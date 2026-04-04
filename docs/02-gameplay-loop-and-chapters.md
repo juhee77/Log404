@@ -35,7 +35,7 @@
 ## 용어 통일
 - 단서: `Clue`
 - 챕터 진입 조건: `ChapterGate`
-- 문서 해금: `Document Unlock`
+- 문서 해금: `문서 해금`
 
 ## 참조
 - 수량 기준: [docs/08-mvp-scope.md](./08-mvp-scope.md)

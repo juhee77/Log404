@@ -13,72 +13,72 @@
 
 ## 1) 게임 기획 확장
 ```text
-You are a narrative puzzle game designer.
-Design a single-player log-analysis mystery game for Steam.
-Requirements:
-- Windows + macOS
-- solo-dev realistic scope
-- playtime 1.5~3h
-- strong deduction, UI-heavy, minimal animation
-Please provide:
-1) core loop 2) 5 chapters 3) 10 puzzles 4) 3 endings
-5) key UI screens 6) MVP scope 7) cut list
+당신은 내러티브 퍼즐 게임 디자이너입니다.
+Steam용 싱글플레이 로그 분석 미스터리 게임을 설계해 주세요.
+요구사항:
+- Windows + macOS 지원
+- 1인 개발자가 현실적으로 완성 가능한 범위
+- 플레이타임 1.5~3시간
+- 강한 추리 요소, UI 중심 플레이, 최소한의 캐릭터 애니메이션
+아래 항목을 제공해 주세요:
+1) 코어 루프 2) 5개 챕터 개요 3) 퍼즐 10개 4) 엔딩 3개
+5) 핵심 UI 화면 6) 1차 출시용 MVP 범위 7) 범위 축소 권장 항목
 ```
 
 ## 2) 퍼즐 생성
 ```text
-Generate puzzle ideas using auth logs, deployment logs, DB queries, chat, email, and access records.
-Constraints:
-- understandable for non-developers
-- technical vibe but readable
-- clear deduction path
-- no real coding required
-- gradual difficulty
-Output per puzzle:
-- premise, clue sources, player notice, deduction, unlock reward
+인증 로그, 배포 로그, DB 쿼리, 채팅, 이메일, 출입 기록을 활용한 퍼즐 아이디어를 생성해 주세요.
+제약 조건:
+- 비개발자도 이해 가능해야 함
+- 기술적인 분위기는 유지하되 읽기 쉬워야 함
+- 추론 경로가 명확해야 함
+- 실제 코딩 지식이 필요하지 않아야 함
+- 난이도가 점진적으로 상승해야 함
+퍼즐마다 아래 형식으로 출력:
+- 전제, 단서 출처, 플레이어 관찰 포인트, 추론 결과, 해금 보상
 ```
 
 ## 3) UI 디자인
 ```text
-Design a realistic dark investigation UI for a PC detective game.
-Include:
-- case folders sidebar
-- central log/document panel
-- evidence/suspect side panel
-- search/filter/timeline
-Style:
-- dark, subtle teal/cyan, monospace for logs, clean desktop app feel
-Explain layout, components, colors, typography, interaction patterns.
+PC 탐정 게임용 현실적인 다크 테마 조사 UI를 설계해 주세요.
+포함 요소:
+- 사건 폴더 사이드바
+- 중앙 로그/문서 패널
+- 증거/용의자 사이드 패널
+- 검색/필터/시간축
+스타일:
+- 다크 배경, 은은한 청록/시안 강조, 로그용 모노스페이스, 깔끔한 데스크톱 앱 느낌
+레이아웃, 컴포넌트, 색상 방향, 타이포그래피, 상호작용 패턴을 설명해 주세요.
 ```
 
 ## 4) 이미지 생성
 ```text
-A realistic dark-mode investigation dashboard for a cyber detective indie game.
-Left: case folders.
-Center: server logs with suspicious highlights.
-Right: evidence cards and suspect profiles.
-Bottom: command/search bar.
-Subtle teal/cyan accents, clean monospace typography, believable internal security tool.
+사이버 탐정 인디 게임용 현실적인 다크 모드 조사 대시보드를 생성해 주세요.
+왼쪽: 사건 폴더 목록
+가운데: 의심 항목이 강조된 서버 로그
+오른쪽: 증거 카드와 용의자 프로필
+하단: 명령/검색 바
+과하지 않은 청록/시안 포인트, 깔끔한 모노스페이스 타이포그래피, 실제 사내 보안 도구 같은 분위기
 ```
 
 ## 5) Godot 구조 설계
 ```text
-Help structure a Godot 4 project for a UI-heavy detective game.
-Features:
-- case selection, log/mail/chat viewer, evidence board, save/load, clue progression.
-Provide:
-- scene tree, autoloads, JSON data model, save design, UI communication patterns, anti-spaghetti guidelines.
+UI 비중이 높은 탐정 게임을 위한 Godot 4 프로젝트 구조를 설계해 주세요.
+기능:
+- 사건 선택, 로그/메일/채팅 뷰어, 증거 보드, 저장/불러오기, 단서 해금 진행
+제공 항목:
+- 씬 트리 구조, 오토로드 제안, JSON 데이터 모델, 저장 시스템 설계, UI 통신 패턴, 스파게티 코드 방지 가이드
 ```
 
 ## 6) 로그 데이터 생성
 ```text
-Create fictional but believable server logs for a mystery game.
-Requirements:
-- readable to general players
-- timestamps, user IDs, IPs, actions, errors
-- one hidden suspicious pattern
-Output:
-- raw log text
-- suspicious clue explanation
-- expected player inference
+미스터리 게임에 사용할, 허구이지만 그럴듯한 서버 로그를 생성해 주세요.
+요구사항:
+- 일반 플레이어도 읽을 수 있어야 함
+- 타임스탬프, 사용자 ID, IP, 행동, 오류 메시지 포함
+- 숨겨진 의심 패턴 1개 포함
+출력:
+- 원본 로그 텍스트
+- 의심 단서 설명
+- 플레이어가 도달해야 할 추론
 ```
