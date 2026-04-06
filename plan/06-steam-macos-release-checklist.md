@@ -10,6 +10,8 @@
 - Windows 빌드 실행/저장/엔딩 분기 확인
 - macOS 빌드 실행/저장/엔딩 분기 확인
 - 버전 표기 및 빌드 번호 일치 확인
+- Godot export preset / export template 설치 확인
+- `distribution/steam/content/` 패키징 결과 확인
 
 ## macOS 요구사항
 - 64비트 대상 확인
@@ -21,6 +23,8 @@
 - 스크린샷/캡슐 이미지/트레일러 업로드 준비
 - 브랜치(테스트/릴리스) 운영 규칙 확인
 - 배포 전 내부 QA 빌드 승인
+- demo AppID / depot 설정 확인
+- SteamPipe VDF 템플릿 실 ID로 치환
 
 ## 선택 기능 점검
 - 업적 도입 여부

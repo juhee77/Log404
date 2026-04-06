@@ -1,5 +1,4 @@
 extends Node
-class_name ContentRepository
 
 const CASE_PATH := "res://data/cases/case_001.json"
 const DOCUMENTS_PATH := "res://data/documents.json"

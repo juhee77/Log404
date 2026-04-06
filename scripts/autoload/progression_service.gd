@@ -1,5 +1,4 @@
 extends Node
-class_name ProgressionService
 
 func create_initial_state(case_data: CaseData) -> InvestigationState:
     return InvestigationState.create_initial(case_data)

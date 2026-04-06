@@ -17,6 +17,8 @@
 - `data/`: Python 프로토타입과 Godot 런타임이 함께 쓰는 canonical 콘텐츠 데이터
 - `scenes/`, `scripts/`, `assets/`: Godot 4 런타임 프로젝트 골격
 - `game/`, `web/`: Python CLI / 로컬 웹 프로토타입
+- `distribution/steam/`: Steam 데모 업로드용 템플릿과 패키징 구조
+- `tools/`: 릴리즈/패키징 보조 스크립트
 - `docs/images/`: 초안 및 참고 이미지
 - `review-notes/`: 일일 리뷰 체크리스트
 
@@ -27,6 +29,7 @@
 4. Steam/macOS 출시 체크리스트: [plan/06-steam-macos-release-checklist.md](./plan/06-steam-macos-release-checklist.md)
 5. 구현 스택 결정: [docs/12-engine-stack-decision.md](./docs/12-engine-stack-decision.md)
 6. Godot 런타임 아키텍처: [docs/13-godot-runtime-architecture.md](./docs/13-godot-runtime-architecture.md)
+7. Steam 데모 패키징: [docs/14-steam-demo-packaging.md](./docs/14-steam-demo-packaging.md)
 
 ## 즉시 진행할 구현 단계
 1. Godot 4 기본 프로젝트 및 씬 골격 구성
@@ -48,6 +51,12 @@
 1. Godot 4에서 이 저장소 루트를 엽니다.
 2. `project.godot`를 프로젝트로 import 합니다.
 3. 메인 씬은 `res://scenes/app_root.tscn` 입니다.
+
+검증 상태:
+- Godot 4.6.2 headless import 확인 완료
+- 프로젝트 실행용 headless start 확인 완료
+- export preset 파싱 확인 완료
+- export 자체는 **export templates 미설치** 상태라 아직 실패합니다.
 
 ## CLI 프로토타입 실행
 문서 기반 수직 슬라이스를 빠르게 검증할 수 있는 CLI 버전이 포함되어 있습니다.
@@ -77,3 +86,15 @@ GUI에서 가능한 것:
 ```bash
 python3 -m unittest tests/test_game_engine.py
 ```
+
+## Steam 데모 패키징 보조
+Godot export 결과를 Steam 업로드 구조로 정리하는 스크립트가 포함되어 있습니다.
+
+```bash
+python3 tools/package_demo_release.py --source dist --version 0.1.0-demo
+```
+
+관련 파일:
+- `export_presets.cfg`
+- `distribution/steam/templates/*.vdf.example`
+- `distribution/steam/README.md`

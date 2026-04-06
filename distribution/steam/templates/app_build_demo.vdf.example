@@ -1,0 +1,16 @@
+"AppBuild"
+{
+    "AppID"            "DEMO_APP_ID"
+    "Desc"             "LOG:404 demo build"
+    "ContentRoot"      "..\\content\\"
+    "BuildOutput"      "..\\build_output\\"
+    "Preview"          "0"
+    "Local"            ""
+    "SetLive"          "demo"
+
+    "Depots"
+    {
+        "DEMO_WINDOWS_DEPOT_ID"    "depot_build_demo_windows.vdf"
+        "DEMO_MACOS_DEPOT_ID"      "depot_build_demo_macos.vdf"
+    }
+}

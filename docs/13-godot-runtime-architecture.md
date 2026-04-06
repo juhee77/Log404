@@ -25,6 +25,12 @@ LOG:404의 실제 출시용 클라이언트를 Godot 4 + GDScript로 유지보�
 ## 현재 메인 씬
 - `res://scenes/app_root.tscn`
 
+## 현재 검증 상태
+- Godot 4.6.2 headless import 성공
+- `godot --headless --path <repo> --quit-after 1` 실행 성공
+- `export_presets.cfg` 추가 및 preset 인식 확인
+- 네이티브 export는 export template 미설치로 아직 미완료
+
 ## 현재 주요 흐름
 1. 메인 메뉴 진입
 2. 조사 시작
