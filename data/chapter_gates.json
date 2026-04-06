@@ -1,0 +1,17 @@
+[
+  {
+    "chapter_id": "chapter_01",
+    "required_clues": ["clue_auth_mismatch"],
+    "unlock_targets": ["deploy_log_001", "db_log_001", "mail_002", "chat_002"]
+  },
+  {
+    "chapter_id": "chapter_02",
+    "required_clues": ["clue_deleted_deploy"],
+    "unlock_targets": ["mail_003", "mail_004", "cctv_report_001"]
+  },
+  {
+    "chapter_id": "chapter_03",
+    "required_clues": ["clue_fake_alibi"],
+    "unlock_targets": ["final_report_form"]
+  }
+]

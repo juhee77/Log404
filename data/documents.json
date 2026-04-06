@@ -1,0 +1,86 @@
+[
+  {
+    "id": "auth_log_001",
+    "source_type": "auth_log",
+    "title": "Auth Gateway 04-17",
+    "chapter": 1,
+    "content": "[22:41] user=minseo login success ip=10.20.1.44\n[22:58] user=minseo logout\n[00:14] user=minseo login success ip=10.20.9.7 (vpn-bastion)\n[00:18] user=minseo privilege escalation: deploy_admin"
+  },
+  {
+    "id": "badge_log_001",
+    "source_type": "badge",
+    "title": "Office Badge Entry",
+    "chapter": 1,
+    "content": "[21:12] minseo IN gate-B\n[22:58] minseo OUT gate-B\n[23:03~03:00] minseo entry record 없음"
+  },
+  {
+    "id": "deploy_log_001",
+    "source_type": "deploy_log",
+    "title": "Deploy Pipeline Delta",
+    "chapter": 2,
+    "content": "[00:21] project=nebula-api deploy triggered by svc.deploy\n[00:22] project=nebula-api checksum mismatch (warning)\n[00:26] project=nebula-api deploy record missing -> fallback snapshot loaded"
+  },
+  {
+    "id": "db_log_001",
+    "source_type": "db_query",
+    "title": "DB Audit Trail",
+    "chapter": 2,
+    "content": "00:24 DELETE FROM deploy_history WHERE project='nebula-api' AND build='b421' -- actor=admin_yoon\n00:25 UPDATE audit_mask SET reason='retention_cleanup'"
+  },
+  {
+    "id": "cctv_report_001",
+    "source_type": "cctv_report",
+    "title": "CCTV Text Report",
+    "chapter": 3,
+    "content": "23:40 devops-room lights off\n00:10 corridor cam: hoodie person enters side-door\n00:16 same person meets yoon near archive room"
+  },
+  {
+    "id": "mail_001",
+    "source_type": "mail",
+    "title": "[mail thread] HR 공지 초안",
+    "chapter": 1,
+    "content": "From: hr@log404.local\nTo: exec@log404.local\nSubject: 민서 퇴사 공지 문안\n\n'개인 사정으로 즉시 퇴사' 문안으로 통일 바랍니다."
+  },
+  {
+    "id": "mail_002",
+    "source_type": "mail",
+    "title": "[mail thread] 운영팀 질의",
+    "chapter": 2,
+    "content": "From: ops@log404.local\nTo: yoon@log404.local\nSubject: 00시대 배포 누락\n\ndeploy_history b421이 조회되지 않습니다. 보관정책 변경 있었나요?"
+  },
+  {
+    "id": "mail_003",
+    "source_type": "mail",
+    "title": "[mail thread] 알리바이 회신",
+    "chapter": 3,
+    "content": "From: yoon@log404.local\nTo: audit@log404.local\nSubject: 당일 위치 확인\n\n저는 23:00 이후 집에 있었고 시스템 접속이 없었습니다."
+  },
+  {
+    "id": "mail_004",
+    "source_type": "mail",
+    "title": "[mail thread] Legal 검토",
+    "chapter": 3,
+    "content": "From: legal@log404.local\nTo: exec@log404.local\nSubject: 공식입장 리스크\n\n접속기록 질의가 반복되면 '백업 오류'로 일관 답변 권장."
+  },
+  {
+    "id": "chat_001",
+    "source_type": "chat",
+    "title": "#ops-war-room",
+    "chapter": 1,
+    "content": "[22:50] minseo: 오늘 배포 끝나면 감사 로그 확인할게요\n[23:02] yoon: 야근은 여기까지. 다들 퇴근"
+  },
+  {
+    "id": "chat_002",
+    "source_type": "chat",
+    "title": "#audit-backchannel",
+    "chapter": 2,
+    "content": "[00:11] unknown: 문서 타임라인 맞춰놔\n[00:17] yoon: badge는 비어 있으니 메일 시간만 맞추면 돼"
+  },
+  {
+    "id": "final_report_form",
+    "source_type": "report",
+    "title": "최종 보고서 양식",
+    "chapter": 3,
+    "content": "아래 항목을 제출하시오: 범인 / 동기 / 방법"
+  }
+]

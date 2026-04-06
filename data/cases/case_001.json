@@ -1,0 +1,16 @@
+{
+  "case_id": "case_001",
+  "title": "Missing Employee",
+  "objective": "실종된 직원 민서의 마지막 접근 기록과 은폐된 배포 이력을 찾아 진실을 규명하라.",
+  "documents_unlocked": [
+    "auth_log_001",
+    "badge_log_001",
+    "mail_001",
+    "chat_001"
+  ],
+  "solution_conditions": [
+    "clue_auth_mismatch",
+    "clue_deleted_deploy",
+    "clue_fake_alibi"
+  ]
+}

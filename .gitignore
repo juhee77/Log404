@@ -1,0 +1,5 @@
+.omx/
+.codex/
+__pycache__/
+.godot/
+runtime/

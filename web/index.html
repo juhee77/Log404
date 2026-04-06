@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LOG:404 / 사건 조사 대시보드</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div>
+        <div class="eyebrow">LOG:404</div>
+        <h1>사건 조사 대시보드</h1>
+        <p id="objective" class="objective"></p>
+      </div>
+      <div id="progress" class="progress"></div>
+    </header>
+
+    <main class="workspace">
+      <aside class="panel left-panel">
+        <div class="panel-title">문서 네비게이션</div>
+        <div class="filter-row">
+          <label for="sourceFilter">소스 필터</label>
+          <select id="sourceFilter">
+            <option value="all">all</option>
+            <option value="auth_log">auth_log</option>
+            <option value="badge">badge</option>
+            <option value="deploy_log">deploy_log</option>
+            <option value="db_query">db_query</option>
+            <option value="mail">mail</option>
+            <option value="chat">chat</option>
+            <option value="cctv_report">cctv_report</option>
+            <option value="report">report</option>
+          </select>
+        </div>
+        <div id="documentList" class="document-list"></div>
+      </aside>
+
+      <section class="panel center-panel">
+        <div class="panel-title">문서 뷰어</div>
+        <div id="documentTitle" class="document-title">문서를 선택하세요</div>
+        <pre id="documentContent" class="document-content">좌측에서 문서를 클릭하면 내용이 여기에 표시됩니다.</pre>
+      </section>
+
+      <aside class="panel right-panel">
+        <div class="panel-title">추론 / 보드</div>
+        <section class="subpanel">
+          <div class="subpanel-title">단서</div>
+          <div id="clueList" class="clue-list"></div>
+        </section>
+        <section class="subpanel">
+          <div class="subpanel-title">북마크</div>
+          <div id="bookmarkList" class="bookmark-list"></div>
+        </section>
+        <section class="subpanel">
+          <div class="subpanel-title">최종 보고서</div>
+          <label>범인<input id="culpritInput" type="text" /></label>
+          <label>동기<input id="motiveInput" type="text" /></label>
+          <label>방법<input id="methodInput" type="text" /></label>
+          <button id="submitButton" class="accent">보고서 제출</button>
+        </section>
+      </aside>
+    </main>
+
+    <footer class="bottom-bar panel">
+      <div class="search-row">
+        <input id="searchInput" type="text" placeholder="문서 검색어를 입력하세요" />
+        <button id="searchButton" class="accent">검색 적용</button>
+        <button id="resetButton">검색 초기화</button>
+        <button id="saveButton">저장</button>
+        <button id="loadButton">불러오기</button>
+      </div>
+      <div id="statusLine" class="status-line">로딩 중...</div>
+    </footer>
+
+    <script src="/app.js"></script>
+  </body>
+</html>
