@@ -200,9 +200,18 @@ class GameEngine:
         )
 
     def ending(self, culprit: str, motive: str, method: str) -> str:
-        culprit_ok = culprit.strip().lower() in {"yoon", "admin_yoon", "윤", "윤 팀장"}
-        motive_ok = any(token in motive for token in ["은폐", "조작", "퇴사 공지", "책임 회피"])
-        method_ok = ("삭제" in method and "배포" in method) or ("로그" in method and "조작" in method)
+        culprit_ok = culprit.strip().lower() in {
+            "alice",
+            "alice han",
+            "alice.h",
+            "앨리스",
+            "앨리스 한",
+        }
+        motive_ok = any(token in motive for token in ["은폐", "보호", "통제", "죄책감", "감추"])
+        method_ok = any(
+            token in method
+            for token in ["로그 조작", "캐시", "타임라인", "재작성", "기록 조작"]
+        )
 
         if culprit_ok and motive_ok and method_ok:
             return (

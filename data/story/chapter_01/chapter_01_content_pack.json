@@ -1,0 +1,137 @@
+{
+  "chapter_id": "chapter_01",
+  "title": "아무도 울지 않는 퇴사",
+  "story_goal": "존의 실종이 비정상적으로 무감각하게 처리됐음을 보여주고, 플레이어가 앨리스를 신뢰하며 존스를 첫 용의자로 오해하도록 만든다.",
+  "screen_beats": [
+    {
+      "screen": "login",
+      "beat": "앨리스가 늦은 시간 조사에 함께하겠다고 먼저 메시지를 남긴다."
+    },
+    {
+      "screen": "dashboard",
+      "beat": "존의 상태가 실종이 아니라 '개인 사정 퇴사'로 표시되어 조직의 냉담함을 체감시킨다."
+    },
+    {
+      "screen": "workspace",
+      "beat": "로그/메일/채팅/출입 기록 사이의 말과 감정의 온도차를 읽게 만든다."
+    }
+  ],
+  "documents": [
+    {
+      "id": "mail_hr_termination_draft",
+      "type": "email",
+      "title": "[인사 초안] 존 퇴사 공지",
+      "timestamp": "2026-04-17 09:12:11 KST",
+      "user_id": "hr.notice",
+      "ip": "10.24.2.18",
+      "action": "draft_saved",
+      "content": "제목: John Kim 퇴사 공지\n\n개인 사정으로 4월 17일부로 업무를 종료합니다. 관련 문의는 운영기획팀으로 전달 바랍니다.\n\n※ 내부 커뮤니케이션에서는 추가 언급 자제 요망",
+      "player_notice": "실종 또는 사고가 아니라 지나치게 정리된 퇴사 공지처럼 보인다.",
+      "hidden_meaning": "회사는 사건을 설명하기보다 감정이 없는 문구로 덮으려 한다.",
+      "reveals_character": "조직은 존 개인보다 통제 가능한 문장을 우선한다."
+    },
+    {
+      "id": "chat_alice_late_help",
+      "type": "chat",
+      "title": "[개인 DM] Alice → Player",
+      "timestamp": "2026-04-17 09:18:04 KST",
+      "user_id": "alice.h",
+      "ip": "10.24.4.11",
+      "action": "message_sent",
+      "content": "늦은 시간에 배정돼서 당황하셨죠. 존 건은 제가 옆에서 최대한 도울게요.\n처음엔 존스 쪽 기록부터 보는 게 좋아요. 직접 충돌이 가장 많았거든요.",
+      "player_notice": "앨리스는 친절하고 사건을 잘 아는 내부자처럼 보인다.",
+      "hidden_meaning": "도움과 동시에 플레이어의 감정선을 존스 쪽으로 정렬한다.",
+      "reveals_character": "앨리스는 신뢰를 먼저 준 뒤 해석 방향을 설계하는 사람이다."
+    },
+    {
+      "id": "chat_jones_argument",
+      "type": "chat",
+      "title": "#ops-dev 갈등 로그 일부",
+      "timestamp": "2026-04-16 23:03:17 KST",
+      "user_id": "jones.m",
+      "ip": "10.24.3.90",
+      "action": "chat_send",
+      "content": "[23:03:17] jones.m: 존, 네 방식이 다 맞는 건 아니야.\n[23:04:01] john.k: 알아. 근데 지금 멈추면 더 망가져.\n[23:04:44] jones.m: 적어도 사람까지 같이 데려가진 마.",
+      "player_notice": "존스는 공격적이고 위협적인 상사처럼 느껴진다.",
+      "hidden_meaning": "말투는 거칠지만, 실제로는 사건 확대를 막으려는 경고일 수 있다.",
+      "reveals_character": "존스는 쉽게 미움받지만 단순 악인은 아니다."
+    },
+    {
+      "id": "log_badge_gap",
+      "type": "badge_log",
+      "title": "출입 기록 / 존",
+      "timestamp": "2026-04-16 22:58:09 KST",
+      "user_id": "john.k",
+      "ip": "10.24.0.5",
+      "action": "badge_out",
+      "content": "2026-04-16 21:12:44 KST | user_id=john.k | ip=10.24.0.5 | action=badge_in  | note=gate-B\n2026-04-16 22:58:09 KST | user_id=john.k | ip=10.24.0.5 | action=badge_out | note=gate-B\n2026-04-16 23:00:00~03:00:00 | user_id=john.k | ip=10.24.0.5 | action=no_entry_record | note=none",
+      "player_notice": "존은 회사에서 나간 뒤 다시 들어온 기록이 없다.",
+      "hidden_meaning": "후속 접속 기록과 충돌하면 알리바이 붕괴 퍼즐의 기반이 된다.",
+      "reveals_character": "누군가의 진술보다 시스템 시간축이 더 잔인하게 진실을 남긴다."
+    },
+    {
+      "id": "log_auth_midnight",
+      "type": "auth_log",
+      "title": "인증 로그 / 존 계정",
+      "timestamp": "2026-04-17 00:14:33 KST",
+      "user_id": "john.k",
+      "ip": "10.24.8.14",
+      "action": "login_success",
+      "content": "2026-04-16 22:41:08 KST | user_id=john.k | ip=10.24.8.14 | action=login_success       | note=night_review\n2026-04-16 22:58:40 KST | user_id=john.k | ip=10.24.8.14 | action=logout              | note=manual_close\n2026-04-17 00:14:33 KST | user_id=john.k | ip=10.24.9.7  | action=login_success       | note=vpn_bastion\n2026-04-17 00:18:12 KST | user_id=john.k | ip=10.24.9.7  | action=privilege_escalated | note=deploy_admin",
+      "player_notice": "퇴근 뒤 다시 접속이 있었다.",
+      "hidden_meaning": "존이 돌아왔거나, 누군가가 존의 계정과 흔적을 사용했다.",
+      "reveals_character": "존의 마지막 시간은 평온한 퇴사가 아니라 불안한 재접속과 연결돼 있다."
+    },
+    {
+      "id": "mail_john_unsent_fragment",
+      "type": "email_draft",
+      "title": "존 미전송 초안 일부",
+      "timestamp": "2026-04-17 00:13:09 KST",
+      "user_id": "john.k",
+      "ip": "10.24.8.14",
+      "action": "draft_deleted",
+      "content": "[삭제된 문장 복구]\n- 미안해. 내가 이걸 말하면 다 같이 끝날 수도 있어.\n- 앨리스, 혹시 네가 이걸 보면...\n- 존스가 아니라면, 내가 지금 뭘 보고 있는 거지.",
+      "player_notice": "존은 마지막 순간까지 누군가를 특정하지 못했고, 앨리스를 의식했다.",
+      "hidden_meaning": "존은 존스를 의심하면서도 확신하지 못했고, 앨리스에게 어떤 기대를 걸고 있었다.",
+      "reveals_character": "존은 무너지는 와중에도 누군가를 믿고 싶어 했다."
+    }
+  ],
+  "puzzles": [
+    {
+      "id": "puzzle_ch1_empty_resignation",
+      "situation": "존은 감정이 완전히 제거된 퇴사 메일만 남기고 사라졌다.",
+      "evidence_ids": [
+        "mail_hr_termination_draft",
+        "mail_john_unsent_fragment"
+      ],
+      "what_feels_normal_at_first": "위기 상황에서 짧고 건조한 메일을 보내는 건 이상하지 않다.",
+      "what_is_actually_suspicious": "초안에는 공포와 망설임이 있는데 최종 메시지만 지나치게 정리돼 있다.",
+      "emotional_meaning": "존은 떠난 사람이라기보다 누군가를 다치게 하지 않으려 감정을 지운 사람처럼 보인다.",
+      "player_deduction": "존의 퇴사는 자발적 정리가 아니라 두려움 속에서 검열된 메시지다."
+    },
+    {
+      "id": "puzzle_ch1_jones_too_convenient",
+      "situation": "존스는 공격적인 채팅과 야근 기록 때문에 가장 먼저 범인처럼 보인다.",
+      "evidence_ids": [
+        "chat_alice_late_help",
+        "chat_jones_argument"
+      ],
+      "what_feels_normal_at_first": "조력자가 먼저 존스 쪽을 보자고 하는 건 효율적인 안내처럼 보인다.",
+      "what_is_actually_suspicious": "앨리스의 설명과 존스의 실제 대화 감정선 사이에 미묘한 과장이 있다.",
+      "emotional_meaning": "플레이어의 미움이 자연스럽게 생기도록 누군가가 감정의 순서를 설계한다.",
+      "player_deduction": "존스는 수상하지만, 지금 보이는 프레임은 누군가가 정리해 준 결과일 수 있다."
+    },
+    {
+      "id": "puzzle_ch1_badge_auth_conflict",
+      "situation": "존은 퇴근 처리됐지만 새벽에 다시 접속한 기록이 남아 있다.",
+      "evidence_ids": [
+        "log_badge_gap",
+        "log_auth_midnight"
+      ],
+      "what_feels_normal_at_first": "VPN으로 원격 접속했을 수 있다.",
+      "what_is_actually_suspicious": "접속 시점과 감정적 메일 초안 시점이 겹치며, 단순 퇴사자 행동처럼 보이지 않는다.",
+      "emotional_meaning": "존은 정리된 퇴사자가 아니라 마지막까지 무언가를 확인하고 매달린 사람이다.",
+      "player_deduction": "존의 마지막 밤은 회사가 말하는 '개인 사정 퇴사'와 전혀 다른 사건의 시간축을 가진다."
+    }
+  ]
+}

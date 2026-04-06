@@ -1,0 +1,119 @@
+{
+  "season_id": "season_01",
+  "title": "LOG:404 / 삭제된 사건 기록",
+  "premise": "플레이어는 사내 조사관이 되어 실종된 개발자 존의 흔적을 추적하지만, 가장 신뢰한 조력자 앨리스가 로그를 조작하고 있었다는 사실과 마주한다.",
+  "characters": [
+    {
+      "id": "alice",
+      "name": "Alice Han",
+      "role": "helper_hidden_culprit",
+      "personal_goal": "존이 남긴 마지막 진실이 회사의 냉혹한 방식으로 소비되지 않게 통제하고 싶다.",
+      "fear": "존을 끝내 구하지 못했다는 사실이 드러나는 것",
+      "secret": "존의 마지막 밤에 직접 연락했고, 사건 관련 로그와 캐시 타임라인 일부를 조작했다.",
+      "sympathetic_core": "플레이어와 존을 실제로 돕고 싶어 했지만, 보호 욕망이 통제로 변질되었다."
+    },
+    {
+      "id": "john",
+      "name": "John Kim",
+      "role": "missing_developer",
+      "personal_goal": "내부 조작의 진실을 밝히되 가까운 사람들이 함께 무너지지 않게 하고 싶다.",
+      "fear": "진실이 밝혀질수록 무고한 사람이 함께 다치는 것",
+      "secret": "도움을 청하면서도 끝까지 핵심 일부를 숨겼고, 이미 오래전부터 누구도 완전히 믿지 못했다.",
+      "emotional_trace": "차가운 메일 초안과 달리 메모/채팅에서는 다른 사람을 먼저 걱정한다."
+    },
+    {
+      "id": "jones",
+      "name": "Marcus Jones",
+      "role": "false_suspect",
+      "personal_goal": "존과의 갈등 이후에도 자기 팀과 커리어를 지키고 싶다.",
+      "fear": "위험한 사람으로 낙인찍혀 모든 말을 의심받는 것",
+      "secret": "존과 심하게 다퉜지만 사건 당일 실제로는 그를 막으려 했고, 마지막 말이 폭언으로 남을까 두려워한다.",
+      "misread_as": "공격적이고 권위적이어서 가장 쉽게 범인처럼 보이는 인물"
+    }
+  ],
+  "relationship_map": [
+    {
+      "from": "alice",
+      "to": "player",
+      "surface": "친절한 조력자",
+      "truth": "도움과 유도를 동시에 제공하는 사람"
+    },
+    {
+      "from": "john",
+      "to": "alice",
+      "surface": "믿을 수 있는 동료",
+      "truth": "마지막까지 가장 의지한 사람"
+    },
+    {
+      "from": "john",
+      "to": "jones",
+      "surface": "계속 충돌하는 상사/협업 상대",
+      "truth": "거칠게 부딪히지만 완전히 포기하진 않은 관계"
+    },
+    {
+      "from": "player",
+      "to": "alice",
+      "surface": "신뢰",
+      "truth": "배신 이후 죄책감으로 되돌아오는 의존"
+    }
+  ],
+  "foreshadowing_moments": [
+    {
+      "id": "f01_fast_recovery",
+      "moment": "플레이어가 찾기 전에 앨리스가 누락 문서를 복구해 준다.",
+      "misinterpretation": "유능하고 든든한 조력자다.",
+      "reinterpretation": "남들이 보기 전에 기록에 접근하고 선택적으로 보여줄 수 있었다."
+    },
+    {
+      "id": "f02_jones_comment",
+      "moment": "존스 관련 기록을 볼 때마다 앨리스가 감정 섞인 해설을 붙인다.",
+      "misinterpretation": "내부 사정을 아는 신뢰할 만한 설명이다.",
+      "reinterpretation": "사실을 설명하는 척하며 플레이어 감정을 특정 방향으로 민다."
+    },
+    {
+      "id": "f03_overkindness",
+      "moment": "플레이어가 다른 가능성을 보려 하면 앨리스가 부드럽게 존스 쪽만 더 보자고 달랜다.",
+      "misinterpretation": "긴장을 덜어주는 배려다.",
+      "reinterpretation": "의심이 확산되기 전에 방향을 잠그는 통제였다."
+    },
+    {
+      "id": "f04_avoids_john_voice",
+      "moment": "존의 감정적인 메모나 음성 기록이 나오면 앨리스가 대화를 기술적 내용으로 돌린다.",
+      "misinterpretation": "사건 해결에 감정은 덜 중요하다고 여긴다.",
+      "reinterpretation": "존의 인간적인 목소리가 살아날수록 자기 죄책감을 피하기 어려워진다."
+    },
+    {
+      "id": "f05_tone_break",
+      "moment": "후반 특정 기록에서 앨리스의 말투가 처음으로 무너진다.",
+      "misinterpretation": "피곤하거나 놀란 것이다.",
+      "reinterpretation": "설명할 수 없는 기록과 마주쳐 조력자 역할을 유지하지 못했다."
+    }
+  ],
+  "chapter_emotional_arc": [
+    {
+      "chapter": 1,
+      "title": "아무도 울지 않는 퇴사",
+      "player_feeling": ["조직에 대한 불신", "앨리스에 대한 신뢰", "존스에 대한 첫 의심"]
+    },
+    {
+      "chapter": 2,
+      "title": "도와주는 사람의 손길",
+      "player_feeling": ["안도", "의존", "작은 불편함"]
+    },
+    {
+      "chapter": 3,
+      "title": "존스는 너무 쉽게 미워진다",
+      "player_feeling": ["확신", "분노", "찜찜함"]
+    },
+    {
+      "chapter": 4,
+      "title": "사라진 사람은 누구를 믿었나",
+      "player_feeling": ["혼란", "부정", "죄책감"]
+    },
+    {
+      "chapter": 5,
+      "title": "네가 틀린 게 아니라, 네가 믿은 거야",
+      "player_feeling": ["배신감", "연민", "자기혐오", "갈등"]
+    }
+  ]
+}

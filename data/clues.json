@@ -1,32 +1,32 @@
 [
   {
-    "clue_id": "clue_auth_mismatch",
+    "clue_id": "clue_empty_resignation",
     "chapter": 1,
-    "source_type": "auth_log",
-    "name": "로그인/출입 시간 불일치",
-    "description": "00:14 서버 로그인 기록이 있으나 동일 계정의 출입 기록은 22:58 이후가 없다.",
-    "required_documents": ["auth_log_001", "badge_log_001"],
-    "trigger_condition": "auth_time != badge_time",
-    "unlock_effect": "unlock_document:deploy_log_001"
+    "source_type": "mail",
+    "name": "감정이 제거된 퇴사",
+    "description": "존의 공식 퇴사 문구는 지나치게 정리돼 있으며, 미전송 초안은 공포와 망설임을 드러낸다.",
+    "required_documents": ["mail_hr_termination_draft", "mail_john_unsent_fragment"],
+    "trigger_condition": "official_resignation_conflicts_with_unsent_emotion",
+    "unlock_effect": "unlock_document:log_badge_gap"
   },
   {
-    "clue_id": "clue_deleted_deploy",
+    "clue_id": "clue_jones_false_face",
     "chapter": 2,
-    "source_type": "db_query",
-    "name": "삭제된 배포 이력",
-    "description": "deploy_history에서 특정 프로젝트 배포 레코드가 수동 삭제되었다.",
-    "required_documents": ["deploy_log_001", "db_log_001", "mail_002"],
-    "trigger_condition": "manual_delete_detected",
-    "unlock_effect": "unlock_document:mail_003"
+    "source_type": "chat_call_note",
+    "name": "존스의 너무 쉬운 유죄성",
+    "description": "존스는 거칠게 말했지만, 실제 기록을 보면 존을 포기한 사람이 아니라 뒤늦게 수습하려 했던 사람에 가깝다.",
+    "required_documents": ["chat_jones_argument", "log_jones_calls", "note_if_i_disappear"],
+    "trigger_condition": "surface_guilt_conflicts_with_private_trace",
+    "unlock_effect": "unlock_document:log_alice_dm_read"
   },
   {
-    "clue_id": "clue_fake_alibi",
+    "clue_id": "clue_alice_tampered_truth",
     "chapter": 3,
-    "source_type": "mail_chat",
-    "name": "거짓 알리바이",
-    "description": "메일 타임스탬프와 채팅 타임라인이 충돌하며, CCTV 텍스트 리포트와도 불일치한다.",
-    "required_documents": ["mail_003", "chat_002", "cctv_report_001"],
-    "trigger_condition": "timeline_conflict",
+    "source_type": "timeline_manipulation",
+    "name": "앨리스가 설계한 진실의 방향",
+    "description": "앨리스는 플레이어를 도우면서 동시에 존의 기록에 먼저 접근했고, 시간축과 해석 방향을 함께 통제했다.",
+    "required_documents": ["chat_alice_late_help", "log_badge_gap", "log_auth_midnight", "log_alice_dm_read", "log_alice_vpn_rewrite", "mail_alice_to_player"],
+    "trigger_condition": "helper_has_access_and_guidance_control",
     "unlock_effect": "unlock_document:final_report_form"
   }
 ]

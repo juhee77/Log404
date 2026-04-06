@@ -25,6 +25,11 @@ project/
     logs/
     mails/
     chats/
+    story/
+      season_01/
+        story_bible.json
+      chapter_01/
+        chapter_01_content_pack.json
   assets/
     fonts/
     sfx/
@@ -65,8 +70,10 @@ project/
 ## 콘텐츠 추가 워크플로우
 1. `cases`에 사건 메타 추가
 2. `logs/mails/chats`에 원천 데이터 추가
-3. `ClueData`와 `ChapterGate`로 해금 조건 연결
-4. 씬/스크립트는 데이터 키를 소비만 하도록 유지
+3. `story/season_*`에 인물/관계/복선/감정 아크를 스토리 바이블로 정리
+4. `story/chapter_*`에 실제 챕터 콘텐츠 팩(문서/퍼즐/연출 비트) 추가
+5. `ClueData`와 `ChapterGate`로 해금 조건 연결
+6. 씬/스크립트는 데이터 키를 소비만 하도록 유지
 
 ## 파일 간 참조 규칙
 - 수량/범위 기준은 [docs/08-mvp-scope.md](./08-mvp-scope.md) 단일 참조

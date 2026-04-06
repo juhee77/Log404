@@ -1,16 +1,16 @@
 {
   "case_id": "case_001",
-  "title": "Missing Employee",
-  "objective": "실종된 직원 민서의 마지막 접근 기록과 은폐된 배포 이력을 찾아 진실을 규명하라.",
+  "title": "John Kim 실종 사건",
+  "objective": "존의 실종과 앨리스가 감춘 시간축을 따라가며 누가 진실을 조작했는지 밝혀내라.",
   "documents_unlocked": [
-    "auth_log_001",
-    "badge_log_001",
-    "mail_001",
-    "chat_001"
+    "mail_hr_termination_draft",
+    "chat_alice_late_help",
+    "chat_jones_argument",
+    "mail_john_unsent_fragment"
   ],
   "solution_conditions": [
-    "clue_auth_mismatch",
-    "clue_deleted_deploy",
-    "clue_fake_alibi"
+    "clue_empty_resignation",
+    "clue_jones_false_face",
+    "clue_alice_tampered_truth"
   ]
 }
