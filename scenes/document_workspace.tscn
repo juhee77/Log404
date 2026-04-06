@@ -1,0 +1,219 @@
+[gd_scene load_steps=8 format=3]
+
+[ext_resource type="Script" path="res://scripts/scenes/workspace_controller.gd" id="1"]
+[ext_resource type="Script" path="res://scripts/ui/document_list_panel.gd" id="2"]
+[ext_resource type="Script" path="res://scripts/ui/document_view_panel.gd" id="3"]
+[ext_resource type="Script" path="res://scripts/ui/clue_panel.gd" id="4"]
+[ext_resource type="Script" path="res://scripts/ui/bookmark_panel.gd" id="5"]
+[ext_resource type="Script" path="res://scripts/ui/report_panel.gd" id="6"]
+[ext_resource type="Script" path="res://scripts/ui/search_bar.gd" id="7"]
+
+[node name="DocumentWorkspace" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1")
+
+[node name="Margin" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="MainVBox" type="VBoxContainer" parent="Margin"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="WorkspaceHeader" type="VBoxContainer" parent="Margin/MainVBox"]
+layout_mode = 2
+
+[node name="WorkspaceTitle" type="Label" parent="Margin/MainVBox/WorkspaceHeader"]
+layout_mode = 2
+text = "사건 조사"
+
+[node name="WorkspaceObjective" type="Label" parent="Margin/MainVBox/WorkspaceHeader"]
+layout_mode = 2
+autowrap_mode = 3
+text = "목표"
+
+[node name="WorkspaceSplit" type="HSplitContainer" parent="Margin/MainVBox"]
+layout_mode = 2
+size_flags_vertical = 3
+split_offset = 260
+
+[node name="DocumentListPanel" type="VBoxContainer" parent="Margin/MainVBox/WorkspaceSplit"]
+custom_minimum_size = Vector2(280, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("2")
+
+[node name="PanelTitle" type="Label" parent="Margin/MainVBox/WorkspaceSplit/DocumentListPanel"]
+layout_mode = 2
+text = "문서 네비게이션"
+
+[node name="SourceFilter" type="OptionButton" parent="Margin/MainVBox/WorkspaceSplit/DocumentListPanel"]
+layout_mode = 2
+
+[node name="DocumentsList" type="ItemList" parent="Margin/MainVBox/WorkspaceSplit/DocumentListPanel"]
+layout_mode = 2
+size_flags_vertical = 3
+allow_reselect = true
+
+[node name="ActionRow" type="HBoxContainer" parent="Margin/MainVBox/WorkspaceSplit/DocumentListPanel"]
+layout_mode = 2
+
+[node name="OpenButton" type="Button" parent="Margin/MainVBox/WorkspaceSplit/DocumentListPanel/ActionRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "문서 열기"
+
+[node name="BookmarkButton" type="Button" parent="Margin/MainVBox/WorkspaceSplit/DocumentListPanel/ActionRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "북마크 토글"
+
+[node name="DocumentViewPanel" type="VBoxContainer" parent="Margin/MainVBox/WorkspaceSplit"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("3")
+
+[node name="PanelTitle" type="Label" parent="Margin/MainVBox/WorkspaceSplit/DocumentViewPanel"]
+layout_mode = 2
+text = "문서 뷰어"
+
+[node name="TitleLabel" type="Label" parent="Margin/MainVBox/WorkspaceSplit/DocumentViewPanel"]
+layout_mode = 2
+text = "문서를 선택하세요"
+
+[node name="MetaLabel" type="Label" parent="Margin/MainVBox/WorkspaceSplit/DocumentViewPanel"]
+layout_mode = 2
+text = "좌측 목록에서 문서를 열면 내용이 표시됩니다."
+autowrap_mode = 3
+
+[node name="ContentText" type="RichTextLabel" parent="Margin/MainVBox/WorkspaceSplit/DocumentViewPanel"]
+layout_mode = 2
+size_flags_vertical = 3
+bbcode_enabled = false
+fit_content = false
+scroll_following = true
+selection_enabled = true
+
+[node name="RightColumn" type="VBoxContainer" parent="Margin/MainVBox/WorkspaceSplit"]
+custom_minimum_size = Vector2(360, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="CluePanel" type="VBoxContainer" parent="Margin/MainVBox/WorkspaceSplit/RightColumn"]
+layout_mode = 2
+size_flags_vertical = 3
+script = ExtResource("4")
+
+[node name="PanelTitle" type="Label" parent="Margin/MainVBox/WorkspaceSplit/RightColumn/CluePanel"]
+layout_mode = 2
+text = "단서"
+
+[node name="ClueList" type="ItemList" parent="Margin/MainVBox/WorkspaceSplit/RightColumn/CluePanel"]
+layout_mode = 2
+size_flags_vertical = 3
+allow_reselect = true
+
+[node name="DetailText" type="RichTextLabel" parent="Margin/MainVBox/WorkspaceSplit/RightColumn/CluePanel"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 160)
+selection_enabled = true
+
+[node name="InferButton" type="Button" parent="Margin/MainVBox/WorkspaceSplit/RightColumn/CluePanel"]
+layout_mode = 2
+text = "단서 추론"
+
+[node name="BookmarkPanel" type="VBoxContainer" parent="Margin/MainVBox/WorkspaceSplit/RightColumn"]
+layout_mode = 2
+size_flags_vertical = 2
+script = ExtResource("5")
+
+[node name="PanelTitle" type="Label" parent="Margin/MainVBox/WorkspaceSplit/RightColumn/BookmarkPanel"]
+layout_mode = 2
+text = "북마크"
+
+[node name="BookmarkList" type="ItemList" parent="Margin/MainVBox/WorkspaceSplit/RightColumn/BookmarkPanel"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 120)
+allow_reselect = true
+
+[node name="OpenButton" type="Button" parent="Margin/MainVBox/WorkspaceSplit/RightColumn/BookmarkPanel"]
+layout_mode = 2
+text = "북마크 문서 열기"
+
+[node name="ReportPanel" type="VBoxContainer" parent="Margin/MainVBox/WorkspaceSplit/RightColumn"]
+layout_mode = 2
+size_flags_vertical = 2
+script = ExtResource("6")
+
+[node name="PanelTitle" type="Label" parent="Margin/MainVBox/WorkspaceSplit/RightColumn/ReportPanel"]
+layout_mode = 2
+text = "최종 보고"
+
+[node name="HintLabel" type="Label" parent="Margin/MainVBox/WorkspaceSplit/RightColumn/ReportPanel"]
+layout_mode = 2
+autowrap_mode = 3
+text = "보고서를 제출할 준비가 되면 입력하세요."
+
+[node name="CulpritInput" type="LineEdit" parent="Margin/MainVBox/WorkspaceSplit/RightColumn/ReportPanel"]
+layout_mode = 2
+placeholder_text = "범인"
+
+[node name="MotiveInput" type="LineEdit" parent="Margin/MainVBox/WorkspaceSplit/RightColumn/ReportPanel"]
+layout_mode = 2
+placeholder_text = "동기"
+
+[node name="MethodInput" type="LineEdit" parent="Margin/MainVBox/WorkspaceSplit/RightColumn/ReportPanel"]
+layout_mode = 2
+placeholder_text = "방법"
+
+[node name="SubmitButton" type="Button" parent="Margin/MainVBox/WorkspaceSplit/RightColumn/ReportPanel"]
+layout_mode = 2
+text = "보고서 제출"
+
+[node name="StatusLabel" type="Label" parent="Margin/MainVBox/WorkspaceSplit/RightColumn/ReportPanel"]
+layout_mode = 2
+autowrap_mode = 3
+text = ""
+
+[node name="SearchBar" type="HBoxContainer" parent="Margin/MainVBox"]
+layout_mode = 2
+script = ExtResource("7")
+
+[node name="SearchInput" type="LineEdit" parent="Margin/MainVBox/SearchBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "문서를 검색하세요"
+
+[node name="SearchButton" type="Button" parent="Margin/MainVBox/SearchBar"]
+layout_mode = 2
+text = "검색"
+
+[node name="ResetButton" type="Button" parent="Margin/MainVBox/SearchBar"]
+layout_mode = 2
+text = "초기화"
+
+[node name="SaveButton" type="Button" parent="Margin/MainVBox/SearchBar"]
+layout_mode = 2
+text = "저장"
+
+[node name="LoadButton" type="Button" parent="Margin/MainVBox/SearchBar"]
+layout_mode = 2
+text = "불러오기"
+
+[node name="StatusLabel" type="Label" parent="Margin/MainVBox/SearchBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "준비 중..."
+autowrap_mode = 3

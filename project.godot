@@ -1,0 +1,25 @@
+; Engine configuration file.
+; Auto-generated Godot project skeleton for LOG:404.
+config_version=5
+
+[application]
+config/name="LOG:404"
+run/main_scene="res://scenes/app_root.tscn"
+config/features=PackedStringArray("4.2")
+config/icon="res://assets/icon.svg"
+
+[autoload]
+ContentRepository="*res://scripts/autoload/content_repository.gd"
+ProgressionService="*res://scripts/autoload/progression_service.gd"
+SaveService="*res://scripts/autoload/save_service.gd"
+AppState="*res://scripts/autoload/app_state.gd"
+
+[display]
+window/size/viewport_width=1600
+window/size/viewport_height=900
+window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
+
+[rendering]
+renderer/rendering_method="forward_plus"
+textures/canvas_textures/default_texture_filter=0

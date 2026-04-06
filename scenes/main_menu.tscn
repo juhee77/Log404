@@ -1,0 +1,48 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/scenes/main_menu_controller.gd" id="1"]
+
+[node name="MainMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1")
+
+[node name="Center" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Panel" type="PanelContainer" parent="Center"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="VBox" type="VBoxContainer" parent="Center/Panel"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+custom_minimum_size = Vector2(640, 360)
+
+[node name="Title" type="Label" parent="Center/Panel/VBox"]
+layout_mode = 2
+text = "LOG:404"
+horizontal_alignment = 1
+
+[node name="Subtitle" type="Label" parent="Center/Panel/VBox"]
+layout_mode = 2
+text = "삭제된 사건 기록\n로그와 문서의 모순으로 인간의 거짓말을 추적하는 조사 게임"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="StartButton" type="Button" parent="Center/Panel/VBox"]
+layout_mode = 2
+text = "조사 시작"
+
+[node name="Hint" type="Label" parent="Center/Panel/VBox"]
+layout_mode = 2
+text = "프로토타입은 Python 툴로 유지하고, 본게임 런타임은 Godot로 구현합니다."
+horizontal_alignment = 1
+autowrap_mode = 3
