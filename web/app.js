@@ -11,10 +11,12 @@ const els = {
   progress: document.getElementById('progress'),
   stageBadge: document.getElementById('stageBadge'),
   nextStep: document.getElementById('nextStep'),
+  suspectBoard: document.getElementById('suspectBoard'),
   documentList: document.getElementById('documentList'),
   documentTitle: document.getElementById('documentTitle'),
   documentMetaTags: document.getElementById('documentMetaTags'),
   documentContent: document.getElementById('documentContent'),
+  activityLog: document.getElementById('activityLog'),
   clueList: document.getElementById('clueList'),
   bookmarkList: document.getElementById('bookmarkList'),
   statusLine: document.getElementById('statusLine'),
@@ -25,6 +27,7 @@ const els = {
   methodInput: document.getElementById('methodInput'),
   submitButton: document.getElementById('submitButton'),
   reportGuide: document.getElementById('reportGuide'),
+  reportPresets: document.getElementById('reportPresets'),
   reportResult: document.getElementById('reportResult'),
   searchButton: document.getElementById('searchButton'),
   resetButton: document.getElementById('resetButton'),
@@ -88,10 +91,13 @@ function render() {
   els.submitButton.disabled = !state.can_submit;
   syncSourceTypes(state.source_types);
 
+  renderSuspects(state.suspects);
   renderDocuments(state.documents, state.active_document);
   renderClues(state.clues);
   renderBookmarks(state.bookmarks);
   renderDocumentViewer(state.active_document);
+  renderActivityLog(state.activity_log);
+  renderReportPresets(state.report_presets);
   setStatus(state.last_message);
 }
 
@@ -141,11 +147,19 @@ function renderDocuments(documents, activeDocument) {
 function renderClues(clues) {
   els.clueList.innerHTML = clues.map((clue) => `
     <article class="clue-item ${clue.solved ? 'active' : ''}">
-      <div><strong>${escapeHtml(clue.name)}</strong></div>
+      <div class="clue-header">
+        <strong>${escapeHtml(clue.name)}</strong>
+        <span class="clue-readiness ${clue.ready_to_infer ? 'ready' : ''}">${clue.solved ? '확보 완료' : clue.ready_to_infer ? '추론 가능' : '조사 중'}</span>
+      </div>
       <div class="clue-meta">${escapeHtml(clue.clue_id)} · 챕터 ${clue.chapter} · ${clue.solved ? '확보' : '미확보'}</div>
       <p>${escapeHtml(clue.description)}</p>
+      <div class="clue-progress">
+        <div class="clue-progress-fill" style="width: ${(clue.opened_required_count / clue.required_count) * 100}%"></div>
+      </div>
+      <div class="clue-meta">필수 근거 ${clue.opened_required_count}/${clue.required_count}</div>
+      ${clue.missing_documents.length ? `<div class="clue-missing">남은 문서: ${escapeHtml(clue.missing_documents.join(', '))}</div>` : ''}
       <div class="clue-actions">
-        <button data-infer-clue="${clue.clue_id}" class="accent">추론</button>
+        <button data-infer-clue="${clue.clue_id}" class="accent">${clue.solved ? '다시 확인' : '추론'}</button>
       </div>
     </article>
   `).join('');
@@ -153,6 +167,22 @@ function renderClues(clues) {
   els.clueList.querySelectorAll('[data-infer-clue]').forEach((button) => {
     button.addEventListener('click', () => postAction('/api/infer', { clue_id: button.dataset.inferClue }));
   });
+}
+
+function renderSuspects(suspects) {
+  els.suspectBoard.innerHTML = suspects.map((suspect) => `
+    <article class="suspect-card score-${suspect.score}">
+      <header>
+        <div>
+          <strong>${escapeHtml(suspect.name)}</strong>
+          <div class="suspect-role">${escapeHtml(suspect.role)}</div>
+        </div>
+        <span class="suspect-score">의심 ${suspect.score}/5</span>
+      </header>
+      <div class="suspect-status">${escapeHtml(suspect.status)}</div>
+      <p>${escapeHtml(suspect.note)}</p>
+    </article>
+  `).join('');
 }
 
 function renderBookmarks(bookmarks) {
@@ -196,6 +226,32 @@ function renderDocumentViewer(documentData) {
     <span class="tag">${documentData.bookmarked ? '북마크됨' : '추적 가능'}</span>
   `;
   els.documentContent.textContent = documentData.content;
+}
+
+function renderActivityLog(activityLog) {
+  els.activityLog.innerHTML = activityLog.map((entry) => `
+    <div class="activity-entry">${escapeHtml(entry)}</div>
+  `).join('');
+}
+
+function renderReportPresets(reportPresets) {
+  if (!reportPresets.length) {
+    els.reportPresets.innerHTML = '<div class="empty compact">세 단서를 모두 모으면 보고서 힌트 버튼이 열립니다.</div>';
+    return;
+  }
+
+  els.reportPresets.innerHTML = reportPresets.map((preset) => `
+    <button class="preset-chip" data-report-field="${preset.field}" data-report-value="${escapeHtml(preset.value)}">${escapeHtml(preset.label)}</button>
+  `).join('');
+
+  els.reportPresets.querySelectorAll('[data-report-field]').forEach((button) => {
+    button.addEventListener('click', () => {
+      const { reportField, reportValue } = button.dataset;
+      if (reportField === 'culprit') els.culpritInput.value = reportValue;
+      if (reportField === 'motive') els.motiveInput.value = reportValue;
+      if (reportField === 'method') els.methodInput.value = reportValue;
+    });
+  });
 }
 
 els.sourceFilter.addEventListener('change', () => {

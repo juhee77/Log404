@@ -38,6 +38,11 @@
         </section>
 
         <section class="subpanel">
+          <div class="subpanel-title">용의선상 보드</div>
+          <div id="suspectBoard" class="suspect-board"></div>
+        </section>
+
+        <section class="subpanel">
           <div class="subpanel-title">문서 보관함</div>
           <div class="filter-row">
             <label for="sourceFilter">소스 필터</label>
@@ -58,6 +63,10 @@
           </div>
         </div>
         <pre id="documentContent" class="document-content">좌측 문서를 클릭하면 기록 전문이 여기에 표시됩니다.</pre>
+        <section class="subpanel activity-panel">
+          <div class="subpanel-title">조사 로그</div>
+          <div id="activityLog" class="activity-log"></div>
+        </section>
       </section>
 
       <aside class="panel right-panel">
@@ -73,6 +82,7 @@
         <section class="subpanel">
           <div class="subpanel-title">최종 보고서</div>
           <div id="reportGuide" class="report-guide"></div>
+          <div id="reportPresets" class="report-presets"></div>
           <label>범인<input id="culpritInput" type="text" placeholder="누가 기록의 방향을 통제했는가" /></label>
           <label>동기<input id="motiveInput" type="text" placeholder="왜 진실을 숨기거나 비틀었는가" /></label>
           <label>방법<input id="methodInput" type="text" placeholder="어떤 로그/타임라인 조작이 있었는가" /></label>
