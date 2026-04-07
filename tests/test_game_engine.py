@@ -76,6 +76,8 @@ class GameEngineTest(unittest.TestCase):
 
         self.assertIn("진실 엔딩", truth)
         self.assertIn("부분 정답 엔딩", partial)
+        self.assertIn("재검토 가이드", partial)
+        self.assertIn("추천 재열람 문서", partial)
 
     def test_submit_report_requires_all_clues(self):
         result = self.game.submit_report("앨리스", "은폐", "로그 조작")
@@ -90,6 +92,15 @@ class GameEngineTest(unittest.TestCase):
         self.solve_case()
         result = self.game.submit_report("앨리스", "존을 보호하려던 은폐와 죄책감", "타임라인 조작과 캐시 재작성")
         self.assertIn("진실 엔딩", result)
+
+    def test_investigation_guidance_changes_with_progress(self):
+        self.assertIn("다음 표적 단서", self.game.next_step())
+        self.assertIn("남은 정리 대상", self.game.report_guidance())
+
+        self.solve_case()
+        self.assertIn("최종 보고", self.game.investigation_stage())
+        self.assertIn("범인, 동기, 조작 수법", self.game.next_step())
+        self.assertIn("범인에는 기록의 방향을 통제한 인물", self.game.report_guidance())
 
 
 if __name__ == "__main__":

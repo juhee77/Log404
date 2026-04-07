@@ -111,6 +111,81 @@ class GameEngine:
     def list_bookmarks(self) -> List[Document]:
         return self.list_documents(bookmarks_only=True)
 
+    def solved_clue_count(self) -> int:
+        return len(self.state.discovered_clues)
+
+    def total_clue_count(self) -> int:
+        return len(self.clues)
+
+    def investigation_stage(self) -> str:
+        if self.can_submit():
+            return "최종 보고 단계"
+        if self.state.current_chapter <= 1:
+            return "초기 진술 검증 단계"
+        if self.state.current_chapter == 2:
+            return "용의선상 재정렬 단계"
+        return "은폐 구조 재구성 단계"
+
+    def next_step(self) -> str:
+        unsolved = [clue for clue in self.list_clues() if clue.clue_id not in self.state.discovered_clues]
+        if not unsolved:
+            return "세 단서를 모두 확보했습니다. 이제 범인, 동기, 조작 수법을 한 문장씩 정리한 뒤 최종 보고서를 제출하세요."
+
+        target = unsolved[0]
+        missing_documents = [doc_id for doc_id in target.required_documents if doc_id not in self.state.opened_documents]
+        available_documents = [doc_id for doc_id in missing_documents if doc_id in self.state.unlocked_documents]
+
+        if available_documents:
+            return (
+                f"다음 표적 단서는 '{target.name}' 입니다. "
+                f"먼저 {', '.join(available_documents)} 문서를 열람해 근거를 모으세요."
+            )
+
+        if not missing_documents:
+            return f"'{target.name}' 단서의 필수 문서를 모두 읽었습니다. 우측 단서 카드에서 추론 버튼을 눌러 정리하세요."
+
+        return (
+            f"아직 '{target.name}' 단서에 필요한 문서가 잠겨 있습니다. "
+            "현재 챕터의 단서를 먼저 확정하면 다음 기록이 열립니다."
+        )
+
+    def report_guidance(self) -> str:
+        if not self.can_submit():
+            remaining = [
+                clue.name
+                for clue in self.list_clues()
+                if clue.clue_id not in self.state.discovered_clues
+            ]
+            return (
+                "최종 보고서는 세 단서를 모두 확보한 뒤 열립니다. "
+                f"남은 정리 대상: {', '.join(remaining)}"
+            )
+
+        return (
+            "보고서는 세 줄로 정리하면 됩니다. "
+            "범인에는 기록의 방향을 통제한 인물, 동기에는 왜 진실을 비틀었는지, "
+            "방법에는 어떤 로그/타임라인 조작을 했는지를 적으세요."
+        )
+
+    def _assess_report(self, culprit: str, motive: str, method: str) -> dict:
+        culprit_ok = culprit.strip().lower() in {
+            "alice",
+            "alice han",
+            "alice.h",
+            "앨리스",
+            "앨리스 한",
+        }
+        motive_ok = any(token in motive for token in ["은폐", "보호", "통제", "죄책감", "감추"])
+        method_ok = any(
+            token in method
+            for token in ["로그 조작", "캐시", "타임라인", "재작성", "기록 조작"]
+        )
+        return {
+            "culprit_ok": culprit_ok,
+            "motive_ok": motive_ok,
+            "method_ok": method_ok,
+        }
+
     def open_document(self, doc_id: str) -> str:
         if doc_id not in self.state.unlocked_documents:
             return f"잠겨 있는 문서입니다: {doc_id}"
@@ -200,40 +275,68 @@ class GameEngine:
         )
 
     def ending(self, culprit: str, motive: str, method: str) -> str:
-        culprit_ok = culprit.strip().lower() in {
-            "alice",
-            "alice han",
-            "alice.h",
-            "앨리스",
-            "앨리스 한",
-        }
-        motive_ok = any(token in motive for token in ["은폐", "보호", "통제", "죄책감", "감추"])
-        method_ok = any(
-            token in method
-            for token in ["로그 조작", "캐시", "타임라인", "재작성", "기록 조작"]
-        )
+        assessment = self._assess_report(culprit, motive, method)
 
-        if culprit_ok and motive_ok and method_ok:
+        if assessment["culprit_ok"] and assessment["motive_ok"] and assessment["method_ok"]:
             return (
                 "[진실 엔딩]\n"
-                "당신은 범인, 동기, 수법을 모두 특정했다.\n"
-                "공식 발표는 철회되고 내부 공모 정황이 수사로 이관된다."
+                "당신은 범인, 동기, 수법을 모두 정확히 연결했다.\n"
+                "앨리스는 존을 보호하고 자신이 설계한 해석 방향을 유지하려고 기록의 시간축을 비틀었다.\n"
+                "공식 발표는 철회되고 내부 공모 정황은 별도 수사로 넘어간다."
             )
 
-        return (
-            "[부분 정답 엔딩]\n"
-            "핵심 은폐 정황은 밝혔지만 보고서가 완전하지 않다.\n"
-            "사건은 재조사로 넘어가며, 일부 관련자는 책임을 피한다."
-        )
+        lines = [
+            "[부분 정답 엔딩]",
+            "사건의 방향은 잡았지만 보고서가 아직 완성되지는 않았습니다.",
+            "",
+            "재검토 가이드",
+            (
+                "범인: 적절합니다."
+                if assessment["culprit_ok"]
+                else "범인: 플레이어를 돕는 척하면서 기록 접근권과 시간축 통제권을 동시에 가진 인물을 다시 보세요."
+            ),
+            (
+                "동기: 적절합니다."
+                if assessment["motive_ok"]
+                else "동기: 단순한 적대감보다 보호, 은폐, 죄책감이 섞인 이유를 찾아야 합니다."
+            ),
+            (
+                "방법: 적절합니다."
+                if assessment["method_ok"]
+                else "방법: 출입 기록, 인증 로그, VPN 재작성 흔적처럼 시간축을 비튼 조작 방식을 명시해야 합니다."
+            ),
+            "",
+            "추천 재열람 문서",
+            "- chat_alice_late_help",
+            "- log_alice_dm_read",
+            "- log_alice_vpn_rewrite",
+            "- mail_alice_to_player",
+            "",
+            "사건은 재조사로 넘어가고, 보고서가 모호한 탓에 일부 책임 소재는 흐려집니다.",
+        ]
+        return "\n".join(lines)
 
     def can_submit(self) -> bool:
         return set(self.case_data["solution_conditions"]).issubset(self.state.discovered_clues)
 
     def submit_report(self, culprit: str, motive: str, method: str) -> str:
         if not self.can_submit():
-            return "아직 최종 보고서를 제출할 수 없습니다. 단서를 더 확보하세요."
+            remaining = [
+                clue.name
+                for clue in self.list_clues()
+                if clue.clue_id not in self.state.discovered_clues
+            ]
+            return (
+                "아직 최종 보고서를 제출할 수 없습니다. "
+                f"먼저 남은 단서를 확보하세요: {', '.join(remaining)}"
+            )
         if not culprit.strip() or not motive.strip() or not method.strip():
-            return "범인 / 동기 / 방법을 모두 입력해야 합니다."
+            return (
+                "범인 / 동기 / 방법을 모두 입력해야 합니다.\n"
+                "범인: 누가 기록의 방향을 통제했는가\n"
+                "동기: 왜 진실을 감추거나 비틀었는가\n"
+                "방법: 어떤 로그/타임라인 조작이 있었는가"
+            )
         return self.ending(culprit, motive, method)
 
     def save(self, path: Path = SAVE_PATH) -> str:

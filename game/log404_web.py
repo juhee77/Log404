@@ -23,6 +23,8 @@ class GameSession:
         self.engine = GameEngine()
         self.active_doc_id: str | None = None
         self.lock = threading.Lock()
+        self.last_message = "사건 파일을 펼쳤습니다. 좌측 문서를 열어 모순부터 확인하세요."
+        self.last_report_message = "최종 보고서는 아직 작성되지 않았습니다."
 
     def _serialize_document(self, doc: Document) -> dict:
         return {
@@ -63,8 +65,15 @@ class GameSession:
             "chapter": min(self.engine.state.current_chapter, 3),
             "opened_count": len(self.engine.state.opened_documents),
             "clue_count": len(self.engine.state.discovered_clues),
+            "total_clue_count": self.engine.total_clue_count(),
             "bookmark_count": len(self.engine.state.bookmarks),
             "can_submit": self.engine.can_submit(),
+            "stage_label": self.engine.investigation_stage(),
+            "next_step": self.engine.next_step(),
+            "report_guidance": self.engine.report_guidance(),
+            "source_types": self.engine.list_source_types(),
+            "last_message": self.last_message,
+            "last_report_message": self.last_report_message,
             "documents": documents,
             "bookmarks": bookmarks,
             "clues": clues,
@@ -136,6 +145,7 @@ class Log404Handler(BaseHTTPRequestHandler):
             if parsed.path == "/api/open":
                 doc_id = payload.get("doc_id", "")
                 message = SESSION.engine.open_document(doc_id)
+                SESSION.last_message = message
                 if doc_id in SESSION.engine.documents and doc_id in SESSION.engine.state.unlocked_documents:
                     SESSION.active_doc_id = doc_id
                 response = {"message": message, "state": SESSION.snapshot(source_type, search_keyword)}
@@ -145,6 +155,7 @@ class Log404Handler(BaseHTTPRequestHandler):
             if parsed.path == "/api/bookmark":
                 doc_id = payload.get("doc_id", "")
                 message = SESSION.engine.toggle_bookmark(doc_id)
+                SESSION.last_message = message
                 response = {"message": message, "state": SESSION.snapshot(source_type, search_keyword)}
                 self._send_json(response)
                 return
@@ -152,18 +163,21 @@ class Log404Handler(BaseHTTPRequestHandler):
             if parsed.path == "/api/infer":
                 clue_id = payload.get("clue_id", "")
                 message = SESSION.engine.infer_clue(clue_id)
+                SESSION.last_message = message
                 response = {"message": message, "state": SESSION.snapshot(source_type, search_keyword)}
                 self._send_json(response)
                 return
 
             if parsed.path == "/api/save":
                 message = SESSION.engine.save()
+                SESSION.last_message = message
                 response = {"message": message, "state": SESSION.snapshot(source_type, search_keyword)}
                 self._send_json(response)
                 return
 
             if parsed.path == "/api/load":
                 message = SESSION.engine.load()
+                SESSION.last_message = message
                 if SESSION.active_doc_id and SESSION.active_doc_id not in SESSION.engine.state.unlocked_documents:
                     SESSION.active_doc_id = None
                 response = {"message": message, "state": SESSION.snapshot(source_type, search_keyword)}
@@ -176,6 +190,8 @@ class Log404Handler(BaseHTTPRequestHandler):
                     payload.get("motive", ""),
                     payload.get("method", ""),
                 )
+                SESSION.last_message = message
+                SESSION.last_report_message = message
                 response = {"message": message, "state": SESSION.snapshot(source_type, search_keyword)}
                 self._send_json(response)
                 return

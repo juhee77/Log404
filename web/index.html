@@ -7,57 +7,77 @@
     <link rel="stylesheet" href="/styles.css" />
   </head>
   <body>
-    <header class="topbar">
-      <div>
-        <div class="eyebrow">LOG:404</div>
-        <h1>사건 조사 대시보드</h1>
+    <div class="backdrop-glow"></div>
+    <header class="topbar panel">
+      <div class="brand-block">
+        <div class="eyebrow">LOG:404 / INVESTIGATION DESK</div>
+        <h1>사건 조사실</h1>
         <p id="objective" class="objective"></p>
       </div>
-      <div id="progress" class="progress"></div>
+      <div class="header-side">
+        <div id="stageBadge" class="stage-badge">조사 준비 중</div>
+        <div id="progress" class="progress"></div>
+      </div>
     </header>
 
     <main class="workspace">
       <aside class="panel left-panel">
-        <div class="panel-title">문서 네비게이션</div>
-        <div class="filter-row">
-          <label for="sourceFilter">소스 필터</label>
-          <select id="sourceFilter">
-            <option value="all">all</option>
-            <option value="auth_log">auth_log</option>
-            <option value="badge">badge</option>
-            <option value="deploy_log">deploy_log</option>
-            <option value="db_query">db_query</option>
-            <option value="mail">mail</option>
-            <option value="chat">chat</option>
-            <option value="cctv_report">cctv_report</option>
-            <option value="report">report</option>
-          </select>
-        </div>
-        <div id="documentList" class="document-list"></div>
+        <section class="subpanel briefing-panel">
+          <div class="panel-title">사건 브리핑</div>
+          <div id="nextStep" class="briefing-copy"></div>
+        </section>
+
+        <section class="subpanel help-panel">
+          <div class="subpanel-title">플레이 방법</div>
+          <ol class="how-to-list">
+            <li>좌측 문서를 열어 공식 설명과 실제 기록의 모순을 찾습니다.</li>
+            <li>수상한 문서는 북마크해 두고, 하단 검색으로 단어와 인물을 추적합니다.</li>
+            <li>필수 문서를 읽었다면 우측 단서 카드에서 추론 버튼을 눌러 단서를 확정합니다.</li>
+            <li>세 단서를 모두 모으면 최종 보고서에 범인, 동기, 방법을 정리합니다.</li>
+          </ol>
+        </section>
+
+        <section class="subpanel">
+          <div class="subpanel-title">문서 보관함</div>
+          <div class="filter-row">
+            <label for="sourceFilter">소스 필터</label>
+            <select id="sourceFilter">
+              <option value="all">all</option>
+            </select>
+          </div>
+          <div id="documentList" class="document-list"></div>
+        </section>
       </aside>
 
       <section class="panel center-panel">
-        <div class="panel-title">문서 뷰어</div>
-        <div id="documentTitle" class="document-title">문서를 선택하세요</div>
-        <pre id="documentContent" class="document-content">좌측에서 문서를 클릭하면 내용이 여기에 표시됩니다.</pre>
+        <div class="panel-title">증거 열람대</div>
+        <div class="viewer-meta">
+          <div id="documentTitle" class="document-title">문서를 선택하세요</div>
+          <div id="documentMetaTags" class="viewer-tags">
+            <span class="tag">열람 대기</span>
+          </div>
+        </div>
+        <pre id="documentContent" class="document-content">좌측 문서를 클릭하면 기록 전문이 여기에 표시됩니다.</pre>
       </section>
 
       <aside class="panel right-panel">
-        <div class="panel-title">추론 / 보드</div>
+        <div class="panel-title">추론 보드</div>
         <section class="subpanel">
-          <div class="subpanel-title">단서</div>
+          <div class="subpanel-title">확정 가능한 단서</div>
           <div id="clueList" class="clue-list"></div>
         </section>
         <section class="subpanel">
-          <div class="subpanel-title">북마크</div>
+          <div class="subpanel-title">증거 북마크</div>
           <div id="bookmarkList" class="bookmark-list"></div>
         </section>
         <section class="subpanel">
           <div class="subpanel-title">최종 보고서</div>
-          <label>범인<input id="culpritInput" type="text" /></label>
-          <label>동기<input id="motiveInput" type="text" /></label>
-          <label>방법<input id="methodInput" type="text" /></label>
+          <div id="reportGuide" class="report-guide"></div>
+          <label>범인<input id="culpritInput" type="text" placeholder="누가 기록의 방향을 통제했는가" /></label>
+          <label>동기<input id="motiveInput" type="text" placeholder="왜 진실을 숨기거나 비틀었는가" /></label>
+          <label>방법<input id="methodInput" type="text" placeholder="어떤 로그/타임라인 조작이 있었는가" /></label>
           <button id="submitButton" class="accent">보고서 제출</button>
+          <pre id="reportResult" class="report-result">보고서를 제출하면 이곳에 판정과 재검토 가이드가 표시됩니다.</pre>
         </section>
       </aside>
     </main>

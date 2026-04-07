@@ -9,8 +9,11 @@ const stateStore = {
 const els = {
   objective: document.getElementById('objective'),
   progress: document.getElementById('progress'),
+  stageBadge: document.getElementById('stageBadge'),
+  nextStep: document.getElementById('nextStep'),
   documentList: document.getElementById('documentList'),
   documentTitle: document.getElementById('documentTitle'),
+  documentMetaTags: document.getElementById('documentMetaTags'),
   documentContent: document.getElementById('documentContent'),
   clueList: document.getElementById('clueList'),
   bookmarkList: document.getElementById('bookmarkList'),
@@ -21,6 +24,8 @@ const els = {
   motiveInput: document.getElementById('motiveInput'),
   methodInput: document.getElementById('methodInput'),
   submitButton: document.getElementById('submitButton'),
+  reportGuide: document.getElementById('reportGuide'),
+  reportResult: document.getElementById('reportResult'),
   searchButton: document.getElementById('searchButton'),
   resetButton: document.getElementById('resetButton'),
   saveButton: document.getElementById('saveButton'),
@@ -75,13 +80,27 @@ function render() {
   if (!state) return;
 
   els.objective.textContent = `${state.case_title} / ${state.objective}`;
-  els.progress.textContent = `챕터 ${state.chapter}/3 · 열람 ${state.opened_count} · 단서 ${state.clue_count}/3 · 북마크 ${state.bookmark_count}`;
+  els.stageBadge.textContent = state.stage_label;
+  els.progress.textContent = `챕터 ${state.chapter}/3 · 열람 ${state.opened_count} · 단서 ${state.clue_count}/${state.total_clue_count} · 북마크 ${state.bookmark_count}`;
+  els.nextStep.textContent = state.next_step;
+  els.reportGuide.textContent = state.report_guidance;
+  els.reportResult.textContent = state.last_report_message;
   els.submitButton.disabled = !state.can_submit;
+  syncSourceTypes(state.source_types);
 
   renderDocuments(state.documents, state.active_document);
   renderClues(state.clues);
   renderBookmarks(state.bookmarks);
   renderDocumentViewer(state.active_document);
+  setStatus(state.last_message);
+}
+
+function syncSourceTypes(sourceTypes) {
+  const options = ['all', ...sourceTypes];
+  const current = stateStore.sourceType;
+  els.sourceFilter.innerHTML = options.map((value) => `
+    <option value="${value}" ${value === current ? 'selected' : ''}>${value}</option>
+  `).join('');
 }
 
 function renderDocuments(documents, activeDocument) {
@@ -165,11 +184,17 @@ function renderBookmarks(bookmarks) {
 function renderDocumentViewer(documentData) {
   if (!documentData) {
     els.documentTitle.textContent = '문서를 선택하세요';
-    els.documentContent.textContent = '좌측에서 문서를 클릭하면 내용이 여기에 표시됩니다.';
+    els.documentMetaTags.innerHTML = '<span class="tag">열람 대기</span>';
+    els.documentContent.textContent = '좌측 문서를 클릭하면 기록 전문이 여기에 표시됩니다.';
     return;
   }
   stateStore.activeDocId = documentData.doc_id;
   els.documentTitle.textContent = `${documentData.title} / ${documentData.doc_id}`;
+  els.documentMetaTags.innerHTML = `
+    <span class="tag">${escapeHtml(documentData.source_type)}</span>
+    <span class="tag">챕터 ${documentData.chapter}</span>
+    <span class="tag">${documentData.bookmarked ? '북마크됨' : '추적 가능'}</span>
+  `;
   els.documentContent.textContent = documentData.content;
 }
 
