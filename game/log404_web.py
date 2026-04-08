@@ -138,6 +138,7 @@ class GameSession:
             "case_title": self.engine.state.case_title,
             "objective": self.engine.state.objective,
             "chapter": min(self.engine.state.current_chapter, 3),
+            "story_brief": self.engine.story_brief(),
             "opened_count": len(self.engine.state.opened_documents),
             "clue_count": len(self.engine.state.discovered_clues),
             "total_clue_count": self.engine.total_clue_count(),

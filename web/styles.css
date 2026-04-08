@@ -33,7 +33,8 @@ body {
     radial-gradient(circle at top right, rgba(200, 109, 86, 0.1), transparent 26%),
     linear-gradient(145deg, #0c0a09 0%, var(--bg) 42%, var(--bg-alt) 100%);
   position: relative;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 .backdrop-glow {
@@ -156,6 +157,14 @@ h1 {
   font-weight: 800;
 }
 
+.section-label {
+  margin: 14px 0 8px;
+  color: var(--accent-strong);
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  font-size: 11px;
+}
+
 .briefing-panel {
   background:
     linear-gradient(135deg, rgba(214, 162, 74, 0.14), rgba(0, 0, 0, 0.08)),
@@ -164,6 +173,59 @@ h1 {
 
 .briefing-copy {
   line-height: 1.65;
+}
+
+.story-current-title {
+  margin-bottom: 8px;
+  color: var(--paper);
+  font-family: "Iowan Old Style", "Palatino Linotype", "Times New Roman", serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.story-question {
+  margin: 12px 0 0;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: rgba(200, 109, 86, 0.1);
+  border: 1px solid rgba(200, 109, 86, 0.16);
+  color: var(--paper);
+  line-height: 1.55;
+}
+
+.story-beats,
+.story-roadmap {
+  display: grid;
+  gap: 10px;
+}
+
+.story-beat,
+.story-roadmap-item {
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--paper);
+  line-height: 1.55;
+}
+
+.story-beat-screen,
+.story-roadmap-label {
+  margin-bottom: 6px;
+  color: var(--accent-strong);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.story-roadmap-item p {
+  margin: 6px 0 0;
+}
+
+.story-roadmap-meta {
+  margin-top: 8px;
+  color: var(--muted);
+  font-size: 12px;
 }
 
 .how-to-list {

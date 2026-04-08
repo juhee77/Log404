@@ -1,0 +1,106 @@
+{
+  "chapter_id": "chapter_02",
+  "title": "도와주는 사람의 손길",
+  "story_goal": "앨리스가 실제로 수사를 도와주며 신뢰를 강화하지만, 그녀가 찾아주는 기록이 존스를 지나치게 쉽게 의심하게 만든다는 어긋남을 심는다.",
+  "emotional_focus": [
+    "안도",
+    "의존",
+    "작은 불편함"
+  ],
+  "chapter_question": "왜 앨리스가 건네는 도움은 늘 존스에게 불리한 방향의 기록과 함께 도착하는가?",
+  "screen_beats": [
+    {
+      "screen": "dashboard",
+      "beat": "챕터 해금 직후 앨리스가 누락된 야간 기록을 복구해줬다고 알리며 수사 속도를 끌어올린다."
+    },
+    {
+      "screen": "workspace",
+      "beat": "출입 기록과 인증 로그가 충돌하면서 존의 퇴사가 거짓 서사일 수 있다는 감각이 생긴다."
+    },
+    {
+      "screen": "workspace",
+      "beat": "존스의 반복 통화와 존의 로컬 메모가 열리며, 거친 말투와 실제 감정 사이의 간극이 처음 드러난다."
+    }
+  ],
+  "documents": [
+    {
+      "id": "log_badge_gap",
+      "type": "badge_log",
+      "title": "출입 기록 / 존",
+      "timestamp": "2026-04-16 22:58:09 KST",
+      "user_id": "john.k",
+      "ip": "10.24.0.5",
+      "action": "badge_out",
+      "content": "2026-04-16 21:12:44 KST | user_id=john.k | ip=10.24.0.5 | action=badge_in  | note=gate-B\n2026-04-16 22:58:09 KST | user_id=john.k | ip=10.24.0.5 | action=badge_out | note=gate-B\n2026-04-16 23:00:00~03:00:00 | user_id=john.k | ip=10.24.0.5 | action=no_entry_record | note=none",
+      "player_notice": "존은 회사에서 나간 뒤 다시 들어온 기록이 없다.",
+      "hidden_meaning": "후속 접속 기록과 충돌하면 알리바이 붕괴 퍼즐의 기반이 된다.",
+      "reveals_character": "누군가의 진술보다 시스템 시간축이 더 잔인하게 진실을 남긴다."
+    },
+    {
+      "id": "log_auth_midnight",
+      "type": "auth_log",
+      "title": "인증 로그 / 존 계정",
+      "timestamp": "2026-04-17 00:14:33 KST",
+      "user_id": "john.k",
+      "ip": "10.24.9.7",
+      "action": "login_success",
+      "content": "2026-04-16 22:41:08 KST | user_id=john.k | ip=10.24.8.14 | action=login_success       | note=night_review\n2026-04-16 22:58:40 KST | user_id=john.k | ip=10.24.8.14 | action=logout              | note=manual_close\n2026-04-17 00:14:33 KST | user_id=john.k | ip=10.24.9.7  | action=login_success       | note=vpn_bastion\n2026-04-17 00:18:12 KST | user_id=john.k | ip=10.24.9.7  | action=privilege_escalated | note=deploy_admin",
+      "player_notice": "퇴근 뒤 다시 접속이 있었다.",
+      "hidden_meaning": "존이 돌아왔거나, 누군가가 존의 계정과 흔적을 사용했다.",
+      "reveals_character": "존의 마지막 시간은 평온한 퇴사가 아니라 불안한 재접속과 연결돼 있다."
+    },
+    {
+      "id": "log_jones_calls",
+      "type": "call_log",
+      "title": "통화 로그 / 존스 발신 기록",
+      "timestamp": "2026-04-17 00:07:01 KST",
+      "user_id": "jones.m",
+      "ip": "10.24.3.90",
+      "action": "mail_draft",
+      "content": "2026-04-17 00:02:11 KST | user_id=jones.m | ip=10.24.3.90 | action=outgoing_call | note=john.k / 17초 / no_answer\n2026-04-17 00:03:42 KST | user_id=jones.m | ip=10.24.3.90 | action=outgoing_call | note=john.k / 11초 / no_answer\n2026-04-17 00:05:18 KST | user_id=jones.m | ip=10.24.3.90 | action=outgoing_call | note=john.k / 7초 / no_answer\n2026-04-17 00:07:01 KST | user_id=jones.m | ip=10.24.3.90 | action=mail_draft   | note=아까 한 말 취소한다. 연락 받아.",
+      "player_notice": "존스를 더 의심하게 만들던 분노 뒤에 초조함과 후회가 같이 남아 있다.",
+      "hidden_meaning": "그는 사건을 밀어붙인 인물보다 뒤늦게라도 붙잡으려 한 인물일 수 있다.",
+      "reveals_character": "존스는 거칠지만 완전히 포기한 사람은 아니다."
+    },
+    {
+      "id": "note_if_i_disappear",
+      "type": "note",
+      "title": "로컬 메모 / if_i_disappear.txt",
+      "timestamp": "2026-04-17 00:09:50 KST",
+      "user_id": "john.k",
+      "ip": "127.0.0.1",
+      "action": "note_saved",
+      "content": "존스는 화만 많지 끝까지 선은 넘지 않는다.\n앨리스는 내가 말하지 않은 것까지 알아차릴 거다.\n이게 진짜라면, 누군가는 이미 알고도 그냥 두고 있는 거다.",
+      "player_notice": "존은 존스를 완전히 범인으로 보지 않았고, 앨리스를 여전히 신뢰하려 했다.",
+      "hidden_meaning": "존의 신뢰 지도와 플레이어가 보고 있는 프레임이 어긋난다.",
+      "reveals_character": "존은 무너지면서도 가까운 사람들을 끝까지 나눠 보려 한다."
+    }
+  ],
+  "puzzles": [
+    {
+      "id": "puzzle_ch2_time_axis_break",
+      "situation": "앨리스가 복구해 준 기록을 따라가자 존의 퇴사가 아니라 누군가의 재접속과 추적이 보이기 시작한다.",
+      "evidence_ids": [
+        "log_badge_gap",
+        "log_auth_midnight"
+      ],
+      "what_feels_normal_at_first": "존이 퇴근 후 원격으로 마무리 작업을 했다고 보면 이상하지 않다.",
+      "what_is_actually_suspicious": "출입 기록 공백과 새벽 VPN 접속이 맞물리며 단순한 야근 정리가 아니라 마지막 확인 행동처럼 보인다.",
+      "emotional_meaning": "존은 조용히 떠난 퇴사자가 아니라 무언가를 붙잡고 있었던 사람이다.",
+      "player_deduction": "챕터 2의 핵심은 누가 다시 접속했는가보다, 왜 그 시간축을 평범한 퇴사처럼 덮었는가다."
+    },
+    {
+      "id": "puzzle_ch2_jones_after_anger",
+      "situation": "존스는 계속 거칠게 보이지만, 사적인 기록으로 갈수록 그의 감정은 위협보다 후회에 가깝게 바뀐다.",
+      "evidence_ids": [
+        "chat_jones_argument",
+        "log_jones_calls",
+        "note_if_i_disappear"
+      ],
+      "what_feels_normal_at_first": "공격적이던 사람이 나중에 연락을 다시 시도하는 건 자기 알리바이를 만들려는 행동일 수 있다.",
+      "what_is_actually_suspicious": "존의 메모 안에서조차 존스는 선을 넘지 않을 사람으로 남아 있고, 통화 로그도 분노보다 다급함을 남긴다.",
+      "emotional_meaning": "플레이어가 존스를 미워하는 속도만큼 누군가는 그 미움을 정리해 주고 있었던 것처럼 느껴진다.",
+      "player_deduction": "존스는 유력 용의자라기보다 보기 좋게 정렬된 첫 번째 해답일 수 있다."
+    }
+  ]
+}

@@ -32,6 +32,12 @@ class GameEngineTest(unittest.TestCase):
         self.assertEqual(len(self.game.state.unlocked_documents), 4)
         self.assertFalse(self.game.can_submit())
         self.assertEqual(self.game.state.case_title, "John Kim 실종 사건")
+        story_brief = self.game.story_brief()
+        self.assertEqual(story_brief["current"]["title"], "아무도 울지 않는 퇴사")
+        self.assertEqual(
+            [entry["chapter"] for entry in story_brief["roadmap"]],
+            [2, 3],
+        )
 
     def test_chapter_progression_by_clues(self):
         for doc_id in ["mail_hr_termination_draft", "mail_john_unsent_fragment"]:
@@ -101,6 +107,16 @@ class GameEngineTest(unittest.TestCase):
         self.assertIn("최종 보고", self.game.investigation_stage())
         self.assertIn("범인, 동기, 조작 수법", self.game.next_step())
         self.assertIn("범인에는 기록의 방향을 통제한 인물", self.game.report_guidance())
+
+    def test_story_brief_advances_with_progress(self):
+        for doc_id in ["mail_hr_termination_draft", "mail_john_unsent_fragment"]:
+            self.game.open_document(doc_id)
+        self.game.infer_clue("clue_empty_resignation")
+
+        story_brief = self.game.story_brief()
+        self.assertEqual(story_brief["current"]["title"], "도와주는 사람의 손길")
+        self.assertEqual(story_brief["roadmap"][0]["title"], "존스는 너무 쉽게 미워진다")
+        self.assertIn("안도", story_brief["current"]["emotional_focus"])
 
 
 if __name__ == "__main__":

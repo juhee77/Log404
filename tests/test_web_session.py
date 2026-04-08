@@ -12,6 +12,8 @@ class GameSessionTest(unittest.TestCase):
         self.assertTrue(initial["activity_log"])
         self.assertFalse(initial["report_presets"])
         self.assertEqual(initial["clues"][0]["opened_required_count"], 0)
+        self.assertEqual(initial["story_brief"]["current"]["title"], "아무도 울지 않는 퇴사")
+        self.assertEqual([entry["chapter"] for entry in initial["story_brief"]["roadmap"]], [2, 3])
 
         for doc_id in ["mail_hr_termination_draft", "mail_john_unsent_fragment"]:
             session.engine.open_document(doc_id)
@@ -20,6 +22,7 @@ class GameSessionTest(unittest.TestCase):
         progressed = session.snapshot()
         self.assertGreaterEqual(progressed["clues"][0]["opened_required_count"], 2)
         self.assertIn("강요된 퇴사 서사", progressed["suspects"][2]["status"])
+        self.assertEqual(progressed["story_brief"]["current"]["title"], "도와주는 사람의 손길")
 
     def test_report_presets_unlock_after_case_solution(self):
         session = GameSession()

@@ -11,6 +11,11 @@ const els = {
   progress: document.getElementById('progress'),
   stageBadge: document.getElementById('stageBadge'),
   nextStep: document.getElementById('nextStep'),
+  storyCurrentTitle: document.getElementById('storyCurrentTitle'),
+  storyGoal: document.getElementById('storyGoal'),
+  storyQuestion: document.getElementById('storyQuestion'),
+  storyBeats: document.getElementById('storyBeats'),
+  storyRoadmap: document.getElementById('storyRoadmap'),
   suspectBoard: document.getElementById('suspectBoard'),
   documentList: document.getElementById('documentList'),
   documentTitle: document.getElementById('documentTitle'),
@@ -91,6 +96,7 @@ function render() {
   els.submitButton.disabled = !state.can_submit;
   syncSourceTypes(state.source_types);
 
+  renderStoryBrief(state.story_brief);
   renderSuspects(state.suspects);
   renderDocuments(state.documents, state.active_document);
   renderClues(state.clues);
@@ -106,6 +112,55 @@ function syncSourceTypes(sourceTypes) {
   const current = stateStore.sourceType;
   els.sourceFilter.innerHTML = options.map((value) => `
     <option value="${value}" ${value === current ? 'selected' : ''}>${value}</option>
+  `).join('');
+}
+
+function formatStoryScreen(screen) {
+  const labels = {
+    dashboard: '대시보드',
+    workspace: '워크스페이스',
+    evidence_board: '증거 보드',
+    report: '최종 보고',
+    login: '로그인',
+  };
+  return labels[screen] || screen;
+}
+
+function renderStoryBrief(storyBrief) {
+  const current = storyBrief?.current;
+  if (!current) {
+    els.storyCurrentTitle.textContent = '챕터 브리핑을 불러오지 못했습니다.';
+    els.storyGoal.textContent = '';
+    els.storyQuestion.textContent = '';
+    els.storyBeats.innerHTML = '<div class="empty compact">서사 브리프 데이터가 없습니다.</div>';
+    els.storyRoadmap.innerHTML = '';
+    return;
+  }
+
+  els.storyCurrentTitle.textContent = `챕터 ${current.chapter}. ${current.title}`;
+  els.storyGoal.textContent = current.story_goal;
+  els.storyQuestion.textContent = current.chapter_question;
+
+  els.storyBeats.innerHTML = (current.screen_beats || []).map((beat) => `
+    <article class="story-beat">
+      <div class="story-beat-screen">${escapeHtml(formatStoryScreen(beat.screen))}</div>
+      <div>${escapeHtml(beat.beat)}</div>
+    </article>
+  `).join('');
+
+  const roadmap = storyBrief.roadmap || [];
+  if (!roadmap.length) {
+    els.storyRoadmap.innerHTML = '<div class="empty compact">현재 MVP 범위의 마지막 챕터입니다.</div>';
+    return;
+  }
+
+  els.storyRoadmap.innerHTML = roadmap.map((entry, index) => `
+    <article class="story-roadmap-item">
+      <div class="story-roadmap-label">${index === 0 ? '다음' : '다다음'}</div>
+      <strong>챕터 ${entry.chapter}. ${escapeHtml(entry.title)}</strong>
+      <p>${escapeHtml(entry.hook)}</p>
+      ${(entry.feelings || []).length ? `<div class="story-roadmap-meta">감정 축: ${escapeHtml(entry.feelings.join(' / '))}</div>` : ''}
+    </article>
   `).join('');
 }
 

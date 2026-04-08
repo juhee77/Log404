@@ -46,9 +46,15 @@ class GameEngine:
     def __init__(self, data_dir: Path = DATA_DIR):
         self.data_dir = data_dir
         self.case_data = self._load_json("cases/case_001.json")
+        self.story_bible = self._load_json("story/season_01/story_bible.json")
         self.clues_data = self._load_json("clues.json")
         self.gates_data = self._load_json("chapter_gates.json")
         self.documents_data = self._load_json("documents.json")
+        self.chapter_packs = self._load_chapter_packs()
+        self.chapter_arc = {
+            row["chapter"]: row
+            for row in self.story_bible.get("chapter_emotional_arc", [])
+        }
 
         self.documents: Dict[str, Document] = {
             row["id"]: Document(
@@ -82,6 +88,59 @@ class GameEngine:
     def _load_json(self, relative_path: str):
         with (self.data_dir / relative_path).open("r", encoding="utf-8") as f:
             return json.load(f)
+
+    def _load_chapter_packs(self) -> Dict[int, dict]:
+        story_dir = self.data_dir / "story"
+        packs: Dict[int, dict] = {}
+        for path in sorted(story_dir.glob("chapter_*/*_content_pack.json")):
+            with path.open("r", encoding="utf-8") as f:
+                payload = json.load(f)
+            chapter_number = self._chapter_number(payload.get("chapter_id", ""))
+            if chapter_number is not None:
+                packs[chapter_number] = payload
+        return packs
+
+    @staticmethod
+    def _chapter_number(chapter_id: str) -> int | None:
+        if not chapter_id.startswith("chapter_"):
+            return None
+        try:
+            return int(chapter_id.split("_")[-1])
+        except ValueError:
+            return None
+
+    def story_brief(self) -> dict:
+        max_chapter = max(self.chapter_packs.keys(), default=self.state.current_chapter)
+        current_chapter = min(self.state.current_chapter, max_chapter)
+        current_pack = self.chapter_packs.get(current_chapter, {})
+        current_arc = self.chapter_arc.get(current_chapter, {})
+
+        roadmap = []
+        for chapter in range(current_chapter + 1, min(current_chapter + 2, max_chapter) + 1):
+            pack = self.chapter_packs.get(chapter, {})
+            arc = self.chapter_arc.get(chapter, {})
+            roadmap.append(
+                {
+                    "chapter": chapter,
+                    "title": pack.get("title") or arc.get("title") or f"챕터 {chapter}",
+                    "hook": pack.get("chapter_question") or pack.get("story_goal", ""),
+                    "feelings": arc.get("player_feeling", pack.get("emotional_focus", [])),
+                }
+            )
+
+        return {
+            "current": {
+                "chapter": current_chapter,
+                "title": current_pack.get("title") or current_arc.get("title") or f"챕터 {current_chapter}",
+                "story_goal": current_pack.get("story_goal", ""),
+                "chapter_question": current_pack.get("chapter_question", ""),
+                "emotional_focus": current_pack.get(
+                    "emotional_focus", current_arc.get("player_feeling", [])
+                ),
+                "screen_beats": current_pack.get("screen_beats", []),
+            },
+            "roadmap": roadmap,
+        }
 
     def list_source_types(self) -> List[str]:
         return sorted({doc.source_type for doc in self.documents.values()})
@@ -261,6 +320,7 @@ class GameEngine:
             "total_clues": len(self.clues),
             "bookmarks": len(self.state.bookmarks),
             "can_submit": self.can_submit(),
+            "story_brief": self.story_brief(),
         }
 
     def status(self) -> str:

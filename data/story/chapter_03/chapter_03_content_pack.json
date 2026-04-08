@@ -1,0 +1,107 @@
+{
+  "chapter_id": "chapter_03",
+  "title": "존스는 너무 쉽게 미워진다",
+  "story_goal": "존스를 향하던 확신이 과하게 매끈하게 정렬돼 있었다는 사실을 드러내고, 앨리스의 접근권과 해석 통제가 하나의 구조였음을 보이기 시작한다.",
+  "emotional_focus": [
+    "확신",
+    "분노",
+    "찜찜함"
+  ],
+  "chapter_question": "누가 플레이어가 믿을 증거의 순서까지 설계했는가?",
+  "screen_beats": [
+    {
+      "screen": "workspace",
+      "beat": "앨리스 관련 DM 감사 로그가 열리며, 그녀가 존의 마지막 메시지를 읽고도 답하지 않았다는 사실이 드러난다."
+    },
+    {
+      "screen": "workspace",
+      "beat": "원격 접속과 캐시 재작성 로그가 이어지며 도움과 조작이 같은 손에서 나왔을 가능성이 생긴다."
+    },
+    {
+      "screen": "report",
+      "beat": "플레이어는 존스를 고발하는 대신 자신이 왜 그를 그렇게 빨리 미워했는지를 되돌아보게 된다."
+    }
+  ],
+  "documents": [
+    {
+      "id": "chat_alice_late_help",
+      "type": "chat",
+      "title": "[개인 DM] Alice → Player",
+      "timestamp": "2026-04-17 09:18:04 KST",
+      "user_id": "alice.h",
+      "ip": "10.24.4.11",
+      "action": "message_sent",
+      "content": "늦은 시간에 배정돼서 당황하셨죠. 존 건은 제가 옆에서 최대한 도울게요.\n처음엔 존스 쪽 기록부터 보는 게 좋아요. 직접 충돌이 가장 많았거든요.",
+      "player_notice": "처음엔 든든했던 조언이, 뒤로 갈수록 감정 유도였을 가능성으로 보인다.",
+      "hidden_meaning": "플레이어가 무엇을 먼저 믿을지 앨리스가 시작부터 설계했다.",
+      "reveals_character": "앨리스는 도움과 방향 통제를 동시에 수행할 수 있는 인물이다."
+    },
+    {
+      "id": "log_alice_dm_read",
+      "type": "dm_audit",
+      "title": "DM 감사 로그 / Alice",
+      "timestamp": "2026-04-17 00:28:17 KST",
+      "user_id": "alice.h",
+      "ip": "10.24.4.11",
+      "action": "file_access",
+      "content": "2026-04-17 00:21:44 KST | user_id=john.k  | ip=10.24.8.14 | action=dm_send    | note=지금 봐. 제발.\n2026-04-17 00:22:03 KST | user_id=alice.h | ip=10.24.4.11 | action=dm_read    | note=opened_not_replied\n2026-04-17 00:28:17 KST | user_id=alice.h | ip=10.24.4.11 | action=file_access| note=incident_cache",
+      "player_notice": "앨리스는 존의 긴급 메시지를 읽은 뒤 바로 사건 캐시에 접근했다.",
+      "hidden_meaning": "도움을 주기 전에 기록을 선별하거나 정리할 시간을 이미 확보했다.",
+      "reveals_character": "그녀의 침묵은 무지가 아니라 선택일 수 있다."
+    },
+    {
+      "id": "log_alice_vpn_rewrite",
+      "type": "security_log",
+      "title": "보안 로그 / Alice 원격 접속",
+      "timestamp": "2026-04-17 00:38:54 KST",
+      "user_id": "alice.h",
+      "ip": "172.16.44.201",
+      "action": "vpn_connect",
+      "content": "2026-04-17 00:31:42 KST | user_id=alice.h | ip=172.16.44.201 | action=vpn_connect   | note=remote_admin\n2026-04-17 00:36:10 KST | user_id=alice.h | ip=10.24.4.11   | action=cache_rewrite | note=timeline_patch\n2026-04-17 00:38:54 KST | user_id=alice.h | ip=10.24.4.11   | action=audit_view    | note=john_last_session",
+      "player_notice": "앨리스는 사건 직후 원격 접속으로 캐시 시간축을 손댔다.",
+      "hidden_meaning": "플레이어가 뒤늦게 보는 기록의 순서와 모양이 이미 한 번 정리됐을 수 있다.",
+      "reveals_character": "조력자의 손길과 조작자의 손길이 같은 좌표에 겹친다."
+    },
+    {
+      "id": "mail_alice_to_player",
+      "type": "mail",
+      "title": "[메일] Alice가 정리한 조사 방향",
+      "timestamp": "2026-04-17 08:42:50 KST",
+      "user_id": "alice.h",
+      "ip": "10.24.4.11",
+      "action": "mail_sent",
+      "content": "From: alice.h@log404.local\nTo: player.audit@log404.local\nSubject: 존 관련 자료 먼저 정리해뒀어요\n\n밤새 확인해봤는데 존스 쪽 기록부터 보는 게 좋겠어요.\n가장 직접적인 충돌이 있던 사람이라서요.\n필요한 건 제가 옆에서 계속 도와드릴게요.",
+      "player_notice": "친절한 후속 메일이 사실상 수사 우선순위를 잠그는 지침처럼 보이기 시작한다.",
+      "hidden_meaning": "앨리스는 증거를 주는 것만이 아니라 증거를 읽는 순서를 관리했다.",
+      "reveals_character": "그녀는 플레이어의 판단 과정까지 구조화하려 했다."
+    }
+  ],
+  "puzzles": [
+    {
+      "id": "puzzle_ch3_helper_controls_frame",
+      "situation": "플레이어는 앨리스의 친절을 따라 움직였지만, 그 친절이 곧 해석 프레임의 설계였다는 사실과 마주한다.",
+      "evidence_ids": [
+        "chat_alice_late_help",
+        "log_alice_dm_read",
+        "mail_alice_to_player"
+      ],
+      "what_feels_normal_at_first": "조력자가 배경 맥락을 정리해 주는 건 수사 지원처럼 보인다.",
+      "what_is_actually_suspicious": "앨리스는 존의 마지막 메시지를 읽고도 답하지 않은 채, 존스를 먼저 보라고 권하는 안내를 반복한다.",
+      "emotional_meaning": "플레이어의 신뢰는 단서가 아니라 관계를 통해 조작될 수 있었다.",
+      "player_deduction": "문제는 앨리스가 거짓말을 했는가만이 아니라, 내가 누구의 말에 기대어 존스를 미워했는가다."
+    },
+    {
+      "id": "puzzle_ch3_timeline_patch",
+      "situation": "시간축이 너무 깔끔하게 존스를 향하고 있었다면, 누군가 이미 그 기록을 다듬었을 가능성을 봐야 한다.",
+      "evidence_ids": [
+        "log_badge_gap",
+        "log_auth_midnight",
+        "log_alice_vpn_rewrite"
+      ],
+      "what_feels_normal_at_first": "각 로그는 따로 보면 존스가 관련됐을 수도 있는 혼란스러운 사건 기록이다.",
+      "what_is_actually_suspicious": "앨리스의 원격 접속과 캐시 재작성 시점이 뒤늦게 발견되면서, 플레이어가 본 시간축 자체가 가공된 결과처럼 읽힌다.",
+      "emotional_meaning": "진실은 숨겨진 것이 아니라, 더 믿기 쉬운 방향으로 배열돼 있었다.",
+      "player_deduction": "챕터 3의 결론은 존스의 유죄가 아니라 앨리스가 진실의 방향을 설계했다는 구조적 의심이다."
+    }
+  ]
+}
