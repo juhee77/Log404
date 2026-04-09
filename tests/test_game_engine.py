@@ -45,11 +45,13 @@ class GameEngineTest(unittest.TestCase):
         msg_1 = self.game.infer_clue("clue_empty_resignation")
         self.assertIn("단서 확보", msg_1)
         self.assertEqual(self.game.state.current_chapter, 2)
+        self.assertIn("log_jones_restricted_badge", self.game.state.unlocked_documents)
 
         for doc_id in ["chat_jones_argument", "log_jones_calls", "note_if_i_disappear"]:
             self.game.open_document(doc_id)
         self.game.infer_clue("clue_jones_false_face")
         self.assertEqual(self.game.state.current_chapter, 3)
+        self.assertIn("ticket_jones_freeze_request", self.game.state.unlocked_documents)
 
         for doc_id in [
             "chat_alice_late_help",

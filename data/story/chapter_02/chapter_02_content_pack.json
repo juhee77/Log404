@@ -19,7 +19,7 @@
     },
     {
       "screen": "workspace",
-      "beat": "존스의 반복 통화와 존의 로컬 메모가 열리며, 거친 말투와 실제 감정 사이의 간극이 처음 드러난다."
+      "beat": "존스의 제한 구역 출입 기록, 반복 통화, 존의 로컬 메모가 함께 열리며 존스를 더 의심하게 되지만 동시에 해석이 갈라지기 시작한다."
     }
   ],
   "documents": [
@@ -63,6 +63,19 @@
       "reveals_character": "존스는 거칠지만 완전히 포기한 사람은 아니다."
     },
     {
+      "id": "log_jones_restricted_badge",
+      "type": "badge_log",
+      "title": "출입 기록 / Jones / 제한 구역",
+      "timestamp": "2026-04-16 23:19:41 KST",
+      "user_id": "jones.m",
+      "ip": "10.24.0.5",
+      "action": "badge_out",
+      "content": "2026-04-16 23:11:26 KST | user_id=jones.m | ip=10.24.0.5 | action=badge_in   | note=svc-corridor-3\n2026-04-16 23:14:02 KST | user_id=jones.m | ip=10.24.0.5 | action=door_hold  | note=server-latch\n2026-04-16 23:19:41 KST | user_id=jones.m | ip=10.24.0.5 | action=badge_out  | note=svc-corridor-3",
+      "player_notice": "존스는 말다툼 직후 제한 구역 근처에 있었다.",
+      "hidden_meaning": "표면상으로는 존을 뒤쫓거나 서버 쪽에 개입한 인물처럼 보이지만, 실제 목적은 아직 단정할 수 없다.",
+      "reveals_character": "존스는 더 그럴듯한 용의자로 보이기 시작한다."
+    },
+    {
       "id": "note_if_i_disappear",
       "type": "note",
       "title": "로컬 메모 / if_i_disappear.txt",
@@ -94,11 +107,12 @@
       "situation": "존스는 계속 거칠게 보이지만, 사적인 기록으로 갈수록 그의 감정은 위협보다 후회에 가깝게 바뀐다.",
       "evidence_ids": [
         "chat_jones_argument",
+        "log_jones_restricted_badge",
         "log_jones_calls",
         "note_if_i_disappear"
       ],
       "what_feels_normal_at_first": "공격적이던 사람이 나중에 연락을 다시 시도하는 건 자기 알리바이를 만들려는 행동일 수 있다.",
-      "what_is_actually_suspicious": "존의 메모 안에서조차 존스는 선을 넘지 않을 사람으로 남아 있고, 통화 로그도 분노보다 다급함을 남긴다.",
+      "what_is_actually_suspicious": "제한 구역 출입 기록 때문에 존스는 더 위험해 보이지만, 존의 메모 안에서조차 그는 선을 넘지 않을 사람으로 남아 있고 통화 로그도 분노보다 다급함을 남긴다.",
       "emotional_meaning": "플레이어가 존스를 미워하는 속도만큼 누군가는 그 미움을 정리해 주고 있었던 것처럼 느껴진다.",
       "player_deduction": "존스는 유력 용의자라기보다 보기 좋게 정렬된 첫 번째 해답일 수 있다."
     }

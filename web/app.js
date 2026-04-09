@@ -24,6 +24,7 @@ const els = {
   activityLog: document.getElementById('activityLog'),
   clueList: document.getElementById('clueList'),
   bookmarkList: document.getElementById('bookmarkList'),
+  opsRail: document.getElementById('opsRail'),
   statusLine: document.getElementById('statusLine'),
   sourceFilter: document.getElementById('sourceFilter'),
   searchInput: document.getElementById('searchInput'),
@@ -87,6 +88,8 @@ function render() {
   const state = stateStore.payload;
   if (!state) return;
 
+  document.body.dataset.chapter = String(state.chapter);
+  document.body.dataset.reportReady = state.can_submit ? 'true' : 'false';
   els.objective.textContent = `${state.case_title} / ${state.objective}`;
   els.stageBadge.textContent = state.stage_label;
   els.progress.textContent = `챕터 ${state.chapter}/3 · 열람 ${state.opened_count} · 단서 ${state.clue_count}/${state.total_clue_count} · 북마크 ${state.bookmark_count}`;
@@ -101,6 +104,7 @@ function render() {
   renderDocuments(state.documents, state.active_document);
   renderClues(state.clues);
   renderBookmarks(state.bookmarks);
+  renderOpsRail(state);
   renderDocumentViewer(state.active_document);
   renderActivityLog(state.activity_log);
   renderReportPresets(state.report_presets);
@@ -155,13 +159,34 @@ function renderStoryBrief(storyBrief) {
   }
 
   els.storyRoadmap.innerHTML = roadmap.map((entry, index) => `
-    <article class="story-roadmap-item">
+    <article class="story-roadmap-item ${index === 0 ? 'primary' : ''}">
       <div class="story-roadmap-label">${index === 0 ? '다음' : '다다음'}</div>
       <strong>챕터 ${entry.chapter}. ${escapeHtml(entry.title)}</strong>
       <p>${escapeHtml(entry.hook)}</p>
       ${(entry.feelings || []).length ? `<div class="story-roadmap-meta">감정 축: ${escapeHtml(entry.feelings.join(' / '))}</div>` : ''}
     </article>
   `).join('');
+}
+
+function renderOpsRail(state) {
+  els.opsRail.innerHTML = `
+    <div class="ops-chip">
+      <span class="ops-chip-label">단계</span>
+      <strong>${escapeHtml(state.stage_label)}</strong>
+    </div>
+    <div class="ops-chip">
+      <span class="ops-chip-label">열람</span>
+      <strong>${state.opened_count}</strong>
+    </div>
+    <div class="ops-chip">
+      <span class="ops-chip-label">단서</span>
+      <strong>${state.clue_count}/${state.total_clue_count}</strong>
+    </div>
+    <div class="ops-chip">
+      <span class="ops-chip-label">북마크</span>
+      <strong>${state.bookmark_count}</strong>
+    </div>
+  `;
 }
 
 function renderDocuments(documents, activeDocument) {
@@ -276,6 +301,7 @@ function renderDocumentViewer(documentData) {
   stateStore.activeDocId = documentData.doc_id;
   els.documentTitle.textContent = `${documentData.title} / ${documentData.doc_id}`;
   els.documentMetaTags.innerHTML = `
+    <span class="tag alert-tag">Evidence Focus</span>
     <span class="tag">${escapeHtml(documentData.source_type)}</span>
     <span class="tag">챕터 ${documentData.chapter}</span>
     <span class="tag">${documentData.bookmarked ? '북마크됨' : '추적 가능'}</span>

@@ -49,6 +49,13 @@
     "content": "2026-04-17 00:02:11 KST | user_id=jones.m | ip=10.24.3.90 | action=outgoing_call | note=john.k / 17초 / no_answer\n2026-04-17 00:03:42 KST | user_id=jones.m | ip=10.24.3.90 | action=outgoing_call | note=john.k / 11초 / no_answer\n2026-04-17 00:05:18 KST | user_id=jones.m | ip=10.24.3.90 | action=outgoing_call | note=john.k / 7초 / no_answer\n2026-04-17 00:07:01 KST | user_id=jones.m | ip=10.24.3.90 | action=mail_draft   | note=아까 한 말 취소한다. 연락 받아."
   },
   {
+    "id": "log_jones_restricted_badge",
+    "source_type": "badge_log",
+    "title": "출입 기록 / Jones / 제한 구역",
+    "chapter": 2,
+    "content": "2026-04-16 23:11:26 KST | user_id=jones.m | ip=10.24.0.5 | action=badge_in   | note=svc-corridor-3\n2026-04-16 23:14:02 KST | user_id=jones.m | ip=10.24.0.5 | action=door_hold  | note=server-latch\n2026-04-16 23:19:41 KST | user_id=jones.m | ip=10.24.0.5 | action=badge_out  | note=svc-corridor-3"
+  },
+  {
     "id": "note_if_i_disappear",
     "source_type": "note",
     "title": "로컬 메모 / if_i_disappear.txt",
@@ -75,6 +82,13 @@
     "title": "[메일] Alice가 정리한 조사 방향",
     "chapter": 3,
     "content": "From: alice.h@log404.local\nTo: player.audit@log404.local\nSubject: 존 관련 자료 먼저 정리해뒀어요\n\n밤새 확인해봤는데 존스 쪽 기록부터 보는 게 좋겠어요.\n가장 직접적인 충돌이 있던 사람이라서요.\n필요한 건 제가 옆에서 계속 도와드릴게요."
+  },
+  {
+    "id": "ticket_jones_freeze_request",
+    "source_type": "ops_ticket",
+    "title": "운영 티켓 / Jones 긴급 계정 동결 요청",
+    "chapter": 3,
+    "content": "2026-04-17 00:24:55 KST | requester=jones.m | severity=sev-1 | target=john.k\nsummary=deploy_admin 경로 즉시 차단 요청\nbody=존 계정이 다시 붙었다. 지금 막지 않으면 더 큰 일 난다.\nbody=Alice 쪽에서 이미 맥락을 알고 있을 수 있다. 우선 bastion 경로부터 끊어라.\nstatus=cancelled_by_requester @ 00:29:18 KST"
   },
   {
     "id": "final_report_form",

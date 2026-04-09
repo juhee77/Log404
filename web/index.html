@@ -15,8 +15,11 @@
         <p id="objective" class="objective"></p>
       </div>
       <div class="header-side">
-        <div id="stageBadge" class="stage-badge">조사 준비 중</div>
-        <div id="progress" class="progress"></div>
+        <div class="status-card">
+          <div class="status-card-label">Investigation State</div>
+          <div id="stageBadge" class="stage-badge">조사 준비 중</div>
+          <div id="progress" class="progress"></div>
+        </div>
       </div>
     </header>
 
@@ -101,6 +104,7 @@
     </main>
 
     <footer class="bottom-bar panel">
+      <div id="opsRail" class="ops-rail"></div>
       <div class="search-row">
         <input id="searchInput" type="text" placeholder="문서 검색어를 입력하세요" />
         <button id="searchButton" class="accent">검색 적용</button>
