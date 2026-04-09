@@ -66,7 +66,7 @@ python3 game/log404_cli.py
 ```
 
 ## GUI 프로토타입 실행
-무의존성 로컬 웹 GUI 수직 슬라이스가 포함되어 있습니다.
+무의존성 웹 GUI 수직 슬라이스가 포함되어 있습니다.
 
 ```bash
 python3 -m game.log404_gui --port 8000 --no-browser
@@ -80,6 +80,11 @@ GUI에서 가능한 것:
 - 단서 확인 및 추론
 - 저장 / 불러오기
 - 최종 보고서 제출과 엔딩 확인
+
+참고:
+- 웹 앱은 이제 `로컬 서버 API 모드`와 `정적 데이터 모드`를 모두 지원합니다.
+- 서버 API가 없으면 `data/*.json`과 브라우저 `localStorage`만으로 동작합니다.
+- `.github/workflows/deploy-pages.yml`가 포함되어 있어 GitHub Pages를 `GitHub Actions` 소스로 설정하면 `master` 푸시마다 정적 웹 프로토타입을 배포할 수 있습니다.
 
 테스트 실행:
 

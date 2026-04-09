@@ -1,9 +1,13 @@
+const STATIC_SAVE_KEY = 'log404-static-save-v1';
+const STATIC_CASE_ID = 'case_001';
 
 const stateStore = {
   sourceType: 'all',
   search: '',
   activeDocId: null,
   payload: null,
+  runtimeMode: null,
+  staticSession: null,
 };
 
 const els = {
@@ -46,42 +50,650 @@ function setStatus(message) {
 }
 
 function escapeHtml(value) {
-  return value
+  return String(value)
     .replaceAll('&', '&amp;')
     .replaceAll('<', '&lt;')
     .replaceAll('>', '&gt;')
     .replaceAll('"', '&quot;');
 }
 
-async function fetchState() {
+function normalizeApiPath(path) {
+  return path.replace(/^\/+/, '');
+}
+
+async function fetchJson(path) {
+  const response = await fetch(path);
+  if (!response.ok) {
+    throw new Error(`Failed to fetch ${path}: ${response.status}`);
+  }
+  return response.json();
+}
+
+async function loadStaticData() {
+  const chapterNumbers = [1, 2, 3, 4, 5];
+  const chapterResults = await Promise.allSettled(
+    chapterNumbers.map(async (chapter) => {
+      const chapterId = `chapter_${String(chapter).padStart(2, '0')}`;
+      const payload = await fetchJson(`./data/story/${chapterId}/${chapterId}_content_pack.json`);
+      return [chapter, payload];
+    })
+  );
+
+  const chapterPacks = Object.fromEntries(
+    chapterResults
+      .filter((result) => result.status === 'fulfilled')
+      .map((result) => result.value)
+  );
+
+  const [caseData, storyBible, cluesData, gatesData, documentsData] = await Promise.all([
+    fetchJson(`./data/cases/${STATIC_CASE_ID}.json`),
+    fetchJson('./data/story/season_01/story_bible.json'),
+    fetchJson('./data/clues.json'),
+    fetchJson('./data/chapter_gates.json'),
+    fetchJson('./data/documents.json'),
+  ]);
+
+  return {
+    caseData,
+    storyBible,
+    cluesData,
+    gatesData,
+    documentsData,
+    chapterPacks,
+  };
+}
+
+function createStaticSession(data) {
+  const documents = Object.fromEntries(
+    data.documentsData.map((row) => [
+      row.id,
+      {
+        doc_id: row.id,
+        source_type: row.source_type,
+        title: row.title,
+        chapter: row.chapter,
+        content: row.content,
+      },
+    ])
+  );
+  const clues = Object.fromEntries(
+    data.cluesData.map((row) => [
+      row.clue_id,
+      {
+        clue_id: row.clue_id,
+        chapter: row.chapter,
+        source_type: row.source_type,
+        name: row.name,
+        description: row.description,
+        required_documents: row.required_documents,
+      },
+    ])
+  );
+  const chapterArc = Object.fromEntries(
+    (data.storyBible.chapter_emotional_arc || []).map((row) => [row.chapter, row])
+  );
+
+  const session = {
+    caseData: data.caseData,
+    storyBible: data.storyBible,
+    cluesData: data.cluesData,
+    gatesData: data.gatesData,
+    documentsData: data.documentsData,
+    chapterPacks: data.chapterPacks,
+    chapterArc,
+    documents,
+    clues,
+    state: {
+      case_id: data.caseData.case_id,
+      case_title: data.caseData.title,
+      objective: data.caseData.objective,
+      current_chapter: 1,
+      unlocked_documents: new Set(data.caseData.documents_unlocked),
+      opened_documents: new Set(),
+      bookmarks: new Set(),
+      discovered_clues: new Set(),
+    },
+    activeDocId: null,
+    lastMessage: '사건 파일을 펼쳤습니다. 좌측 문서를 열어 모순부터 확인하세요.',
+    lastReportMessage: '최종 보고서는 아직 작성되지 않았습니다.',
+    activityLog: ['사건 파일을 펼쳤습니다. 좌측 문서를 열어 모순부터 확인하세요.'],
+  };
+
+  function chapterNumber(chapterId) {
+    if (!chapterId.startsWith('chapter_')) return null;
+    return Number.parseInt(chapterId.split('_').at(-1), 10);
+  }
+
+  function storyBrief() {
+    const maxChapter = Math.max(...Object.keys(session.chapterPacks).map(Number), session.state.current_chapter);
+    const currentChapter = Math.min(session.state.current_chapter, maxChapter);
+    const currentPack = session.chapterPacks[currentChapter] || {};
+    const currentArc = session.chapterArc[currentChapter] || {};
+    const roadmap = [];
+
+    for (let chapter = currentChapter + 1; chapter <= Math.min(currentChapter + 2, maxChapter); chapter += 1) {
+      const pack = session.chapterPacks[chapter] || {};
+      const arc = session.chapterArc[chapter] || {};
+      roadmap.push({
+        chapter,
+        title: pack.title || arc.title || `챕터 ${chapter}`,
+        hook: pack.chapter_question || pack.story_goal || '',
+        feelings: arc.player_feeling || pack.emotional_focus || [],
+      });
+    }
+
+    return {
+      current: {
+        chapter: currentChapter,
+        title: currentPack.title || currentArc.title || `챕터 ${currentChapter}`,
+        story_goal: currentPack.story_goal || '',
+        chapter_question: currentPack.chapter_question || '',
+        emotional_focus: currentPack.emotional_focus || currentArc.player_feeling || [],
+        screen_beats: currentPack.screen_beats || [],
+      },
+      roadmap,
+    };
+  }
+
+  function listSourceTypes() {
+    return [...new Set(Object.values(session.documents).map((doc) => doc.source_type))].sort();
+  }
+
+  function listDocuments({ sourceType = 'all', searchKeyword = '', bookmarksOnly = false } = {}) {
+    const docIds = bookmarksOnly ? session.state.bookmarks : session.state.unlocked_documents;
+    let docs = [...docIds]
+      .map((docId) => session.documents[docId])
+      .filter(Boolean);
+
+    if (sourceType && sourceType !== 'all') {
+      docs = docs.filter((doc) => doc.source_type === sourceType);
+    }
+
+    if (searchKeyword) {
+      const keyword = searchKeyword.toLowerCase().trim();
+      if (keyword) {
+        docs = docs.filter((doc) => keyword.includes('') || `${doc.title}\n${doc.content}`.toLowerCase().includes(keyword));
+      }
+    }
+
+    return docs.sort((a, b) => (a.chapter - b.chapter) || a.doc_id.localeCompare(b.doc_id));
+  }
+
+  function listClues() {
+    return Object.values(session.clues).sort((a, b) => (a.chapter - b.chapter) || a.clue_id.localeCompare(b.clue_id));
+  }
+
+  function canSubmit() {
+    return session.caseData.solution_conditions.every((clueId) => session.state.discovered_clues.has(clueId));
+  }
+
+  function investigationStage() {
+    if (canSubmit()) return '최종 보고 단계';
+    if (session.state.current_chapter <= 1) return '초기 진술 검증 단계';
+    if (session.state.current_chapter === 2) return '용의선상 재정렬 단계';
+    return '은폐 구조 재구성 단계';
+  }
+
+  function nextStep() {
+    const unsolved = listClues().filter((clue) => !session.state.discovered_clues.has(clue.clue_id));
+    if (!unsolved.length) {
+      return '세 단서를 모두 확보했습니다. 이제 범인, 동기, 조작 수법을 한 문장씩 정리한 뒤 최종 보고서를 제출하세요.';
+    }
+
+    const target = unsolved[0];
+    const missingDocuments = target.required_documents.filter((docId) => !session.state.opened_documents.has(docId));
+    const availableDocuments = missingDocuments.filter((docId) => session.state.unlocked_documents.has(docId));
+
+    if (availableDocuments.length) {
+      return `다음 표적 단서는 '${target.name}' 입니다. 먼저 ${availableDocuments.join(', ')} 문서를 열람해 근거를 모으세요.`;
+    }
+
+    if (!missingDocuments.length) {
+      return `'${target.name}' 단서의 필수 문서를 모두 읽었습니다. 우측 단서 카드에서 추론 버튼을 눌러 정리하세요.`;
+    }
+
+    return `아직 '${target.name}' 단서에 필요한 문서가 잠겨 있습니다. 현재 챕터의 단서를 먼저 확정하면 다음 기록이 열립니다.`;
+  }
+
+  function reportGuidance() {
+    if (!canSubmit()) {
+      const remaining = listClues()
+        .filter((clue) => !session.state.discovered_clues.has(clue.clue_id))
+        .map((clue) => clue.name);
+      return `최종 보고서는 세 단서를 모두 확보한 뒤 열립니다. 남은 정리 대상: ${remaining.join(', ')}`;
+    }
+
+    return '보고서는 세 줄로 정리하면 됩니다. 범인에는 기록의 방향을 통제한 인물, 동기에는 왜 진실을 비틀었는지, 방법에는 어떤 로그/타임라인 조작을 했는지를 적으세요.';
+  }
+
+  function assessReport(culprit, motive, method) {
+    const culpritValue = culprit.trim().toLowerCase();
+    const culpritOk = ['alice', 'alice han', 'alice.h', '앨리스', '앨리스 한'].includes(culpritValue);
+    const motiveOk = ['은폐', '보호', '통제', '죄책감', '감추'].some((token) => motive.includes(token));
+    const methodOk = ['로그 조작', '캐시', '타임라인', '재작성', '기록 조작'].some((token) => method.includes(token));
+    return { culpritOk, motiveOk, methodOk };
+  }
+
+  function ending(culprit, motive, method) {
+    const assessment = assessReport(culprit, motive, method);
+    if (assessment.culpritOk && assessment.motiveOk && assessment.methodOk) {
+      return [
+        '[진실 엔딩]',
+        '당신은 범인, 동기, 수법을 모두 정확히 연결했다.',
+        '앨리스는 존을 보호하고 자신이 설계한 해석 방향을 유지하려고 기록의 시간축을 비틀었다.',
+        '공식 발표는 철회되고 내부 공모 정황은 별도 수사로 넘어간다.',
+      ].join('\n');
+    }
+
+    return [
+      '[부분 정답 엔딩]',
+      '사건의 방향은 잡았지만 보고서가 아직 완성되지는 않았습니다.',
+      '',
+      '재검토 가이드',
+      assessment.culpritOk
+        ? '범인: 적절합니다.'
+        : '범인: 플레이어를 돕는 척하면서 기록 접근권과 시간축 통제권을 동시에 가진 인물을 다시 보세요.',
+      assessment.motiveOk
+        ? '동기: 적절합니다.'
+        : '동기: 단순한 적대감보다 보호, 은폐, 죄책감이 섞인 이유를 찾아야 합니다.',
+      assessment.methodOk
+        ? '방법: 적절합니다.'
+        : '방법: 출입 기록, 인증 로그, VPN 재작성 흔적처럼 시간축을 비튼 조작 방식을 명시해야 합니다.',
+      '',
+      '추천 재열람 문서',
+      '- chat_alice_late_help',
+      '- log_alice_dm_read',
+      '- log_alice_vpn_rewrite',
+      '- mail_alice_to_player',
+      '',
+      '사건은 재조사로 넘어가고, 보고서가 모호한 탓에 일부 책임 소재는 흐려집니다.',
+    ].join('\n');
+  }
+
+  function serializeDocument(doc) {
+    return {
+      doc_id: doc.doc_id,
+      source_type: doc.source_type,
+      title: doc.title,
+      chapter: doc.chapter,
+      opened: session.state.opened_documents.has(doc.doc_id),
+      bookmarked: session.state.bookmarks.has(doc.doc_id),
+    };
+  }
+
+  function serializeClue(clue) {
+    const openedRequired = clue.required_documents.filter((docId) => session.state.opened_documents.has(docId)).length;
+    const missingDocuments = clue.required_documents.filter((docId) => !session.state.opened_documents.has(docId));
+    return {
+      clue_id: clue.clue_id,
+      name: clue.name,
+      description: clue.description,
+      chapter: clue.chapter,
+      solved: session.state.discovered_clues.has(clue.clue_id),
+      required_count: clue.required_documents.length,
+      opened_required_count: openedRequired,
+      missing_documents: missingDocuments,
+      ready_to_infer: !missingDocuments.length && !session.state.discovered_clues.has(clue.clue_id),
+    };
+  }
+
+  function suspectBoard() {
+    const discovered = session.state.discovered_clues;
+    return [
+      {
+        name: 'Alice Han',
+        role: '플레이어 조력자 / 운영 접근권 보유',
+        status: discovered.has('clue_alice_tampered_truth') ? '핵심 조작자' : '조력자인 척하는 고위험 인물',
+        score: discovered.has('clue_alice_tampered_truth') ? 5 : 3,
+        note: discovered.has('clue_alice_tampered_truth')
+          ? '도움의 말투와 별개로 DM 열람 기록과 재작성 흔적이 겹친다.'
+          : '존의 기록에 먼저 접근할 수 있었던 인물인지 계속 확인해야 한다.',
+      },
+      {
+        name: 'Jones',
+        role: '거친 동료 / 초반 용의선상',
+        status: discovered.has('clue_jones_false_face') ? '희생양에 가까움' : '표면상 가장 수상함',
+        score: discovered.has('clue_jones_false_face') ? 1 : 4,
+        note: discovered.has('clue_jones_false_face')
+          ? '사적인 기록을 보면 존을 버린 인물보다 뒤늦게 수습하려 한 인물에 가깝다.'
+          : '거친 발언과 실제 행동 사이에 간극이 있는지 확인이 필요하다.',
+      },
+      {
+        name: 'John Kim',
+        role: '실종자 / 피해자',
+        status: discovered.has('clue_empty_resignation') ? '강요된 퇴사 서사' : '자발적 퇴사처럼 위장됨',
+        score: 0,
+        note: discovered.has('clue_empty_resignation')
+          ? '미전송 초안의 감정과 공식 퇴사 공지의 문체가 너무 다르다.'
+          : '퇴사 서사가 지나치게 깔끔하다. 공백 자체가 단서일 수 있다.',
+      },
+    ];
+  }
+
+  function reportPresets() {
+    if (!canSubmit()) return [];
+    return [
+      { field: 'culprit', label: '범인 힌트', value: '앨리스' },
+      { field: 'motive', label: '동기 힌트', value: '존을 보호하려던 은폐와 죄책감' },
+      { field: 'method', label: '방법 힌트', value: '로그 조작과 시간축 재작성' },
+    ];
+  }
+
+  function snapshot(sourceType = 'all', searchKeyword = '') {
+    const documentsList = listDocuments({ sourceType, searchKeyword }).map(serializeDocument);
+    const bookmarks = listDocuments({ bookmarksOnly: true }).map(serializeDocument);
+    const cluesList = listClues().map(serializeClue);
+
+    let activeDocument = null;
+    if (session.activeDocId && session.documents[session.activeDocId] && session.state.unlocked_documents.has(session.activeDocId)) {
+      const doc = session.documents[session.activeDocId];
+      activeDocument = {
+        ...serializeDocument(doc),
+        content: `[${doc.doc_id}] ${doc.title}\n(source: ${doc.source_type})\n\n${doc.content}`,
+      };
+    }
+
+    return {
+      case_title: session.state.case_title,
+      objective: session.state.objective,
+      chapter: Math.min(session.state.current_chapter, 3),
+      story_brief: storyBrief(),
+      opened_count: session.state.opened_documents.size,
+      clue_count: session.state.discovered_clues.size,
+      total_clue_count: Object.keys(session.clues).length,
+      bookmark_count: session.state.bookmarks.size,
+      can_submit: canSubmit(),
+      stage_label: investigationStage(),
+      next_step: nextStep(),
+      report_guidance: reportGuidance(),
+      source_types: listSourceTypes(),
+      last_message: session.lastMessage,
+      last_report_message: session.lastReportMessage,
+      activity_log: session.activityLog,
+      suspects: suspectBoard(),
+      report_presets: reportPresets(),
+      documents: documentsList,
+      bookmarks,
+      clues: cluesList,
+      active_document: activeDocument,
+    };
+  }
+
+  function snapshotResponse(sourceType, searchKeyword, message) {
+    return {
+      message,
+      state: snapshot(sourceType, searchKeyword),
+    };
+  }
+
+  function recordActivity(message) {
+    const headline = message.trim().split('\n')[0] || '알 수 없는 작업';
+    const entry = `챕터 ${Math.min(session.state.current_chapter, 3)} · ${headline}`;
+    session.activityLog = [entry, ...session.activityLog.slice(0, 6)];
+  }
+
+  function applyChapterGates() {
+    const newlyUnlocked = [];
+    let progressed = true;
+
+    while (progressed) {
+      progressed = false;
+      session.gatesData.forEach((gate, index) => {
+        const required = new Set(gate.required_clues);
+        const unlocked = [...required].every((clueId) => session.state.discovered_clues.has(clueId));
+        const targetChapter = index + 2;
+        if (!unlocked || targetChapter <= session.state.current_chapter) {
+          return;
+        }
+
+        gate.unlock_targets.forEach((docId) => {
+          if (!session.state.unlocked_documents.has(docId)) {
+            session.state.unlocked_documents.add(docId);
+            newlyUnlocked.push(docId);
+          }
+        });
+
+        session.state.current_chapter = targetChapter;
+        progressed = true;
+      });
+    }
+
+    return newlyUnlocked;
+  }
+
+  function openDocument(docId) {
+    if (!session.state.unlocked_documents.has(docId)) {
+      return `잠겨 있는 문서입니다: ${docId}`;
+    }
+    const doc = session.documents[docId];
+    if (!doc) {
+      return `문서를 찾을 수 없습니다: ${docId}`;
+    }
+    session.state.opened_documents.add(docId);
+    session.activeDocId = docId;
+    return `[${doc.doc_id}] ${doc.title}\n(source: ${doc.source_type})\n\n${doc.content}`;
+  }
+
+  function toggleBookmark(docId) {
+    if (!session.state.unlocked_documents.has(docId)) {
+      return `잠겨 있는 문서는 북마크할 수 없습니다: ${docId}`;
+    }
+    if (session.state.bookmarks.has(docId)) {
+      session.state.bookmarks.delete(docId);
+      return `북마크 해제: ${docId}`;
+    }
+    session.state.bookmarks.add(docId);
+    return `북마크 추가: ${docId}`;
+  }
+
+  function inferClue(clueId) {
+    const clue = session.clues[clueId];
+    if (!clue) {
+      return `알 수 없는 단서 ID: ${clueId}`;
+    }
+    if (session.state.discovered_clues.has(clueId)) {
+      return `이미 확보한 단서입니다: ${clue.name}`;
+    }
+
+    const missing = clue.required_documents.filter((docId) => !session.state.opened_documents.has(docId));
+    if (missing.length) {
+      return `근거 문서 열람이 부족합니다. 먼저 열어야 할 문서: ${missing.join(', ')}`;
+    }
+
+    session.state.discovered_clues.add(clueId);
+    const unlocked = applyChapterGates();
+    const lines = [`단서 확보: ${clue.name}`, `설명: ${clue.description}`];
+    if (unlocked.length) {
+      lines.push(`해금된 문서: ${unlocked.join(', ')}`);
+    }
+    return lines.join('\n');
+  }
+
+  function submitReport(culprit, motive, method) {
+    if (!canSubmit()) {
+      const remaining = listClues()
+        .filter((clue) => !session.state.discovered_clues.has(clue.clue_id))
+        .map((clue) => clue.name);
+      return `아직 최종 보고서를 제출할 수 없습니다. 먼저 남은 단서를 확보하세요: ${remaining.join(', ')}`;
+    }
+    if (!culprit.trim() || !motive.trim() || !method.trim()) {
+      return [
+        '범인 / 동기 / 방법을 모두 입력해야 합니다.',
+        '범인: 누가 기록의 방향을 통제했는가',
+        '동기: 왜 진실을 감추거나 비틀었는가',
+        '방법: 어떤 로그/타임라인 조작이 있었는가',
+      ].join('\n');
+    }
+    return ending(culprit, motive, method);
+  }
+
+  function save() {
+    const payload = {
+      case_id: session.state.case_id,
+      current_chapter: session.state.current_chapter,
+      unlocked_documents: [...session.state.unlocked_documents].sort(),
+      opened_documents: [...session.state.opened_documents].sort(),
+      bookmarks: [...session.state.bookmarks].sort(),
+      discovered_clues: [...session.state.discovered_clues].sort(),
+      active_doc_id: session.activeDocId,
+      last_report_message: session.lastReportMessage,
+    };
+    localStorage.setItem(STATIC_SAVE_KEY, JSON.stringify(payload));
+    return '브라우저 저장 완료';
+  }
+
+  function load() {
+    const raw = localStorage.getItem(STATIC_SAVE_KEY);
+    if (!raw) {
+      return '브라우저 저장 데이터가 없습니다.';
+    }
+    const payload = JSON.parse(raw);
+    session.state.current_chapter = payload.current_chapter;
+    session.state.unlocked_documents = new Set(payload.unlocked_documents);
+    session.state.opened_documents = new Set(payload.opened_documents);
+    session.state.bookmarks = new Set(payload.bookmarks);
+    session.state.discovered_clues = new Set(payload.discovered_clues);
+    session.activeDocId = payload.active_doc_id || null;
+    session.lastReportMessage = payload.last_report_message || session.lastReportMessage;
+    return '브라우저 저장 데이터 불러오기 완료';
+  }
+
+  function dispatch(action, payload, sourceType, searchKeyword) {
+    let message = '알 수 없는 작업';
+
+    if (action === 'open') {
+      const docId = payload.doc_id || '';
+      message = openDocument(docId);
+      session.lastMessage = message;
+      recordActivity(`문서 열람: ${docId}`);
+      return snapshotResponse(sourceType, searchKeyword, message);
+    }
+
+    if (action === 'bookmark') {
+      message = toggleBookmark(payload.doc_id || '');
+      session.lastMessage = message;
+      recordActivity(message);
+      return snapshotResponse(sourceType, searchKeyword, message);
+    }
+
+    if (action === 'infer') {
+      message = inferClue(payload.clue_id || '');
+      session.lastMessage = message;
+      recordActivity(message);
+      return snapshotResponse(sourceType, searchKeyword, message);
+    }
+
+    if (action === 'save') {
+      message = save();
+      session.lastMessage = message;
+      recordActivity('브라우저 저장');
+      return snapshotResponse(sourceType, searchKeyword, message);
+    }
+
+    if (action === 'load') {
+      message = load();
+      session.lastMessage = message;
+      recordActivity('브라우저 저장 데이터 복원');
+      if (session.activeDocId && !session.state.unlocked_documents.has(session.activeDocId)) {
+        session.activeDocId = null;
+      }
+      return snapshotResponse(sourceType, searchKeyword, message);
+    }
+
+    if (action === 'submit') {
+      message = submitReport(payload.culprit || '', payload.motive || '', payload.method || '');
+      session.lastMessage = message;
+      session.lastReportMessage = message;
+      recordActivity('최종 보고서 제출 시도');
+      return snapshotResponse(sourceType, searchKeyword, message);
+    }
+
+    return snapshotResponse(sourceType, searchKeyword, message);
+  }
+
+  return {
+    snapshotResponse,
+    dispatch,
+  };
+}
+
+async function initializeRuntime() {
   const params = new URLSearchParams({
     source_type: stateStore.sourceType,
     search: stateStore.search,
   });
-  const response = await fetch(`/api/state?${params.toString()}`);
-  const payload = await response.json();
+
+  try {
+    const response = await fetch(`api/state?${params.toString()}`);
+    if (!response.ok) {
+      throw new Error(`Server mode unavailable: ${response.status}`);
+    }
+    const payload = await response.json();
+    stateStore.runtimeMode = 'server';
+    applyPayload(payload);
+    return;
+  } catch (error) {
+    const data = await loadStaticData();
+    stateStore.runtimeMode = 'static';
+    stateStore.staticSession = createStaticSession(data);
+    applyPayload(stateStore.staticSession.snapshotResponse(stateStore.sourceType, stateStore.search, '정적 조사 모드 초기화 완료'));
+  }
+}
+
+function applyPayload(payload) {
   stateStore.payload = payload.state;
+  if (Object.prototype.hasOwnProperty.call(payload.state, 'active_document')) {
+    stateStore.activeDocId = payload.state.active_document ? payload.state.active_document.doc_id : null;
+  }
   render();
   setStatus(payload.message);
 }
 
-async function postAction(path, body = {}) {
-  const response = await fetch(path, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      ...body,
+async function fetchState() {
+  if (!stateStore.runtimeMode) {
+    await initializeRuntime();
+    return;
+  }
+
+  if (stateStore.runtimeMode === 'server') {
+    const params = new URLSearchParams({
       source_type: stateStore.sourceType,
       search: stateStore.search,
-    }),
-  });
-  const payload = await response.json();
-  stateStore.payload = payload.state;
-  if (stateStore.payload?.active_document?.doc_id) {
-    stateStore.activeDocId = stateStore.payload.active_document.doc_id;
+    });
+    const response = await fetch(`api/state?${params.toString()}`);
+    const payload = await response.json();
+    applyPayload(payload);
+    return;
   }
-  render();
-  setStatus(payload.message);
+
+  applyPayload(stateStore.staticSession.snapshotResponse(stateStore.sourceType, stateStore.search, '정적 조사 상태 갱신 완료'));
+}
+
+async function postAction(path, body = {}) {
+  if (stateStore.runtimeMode === 'server') {
+    const response = await fetch(normalizeApiPath(path), {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        ...body,
+        source_type: stateStore.sourceType,
+        search: stateStore.search,
+      }),
+    });
+    const payload = await response.json();
+    applyPayload(payload);
+    return;
+  }
+
+  const action = normalizeApiPath(path).replace(/^api\//, '');
+  applyPayload(
+    stateStore.staticSession.dispatch(
+      action,
+      body,
+      stateStore.sourceType,
+      stateStore.search
+    )
+  );
 }
 
 function render() {
@@ -90,6 +702,7 @@ function render() {
 
   document.body.dataset.chapter = String(state.chapter);
   document.body.dataset.reportReady = state.can_submit ? 'true' : 'false';
+  document.body.dataset.runtimeMode = stateStore.runtimeMode || 'unknown';
   els.objective.textContent = `${state.case_title} / ${state.objective}`;
   els.stageBadge.textContent = state.stage_label;
   els.progress.textContent = `챕터 ${state.chapter}/3 · 열람 ${state.opened_count} · 단서 ${state.clue_count}/${state.total_clue_count} · 북마크 ${state.bookmark_count}`;
@@ -169,7 +782,12 @@ function renderStoryBrief(storyBrief) {
 }
 
 function renderOpsRail(state) {
+  const runtimeLabel = stateStore.runtimeMode === 'static' ? 'Pages / Static' : 'Local Server';
   els.opsRail.innerHTML = `
+    <div class="ops-chip">
+      <span class="ops-chip-label">런타임</span>
+      <strong>${escapeHtml(runtimeLabel)}</strong>
+    </div>
     <div class="ops-chip">
       <span class="ops-chip-label">단계</span>
       <strong>${escapeHtml(state.stage_label)}</strong>
@@ -368,4 +986,4 @@ els.submitButton.addEventListener('click', () => {
   });
 });
 
-fetchState();
+initializeRuntime();
