@@ -76,6 +76,19 @@
       "reveals_character": "그녀는 플레이어의 판단 과정까지 구조화하려 했다."
     },
     {
+      "id": "mail_alice_unsent_escalation",
+      "type": "mail_draft",
+      "title": "미전송 메일 / Alice 내부 보고 초안",
+      "timestamp": "2026-04-17 00:34:22 KST",
+      "user_id": "alice.h",
+      "ip": "10.24.4.11",
+      "action": "draft_saved",
+      "content": "From: alice.h@log404.local\nTo: exec-response@log404.local\nSubject: John 관련 야간 접근 대응 초안\n\n존 계정의 재접속 흔적을 확인했습니다.\n다만 현 시점에서 전체 로그를 그대로 올리면 관련자 실명과 미검증 정황이 함께 확산될 수 있습니다.\n먼저 당사자 안전과 사실관계부터 확인할 시간을 요청합니다.\n\n보내지 않은 메모:\n- 지금 올리면 존이 완전히 끝난다.\n- 누군가를 보호하려는 건지, 미루려는 건지 모르겠다.",
+      "player_notice": "앨리스는 보고를 미룬 흔적이 있지만, 그 문장은 냉정한 은폐보다 보호와 망설임을 먼저 드러낸다.",
+      "hidden_meaning": "그녀는 진실을 고의로 눌렀지만, 출발점에는 존을 보호하고 싶다는 마음과 자기 비겁함이 동시에 섞여 있다.",
+      "reveals_character": "앨리스는 단순한 악역이 아니라 보호 욕망을 통제로 바꿔 버린 사람이다."
+    },
+    {
       "id": "ticket_jones_freeze_request",
       "type": "ops_ticket",
       "title": "운영 티켓 / Jones 긴급 계정 동결 요청",
@@ -128,6 +141,19 @@
       "what_is_actually_suspicious": "앨리스의 원격 접속과 캐시 재작성 시점이 뒤늦게 발견되면서, 플레이어가 본 시간축 자체가 가공된 결과처럼 읽힌다.",
       "emotional_meaning": "진실은 숨겨진 것이 아니라, 더 믿기 쉬운 방향으로 배열돼 있었다.",
       "player_deduction": "챕터 3의 결론은 존스의 유죄가 아니라 앨리스가 진실의 방향을 설계했다는 구조적 의심이다."
+    },
+    {
+      "id": "puzzle_ch3_alice_not_simple_villain",
+      "situation": "앨리스의 미전송 보고 초안은 그녀의 개입이 명백했음을 보여주지만, 동시에 왜 그 선택을 했는지도 어렴풋이 드러낸다.",
+      "evidence_ids": [
+        "mail_alice_unsent_escalation",
+        "log_alice_dm_read",
+        "mail_alice_to_player"
+      ],
+      "what_feels_normal_at_first": "보고를 미룬 초안은 증거 인멸 직전의 자기합리화처럼 보인다.",
+      "what_is_actually_suspicious": "그녀는 진실을 누르면서도 존을 완전히 회사 손에 넘기고 싶지 않아 했고, 그 망설임이 오히려 더 큰 조작으로 이어졌다.",
+      "emotional_meaning": "플레이어는 앨리스를 미워하기 시작하면서도, 그 미움이 한 번에 단순해지지 않는 불편함을 느낀다.",
+      "player_deduction": "챕터 3의 마지막 질문은 '앨리스가 했는가'를 넘어서 '왜 이런 방식으로 진실을 붙잡으려 했는가'가 된다."
     }
   ]
 }

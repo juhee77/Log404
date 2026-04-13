@@ -58,11 +58,42 @@ class GameSession:
             "required_count": len(clue.required_documents),
             "opened_required_count": opened_required,
             "missing_documents": missing_documents,
+            "story_prompt": self._clue_story_prompt(clue.clue_id, missing_documents),
             "ready_to_infer": not missing_documents and clue.clue_id not in self.engine.state.discovered_clues,
         }
 
+    def _clue_story_prompt(self, clue_id: str, missing_documents: list[str]) -> str:
+        discovered = self.engine.state.discovered_clues
+
+        if clue_id == "clue_empty_resignation":
+            if clue_id in discovered:
+                return "회사가 만든 퇴사 서사는 깨졌습니다. 이제 누가 그 공백을 이용했는지 넘어갈 차례입니다."
+            if missing_documents:
+                return "공식 공지와 미전송 초안의 감정 차이를 먼저 붙잡으세요."
+            return "퇴사 통보가 아니라 검열된 마지막 문장인지 판단할 시점입니다."
+
+        if clue_id == "clue_jones_false_face":
+            if clue_id in discovered:
+                return "존스는 여전히 거칠지만, 바로 그 점 때문에 너무 편한 범인처럼 소비됐습니다."
+            if "note_security_jones_override" in missing_documents or "note_john_contingency_map" in missing_documents:
+                return "존스를 더 강하게 의심하게 만드는 표면 기록과, 존이 남긴 대비 메모를 함께 읽어야 합니다."
+            return "이제 존스를 향한 분노가 자연발생인지, 누군가가 정리해 준 감정인지 재구성하세요."
+
+        if clue_id == "clue_alice_tampered_truth":
+            if clue_id in discovered:
+                return "도움과 조작이 같은 손에서 나왔습니다. 문제는 누가 범인인가보다 왜 그 방향을 믿었는가입니다."
+            if "mail_alice_unsent_escalation" in missing_documents:
+                return "앨리스의 개입만으론 부족합니다. 그녀가 왜 보고를 미뤘는지 보여 주는 초안까지 읽어야 합니다."
+            return "조작의 증거와 보호의 동기가 같은 인물에게서 나왔는지 읽을 차례입니다."
+
+        return ""
+
     def _suspect_board(self) -> list[dict]:
         discovered = self.engine.state.discovered_clues
+        opened = self.engine.state.opened_documents
+        has_jones_override = "note_security_jones_override" in opened
+        has_john_plan = "note_john_contingency_map" in opened
+        has_alice_draft = "mail_alice_unsent_escalation" in opened
         return [
             {
                 "name": "Alice Han",
@@ -70,12 +101,16 @@ class GameSession:
                 "status": (
                     "핵심 조작자"
                     if "clue_alice_tampered_truth" in discovered
+                    else "도움과 은폐를 함께 쥔 내부자"
+                    if has_alice_draft
                     else "조력자인 척하는 고위험 인물"
                 ),
-                "score": 5 if "clue_alice_tampered_truth" in discovered else 3,
+                "score": 5 if "clue_alice_tampered_truth" in discovered else 4 if has_alice_draft else 3,
                 "note": (
-                    "도움의 말투와 별개로 DM 열람 기록과 재작성 흔적이 겹친다."
+                    "DM 열람 기록, 재작성 흔적, 미전송 보고 초안이 겹치며 보호 욕망이 통제로 변질된 구조가 보인다."
                     if "clue_alice_tampered_truth" in discovered
+                    else "미전송 보고 초안은 그녀가 숨기고 있음을 보여주지만, 출발점에 보호 충동과 망설임도 섞여 있다."
+                    if has_alice_draft
                     else "존의 기록에 먼저 접근할 수 있었던 인물인지 계속 확인해야 한다."
                 ),
             },
@@ -85,12 +120,16 @@ class GameSession:
                 "status": (
                     "희생양에 가까움"
                     if "clue_jones_false_face" in discovered
+                    else "폭주 직전의 유력 용의자"
+                    if has_jones_override
                     else "표면상 가장 수상함"
                 ),
-                "score": 1 if "clue_jones_false_face" in discovered else 4,
+                "score": 1 if "clue_jones_false_face" in discovered else 5 if has_jones_override else 4,
                 "note": (
-                    "사적인 기록을 보면 존을 버린 인물보다 뒤늦게 수습하려 한 인물에 가깝다."
+                    "보안 인계 메모와 반복 통화를 다시 읽으면, 위협보다 뒤늦은 수습과 차단 시도가 더 선명해진다."
                     if "clue_jones_false_face" in discovered
+                    else "수동 개방 요청 메모까지 보면 바로 범인으로 적고 싶어지지만, 아직 재해석 여지가 남아 있다."
+                    if has_jones_override
                     else "거친 발언과 실제 행동 사이에 간극이 있는지 확인이 필요하다."
                 ),
             },
@@ -98,13 +137,18 @@ class GameSession:
                 "name": "John Kim",
                 "role": "실종자 / 피해자",
                 "status": (
+                    "사라지기 전 대비를 남긴 실종자"
+                    if has_john_plan
+                    else
                     "강요된 퇴사 서사"
                     if "clue_empty_resignation" in discovered
                     else "자발적 퇴사처럼 위장됨"
                 ),
                 "score": 0,
                 "note": (
-                    "미전송 초안의 감정과 공식 퇴사 공지의 문체가 너무 다르다."
+                    "contingency_map은 존이 마지막까지 사건의 순서와 증거 보존을 설계하려 했음을 보여준다."
+                    if has_john_plan
+                    else "미전송 초안의 감정과 공식 퇴사 공지의 문체가 너무 다르다."
                     if "clue_empty_resignation" in discovered
                     else "퇴사 서사가 지나치게 깔끔하다. 공백 자체가 단서일 수 있다."
                 ),
@@ -139,6 +183,7 @@ class GameSession:
             "objective": self.engine.state.objective,
             "chapter": min(self.engine.state.current_chapter, 3),
             "story_brief": self.engine.story_brief(),
+            "report_review_documents": self.engine.report_review_documents(),
             "opened_count": len(self.engine.state.opened_documents),
             "clue_count": len(self.engine.state.discovered_clues),
             "total_clue_count": self.engine.total_clue_count(),
@@ -246,6 +291,8 @@ class Log404Handler(BaseHTTPRequestHandler):
                 message = SESSION.engine.infer_clue(clue_id)
                 SESSION.last_message = message
                 SESSION._record_activity(message)
+                if clue_id == "clue_alice_tampered_truth" and SESSION.engine.can_submit():
+                    SESSION._record_activity("재독 필요: 누구의 설명을 믿고 여기까지 왔는지 다시 확인")
                 response = {"message": message, "state": SESSION.snapshot(source_type, search_keyword)}
                 self._send_json(response)
                 return

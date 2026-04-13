@@ -9,6 +9,12 @@ from typing import Dict, List, Set
 ROOT_DIR = Path(__file__).resolve().parent.parent
 DATA_DIR = ROOT_DIR / "data"
 SAVE_PATH = ROOT_DIR / "runtime" / "reports" / "savegame.json"
+REPORT_REVIEW_DOCUMENTS = [
+    "chat_alice_late_help",
+    "note_john_contingency_map",
+    "log_alice_dm_read",
+    "mail_alice_unsent_escalation",
+]
 
 
 @dataclass
@@ -176,6 +182,9 @@ class GameEngine:
     def total_clue_count(self) -> int:
         return len(self.clues)
 
+    def report_review_documents(self) -> List[str]:
+        return REPORT_REVIEW_DOCUMENTS.copy()
+
     def investigation_stage(self) -> str:
         if self.can_submit():
             return "최종 보고 단계"
@@ -188,7 +197,11 @@ class GameEngine:
     def next_step(self) -> str:
         unsolved = [clue for clue in self.list_clues() if clue.clue_id not in self.state.discovered_clues]
         if not unsolved:
-            return "세 단서를 모두 확보했습니다. 이제 범인, 동기, 조작 수법을 한 문장씩 정리한 뒤 최종 보고서를 제출하세요."
+            return (
+                "세 단서를 모두 확보했습니다. 바로 제출하기보다 "
+                f"{', '.join(self.report_review_documents())} 문서를 다시 읽고, "
+                "내가 누구의 설명을 빌려 여기까지 왔는지 먼저 정리하세요."
+            )
 
         target = unsolved[0]
         missing_documents = [doc_id for doc_id in target.required_documents if doc_id not in self.state.opened_documents]
@@ -221,9 +234,11 @@ class GameEngine:
             )
 
         return (
+            "지금 필요한 건 새 증거가 아니라, 이미 읽은 기록을 누구의 말 없이 다시 읽는 일입니다. "
             "보고서는 세 줄로 정리하면 됩니다. "
             "범인에는 기록의 방향을 통제한 인물, 동기에는 왜 진실을 비틀었는지, "
-            "방법에는 어떤 로그/타임라인 조작을 했는지를 적으세요."
+            "방법에는 어떤 로그/타임라인 조작이 있었는지를 적으세요. "
+            f"추천 재검토: {', '.join(self.report_review_documents())}"
         )
 
     def _assess_report(self, culprit: str, motive: str, method: str) -> dict:
@@ -283,6 +298,14 @@ class GameEngine:
         lines = [f"단서 확보: {clue.name}", f"설명: {clue.description}"]
         if unlocked:
             lines.append(f"해금된 문서: {', '.join(unlocked)}")
+        if self.can_submit():
+            lines.append(
+                "재검토 권장: "
+                + ", ".join(self.report_review_documents())
+            )
+            lines.append(
+                "지금 필요한 건 범인을 급히 적는 일보다, 내가 누구의 설명을 믿고 여기까지 왔는지 다시 읽는 일이다."
+            )
         return "\n".join(lines)
 
     def _apply_chapter_gates(self) -> List[str]:
@@ -361,16 +384,16 @@ class GameEngine:
                 else "동기: 단순한 적대감보다 보호, 은폐, 죄책감이 섞인 이유를 찾아야 합니다."
             ),
             (
-                "방법: 적절합니다."
+            "방법: 적절합니다."
                 if assessment["method_ok"]
                 else "방법: 출입 기록, 인증 로그, VPN 재작성 흔적처럼 시간축을 비튼 조작 방식을 명시해야 합니다."
             ),
             "",
             "추천 재열람 문서",
             "- chat_alice_late_help",
+            "- note_john_contingency_map",
             "- log_alice_dm_read",
-            "- log_alice_vpn_rewrite",
-            "- mail_alice_to_player",
+            "- mail_alice_unsent_escalation",
             "",
             "사건은 재조사로 넘어가고, 보고서가 모호한 탓에 일부 책임 소재는 흐려집니다.",
         ]

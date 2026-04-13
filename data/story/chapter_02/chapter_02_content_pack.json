@@ -87,6 +87,32 @@
       "player_notice": "존은 존스를 완전히 범인으로 보지 않았고, 앨리스를 여전히 신뢰하려 했다.",
       "hidden_meaning": "존의 신뢰 지도와 플레이어가 보고 있는 프레임이 어긋난다.",
       "reveals_character": "존은 무너지면서도 가까운 사람들을 끝까지 나눠 보려 한다."
+    },
+    {
+      "id": "note_security_jones_override",
+      "type": "incident_note",
+      "title": "보안 인계 메모 / Jones 수동 개방 요청",
+      "timestamp": "2026-04-16 23:15:12 KST",
+      "user_id": "sec.shift_b",
+      "ip": "10.24.0.23",
+      "action": "handoff_note",
+      "content": "2026-04-16 23:15:12 KST | author=sec.shift_b | subject=svc-corridor-3 수동 개방 요청\n\n- 요청자: jones.m\n- 사유: '존이 지금 서버 쪽에 다시 붙었을 수 있다. 문 열어.'\n- 특이사항: 요청자는 매우 격앙돼 있었고, 절차 생략을 요구함.\n- 후속 메모: 현장 충돌 가능성 우려로 일단 보류.",
+      "player_notice": "존스가 직접 문을 열라고 밀어붙인 기록은 그를 더 위험한 인물로 보이게 만든다.",
+      "hidden_meaning": "표면상 위협처럼 보이지만, 실제로는 늦은 차단 또는 수습 시도였을 수 있다.",
+      "reveals_character": "존스는 감정을 숨기지 못해 더 쉽게 악역처럼 읽힌다."
+    },
+    {
+      "id": "note_john_contingency_map",
+      "type": "private_note",
+      "title": "로컬 메모 / contingency_map.txt",
+      "timestamp": "2026-04-17 00:11:02 KST",
+      "user_id": "john.k",
+      "ip": "127.0.0.1",
+      "action": "note_saved",
+      "content": "1. bastion 경로 다시 열리면 바로 스냅샷 남길 것\n2. Jones가 또 소리치더라도 그 사람이 먼저 선 넘지는 않을 거다\n3. Alice는 끝까지 맥락을 보려 할 거다. 다만 너무 늦지 않으면 좋겠다\n4. 이게 진짜면 누군가는 이미 알고 있고, 누군가는 덮으려 한다\n5. 내가 사라지면 '퇴사'로 정리될 가능성이 크다\n\n마지막 줄:\n적어도 누군가는 전체 순서를 다시 읽게 만들어야 한다.",
+      "player_notice": "존은 마지막까지 사건의 순서를 남기려는 계획을 세우고 있었다.",
+      "hidden_meaning": "그는 단순히 도망친 사람이 아니라, 누군가가 다시 읽을 수 있도록 흔적을 설계한 사람이다.",
+      "reveals_character": "존은 무력한 피해자가 아니라 끝까지 움직인 사람으로 남는다."
     }
   ],
   "puzzles": [
@@ -115,6 +141,19 @@
       "what_is_actually_suspicious": "제한 구역 출입 기록 때문에 존스는 더 위험해 보이지만, 존의 메모 안에서조차 그는 선을 넘지 않을 사람으로 남아 있고 통화 로그도 분노보다 다급함을 남긴다.",
       "emotional_meaning": "플레이어가 존스를 미워하는 속도만큼 누군가는 그 미움을 정리해 주고 있었던 것처럼 느껴진다.",
       "player_deduction": "존스는 유력 용의자라기보다 보기 좋게 정렬된 첫 번째 해답일 수 있다."
+    },
+    {
+      "id": "puzzle_ch2_john_still_moving",
+      "situation": "존은 실종 직전까지도 도망친 사람이 아니라, 누군가가 전체 순서를 다시 읽게 만들려 한 사람처럼 보인다.",
+      "evidence_ids": [
+        "note_if_i_disappear",
+        "note_john_contingency_map",
+        "log_auth_midnight"
+      ],
+      "what_feels_normal_at_first": "메모는 불안한 사람이 남긴 단편 기록처럼 보인다.",
+      "what_is_actually_suspicious": "존은 감정만 토로한 게 아니라 접근 경로와 재독 순서를 남기며 마지막까지 능동적으로 움직였다.",
+      "emotional_meaning": "플레이어는 존을 더 이상 수동적 피해자로만 볼 수 없고, 그가 누구를 믿으며 무엇을 남기려 했는지 고민하게 된다.",
+      "player_deduction": "챕터 2의 핵심은 존스를 의심하는 것만이 아니라, 존이 끝까지 무엇을 막으려 했는지 읽는 데 있다."
     }
   ]
 }

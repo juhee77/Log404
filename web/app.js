@@ -212,7 +212,7 @@ function createStaticSession(data) {
     if (searchKeyword) {
       const keyword = searchKeyword.toLowerCase().trim();
       if (keyword) {
-        docs = docs.filter((doc) => keyword.includes('') || `${doc.title}\n${doc.content}`.toLowerCase().includes(keyword));
+        docs = docs.filter((doc) => `${doc.title}\n${doc.content}`.toLowerCase().includes(keyword));
       }
     }
 
@@ -221,6 +221,15 @@ function createStaticSession(data) {
 
   function listClues() {
     return Object.values(session.clues).sort((a, b) => (a.chapter - b.chapter) || a.clue_id.localeCompare(b.clue_id));
+  }
+
+  function reportReviewDocuments() {
+    return [
+      'chat_alice_late_help',
+      'note_john_contingency_map',
+      'log_alice_dm_read',
+      'mail_alice_unsent_escalation',
+    ];
   }
 
   function canSubmit() {
@@ -237,7 +246,7 @@ function createStaticSession(data) {
   function nextStep() {
     const unsolved = listClues().filter((clue) => !session.state.discovered_clues.has(clue.clue_id));
     if (!unsolved.length) {
-      return '세 단서를 모두 확보했습니다. 이제 범인, 동기, 조작 수법을 한 문장씩 정리한 뒤 최종 보고서를 제출하세요.';
+      return `세 단서를 모두 확보했습니다. 바로 제출하기보다 ${reportReviewDocuments().join(', ')} 문서를 다시 읽고, 내가 누구의 설명을 빌려 여기까지 왔는지 먼저 정리하세요.`;
     }
 
     const target = unsolved[0];
@@ -263,7 +272,7 @@ function createStaticSession(data) {
       return `최종 보고서는 세 단서를 모두 확보한 뒤 열립니다. 남은 정리 대상: ${remaining.join(', ')}`;
     }
 
-    return '보고서는 세 줄로 정리하면 됩니다. 범인에는 기록의 방향을 통제한 인물, 동기에는 왜 진실을 비틀었는지, 방법에는 어떤 로그/타임라인 조작을 했는지를 적으세요.';
+    return `지금 필요한 건 새 증거가 아니라, 이미 읽은 기록을 누구의 말 없이 다시 읽는 일입니다. 보고서는 세 줄로 정리하면 됩니다. 범인에는 기록의 방향을 통제한 인물, 동기에는 왜 진실을 비틀었는지, 방법에는 어떤 로그/타임라인 조작이 있었는지를 적으세요. 추천 재검토: ${reportReviewDocuments().join(', ')}`;
   }
 
   function assessReport(culprit, motive, method) {
@@ -302,9 +311,9 @@ function createStaticSession(data) {
       '',
       '추천 재열람 문서',
       '- chat_alice_late_help',
+      '- note_john_contingency_map',
       '- log_alice_dm_read',
-      '- log_alice_vpn_rewrite',
-      '- mail_alice_to_player',
+      '- mail_alice_unsent_escalation',
       '',
       '사건은 재조사로 넘어가고, 보고서가 모호한 탓에 일부 책임 소재는 흐려집니다.',
     ].join('\n');
@@ -333,39 +342,98 @@ function createStaticSession(data) {
       required_count: clue.required_documents.length,
       opened_required_count: openedRequired,
       missing_documents: missingDocuments,
+      story_prompt: clueStoryPrompt(clue, missingDocuments),
       ready_to_infer: !missingDocuments.length && !session.state.discovered_clues.has(clue.clue_id),
     };
   }
 
+  function clueStoryPrompt(clue, missingDocuments) {
+    const solved = session.state.discovered_clues.has(clue.clue_id);
+
+    if (clue.clue_id === 'clue_empty_resignation') {
+      if (solved) {
+        return '회사가 만든 퇴사 서사는 깨졌습니다. 이제 누가 그 공백을 이용했는지 넘어갈 차례입니다.';
+      }
+      if (missingDocuments.length) {
+        return '공식 공지와 미전송 초안의 감정 차이를 먼저 붙잡으세요.';
+      }
+      return '퇴사 통보가 아니라 검열된 마지막 문장인지 판단할 시점입니다.';
+    }
+
+    if (clue.clue_id === 'clue_jones_false_face') {
+      if (solved) {
+        return '존스는 여전히 거칠지만, 바로 그 점 때문에 너무 편한 범인처럼 소비됐습니다.';
+      }
+      if (missingDocuments.includes('note_security_jones_override') || missingDocuments.includes('note_john_contingency_map')) {
+        return '존스를 더 강하게 의심하게 만드는 표면 기록과, 존이 남긴 대비 메모를 함께 읽어야 합니다.';
+      }
+      return '이제 존스를 향한 분노가 자연발생인지, 누군가가 정리해 준 감정인지 재구성하세요.';
+    }
+
+    if (clue.clue_id === 'clue_alice_tampered_truth') {
+      if (solved) {
+        return '도움과 조작이 같은 손에서 나왔습니다. 문제는 누가 범인인가보다 왜 그 방향을 믿었는가입니다.';
+      }
+      if (missingDocuments.includes('mail_alice_unsent_escalation')) {
+        return '앨리스의 개입만으론 부족합니다. 그녀가 왜 보고를 미뤘는지 보여 주는 초안까지 읽어야 합니다.';
+      }
+      return '조작의 증거와 보호의 동기가 같은 인물에게서 나왔는지 읽을 차례입니다.';
+    }
+
+    return '';
+  }
+
   function suspectBoard() {
     const discovered = session.state.discovered_clues;
+    const hasJonesOverride = session.state.opened_documents.has('note_security_jones_override');
+    const hasJohnPlan = session.state.opened_documents.has('note_john_contingency_map');
+    const hasAliceDraft = session.state.opened_documents.has('mail_alice_unsent_escalation');
+
     return [
       {
         name: 'Alice Han',
         role: '플레이어 조력자 / 운영 접근권 보유',
-        status: discovered.has('clue_alice_tampered_truth') ? '핵심 조작자' : '조력자인 척하는 고위험 인물',
-        score: discovered.has('clue_alice_tampered_truth') ? 5 : 3,
+        status: discovered.has('clue_alice_tampered_truth')
+          ? '핵심 조작자'
+          : hasAliceDraft
+            ? '도움과 은폐를 함께 쥔 내부자'
+            : '조력자인 척하는 고위험 인물',
+        score: discovered.has('clue_alice_tampered_truth') ? 5 : hasAliceDraft ? 4 : 3,
         note: discovered.has('clue_alice_tampered_truth')
-          ? '도움의 말투와 별개로 DM 열람 기록과 재작성 흔적이 겹친다.'
-          : '존의 기록에 먼저 접근할 수 있었던 인물인지 계속 확인해야 한다.',
+          ? 'DM 열람 기록, 재작성 흔적, 미전송 보고 초안이 겹치며 보호 욕망이 통제로 변질된 구조가 보인다.'
+          : hasAliceDraft
+            ? '미전송 보고 초안은 그녀가 숨기고 있음을 보여주지만, 출발점에 보호 충동과 망설임도 섞여 있다.'
+            : '존의 기록에 먼저 접근할 수 있었던 인물인지 계속 확인해야 한다.',
       },
       {
         name: 'Jones',
         role: '거친 동료 / 초반 용의선상',
-        status: discovered.has('clue_jones_false_face') ? '희생양에 가까움' : '표면상 가장 수상함',
-        score: discovered.has('clue_jones_false_face') ? 1 : 4,
+        status: discovered.has('clue_jones_false_face')
+          ? '희생양에 가까움'
+          : hasJonesOverride
+            ? '폭주 직전의 유력 용의자'
+            : '표면상 가장 수상함',
+        score: discovered.has('clue_jones_false_face') ? 1 : hasJonesOverride ? 5 : 4,
         note: discovered.has('clue_jones_false_face')
-          ? '사적인 기록을 보면 존을 버린 인물보다 뒤늦게 수습하려 한 인물에 가깝다.'
-          : '거친 발언과 실제 행동 사이에 간극이 있는지 확인이 필요하다.',
+          ? '보안 인계 메모와 반복 통화를 다시 읽으면, 위협보다 뒤늦은 수습과 차단 시도가 더 선명해진다.'
+          : hasJonesOverride
+            ? '수동 개방 요청 메모까지 보면 바로 범인으로 적고 싶어지지만, 아직 재해석 여지가 남아 있다.'
+            : '거친 발언과 실제 행동 사이에 간극이 있는지 확인이 필요하다.',
       },
       {
         name: 'John Kim',
         role: '실종자 / 피해자',
-        status: discovered.has('clue_empty_resignation') ? '강요된 퇴사 서사' : '자발적 퇴사처럼 위장됨',
+        status: hasJohnPlan
+          ? '사라지기 전 대비를 남긴 실종자'
+          : discovered.has('clue_empty_resignation')
+            ? '강요된 퇴사 서사'
+            : '자발적 퇴사처럼 위장됨',
         score: 0,
-        note: discovered.has('clue_empty_resignation')
-          ? '미전송 초안의 감정과 공식 퇴사 공지의 문체가 너무 다르다.'
-          : '퇴사 서사가 지나치게 깔끔하다. 공백 자체가 단서일 수 있다.',
+        note: hasJohnPlan
+          ? 'contingency_map은 존이 마지막까지 사건의 순서와 증거 보존을 설계하려 했음을 보여준다.'
+          : discovered.has('clue_empty_resignation')
+            ? '미전송 초안의 감정과 공식 퇴사 공지의 문체가 너무 다르다.'
+            : '퇴사 서사가 지나치게 깔끔하다. 공백 자체가 단서일 수 있다.',
       },
     ];
   }
@@ -398,6 +466,7 @@ function createStaticSession(data) {
       objective: session.state.objective,
       chapter: Math.min(session.state.current_chapter, 3),
       story_brief: storyBrief(),
+      report_review_documents: reportReviewDocuments(),
       opened_count: session.state.opened_documents.size,
       clue_count: session.state.discovered_clues.size,
       total_clue_count: Object.keys(session.clues).length,
@@ -506,6 +575,10 @@ function createStaticSession(data) {
     if (unlocked.length) {
       lines.push(`해금된 문서: ${unlocked.join(', ')}`);
     }
+    if (canSubmit()) {
+      lines.push(`재검토 권장: ${reportReviewDocuments().join(', ')}`);
+      lines.push('지금 필요한 건 범인을 급히 적는 일보다, 내가 누구의 설명을 믿고 여기까지 왔는지 다시 읽는 일이다.');
+    }
     return lines.join('\n');
   }
 
@@ -580,6 +653,9 @@ function createStaticSession(data) {
       message = inferClue(payload.clue_id || '');
       session.lastMessage = message;
       recordActivity(message);
+      if ((payload.clue_id || '') === 'clue_alice_tampered_truth' && canSubmit()) {
+        recordActivity('재독 필요: 누구의 설명을 믿고 여기까지 왔는지 다시 확인');
+      }
       return snapshotResponse(sourceType, searchKeyword, message);
     }
 
@@ -712,7 +788,7 @@ function render() {
   els.submitButton.disabled = !state.can_submit;
   syncSourceTypes(state.source_types);
 
-  renderStoryBrief(state.story_brief);
+  renderStoryBrief(state.story_brief, state.report_review_documents, state.can_submit);
   renderSuspects(state.suspects);
   renderDocuments(state.documents, state.active_document);
   renderClues(state.clues);
@@ -743,7 +819,7 @@ function formatStoryScreen(screen) {
   return labels[screen] || screen;
 }
 
-function renderStoryBrief(storyBrief) {
+function renderStoryBrief(storyBrief, reviewDocuments = [], canSubmit = false) {
   const current = storyBrief?.current;
   if (!current) {
     els.storyCurrentTitle.textContent = '챕터 브리핑을 불러오지 못했습니다.';
@@ -764,6 +840,18 @@ function renderStoryBrief(storyBrief) {
       <div>${escapeHtml(beat.beat)}</div>
     </article>
   `).join('');
+
+  if (canSubmit) {
+    els.storyRoadmap.innerHTML = `
+      <article class="story-roadmap-item primary">
+        <div class="story-roadmap-label">재검토 포인트</div>
+        <strong>누가 범인인가보다, 누구의 설명을 믿고 여기까지 왔는가</strong>
+        <p>보고서를 쓰기 전에 아래 기록을 다시 읽고 판단 순서를 재구성하세요.</p>
+        <div class="story-roadmap-meta">재독 문서: ${escapeHtml((reviewDocuments || []).join(' / '))}</div>
+      </article>
+    `;
+    return;
+  }
 
   const roadmap = storyBrief.roadmap || [];
   if (!roadmap.length) {
@@ -851,6 +939,7 @@ function renderClues(clues) {
       </div>
       <div class="clue-meta">${escapeHtml(clue.clue_id)} · 챕터 ${clue.chapter} · ${clue.solved ? '확보' : '미확보'}</div>
       <p>${escapeHtml(clue.description)}</p>
+      ${clue.story_prompt ? `<div class="clue-missing">${escapeHtml(clue.story_prompt)}</div>` : ''}
       <div class="clue-progress">
         <div class="clue-progress-fill" style="width: ${(clue.opened_required_count / clue.required_count) * 100}%"></div>
       </div>

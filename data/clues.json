@@ -14,8 +14,8 @@
     "chapter": 2,
     "source_type": "chat_call_note",
     "name": "존스의 너무 쉬운 유죄성",
-    "description": "존스는 거칠게 말했지만, 실제 기록을 보면 존을 포기한 사람이 아니라 뒤늦게 수습하려 했던 사람에 가깝다.",
-    "required_documents": ["chat_jones_argument", "log_jones_calls", "note_if_i_disappear"],
+    "description": "존스는 표면 기록상 폭력적으로 보이지만, 보안 인계와 존의 대비 메모까지 읽고 나면 존을 포기한 사람이 아니라 뒤늦게 수습하려 한 사람에 가깝다.",
+    "required_documents": ["chat_jones_argument", "log_jones_calls", "note_if_i_disappear", "note_security_jones_override", "note_john_contingency_map"],
     "trigger_condition": "surface_guilt_conflicts_with_private_trace",
     "unlock_effect": "unlock_document:log_alice_dm_read"
   },
@@ -24,8 +24,8 @@
     "chapter": 3,
     "source_type": "timeline_manipulation",
     "name": "앨리스가 설계한 진실의 방향",
-    "description": "앨리스는 플레이어를 도우면서 동시에 존의 기록에 먼저 접근했고, 시간축과 해석 방향을 함께 통제했다.",
-    "required_documents": ["chat_alice_late_help", "log_badge_gap", "log_auth_midnight", "log_alice_dm_read", "log_alice_vpn_rewrite", "mail_alice_to_player"],
+    "description": "앨리스는 플레이어를 실제로 도우면서도 존의 기록에 먼저 접근했고, 보호 욕망과 죄책감 속에서 시간축과 해석 방향을 함께 통제했다.",
+    "required_documents": ["chat_alice_late_help", "log_badge_gap", "log_auth_midnight", "log_alice_dm_read", "log_alice_vpn_rewrite", "mail_alice_to_player", "mail_alice_unsent_escalation"],
     "trigger_condition": "helper_has_access_and_guidance_control",
     "unlock_effect": "unlock_document:final_report_form"
   }

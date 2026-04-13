@@ -2,12 +2,12 @@
   {
     "chapter_id": "chapter_01",
     "required_clues": ["clue_empty_resignation"],
-    "unlock_targets": ["log_badge_gap", "log_auth_midnight", "log_jones_calls", "log_jones_restricted_badge", "note_if_i_disappear"]
+    "unlock_targets": ["log_badge_gap", "log_auth_midnight", "log_jones_calls", "log_jones_restricted_badge", "note_if_i_disappear", "note_security_jones_override", "note_john_contingency_map"]
   },
   {
     "chapter_id": "chapter_02",
     "required_clues": ["clue_jones_false_face"],
-    "unlock_targets": ["log_alice_dm_read", "log_alice_vpn_rewrite", "mail_alice_to_player", "ticket_jones_freeze_request"]
+    "unlock_targets": ["log_alice_dm_read", "log_alice_vpn_rewrite", "mail_alice_to_player", "mail_alice_unsent_escalation", "ticket_jones_freeze_request"]
   },
   {
     "chapter_id": "chapter_03",
