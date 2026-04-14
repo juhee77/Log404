@@ -1,0 +1,56 @@
+[
+  {
+    "task_id": "task_ch1_resignation_gap",
+    "chapter": 1,
+    "title": "비어 있는 퇴사 문장",
+    "prompt": "공식 퇴사 처리와 가장 크게 충돌하는 기록은 무엇인가?",
+    "required_opened_documents": ["mail_hr_termination_draft", "mail_john_unsent_fragment"],
+    "prerequisite_tasks": [],
+    "options": [
+      {
+        "option_id": "hr_notice",
+        "label": "인사 초안이 이미 충분히 불안정하니 그 자체가 모순이다."
+      },
+      {
+        "option_id": "unsent_fragment",
+        "label": "미전송 초안의 두려움이 공식 퇴사 처리와 직접 충돌한다."
+      },
+      {
+        "option_id": "alice_dm",
+        "label": "앨리스의 안내 메시지가 퇴사 처리보다 더 수상하다."
+      }
+    ],
+    "correct_option": "unsent_fragment",
+    "unlock_targets": ["log_badge_gap", "log_auth_midnight"],
+    "resolves_clue": null,
+    "success_message": "공식 퇴사 처리만으로는 설명되지 않습니다. 퇴근 이후 시간축 기록을 확인할 수 있습니다.",
+    "failure_message": "공식 문장과 개인 기록의 온도 차이에 먼저 집중해야 합니다."
+  },
+  {
+    "task_id": "task_ch1_midnight_access",
+    "chapter": 1,
+    "title": "퇴근 뒤 다시 열린 시간축",
+    "prompt": "다음 단계로 넘어가게 만드는 핵심 모순은 무엇인가?",
+    "required_opened_documents": ["log_badge_gap", "log_auth_midnight"],
+    "prerequisite_tasks": ["task_ch1_resignation_gap"],
+    "options": [
+      {
+        "option_id": "normal_remote",
+        "label": "존은 퇴근 뒤 정상적인 원격 정리 작업을 했다."
+      },
+      {
+        "option_id": "timeline_conflict",
+        "label": "퇴근 처리와 새벽 접속이 같은 밤의 시간축 안에서 충돌한다."
+      },
+      {
+        "option_id": "badge_error",
+        "label": "출입 시스템 오류만으로 충분히 설명된다."
+      }
+    ],
+    "correct_option": "timeline_conflict",
+    "unlock_targets": [],
+    "resolves_clue": "clue_empty_resignation",
+    "success_message": "퇴사 서사는 유지되지 않습니다. 이제 존의 마지막 밤과 관련된 추가 기록을 조사할 수 있습니다.",
+    "failure_message": "출입 기록과 인증 기록을 같은 밤의 순서로 다시 놓고 보세요."
+  }
+]
