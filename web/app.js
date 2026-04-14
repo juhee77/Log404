@@ -27,6 +27,7 @@ const els = {
   documentContent: document.getElementById('documentContent'),
   activityLog: document.getElementById('activityLog'),
   clueList: document.getElementById('clueList'),
+  investigationPanelTitle: document.getElementById('investigationPanelTitle'),
   bookmarkList: document.getElementById('bookmarkList'),
   opsRail: document.getElementById('opsRail'),
   statusLine: document.getElementById('statusLine'),
@@ -85,10 +86,11 @@ async function loadStaticData() {
       .map((result) => result.value)
   );
 
-  const [caseData, storyBible, cluesData, gatesData, documentsData] = await Promise.all([
+  const [caseData, storyBible, cluesData, tasksData, gatesData, documentsData] = await Promise.all([
     fetchJson(`./data/cases/${STATIC_CASE_ID}.json`),
     fetchJson('./data/story/season_01/story_bible.json'),
     fetchJson('./data/clues.json'),
+    fetchJson('./data/investigation_tasks.json'),
     fetchJson('./data/chapter_gates.json'),
     fetchJson('./data/documents.json'),
   ]);
@@ -97,6 +99,7 @@ async function loadStaticData() {
     caseData,
     storyBible,
     cluesData,
+    tasksData,
     gatesData,
     documentsData,
     chapterPacks,
@@ -129,6 +132,25 @@ function createStaticSession(data) {
       },
     ])
   );
+  const tasks = Object.fromEntries(
+    data.tasksData.map((row) => [
+      row.task_id,
+      {
+        task_id: row.task_id,
+        chapter: row.chapter,
+        title: row.title,
+        prompt: row.prompt,
+        required_opened_documents: row.required_opened_documents,
+        prerequisite_tasks: row.prerequisite_tasks,
+        options: row.options,
+        correct_option: row.correct_option,
+        unlock_targets: row.unlock_targets,
+        resolves_clue: row.resolves_clue,
+        success_message: row.success_message,
+        failure_message: row.failure_message,
+      },
+    ])
+  );
   const chapterArc = Object.fromEntries(
     (data.storyBible.chapter_emotional_arc || []).map((row) => [row.chapter, row])
   );
@@ -137,12 +159,14 @@ function createStaticSession(data) {
     caseData: data.caseData,
     storyBible: data.storyBible,
     cluesData: data.cluesData,
+    tasksData: data.tasksData,
     gatesData: data.gatesData,
     documentsData: data.documentsData,
     chapterPacks: data.chapterPacks,
     chapterArc,
     documents,
     clues,
+    tasks,
     state: {
       case_id: data.caseData.case_id,
       case_title: data.caseData.title,
@@ -152,6 +176,7 @@ function createStaticSession(data) {
       opened_documents: new Set(),
       bookmarks: new Set(),
       discovered_clues: new Set(),
+      solved_tasks: new Set(),
     },
     activeDocId: null,
     lastMessage: '사건 파일을 펼쳤습니다. 좌측 문서를 열어 모순부터 확인하세요.',
@@ -223,6 +248,16 @@ function createStaticSession(data) {
     return Object.values(session.clues).sort((a, b) => (a.chapter - b.chapter) || a.clue_id.localeCompare(b.clue_id));
   }
 
+  function listActiveTasks() {
+    return Object.values(session.tasks)
+      .filter((task) =>
+        task.chapter === session.state.current_chapter
+        && !session.state.solved_tasks.has(task.task_id)
+        && task.prerequisite_tasks.every((taskId) => session.state.solved_tasks.has(taskId))
+      )
+      .sort((a, b) => a.task_id.localeCompare(b.task_id));
+  }
+
   function reportReviewDocuments() {
     return [
       'chat_alice_late_help',
@@ -244,6 +279,16 @@ function createStaticSession(data) {
   }
 
   function nextStep() {
+    const activeTasks = listActiveTasks();
+    if (activeTasks.length) {
+      const task = activeTasks[0];
+      const missingDocuments = task.required_opened_documents.filter((docId) => !session.state.opened_documents.has(docId));
+      if (missingDocuments.length) {
+        return `현재 조사 과제는 '${task.title}' 입니다. 먼저 ${missingDocuments.join(', ')} 문서를 열어 모순을 확인하세요.`;
+      }
+      return `현재 조사 과제는 '${task.title}' 입니다. 오른쪽 패널에서 가장 맞는 해석을 골라 다음 증거를 여세요.`;
+    }
+
     const unsolved = listClues().filter((clue) => !session.state.discovered_clues.has(clue.clue_id));
     if (!unsolved.length) {
       return `세 단서를 모두 확보했습니다. 바로 제출하기보다 ${reportReviewDocuments().join(', ')} 문서를 다시 읽고, 내가 누구의 설명을 빌려 여기까지 왔는지 먼저 정리하세요.`;
@@ -344,6 +389,22 @@ function createStaticSession(data) {
       missing_documents: missingDocuments,
       story_prompt: clueStoryPrompt(clue, missingDocuments),
       ready_to_infer: !missingDocuments.length && !session.state.discovered_clues.has(clue.clue_id),
+    };
+  }
+
+  function serializeTask(task) {
+    const missingDocuments = task.required_opened_documents.filter((docId) => !session.state.opened_documents.has(docId));
+    return {
+      task_id: task.task_id,
+      title: task.title,
+      prompt: task.prompt,
+      chapter: task.chapter,
+      required_documents: task.required_opened_documents,
+      opened_required_count: task.required_opened_documents.length - missingDocuments.length,
+      required_count: task.required_opened_documents.length,
+      missing_documents: missingDocuments,
+      ready_to_submit: !missingDocuments.length,
+      options: task.options,
     };
   }
 
@@ -451,6 +512,7 @@ function createStaticSession(data) {
     const documentsList = listDocuments({ sourceType, searchKeyword }).map(serializeDocument);
     const bookmarks = listDocuments({ bookmarksOnly: true }).map(serializeDocument);
     const cluesList = listClues().map(serializeClue);
+    const activeTasks = listActiveTasks().map(serializeTask);
 
     let activeDocument = null;
     if (session.activeDocId && session.documents[session.activeDocId] && session.state.unlocked_documents.has(session.activeDocId)) {
@@ -467,6 +529,7 @@ function createStaticSession(data) {
       chapter: Math.min(session.state.current_chapter, 3),
       story_brief: storyBrief(),
       report_review_documents: reportReviewDocuments(),
+      active_tasks: activeTasks,
       opened_count: session.state.opened_documents.size,
       clue_count: session.state.discovered_clues.size,
       total_clue_count: Object.keys(session.clues).length,
@@ -560,6 +623,9 @@ function createStaticSession(data) {
     if (!clue) {
       return `알 수 없는 단서 ID: ${clueId}`;
     }
+    if (Object.values(session.tasks).some((task) => task.resolves_clue === clueId && !session.state.solved_tasks.has(task.task_id))) {
+      return '이 단서는 현재 조사 과제를 해결해야 확정할 수 있습니다.';
+    }
     if (session.state.discovered_clues.has(clueId)) {
       return `이미 확보한 단서입니다: ${clue.name}`;
     }
@@ -579,6 +645,55 @@ function createStaticSession(data) {
       lines.push(`재검토 권장: ${reportReviewDocuments().join(', ')}`);
       lines.push('지금 필요한 건 범인을 급히 적는 일보다, 내가 누구의 설명을 믿고 여기까지 왔는지 다시 읽는 일이다.');
     }
+    return lines.join('\n');
+  }
+
+  function submitTaskAnswer(taskId, optionId) {
+    const task = session.tasks[taskId];
+    if (!task) {
+      return `알 수 없는 조사 과제 ID: ${taskId}`;
+    }
+    if (session.state.solved_tasks.has(taskId)) {
+      return `이미 해결한 조사 과제입니다: ${task.title}`;
+    }
+    if (!task.prerequisite_tasks.every((requiredId) => session.state.solved_tasks.has(requiredId))) {
+      return `아직 잠겨 있는 조사 과제입니다: ${task.title}`;
+    }
+
+    const missingDocuments = task.required_opened_documents.filter((docId) => !session.state.opened_documents.has(docId));
+    if (missingDocuments.length) {
+      return `근거 문서 열람이 부족합니다. 먼저 열어야 할 문서: ${missingDocuments.join(', ')}`;
+    }
+
+    if (optionId !== task.correct_option) {
+      return task.failure_message;
+    }
+
+    session.state.solved_tasks.add(taskId);
+    const newlyUnlocked = [];
+    task.unlock_targets.forEach((docId) => {
+      if (!session.state.unlocked_documents.has(docId)) {
+        session.state.unlocked_documents.add(docId);
+        newlyUnlocked.push(docId);
+      }
+    });
+
+    const lines = [`조사 과제 해결: ${task.title}`, task.success_message];
+    if (task.resolves_clue && !session.state.discovered_clues.has(task.resolves_clue)) {
+      const clue = session.clues[task.resolves_clue];
+      session.state.discovered_clues.add(task.resolves_clue);
+      if (clue) {
+        lines.push(`단서 확보: ${clue.name}`);
+        lines.push(`설명: ${clue.description}`);
+      }
+      const gateUnlocks = applyChapterGates();
+      newlyUnlocked.push(...gateUnlocks);
+    }
+
+    if (newlyUnlocked.length) {
+      lines.push(`해금된 문서: ${[...new Set(newlyUnlocked)].join(', ')}`);
+    }
+
     return lines.join('\n');
   }
 
@@ -608,6 +723,7 @@ function createStaticSession(data) {
       opened_documents: [...session.state.opened_documents].sort(),
       bookmarks: [...session.state.bookmarks].sort(),
       discovered_clues: [...session.state.discovered_clues].sort(),
+      solved_tasks: [...session.state.solved_tasks].sort(),
       active_doc_id: session.activeDocId,
       last_report_message: session.lastReportMessage,
     };
@@ -626,6 +742,7 @@ function createStaticSession(data) {
     session.state.opened_documents = new Set(payload.opened_documents);
     session.state.bookmarks = new Set(payload.bookmarks);
     session.state.discovered_clues = new Set(payload.discovered_clues);
+    session.state.solved_tasks = new Set(payload.solved_tasks || []);
     session.activeDocId = payload.active_doc_id || null;
     session.lastReportMessage = payload.last_report_message || session.lastReportMessage;
     return '브라우저 저장 데이터 불러오기 완료';
@@ -656,6 +773,13 @@ function createStaticSession(data) {
       if ((payload.clue_id || '') === 'clue_alice_tampered_truth' && canSubmit()) {
         recordActivity('재독 필요: 누구의 설명을 믿고 여기까지 왔는지 다시 확인');
       }
+      return snapshotResponse(sourceType, searchKeyword, message);
+    }
+
+    if (action === 'task') {
+      message = submitTaskAnswer(payload.task_id || '', payload.option_id || '');
+      session.lastMessage = message;
+      recordActivity(message);
       return snapshotResponse(sourceType, searchKeyword, message);
     }
 
@@ -791,7 +915,7 @@ function render() {
   renderStoryBrief(state.story_brief, state.report_review_documents, state.can_submit);
   renderSuspects(state.suspects);
   renderDocuments(state.documents, state.active_document);
-  renderClues(state.clues);
+  renderInvestigations(state.active_tasks, state.clues);
   renderBookmarks(state.bookmarks);
   renderOpsRail(state);
   renderDocumentViewer(state.active_document);
@@ -930,7 +1054,42 @@ function renderDocuments(documents, activeDocument) {
   });
 }
 
-function renderClues(clues) {
+function renderInvestigations(activeTasks, clues) {
+  if (activeTasks.length) {
+    els.investigationPanelTitle.textContent = '현재 조사 과제';
+    els.clueList.innerHTML = activeTasks.map((task) => `
+      <article class="clue-item active">
+        <div class="clue-header">
+          <strong>${escapeHtml(task.title)}</strong>
+          <span class="clue-readiness ${task.ready_to_submit ? 'ready' : ''}">${task.ready_to_submit ? '제출 가능' : '조사 중'}</span>
+        </div>
+        <div class="clue-meta">${escapeHtml(task.task_id)} · 챕터 ${task.chapter}</div>
+        <p>${escapeHtml(task.prompt)}</p>
+        <div class="clue-progress">
+          <div class="clue-progress-fill" style="width: ${(task.opened_required_count / task.required_count) * 100}%"></div>
+        </div>
+        <div class="clue-meta">필수 기록 ${task.opened_required_count}/${task.required_count}</div>
+        ${task.missing_documents.length ? `<div class="clue-missing">먼저 열어야 할 문서: ${escapeHtml(task.missing_documents.join(', '))}</div>` : ''}
+        <div class="document-actions">
+          ${task.options.map((option) => `
+            <button data-task-answer="${task.task_id}" data-task-option="${option.option_id}" class="${task.ready_to_submit ? 'accent' : ''}" ${task.ready_to_submit ? '' : 'disabled'}>
+              ${escapeHtml(option.label)}
+            </button>
+          `).join('')}
+        </div>
+      </article>
+    `).join('');
+
+    els.clueList.querySelectorAll('[data-task-answer]').forEach((button) => {
+      button.addEventListener('click', () => postAction('/api/task', {
+        task_id: button.dataset.taskAnswer,
+        option_id: button.dataset.taskOption,
+      }));
+    });
+    return;
+  }
+
+  els.investigationPanelTitle.textContent = '확정 가능한 단서';
   els.clueList.innerHTML = clues.map((clue) => `
     <article class="clue-item ${clue.solved ? 'active' : ''}">
       <div class="clue-header">

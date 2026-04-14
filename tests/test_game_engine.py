@@ -10,7 +10,10 @@ class GameEngineTest(unittest.TestCase):
     def solve_case(self):
         for doc_id in ["mail_hr_termination_draft", "mail_john_unsent_fragment"]:
             self.game.open_document(doc_id)
-        self.game.infer_clue("clue_empty_resignation")
+        self.game.submit_task_answer("task_ch1_resignation_gap", "unsent_fragment")
+        for doc_id in ["log_badge_gap", "log_auth_midnight"]:
+            self.game.open_document(doc_id)
+        self.game.submit_task_answer("task_ch1_midnight_access", "timeline_conflict")
 
         for doc_id in [
             "chat_jones_argument",
@@ -46,11 +49,18 @@ class GameEngineTest(unittest.TestCase):
             [2, 3],
         )
 
-    def test_chapter_progression_by_clues(self):
+    def test_chapter_progression_by_tasks_and_clues(self):
         for doc_id in ["mail_hr_termination_draft", "mail_john_unsent_fragment"]:
             self.game.open_document(doc_id)
-        msg_1 = self.game.infer_clue("clue_empty_resignation")
-        self.assertIn("단서 확보", msg_1)
+        msg_1 = self.game.submit_task_answer("task_ch1_resignation_gap", "unsent_fragment")
+        self.assertIn("조사 과제 해결", msg_1)
+        self.assertIn("log_badge_gap", self.game.state.unlocked_documents)
+        self.assertIn("log_auth_midnight", self.game.state.unlocked_documents)
+
+        for doc_id in ["log_badge_gap", "log_auth_midnight"]:
+            self.game.open_document(doc_id)
+        msg_2 = self.game.submit_task_answer("task_ch1_midnight_access", "timeline_conflict")
+        self.assertIn("단서 확보", msg_2)
         self.assertEqual(self.game.state.current_chapter, 2)
         self.assertIn("log_jones_restricted_badge", self.game.state.unlocked_documents)
         self.assertIn("note_security_jones_override", self.game.state.unlocked_documents)
@@ -82,10 +92,31 @@ class GameEngineTest(unittest.TestCase):
         self.game.infer_clue("clue_alice_tampered_truth")
         self.assertTrue(self.game.can_submit())
 
-    def test_new_story_documents_are_required_for_progression(self):
+    def test_task_submission_requires_opened_documents(self):
         for doc_id in ["mail_hr_termination_draft", "mail_john_unsent_fragment"]:
             self.game.open_document(doc_id)
-        self.game.infer_clue("clue_empty_resignation")
+        result = self.game.submit_task_answer("task_ch1_midnight_access", "timeline_conflict")
+        self.assertIn("잠겨 있는 조사 과제", result)
+
+        self.game.submit_task_answer("task_ch1_resignation_gap", "unsent_fragment")
+        result = self.game.submit_task_answer("task_ch1_midnight_access", "timeline_conflict")
+        self.assertIn("log_badge_gap", result)
+        self.assertIn("log_auth_midnight", result)
+
+    def test_task_submission_blocks_wrong_answer(self):
+        for doc_id in ["mail_hr_termination_draft", "mail_john_unsent_fragment"]:
+            self.game.open_document(doc_id)
+        result = self.game.submit_task_answer("task_ch1_resignation_gap", "alice_dm")
+        self.assertIn("온도 차이", result)
+        self.assertNotIn("task_ch1_resignation_gap", self.game.state.solved_tasks)
+
+    def test_new_story_documents_are_required_for_progression(self):
+        self.game.open_document("mail_hr_termination_draft")
+        self.game.open_document("mail_john_unsent_fragment")
+        self.game.submit_task_answer("task_ch1_resignation_gap", "unsent_fragment")
+        self.game.open_document("log_badge_gap")
+        self.game.open_document("log_auth_midnight")
+        self.game.submit_task_answer("task_ch1_midnight_access", "timeline_conflict")
 
         for doc_id in ["chat_jones_argument", "log_jones_calls", "note_if_i_disappear"]:
             self.game.open_document(doc_id)
@@ -131,7 +162,7 @@ class GameEngineTest(unittest.TestCase):
         self.assertIn("진실 엔딩", result)
 
     def test_investigation_guidance_changes_with_progress(self):
-        self.assertIn("다음 표적 단서", self.game.next_step())
+        self.assertIn("현재 조사 과제", self.game.next_step())
         self.assertIn("남은 정리 대상", self.game.report_guidance())
 
         self.solve_case()
@@ -143,12 +174,24 @@ class GameEngineTest(unittest.TestCase):
     def test_story_brief_advances_with_progress(self):
         for doc_id in ["mail_hr_termination_draft", "mail_john_unsent_fragment"]:
             self.game.open_document(doc_id)
-        self.game.infer_clue("clue_empty_resignation")
+        self.game.submit_task_answer("task_ch1_resignation_gap", "unsent_fragment")
+        for doc_id in ["log_badge_gap", "log_auth_midnight"]:
+            self.game.open_document(doc_id)
+        self.game.submit_task_answer("task_ch1_midnight_access", "timeline_conflict")
 
         story_brief = self.game.story_brief()
         self.assertEqual(story_brief["current"]["title"], "도와주는 사람의 손길")
         self.assertEqual(story_brief["roadmap"][0]["title"], "존스는 너무 쉽게 미워진다")
         self.assertIn("안도", story_brief["current"]["emotional_focus"])
+
+    def test_initial_active_task_and_ch1_clue_gate(self):
+        tasks = self.game.list_active_tasks()
+        self.assertEqual([task.task_id for task in tasks], ["task_ch1_resignation_gap"])
+
+        self.game.open_document("mail_hr_termination_draft")
+        self.game.open_document("mail_john_unsent_fragment")
+        infer_result = self.game.infer_clue("clue_empty_resignation")
+        self.assertIn("현재 조사 과제", infer_result)
 
 
 if __name__ == "__main__":

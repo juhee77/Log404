@@ -62,6 +62,28 @@ class GameSession:
             "ready_to_infer": not missing_documents and clue.clue_id not in self.engine.state.discovered_clues,
         }
 
+    def _serialize_task(self, task) -> dict:
+        missing_documents = [
+            doc_id
+            for doc_id in task.required_opened_documents
+            if doc_id not in self.engine.state.opened_documents
+        ]
+        return {
+            "task_id": task.task_id,
+            "title": task.title,
+            "prompt": task.prompt,
+            "chapter": task.chapter,
+            "required_documents": task.required_opened_documents,
+            "opened_required_count": len(task.required_opened_documents) - len(missing_documents),
+            "required_count": len(task.required_opened_documents),
+            "missing_documents": missing_documents,
+            "ready_to_submit": not missing_documents,
+            "options": [
+                {"option_id": option.option_id, "label": option.label}
+                for option in task.options
+            ],
+        }
+
     def _clue_story_prompt(self, clue_id: str, missing_documents: list[str]) -> str:
         discovered = self.engine.state.discovered_clues
 
@@ -171,6 +193,7 @@ class GameSession:
         ]
         bookmarks = [self._serialize_document(doc) for doc in self.engine.list_bookmarks()]
         clues = [self._serialize_clue(clue) for clue in self.engine.list_clues()]
+        active_tasks = [self._serialize_task(task) for task in self.engine.list_active_tasks()]
 
         active_doc = None
         if self.active_doc_id and self.active_doc_id in self.engine.documents and self.active_doc_id in self.engine.state.unlocked_documents:
@@ -184,6 +207,7 @@ class GameSession:
             "chapter": min(self.engine.state.current_chapter, 3),
             "story_brief": self.engine.story_brief(),
             "report_review_documents": self.engine.report_review_documents(),
+            "active_tasks": active_tasks,
             "opened_count": len(self.engine.state.opened_documents),
             "clue_count": len(self.engine.state.discovered_clues),
             "total_clue_count": self.engine.total_clue_count(),
@@ -293,6 +317,16 @@ class Log404Handler(BaseHTTPRequestHandler):
                 SESSION._record_activity(message)
                 if clue_id == "clue_alice_tampered_truth" and SESSION.engine.can_submit():
                     SESSION._record_activity("재독 필요: 누구의 설명을 믿고 여기까지 왔는지 다시 확인")
+                response = {"message": message, "state": SESSION.snapshot(source_type, search_keyword)}
+                self._send_json(response)
+                return
+
+            if parsed.path == "/api/task":
+                task_id = payload.get("task_id", "")
+                option_id = payload.get("option_id", "")
+                message = SESSION.engine.submit_task_answer(task_id, option_id)
+                SESSION.last_message = message
+                SESSION._record_activity(message)
                 response = {"message": message, "state": SESSION.snapshot(source_type, search_keyword)}
                 self._send_json(response)
                 return

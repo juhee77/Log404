@@ -37,6 +37,28 @@ class Clue:
 
 
 @dataclass
+class InvestigationOption:
+    option_id: str
+    label: str
+
+
+@dataclass
+class InvestigationTask:
+    task_id: str
+    chapter: int
+    title: str
+    prompt: str
+    required_opened_documents: List[str]
+    prerequisite_tasks: List[str]
+    options: List[InvestigationOption]
+    correct_option: str
+    unlock_targets: List[str]
+    resolves_clue: str | None
+    success_message: str
+    failure_message: str
+
+
+@dataclass
 class GameState:
     case_id: str
     case_title: str
@@ -46,6 +68,7 @@ class GameState:
     opened_documents: Set[str] = field(default_factory=set)
     bookmarks: Set[str] = field(default_factory=set)
     discovered_clues: Set[str] = field(default_factory=set)
+    solved_tasks: Set[str] = field(default_factory=set)
 
 
 class GameEngine:
@@ -54,6 +77,7 @@ class GameEngine:
         self.case_data = self._load_json("cases/case_001.json")
         self.story_bible = self._load_json("story/season_01/story_bible.json")
         self.clues_data = self._load_json("clues.json")
+        self.tasks_data = self._load_json("investigation_tasks.json")
         self.gates_data = self._load_json("chapter_gates.json")
         self.documents_data = self._load_json("documents.json")
         self.chapter_packs = self._load_chapter_packs()
@@ -82,6 +106,26 @@ class GameEngine:
                 required_documents=row["required_documents"],
             )
             for row in self.clues_data
+        }
+        self.tasks: Dict[str, InvestigationTask] = {
+            row["task_id"]: InvestigationTask(
+                task_id=row["task_id"],
+                chapter=row["chapter"],
+                title=row["title"],
+                prompt=row["prompt"],
+                required_opened_documents=row["required_opened_documents"],
+                prerequisite_tasks=row["prerequisite_tasks"],
+                options=[
+                    InvestigationOption(option_id=option["option_id"], label=option["label"])
+                    for option in row["options"]
+                ],
+                correct_option=row["correct_option"],
+                unlock_targets=row["unlock_targets"],
+                resolves_clue=row.get("resolves_clue"),
+                success_message=row["success_message"],
+                failure_message=row["failure_message"],
+            )
+            for row in self.tasks_data
         }
 
         self.state = GameState(
@@ -173,6 +217,18 @@ class GameEngine:
     def list_clues(self) -> List[Clue]:
         return sorted(self.clues.values(), key=lambda clue: (clue.chapter, clue.clue_id))
 
+    def list_active_tasks(self) -> List[InvestigationTask]:
+        return sorted(
+            [
+                task
+                for task in self.tasks.values()
+                if task.chapter == self.state.current_chapter
+                and task.task_id not in self.state.solved_tasks
+                and set(task.prerequisite_tasks).issubset(self.state.solved_tasks)
+            ],
+            key=lambda task: task.task_id,
+        )
+
     def list_bookmarks(self) -> List[Document]:
         return self.list_documents(bookmarks_only=True)
 
@@ -195,6 +251,24 @@ class GameEngine:
         return "은폐 구조 재구성 단계"
 
     def next_step(self) -> str:
+        active_tasks = self.list_active_tasks()
+        if active_tasks:
+            task = active_tasks[0]
+            missing_documents = [
+                doc_id
+                for doc_id in task.required_opened_documents
+                if doc_id not in self.state.opened_documents
+            ]
+            if missing_documents:
+                return (
+                    f"현재 조사 과제는 '{task.title}' 입니다. "
+                    f"먼저 {', '.join(missing_documents)} 문서를 열어 모순을 확인하세요."
+                )
+            return (
+                f"현재 조사 과제는 '{task.title}' 입니다. "
+                "오른쪽 패널에서 정답 문장을 고르면 다음 증거가 열립니다."
+            )
+
         unsolved = [clue for clue in self.list_clues() if clue.clue_id not in self.state.discovered_clues]
         if not unsolved:
             return (
@@ -285,6 +359,11 @@ class GameEngine:
         clue = self.clues.get(clue_id)
         if not clue:
             return f"알 수 없는 단서 ID: {clue_id}"
+        if any(
+            task.resolves_clue == clue_id and task.task_id not in self.state.solved_tasks
+            for task in self.tasks.values()
+        ):
+            return "이 단서는 현재 조사 과제를 해결해야 확정할 수 있습니다."
         if clue.clue_id in self.state.discovered_clues:
             return f"이미 확보한 단서입니다: {clue.name}"
 
@@ -306,6 +385,52 @@ class GameEngine:
             lines.append(
                 "지금 필요한 건 범인을 급히 적는 일보다, 내가 누구의 설명을 믿고 여기까지 왔는지 다시 읽는 일이다."
             )
+        return "\n".join(lines)
+
+    def submit_task_answer(self, task_id: str, option_id: str) -> str:
+        task = self.tasks.get(task_id)
+        if not task:
+            return f"알 수 없는 조사 과제 ID: {task_id}"
+        if task.task_id in self.state.solved_tasks:
+            return f"이미 해결한 조사 과제입니다: {task.title}"
+        if not set(task.prerequisite_tasks).issubset(self.state.solved_tasks):
+            return f"아직 잠겨 있는 조사 과제입니다: {task.title}"
+
+        missing_documents = [
+            doc_id
+            for doc_id in task.required_opened_documents
+            if doc_id not in self.state.opened_documents
+        ]
+        if missing_documents:
+            return (
+                "근거 문서 열람이 부족합니다. 먼저 열어야 할 문서: "
+                + ", ".join(missing_documents)
+            )
+
+        if option_id != task.correct_option:
+            return task.failure_message
+
+        self.state.solved_tasks.add(task.task_id)
+        newly_unlocked = []
+        for doc_id in task.unlock_targets:
+            if doc_id not in self.state.unlocked_documents:
+                self.state.unlocked_documents.add(doc_id)
+                newly_unlocked.append(doc_id)
+
+        lines = [f"조사 과제 해결: {task.title}", task.success_message]
+        if task.resolves_clue and task.resolves_clue not in self.state.discovered_clues:
+            clue = self.clues.get(task.resolves_clue)
+            self.state.discovered_clues.add(task.resolves_clue)
+            if clue:
+                lines.append(f"단서 확보: {clue.name}")
+                lines.append(f"설명: {clue.description}")
+            gate_unlocks = self._apply_chapter_gates()
+            newly_unlocked.extend(gate_unlocks)
+
+        if newly_unlocked:
+            deduped = list(dict.fromkeys(newly_unlocked))
+            lines.append(f"해금된 문서: {', '.join(deduped)}")
+
         return "\n".join(lines)
 
     def _apply_chapter_gates(self) -> List[str]:
@@ -344,6 +469,7 @@ class GameEngine:
             "bookmarks": len(self.state.bookmarks),
             "can_submit": self.can_submit(),
             "story_brief": self.story_brief(),
+            "active_tasks": len(self.list_active_tasks()),
         }
 
     def status(self) -> str:
@@ -354,7 +480,8 @@ class GameEngine:
             f"챕터: {snapshot['current_chapter']}/3\n"
             f"열람 문서: {snapshot['opened_documents']}\n"
             f"확보 단서: {snapshot['discovered_clues']}/{snapshot['total_clues']}\n"
-            f"북마크: {snapshot['bookmarks']}"
+            f"북마크: {snapshot['bookmarks']}\n"
+            f"현재 조사 과제: {snapshot['active_tasks']}"
         )
 
     def ending(self, culprit: str, motive: str, method: str) -> str:
@@ -431,6 +558,7 @@ class GameEngine:
             "opened_documents": sorted(self.state.opened_documents),
             "bookmarks": sorted(self.state.bookmarks),
             "discovered_clues": sorted(self.state.discovered_clues),
+            "solved_tasks": sorted(self.state.solved_tasks),
         }
         with path.open("w", encoding="utf-8") as f:
             json.dump(payload, f, ensure_ascii=False, indent=2)
@@ -447,4 +575,5 @@ class GameEngine:
         self.state.opened_documents = set(payload["opened_documents"])
         self.state.bookmarks = set(payload["bookmarks"])
         self.state.discovered_clues = set(payload["discovered_clues"])
+        self.state.solved_tasks = set(payload.get("solved_tasks", []))
         return f"불러오기 완료: {path}"
