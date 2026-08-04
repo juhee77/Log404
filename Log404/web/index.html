@@ -34,12 +34,12 @@
           <div id="storyBeats" class="story-beats"></div>
           <div class="section-label">조사 지시</div>
           <div id="nextStep" class="briefing-copy"></div>
-          <div class="section-label">다음 스토리 계획</div>
+          <div class="section-label">후속 확인 대상</div>
           <div id="storyRoadmap" class="story-roadmap"></div>
         </section>
 
         <section class="subpanel help-panel">
-          <div class="subpanel-title">플레이 방법</div>
+          <div class="subpanel-title">조사 요령</div>
           <ol class="how-to-list">
             <li>좌측 문서를 열어 공식 설명과 실제 기록의 모순을 찾습니다.</li>
             <li>수상한 문서는 북마크해 두고, 하단 검색으로 단어와 인물을 추적합니다.</li>
@@ -54,12 +54,15 @@
         </section>
 
         <section class="subpanel">
-          <div class="subpanel-title">문서 보관함</div>
+          <div class="subpanel-title">조사 문서</div>
           <div class="filter-row">
             <label for="sourceFilter">소스 필터</label>
             <select id="sourceFilter">
               <option value="all">all</option>
             </select>
+          </div>
+          <div class="filter-row">
+            <button id="toggleArchiveButton">보관 문서 보기</button>
           </div>
           <div id="documentList" class="document-list"></div>
         </section>

@@ -58,7 +58,6 @@ class GameSession:
             "required_count": len(clue.required_documents),
             "opened_required_count": opened_required,
             "missing_documents": missing_documents,
-            "story_prompt": self._clue_story_prompt(clue.clue_id, missing_documents),
             "ready_to_infer": not missing_documents and clue.clue_id not in self.engine.state.discovered_clues,
         }
 
@@ -84,32 +83,6 @@ class GameSession:
             ],
         }
 
-    def _clue_story_prompt(self, clue_id: str, missing_documents: list[str]) -> str:
-        discovered = self.engine.state.discovered_clues
-
-        if clue_id == "clue_empty_resignation":
-            if clue_id in discovered:
-                return "회사가 만든 퇴사 서사는 깨졌습니다. 이제 누가 그 공백을 이용했는지 넘어갈 차례입니다."
-            if missing_documents:
-                return "공식 공지와 미전송 초안의 감정 차이를 먼저 붙잡으세요."
-            return "퇴사 통보가 아니라 검열된 마지막 문장인지 판단할 시점입니다."
-
-        if clue_id == "clue_jones_false_face":
-            if clue_id in discovered:
-                return "존스는 여전히 거칠지만, 바로 그 점 때문에 너무 편한 범인처럼 소비됐습니다."
-            if "note_security_jones_override" in missing_documents or "note_john_contingency_map" in missing_documents:
-                return "존스를 더 강하게 의심하게 만드는 표면 기록과, 존이 남긴 대비 메모를 함께 읽어야 합니다."
-            return "이제 존스를 향한 분노가 자연발생인지, 누군가가 정리해 준 감정인지 재구성하세요."
-
-        if clue_id == "clue_alice_tampered_truth":
-            if clue_id in discovered:
-                return "도움과 조작이 같은 손에서 나왔습니다. 문제는 누가 범인인가보다 왜 그 방향을 믿었는가입니다."
-            if "mail_alice_unsent_escalation" in missing_documents:
-                return "앨리스의 개입만으론 부족합니다. 그녀가 왜 보고를 미뤘는지 보여 주는 초안까지 읽어야 합니다."
-            return "조작의 증거와 보호의 동기가 같은 인물에게서 나왔는지 읽을 차례입니다."
-
-        return ""
-
     def _suspect_board(self) -> list[dict]:
         discovered = self.engine.state.discovered_clues
         opened = self.engine.state.opened_documents
@@ -129,9 +102,9 @@ class GameSession:
                 ),
                 "score": 5 if "clue_alice_tampered_truth" in discovered else 4 if has_alice_draft else 3,
                 "note": (
-                    "DM 열람 기록, 재작성 흔적, 미전송 보고 초안이 겹치며 보호 욕망이 통제로 변질된 구조가 보인다."
+                    "DM 열람 기록, 재작성 흔적, 미전송 보고 초안이 같은 이름으로 반복해서 남아 있다."
                     if "clue_alice_tampered_truth" in discovered
-                    else "미전송 보고 초안은 그녀가 숨기고 있음을 보여주지만, 출발점에 보호 충동과 망설임도 섞여 있다."
+                    else "미전송 보고 초안은 그녀가 사건 파일을 바로 올리지 않고 붙잡고 있었음을 보여준다."
                     if has_alice_draft
                     else "존의 기록에 먼저 접근할 수 있었던 인물인지 계속 확인해야 한다."
                 ),
@@ -148,9 +121,9 @@ class GameSession:
                 ),
                 "score": 1 if "clue_jones_false_face" in discovered else 5 if has_jones_override else 4,
                 "note": (
-                    "보안 인계 메모와 반복 통화를 다시 읽으면, 위협보다 뒤늦은 수습과 차단 시도가 더 선명해진다."
+                    "보안 인계 메모와 반복 통화 기록을 다시 놓고 보면, 단순 추격으로만 읽히지 않는다."
                     if "clue_jones_false_face" in discovered
-                    else "수동 개방 요청 메모까지 보면 바로 범인으로 적고 싶어지지만, 아직 재해석 여지가 남아 있다."
+                    else "수동 개방 요청 메모와 제한 구역 출입 기록 때문에 가장 먼저 의심선에 오른다."
                     if has_jones_override
                     else "거친 발언과 실제 행동 사이에 간극이 있는지 확인이 필요하다."
                 ),
@@ -168,7 +141,7 @@ class GameSession:
                 ),
                 "score": 0,
                 "note": (
-                    "contingency_map은 존이 마지막까지 사건의 순서와 증거 보존을 설계하려 했음을 보여준다."
+                    "contingency_map은 존이 마지막까지 사건의 순서와 증거 보존을 남기려 했음을 보여준다."
                     if has_john_plan
                     else "미전송 초안의 감정과 공식 퇴사 공지의 문체가 너무 다르다."
                     if "clue_empty_resignation" in discovered
@@ -187,9 +160,46 @@ class GameSession:
         ]
 
     def snapshot(self, source_type: str = "all", search_keyword: str = "") -> dict:
+        all_documents = self.engine.list_documents(source_type=source_type, search_keyword=search_keyword)
+        focused_ids = self.engine.focused_document_ids()
+        active_task_documents = [
+            doc_id
+            for task in self.engine.list_active_tasks()
+            for doc_id in task.required_opened_documents
+        ]
+        active_task_priority = {
+            doc_id: index for index, doc_id in enumerate(active_task_documents)
+        }
+
+        def sort_documents(items: list[Document]) -> list[Document]:
+            return sorted(
+                items,
+                key=lambda doc: (
+                    active_task_priority.get(doc.doc_id, float("inf")),
+                    0 if doc.doc_id in self.engine.state.bookmarks else 1,
+                    1 if doc.doc_id in self.engine.state.opened_documents else 0,
+                    doc.chapter,
+                    doc.doc_id,
+                ),
+            )
+
         documents = [
             self._serialize_document(doc)
-            for doc in self.engine.list_documents(source_type=source_type, search_keyword=search_keyword)
+            for doc in sort_documents(
+                [
+                    doc for doc in all_documents
+                    if doc.doc_id in focused_ids or doc.doc_id == self.active_doc_id
+                ]
+            )
+        ]
+        archived_documents = [
+            self._serialize_document(doc)
+            for doc in sort_documents(
+                [
+                    doc for doc in all_documents
+                    if doc.doc_id not in focused_ids and doc.doc_id != self.active_doc_id
+                ]
+            )
         ]
         bookmarks = [self._serialize_document(doc) for doc in self.engine.list_bookmarks()]
         clues = [self._serialize_clue(clue) for clue in self.engine.list_clues()]
@@ -223,6 +233,7 @@ class GameSession:
             "suspects": self._suspect_board(),
             "report_presets": self._report_presets(),
             "documents": documents,
+            "archived_documents": archived_documents,
             "bookmarks": bookmarks,
             "clues": clues,
             "active_document": active_doc,

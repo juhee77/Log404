@@ -4,6 +4,7 @@ const STATIC_CASE_ID = 'case_001';
 const stateStore = {
   sourceType: 'all',
   search: '',
+  showArchived: false,
   activeDocId: null,
   payload: null,
   runtimeMode: null,
@@ -32,6 +33,7 @@ const els = {
   opsRail: document.getElementById('opsRail'),
   statusLine: document.getElementById('statusLine'),
   sourceFilter: document.getElementById('sourceFilter'),
+  toggleArchiveButton: document.getElementById('toggleArchiveButton'),
   searchInput: document.getElementById('searchInput'),
   culpritInput: document.getElementById('culpritInput'),
   motiveInput: document.getElementById('motiveInput'),
@@ -244,6 +246,68 @@ function createStaticSession(data) {
     return docs.sort((a, b) => (a.chapter - b.chapter) || a.doc_id.localeCompare(b.doc_id));
   }
 
+  function focusedDocumentIds() {
+    const focused = new Set(session.state.bookmarks);
+
+    if (canSubmit()) {
+      reportReviewDocuments().forEach((docId) => {
+        if (session.state.unlocked_documents.has(docId)) focused.add(docId);
+      });
+    }
+
+    const activeTasks = listActiveTasks();
+    if (activeTasks.length) {
+      activeTasks.forEach((task) => {
+        task.required_opened_documents.forEach((docId) => {
+          if (session.state.unlocked_documents.has(docId)) focused.add(docId);
+        });
+      });
+    } else {
+      const unsolved = listClues().filter((clue) => !session.state.discovered_clues.has(clue.clue_id));
+      if (unsolved.length) {
+        unsolved[0].required_documents.forEach((docId) => {
+          if (session.state.unlocked_documents.has(docId)) focused.add(docId);
+        });
+      }
+    }
+
+    if (!focused.size) {
+      session.state.unlocked_documents.forEach((docId) => focused.add(docId));
+    }
+
+    return focused;
+  }
+
+  function splitDocuments(sourceType = 'all', searchKeyword = '') {
+    const allDocuments = listDocuments({ sourceType, searchKeyword });
+    const focused = focusedDocumentIds();
+    const primary = [];
+    const archived = [];
+
+    allDocuments.forEach((doc) => {
+      if (focused.has(doc.doc_id)) {
+        primary.push(doc);
+      } else {
+        archived.push(doc);
+      }
+    });
+
+    if (session.activeDocId && session.documents[session.activeDocId]) {
+      const activeDoc = session.documents[session.activeDocId];
+      const matchesPrimary = primary.some((doc) => doc.doc_id === activeDoc.doc_id);
+      const isVisible = session.state.unlocked_documents.has(activeDoc.doc_id)
+        && (sourceType === 'all' || activeDoc.source_type === sourceType)
+        && (!searchKeyword || `${activeDoc.title}\n${activeDoc.content}`.toLowerCase().includes(searchKeyword.toLowerCase().trim()));
+      if (!matchesPrimary && isVisible) {
+        const archivedIndex = archived.findIndex((doc) => doc.doc_id === activeDoc.doc_id);
+        if (archivedIndex >= 0) archived.splice(archivedIndex, 1);
+        primary.unshift(activeDoc);
+      }
+    }
+
+    return { primary, archived };
+  }
+
   function listClues() {
     return Object.values(session.clues).sort((a, b) => (a.chapter - b.chapter) || a.clue_id.localeCompare(b.clue_id));
   }
@@ -387,7 +451,6 @@ function createStaticSession(data) {
       required_count: clue.required_documents.length,
       opened_required_count: openedRequired,
       missing_documents: missingDocuments,
-      story_prompt: clueStoryPrompt(clue, missingDocuments),
       ready_to_infer: !missingDocuments.length && !session.state.discovered_clues.has(clue.clue_id),
     };
   }
@@ -408,42 +471,6 @@ function createStaticSession(data) {
     };
   }
 
-  function clueStoryPrompt(clue, missingDocuments) {
-    const solved = session.state.discovered_clues.has(clue.clue_id);
-
-    if (clue.clue_id === 'clue_empty_resignation') {
-      if (solved) {
-        return '회사가 만든 퇴사 서사는 깨졌습니다. 이제 누가 그 공백을 이용했는지 넘어갈 차례입니다.';
-      }
-      if (missingDocuments.length) {
-        return '공식 공지와 미전송 초안의 감정 차이를 먼저 붙잡으세요.';
-      }
-      return '퇴사 통보가 아니라 검열된 마지막 문장인지 판단할 시점입니다.';
-    }
-
-    if (clue.clue_id === 'clue_jones_false_face') {
-      if (solved) {
-        return '존스는 여전히 거칠지만, 바로 그 점 때문에 너무 편한 범인처럼 소비됐습니다.';
-      }
-      if (missingDocuments.includes('note_security_jones_override') || missingDocuments.includes('note_john_contingency_map')) {
-        return '존스를 더 강하게 의심하게 만드는 표면 기록과, 존이 남긴 대비 메모를 함께 읽어야 합니다.';
-      }
-      return '이제 존스를 향한 분노가 자연발생인지, 누군가가 정리해 준 감정인지 재구성하세요.';
-    }
-
-    if (clue.clue_id === 'clue_alice_tampered_truth') {
-      if (solved) {
-        return '도움과 조작이 같은 손에서 나왔습니다. 문제는 누가 범인인가보다 왜 그 방향을 믿었는가입니다.';
-      }
-      if (missingDocuments.includes('mail_alice_unsent_escalation')) {
-        return '앨리스의 개입만으론 부족합니다. 그녀가 왜 보고를 미뤘는지 보여 주는 초안까지 읽어야 합니다.';
-      }
-      return '조작의 증거와 보호의 동기가 같은 인물에게서 나왔는지 읽을 차례입니다.';
-    }
-
-    return '';
-  }
-
   function suspectBoard() {
     const discovered = session.state.discovered_clues;
     const hasJonesOverride = session.state.opened_documents.has('note_security_jones_override');
@@ -461,9 +488,9 @@ function createStaticSession(data) {
             : '조력자인 척하는 고위험 인물',
         score: discovered.has('clue_alice_tampered_truth') ? 5 : hasAliceDraft ? 4 : 3,
         note: discovered.has('clue_alice_tampered_truth')
-          ? 'DM 열람 기록, 재작성 흔적, 미전송 보고 초안이 겹치며 보호 욕망이 통제로 변질된 구조가 보인다.'
+          ? 'DM 열람 기록, 재작성 흔적, 미전송 보고 초안이 같은 이름으로 반복해서 남아 있다.'
           : hasAliceDraft
-            ? '미전송 보고 초안은 그녀가 숨기고 있음을 보여주지만, 출발점에 보호 충동과 망설임도 섞여 있다.'
+            ? '미전송 보고 초안은 그녀가 사건 파일을 바로 올리지 않고 붙잡고 있었음을 보여준다.'
             : '존의 기록에 먼저 접근할 수 있었던 인물인지 계속 확인해야 한다.',
       },
       {
@@ -476,9 +503,9 @@ function createStaticSession(data) {
             : '표면상 가장 수상함',
         score: discovered.has('clue_jones_false_face') ? 1 : hasJonesOverride ? 5 : 4,
         note: discovered.has('clue_jones_false_face')
-          ? '보안 인계 메모와 반복 통화를 다시 읽으면, 위협보다 뒤늦은 수습과 차단 시도가 더 선명해진다.'
+          ? '보안 인계 메모와 반복 통화 기록을 다시 놓고 보면, 단순 추격으로만 읽히지 않는다.'
           : hasJonesOverride
-            ? '수동 개방 요청 메모까지 보면 바로 범인으로 적고 싶어지지만, 아직 재해석 여지가 남아 있다.'
+            ? '수동 개방 요청 메모와 제한 구역 출입 기록 때문에 가장 먼저 의심선에 오른다.'
             : '거친 발언과 실제 행동 사이에 간극이 있는지 확인이 필요하다.',
       },
       {
@@ -491,7 +518,7 @@ function createStaticSession(data) {
             : '자발적 퇴사처럼 위장됨',
         score: 0,
         note: hasJohnPlan
-          ? 'contingency_map은 존이 마지막까지 사건의 순서와 증거 보존을 설계하려 했음을 보여준다.'
+          ? 'contingency_map은 존이 마지막까지 사건의 순서와 증거 보존을 남기려 했음을 보여준다.'
           : discovered.has('clue_empty_resignation')
             ? '미전송 초안의 감정과 공식 퇴사 공지의 문체가 너무 다르다.'
             : '퇴사 서사가 지나치게 깔끔하다. 공백 자체가 단서일 수 있다.',
@@ -509,7 +536,9 @@ function createStaticSession(data) {
   }
 
   function snapshot(sourceType = 'all', searchKeyword = '') {
-    const documentsList = listDocuments({ sourceType, searchKeyword }).map(serializeDocument);
+    const documentGroups = splitDocuments(sourceType, searchKeyword);
+    const documentsList = documentGroups.primary.map(serializeDocument);
+    const archivedDocuments = documentGroups.archived.map(serializeDocument);
     const bookmarks = listDocuments({ bookmarksOnly: true }).map(serializeDocument);
     const cluesList = listClues().map(serializeClue);
     const activeTasks = listActiveTasks().map(serializeTask);
@@ -545,6 +574,7 @@ function createStaticSession(data) {
       suspects: suspectBoard(),
       report_presets: reportPresets(),
       documents: documentsList,
+      archived_documents: archivedDocuments,
       bookmarks,
       clues: cluesList,
       active_document: activeDocument,
@@ -911,10 +941,13 @@ function render() {
   els.reportResult.textContent = state.last_report_message;
   els.submitButton.disabled = !state.can_submit;
   syncSourceTypes(state.source_types);
+  els.toggleArchiveButton.textContent = stateStore.showArchived
+    ? `보관 문서 숨기기 (${state.archived_documents.length})`
+    : `보관 문서 보기 (${state.archived_documents.length})`;
 
   renderStoryBrief(state.story_brief, state.report_review_documents, state.can_submit);
   renderSuspects(state.suspects);
-  renderDocuments(state.documents, state.active_document);
+  renderDocuments(state.documents, state.archived_documents, state.active_document);
   renderInvestigations(state.active_tasks, state.clues);
   renderBookmarks(state.bookmarks);
   renderOpsRail(state);
@@ -988,7 +1021,6 @@ function renderStoryBrief(storyBrief, reviewDocuments = [], canSubmit = false) {
       <div class="story-roadmap-label">${index === 0 ? '다음' : '다다음'}</div>
       <strong>챕터 ${entry.chapter}. ${escapeHtml(entry.title)}</strong>
       <p>${escapeHtml(entry.hook)}</p>
-      ${(entry.feelings || []).length ? `<div class="story-roadmap-meta">감정 축: ${escapeHtml(entry.feelings.join(' / '))}</div>` : ''}
     </article>
   `).join('');
 }
@@ -1019,13 +1051,31 @@ function renderOpsRail(state) {
   `;
 }
 
-function renderDocuments(documents, activeDocument) {
-  if (!documents.length) {
+function renderDocuments(documents, archivedDocuments, activeDocument) {
+  if (!documents.length && !(stateStore.showArchived && archivedDocuments.length)) {
     els.documentList.innerHTML = '<div class="empty">표시할 문서가 없습니다.</div>';
     return;
   }
 
-  els.documentList.innerHTML = documents.map((doc) => {
+  const activeTaskDocuments = (stateStore.payload?.active_tasks || [])
+    .flatMap((task) => task.required_documents || []);
+  const activeTaskPriority = new Map(activeTaskDocuments.map((docId, index) => [docId, index]));
+
+  const sortForPanel = (items) => [...items].sort((a, b) => {
+    const aTaskPriority = activeTaskPriority.has(a.doc_id) ? activeTaskPriority.get(a.doc_id) : Number.POSITIVE_INFINITY;
+    const bTaskPriority = activeTaskPriority.has(b.doc_id) ? activeTaskPriority.get(b.doc_id) : Number.POSITIVE_INFINITY;
+    if (aTaskPriority !== bTaskPriority) return aTaskPriority - bTaskPriority;
+
+    if (a.bookmarked !== b.bookmarked) return a.bookmarked ? -1 : 1;
+    if (a.opened !== b.opened) return a.opened ? 1 : -1;
+    if (a.chapter !== b.chapter) return a.chapter - b.chapter;
+    return a.doc_id.localeCompare(b.doc_id);
+  });
+
+  const orderedDocuments = sortForPanel(documents);
+  const orderedArchivedDocuments = sortForPanel(archivedDocuments);
+
+  const renderDocCard = (doc) => {
     const isActive = activeDocument && activeDocument.doc_id === doc.doc_id;
     return `
       <article class="document-item ${isActive ? 'active' : ''}">
@@ -1040,7 +1090,24 @@ function renderDocuments(documents, activeDocument) {
         </div>
       </article>
     `;
-  }).join('');
+  };
+
+  const primaryMarkup = orderedDocuments.length
+    ? orderedDocuments.map(renderDocCard).join('')
+    : '<div class="empty">현재 조사에 직접 필요한 문서가 없습니다.</div>';
+
+  const archivedMarkup = stateStore.showArchived
+    ? `
+      <div class="section-label">보관 문서</div>
+      ${orderedArchivedDocuments.length ? orderedArchivedDocuments.map(renderDocCard).join('') : '<div class="empty compact">보관된 문서가 없습니다.</div>'}
+    `
+    : '';
+
+  els.documentList.innerHTML = `
+    <div class="section-label">현재 조사에 필요한 문서</div>
+    ${primaryMarkup}
+    ${archivedMarkup}
+  `;
 
   els.documentList.querySelectorAll('[data-open-doc]').forEach((button) => {
     button.addEventListener('click', () => {
@@ -1098,7 +1165,6 @@ function renderInvestigations(activeTasks, clues) {
       </div>
       <div class="clue-meta">${escapeHtml(clue.clue_id)} · 챕터 ${clue.chapter} · ${clue.solved ? '확보' : '미확보'}</div>
       <p>${escapeHtml(clue.description)}</p>
-      ${clue.story_prompt ? `<div class="clue-missing">${escapeHtml(clue.story_prompt)}</div>` : ''}
       <div class="clue-progress">
         <div class="clue-progress-fill" style="width: ${(clue.opened_required_count / clue.required_count) * 100}%"></div>
       </div>
@@ -1204,6 +1270,11 @@ function renderReportPresets(reportPresets) {
 els.sourceFilter.addEventListener('change', () => {
   stateStore.sourceType = els.sourceFilter.value;
   fetchState();
+});
+
+els.toggleArchiveButton.addEventListener('click', () => {
+  stateStore.showArchived = !stateStore.showArchived;
+  render();
 });
 
 els.searchButton.addEventListener('click', () => {

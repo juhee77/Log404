@@ -2,7 +2,7 @@
   {
     "chapter_id": "chapter_01",
     "required_clues": ["clue_empty_resignation"],
-    "unlock_targets": ["log_badge_gap", "log_auth_midnight", "log_jones_calls", "log_jones_restricted_badge", "note_if_i_disappear", "note_security_jones_override", "note_john_contingency_map"]
+    "unlock_targets": ["log_badge_gap", "log_auth_midnight", "log_jones_restricted_badge", "note_security_jones_override"]
   },
   {
     "chapter_id": "chapter_02",

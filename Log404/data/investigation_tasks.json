@@ -1,0 +1,110 @@
+[
+  {
+    "task_id": "task_ch1_resignation_gap",
+    "chapter": 1,
+    "title": "비어 있는 퇴사 문장",
+    "prompt": "공식 퇴사 처리와 가장 크게 충돌하는 기록은 무엇인가?",
+    "required_opened_documents": ["mail_hr_termination_draft", "mail_john_unsent_fragment"],
+    "prerequisite_tasks": [],
+    "options": [
+      {
+        "option_id": "hr_notice",
+        "label": "인사 초안이 이미 충분히 불안정하니 그 자체가 모순이다."
+      },
+      {
+        "option_id": "unsent_fragment",
+        "label": "미전송 초안의 두려움이 공식 퇴사 처리와 직접 충돌한다."
+      },
+      {
+        "option_id": "alice_dm",
+        "label": "앨리스의 안내 메시지가 퇴사 처리보다 더 수상하다."
+      }
+    ],
+    "correct_option": "unsent_fragment",
+    "unlock_targets": ["log_badge_gap", "log_auth_midnight"],
+    "resolves_clue": null,
+    "success_message": "공식 퇴사 처리만으로는 설명되지 않습니다. 퇴근 이후 시간축 기록을 확인할 수 있습니다.",
+    "failure_message": "공식 문장과 개인 기록의 온도 차이에 먼저 집중해야 합니다."
+  },
+  {
+    "task_id": "task_ch1_midnight_access",
+    "chapter": 1,
+    "title": "퇴근 뒤 다시 열린 시간축",
+    "prompt": "다음 단계로 넘어가게 만드는 핵심 모순은 무엇인가?",
+    "required_opened_documents": ["log_badge_gap", "log_auth_midnight"],
+    "prerequisite_tasks": ["task_ch1_resignation_gap"],
+    "options": [
+      {
+        "option_id": "normal_remote",
+        "label": "존은 퇴근 뒤 정상적인 원격 정리 작업을 했다."
+      },
+      {
+        "option_id": "timeline_conflict",
+        "label": "퇴근 처리와 새벽 접속이 같은 밤의 시간축 안에서 충돌한다."
+      },
+      {
+        "option_id": "badge_error",
+        "label": "출입 시스템 오류만으로 충분히 설명된다."
+      }
+    ],
+    "correct_option": "timeline_conflict",
+    "unlock_targets": [],
+    "resolves_clue": "clue_empty_resignation",
+    "success_message": "퇴사 서사는 유지되지 않습니다. 이제 존의 마지막 밤과 관련된 추가 기록을 조사할 수 있습니다.",
+    "failure_message": "출입 기록과 인증 기록을 같은 밤의 순서로 다시 놓고 보세요."
+  },
+  {
+    "task_id": "task_ch2_scene_pressure",
+    "chapter": 2,
+    "title": "존스를 가리키는 현장 흔적",
+    "prompt": "지금 시점에서 존스를 가장 직접적인 용의자로 보이게 만드는 조합은 무엇인가?",
+    "required_opened_documents": ["chat_jones_argument", "log_jones_restricted_badge", "note_security_jones_override"],
+    "prerequisite_tasks": [],
+    "options": [
+      {
+        "option_id": "jones_scene_combo",
+        "label": "갈등 직후 제한 구역 출입과 수동 개방 요청이 존스를 현장 개입자로 보이게 만든다."
+      },
+      {
+        "option_id": "unsent_fragment_only",
+        "label": "존의 미전송 초안만으로 이미 존스가 범인이라고 볼 수 있다."
+      },
+      {
+        "option_id": "alice_guide",
+        "label": "앨리스의 안내 메시지가 현장 기록보다 더 직접적인 증거다."
+      }
+    ],
+    "correct_option": "jones_scene_combo",
+    "unlock_targets": ["log_jones_calls", "note_if_i_disappear", "note_john_contingency_map"],
+    "resolves_clue": null,
+    "success_message": "존스는 충분히 범인처럼 보입니다. 하지만 그 인상이 유지되는지 확인할 사적인 기록이 더 열렸습니다.",
+    "failure_message": "현장 개입처럼 보이는 직접 기록 조합부터 다시 확인해야 합니다."
+  },
+  {
+    "task_id": "task_ch2_reversal",
+    "chapter": 2,
+    "title": "너무 쉬운 유죄성의 균열",
+    "prompt": "존스를 바로 범인으로 단정할 수 없게 만드는 핵심 반전은 무엇인가?",
+    "required_opened_documents": ["log_jones_calls", "note_if_i_disappear", "note_john_contingency_map"],
+    "prerequisite_tasks": ["task_ch2_scene_pressure"],
+    "options": [
+      {
+        "option_id": "panic_cleanup",
+        "label": "거친 말투와 별개로 존스는 뒤늦게 수습하거나 막으려 한 흔적을 남겼다."
+      },
+      {
+        "option_id": "pure_threat",
+        "label": "사적인 기록까지 읽어도 존스는 처음부터 끝까지 위협적인 가해자다."
+      },
+      {
+        "option_id": "all_system_error",
+        "label": "관련 기록들은 대부분 시스템 오류라 의미가 없다."
+      }
+    ],
+    "correct_option": "panic_cleanup",
+    "unlock_targets": [],
+    "resolves_clue": "clue_jones_false_face",
+    "success_message": "존스는 거칠고 위험해 보였지만, 그 모습만으로는 설명되지 않습니다. 이제 누가 그 인상을 정리해 주었는지 살펴볼 수 있습니다.",
+    "failure_message": "통화 기록과 존의 메모를 함께 보면, 분노만으로는 설명되지 않는 흔적이 남아 있습니다."
+  }
+]

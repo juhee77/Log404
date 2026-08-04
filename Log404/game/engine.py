@@ -214,6 +214,44 @@ class GameEngine:
 
         return sorted(docs, key=lambda doc: (doc.chapter, doc.doc_id))
 
+    def focused_document_ids(self) -> Set[str]:
+        focused: Set[str] = set(self.state.bookmarks)
+
+        if self.can_submit():
+            focused.update(
+                doc_id
+                for doc_id in self.report_review_documents()
+                if doc_id in self.state.unlocked_documents
+            )
+
+        active_tasks = self.list_active_tasks()
+        if active_tasks:
+            for task in active_tasks:
+                focused.update(
+                    doc_id
+                    for doc_id in task.required_opened_documents
+                    if doc_id in self.state.unlocked_documents
+                )
+        else:
+            unsolved = [
+                clue for clue in self.list_clues()
+                if clue.clue_id not in self.state.discovered_clues
+            ]
+            if unsolved:
+                focused.update(
+                    doc_id
+                    for doc_id in unsolved[0].required_documents
+                    if doc_id in self.state.unlocked_documents
+                )
+
+        if not focused:
+            focused.update(self.state.unlocked_documents)
+
+        return focused
+
+    def archived_document_ids(self) -> Set[str]:
+        return self.state.unlocked_documents - self.focused_document_ids()
+
     def list_clues(self) -> List[Clue]:
         return sorted(self.clues.values(), key=lambda clue: (clue.chapter, clue.clue_id))
 
