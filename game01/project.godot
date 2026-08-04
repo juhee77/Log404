@@ -1,0 +1,25 @@
+; Engine configuration file.
+; Auto-generated Godot project for Study Cafe Tycoon
+
+config_version=5
+
+[application]
+config/name="Study Cafe Tycoon"
+config/description="Cozy 2D Study Cafe Management Tycoon Game."
+run/main_scene="res://scenes/main_scene.tscn"
+config/features=PackedStringArray("4.6")
+config/icon="res://assets/icon.svg"
+
+[autoload]
+GameState="*res://scripts/autoload/game_state.gd"
+SoundManager="*res://scripts/autoload/sound_manager.gd"
+
+[display]
+window/size/viewport_width=1280
+window/size/viewport_height=720
+window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
+
+[rendering]
+renderer/rendering_method="forward_plus"
+textures/canvas_textures/default_texture_filter=1

@@ -1,0 +1,6 @@
+.omx/
+.codex/
+.pytest_cache/
+.godot/
+*.import
+user://

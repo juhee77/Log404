@@ -1,0 +1,424 @@
+extends Node
+
+# GameState.gd - Tycoon Engine with Rebalanced Auto-Cleaner Upgrade
+
+signal money_changed(new_amount, change)
+signal reputation_changed(new_reputation)
+signal upgrade_purchased(category, new_level)
+signal customer_arrived(customer_info)
+signal customer_left(customer_info, earnings)
+signal review_added(review_data)
+signal order_created(customer_id, order_type)
+signal order_served(customer_id, tip)
+signal villain_appeared(customer_id, villain_type)
+signal villain_resolved(customer_id)
+signal seat_dirty(seat_index)
+signal seat_cleaned(seat_index)
+signal temperature_changed(new_temp)
+signal day_ended(summary_data)
+
+# Financial & Time Variables
+var money: float = 5000.0
+var total_earnings: float = 0.0
+var reputation: float = 4.2
+var day_count: int = 1
+var game_time: float = 8.0
+var is_day_ended: bool = false
+
+# Daily Statistics Counter
+var daily_seat_rev: float = 0.0
+var daily_drink_rev: float = 0.0
+var daily_clean_rev: float = 0.0
+var daily_visitors: int = 0
+
+# Interactive Features State
+var temperature: float = 24.0
+var dirty_seats: Array = []
+var active_orders: Dictionary = {}
+var active_villains: Dictionary = {}
+
+# Auto Cleaner Timer
+var auto_clean_timer: float = 0.0
+
+# Rebalanced Upgrades Configuration
+var upgrades: Dictionary = {
+	"staff_cleaner": {
+		"name": "🧹 자동 청소 로봇 & 알바",
+		"level": 0,
+		"max_level": 3,
+		"base_cost": 500.0,
+		"cost_mult": 1.8,
+		"desc": "퇴실한 좌석을 자동으로 쓱싹 청소합니다 (Lv.1: 3초, Lv.2: 1.5초, Lv.3: 0.5초)"
+	},
+	"open_seats": {
+		"name": "일반 오픈석",
+		"level": 1,
+		"max_level": 5,
+		"base_cost": 600.0,
+		"cost_mult": 1.8,
+		"desc": "기본 오픈형 독서실 좌석 (좌석 수 증가)"
+	},
+	"private_booths": {
+		"name": "1인 프라이빗 몰입석",
+		"level": 0,
+		"max_level": 5,
+		"base_cost": 1200.0,
+		"cost_mult": 2.0,
+		"desc": "집중도가 극대화되는 1인 칸막이 몰입석"
+	},
+	"chairs": {
+		"name": "인체공학 의자",
+		"level": 1,
+		"max_level": 5,
+		"base_cost": 500.0,
+		"cost_mult": 1.7,
+		"desc": "장시간 공부에도 피로가 적은 프리미엄 의자"
+	},
+	"wifi": {
+		"name": "초고속 GiGA Wi-Fi 6",
+		"level": 1,
+		"max_level": 5,
+		"base_cost": 400.0,
+		"cost_mult": 1.6,
+		"desc": "인강과 노트북 작업에 필수적인 빠른 무선 인터넷"
+	},
+	"coffee_bar": {
+		"name": "스낵 & 에스프레소 머신",
+		"level": 1,
+		"max_level": 5,
+		"base_cost": 800.0,
+		"cost_mult": 1.9,
+		"desc": "갓 뽑은 커피와 프리미엄 다과 판매 코너"
+	},
+	"white_noise": {
+		"name": "백색소음 & 빗소리 장치",
+		"level": 0,
+		"max_level": 5,
+		"base_cost": 1000.0,
+		"cost_mult": 1.8,
+		"desc": "소음을 줄이고 몰입감을 최대로 높여주는 아날로그 백색소음"
+	},
+	"staff_counter": {
+		"name": "카운터 매니저 알바",
+		"level": 0,
+		"max_level": 3,
+		"base_cost": 2500.0,
+		"cost_mult": 2.5,
+		"desc": "이용료와 음료 매출을 자동으로 정산 및 수금"
+	}
+}
+
+const CUSTOMER_TYPES = [
+	{ "type": "student", "name": "고등학생", "color": Color(0.3, 0.7, 1.0), "pay_rate": 1.0, "icon": "🎓" },
+	{ "type": "examinee", "name": "공시생/고시생", "color": Color(1.0, 0.6, 0.2), "pay_rate": 1.4, "icon": "📚" },
+	{ "type": "developer", "name": "프리랜서 개발자", "color": Color(0.2, 0.9, 0.5), "pay_rate": 1.8, "icon": "💻" },
+	{ "type": "worker", "name": "재택 직장인", "color": Color(0.8, 0.4, 0.9), "pay_rate": 1.6, "icon": "☕" }
+]
+
+var active_customers: Array = []
+var reviews_log: Array = []
+var spawn_timer: float = 0.0
+var temp_drift_timer: float = 0.0
+
+func _ready() -> void:
+	load_game()
+
+func _process(delta: float) -> void:
+	if is_day_ended: return
+	
+	game_time += delta * 0.25
+	if game_time >= 22.0:
+		trigger_day_end()
+		return
+	
+	# Temperature drift
+	temp_drift_timer += delta
+	if temp_drift_timer >= 10.0:
+		temp_drift_timer = 0.0
+		temperature += randf_range(-0.6, 0.6)
+		temperature = clamp(temperature, 18.0, 30.0)
+		temperature_changed.emit(temperature)
+	
+	# Customer Spawning
+	spawn_timer += delta
+	var current_capacity = get_max_capacity()
+	var available_seats = current_capacity - dirty_seats.size()
+	var spawn_interval = max(1.2, 5.0 - (reputation * 0.7))
+	
+	if spawn_timer >= spawn_interval and active_customers.size() < available_seats:
+		spawn_timer = 0.0
+		spawn_customer()
+	
+	# Update Customers
+	var to_remove = []
+	for c in active_customers:
+		c["study_time"] += delta
+		
+		var temp_penalty = 1.0
+		if temperature < 21.0 or temperature > 27.0:
+			temp_penalty = 0.7
+			
+		var tick_income = get_income_per_second_for_customer(c) * temp_penalty * delta
+		add_money(tick_income)
+		daily_seat_rev += tick_income
+		
+		if not active_orders.has(c["id"]) and c["study_time"] > 2.0 and randf() < 0.005:
+			create_order(c["id"])
+			
+		if c["study_time"] >= c["duration"]:
+			to_remove.append(c)
+			
+	for c in to_remove:
+		finish_customer(c)
+		
+	# Predictable Auto-Cleaner Timer Logic
+	var cleaner_level = upgrades["staff_cleaner"]["level"]
+	if cleaner_level > 0 and dirty_seats.size() > 0:
+		auto_clean_timer += delta
+		var interval = max(0.5, 3.5 - (cleaner_level * 1.0))
+		if auto_clean_timer >= interval:
+			auto_clean_timer = 0.0
+			clean_seat(dirty_seats[0])
+			
+	# Staff Counter Auto Collection
+	if upgrades["staff_counter"]["level"] > 0:
+		var auto_inc = upgrades["staff_counter"]["level"] * 20.0 * delta
+		add_money(auto_inc)
+		daily_seat_rev += auto_inc
+		if active_orders.size() > 0:
+			var first_cid = active_orders.keys()[0]
+			serve_order(first_cid)
+
+func trigger_day_end() -> void:
+	is_day_ended = true
+	game_time = 22.0
+	
+	for c in active_customers.duplicate():
+		active_customers.erase(c)
+	active_orders.clear()
+	active_villains.clear()
+	
+	var total_day_rev = daily_seat_rev + daily_drink_rev + daily_clean_rev
+	var summary = {
+		"day": day_count,
+		"seat_rev": daily_seat_rev,
+		"drink_rev": daily_drink_rev,
+		"clean_rev": daily_clean_rev,
+		"total_rev": total_day_rev,
+		"visitors": daily_visitors,
+		"rating": reputation
+	}
+	day_ended.emit(summary)
+
+func start_next_day() -> void:
+	day_count += 1
+	game_time = 8.0
+	is_day_ended = false
+	daily_seat_rev = 0.0
+	daily_drink_rev = 0.0
+	daily_clean_rev = 0.0
+	daily_visitors = 0
+	add_review("DAY %d 개업! 쾌적하고 차분한 스터디 카페입니다." % day_count, 5.0, "스터디 매니저")
+
+func spawn_customer() -> void:
+	var current_capacity = get_max_capacity()
+	var taken_seats = []
+	for c in active_customers:
+		taken_seats.append(c["seat_index"])
+		
+	var free_seat = -1
+	for i in range(current_capacity):
+		if not taken_seats.has(i) and not dirty_seats.has(i):
+			free_seat = i
+			break
+			
+	if free_seat == -1: return
+	
+	var template = CUSTOMER_TYPES[randi() % CUSTOMER_TYPES.size()]
+	var cid = randi()
+	var customer = {
+		"id": cid,
+		"name": template["name"],
+		"type": template["type"],
+		"color": template["color"],
+		"pay_rate": template["pay_rate"],
+		"icon": template["icon"],
+		"study_time": 0.0,
+		"duration": randf_range(8.0, 18.0),
+		"seat_index": free_seat
+	}
+	active_customers.append(customer)
+	daily_visitors += 1
+	customer_arrived.emit(customer)
+	
+	if randf() < 0.15:
+		var v_types = ["phone", "snack", "snore"]
+		var v_type = v_types[randi() % v_types.size()]
+		active_villains[cid] = { "type": v_type, "warnings": 0 }
+		villain_appeared.emit(cid, v_type)
+
+func finish_customer(c: Dictionary) -> void:
+	var bonus_tip = c["pay_rate"] * (80.0 + upgrades["coffee_bar"]["level"] * 40.0)
+	add_money(bonus_tip)
+	daily_seat_rev += bonus_tip
+	
+	var s_idx = c["seat_index"]
+	if not dirty_seats.has(s_idx):
+		dirty_seats.append(s_idx)
+		seat_dirty.emit(s_idx)
+		
+	active_orders.erase(c["id"])
+	active_villains.erase(c["id"])
+	active_customers.erase(c)
+	customer_left.emit(c, bonus_tip)
+	
+	if randf() < 0.35:
+		generate_random_review()
+
+func create_order(customer_id: int) -> void:
+	var o_types = ["☕ 아이스 아메리카노", "🥐 바삭 크로플", "🍵 따뜻한 말차 라떼"]
+	var selected = o_types[randi() % o_types.size()]
+	active_orders[customer_id] = { "type": selected, "time": game_time }
+	order_created.emit(customer_id, selected)
+
+func serve_order(customer_id: int) -> bool:
+	if not active_orders.has(customer_id): return false
+	var tip = 300.0 + (upgrades["coffee_bar"]["level"] * 80.0)
+	add_money(tip)
+	daily_drink_rev += tip
+	active_orders.erase(customer_id)
+	order_served.emit(customer_id, tip)
+	return true
+
+func warn_villain(customer_id: int) -> void:
+	if not active_villains.has(customer_id): return
+	var v = active_villains[customer_id]
+	v["warnings"] += 1
+	if v["warnings"] >= 1:
+		active_villains.erase(customer_id)
+		reputation = min(5.0, reputation + 0.1)
+		reputation_changed.emit(reputation)
+		villain_resolved.emit(customer_id)
+
+func clean_seat(seat_index: int) -> void:
+	if dirty_seats.has(seat_index):
+		dirty_seats.erase(seat_index)
+		add_money(80.0)
+		daily_clean_rev += 80.0
+		seat_cleaned.emit(seat_index)
+
+func adjust_temperature(delta_t: float) -> void:
+	temperature = clamp(temperature + delta_t, 18.0, 30.0)
+	temperature_changed.emit(temperature)
+
+func get_max_capacity() -> int:
+	var open = upgrades["open_seats"]["level"] * 3
+	var booth = upgrades["private_booths"]["level"] * 2
+	return max(4, open + booth)
+
+func get_income_per_second_for_customer(c: Dictionary) -> float:
+	var base_rate = 12.0
+	var chair_mult = 1.0 + (upgrades["chairs"]["level"] * 0.25)
+	var wifi_mult = 1.0 + (upgrades["wifi"]["level"] * 0.2)
+	var noise_mult = 1.0 + (upgrades["white_noise"]["level"] * 0.3)
+	return base_rate * c["pay_rate"] * chair_mult * wifi_mult * noise_mult
+
+func get_total_income_rate() -> float:
+	var total = 0.0
+	for c in active_customers:
+		total += get_income_per_second_for_customer(c)
+	if upgrades["staff_counter"]["level"] > 0:
+		total += upgrades["staff_counter"]["level"] * 20.0
+	return total
+
+func add_money(amount: float) -> void:
+	money += amount
+	if amount > 0:
+		total_earnings += amount
+	money_changed.emit(money, amount)
+
+func can_afford(cost: float) -> bool:
+	return money >= cost
+
+func get_upgrade_cost(category: String) -> float:
+	if not upgrades.has(category): return 0.0
+	var item = upgrades[category]
+	return item["base_cost"] * pow(item["cost_mult"], item["level"])
+
+func buy_upgrade(category: String) -> bool:
+	if not upgrades.has(category): return false
+	var item = upgrades[category]
+	if item["level"] >= item["max_level"]: return false
+	
+	var cost = get_upgrade_cost(category)
+	if not can_afford(cost): return false
+	
+	add_money(-cost)
+	item["level"] += 1
+	
+	reputation = min(5.0, reputation + 0.15)
+	reputation_changed.emit(reputation)
+	upgrade_purchased.emit(category, item["level"])
+	
+	save_game()
+	return true
+
+func add_review(text: String, rating: float, author: String) -> void:
+	var review = {
+		"text": text,
+		"rating": rating,
+		"author": author,
+		"time": "%02d:%02d" % [int(game_time), int(fmod(game_time * 60.0, 60.0))]
+	}
+	reviews_log.push_front(review)
+	if reviews_log.size() > 20:
+		reviews_log.pop_back()
+	review_added.emit(review)
+
+func generate_random_review() -> void:
+	var sample_reviews = [
+		"의자가 진짜 편해서 인강 3개 연속으로 다 들었어요! ⭐5",
+		"에스프레소 머신 커피 향이 최고입니다. 몰입 잘돼요! ⭐5",
+		"초고속 Wi-Fi 덕분에 개발 작업 끊김없이 완료했습니다! ⭐5",
+		"백색소음 잔잔하게 들려서 독서하기 딱 좋아요. ⭐5",
+		"스터디 카페 인테리어가 차분하고 깔끔해요. 단골 확정! ⭐5"
+	]
+	var text = sample_reviews[randi() % sample_reviews.size()]
+	add_review(text, 5.0, "열공중인 손님")
+
+func save_game() -> void:
+	var data = {
+		"money": money,
+		"total_earnings": total_earnings,
+		"reputation": reputation,
+		"day_count": day_count,
+		"temperature": temperature,
+		"upgrades": {}
+	}
+	for key in upgrades:
+		data["upgrades"][key] = upgrades[key]["level"]
+		
+	var file = FileAccess.open("user://study_cafe_tycoon_save.json", FileAccess.WRITE)
+	if file:
+		file.store_string(JSON.stringify(data))
+
+func load_game() -> void:
+	if not FileAccess.file_exists("user://study_cafe_tycoon_save.json"):
+		return
+	var file = FileAccess.open("user://study_cafe_tycoon_save.json", FileAccess.READ)
+	if not file: return
+	
+	var json_text = file.get_as_text()
+	var json = JSON.new()
+	if json.parse(json_text) == OK:
+		var data = json.get_data()
+		money = data.get("money", 5000.0)
+		total_earnings = data.get("total_earnings", 0.0)
+		reputation = data.get("reputation", 4.2)
+		day_count = data.get("day_count", 1)
+		temperature = data.get("temperature", 24.0)
+		
+		var saved_upgrades = data.get("upgrades", {})
+		for key in saved_upgrades:
+			if upgrades.has(key):
+				upgrades[key]["level"] = saved_upgrades[key]

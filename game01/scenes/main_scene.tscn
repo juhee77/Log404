@@ -1,0 +1,250 @@
+[gd_scene load_steps=7 format=3 uid="uid://study_cafe_main_scene"]
+
+[ext_resource type="Script" path="res://scripts/main_scene.gd" id="1_main"]
+[ext_resource type="Script" path="res://scripts/ui/top_bar.gd" id="2_top"]
+[ext_resource type="Script" path="res://scripts/ui/cafe_view.gd" id="3_cafe"]
+[ext_resource type="Script" path="res://scripts/ui/upgrade_panel.gd" id="4_upg"]
+[ext_resource type="Script" path="res://scripts/ui/review_panel.gd" id="5_rev"]
+[ext_resource type="PackedScene" uid="uid://daily_report_panel_scene" path="res://scenes/ui/daily_report_panel.tscn" id="6_rep"]
+
+[node name="MainScene" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_main")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 0
+
+[node name="TopBar" type="PanelContainer" parent="VBoxContainer"]
+custom_minimum_size = Vector2(0, 56)
+layout_mode = 2
+script = ExtResource("2_top")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/TopBar"]
+layout_mode = 2
+alignment = 1
+
+[node name="MoneyBox" type="MarginContainer" parent="VBoxContainer/TopBar/HBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_right = 12
+
+[node name="LabelMoney" type="Label" parent="VBoxContainer/TopBar/HBoxContainer/MoneyBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.96, 0.62, 0.07, 1)
+theme_override_font_sizes/font_size = 18
+text = "💰 5,000 ₩"
+
+[node name="IncomeBox" type="MarginContainer" parent="VBoxContainer/TopBar/HBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_right = 12
+
+[node name="LabelIncome" type="Label" parent="VBoxContainer/TopBar/HBoxContainer/IncomeBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.06, 0.72, 0.5, 1)
+theme_override_font_sizes/font_size = 15
+text = "+0 ₩/초"
+
+[node name="RepBox" type="MarginContainer" parent="VBoxContainer/TopBar/HBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_right = 12
+
+[node name="LabelRep" type="Label" parent="VBoxContainer/TopBar/HBoxContainer/RepBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.96, 0.62, 0.07, 1)
+theme_override_font_sizes/font_size = 15
+text = "⭐ 4.2 / 5.0"
+
+[node name="CapBox" type="MarginContainer" parent="VBoxContainer/TopBar/HBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_right = 12
+
+[node name="LabelCap" type="Label" parent="VBoxContainer/TopBar/HBoxContainer/CapBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.8, 0.75, 1)
+theme_override_font_sizes/font_size = 15
+text = "👥 0 / 4 명"
+
+[node name="TempBox" type="HBoxContainer" parent="VBoxContainer/TopBar/HBoxContainer"]
+layout_mode = 2
+
+[node name="BtnTempDown" type="Button" parent="VBoxContainer/TopBar/HBoxContainer/TempBox"]
+custom_minimum_size = Vector2(28, 28)
+layout_mode = 2
+text = "❄️"
+
+[node name="LabelTemp" type="Label" parent="VBoxContainer/TopBar/HBoxContainer/TempBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.1, 0.8, 0.4, 1)
+theme_override_font_sizes/font_size = 15
+text = "🌡️ 24.0°C"
+
+[node name="BtnTempUp" type="Button" parent="VBoxContainer/TopBar/HBoxContainer/TempBox"]
+custom_minimum_size = Vector2(28, 28)
+layout_mode = 2
+text = "🔥"
+
+[node name="TimeBox" type="MarginContainer" parent="VBoxContainer/TopBar/HBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_right = 12
+
+[node name="LabelTime" type="Label" parent="VBoxContainer/TopBar/HBoxContainer/TimeBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.8, 0.75, 1)
+theme_override_font_sizes/font_size = 15
+text = "DAY 1  08:00"
+
+[node name="MainContent" type="MarginContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="CafeView" type="Control" parent="VBoxContainer/MainContent"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("3_cafe")
+
+[node name="BottomBar" type="PanelContainer" parent="VBoxContainer"]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/BottomBar"]
+layout_mode = 2
+alignment = 1
+
+[node name="BtnUpgrades" type="Button" parent="VBoxContainer/BottomBar/HBoxContainer"]
+custom_minimum_size = Vector2(220, 48)
+layout_mode = 2
+text = "🏭 좌석 & 시설 업그레이드"
+
+[node name="BtnReviews" type="Button" parent="VBoxContainer/BottomBar/HBoxContainer"]
+custom_minimum_size = Vector2(220, 48)
+layout_mode = 2
+text = "⭐ 손님 리뷰 & 평가"
+
+[node name="BtnSound" type="Button" parent="VBoxContainer/BottomBar/HBoxContainer"]
+custom_minimum_size = Vector2(160, 48)
+layout_mode = 2
+text = "🔊 소리 켜짐"
+
+[node name="UpgradePanelOverlay" type="PanelContainer" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -320.0
+offset_top = -260.0
+offset_right = 320.0
+offset_bottom = 260.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("4_upg")
+
+[node name="MarginContainer" type="MarginContainer" parent="UpgradePanelOverlay"]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UpgradePanelOverlay/MarginContainer"]
+layout_mode = 2
+
+[node name="Header" type="HBoxContainer" parent="UpgradePanelOverlay/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="UpgradePanelOverlay/MarginContainer/VBoxContainer/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.96, 0.62, 0.07, 1)
+theme_override_font_sizes/font_size = 20
+text = "🏭 시설 & 좌석 확장 센터"
+
+[node name="BtnClose" type="Button" parent="UpgradePanelOverlay/MarginContainer/VBoxContainer/Header"]
+custom_minimum_size = Vector2(36, 36)
+layout_mode = 2
+text = "❌"
+
+[node name="HSeparator" type="HSeparator" parent="UpgradePanelOverlay/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="UpgradePanelOverlay/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ListContainer" type="VBoxContainer" parent="UpgradePanelOverlay/MarginContainer/VBoxContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ReviewPanelOverlay" type="PanelContainer" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -300.0
+offset_top = -240.0
+offset_right = 300.0
+offset_bottom = 240.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("5_rev")
+
+[node name="MarginContainer" type="MarginContainer" parent="ReviewPanelOverlay"]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ReviewPanelOverlay/MarginContainer"]
+layout_mode = 2
+
+[node name="Header" type="HBoxContainer" parent="ReviewPanelOverlay/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="ReviewPanelOverlay/MarginContainer/VBoxContainer/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.06, 0.72, 0.5, 1)
+theme_override_font_sizes/font_size = 20
+text = "⭐ 손님 리얼 리뷰 피드"
+
+[node name="BtnClose" type="Button" parent="ReviewPanelOverlay/MarginContainer/VBoxContainer/Header"]
+custom_minimum_size = Vector2(36, 36)
+layout_mode = 2
+text = "❌"
+
+[node name="HSeparator" type="HSeparator" parent="ReviewPanelOverlay/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="ReviewPanelOverlay/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ListContainer" type="VBoxContainer" parent="ReviewPanelOverlay/MarginContainer/VBoxContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="DailyReportPanelOverlay" parent="." instance=ExtResource("6_rep")]
+visible = false
+layout_mode = 1
