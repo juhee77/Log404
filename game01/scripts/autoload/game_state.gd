@@ -47,9 +47,20 @@ var achievements: Dictionary = {
 	"master_visitors": { "title": "👥 누적 손님 20명 돌파!", "reward": 2000.0, "unlocked": false }
 }
 
-# Interior Decorating Mode State
+# Interior Decorating Mode & Custom Partitions
 var is_decorating_mode: bool = false
 var custom_decorations: Array = []
+var seat_partitions: Dictionary = {} # seat_index -> "divider"|"curtain"
+
+func install_partition(seat_index: int, type: String = "divider") -> bool:
+	var cost = 300.0
+	if not can_afford(cost): return false
+	add_money(-cost)
+	seat_partitions[seat_index] = type
+	reputation = min(5.0, reputation + 0.1)
+	reputation_changed.emit(reputation)
+	SoundManager.play_coin_sfx()
+	return true
 
 # Daily Statistics Counter
 var daily_seat_rev: float = 0.0

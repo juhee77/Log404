@@ -123,8 +123,21 @@ func _gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 		var click_pos = event.position - view_offset
 		
-		# If Decorating Mode is Active, place custom furniture
+		# If Decorating Mode is Active, place custom furniture or partitions
 		if GameState.is_decorating_mode:
+			var capacity = GameState.get_max_capacity()
+			for i in range(capacity):
+				var seat_pos = GameState.get_seat_position(i)
+				if click_pos.distance_to(seat_pos) < 50.0:
+					if GameState.install_partition(i, "curtain"):
+						floating_texts.append({
+							"text": "🎪 방음 커튼 설치 완료! (⭐+0.1)",
+							"pos": seat_pos + Vector2(0, -30),
+							"alpha": 1.0,
+							"color": Color(0.9, 0.4, 0.8)
+						})
+					return
+					
 			if GameState.add_decoration(click_pos, "plant"):
 				floating_texts.append({
 					"text": "🪴 공기정화 화분 배치! (⭐+0.08)",
@@ -262,6 +275,16 @@ func draw_study_zone(w: float, h: float) -> void:
 		
 		var label = "프라이빗 1인실 #%d" % (i + 1) if is_booth else "오픈 카페석 #%d" % (i + 1)
 		draw_string(ThemeDB.fallback_font, seat_pos + Vector2(10, 22), label, HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color(0.8, 0.8, 0.75))
+		
+		# Draw Custom Partition / Curtain Overlays
+		if GameState.seat_partitions.has(i):
+			var p_type = GameState.seat_partitions[i]
+			if p_type == "curtain":
+				draw_rect(Rect2(seat_pos.x, seat_pos.y, cell_w, 18), Color(0.8, 0.2, 0.3, 0.85), true)
+				draw_string(ThemeDB.fallback_font, seat_pos + Vector2(25, 14), "🎪 방음 커튼 설치됨", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color.WHITE)
+			else:
+				draw_rect(Rect2(seat_pos.x, seat_pos.y, 8, cell_h), Color(0.8, 0.4, 0.9, 0.85), true)
+				draw_string(ThemeDB.fallback_font, seat_pos + Vector2(14, 14), "🔮 몰입 칸막이", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color.WHITE)
 		
 		# Glowing Desk Lamp Halos
 		var lamp_pos = seat_pos + Vector2(cell_w - 22, 22)
