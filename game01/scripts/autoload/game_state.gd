@@ -51,7 +51,14 @@ var achievements: Dictionary = {
 var is_decorating_mode: bool = false
 var custom_decorations: Array = []
 var seat_partitions: Dictionary = {}
-var seat_custom_offsets: Dictionary = {} # seat_index -> Vector2 offset
+var seat_custom_offsets: Dictionary = {}
+var lamp_states: Dictionary = {} # seat_index -> bool is_on
+
+func toggle_seat_lamp(seat_index: int) -> bool:
+	var cur = lamp_states.get(seat_index, true)
+	lamp_states[seat_index] = not cur
+	SoundManager.play_click_sfx()
+	return lamp_states[seat_index]
 
 func set_seat_offset(seat_index: int, offset: Vector2) -> void:
 	seat_custom_offsets[seat_index] = offset
