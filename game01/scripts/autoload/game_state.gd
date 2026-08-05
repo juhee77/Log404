@@ -158,6 +158,14 @@ var upgrades: Dictionary = {
 		"cost_mult": 1.8,
 		"desc": "소음을 줄이고 몰입감을 최대로 높여주는 아날로그 백색소음"
 	},
+	"smart_robot_vacuum": {
+		"name": "🤖 24시간 자율주행 AI 바닥 청소 로봇",
+		"level": 0,
+		"max_level": 3,
+		"base_cost": 2100.0,
+		"cost_mult": 2.0,
+		"desc": "퇴실한 책상과 바닥 먼지를 실시간 자율 청소하여 청소 속도 2배"
+	},
 	"gourmet_bakery": {
 		"name": "🍰 갓 구운 크로플 & 그릭요거트 디저트",
 		"level": 0,
