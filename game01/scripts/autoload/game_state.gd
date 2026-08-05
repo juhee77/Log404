@@ -158,6 +158,14 @@ var upgrades: Dictionary = {
 		"cost_mult": 1.8,
 		"desc": "소음을 줄이고 몰입감을 최대로 높여주는 아날로그 백색소음"
 	},
+	"nitro_coffee": {
+		"name": "☕ 프리미엄 니트로 질소 콜드브루 탭",
+		"level": 0,
+		"max_level": 3,
+		"base_cost": 2200.0,
+		"cost_mult": 2.0,
+		"desc": "부드러운 크레마와 초콜렛 풍미의 원두로 고급 음료 팁 매출 +50% 증가"
+	},
 	"rentals": {
 		"name": "🎧 3M 귀마개 & 독서대/충전기 대여 자판기",
 		"level": 1,
