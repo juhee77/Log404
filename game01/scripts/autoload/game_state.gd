@@ -158,6 +158,14 @@ var upgrades: Dictionary = {
 		"cost_mult": 1.8,
 		"desc": "소음을 줄이고 몰입감을 최대로 높여주는 아날로그 백색소음"
 	},
+	"pomodoro_timer": {
+		"name": "💡 25분 몰입 / 5분 휴식 포모도로 시계",
+		"level": 0,
+		"max_level": 3,
+		"base_cost": 900.0,
+		"cost_mult": 1.7,
+		"desc": "과학적인 인터벌 타이머로 학습 효율성 +20% 가산"
+	},
 	"group_study_room": {
 		"name": "🎓 4인 전용 스터디 그룹룸 & 대형 화이트보드",
 		"level": 0,
