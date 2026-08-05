@@ -15,16 +15,12 @@ var pan_start_pos: Vector2 = Vector2.ZERO
 func _ready() -> void:
 	custom_minimum_size = Vector2(800, 520)
 	
-	if ResourceLoader.exists("res://assets/cafe_bg.png"):
-		bg_texture = load("res://assets/cafe_bg.png")
-	elif FileAccess.file_exists("res://assets/cafe_bg.png"):
+	if FileAccess.file_exists("res://assets/cafe_bg.png"):
 		var img = Image.load_from_file("res://assets/cafe_bg.png")
 		if img != null:
 			bg_texture = ImageTexture.create_from_image(img)
 			
-	if ResourceLoader.exists("res://assets/coffee_bar.png"):
-		coffee_bar_texture = load("res://assets/coffee_bar.png")
-	elif FileAccess.file_exists("res://assets/coffee_bar.png"):
+	if FileAccess.file_exists("res://assets/coffee_bar.png"):
 		var img_bar = Image.load_from_file("res://assets/coffee_bar.png")
 		if img_bar != null:
 			coffee_bar_texture = ImageTexture.create_from_image(img_bar)
@@ -213,7 +209,16 @@ func _draw() -> void:
 		draw_rect(Rect2(0, 0, w, h), Color(1.0, 0.65, 0.2, 0.22))
 	elif GameState.time_of_day == "NIGHT":
 		draw_rect(Rect2(0, 0, w, h), Color(0.1, 0.12, 0.3, 0.42))
-		
+	
+	# Render Rain Weather Glass Waterdrops
+	if GameState.weather == "RAINY":
+		var t_time = Time.get_ticks_msec() * 0.002
+		for r in range(16):
+			var rx = 100 + r * 45
+			var ry = fmod(r * 30 + t_time * 60, 240.0) + 60
+			draw_circle(Vector2(rx, ry) + view_offset, 3.5, Color(0.7, 0.85, 1.0, 0.55))
+			draw_line(Vector2(rx, ry - 12) + view_offset, Vector2(rx, ry) + view_offset, Color(0.7, 0.85, 1.0, 0.35), 1.5)
+
 	# 3. Draw Grid Overlay in Decorating Mode
 	if GameState.is_decorating_mode:
 		var grid_step = 64.0
