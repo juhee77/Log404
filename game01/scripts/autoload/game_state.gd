@@ -158,6 +158,14 @@ var upgrades: Dictionary = {
 		"cost_mult": 1.8,
 		"desc": "소음을 줄이고 몰입감을 최대로 높여주는 아날로그 백색소음"
 	},
+	"dual_monitors": {
+		"name": "🖥 듀얼 모니터 코딩 몰입석",
+		"level": 0,
+		"max_level": 3,
+		"base_cost": 2000.0,
+		"cost_mult": 2.1,
+		"desc": "개발자와 디자이너를 위한 4K 와이드 듀얼 모니터 독서실 책상"
+	},
 	"phone_booth": {
 		"name": "🎙 1인 완전 방음 스마트 폰부스",
 		"level": 0,
