@@ -158,6 +158,14 @@ var upgrades: Dictionary = {
 		"cost_mult": 1.8,
 		"desc": "소음을 줄이고 몰입감을 최대로 높여주는 아날로그 백색소음"
 	},
+	"aroma_diffuser": {
+		"name": "🌸 유칼립투스 & 라벤더 천연 아로마 디퓨저",
+		"level": 0,
+		"max_level": 3,
+		"base_cost": 850.0,
+		"cost_mult": 1.7,
+		"desc": "두통 완화 및 집중력에 좋은 에센셜 오일로 스터디 카페 매장 향기 튜닝"
+	},
 	"dark_chocolate": {
 		"name": "🍫 85% 무설탕 딥 다크 초콜릿 & 에너지바",
 		"level": 0,
