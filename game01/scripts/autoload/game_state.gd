@@ -1,6 +1,6 @@
 extends Node
 
-# GameState.gd - Master Tycoon Engine with Dynamic Weather System
+# GameState.gd - Master Tycoon Engine with Lounge Customer Break System & Achievements
 
 signal money_changed(new_amount, change)
 signal reputation_changed(new_reputation)
@@ -17,6 +17,7 @@ signal seat_cleaned(seat_index)
 signal temperature_changed(new_temp)
 signal time_of_day_changed(new_tod)
 signal weather_changed(new_weather)
+signal day_ended(summary_data)
 signal zone_changed(new_zone)
 signal decor_mode_changed(is_active)
 signal achievement_unlocked(title, reward)
@@ -28,7 +29,7 @@ var reputation: float = 4.2
 var day_count: int = 1
 var game_time: float = 8.0
 var time_of_day: String = "DAY"
-var weather: String = "RAINY" # "CLEAR", "RAINY"
+var weather: String = "RAINY"
 var weather_timer: float = 0.0
 
 # Current Active Map Zone ("study", "lounge", "front")
@@ -211,7 +212,6 @@ func _process(delta: float) -> void:
 		time_of_day = new_tod
 		time_of_day_changed.emit(time_of_day)
 		
-	# Dynamic Weather Cycle
 	weather_timer += delta
 	if weather_timer >= 25.0:
 		weather_timer = 0.0
