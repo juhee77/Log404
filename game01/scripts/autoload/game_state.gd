@@ -53,7 +53,11 @@ var is_decorating_mode: bool = false
 var custom_decorations: Array = []
 var seat_partitions: Dictionary = {}
 var seat_custom_offsets: Dictionary = {}
-var lamp_states: Dictionary = {} # seat_index -> bool is_on
+var lamp_states: Dictionary = {}
+
+# Barista Special Coffee Menu & Air Quality Index
+var coffee_menu_unlocked: Array = ["아메리카노", "카페라떼", "아인슈페너", "돌체라떼"]
+var air_quality_score: float = 98.0
 
 func toggle_seat_lamp(seat_index: int) -> bool:
 	var cur = lamp_states.get(seat_index, true)
