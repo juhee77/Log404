@@ -158,6 +158,14 @@ var upgrades: Dictionary = {
 		"cost_mult": 1.8,
 		"desc": "소음을 줄이고 몰입감을 최대로 높여주는 아날로그 백색소음"
 	},
+	"lockers": {
+		"name": "🎒 개인 스마트 사물함 & 도어락",
+		"level": 1,
+		"max_level": 5,
+		"base_cost": 700.0,
+		"cost_mult": 1.7,
+		"desc": "무거운 수험서와 무소음 키보드를 보관하는 월 대여 사물함 매출"
+	},
 	"air_purifier": {
 		"name": "🌿 초미세먼지 HEPA 공기청정기 & 바이오월",
 		"level": 0,
