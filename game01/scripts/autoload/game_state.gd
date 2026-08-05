@@ -1,6 +1,6 @@
 extends Node
 
-# GameState.gd - Tycoon Engine with Rebalanced Auto-Cleaner Upgrade
+# GameState.gd - Master Tycoon Engine with Interior Grid Decoration Architecture
 
 signal money_changed(new_amount, change)
 signal reputation_changed(new_reputation)
@@ -15,15 +15,24 @@ signal villain_resolved(customer_id)
 signal seat_dirty(seat_index)
 signal seat_cleaned(seat_index)
 signal temperature_changed(new_temp)
-signal day_ended(summary_data)
+signal time_of_day_changed(new_tod)
+signal zone_changed(new_zone)
+signal decor_mode_changed(is_active)
 
 # Financial & Time Variables
 var money: float = 5000.0
 var total_earnings: float = 0.0
 var reputation: float = 4.2
 var day_count: int = 1
-var game_time: float = 8.0
-var is_day_ended: bool = false
+var game_time: float = 8.0 # 0.0 to 24.0
+var time_of_day: String = "DAY" # "DAY", "DUSK", "NIGHT"
+
+# Current Active Map Zone ("study", "lounge", "front")
+var current_zone: String = "study"
+
+# Interior Decorating Mode State
+var is_decorating_mode: bool = false
+var custom_decorations: Array = [] # Array of { pos: Vector2, type: "plant"|"lamp"|"bookshelf" }
 
 # Daily Statistics Counter
 var daily_seat_rev: float = 0.0
@@ -31,14 +40,20 @@ var daily_drink_rev: float = 0.0
 var daily_clean_rev: float = 0.0
 var daily_visitors: int = 0
 
-# Interactive Features State
+# Interactive Features & Amenities
 var temperature: float = 24.0
 var dirty_seats: Array = []
 var active_orders: Dictionary = {}
 var active_villains: Dictionary = {}
 
-# Auto Cleaner Timer
-var auto_clean_timer: float = 0.0
+# Snack Bar & Locker Stock
+var snack_stock: int = 100
+var lockers_rented: int = 4
+
+# Staff Character Animated Positions
+var cleaner_pos: Vector2 = Vector2(700, 70)
+var cleaner_target: Vector2 = Vector2(700, 70)
+var cleaner_state: String = "IDLE"
 
 # Rebalanced Upgrades Configuration
 var upgrades: Dictionary = {
@@ -48,7 +63,7 @@ var upgrades: Dictionary = {
 		"max_level": 3,
 		"base_cost": 500.0,
 		"cost_mult": 1.8,
-		"desc": "퇴실한 좌석을 자동으로 쓱싹 청소합니다 (Lv.1: 3초, Lv.2: 1.5초, Lv.3: 0.5초)"
+		"desc": "퇴실한 좌석으로 걸어가 자동으로 쓱싹 청소합니다"
 	},
 	"open_seats": {
 		"name": "일반 오픈석",
@@ -56,7 +71,7 @@ var upgrades: Dictionary = {
 		"max_level": 5,
 		"base_cost": 600.0,
 		"cost_mult": 1.8,
-		"desc": "기본 오픈형 독서실 좌석 (좌석 수 증가)"
+		"desc": "노트북 타핑이 가능한 오픈형 카페존 좌석"
 	},
 	"private_booths": {
 		"name": "1인 프라이빗 몰입석",
@@ -64,7 +79,7 @@ var upgrades: Dictionary = {
 		"max_level": 5,
 		"base_cost": 1200.0,
 		"cost_mult": 2.0,
-		"desc": "집중도가 극대화되는 1인 칸막이 몰입석"
+		"desc": "도어락과 칸막이가 완비된 고집중 1인실"
 	},
 	"chairs": {
 		"name": "인체공학 의자",
@@ -109,8 +124,8 @@ var upgrades: Dictionary = {
 }
 
 const CUSTOMER_TYPES = [
-	{ "type": "student", "name": "고등학생", "color": Color(0.3, 0.7, 1.0), "pay_rate": 1.0, "icon": "🎓" },
-	{ "type": "examinee", "name": "공시생/고시생", "color": Color(1.0, 0.6, 0.2), "pay_rate": 1.4, "icon": "📚" },
+	{ "type": "student", "name": "고등학생 수험생", "color": Color(0.3, 0.7, 1.0), "pay_rate": 1.0, "icon": "🎓" },
+	{ "type": "examinee", "name": "공시생", "color": Color(1.0, 0.6, 0.2), "pay_rate": 1.4, "icon": "📚" },
 	{ "type": "developer", "name": "프리랜서 개발자", "color": Color(0.2, 0.9, 0.5), "pay_rate": 1.8, "icon": "💻" },
 	{ "type": "worker", "name": "재택 직장인", "color": Color(0.8, 0.4, 0.9), "pay_rate": 1.6, "icon": "☕" }
 ]
@@ -120,18 +135,45 @@ var reviews_log: Array = []
 var spawn_timer: float = 0.0
 var temp_drift_timer: float = 0.0
 
+func toggle_decorating_mode() -> bool:
+	is_decorating_mode = not is_decorating_mode
+	decor_mode_changed.emit(is_decorating_mode)
+	return is_decorating_mode
+
+func add_decoration(pos: Vector2, type: String = "plant") -> bool:
+	var cost = 150.0
+	if not can_afford(cost): return false
+	add_money(-cost)
+	custom_decorations.append({ "pos": pos, "type": type })
+	reputation = min(5.0, reputation + 0.08)
+	reputation_changed.emit(reputation)
+	SoundManager.play_coin_sfx()
+	return true
+
 func _ready() -> void:
 	load_game()
 
+func change_zone(new_zone: String) -> void:
+	current_zone = new_zone
+	zone_changed.emit(new_zone)
+
 func _process(delta: float) -> void:
-	if is_day_ended: return
+	game_time += delta * 0.3
+	if game_time >= 24.0:
+		game_time -= 24.0
+		day_count += 1
+		add_review("DAY %d 개업 유지! 24시간 쾌적한 스터디 카페입니다." % day_count, 5.0, "스터디 매니저")
+		
+	var new_tod = "DAY"
+	if game_time >= 17.0 and game_time < 20.0:
+		new_tod = "DUSK"
+	elif game_time >= 20.0 or game_time < 6.0:
+		new_tod = "NIGHT"
+		
+	if new_tod != time_of_day:
+		time_of_day = new_tod
+		time_of_day_changed.emit(time_of_day)
 	
-	game_time += delta * 0.25
-	if game_time >= 22.0:
-		trigger_day_end()
-		return
-	
-	# Temperature drift
 	temp_drift_timer += delta
 	if temp_drift_timer >= 10.0:
 		temp_drift_timer = 0.0
@@ -139,48 +181,63 @@ func _process(delta: float) -> void:
 		temperature = clamp(temperature, 18.0, 30.0)
 		temperature_changed.emit(temperature)
 	
-	# Customer Spawning
 	spawn_timer += delta
 	var current_capacity = get_max_capacity()
 	var available_seats = current_capacity - dirty_seats.size()
-	var spawn_interval = max(1.2, 5.0 - (reputation * 0.7))
+	var spawn_interval = max(1.2, 4.5 - (reputation * 0.6))
 	
 	if spawn_timer >= spawn_interval and active_customers.size() < available_seats:
 		spawn_timer = 0.0
 		spawn_customer()
 	
-	# Update Customers
+	var entrance_pos = Vector2(1150, 70)
 	var to_remove = []
+	
 	for c in active_customers:
-		c["study_time"] += delta
+		var target = c["target_pos"]
+		var current_pos = c["pos"]
 		
-		var temp_penalty = 1.0
-		if temperature < 21.0 or temperature > 27.0:
-			temp_penalty = 0.7
+		if c["state"] == "WALKING_IN":
+			c["pos"] = current_pos.move_toward(target, delta * 120.0)
+			if c["pos"].distance_to(target) < 4.0:
+				c["state"] = "STUDYING"
+		elif c["state"] == "STUDYING":
+			c["study_time"] += delta
+			var temp_penalty = 1.0
+			if temperature < 21.0 or temperature > 27.0:
+				temp_penalty = 0.7
+				
+			var tick_income = get_income_per_second_for_customer(c) * temp_penalty * delta
+			add_money(tick_income)
+			daily_seat_rev += tick_income
 			
-		var tick_income = get_income_per_second_for_customer(c) * temp_penalty * delta
-		add_money(tick_income)
-		daily_seat_rev += tick_income
-		
-		if not active_orders.has(c["id"]) and c["study_time"] > 2.0 and randf() < 0.005:
-			create_order(c["id"])
-			
-		if c["study_time"] >= c["duration"]:
-			to_remove.append(c)
-			
+			if not active_orders.has(c["id"]) and c["study_time"] > 2.0 and randf() < 0.005:
+				create_order(c["id"])
+				
+			if c["study_time"] >= c["duration"]:
+				c["state"] = "LEAVING"
+				c["target_pos"] = entrance_pos
+		elif c["state"] == "LEAVING":
+			c["pos"] = current_pos.move_toward(entrance_pos, delta * 140.0)
+			if c["pos"].distance_to(entrance_pos) < 6.0:
+				to_remove.append(c)
+				
 	for c in to_remove:
 		finish_customer(c)
 		
-	# Predictable Auto-Cleaner Timer Logic
-	var cleaner_level = upgrades["staff_cleaner"]["level"]
-	if cleaner_level > 0 and dirty_seats.size() > 0:
-		auto_clean_timer += delta
-		var interval = max(0.5, 3.5 - (cleaner_level * 1.0))
-		if auto_clean_timer >= interval:
-			auto_clean_timer = 0.0
-			clean_seat(dirty_seats[0])
+	var cleaner_lvl = upgrades["staff_cleaner"]["level"]
+	if cleaner_lvl > 0:
+		if dirty_seats.size() > 0:
+			var target_seat_pos = get_seat_position(dirty_seats[0])
+			cleaner_target = target_seat_pos
+			cleaner_pos = cleaner_pos.move_toward(cleaner_target, delta * (100.0 + cleaner_lvl * 40.0))
 			
-	# Staff Counter Auto Collection
+			if cleaner_pos.distance_to(cleaner_target) < 10.0:
+				clean_seat(dirty_seats[0])
+		else:
+			cleaner_target = Vector2(1050, 70)
+			cleaner_pos = cleaner_pos.move_toward(cleaner_target, delta * 80.0)
+			
 	if upgrades["staff_counter"]["level"] > 0:
 		var auto_inc = upgrades["staff_counter"]["level"] * 20.0 * delta
 		add_money(auto_inc)
@@ -188,37 +245,6 @@ func _process(delta: float) -> void:
 		if active_orders.size() > 0:
 			var first_cid = active_orders.keys()[0]
 			serve_order(first_cid)
-
-func trigger_day_end() -> void:
-	is_day_ended = true
-	game_time = 22.0
-	
-	for c in active_customers.duplicate():
-		active_customers.erase(c)
-	active_orders.clear()
-	active_villains.clear()
-	
-	var total_day_rev = daily_seat_rev + daily_drink_rev + daily_clean_rev
-	var summary = {
-		"day": day_count,
-		"seat_rev": daily_seat_rev,
-		"drink_rev": daily_drink_rev,
-		"clean_rev": daily_clean_rev,
-		"total_rev": total_day_rev,
-		"visitors": daily_visitors,
-		"rating": reputation
-	}
-	day_ended.emit(summary)
-
-func start_next_day() -> void:
-	day_count += 1
-	game_time = 8.0
-	is_day_ended = false
-	daily_seat_rev = 0.0
-	daily_drink_rev = 0.0
-	daily_clean_rev = 0.0
-	daily_visitors = 0
-	add_review("DAY %d 개업! 쾌적하고 차분한 스터디 카페입니다." % day_count, 5.0, "스터디 매니저")
 
 func spawn_customer() -> void:
 	var current_capacity = get_max_capacity()
@@ -236,6 +262,9 @@ func spawn_customer() -> void:
 	
 	var template = CUSTOMER_TYPES[randi() % CUSTOMER_TYPES.size()]
 	var cid = randi()
+	var entrance_pos = Vector2(1150, 70)
+	var seat_target = get_seat_position(free_seat)
+	
 	var customer = {
 		"id": cid,
 		"name": template["name"],
@@ -244,8 +273,11 @@ func spawn_customer() -> void:
 		"pay_rate": template["pay_rate"],
 		"icon": template["icon"],
 		"study_time": 0.0,
-		"duration": randf_range(8.0, 18.0),
-		"seat_index": free_seat
+		"duration": randf_range(10.0, 24.0),
+		"seat_index": free_seat,
+		"pos": entrance_pos,
+		"target_pos": seat_target,
+		"state": "WALKING_IN"
 	}
 	active_customers.append(customer)
 	daily_visitors += 1
@@ -330,6 +362,16 @@ func get_total_income_rate() -> float:
 	if upgrades["staff_counter"]["level"] > 0:
 		total += upgrades["staff_counter"]["level"] * 20.0
 	return total
+
+func get_seat_position(index: int) -> Vector2:
+	var cols = 4
+	var start_x = 60.0
+	var start_y = 160.0
+	var cell_w = 160.0
+	var cell_h = 100.0
+	var col = index % cols
+	var row = index / cols
+	return Vector2(start_x + col * (cell_w + 30.0) + cell_w*0.5, start_y + row * (cell_h + 30.0) + cell_h*0.5)
 
 func add_money(amount: float) -> void:
 	money += amount

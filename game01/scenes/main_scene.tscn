@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://study_cafe_main_scene"]
+[gd_scene load_steps=8 format=3 uid="uid://study_cafe_main_scene"]
 
 [ext_resource type="Script" path="res://scripts/main_scene.gd" id="1_main"]
 [ext_resource type="Script" path="res://scripts/ui/top_bar.gd" id="2_top"]
@@ -6,6 +6,7 @@
 [ext_resource type="Script" path="res://scripts/ui/upgrade_panel.gd" id="4_upg"]
 [ext_resource type="Script" path="res://scripts/ui/review_panel.gd" id="5_rev"]
 [ext_resource type="PackedScene" uid="uid://daily_report_panel_scene" path="res://scenes/ui/daily_report_panel.tscn" id="6_rep"]
+[ext_resource type="PackedScene" uid="uid://snack_restock_panel_scene" path="res://scenes/ui/snack_restock_panel.tscn" id="7_snk"]
 
 [node name="MainScene" type="Control"]
 layout_mode = 3
@@ -106,7 +107,35 @@ theme_override_constants/margin_right = 12
 layout_mode = 2
 theme_override_colors/font_color = Color(0.8, 0.8, 0.75, 1)
 theme_override_font_sizes/font_size = 15
-text = "DAY 1  08:00"
+text = "☀️ DAY 1  08:00 (낮)"
+
+[node name="ZoneBar" type="PanelContainer" parent="VBoxContainer"]
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/ZoneBar"]
+layout_mode = 2
+alignment = 1
+
+[node name="BtnZoneStudy" type="Button" parent="VBoxContainer/ZoneBar/HBoxContainer"]
+custom_minimum_size = Vector2(160, 36)
+layout_mode = 2
+text = "🗺️ 메인 열공 존"
+
+[node name="BtnZoneLounge" type="Button" parent="VBoxContainer/ZoneBar/HBoxContainer"]
+custom_minimum_size = Vector2(160, 36)
+layout_mode = 2
+text = "☕ 스낵바 & 휴게실"
+
+[node name="BtnZoneFront" type="Button" parent="VBoxContainer/ZoneBar/HBoxContainer"]
+custom_minimum_size = Vector2(160, 36)
+layout_mode = 2
+text = "🔑 사물함 & 프런트"
+
+[node name="BtnDecorate" type="Button" parent="VBoxContainer/ZoneBar/HBoxContainer"]
+custom_minimum_size = Vector2(160, 36)
+layout_mode = 2
+text = "🔨 인테리어 꾸미기"
 
 [node name="MainContent" type="MarginContainer" parent="VBoxContainer"]
 layout_mode = 2
@@ -119,7 +148,7 @@ size_flags_vertical = 3
 script = ExtResource("3_cafe")
 
 [node name="BottomBar" type="PanelContainer" parent="VBoxContainer"]
-custom_minimum_size = Vector2(0, 64)
+custom_minimum_size = Vector2(0, 60)
 layout_mode = 2
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/BottomBar"]
@@ -127,19 +156,24 @@ layout_mode = 2
 alignment = 1
 
 [node name="BtnUpgrades" type="Button" parent="VBoxContainer/BottomBar/HBoxContainer"]
-custom_minimum_size = Vector2(220, 48)
+custom_minimum_size = Vector2(200, 44)
 layout_mode = 2
 text = "🏭 좌석 & 시설 업그레이드"
 
-[node name="BtnReviews" type="Button" parent="VBoxContainer/BottomBar/HBoxContainer"]
-custom_minimum_size = Vector2(220, 48)
+[node name="BtnSnackMinigame" type="Button" parent="VBoxContainer/BottomBar/HBoxContainer"]
+custom_minimum_size = Vector2(180, 44)
 layout_mode = 2
-text = "⭐ 손님 리뷰 & 평가"
+text = "🥐 스낵바 비품 충전"
+
+[node name="BtnReviews" type="Button" parent="VBoxContainer/BottomBar/HBoxContainer"]
+custom_minimum_size = Vector2(180, 44)
+layout_mode = 2
+text = "⭐ 손님 리뷰 피드"
 
 [node name="BtnSound" type="Button" parent="VBoxContainer/BottomBar/HBoxContainer"]
-custom_minimum_size = Vector2(160, 48)
+custom_minimum_size = Vector2(140, 44)
 layout_mode = 2
-text = "🔊 소리 켜짐"
+text = "🔇 무음 모드"
 
 [node name="UpgradePanelOverlay" type="PanelContainer" parent="."]
 visible = false
@@ -234,7 +268,7 @@ custom_minimum_size = Vector2(36, 36)
 layout_mode = 2
 text = "❌"
 
-[node name="HSeparator" type="HSeparator" parent="ReviewPanelOverlay/MarginContainer/VBoxContainer"]
+[node name="HSeparator" type="HSeparator" parent="UpgradePanelOverlay/MarginContainer/VBoxContainer"]
 layout_mode = 2
 
 [node name="ScrollContainer" type="ScrollContainer" parent="ReviewPanelOverlay/MarginContainer/VBoxContainer"]
@@ -244,6 +278,10 @@ size_flags_vertical = 3
 [node name="ListContainer" type="VBoxContainer" parent="ReviewPanelOverlay/MarginContainer/VBoxContainer/ScrollContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+
+[node name="SnackRestockPanelOverlay" parent="." instance=ExtResource("7_snk")]
+visible = false
+layout_mode = 1
 
 [node name="DailyReportPanelOverlay" parent="." instance=ExtResource("6_rep")]
 visible = false
