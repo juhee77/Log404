@@ -158,6 +158,14 @@ var upgrades: Dictionary = {
 		"cost_mult": 1.8,
 		"desc": "소음을 줄이고 몰입감을 최대로 높여주는 아날로그 백색소음"
 	},
+	"ice_dispenser": {
+		"name": "🍧 대용량 제빙기 & 수제 과일 에이드 시럽",
+		"level": 0,
+		"max_level": 3,
+		"base_cost": 1400.0,
+		"cost_mult": 1.8,
+		"desc": "얼음 무제한 맑은 제빙기와 청포도/자몽 에이드 음료 매출 +30% 가산"
+	},
 	"sns_challenge": {
 		"name": "📱 열공 타임스탬프 SNS 챌린지 인스타그램 포토존",
 		"level": 0,
