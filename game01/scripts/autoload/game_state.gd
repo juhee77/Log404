@@ -130,6 +130,14 @@ var upgrades: Dictionary = {
 		"cost_mult": 1.8,
 		"desc": "소음을 줄이고 몰입감을 최대로 높여주는 아날로그 백색소음"
 	},
+	"branch_expansion": {
+		"name": "🏢 2호점 강남 직영점 오픈",
+		"level": 0,
+		"max_level": 3,
+		"base_cost": 5000.0,
+		"cost_mult": 3.0,
+		"desc": "강남/판교 직영점 확장으로 전체 수익률 1.5배 폭증"
+	},
 	"staff_counter": {
 		"name": "카운터 매니저 알바",
 		"level": 0,
@@ -407,7 +415,8 @@ func get_income_per_second_for_customer(c: Dictionary) -> float:
 	var chair_mult = 1.0 + (upgrades["chairs"]["level"] * 0.25)
 	var wifi_mult = 1.0 + (upgrades["wifi"]["level"] * 0.2)
 	var noise_mult = 1.0 + (upgrades["white_noise"]["level"] * 0.3)
-	return base_rate * c["pay_rate"] * chair_mult * wifi_mult * noise_mult
+	var branch_mult = 1.0 + (upgrades["branch_expansion"]["level"] * 0.5)
+	return base_rate * c["pay_rate"] * chair_mult * wifi_mult * noise_mult * branch_mult
 
 func get_total_income_rate() -> float:
 	var total = 0.0
