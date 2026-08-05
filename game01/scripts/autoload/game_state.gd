@@ -158,6 +158,14 @@ var upgrades: Dictionary = {
 		"cost_mult": 1.8,
 		"desc": "소음을 줄이고 몰입감을 최대로 높여주는 아날로그 백색소음"
 	},
+	"group_study_room": {
+		"name": "🎓 4인 전용 스터디 그룹룸 & 대형 화이트보드",
+		"level": 0,
+		"max_level": 3,
+		"base_cost": 3200.0,
+		"cost_mult": 2.2,
+		"desc": "팀 프로젝트와 스터디 모임을 위한 대형 화이트보드 방음룸 대여"
+	},
 	"smart_robot_vacuum": {
 		"name": "🤖 24시간 자율주행 AI 바닥 청소 로봇",
 		"level": 0,
