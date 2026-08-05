@@ -3,8 +3,14 @@ extends Node
 # sound_manager.gd - Master Procedural Sound & Analog White Noise Engine
 
 var sound_enabled: bool = false
+var bgm_track: String = "lofi_study"
 var audio_player: AudioStreamPlayer
 var ambient_player: AudioStreamPlayer
+
+func switch_bgm_track(track_name: String) -> void:
+	bgm_track = track_name
+	if sound_enabled:
+		start_white_noise_ambient()
 
 func _ready() -> void:
 	audio_player = AudioStreamPlayer.new()
@@ -39,11 +45,11 @@ func start_white_noise_ambient() -> void:
 		var int_val = int(clamp(last_val * 0.15, -1.0, 1.0) * 32767.0)
 		buffer.encode_s16(i * 2, int_val)
 		
-	var wav = AudioStreamWav.new()
-	wav.format = AudioStreamWav.FORMAT_16_BITS
+	var wav = AudioStreamWAV.new()
+	wav.format = AudioStreamWAV.FORMAT_16_BITS
 	wav.mix_rate = sample_rate
 	wav.stereo = false
-	wav.loop_mode = AudioStreamWav.LOOP_FORWARD
+	wav.loop_mode = AudioStreamWAV.LOOP_FORWARD
 	wav.loop_end = num_samples
 	wav.data = buffer
 	
@@ -87,8 +93,8 @@ func play_synth_tone(freq: float, duration: float, type: String = "sine") -> voi
 		var int_val = int(clamp(sample_val, -1.0, 1.0) * 32767.0)
 		buffer.encode_s16(i * 2, int_val)
 		
-	var wav = AudioStreamWav.new()
-	wav.format = AudioStreamWav.FORMAT_16_BITS
+	var wav = AudioStreamWAV.new()
+	wav.format = AudioStreamWAV.FORMAT_16_BITS
 	wav.mix_rate = sample_rate
 	wav.stereo = false
 	wav.data = buffer
