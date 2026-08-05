@@ -158,6 +158,14 @@ var upgrades: Dictionary = {
 		"cost_mult": 1.8,
 		"desc": "소음을 줄이고 몰입감을 최대로 높여주는 아날로그 백색소음"
 	},
+	"ai_coach": {
+		"name": "🤖 AI 공시/수험 몰입 코치봇",
+		"level": 0,
+		"max_level": 3,
+		"base_cost": 3000.0,
+		"cost_mult": 2.5,
+		"desc": "실시간 소음 감지 및 학습 스케줄링으로 빌런 자동 계도 및 몰입도 +35% 증가"
+	},
 	"smart_kiosk": {
 		"name": "📱 모바일 키오스크 & 원격 좌석 예약 앱",
 		"level": 0,
