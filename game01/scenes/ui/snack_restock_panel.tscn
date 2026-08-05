@@ -1,0 +1,77 @@
+[gd_scene load_steps=2 format=3 uid="uid://snack_restock_panel_scene"]
+
+[ext_resource type="Script" path="res://scripts/ui/snack_restock_panel.gd" id="1_snk"]
+
+[node name="SnackRestockPanelOverlay" type="PanelContainer"]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -280.0
+offset_top = -200.0
+offset_right = 280.0
+offset_bottom = 200.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_snk")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="Header" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="MarginContainer/VBoxContainer/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.1, 0.8, 0.4, 1)
+theme_override_font_sizes/font_size = 18
+text = "☕ 셀프 스낵바 & 비품 충전 센터"
+
+[node name="BtnClose" type="Button" parent="MarginContainer/VBoxContainer/Header"]
+custom_minimum_size = Vector2(36, 36)
+layout_mode = 2
+text = "❌"
+
+[node name="HSeparator" type="HSeparator" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="StockBox" type="MarginContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="LabelStock" type="Label" parent="MarginContainer/VBoxContainer/StockBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.96, 0.62, 0.07, 1)
+theme_override_font_sizes/font_size = 15
+text = "🍫 스낵바 & 비품 재고율: 100%"
+
+[node name="ActionGrid" type="VBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 12
+
+[node name="BtnFillCoffee" type="Button" parent="MarginContainer/VBoxContainer/ActionGrid"]
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+text = "☕ 캡슐 커피 50팩 발주 & 채우기 (200 ₩)"
+
+[node name="BtnFillSnack" type="Button" parent="MarginContainer/VBoxContainer/ActionGrid"]
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+text = "🥐 마카롱 & 에너지바 다과 채우기 (300 ₩)"
+
+[node name="BtnFillAmenity" type="Button" parent="MarginContainer/VBoxContainer/ActionGrid"]
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+text = "🎧 3M 귀마개 & 무릎담요 비품 채우기 (250 ₩)"
