@@ -240,10 +240,12 @@ func draw_study_zone(w: float, h: float) -> void:
 		var label = "프라이빗 1인실 #%d" % (i + 1) if is_booth else "오픈 카페석 #%d" % (i + 1)
 		draw_string(ThemeDB.fallback_font, seat_pos + Vector2(10, 22), label, HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color(0.8, 0.8, 0.75))
 		
+		# Glowing Desk Lamp Halos
 		var lamp_pos = seat_pos + Vector2(cell_w - 22, 22)
-		var lamp_alpha = 0.6 if GameState.time_of_day == "NIGHT" else 0.25
-		draw_circle(lamp_pos, 18.0, Color(0.96, 0.62, 0.07, lamp_alpha))
-		draw_circle(lamp_pos, 5.0, Color(1.0, 0.85, 0.4))
+		var lamp_alpha = 0.75 if GameState.time_of_day == "NIGHT" else (0.45 if GameState.time_of_day == "DUSK" else 0.25)
+		draw_circle(lamp_pos, 42.0, Color(1.0, 0.7, 0.2, lamp_alpha * 0.15))
+		draw_circle(lamp_pos, 24.0, Color(0.96, 0.62, 0.07, lamp_alpha * 0.35))
+		draw_circle(lamp_pos, 6.0, Color(1.0, 0.9, 0.5))
 		
 		if GameState.dirty_seats.has(i):
 			draw_rect(desk_rect, Color(0.4, 0.1, 0.1, 0.65), true)
