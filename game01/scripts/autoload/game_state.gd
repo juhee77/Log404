@@ -159,6 +159,14 @@ var upgrades: Dictionary = {
 		"cost_mult": 1.8,
 		"desc": "소음을 줄이고 몰입감을 최대로 높여주는 아날로그 백색소음"
 	},
+	"grand_celebration": {
+		"name": "🎉 직영 5호점 돌파 그랜드 타이쿤 파티 랜드마크",
+		"level": 0,
+		"max_level": 1,
+		"base_cost": 10000.0,
+		"cost_mult": 1.0,
+		"desc": "Log404 Studio 50회 연속 자율 순환 개발 완수 기념 축하 축제"
+	},
 	"ergonomic_chair": {
 		"name": "🛋 허리 피로 제로 에르고노믹 럭셔리 메쉬 의자",
 		"level": 0,
