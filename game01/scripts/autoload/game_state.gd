@@ -27,6 +27,7 @@ var money: float = 5000.0
 var total_earnings: float = 0.0
 var reputation: float = 4.2
 var day_count: int = 1
+var exam_d_day: int = 100
 var game_time: float = 8.0
 var time_of_day: String = "DAY"
 var weather: String = "RAINY"
@@ -231,7 +232,8 @@ func _process(delta: float) -> void:
 	if game_time >= 24.0:
 		game_time -= 24.0
 		day_count += 1
-		add_review("DAY %d 개업 유지! 24시간 쾌적한 스터디 카페입니다." % day_count, 5.0, "스터디 매니저")
+		exam_d_day = max(1, exam_d_day - 1)
+		add_review("DAY %d (수능 D-%d)! 열공 모드 지속 중입니다." % [day_count, exam_d_day], 5.0, "스터디 매니저")
 		
 	var new_tod = "DAY"
 	if game_time >= 17.0 and game_time < 20.0:
