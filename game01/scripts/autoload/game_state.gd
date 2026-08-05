@@ -158,6 +158,14 @@ var upgrades: Dictionary = {
 		"cost_mult": 1.8,
 		"desc": "소음을 줄이고 몰입감을 최대로 높여주는 아날로그 백색소음"
 	},
+	"gourmet_bakery": {
+		"name": "🍰 갓 구운 크로플 & 그릭요거트 디저트",
+		"level": 0,
+		"max_level": 3,
+		"base_cost": 1700.0,
+		"cost_mult": 1.9,
+		"desc": "버터 풍미 크로플과 무설탕 요거트로 당 충전 매출 +40% 가산"
+	},
 	"recliner_pod": {
 		"name": "🛋 1인 전용 무중력 리클라이너 소파 포드",
 		"level": 0,
