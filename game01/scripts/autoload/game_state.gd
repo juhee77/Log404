@@ -158,6 +158,14 @@ var upgrades: Dictionary = {
 		"cost_mult": 1.8,
 		"desc": "소음을 줄이고 몰입감을 최대로 높여주는 아날로그 백색소음"
 	},
+	"exam_library": {
+		"name": "📚 평가원 모의고사 & 공시 족보 라이브러리",
+		"level": 0,
+		"max_level": 3,
+		"base_cost": 2000.0,
+		"cost_mult": 2.1,
+		"desc": "최신 기출 문제지와 풀이집을 열람하는 기출 서가 자료실"
+	},
 	"ice_dispenser": {
 		"name": "🍧 대용량 제빙기 & 수제 과일 에이드 시럽",
 		"level": 0,
