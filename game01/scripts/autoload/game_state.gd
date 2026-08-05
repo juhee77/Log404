@@ -1,6 +1,6 @@
 extends Node
 
-# GameState.gd - Master Tycoon Engine with Resident Mascot Cat System
+# GameState.gd - Master Tycoon Engine with Achievement Trophy System
 
 signal money_changed(new_amount, change)
 signal reputation_changed(new_reputation)
@@ -18,6 +18,7 @@ signal temperature_changed(new_temp)
 signal time_of_day_changed(new_tod)
 signal zone_changed(new_zone)
 signal decor_mode_changed(is_active)
+signal achievement_unlocked(title, reward)
 
 # Financial & Time Variables
 var money: float = 5000.0
@@ -34,6 +35,13 @@ var current_zone: String = "study"
 var cat_pos: Vector2 = Vector2(420, 380)
 var cat_target: Vector2 = Vector2(420, 380)
 var cat_patrol_timer: float = 0.0
+
+# Achievements Tracking
+var achievements: Dictionary = {
+	"first_10k": { "title": "🏆 누적 매출 10,000₩ 달성!", "reward": 1000.0, "unlocked": false },
+	"high_reputation": { "title": "⭐ 스터디 카페 평점 4.8 돌파!", "reward": 1500.0, "unlocked": false },
+	"master_visitors": { "title": "👥 누적 손님 20명 돌파!", "reward": 2000.0, "unlocked": false }
+}
 
 # Interior Decorating Mode State
 var is_decorating_mode: bool = false
@@ -140,6 +148,22 @@ var reviews_log: Array = []
 var spawn_timer: float = 0.0
 var temp_drift_timer: float = 0.0
 
+func check_achievements() -> void:
+	if not achievements["first_10k"]["unlocked"] and total_earnings >= 10000.0:
+		unlock_achieve("first_10k")
+	if not achievements["high_reputation"]["unlocked"] and reputation >= 4.8:
+		unlock_achieve("high_reputation")
+	if not achievements["master_visitors"]["unlocked"] and daily_visitors >= 20:
+		unlock_achieve("master_visitors")
+
+func unlock_achieve(key: String) -> void:
+	if not achievements.has(key): return
+	var ach = achievements[key]
+	ach["unlocked"] = true
+	add_money(ach["reward"])
+	achievement_unlocked.emit(ach["title"], ach["reward"])
+	SoundManager.play_chime_sfx()
+
 func pet_cat() -> void:
 	reputation = min(5.0, reputation + 0.05)
 	reputation_changed.emit(reputation)
@@ -184,7 +208,6 @@ func _process(delta: float) -> void:
 		time_of_day = new_tod
 		time_of_day_changed.emit(time_of_day)
 		
-	# Mascot Cat Patrol Animation
 	cat_patrol_timer += delta
 	if cat_patrol_timer >= 6.0:
 		cat_patrol_timer = 0.0
@@ -197,6 +220,8 @@ func _process(delta: float) -> void:
 		temperature += randf_range(-0.6, 0.6)
 		temperature = clamp(temperature, 18.0, 30.0)
 		temperature_changed.emit(temperature)
+	
+	check_achievements()
 	
 	spawn_timer += delta
 	var current_capacity = get_max_capacity()
