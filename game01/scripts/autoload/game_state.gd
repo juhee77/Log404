@@ -158,6 +158,14 @@ var upgrades: Dictionary = {
 		"cost_mult": 1.8,
 		"desc": "소음을 줄이고 몰입감을 최대로 높여주는 아날로그 백색소음"
 	},
+	"herbal_tea": {
+		"name": "🍵 유기농 캐모마일 & 허브티 셀프바",
+		"level": 0,
+		"max_level": 3,
+		"base_cost": 1200.0,
+		"cost_mult": 1.8,
+		"desc": "심신 안정을 돕는 무카페인 힐링 티 코너로 스트레스 완화"
+	},
 	"vip_membership": {
 		"name": "🏆 월 정기권 VIP 회원제 구독 시스템",
 		"level": 0,
