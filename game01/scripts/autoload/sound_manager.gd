@@ -1,72 +1,63 @@
 extends Node
 
-# SoundManager.gd - Procedural & Ambient Audio Manager (Default: Muted)
+# sound_manager.gd - Procedural Sound Effects & Audio Engine for Study Cafe Tycoon
 
-var bgm_player: AudioStreamPlayer
-var sfx_player: AudioStreamPlayer
-var ambient_player: AudioStreamPlayer
-
-# Muted by default as requested by user
 var sound_enabled: bool = false
-var ambient_volume: float = 0.5
+var audio_player: AudioStreamPlayer
 
 func _ready() -> void:
-	sfx_player = AudioStreamPlayer.new()
-	add_child(sfx_player)
-	
-	ambient_player = AudioStreamPlayer.new()
-	add_child(ambient_player)
-	
-	GameState.money_changed.connect(_on_money_changed)
-	GameState.upgrade_purchased.connect(_on_upgrade_purchased)
-
-func _on_money_changed(amount: float, change: float) -> void:
-	if change > 50.0 and sound_enabled:
-		play_coin_chime()
-
-func _on_upgrade_purchased(_category: String, _level: int) -> void:
-	if sound_enabled:
-		play_purchase_sound()
-
-func play_coin_chime() -> void:
-	if not sound_enabled: return
-	var gen = AudioStreamGenerator.new()
-	gen.mix_rate = 22050
-	gen.buffer_length = 0.15
-	
-	sfx_player.stream = gen
-	sfx_player.volume_db = -6.0
-	sfx_player.play()
-	
-	var playback = sfx_player.get_stream_playback()
-	if playback:
-		var phase = 0.0
-		var freq = 880.0
-		for i in range(1200):
-			var sample = sin(phase * TAU) * 0.3
-			playback.push_frame(Vector2(sample, sample))
-			phase = fmod(phase + freq / gen.mix_rate, 1.0)
-
-func play_purchase_sound() -> void:
-	if not sound_enabled: return
-	var gen = AudioStreamGenerator.new()
-	gen.mix_rate = 22050
-	gen.buffer_length = 0.2
-	
-	sfx_player.stream = gen
-	sfx_player.volume_db = -4.0
-	sfx_player.play()
-	
-	var playback = sfx_player.get_stream_playback()
-	if playback:
-		var phase = 0.0
-		var freq = 523.25
-		for i in range(1600):
-			if i > 800: freq = 659.25
-			var sample = sin(phase * TAU) * 0.4
-			playback.push_frame(Vector2(sample, sample))
-			phase = fmod(phase + freq / gen.mix_rate, 1.0)
+	audio_player = AudioStreamPlayer.new()
+	add_child(audio_player)
+	process_mode = Node.PROCESS_MODE_ALWAYS
 
 func toggle_sound() -> bool:
-	sound_enabled = !sound_enabled
+	sound_enabled = not sound_enabled
+	if sound_enabled:
+		play_chime_sfx()
 	return sound_enabled
+
+func play_click_sfx() -> void:
+	if not sound_enabled: return
+	play_synth_tone(800.0, 0.05, "sine")
+
+func play_coin_sfx() -> void:
+	if not sound_enabled: return
+	play_synth_tone(1200.0, 0.08, "triangle")
+
+func play_clean_sfx() -> void:
+	if not sound_enabled: return
+	play_synth_tone(400.0, 0.12, "noise")
+
+func play_chime_sfx() -> void:
+	if not sound_enabled: return
+	play_synth_tone(950.0, 0.15, "sine")
+
+func play_synth_tone(freq: float, duration: float, type: String = "sine") -> void:
+	var sample_rate = 22050
+	var num_samples = int(sample_rate * duration)
+	var buffer = PackedByteArray()
+	buffer.resize(num_samples * 2)
+	
+	for i in range(num_samples):
+		var t = float(i) / sample_rate
+		var sample_val = 0.0
+		var env = 1.0 - (float(i) / num_samples) # Linear decay
+		
+		if type == "sine":
+			sample_val = sin(t * freq * TAU) * env
+		elif type == "triangle":
+			sample_val = (abs(fmod(t * freq * 4.0, 4.0) - 2.0) - 1.0) * env
+		elif type == "noise":
+			sample_val = (randf() * 2.0 - 1.0) * env
+			
+		var int_val = int(clamp(sample_val, -1.0, 1.0) * 32767.0)
+		buffer.encode_s16(i * 2, int_val)
+		
+	var wav = AudioStreamWav.new()
+	wav.format = AudioStreamWav.FORMAT_16_BITS
+	wav.mix_rate = sample_rate
+	wav.stereo = false
+	wav.data = buffer
+	
+	audio_player.stream = wav
+	audio_player.play()
