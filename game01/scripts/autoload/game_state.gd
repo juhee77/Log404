@@ -158,6 +158,14 @@ var upgrades: Dictionary = {
 		"cost_mult": 1.8,
 		"desc": "소음을 줄이고 몰입감을 최대로 높여주는 아날로그 백색소음"
 	},
+	"ergonomic_chair": {
+		"name": "🛋 허리 피로 제로 에르고노믹 럭셔리 메쉬 의자",
+		"level": 0,
+		"max_level": 3,
+		"base_cost": 2800.0,
+		"cost_mult": 2.2,
+		"desc": "요추 지지대와 매쉬 소재 풀 옵션 의자로 장시간 몰입도 +35% 증가"
+	},
 	"exam_library": {
 		"name": "📚 평가원 모의고사 & 공시 족보 라이브러리",
 		"level": 0,
