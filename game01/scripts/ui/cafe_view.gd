@@ -106,7 +106,16 @@ func _gui_input(event: InputEvent) -> void:
 				})
 			return
 		
-		# Check Coffee Bar Click
+		# Check Mascot Cat Click
+		if click_pos.distance_to(GameState.cat_pos) < 35.0:
+			GameState.pet_cat()
+			floating_texts.append({
+				"text": "🐱 야옹~! 힐링 골골송! (⭐+0.05)",
+				"pos": GameState.cat_pos + Vector2(0, -35),
+				"alpha": 1.0,
+				"color": Color(1.0, 0.6, 0.8)
+			})
+			return
 		if GameState.current_zone == "lounge" or GameState.current_zone == "study":
 			var bar_rect = Rect2(30, 30, 220, 150)
 			if bar_rect.has_point(click_pos):

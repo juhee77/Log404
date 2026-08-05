@@ -1,6 +1,6 @@
 extends Node
 
-# GameState.gd - Master Tycoon Engine with Interior Grid Decoration Architecture
+# GameState.gd - Master Tycoon Engine with Resident Mascot Cat System
 
 signal money_changed(new_amount, change)
 signal reputation_changed(new_reputation)
@@ -24,15 +24,20 @@ var money: float = 5000.0
 var total_earnings: float = 0.0
 var reputation: float = 4.2
 var day_count: int = 1
-var game_time: float = 8.0 # 0.0 to 24.0
-var time_of_day: String = "DAY" # "DAY", "DUSK", "NIGHT"
+var game_time: float = 8.0
+var time_of_day: String = "DAY"
 
 # Current Active Map Zone ("study", "lounge", "front")
 var current_zone: String = "study"
 
+# Mascot Cat Position & Animated Path
+var cat_pos: Vector2 = Vector2(420, 380)
+var cat_target: Vector2 = Vector2(420, 380)
+var cat_patrol_timer: float = 0.0
+
 # Interior Decorating Mode State
 var is_decorating_mode: bool = false
-var custom_decorations: Array = [] # Array of { pos: Vector2, type: "plant"|"lamp"|"bookshelf" }
+var custom_decorations: Array = []
 
 # Daily Statistics Counter
 var daily_seat_rev: float = 0.0
@@ -135,6 +140,11 @@ var reviews_log: Array = []
 var spawn_timer: float = 0.0
 var temp_drift_timer: float = 0.0
 
+func pet_cat() -> void:
+	reputation = min(5.0, reputation + 0.05)
+	reputation_changed.emit(reputation)
+	SoundManager.play_chime_sfx()
+
 func toggle_decorating_mode() -> bool:
 	is_decorating_mode = not is_decorating_mode
 	decor_mode_changed.emit(is_decorating_mode)
@@ -173,6 +183,13 @@ func _process(delta: float) -> void:
 	if new_tod != time_of_day:
 		time_of_day = new_tod
 		time_of_day_changed.emit(time_of_day)
+		
+	# Mascot Cat Patrol Animation
+	cat_patrol_timer += delta
+	if cat_patrol_timer >= 6.0:
+		cat_patrol_timer = 0.0
+		cat_target = Vector2(randf_range(300, 700), randf_range(350, 480))
+	cat_pos = cat_pos.move_toward(cat_target, delta * 30.0)
 	
 	temp_drift_timer += delta
 	if temp_drift_timer >= 10.0:
