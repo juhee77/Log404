@@ -158,6 +158,14 @@ var upgrades: Dictionary = {
 		"cost_mult": 1.8,
 		"desc": "소음을 줄이고 몰입감을 최대로 높여주는 아날로그 백색소음"
 	},
+	"dark_chocolate": {
+		"name": "🍫 85% 무설탕 딥 다크 초콜릿 & 에너지바",
+		"level": 0,
+		"max_level": 3,
+		"base_cost": 650.0,
+		"cost_mult": 1.6,
+		"desc": "두뇌 활성화 플라보놀 성분의 다크 초콜릿으로 수험생 집중력 가산"
+	},
 	"pomodoro_timer": {
 		"name": "💡 25분 몰입 / 5분 휴식 포모도로 시계",
 		"level": 0,
