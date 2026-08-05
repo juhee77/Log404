@@ -50,7 +50,12 @@ var achievements: Dictionary = {
 # Interior Decorating Mode & Custom Partitions
 var is_decorating_mode: bool = false
 var custom_decorations: Array = []
-var seat_partitions: Dictionary = {} # seat_index -> "divider"|"curtain"
+var seat_partitions: Dictionary = {}
+var seat_custom_offsets: Dictionary = {} # seat_index -> Vector2 offset
+
+func set_seat_offset(seat_index: int, offset: Vector2) -> void:
+	seat_custom_offsets[seat_index] = offset
+	save_game()
 
 func install_partition(seat_index: int, type: String = "divider") -> bool:
 	var cost = 300.0
@@ -445,7 +450,10 @@ func get_seat_position(index: int) -> Vector2:
 	var cell_h = 100.0
 	var col = index % cols
 	var row = index / cols
-	return Vector2(start_x + col * (cell_w + 30.0) + cell_w*0.5, start_y + row * (cell_h + 30.0) + cell_h*0.5)
+	var base_pos = Vector2(start_x + col * (cell_w + 30.0) + cell_w*0.5, start_y + row * (cell_h + 30.0) + cell_h*0.5)
+	if seat_custom_offsets.has(index):
+		return base_pos + seat_custom_offsets[index]
+	return base_pos
 
 func add_money(amount: float) -> void:
 	money += amount
