@@ -11,12 +11,16 @@ var steam_time: float = 0.0
 func _ready() -> void:
 	custom_minimum_size = Vector2(800, 520)
 	
-	if FileAccess.file_exists("res://assets/cafe_bg.png"):
+	if ResourceLoader.exists("res://assets/cafe_bg.png"):
+		bg_texture = load("res://assets/cafe_bg.png")
+	elif FileAccess.file_exists("res://assets/cafe_bg.png"):
 		var img = Image.load_from_file("res://assets/cafe_bg.png")
 		if img != null:
 			bg_texture = ImageTexture.create_from_image(img)
 			
-	if FileAccess.file_exists("res://assets/coffee_bar.png"):
+	if ResourceLoader.exists("res://assets/coffee_bar.png"):
+		coffee_bar_texture = load("res://assets/coffee_bar.png")
+	elif FileAccess.file_exists("res://assets/coffee_bar.png"):
 		var img_bar = Image.load_from_file("res://assets/coffee_bar.png")
 		if img_bar != null:
 			coffee_bar_texture = ImageTexture.create_from_image(img_bar)
