@@ -8,6 +8,10 @@ var coffee_bar_texture: Texture2D
 var floating_texts: Array = []
 var steam_time: float = 0.0
 
+var view_offset: Vector2 = Vector2.ZERO
+var is_panning: bool = false
+var pan_start_pos: Vector2 = Vector2.ZERO
+
 func _ready() -> void:
 	custom_minimum_size = Vector2(800, 520)
 	
@@ -101,8 +105,23 @@ func _gui_input(event: InputEvent) -> void:
 		if (upg_overlay and upg_overlay.visible) or (rev_overlay and rev_overlay.visible):
 			return
 
+	if event is InputEventMouseButton:
+		if event.button_index == MOUSE_BUTTON_RIGHT or event.button_index == MOUSE_BUTTON_MIDDLE:
+			if event.pressed:
+				is_panning = true
+				pan_start_pos = event.position - view_offset
+			else:
+				is_panning = false
+				
+	if event is InputEventMouseMotion and is_panning:
+		view_offset = event.position - pan_start_pos
+		view_offset.x = clamp(view_offset.x, -400.0, 200.0)
+		view_offset.y = clamp(view_offset.y, -400.0, 200.0)
+		queue_redraw()
+		return
+
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-		var click_pos = event.position
+		var click_pos = event.position - view_offset
 		
 		# If Decorating Mode is Active, place custom furniture
 		if GameState.is_decorating_mode:
