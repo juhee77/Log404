@@ -158,6 +158,14 @@ var upgrades: Dictionary = {
 		"cost_mult": 1.8,
 		"desc": "소음을 줄이고 몰입감을 최대로 높여주는 아날로그 백색소음"
 	},
+	"fast_charger": {
+		"name": "⚡ 100W 초고속 USB-C PD 멀티 충전기",
+		"level": 0,
+		"max_level": 3,
+		"base_cost": 800.0,
+		"cost_mult": 1.7,
+		"desc": "노트북과 태블릿을 초고속 충전하여 개발자 손님 매출 +25% 가산"
+	},
 	"herbal_tea": {
 		"name": "🍵 유기농 캐모마일 & 허브티 셀프바",
 		"level": 0,
