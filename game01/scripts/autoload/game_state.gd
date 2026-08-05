@@ -158,6 +158,14 @@ var upgrades: Dictionary = {
 		"cost_mult": 1.8,
 		"desc": "소음을 줄이고 몰입감을 최대로 높여주는 아날로그 백색소음"
 	},
+	"rentals": {
+		"name": "🎧 3M 귀마개 & 독서대/충전기 대여 자판기",
+		"level": 1,
+		"max_level": 5,
+		"base_cost": 500.0,
+		"cost_mult": 1.6,
+		"desc": "노트북 거치대, 무소음 마우스, 3M 폼 귀마개 비품 대여 정산"
+	},
 	"lockers": {
 		"name": "🎒 개인 스마트 사물함 & 도어락",
 		"level": 1,
