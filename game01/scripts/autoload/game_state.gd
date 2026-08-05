@@ -158,6 +158,14 @@ var upgrades: Dictionary = {
 		"cost_mult": 1.8,
 		"desc": "소음을 줄이고 몰입감을 최대로 높여주는 아날로그 백색소음"
 	},
+	"vip_membership": {
+		"name": "🏆 월 정기권 VIP 회원제 구독 시스템",
+		"level": 0,
+		"max_level": 5,
+		"base_cost": 2500.0,
+		"cost_mult": 2.0,
+		"desc": "매일 1,500₩의 안정적인 고정 월 구독 정산 수금"
+	},
 	"nitro_coffee": {
 		"name": "☕ 프리미엄 니트로 질소 콜드브루 탭",
 		"level": 0,
