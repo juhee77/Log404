@@ -158,6 +158,14 @@ var upgrades: Dictionary = {
 		"cost_mult": 1.8,
 		"desc": "소음을 줄이고 몰입감을 최대로 높여주는 아날로그 백색소음"
 	},
+	"smart_kiosk": {
+		"name": "📱 모바일 키오스크 & 원격 좌석 예약 앱",
+		"level": 0,
+		"max_level": 3,
+		"base_cost": 2000.0,
+		"cost_mult": 2.2,
+		"desc": "모바일 앱으로 미리 좌석을 결제 및 예약하여 유입량 +30% 상승"
+	},
 	"massage_chair": {
 		"name": "🧘 휴게실 고급 안마의자 & 스트레칭존",
 		"level": 0,
