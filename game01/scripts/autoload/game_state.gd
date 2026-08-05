@@ -158,6 +158,14 @@ var upgrades: Dictionary = {
 		"cost_mult": 1.8,
 		"desc": "소음을 줄이고 몰입감을 최대로 높여주는 아날로그 백색소음"
 	},
+	"air_purifier": {
+		"name": "🌿 초미세먼지 HEPA 공기청정기 & 바이오월",
+		"level": 0,
+		"max_level": 3,
+		"base_cost": 1800.0,
+		"cost_mult": 1.9,
+		"desc": "산소 농도와 쾌적한 공기질을 100% 유지하여 평점 +0.3 가산"
+	},
 	"ai_coach": {
 		"name": "🤖 AI 공시/수험 몰입 코치봇",
 		"level": 0,
