@@ -158,6 +158,14 @@ var upgrades: Dictionary = {
 		"cost_mult": 1.8,
 		"desc": "소음을 줄이고 몰입감을 최대로 높여주는 아날로그 백색소음"
 	},
+	"cloud_printer": {
+		"name": "🖨 모바일 무인 스마트 프린터 & 스캐너",
+		"level": 0,
+		"max_level": 3,
+		"base_cost": 1100.0,
+		"cost_mult": 1.8,
+		"desc": "수험서 및 시험지 인쇄 스캔 무인 인쇄 정산 수수료"
+	},
 	"arcade_machine": {
 		"name": "🎮 휴게실 레트로 픽셀 미니게임 아케이드",
 		"level": 0,
