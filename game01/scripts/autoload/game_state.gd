@@ -1,6 +1,6 @@
 extends Node
 
-# GameState.gd - Master Tycoon Engine with Achievement Trophy System
+# GameState.gd - Master Tycoon Engine with Dynamic Weather System
 
 signal money_changed(new_amount, change)
 signal reputation_changed(new_reputation)
@@ -16,6 +16,7 @@ signal seat_dirty(seat_index)
 signal seat_cleaned(seat_index)
 signal temperature_changed(new_temp)
 signal time_of_day_changed(new_tod)
+signal weather_changed(new_weather)
 signal zone_changed(new_zone)
 signal decor_mode_changed(is_active)
 signal achievement_unlocked(title, reward)
@@ -27,6 +28,8 @@ var reputation: float = 4.2
 var day_count: int = 1
 var game_time: float = 8.0
 var time_of_day: String = "DAY"
+var weather: String = "RAINY" # "CLEAR", "RAINY"
+var weather_timer: float = 0.0
 
 # Current Active Map Zone ("study", "lounge", "front")
 var current_zone: String = "study"
@@ -208,6 +211,14 @@ func _process(delta: float) -> void:
 		time_of_day = new_tod
 		time_of_day_changed.emit(time_of_day)
 		
+	# Dynamic Weather Cycle
+	weather_timer += delta
+	if weather_timer >= 25.0:
+		weather_timer = 0.0
+		var next_w = "RAINY" if weather == "CLEAR" else "CLEAR"
+		weather = next_w
+		weather_changed.emit(weather)
+		
 	cat_patrol_timer += delta
 	if cat_patrol_timer >= 6.0:
 		cat_patrol_timer = 0.0
@@ -249,7 +260,8 @@ func _process(delta: float) -> void:
 			if temperature < 21.0 or temperature > 27.0:
 				temp_penalty = 0.7
 				
-			var tick_income = get_income_per_second_for_customer(c) * temp_penalty * delta
+			var rain_bonus = 1.2 if weather == "RAINY" else 1.0
+			var tick_income = get_income_per_second_for_customer(c) * temp_penalty * rain_bonus * delta
 			add_money(tick_income)
 			daily_seat_rev += tick_income
 			
