@@ -159,6 +159,14 @@ var upgrades: Dictionary = {
 		"cost_mult": 1.8,
 		"desc": "소음을 줄이고 몰입감을 최대로 높여주는 아날로그 백색소음"
 	},
+	"handdrip_coffee": {
+		"name": "☕ 프리미엄 싱글 오리진 핸드드립 커피 바",
+		"level": 0,
+		"max_level": 3,
+		"base_cost": 1800.0,
+		"cost_mult": 1.9,
+		"desc": "에티오피아 게이샤 & 과테말라 원두 핸드드립 음료 매출 +45% 가산"
+	},
 	"mock_exam_report": {
 		"name": "📜 모의고사 성적 진단 & 슬럼프 상담소",
 		"level": 0,
