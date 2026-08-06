@@ -159,6 +159,14 @@ var upgrades: Dictionary = {
 		"cost_mult": 1.8,
 		"desc": "소음을 줄이고 몰입감을 최대로 높여주는 아날로그 백색소음"
 	},
+	"botanical_wall": {
+		"name": "🌸 대형 산소 공기정화 초록 온실 바이오월",
+		"level": 0,
+		"max_level": 3,
+		"base_cost": 2100.0,
+		"cost_mult": 2.0,
+		"desc": "스킨답서스 & 스파티필름 대형 온실 벽면으로 매장 평점 만점(5.0) 달성"
+	},
 	"curved_monitor": {
 		"name": "🖥 38인치 WQHD 울트라와이드 커브드 모니터 코딩석",
 		"level": 0,
