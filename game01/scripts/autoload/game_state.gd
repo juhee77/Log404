@@ -159,6 +159,14 @@ var upgrades: Dictionary = {
 		"cost_mult": 1.8,
 		"desc": "소음을 줄이고 몰입감을 최대로 높여주는 아날로그 백색소음"
 	},
+	"anc_headphones": {
+		"name": "🎧 프리미엄 ANC 노이즈 캔슬링 헤드폰 대여",
+		"level": 0,
+		"max_level": 3,
+		"base_cost": 1600.0,
+		"cost_mult": 1.8,
+		"desc": "외부 소음을 100% 차단하는 액티브 노이즈 캔슬링 헤드폰 몰입도 +35% 가산"
+	},
 	"handdrip_coffee": {
 		"name": "☕ 프리미엄 싱글 오리진 핸드드립 커피 바",
 		"level": 0,
