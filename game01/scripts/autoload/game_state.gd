@@ -159,6 +159,14 @@ var upgrades: Dictionary = {
 		"cost_mult": 1.8,
 		"desc": "소음을 줄이고 몰입감을 최대로 높여주는 아날로그 백색소음"
 	},
+	"parent_sms": {
+		"name": "🤖 AI 자동 출퇴실 인식 & 부모님 안심 알림톡",
+		"level": 0,
+		"max_level": 3,
+		"base_cost": 1700.0,
+		"cost_mult": 1.9,
+		"desc": "입퇴실 시 학부모에게 안전 입실 문자를 전송하여 학생 등록률 +30% 가산"
+	},
 	"nap_capsule": {
 		"name": "🧘 무중력 파워 냅 수면 캡슐 & 대나무 숯 베개",
 		"level": 0,
