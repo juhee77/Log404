@@ -159,6 +159,14 @@ var upgrades: Dictionary = {
 		"cost_mult": 1.8,
 		"desc": "소음을 줄이고 몰입감을 최대로 높여주는 아날로그 백색소음"
 	},
+	"mock_exam_report": {
+		"name": "📜 모의고사 성적 진단 & 슬럼프 상담소",
+		"level": 0,
+		"max_level": 3,
+		"base_cost": 1500.0,
+		"cost_mult": 1.9,
+		"desc": "수험생 6/9월 모평 성적 분석 및 슬럼프 상담으로 이용 단가 +30% 증가"
+	},
 	"grand_celebration": {
 		"name": "🎉 직영 5호점 돌파 그랜드 타이쿤 파티 랜드마크",
 		"level": 0,
@@ -664,7 +672,7 @@ func get_total_income_rate() -> float:
 		total += upgrades["staff_counter"]["level"] * 20.0
 	return total
 
-func get_seat_position(index: int) -> Vector2:
+func get_base_seat_position(index: int) -> Vector2:
 	var cols = 4
 	var start_x = 60.0
 	var start_y = 160.0
@@ -672,7 +680,10 @@ func get_seat_position(index: int) -> Vector2:
 	var cell_h = 100.0
 	var col = index % cols
 	var row = index / cols
-	var base_pos = Vector2(start_x + col * (cell_w + 30.0) + cell_w*0.5, start_y + row * (cell_h + 30.0) + cell_h*0.5)
+	return Vector2(start_x + col * (cell_w + 30.0) + cell_w*0.5, start_y + row * (cell_h + 30.0) + cell_h*0.5)
+
+func get_seat_position(index: int) -> Vector2:
+	var base_pos = get_base_seat_position(index)
 	if seat_custom_offsets.has(index):
 		return base_pos + seat_custom_offsets[index]
 	return base_pos
