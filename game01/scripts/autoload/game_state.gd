@@ -159,6 +159,14 @@ var upgrades: Dictionary = {
 		"cost_mult": 1.8,
 		"desc": "소음을 줄이고 몰입감을 최대로 높여주는 아날로그 백색소음"
 	},
+	"uv_desk_mat": {
+		"name": "🧼 UV-C 무균 소독 데스크 장패드 & 키보드 살균기",
+		"level": 0,
+		"max_level": 3,
+		"base_cost": 1300.0,
+		"cost_mult": 1.7,
+		"desc": "이용 직후 99.9% 무균 소독되는 UV 데스크 매트로 쾌적 평점 +0.2 가산"
+	},
 	"truffle_buffet": {
 		"name": "🍫 벨기에 트러플 딥 다크 초콜릿 디저트 뷔페",
 		"level": 0,
