@@ -160,6 +160,14 @@ var upgrades: Dictionary = {
 		"cost_mult": 1.8,
 		"desc": "소음을 줄이고 몰입감을 최대로 높여주는 아날로그 백색소음"
 	},
+	"celebration_70th": {
+		"name": "🎉 Log404 Studio 70회 연속 자율 순환 개발 완수 기념 대축제",
+		"level": 0,
+		"max_level": 1,
+		"base_cost": 15000.0,
+		"cost_mult": 1.0,
+		"desc": "Log404 Studio 30인 개발팀 70개 모듈 자율 개발 완수 기념 랜드마크"
+	},
 	"cat_tower": {
 		"name": "🐱 냥이 매니저 전용 원목 캣타워 & 캣폴 구름다리",
 		"level": 0,
