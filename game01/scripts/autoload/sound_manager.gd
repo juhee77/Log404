@@ -12,6 +12,11 @@ func switch_bgm_track(track_name: String) -> void:
 	if sound_enabled:
 		start_white_noise_ambient()
 
+func play_rain_soundscape() -> void:
+	if sound_enabled:
+		# Rain soundscape logic here
+		pass
+
 func _ready() -> void:
 	audio_player = AudioStreamPlayer.new()
 	add_child(audio_player)
