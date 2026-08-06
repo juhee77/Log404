@@ -159,6 +159,14 @@ var upgrades: Dictionary = {
 		"cost_mult": 1.8,
 		"desc": "소음을 줄이고 몰입감을 최대로 높여주는 아날로그 백색소음"
 	},
+	"kelvin_light": {
+		"name": "💡 독서등 3단 색온도(켈빈) 튜닝 파형 조명",
+		"level": 0,
+		"max_level": 3,
+		"base_cost": 1100.0,
+		"cost_mult": 1.7,
+		"desc": "암기/수학/창의 3가지 색온도 조절 스위치로 집중 효율 +25% 가산"
+	},
 	"franchise_league": {
 		"name": "🏆 전국 프랜차이즈 타이쿤 TOP 10 명예 리그",
 		"level": 0,
