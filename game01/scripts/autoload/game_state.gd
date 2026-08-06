@@ -159,6 +159,14 @@ var upgrades: Dictionary = {
 		"cost_mult": 1.8,
 		"desc": "소음을 줄이고 몰입감을 최대로 높여주는 아날로그 백색소음"
 	},
+	"book_share": {
+		"name": "📚 합격자 기부 중고 수험서 & EBS 교재 나눔 서가",
+		"level": 0,
+		"max_level": 3,
+		"base_cost": 800.0,
+		"cost_mult": 1.6,
+		"desc": "선배 합격자들이 기증한 단권화 수험서 무료 대여로 평점 +0.2 가산"
+	},
 	"morning_croissant": {
 		"name": "🥐 아침 8시 갓 구운 크로와상 & 베이글 셀프바",
 		"level": 0,
