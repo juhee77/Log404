@@ -159,6 +159,14 @@ var upgrades: Dictionary = {
 		"cost_mult": 1.8,
 		"desc": "소음을 줄이고 몰입감을 최대로 높여주는 아날로그 백색소음"
 	},
+	"study_badge_app": {
+		"name": "📱 열공 목표 달성 뱃지 & 타이머 모바일앱 연동",
+		"level": 0,
+		"max_level": 3,
+		"base_cost": 1700.0,
+		"cost_mult": 1.9,
+		"desc": "일일 8시간 달성 디지털 뱃지 발급으로 유저 재방문률 +30% 가산"
+	},
 	"acoustic_meeting_room": {
 		"name": "🎙 4인 전용 아쿠스틱 특수 흡음 완전 방음 미팅룸",
 		"level": 0,
