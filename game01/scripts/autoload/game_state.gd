@@ -159,6 +159,14 @@ var upgrades: Dictionary = {
 		"cost_mult": 1.8,
 		"desc": "소음을 줄이고 몰입감을 최대로 높여주는 아날로그 백색소음"
 	},
+	"franchise_league": {
+		"name": "🏆 전국 프랜차이즈 타이쿤 TOP 10 명예 리그",
+		"level": 0,
+		"max_level": 3,
+		"base_cost": 3000.0,
+		"cost_mult": 2.2,
+		"desc": "전국 스터디 카페 명예의 리그 탑10 진입으로 전 지점 방치형 수익 2.0배 증대"
+	},
 	"botanical_wall": {
 		"name": "🌸 대형 산소 공기정화 초록 온실 바이오월",
 		"level": 0,
