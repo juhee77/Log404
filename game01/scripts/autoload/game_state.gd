@@ -159,6 +159,14 @@ var upgrades: Dictionary = {
 		"cost_mult": 1.8,
 		"desc": "소음을 줄이고 몰입감을 최대로 높여주는 아날로그 백색소음"
 	},
+	"protein_smoothie": {
+		"name": "🥤 100% 무설탕 생과일 스무디 & 단백질 프로틴 바",
+		"level": 0,
+		"max_level": 3,
+		"base_cost": 1500.0,
+		"cost_mult": 1.8,
+		"desc": "운동하는 수험생/개발자를 위한 무설탕 생과일 프로틴 쉐이크 매출 +35% 가산"
+	},
 	"kelvin_light": {
 		"name": "💡 독서등 3단 색온도(켈빈) 튜닝 파형 조명",
 		"level": 0,
