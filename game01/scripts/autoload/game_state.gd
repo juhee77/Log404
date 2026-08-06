@@ -159,6 +159,14 @@ var upgrades: Dictionary = {
 		"cost_mult": 1.8,
 		"desc": "소음을 줄이고 몰입감을 최대로 높여주는 아날로그 백색소음"
 	},
+	"nap_capsule": {
+		"name": "🧘 무중력 파워 냅 수면 캡슐 & 대나무 숯 베개",
+		"level": 0,
+		"max_level": 3,
+		"base_cost": 2300.0,
+		"cost_mult": 2.1,
+		"desc": "15분 파워 냅 수면으로 두뇌 쾌적도 최상 유지 및 만족도 +30% 가산"
+	},
 	"anc_headphones": {
 		"name": "🎧 프리미엄 ANC 노이즈 캔슬링 헤드폰 대여",
 		"level": 0,
