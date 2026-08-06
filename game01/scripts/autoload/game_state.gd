@@ -46,7 +46,8 @@ var achievements: Dictionary = {
 	"first_10k": { "title": "🏆 누적 매출 10,000₩ 달성!", "reward": 1000.0, "unlocked": false },
 	"high_reputation": { "title": "⭐ 스터디 카페 평점 4.8 돌파!", "reward": 1500.0, "unlocked": false },
 	"master_visitors": { "title": "👥 누적 손님 20명 돌파!", "reward": 2000.0, "unlocked": false },
-	"hall_of_fame": { "title": "👑 스터디 카페 명예의 전당 등극!", "reward": 5000.0, "unlocked": false }
+	"hall_of_fame": { "title": "👑 스터디 카페 명예의 전당 등극!", "reward": 5000.0, "unlocked": false },
+	"study_marathon": { "title": "🏆 전국 스터디 마라톤 챔피언십 우승!", "reward": 10000.0, "unlocked": false }
 }
 
 # Interior Decorating Mode & Custom Partitions
