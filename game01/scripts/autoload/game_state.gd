@@ -159,6 +159,14 @@ var upgrades: Dictionary = {
 		"cost_mult": 1.8,
 		"desc": "소음을 줄이고 몰입감을 최대로 높여주는 아날로그 백색소음"
 	},
+	"cat_tower": {
+		"name": "🐱 냥이 매니저 전용 원목 캣타워 & 캣폴 구름다리",
+		"level": 0,
+		"max_level": 3,
+		"base_cost": 1600.0,
+		"cost_mult": 1.9,
+		"desc": "마스코트 고양이 전용 수직 구름다리로 힐링 만족도 +40% 가산"
+	},
 	"uv_desk_mat": {
 		"name": "🧼 UV-C 무균 소독 데스크 장패드 & 키보드 살균기",
 		"level": 0,
