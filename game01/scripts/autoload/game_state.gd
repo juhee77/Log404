@@ -159,6 +159,14 @@ var upgrades: Dictionary = {
 		"cost_mult": 1.8,
 		"desc": "소음을 줄이고 몰입감을 최대로 높여주는 아날로그 백색소음"
 	},
+	"truffle_buffet": {
+		"name": "🍫 벨기에 트러플 딥 다크 초콜릿 디저트 뷔페",
+		"level": 0,
+		"max_level": 3,
+		"base_cost": 2200.0,
+		"cost_mult": 2.0,
+		"desc": "두뇌 회전을 돕는 85% 다크 초콜릿 트러플 뷔페 코너 매출 +45% 가산"
+	},
 	"study_badge_app": {
 		"name": "📱 열공 목표 달성 뱃지 & 타이머 모바일앱 연동",
 		"level": 0,
