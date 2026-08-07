@@ -115,6 +115,8 @@ func update_card_states() -> void:
 			buy_btn.disabled = not GameState.can_afford(cost)
 
 func refresh_list() -> void:
+	if card_nodes.size() != GameState.upgrades.size():
+		build_initial_cards()
 	update_card_states()
 
 func format_money(val: float) -> String:

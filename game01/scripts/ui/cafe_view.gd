@@ -12,6 +12,11 @@ var view_offset: Vector2 = Vector2.ZERO
 var is_panning: bool = false
 var pan_start_pos: Vector2 = Vector2.ZERO
 
+var student_texture: Texture2D
+var developer_texture: Texture2D
+
+var selected_drag_seat: int = -1
+
 func _ready() -> void:
 	custom_minimum_size = Vector2(800, 520)
 	
@@ -24,6 +29,16 @@ func _ready() -> void:
 		var img_bar = Image.load_from_file("res://assets/coffee_bar.png")
 		if img_bar != null:
 			coffee_bar_texture = ImageTexture.create_from_image(img_bar)
+			
+	if FileAccess.file_exists("res://assets/customer_student.png"):
+		var img_s = Image.load_from_file("res://assets/customer_student.png")
+		if img_s != null:
+			student_texture = ImageTexture.create_from_image(img_s)
+			
+	if FileAccess.file_exists("res://assets/customer_developer.png"):
+		var img_d = Image.load_from_file("res://assets/customer_developer.png")
+		if img_d != null:
+			developer_texture = ImageTexture.create_from_image(img_d)
 		
 	GameState.zone_changed.connect(func(_z): queue_redraw())
 	GameState.upgrade_purchased.connect(func(_cat, _lvl): queue_redraw())
@@ -101,13 +116,22 @@ func _gui_input(event: InputEvent) -> void:
 		if (upg_overlay and upg_overlay.visible) or (rev_overlay and rev_overlay.visible):
 			return
 
-	if event is InputEventMouseButton:
+	if event is InputEventMouseButton and event.pressed:
+		if event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
+			view_offset.y = max(view_offset.y - 40.0, -400.0)
+			queue_redraw()
+			return
+		elif event.button_index == MOUSE_BUTTON_WHEEL_UP:
+			view_offset.y = min(view_offset.y + 40.0, 50.0)
+			queue_redraw()
+			return
+			
 		if event.button_index == MOUSE_BUTTON_RIGHT or event.button_index == MOUSE_BUTTON_MIDDLE:
-			if event.pressed:
-				is_panning = true
-				pan_start_pos = event.position - view_offset
-			else:
-				is_panning = false
+			is_panning = true
+			pan_start_pos = event.position - view_offset
+	elif event is InputEventMouseButton and not event.pressed:
+		if event.button_index == MOUSE_BUTTON_RIGHT or event.button_index == MOUSE_BUTTON_MIDDLE:
+			is_panning = false
 				
 	if event is InputEventMouseMotion and is_panning:
 		view_offset = event.position - pan_start_pos
@@ -119,19 +143,36 @@ func _gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 		var click_pos = event.position - view_offset
 		
-		# If Decorating Mode is Active, place custom furniture or partitions
+		# If Decorating Mode is Active, drag/reposition desks or place furniture
 		if GameState.is_decorating_mode:
 			var capacity = GameState.get_max_capacity()
+			
+			if selected_drag_seat != -1:
+				var grid_snapped_pos = (click_pos / 32.0).floor() * 32.0
+				var base_pos = GameState.get_base_seat_position(selected_drag_seat)
+				var new_offset = grid_snapped_pos - base_pos
+				GameState.set_seat_offset(selected_drag_seat, new_offset)
+				floating_texts.append({
+					"text": "📍 책상 위치 배치 완료!",
+					"pos": click_pos + Vector2(0, -30),
+					"alpha": 1.0,
+					"color": Color(0.96, 0.62, 0.07)
+				})
+				selected_drag_seat = -1
+				queue_redraw()
+				return
+				
 			for i in range(capacity):
 				var seat_pos = GameState.get_seat_position(i)
-				if click_pos.distance_to(seat_pos) < 50.0:
-					if GameState.install_partition(i, "curtain"):
-						floating_texts.append({
-							"text": "🎪 방음 커튼 설치 완료! (⭐+0.1)",
-							"pos": seat_pos + Vector2(0, -30),
-							"alpha": 1.0,
-							"color": Color(0.9, 0.4, 0.8)
-						})
+				if click_pos.distance_to(seat_pos) < 60.0:
+					selected_drag_seat = i
+					floating_texts.append({
+						"text": "✋ 책상 선택됨! 이동할 위치로 마우스 클릭하세요.",
+						"pos": seat_pos + Vector2(0, -30),
+						"alpha": 1.0,
+						"color": Color(0.2, 0.9, 0.5)
+					})
+					queue_redraw()
 					return
 					
 			if GameState.add_decoration(click_pos, "plant"):
@@ -219,14 +260,18 @@ func _draw() -> void:
 			draw_circle(Vector2(rx, ry) + view_offset, 3.5, Color(0.7, 0.85, 1.0, 0.55))
 			draw_line(Vector2(rx, ry - 12) + view_offset, Vector2(rx, ry) + view_offset, Color(0.7, 0.85, 1.0, 0.35), 1.5)
 
-	# 3. Draw Grid Overlay in Decorating Mode
+	# 3. Draw Grid Overlay & Banner in Decorating Mode
 	if GameState.is_decorating_mode:
 		var grid_step = 64.0
 		for x in range(0, int(w), int(grid_step)):
-			draw_line(Vector2(x, 0), Vector2(x, h), Color(0.96, 0.62, 0.07, 0.3), 1.0)
+			draw_line(Vector2(x, 0), Vector2(x, h), Color(0.96, 0.62, 0.07, 0.25), 1.0)
 		for y in range(0, int(h), int(grid_step)):
-			draw_line(Vector2(0, y), Vector2(w, y), Color(0.96, 0.62, 0.07, 0.3), 1.0)
-		draw_string(ThemeDB.fallback_font, Vector2(w*0.35, 40), "🔨 인테리어 꾸미기 모드: 원하시는 위치를 터치하여 화분(150₩)을 배치하세요!", HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color(0.96, 0.62, 0.07))
+			draw_line(Vector2(0, y), Vector2(w, y), Color(0.96, 0.62, 0.07, 0.25), 1.0)
+			
+		var banner_rect = Rect2(60, 20, w - 120, 36)
+		draw_rect(banner_rect, Color(0.12, 0.1, 0.08, 0.95), true)
+		draw_rect(banner_rect, Color(0.96, 0.62, 0.07), false, 2.0)
+		draw_string(ThemeDB.fallback_font, Vector2(75, 43), "🔨 책상 자리 옮기기 모드: 책상을 클릭하여 잡은 후, 원하시는 위치를 클릭해 재배치하세요!", HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color(0.96, 0.62, 0.07))
 		
 	# 4. Draw Custom Placed Furniture/Decorations
 	for dec in GameState.custom_decorations:
@@ -275,11 +320,22 @@ func draw_study_zone(w: float, h: float) -> void:
 		var border_color = Color(0.96, 0.62, 0.07) if not is_booth else Color(0.8, 0.4, 0.9)
 		
 		var desk_rect = Rect2(seat_pos.x, seat_pos.y, cell_w, cell_h)
-		draw_rect(desk_rect, desk_color, true)
-		draw_rect(desk_rect, border_color, false, 2.0)
+		if i == selected_drag_seat:
+			draw_rect(desk_rect, Color(0.2, 0.9, 0.5, 0.35), true)
+			draw_rect(desk_rect, Color(0.2, 1.0, 0.5), false, 4.0)
+		else:
+			draw_rect(desk_rect, desk_color, true)
+			draw_rect(desk_rect, border_color, false, 2.0)
 		
 		var label = "프라이빗 1인실 #%d" % (i + 1) if is_booth else "오픈 카페석 #%d" % (i + 1)
 		draw_string(ThemeDB.fallback_font, seat_pos + Vector2(10, 22), label, HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color(0.8, 0.8, 0.75))
+		
+		# Draw Desk Drag Handle Badge in Decorating Mode
+		if GameState.is_decorating_mode:
+			var tag_rect = Rect2(seat_pos.x + cell_w - 95, seat_pos.y + 6, 88, 22)
+			draw_rect(tag_rect, Color(0.2, 0.8, 0.4, 0.9) if i == selected_drag_seat else Color(0.1, 0.6, 0.9, 0.85), true)
+			var tag_text = "✋ 잡음!" if i == selected_drag_seat else "↔️ 자리이동"
+			draw_string(ThemeDB.fallback_font, tag_rect.position + Vector2(6, 15), tag_text, HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color.WHITE)
 		
 		# Draw Custom Partition / Curtain Overlays
 		if GameState.seat_partitions.has(i):
@@ -311,28 +367,42 @@ func draw_study_zone(w: float, h: float) -> void:
 				draw_string(ThemeDB.fallback_font, seat_pos + Vector2(cell_w*0.35, cell_h*0.6), "비어있음", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(0.5, 0.5, 0.5, 0.6))
 				
 	for c in GameState.active_customers:
-		var cust_pos = c["pos"]
-		var bounce_y = sin(steam_time * 10.0 + c["id"]) * 3.0 if c["state"] != "STUDYING" else 0.0
-		var render_pos = cust_pos + Vector2(0, bounce_y)
+		var raw_pos = c["pos"]
+		var draw_pos = raw_pos + view_offset
+		var c_type = c["type"]
 		
-		draw_circle(render_pos, 22.0, Color(0.1, 0.1, 0.1))
-		draw_circle(render_pos, 18.0, c["color"])
-		draw_string(ThemeDB.fallback_font, render_pos + Vector2(-8, 6), c["icon"], HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color.WHITE)
+		# Render high-res 2D PNG Character Sprites
+		var char_tex = student_texture
+		if c_type == "developer":
+			char_tex = developer_texture if developer_texture else student_texture
+			
+		if char_tex != null:
+			var sprite_size = Vector2(48, 48)
+			var sprite_rect = Rect2(draw_pos - Vector2(24, 44), sprite_size)
+			draw_texture_rect(char_tex, sprite_rect, false)
+		else:
+			# Fallback vector character drawing
+			var body_rect = Rect2(draw_pos.x - 14, draw_pos.y - 30, 28, 30)
+			draw_rect(body_rect, c["color"], true)
+			draw_circle(draw_pos + Vector2(0, -36), 12.0, Color(0.95, 0.82, 0.7))
+		
+		# Draw Customer Emoji Header
+		draw_string(ThemeDB.fallback_font, draw_pos + Vector2(-8, -48), c["icon"], HORIZONTAL_ALIGNMENT_CENTER, -1, 14, Color.WHITE)
 		
 		if c["state"] == "WALKING_IN":
-			draw_string(ThemeDB.fallback_font, render_pos + Vector2(-25, -25), "🚶 입실 중...", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(0.9, 0.9, 0.4))
+			draw_string(ThemeDB.fallback_font, draw_pos + Vector2(-25, -65), "🚶 입실 중...", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(0.9, 0.9, 0.4))
 		elif c["state"] == "LEAVING":
-			draw_string(ThemeDB.fallback_font, render_pos + Vector2(-25, -25), "👋 퇴실 중...", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(0.9, 0.6, 0.4))
+			draw_string(ThemeDB.fallback_font, draw_pos + Vector2(-25, -65), "👋 퇴실 중...", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(0.9, 0.6, 0.4))
 		elif c["state"] == "STUDYING":
 			var p_ratio = c["study_time"] / c["duration"]
-			var bar_rect = Rect2(render_pos.x - 40, render_pos.y + 24, 80, 5)
+			var bar_rect = Rect2(draw_pos.x - 40, draw_pos.y + 24, 80, 5)
 			draw_rect(bar_rect, Color(0.1, 0.1, 0.1), true)
 			draw_rect(Rect2(bar_rect.position.x, bar_rect.position.y, bar_rect.size.x * p_ratio, 5), Color(0.1, 0.8, 0.4), true)
 			
 			var cid = c["id"]
 			if GameState.active_orders.has(cid):
 				var order = GameState.active_orders[cid]
-				var bubble_rect = Rect2(render_pos.x - 60, render_pos.y - 45, 120, 24)
+				var bubble_rect = Rect2(draw_pos.x - 60, draw_pos.y - 45, 120, 24)
 				draw_rect(bubble_rect, Color(1.0, 0.95, 0.8), true)
 				draw_rect(bubble_rect, Color(0.9, 0.5, 0.1), false, 2.0)
 				draw_string(ThemeDB.fallback_font, bubble_rect.position + Vector2(6, 16), "👉 " + order["type"], HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(0.2, 0.1, 0.0))
@@ -343,7 +413,7 @@ func draw_study_zone(w: float, h: float) -> void:
 				if v["type"] == "phone": v_msg = "📱 큰소리 통화!"
 				elif v["type"] == "snack": v_msg = "🍿 과자 부스럭!"
 				elif v["type"] == "snore": v_msg = "😴 코골이 중!"
-				var v_rect = Rect2(render_pos.x - 60, render_pos.y - 45, 120, 24)
+				var v_rect = Rect2(draw_pos.x - 60, draw_pos.y - 45, 120, 24)
 				draw_rect(v_rect, Color(1.0, 0.3, 0.3), true)
 				draw_rect(v_rect, Color(1.0, 1.0, 1.0), false, 2.0)
 				draw_string(ThemeDB.fallback_font, v_rect.position + Vector2(6, 16), "⚠️ " + v_msg, HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color.WHITE)
@@ -359,11 +429,11 @@ func draw_study_zone(w: float, h: float) -> void:
 		draw_string(ThemeDB.fallback_font, c_render + Vector2(-35, -28), "🤖 청소 알바", HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color(0.96, 0.62, 0.07))
 
 func draw_lounge_zone(w: float, h: float) -> void:
-	draw_rect(Rect2(20, 20, 300, 36), Color(0.1, 0.08, 0.07, 0.85), true)
-	draw_rect(Rect2(20, 20, 300, 36), Color(0.1, 0.8, 0.4), false, 2.0)
-	draw_string(ThemeDB.fallback_font, Vector2(35, 43), "☕ 셀프 스낵바 & 휴게실 (Lounge Zone)", HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color(0.1, 0.8, 0.4))
+	draw_rect(Rect2(20, 20, 320, 36), Color(0.1, 0.08, 0.07, 0.85), true)
+	draw_rect(Rect2(20, 20, 320, 36), Color(0.1, 0.8, 0.4), false, 2.0)
+	draw_string(ThemeDB.fallback_font, Vector2(35, 43), "☕ 프리미엄 휴게실 & 스낵바 (Lounge Zone)", HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color(0.1, 0.8, 0.4))
 	
-	var bar_rect = Rect2(60, 90, 340, 260)
+	var bar_rect = Rect2(40, 80, 300, 220)
 	if coffee_bar_texture != null:
 		draw_texture_rect(coffee_bar_texture, bar_rect, false)
 		draw_rect(bar_rect, Color(0.96, 0.62, 0.07), false, 3.0)
@@ -371,31 +441,98 @@ func draw_lounge_zone(w: float, h: float) -> void:
 		draw_rect(bar_rect, Color(0.24, 0.20, 0.17), true)
 		draw_rect(bar_rect, Color(0.96, 0.62, 0.07), false, 3.0)
 		
-	var desc_rect = Rect2(430, 90, 320, 260)
-	draw_rect(desc_rect, Color(0.15, 0.13, 0.12, 0.85), true)
-	draw_rect(desc_rect, Color(0.1, 0.8, 0.4), false, 2.0)
-	draw_string(ThemeDB.fallback_font, Vector2(450, 130), "☕ 셀프 캡슐 커피 & 다과 코너", HORIZONTAL_ALIGNMENT_LEFT, -1, 16, Color(0.96, 0.62, 0.07))
-	draw_string(ThemeDB.fallback_font, Vector2(450, 170), "• 캡슐 커피, 헛개차, 에너지바, 무릎담요 제공", HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color(0.8, 0.8, 0.75))
-	draw_string(ThemeDB.fallback_font, Vector2(450, 200), "• 스낵바 재고 상태: 100% (자동 충전 중)", HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color(0.1, 0.8, 0.4))
-	draw_string(ThemeDB.fallback_font, Vector2(450, 230), "• 3M 귀마개 & 독서대 대여소 구비 완료", HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color(0.8, 0.8, 0.75))
+	# Draw Purchased Amenity Grid Modules in Lounge Zone
+	var amenity_items = [
+		{"key": "snack_bar", "title": "🍿 프리미엄 셀프 스낵바", "icon": "🍪"},
+		{"key": "barista_coffee", "title": "☕ 바리스타 로스팅 음료", "icon": "☕"},
+		{"key": "handdrip_coffee", "title": "☕ 싱글오리진 핸드드립 바", "icon": "🏺"},
+		{"key": "morning_croissant", "title": "🥐 갓 구운 크로와상 브런치", "icon": "🥐"},
+		{"key": "protein_smoothie", "title": "🥤 생과일 프로틴 스무디", "icon": "🥤"},
+		{"key": "truffle_buffet", "title": "🍫 벨기에 트러플 초콜릿", "icon": "🍫"},
+		{"key": "ice_dispenser", "title": "🍧 대용량 제빙기 에이드", "icon": "🧊"},
+		{"key": "herbal_tea", "title": "🍵 유기농 캐모마일 허브티", "icon": "🍵"},
+		{"key": "gourmet_dessert", "title": "🍰 갓 구운 크로플 & 디저트", "icon": "🍰"},
+		{"key": "dark_chocolate", "title": "🍫 85% 무설탕 다크 초콜릿", "icon": "🍫"},
+		{"key": "massage_chair", "title": "🧘 무중력 안마의자 휴식존", "icon": "🛋"},
+		{"key": "nap_capsule", "title": "🧘 무중력 파워 냅 수면 캡슐", "icon": "😴"},
+		{"key": "recliner_pod", "title": "🛋 1인 리클라이너 소파 포드", "icon": "🛋"},
+		{"key": "pixel_arcade", "title": "🎮 레트로 픽셀 미니 게임기", "icon": "🎮"},
+		{"key": "cat_tower", "title": "🐱 냥이 매니저 원목 캣타워", "icon": "🐈"}
+	]
+	
+	var grid_x = 360.0
+	var grid_y = 80.0
+	var module_w = 210.0
+	var module_h = 42.0
+	var col_count = 2
+	
+	for idx in range(amenity_items.size()):
+		var item = amenity_items[idx]
+		var key = item["key"]
+		var is_unlocked = GameState.upgrades.has(key) and GameState.upgrades[key]["level"] > 0
+		
+		var c = idx % col_count
+		var r = idx / col_count
+		var item_pos = Vector2(grid_x + c * (module_w + 15), grid_y + r * (module_h + 10))
+		var item_rect = Rect2(item_pos.x, item_pos.y, module_w, module_h)
+		
+		if is_unlocked:
+			draw_rect(item_rect, Color(0.12, 0.22, 0.18, 0.95), true)
+			draw_rect(item_rect, Color(0.1, 0.8, 0.4), false, 2.0)
+			draw_string(ThemeDB.fallback_font, item_pos + Vector2(10, 26), item["icon"] + " " + item["title"], HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color(0.96, 0.62, 0.07))
+		else:
+			draw_rect(item_rect, Color(0.12, 0.12, 0.12, 0.6), true)
+			draw_rect(item_rect, Color(0.3, 0.3, 0.3), false, 1.0)
+			draw_string(ThemeDB.fallback_font, item_pos + Vector2(10, 26), "🔒 미해금: " + item["title"], HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(0.5, 0.5, 0.5))
 
 func draw_front_zone(w: float, h: float) -> void:
 	draw_rect(Rect2(20, 20, 320, 36), Color(0.1, 0.08, 0.07, 0.85), true)
 	draw_rect(Rect2(20, 20, 320, 36), Color(0.8, 0.4, 0.9), false, 2.0)
-	draw_string(ThemeDB.fallback_font, Vector2(35, 43), "🔑 사물함 & 무인 프런트 (Front & Lockers)", HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color(0.8, 0.4, 0.9))
+	draw_string(ThemeDB.fallback_font, Vector2(35, 43), "🔑 무인 스마트 키오스크 & 입출구 (Front Zone)", HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color(0.8, 0.4, 0.9))
 	
-	draw_string(ThemeDB.fallback_font, Vector2(60, 100), "🔑 고정 사물함 대여 구역 (Lockers)", HORIZONTAL_ALIGNMENT_LEFT, -1, 16, Color(0.8, 0.4, 0.9))
-	for i in range(12):
-		var col = i % 6
-		var row = i / 6
-		var l_rect = Rect2(60 + col * 110, 130 + row * 100, 95, 80)
-		draw_rect(l_rect, Color(0.22, 0.18, 0.26, 0.85), true)
-		draw_rect(l_rect, Color(0.8, 0.4, 0.9), false, 2.0)
-		draw_string(ThemeDB.fallback_font, l_rect.position + Vector2(10, 25), "사물함 #%d" % (i+1), HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color.WHITE)
-		var is_rented = i < GameState.lockers_rented
-		var status_str = "대여중 🔒" if is_rented else "빈 사물함 🔓"
-		var status_col = Color(0.1, 0.8, 0.4) if is_rented else Color(0.6, 0.6, 0.6)
-		draw_string(ThemeDB.fallback_font, l_rect.position + Vector2(10, 55), status_str, HORIZONTAL_ALIGNMENT_LEFT, -1, 11, status_col)
+	var front_modules = [
+		{"key": "smart_kiosk", "title": "📱 원격 스마트 키오스크 앱", "icon": "📱"},
+		{"key": "parent_sms", "title": "🤖 AI 안심 입출석 알림톡", "icon": "💬"},
+		{"key": "smart_lockers", "title": "🎒 비밀번호 스마트 사물함", "icon": "🔑"},
+		{"key": "cloud_print", "title": "🖨 무인 클라우드 스캔/프린트", "icon": "🖨"},
+		{"key": "rental_station", "title": "🎧 귀마개 & 무소음 비품 대여", "icon": "🎧"},
+		{"key": "anc_headphones", "title": "🎧 ANC 노이즈캔슬링 헤드폰", "icon": "🎧"},
+		{"key": "fast_charger", "title": "⚡ 100W 초고속 충전 도크", "icon": "⚡"},
+		{"key": "phone_booth", "title": "🎙 완전 방음 1인 폰부스", "icon": "📞"},
+		{"key": "exam_library", "title": "📚 평가원 모평 기출 족보", "icon": "📚"},
+		{"key": "mock_exam_report", "title": "📜 모의고사 성적 진단 부스", "icon": "📜"},
+		{"key": "book_share", "title": "📚 합격자 중고 수험서 나눔", "icon": "📖"},
+		{"key": "robot_patrol", "title": "🤖 AI 바닥 청소 자율 로봇", "icon": "🧹"},
+		{"key": "uv_desk_mat", "title": "🧼 UV-C 무균 살균 소독 매트", "icon": "🧼"},
+		{"key": "sns_challenge", "title": "📱 열공 SNS 타임스탬프 포토존", "icon": "📸"},
+		{"key": "study_badge_app", "title": "📱 열공 목표 달성 뱃지 앱", "icon": "🏆"}
+	]
+	
+	var grid_x = 40.0
+	var grid_y = 80.0
+	var module_w = 230.0
+	var module_h = 44.0
+	var col_count = 3
+	
+	for idx in range(front_modules.size()):
+		var item = front_modules[idx]
+		var key = item["key"]
+		var is_unlocked = GameState.upgrades.has(key) and GameState.upgrades[key]["level"] > 0
+		
+		var c = idx % col_count
+		var r = idx / col_count
+		var item_pos = Vector2(grid_x + c * (module_w + 15), grid_y + r * (module_h + 10))
+		var item_rect = Rect2(item_pos.x, item_pos.y, module_w, module_h)
+		
+		if is_unlocked:
+			draw_rect(item_rect, Color(0.18, 0.14, 0.22, 0.95), true)
+			draw_rect(item_rect, Color(0.8, 0.4, 0.9), false, 2.0)
+			draw_string(ThemeDB.fallback_font, item_pos + Vector2(10, 27), item["icon"] + " " + item["title"], HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color(0.8, 0.4, 0.9))
+		else:
+			draw_rect(item_rect, Color(0.12, 0.12, 0.12, 0.6), true)
+			draw_rect(item_rect, Color(0.3, 0.3, 0.3), false, 1.0)
+			draw_string(ThemeDB.fallback_font, item_pos + Vector2(10, 27), "🔒 미해금: " + item["title"], HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(0.5, 0.5, 0.5))
+
 
 func get_customer_at_seat(seat_idx: int) -> Dictionary:
 	for c in GameState.active_customers:

@@ -50,6 +50,51 @@ var achievements: Dictionary = {
 	"study_marathon": { "title": "🏆 전국 스터디 마라톤 챔피언십 우승!", "reward": 10000.0, "unlocked": false }
 }
 
+# I Love Coffee Core Engine Signals & Data Structures
+signal beans_changed(new_amount)
+signal roaster_updated(index, data)
+signal oven_updated(index, data)
+signal quest_updated(quest_info)
+signal intimacy_changed(guest_name, level, xp)
+
+# 1. Bean Economy & Roasting Machines
+var beans_inventory: int = 500
+var roasters: Array = [
+	{ "id": 0, "type": "santos", "name": "브라질 산토스", "timer": 0.0, "max_time": 45.0, "yield": 100, "xp": 10, "state": "IDLE" },
+	{ "id": 1, "type": "supremo", "name": "콜롬비아 수프레모", "timer": 0.0, "max_time": 300.0, "yield": 400, "xp": 45, "state": "IDLE" },
+	{ "id": 2, "type": "yirgacheffe", "name": "에티오피아 예가체프", "timer": 0.0, "max_time": 900.0, "yield": 1200, "xp": 140, "state": "IDLE" },
+	{ "id": 3, "type": "antigua", "name": "과테말라 안티구아", "timer": 0.0, "max_time": 3600.0, "yield": 4500, "xp": 500, "state": "IDLE" }
+]
+
+# 2. Bakery Ovens
+var bakery_ovens: Array = [
+	{ "id": 0, "type": "croissant", "name": "플레인 크로와상", "timer": 0.0, "max_time": 180.0, "yield": 5, "price": 350.0, "state": "IDLE" },
+	{ "id": 1, "type": "cheesecake", "name": "블루베리 치즈케이크", "timer": 0.0, "max_time": 900.0, "yield": 10, "price": 1800.0, "state": "IDLE" }
+]
+
+# 3. Regular Guests Intimacy (❤️)
+var guest_intimacy: Dictionary = {
+	"suhyun": { "name": "재수생 수현", "level": 1, "xp": 0, "max_xp": 100, "reward": "원목 독서대" },
+	"minjun": { "name": "개발자 민준", "level": 1, "xp": 0, "max_xp": 100, "reward": "울트라와이드 모니터석" },
+	"hyunwoo": { "name": "고시생 현우", "level": 1, "xp": 0, "max_xp": 100, "reward": "기출 족보 서가" },
+	"navi": { "name": "고양이 나비", "level": 1, "xp": 0, "max_xp": 100, "reward": "황금 고양이 동상" }
+}
+
+# 4. Decor Score (🌟) & Manager Level (XP)
+var decor_score: int = 450
+var manager_level: int = 1
+var manager_xp: int = 0
+var max_manager_xp: int = 500
+
+# 5. Main Story Quests (50 Stages)
+var current_quest_index: int = 1
+var quests_data: Array = [
+	{ "id": 1, "title": "☕ 브라질 산토스 원두 1회 로스팅하기", "target": 1, "current": 0, "reward_money": 1000.0, "reward_xp": 50 },
+	{ "id": 2, "title": "🥐 아침 크로와상 1회 오븐 베이킹하기", "target": 1, "current": 0, "reward_money": 2000.0, "reward_xp": 100 },
+	{ "id": 3, "title": "🚶 길거리 손님 캐스팅 1회 성공하기", "target": 1, "current": 0, "reward_money": 3000.0, "reward_xp": 150 },
+	{ "id": 4, "title": "🌟 꾸미기 점수 600점 달성하기", "target": 600, "current": 450, "reward_money": 5000.0, "reward_xp": 300 }
+]
+
 # Interior Decorating Mode & Custom Partitions
 var is_decorating_mode: bool = false
 var custom_decorations: Array = []
@@ -61,10 +106,17 @@ var lamp_states: Dictionary = {}
 var coffee_menu_unlocked: Array = ["아메리카노", "카페라떼", "아인슈페너", "돌체라떼"]
 var air_quality_score: float = 98.0
 
+func _play_sfx_safe(type: String) -> void:
+	var sm = get_node_or_null("/root/SoundManager")
+	if sm != null:
+		if type == "click": sm.play_click_sfx()
+		elif type == "coin": sm.play_coin_sfx()
+		elif type == "chime": sm.play_chime_sfx()
+
 func toggle_seat_lamp(seat_index: int) -> bool:
 	var cur = lamp_states.get(seat_index, true)
 	lamp_states[seat_index] = not cur
-	SoundManager.play_click_sfx()
+	_play_sfx_safe("click")
 	return lamp_states[seat_index]
 
 func set_seat_offset(seat_index: int, offset: Vector2) -> void:
@@ -78,8 +130,66 @@ func install_partition(seat_index: int, type: String = "divider") -> bool:
 	seat_partitions[seat_index] = type
 	reputation = min(5.0, reputation + 0.1)
 	reputation_changed.emit(reputation)
-	SoundManager.play_coin_sfx()
+	_play_sfx_safe("coin")
 	return true
+
+func start_roasting(roaster_idx: int) -> bool:
+	if roaster_idx < 0 or roaster_idx >= roasters.size(): return false
+	var r = roasters[roaster_idx]
+	if r["state"] != "IDLE": return false
+	r["state"] = "ROASTING"
+	r["timer"] = r["max_time"]
+	roaster_updated.emit(roaster_idx, r)
+	_play_sfx_safe("click")
+	return true
+
+func harvest_beans(roaster_idx: int) -> bool:
+	if roaster_idx < 0 or roaster_idx >= roasters.size(): return false
+	var r = roasters[roaster_idx]
+	if r["state"] != "READY": return false
+	beans_inventory += r["yield"]
+	beans_changed.emit(beans_inventory)
+	add_manager_xp(r["xp"])
+	r["state"] = "IDLE"
+	roaster_updated.emit(roaster_idx, r)
+	_play_sfx_safe("coin")
+	
+	if current_quest_index == 1:
+		update_quest_progress(1)
+	return true
+
+func repair_burnt_beans(roaster_idx: int) -> bool:
+	if roaster_idx < 0 or roaster_idx >= roasters.size(): return false
+	var r = roasters[roaster_idx]
+	if r["state"] != "BURNT": return false
+	var cost = 100.0
+	if not can_afford(cost): return false
+	add_money(-cost)
+	beans_inventory += int(r["yield"] * 0.5)
+	beans_changed.emit(beans_inventory)
+	r["state"] = "IDLE"
+	roaster_updated.emit(roaster_idx, r)
+	_play_sfx_safe("coin")
+	return true
+
+func add_manager_xp(xp_amount: int) -> void:
+	manager_xp += xp_amount
+	if manager_xp >= max_manager_xp:
+		manager_xp -= max_manager_xp
+		manager_level += 1
+		max_manager_xp = int(max_manager_xp * 1.5)
+		_play_sfx_safe("chime")
+
+func update_quest_progress(amount: int = 1) -> void:
+	if current_quest_index - 1 < quests_data.size():
+		var q = quests_data[current_quest_index - 1]
+		q["current"] = min(q["target"], q["current"] + amount)
+		if q["current"] >= q["target"]:
+			add_money(q["reward_money"])
+			add_manager_xp(q["reward_xp"])
+			current_quest_index += 1
+			_play_sfx_safe("chime")
+		quest_updated.emit(q)
 
 # Daily Statistics Counter
 var daily_seat_rev: float = 0.0
@@ -556,12 +666,12 @@ func unlock_achieve(key: String) -> void:
 	ach["unlocked"] = true
 	add_money(ach["reward"])
 	achievement_unlocked.emit(ach["title"], ach["reward"])
-	SoundManager.play_chime_sfx()
+	_play_sfx_safe("chime")
 
 func pet_cat() -> void:
 	reputation = min(5.0, reputation + 0.05)
 	reputation_changed.emit(reputation)
-	SoundManager.play_chime_sfx()
+	_play_sfx_safe("chime")
 
 func toggle_decorating_mode() -> bool:
 	is_decorating_mode = not is_decorating_mode
@@ -575,7 +685,7 @@ func add_decoration(pos: Vector2, type: String = "plant") -> bool:
 	custom_decorations.append({ "pos": pos, "type": type })
 	reputation = min(5.0, reputation + 0.08)
 	reputation_changed.emit(reputation)
-	SoundManager.play_coin_sfx()
+	_play_sfx_safe("coin")
 	return true
 
 func _ready() -> void:
@@ -586,6 +696,21 @@ func change_zone(new_zone: String) -> void:
 	zone_changed.emit(new_zone)
 
 func _process(delta: float) -> void:
+	# Update Roasters Timers
+	for idx in range(roasters.size()):
+		var r = roasters[idx]
+		if r["state"] == "ROASTING":
+			r["timer"] -= delta
+			if r["timer"] <= 0.0:
+				r["state"] = "READY"
+				r["timer"] = r["max_time"]
+				roaster_updated.emit(idx, r)
+		elif r["state"] == "READY":
+			r["timer"] -= delta
+			if r["timer"] <= -r["max_time"]:
+				r["state"] = "BURNT"
+				roaster_updated.emit(idx, r)
+
 	game_time += delta * 0.3
 	if game_time >= 24.0:
 		game_time -= 24.0
