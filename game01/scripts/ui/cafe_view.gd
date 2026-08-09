@@ -157,15 +157,39 @@ func _gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 		var click_pos = event.position - view_offset
 		if event.pressed:
+			# 1. Check Mascot Cat Click
+			if click_pos.distance_to(GameState.cat_pos) < 35.0:
+				GameState.pet_cat()
+				floating_texts.append({
+					"text": "🐱 야옹~! 힐링 골골송! (⭐+0.05)",
+					"pos": GameState.cat_pos + Vector2(0, -35),
+					"alpha": 1.0,
+					"color": Color(1.0, 0.6, 0.8)
+				})
+				return
+
+			# 2. Check Coffee Bar Click
+			var bar_rect = Rect2(30, 30, 220, 150)
+			if bar_rect.has_point(click_pos):
+				if GameState.active_orders.size() > 0:
+					var first_cid = GameState.active_orders.keys()[0]
+					GameState.serve_order(first_cid)
+				return
+				
+			# 3. Check Seat Selection & Drag Start
 			var capacity = GameState.get_max_capacity()
 			for i in range(capacity):
 				var seat_pos = GameState.get_seat_position(i)
 				if click_pos.distance_to(seat_pos) < 80.0:
+					if GameState.dirty_seats.has(i):
+						GameState.clean_seat(i)
+						return
+						
 					selected_drag_seat = i
 					is_dragging = true
 					drag_start_mouse_pos = event.position
 					floating_texts.append({
-						"text": "🧲 책상 드래그 시작! 마우스로 원하는 위치로 이동하세요",
+						"text": "🧲 책상 드래그 시작! 마우스로 이동하세요",
 						"pos": seat_pos + Vector2(0, -35),
 						"alpha": 1.0,
 						"color": Color(0.2, 0.9, 0.5)
@@ -193,55 +217,6 @@ func _gui_input(event: InputEvent) -> void:
 		var raw_offset = target_pos - base_pos
 		GameState.set_seat_custom_offset_snapped(selected_drag_seat, raw_offset)
 		queue_redraw()
-		
-		# Check Mascot Cat Click
-		if click_pos.distance_to(GameState.cat_pos) < 35.0:
-			GameState.pet_cat()
-			floating_texts.append({
-				"text": "🐱 야옹~! 힐링 골골송! (⭐+0.05)",
-				"pos": GameState.cat_pos + Vector2(0, -35),
-				"alpha": 1.0,
-				"color": Color(1.0, 0.6, 0.8)
-			})
-			return
-		if GameState.current_zone == "lounge" or GameState.current_zone == "study":
-			var bar_rect = Rect2(30, 30, 220, 150)
-			if bar_rect.has_point(click_pos):
-				if GameState.active_orders.size() > 0:
-					var first_cid = GameState.active_orders.keys()[0]
-					GameState.serve_order(first_cid)
-				return
-				
-		# Check Seats Click
-		if GameState.current_zone == "study":
-			var capacity = GameState.get_max_capacity()
-			for i in range(capacity):
-				var seat_pos = GameState.get_seat_position(i)
-				if click_pos.distance_to(seat_pos) < 45.0:
-					if GameState.dirty_seats.has(i):
-						GameState.clean_seat(i)
-						return
-						
-					var customer = get_customer_at_seat(i)
-					if not customer.is_empty():
-						var cid = customer["id"]
-						if GameState.active_orders.has(cid):
-							GameState.serve_order(cid)
-							return
-							
-						if GameState.active_villains.has(cid):
-							GameState.warn_villain(cid)
-							return
-							
-						var tip = 50.0 * customer["pay_rate"]
-						GameState.add_money(tip)
-						floating_texts.append({
-							"text": "+%d ₩ (열공 팁!)" % int(tip),
-							"pos": seat_pos + Vector2(0, -40),
-							"alpha": 1.0,
-							"color": Color(0.06, 0.72, 0.5)
-						})
-						return
 
 func _draw() -> void:
 	var rect = get_rect()
