@@ -333,6 +333,34 @@ func draw_study_zone(w: float, h: float) -> void:
 		var border_color = Color(0.96, 0.62, 0.07) if not is_booth else Color(0.8, 0.4, 0.9)
 		
 		var desk_rect = Rect2(seat_pos.x, seat_pos.y, cell_w, cell_h)
+		# 3D Isometric Floor Shadow
+		var shadow_poly = PackedVector2Array([
+			Vector2(seat_pos.x + 8, seat_pos.y + cell_h + 14),
+			Vector2(seat_pos.x + cell_w + 14, seat_pos.y + cell_h + 14),
+			Vector2(seat_pos.x + cell_w + 22, seat_pos.y + cell_h + 22),
+			Vector2(seat_pos.x + 16, seat_pos.y + cell_h + 22)
+		])
+		draw_polygon(shadow_poly, PackedColorArray([Color(0.02, 0.02, 0.02, 0.4)]))
+
+		# 3D Desk Front Extrusion Face
+		var front_face = PackedVector2Array([
+			Vector2(seat_pos.x, seat_pos.y + cell_h),
+			Vector2(seat_pos.x + cell_w, seat_pos.y + cell_h),
+			Vector2(seat_pos.x + cell_w, seat_pos.y + cell_h + 12),
+			Vector2(seat_pos.x, seat_pos.y + cell_h + 12)
+		])
+		draw_polygon(front_face, PackedColorArray([Color(0.12, 0.09, 0.07, 0.95)]))
+
+		# 3D Desk Side Extrusion Face
+		var side_face = PackedVector2Array([
+			Vector2(seat_pos.x + cell_w, seat_pos.y),
+			Vector2(seat_pos.x + cell_w + 12, seat_pos.y + 12),
+			Vector2(seat_pos.x + cell_w + 12, seat_pos.y + cell_h + 12),
+			Vector2(seat_pos.x + cell_w, seat_pos.y + cell_h)
+		])
+		draw_polygon(side_face, PackedColorArray([Color(0.09, 0.07, 0.05, 0.95)]))
+
+		# 3D Desk Surface Top
 		draw_rect(desk_rect, desk_color, true)
 		draw_rect(desk_rect, border_color, false, 2.0)
 		
@@ -365,11 +393,20 @@ func draw_study_zone(w: float, h: float) -> void:
 				draw_rect(Rect2(seat_pos.x, seat_pos.y, 8, cell_h), Color(0.8, 0.4, 0.9, 0.85), true)
 				draw_string(ThemeDB.fallback_font, seat_pos + Vector2(14, 14), "🔮 몰입 칸막이", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color.WHITE)
 		
-		# Glowing Desk Lamp Halos
+		# 3D Volumetric Desk Lamp Cone & Halos
 		var lamp_is_on = GameState.lamp_states.get(i, true)
 		var lamp_pos = seat_pos + Vector2(cell_w - 22, 22)
 		if lamp_is_on:
 			var lamp_alpha = 0.75 if GameState.time_of_day == "NIGHT" else (0.45 if GameState.time_of_day == "DUSK" else 0.25)
+			
+			# Volumetric 3D Light Cone Projection
+			var cone_poly = PackedVector2Array([
+				lamp_pos,
+				Vector2(seat_pos.x + 20, seat_pos.y + cell_h - 10),
+				Vector2(seat_pos.x + cell_w - 10, seat_pos.y + cell_h - 10)
+			])
+			draw_polygon(cone_poly, PackedColorArray([Color(1.0, 0.85, 0.4, lamp_alpha * 0.18)]))
+
 			draw_circle(lamp_pos, 42.0, Color(1.0, 0.7, 0.2, lamp_alpha * 0.15))
 			draw_circle(lamp_pos, 24.0, Color(0.96, 0.62, 0.07, lamp_alpha * 0.35))
 			draw_circle(lamp_pos, 6.0, Color(1.0, 0.9, 0.5))

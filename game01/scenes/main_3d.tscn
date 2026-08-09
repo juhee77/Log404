@@ -1,0 +1,15 @@
+[gd_scene load_steps=2 format=3 uid="uid://c3d_study_cafe_main_3d"]
+
+[ext_resource type="Script" path="res://scripts/main_3d.gd" id="1_main3d"]
+
+[node name="Main3DScene" type="Node3D"]
+script = ExtResource("1_main3d")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.788011, 0.615661, 0, -0.615661, 0.788011, 0, 8, 10)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.866025, -0.25, 0.433013, 0, 0.866025, 0.5, -0.5, -0.433013, 0.75, 0, 10, 0)
+shadow_enabled = true

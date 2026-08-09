@@ -220,6 +220,27 @@ func _ready() -> void:
 				review_panel.show()
 		)
 
+	# Auto-start roasting & baking so timers actively run
+	GameState.start_roasting(0, "guatemala")
+	GameState.start_roasting(1, "ethiopia")
+
+	# Add dynamic customer spawner timer (Every 2.0s)
+	var spawn_timer = Timer.new()
+	spawn_timer.wait_time = 2.0
+	spawn_timer.autostart = true
+	spawn_timer.timeout.connect(func():
+		var free_seat = -1
+		for i in range(GameState.get_max_capacity()):
+			if GameState.get_customer_at_seat(i).is_empty():
+				free_seat = i
+				break
+		if free_seat != -1:
+			var types = ["student", "developer", "gosi", "cat"]
+			var c_type = types[randi() % types.size()]
+			GameState.spawn_customer(c_type)
+	)
+	add_child(spawn_timer)
+
 func hide_all_overlays() -> void:
 	if upgrade_panel: upgrade_panel.hide()
 	if review_panel: review_panel.hide()
