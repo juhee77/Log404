@@ -251,10 +251,10 @@ func _draw() -> void:
 	var w = rect.size.x
 	var h = rect.size.y
 	
-	# 1. Draw High-Res Background PNG Texture
+	# 1. Draw Background PNG Texture with Cozy Ambient Tint
 	if bg_texture != null:
 		draw_texture_rect(bg_texture, Rect2(0, 0, w, h), false)
-		draw_rect(Rect2(0, 0, w, h), Color(0.05, 0.04, 0.04, 0.25))
+		draw_rect(Rect2(0, 0, w, h), Color(0.06, 0.05, 0.04, 0.52))
 	else:
 		draw_rect(Rect2(0, 0, w, h), Color(0.12, 0.11, 0.10))
 		
@@ -333,15 +333,17 @@ func draw_study_zone(w: float, h: float) -> void:
 		var border_color = Color(0.96, 0.62, 0.07) if not is_booth else Color(0.8, 0.4, 0.9)
 		
 		var desk_rect = Rect2(seat_pos.x, seat_pos.y, cell_w, cell_h)
+		draw_rect(desk_rect, desk_color, true)
+		draw_rect(desk_rect, border_color, false, 2.0)
+		
+		if is_booth and desk_booth_texture != null:
+			draw_texture_rect(desk_booth_texture, desk_rect, false, Color(1, 1, 1, 0.9))
+		elif not is_booth and desk_open_texture != null:
+			draw_texture_rect(desk_open_texture, desk_rect, false, Color(1, 1, 1, 0.9))
+
 		if i == selected_drag_seat:
 			draw_rect(desk_rect, Color(0.2, 0.9, 0.5, 0.35), true)
 			draw_rect(desk_rect, Color(0.2, 1.0, 0.5), false, 4.0)
-			draw_rect(desk_rect, desk_color, true)
-			draw_rect(desk_rect, border_color, false, 2.0)
-			if is_booth and desk_booth_texture != null:
-				draw_texture_rect(desk_booth_texture, desk_rect, false, Color(1, 1, 1, 0.45))
-			elif not is_booth and desk_open_texture != null:
-				draw_texture_rect(desk_open_texture, desk_rect, false, Color(1, 1, 1, 0.45))
 		
 		var label = "프라이빗 1인실 #%d" % (i + 1) if is_booth else "오픈 카페석 #%d" % (i + 1)
 		draw_string(ThemeDB.fallback_font, seat_pos + Vector2(10, 22), label, HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color(0.8, 0.8, 0.75))
