@@ -602,6 +602,35 @@ func draw_front_zone(w: float, h: float) -> void:
 			draw_string(ThemeDB.fallback_font, item_pos + Vector2(10, 27), "🔒 미해금: " + item["title"], HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(0.5, 0.5, 0.5))
 
 
+var is_dragging: bool = false
+var drag_start_mouse_pos: Vector2 = Vector2.ZERO
+
+func _gui_input(event: InputEvent) -> void:
+	if not GameState.is_decorating_mode: return
+	
+	if event is InputEventMouseButton:
+		if event.button_index == MOUSE_BUTTON_LEFT:
+			if event.pressed:
+				var m_pos = event.position
+				for i in range(GameState.get_max_capacity()):
+					var s_pos = GameState.get_seat_position(i)
+					var s_rect = Rect2(s_pos.x - 70, s_pos.y - 45, 140, 90)
+					if s_rect.has_point(m_pos):
+						selected_drag_seat = i
+						is_dragging = true
+						drag_start_mouse_pos = m_pos
+						queue_redraw()
+						break
+			else:
+				if is_dragging:
+					is_dragging = false
+					GameState.save_game()
+					queue_redraw()
+	elif event is InputEventMouseMotion and is_dragging and selected_drag_seat != -1:
+		var delta_pos = event.position - drag_start_mouse_pos
+		GameState.set_seat_custom_offset_snapped(selected_drag_seat, delta_pos)
+		queue_redraw()
+
 func get_customer_at_seat(seat_idx: int) -> Dictionary:
 	for c in GameState.active_customers:
 		if c["seat_index"] == seat_idx:
