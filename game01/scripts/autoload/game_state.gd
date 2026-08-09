@@ -953,6 +953,12 @@ func adjust_temperature(delta_t: float) -> void:
 	temperature = clamp(temperature + delta_t, 18.0, 30.0)
 	temperature_changed.emit(temperature)
 
+func get_customer_at_seat(seat_idx: int) -> Dictionary:
+	for c in active_customers:
+		if c.get("seat_index", -1) == seat_idx:
+			return c
+	return {}
+
 func get_max_capacity() -> int:
 	var open = upgrades["open_seats"]["level"] * 3
 	var booth = upgrades["private_booths"]["level"] * 2

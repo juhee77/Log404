@@ -252,8 +252,8 @@ func hide_all_overlays() -> void:
 	if expansion_panel: expansion_panel.hide()
 
 func take_screenshot(path_name: String = "live_visual_check.png") -> void:
-	await get_tree().process_frame
-	await get_tree().process_frame
+	for i in range(8):
+		await get_tree().process_frame
 	var vp = get_viewport()
 	if vp != null:
 		var tex = vp.get_texture()
