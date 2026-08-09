@@ -41,7 +41,7 @@ func _ready() -> void:
 	if lb_script != null:
 		leaderboard_panel = PanelContainer.new()
 		leaderboard_panel.set_script(lb_script)
-		leaderboard_panel.custom_minimum_size = Vector2(500, 420)
+		leaderboard_panel.custom_minimum_size = Vector2(680, 500)
 		leaderboard_panel.set_anchors_and_offsets_preset(Control.PRESET_CENTER, Control.PRESET_MODE_MINSIZE)
 		leaderboard_panel.hide()
 		add_child(leaderboard_panel)
@@ -51,7 +51,7 @@ func _ready() -> void:
 	if roast_script != null:
 		roasting_panel = PanelContainer.new()
 		roasting_panel.set_script(roast_script)
-		roasting_panel.custom_minimum_size = Vector2(520, 440)
+		roasting_panel.custom_minimum_size = Vector2(680, 500)
 		roasting_panel.set_anchors_and_offsets_preset(Control.PRESET_CENTER, Control.PRESET_MODE_MINSIZE)
 		roasting_panel.hide()
 		add_child(roasting_panel)
@@ -61,7 +61,7 @@ func _ready() -> void:
 	if q_script != null:
 		quest_panel = PanelContainer.new()
 		quest_panel.set_script(q_script)
-		quest_panel.custom_minimum_size = Vector2(500, 360)
+		quest_panel.custom_minimum_size = Vector2(680, 500)
 		quest_panel.set_anchors_and_offsets_preset(Control.PRESET_CENTER, Control.PRESET_MODE_MINSIZE)
 		quest_panel.hide()
 		add_child(quest_panel)
@@ -71,7 +71,7 @@ func _ready() -> void:
 	if b_script != null:
 		bakery_panel = PanelContainer.new()
 		bakery_panel.set_script(b_script)
-		bakery_panel.custom_minimum_size = Vector2(500, 380)
+		bakery_panel.custom_minimum_size = Vector2(680, 500)
 		bakery_panel.set_anchors_and_offsets_preset(Control.PRESET_CENTER, Control.PRESET_MODE_MINSIZE)
 		bakery_panel.hide()
 		add_child(bakery_panel)
@@ -81,7 +81,7 @@ func _ready() -> void:
 	if c_script != null:
 		casting_panel = PanelContainer.new()
 		casting_panel.set_script(c_script)
-		casting_panel.custom_minimum_size = Vector2(500, 420)
+		casting_panel.custom_minimum_size = Vector2(680, 500)
 		casting_panel.set_anchors_and_offsets_preset(Control.PRESET_CENTER, Control.PRESET_MODE_MINSIZE)
 		casting_panel.hide()
 		add_child(casting_panel)
@@ -91,7 +91,7 @@ func _ready() -> void:
 	if u_script != null:
 		uniform_panel = PanelContainer.new()
 		uniform_panel.set_script(u_script)
-		uniform_panel.custom_minimum_size = Vector2(500, 400)
+		uniform_panel.custom_minimum_size = Vector2(680, 500)
 		uniform_panel.set_anchors_and_offsets_preset(Control.PRESET_CENTER, Control.PRESET_MODE_MINSIZE)
 		uniform_panel.hide()
 		add_child(uniform_panel)
@@ -101,7 +101,7 @@ func _ready() -> void:
 	if e_script != null:
 		expansion_panel = PanelContainer.new()
 		expansion_panel.set_script(e_script)
-		expansion_panel.custom_minimum_size = Vector2(520, 400)
+		expansion_panel.custom_minimum_size = Vector2(680, 500)
 		expansion_panel.set_anchors_and_offsets_preset(Control.PRESET_CENTER, Control.PRESET_MODE_MINSIZE)
 		expansion_panel.hide()
 		add_child(expansion_panel)
@@ -110,8 +110,8 @@ func _ready() -> void:
 	var bottom_hbox = $VBoxContainer/BottomBar/HBoxContainer
 	if bottom_hbox:
 		var btn_roast = Button.new()
-		btn_roast.text = "☕ 원두 로스팅 머신"
-		btn_roast.custom_minimum_size = Vector2(150, 40)
+		btn_roast.text = "☕ 로스팅"
+		btn_roast.custom_minimum_size = Vector2(110, 42)
 		bottom_hbox.add_child(btn_roast)
 		btn_roast.pressed.connect(func():
 			hide_all_overlays()
@@ -121,8 +121,8 @@ func _ready() -> void:
 		)
 
 		var btn_quest = Button.new()
-		btn_quest.text = "📜 스토리 퀘스트"
-		btn_quest.custom_minimum_size = Vector2(140, 40)
+		btn_quest.text = "📜 퀘스트"
+		btn_quest.custom_minimum_size = Vector2(110, 42)
 		bottom_hbox.add_child(btn_quest)
 		btn_quest.pressed.connect(func():
 			hide_all_overlays()
@@ -132,8 +132,8 @@ func _ready() -> void:
 		)
 		
 		var btn_bake = Button.new()
-		btn_bake.text = "🥐 오븐 베이킹"
-		btn_bake.custom_minimum_size = Vector2(130, 40)
+		btn_bake.text = "🥐 베이커리"
+		btn_bake.custom_minimum_size = Vector2(110, 42)
 		bottom_hbox.add_child(btn_bake)
 		btn_bake.pressed.connect(func():
 			hide_all_overlays()
@@ -143,8 +143,8 @@ func _ready() -> void:
 		)
 
 		var btn_cast = Button.new()
-		btn_cast.text = "💬 길거리 캐스팅"
-		btn_cast.custom_minimum_size = Vector2(140, 40)
+		btn_cast.text = "💬 캐스팅"
+		btn_cast.custom_minimum_size = Vector2(110, 42)
 		bottom_hbox.add_child(btn_cast)
 		btn_cast.pressed.connect(func():
 			hide_all_overlays()
@@ -154,8 +154,8 @@ func _ready() -> void:
 		)
 
 		var btn_uni = Button.new()
-		btn_uni.text = "👔 알바 유니폼"
-		btn_uni.custom_minimum_size = Vector2(130, 40)
+		btn_uni.text = "👔 유니폼"
+		btn_uni.custom_minimum_size = Vector2(110, 42)
 		bottom_hbox.add_child(btn_uni)
 		btn_uni.pressed.connect(func():
 			hide_all_overlays()
@@ -165,8 +165,8 @@ func _ready() -> void:
 		)
 
 		var btn_exp = Button.new()
-		btn_exp.text = "🏰 매장 평수 확장"
-		btn_exp.custom_minimum_size = Vector2(140, 40)
+		btn_exp.text = "🏰 확장"
+		btn_exp.custom_minimum_size = Vector2(110, 42)
 		bottom_hbox.add_child(btn_exp)
 		btn_exp.pressed.connect(func():
 			hide_all_overlays()

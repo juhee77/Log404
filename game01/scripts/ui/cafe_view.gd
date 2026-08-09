@@ -17,6 +17,9 @@ var developer_texture: Texture2D
 
 var selected_drag_seat: int = -1
 
+var desk_booth_texture: Texture2D
+var desk_open_texture: Texture2D
+
 func _ready() -> void:
 	custom_minimum_size = Vector2(800, 520)
 	
@@ -39,6 +42,16 @@ func _ready() -> void:
 		var img_d = Image.load_from_file("res://assets/customer_developer.png")
 		if img_d != null:
 			developer_texture = ImageTexture.create_from_image(img_d)
+
+	if FileAccess.file_exists("res://assets/desk_booth_1p.png"):
+		var img_b = Image.load_from_file("res://assets/desk_booth_1p.png")
+		if img_b != null:
+			desk_booth_texture = ImageTexture.create_from_image(img_b)
+
+	if FileAccess.file_exists("res://assets/desk_open_cafe.png"):
+		var img_o = Image.load_from_file("res://assets/desk_open_cafe.png")
+		if img_o != null:
+			desk_open_texture = ImageTexture.create_from_image(img_o)
 		
 	GameState.zone_changed.connect(func(_z): queue_redraw())
 	GameState.upgrade_purchased.connect(func(_cat, _lvl): queue_redraw())
@@ -323,9 +336,12 @@ func draw_study_zone(w: float, h: float) -> void:
 		if i == selected_drag_seat:
 			draw_rect(desk_rect, Color(0.2, 0.9, 0.5, 0.35), true)
 			draw_rect(desk_rect, Color(0.2, 1.0, 0.5), false, 4.0)
-		else:
 			draw_rect(desk_rect, desk_color, true)
 			draw_rect(desk_rect, border_color, false, 2.0)
+			if is_booth and desk_booth_texture != null:
+				draw_texture_rect(desk_booth_texture, desk_rect, false, Color(1, 1, 1, 0.45))
+			elif not is_booth and desk_open_texture != null:
+				draw_texture_rect(desk_open_texture, desk_rect, false, Color(1, 1, 1, 0.45))
 		
 		var label = "프라이빗 1인실 #%d" % (i + 1) if is_booth else "오픈 카페석 #%d" % (i + 1)
 		draw_string(ThemeDB.fallback_font, seat_pos + Vector2(10, 22), label, HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color(0.8, 0.8, 0.75))

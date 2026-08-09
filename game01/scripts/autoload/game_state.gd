@@ -637,6 +637,46 @@ var upgrades: Dictionary = {
 		"base_cost": 2500.0,
 		"cost_mult": 2.5,
 		"desc": "이용료와 음료 매출을 자동으로 정산 및 수금"
+	},
+	"ultrawide_monitors_vip": {
+		"name": "🖥 38인치 울트라와이드 커브드 모니터석",
+		"level": 0,
+		"max_level": 3,
+		"base_cost": 3500.0,
+		"cost_mult": 2.2,
+		"desc": "개발자와 디자이너 전용 고화질 듀얼 윈도우 모니터 독서실 책상"
+	},
+	"power_nap_capsule_vip": {
+		"name": "🧘 무중력 파워 냅 수면 캡슐 & 숯 베개",
+		"level": 0,
+		"max_level": 3,
+		"base_cost": 4000.0,
+		"cost_mult": 2.4,
+		"desc": "수험생 피로 회복 전용 30분 파워 수면 파드"
+	},
+	"anc_headphones_pro": {
+		"name": "🎧 프리미엄 ANC 노이즈캔슬링 헤드폰 대여",
+		"level": 0,
+		"max_level": 3,
+		"base_cost": 2800.0,
+		"cost_mult": 2.0,
+		"desc": "주변 소음을 완전 차단하는 고급 ANC 헤드폰 대여 정산"
+	},
+	"uvc_sterilizer_pro": {
+		"name": "🧼 UV-C 무균 소독 데스크 장패드 & 살균기",
+		"level": 0,
+		"max_level": 3,
+		"base_cost": 2200.0,
+		"cost_mult": 1.9,
+		"desc": "키보드와 데스크를 99.9% 무균 소독하여 매장 청결 평점 +0.4 가산"
+	},
+	"greenhouse_wall_pro": {
+		"name": "🌸 대형 산소 공기정화 초록 온실 바이오월",
+		"level": 0,
+		"max_level": 3,
+		"base_cost": 4500.0,
+		"cost_mult": 2.5,
+		"desc": "자연 산소 농도와 피톤치드 아로마를 발산하여 체류 시간 +40% 증가"
 	}
 }
 
