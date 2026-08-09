@@ -320,14 +320,17 @@ func draw_study_zone(w: float, h: float) -> void:
 	var cols = 4
 	var start_x = 60.0
 	var start_y = 160.0
-	var cell_w = 160.0
-	var cell_h = 100.0
 	
 	for i in range(total_capacity):
 		var col = i % cols
 		var row = i / cols
-		var seat_pos = Vector2(start_x + col * (cell_w + 30.0), start_y + row * (cell_h + 30.0))
 		var is_booth = i >= GameState.upgrades["open_seats"]["level"] * 3
+		var cell_w = 220.0 if is_booth else 140.0
+		var cell_h = 150.0 if is_booth else 90.0
+		
+		var seat_pos = Vector2(start_x + col * (160.0 + 30.0), start_y + row * (100.0 + 30.0))
+		if GameState.seat_custom_offsets.has(i):
+			seat_pos += GameState.seat_custom_offsets[i]
 		
 		var desk_color = Color(0.18, 0.14, 0.12, 0.85) if not is_booth else Color(0.15, 0.12, 0.18, 0.85)
 		var border_color = Color(0.96, 0.62, 0.07) if not is_booth else Color(0.8, 0.4, 0.9)

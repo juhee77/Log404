@@ -1009,6 +1009,45 @@ func are_seats_adjacent(idx1: int, idx2: int) -> bool:
 	var p2 = get_seat_position(idx2)
 	return p1.distance_to(p2) <= 190.0
 
+var desk_catalog: Dictionary = {
+	"open_1x1": {
+		"name": "☕ 오픈 카페석 (1x1 규격)",
+		"size": Vector2(1, 1),
+		"cost": 1000.0,
+		"pixel_size": Vector2(140, 90),
+		"desc": "아늑한 1x1 규격의 기본 오픈 스터디 책상"
+	},
+	"booth_2x2": {
+		"name": "🔮 프라이빗 1인실 부스 (2x2 규격)",
+		"size": Vector2(2, 2),
+		"cost": 2500.0,
+		"pixel_size": Vector2(260, 180),
+		"desc": "독립된 2x2 규격의 대형 방음 1인실 몰입 부스"
+	},
+	"vip_2x1": {
+		"name": "🖥 VIP 38인치 울트라와이드 모니터석 (2x1 규격)",
+		"size": Vector2(2, 1),
+		"cost": 4000.0,
+		"pixel_size": Vector2(240, 100),
+		"desc": "개발자/디자이너 전용 2x1 듀얼 모니터 커스텀 데스크"
+	}
+}
+
+func buy_new_desk(type_key: String) -> bool:
+	if not desk_catalog.has(type_key): return false
+	var c_item = desk_catalog[type_key]
+	var cost = c_item["cost"]
+	if not can_afford(cost): return false
+	
+	add_money(-cost)
+	if type_key == "booth_2x2":
+		upgrades["private_booths"]["level"] += 1
+	else:
+		upgrades["open_seats"]["level"] += 1
+	save_game()
+	upgrade_purchased.emit("open_seats", upgrades["open_seats"]["level"])
+	return true
+
 func get_seat_position(index: int) -> Vector2:
 	var base_pos = get_base_seat_position(index)
 	if seat_custom_offsets.has(index):
