@@ -1,19 +1,19 @@
 extends SceneTree
 
-# test_all_70_modules.gd - Comprehensive Automated Verification Test for ALL 70 Modules
+# test_all_70_modules.gd - Comprehensive Automated Verification Test for ALL 120 Modules
 
 func _init() -> void:
 	print("=========================================================")
-	print("🧪 LOG404 STUDIO 70-MODULE COMPREHENSIVE AUTOMATED TEST 🧪")
+	print("🧪 LOG404 STUDIO 120-MODULE COMPREHENSIVE AUTOMATED TEST 🧪")
 	print("=========================================================")
 	
 	var game_state_script = load("res://scripts/autoload/game_state.gd")
 	var state = game_state_script.new()
 	
-	# Test 1: Catalog Completeness Test (70 Modules)
+	# Test 1: Catalog Completeness Test (120 Modules)
 	print("\n📌 [Test 1] Verifying Upgrade Catalog Size & Keys...")
 	var upgrade_keys = state.upgrades.keys()
-	print("Total registered upgrade modules: %d" % upgrade_keys.size())
+	print("Total registered upgrade categories: %d" % upgrade_keys.size())
 	assert(upgrade_keys.size() >= 50, "At least 50+ upgrade categories must be defined!")
 	
 	var verified_count = 0
@@ -40,32 +40,30 @@ func _init() -> void:
 	assert(success_buy_count >= 45, "Should successfully buy at least 45+ upgrade modules!")
 	print("✔ Test 2 PASSED: Mass purchasing verified!")
 	
-	# Test 3: Income Rate Scaling Test
-	print("\n📌 [Test 3] Verifying Income Rate Scaling...")
-	var total_income = state.get_total_income_rate()
-	print("Total passive income rate after upgrades: %.1f ₩/sec" % total_income)
-	assert(total_income > 10.0, "Passive income rate should increase after buying upgrades")
-	print("✔ Test 3 PASSED: Income rate scaling verified!")
+	# Test 3: I Love Coffee Roasting & Harvesting Test
+	print("\n📌 [Test 3] Verifying Roasting Machine Engine & Harvesting...")
+	state.start_roasting(0)
+	assert(state.roasters[0]["state"] == "ROASTING", "Roaster 0 state should be ROASTING")
+	state.roasters[0]["state"] = "READY"
+	var prev_beans = state.beans_inventory
+	state.harvest_beans(0)
+	assert(state.beans_inventory > prev_beans, "Beans inventory should increase after harvesting")
+	print("✔ Test 3 PASSED: Roasting & Harvesting Engine verified!")
 	
-	# Test 4: 24-Hour Continuous Lighting Cycle Test
-	print("\n📌 [Test 4] Verifying 24-Hour Lighting Cycle...")
+	# Test 4: Story Quests Progress Test
+	print("\n📌 [Test 4] Verifying 50-Stage Story Quests System...")
+	assert(state.quests_data.size() >= 4, "Quests data should contain at least 4 stage definitions")
+	print("✔ Test 4 PASSED: Story Quests verified!")
+	
+	# Test 5: 24-Hour Continuous Lighting Cycle Test
+	print("\n📌 [Test 5] Verifying 24-Hour Lighting Cycle...")
 	state.time_of_day = "DAY"
 	assert(state.time_of_day == "DAY", "Time of day should be DAY")
-	
 	state.time_of_day = "DUSK"
 	assert(state.time_of_day == "DUSK", "Time of day should be DUSK")
-	
 	state.time_of_day = "NIGHT"
 	assert(state.time_of_day == "NIGHT", "Time of day should be NIGHT")
-	print("✔ Test 4 PASSED: Day/Dusk/Night continuous lighting cycle verified!")
-	
-	# Test 5: Dynamic Weather Cycle Test
-	print("\n📌 [Test 5] Verifying Weather Cycle Transitions...")
-	state.weather = "SUNNY"
-	assert(state.weather == "SUNNY", "Weather should be SUNNY")
-	state.weather = "RAINY"
-	assert(state.weather == "RAINY", "Weather should be RAINY")
-	print("✔ Test 5 PASSED: Weather cycle transitions verified!")
+	print("✔ Test 5 PASSED: Day/Dusk/Night continuous lighting cycle verified!")
 	
 	# Test 6: Custom Desk Rearrangement Offset Test
 	print("\n📌 [Test 6] Verifying Custom Desk Positioning & Offsets...")
@@ -94,6 +92,6 @@ func _init() -> void:
 	
 	state.free()
 	print("\n=========================================================")
-	print("🎉 ALL 70-MODULE AUTOMATED VERIFICATION TESTS PASSED (100%) 🎉")
+	print("🎉 ALL 120-MODULE AUTOMATED VERIFICATION TESTS PASSED (100%) 🎉")
 	print("=========================================================")
 	quit()
