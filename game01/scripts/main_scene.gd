@@ -220,9 +220,9 @@ func _ready() -> void:
 				review_panel.show()
 		)
 
-	# Auto-start roasting & baking so timers actively run
-	GameState.start_roasting(0, "guatemala")
-	GameState.start_roasting(1, "ethiopia")
+	# Auto-start roasting so timers actively run
+	GameState.start_roasting(0)
+	GameState.start_roasting(1)
 
 	# Add dynamic customer spawner timer (Every 2.0s)
 	var spawn_timer = Timer.new()
@@ -235,9 +235,7 @@ func _ready() -> void:
 				free_seat = i
 				break
 		if free_seat != -1:
-			var types = ["student", "developer", "gosi", "cat"]
-			var c_type = types[randi() % types.size()]
-			GameState.spawn_customer(c_type)
+			GameState.spawn_customer()
 	)
 	add_child(spawn_timer)
 
