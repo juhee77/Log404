@@ -16,6 +16,8 @@ var student_texture: Texture2D
 var developer_texture: Texture2D
 
 var selected_drag_seat: int = -1
+var is_dragging: bool = false
+var drag_start_mouse_pos: Vector2 = Vector2.ZERO
 
 var desk_booth_texture: Texture2D
 var desk_open_texture: Texture2D
