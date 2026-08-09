@@ -1021,21 +1021,35 @@ var desk_catalog: Dictionary = {
 		"size": Vector2(1, 1),
 		"cost": 1000.0,
 		"pixel_size": Vector2(140, 90),
-		"desc": "아늑한 1x1 규격의 기본 오픈 스터디 책상"
+		"desc": "아늑한 1x1 규격의 기본 오픈 스터디 책상 (집중도 +10%)"
 	},
 	"booth_2x2": {
 		"name": "🔮 프라이빗 1인실 부스 (2x2 규격)",
 		"size": Vector2(2, 2),
 		"cost": 2500.0,
 		"pixel_size": Vector2(260, 180),
-		"desc": "독립된 2x2 규격의 대형 방음 1인실 몰입 부스"
+		"desc": "독립된 2x2 규격의 대형 방음 1인실 몰입 부스 (수익 +25%)"
 	},
 	"vip_2x1": {
 		"name": "🖥 VIP 38인치 울트라와이드 모니터석 (2x1 규격)",
 		"size": Vector2(2, 1),
 		"cost": 4000.0,
 		"pixel_size": Vector2(240, 100),
-		"desc": "개발자/디자이너 전용 2x1 듀얼 모니터 커스텀 데스크"
+		"desc": "개발자/디자이너 전용 2x1 듀얼 모니터 커스텀 데스크 (열공 팁 +50%)"
+	},
+	"dual_island_2x2": {
+		"name": "🏰 듀얼 2인 열공 아일랜드 (2x2 규격)",
+		"size": Vector2(2, 2),
+		"cost": 6000.0,
+		"pixel_size": Vector2(260, 180),
+		"desc": "팀 스터디 및 커플 전용 2인 아일랜드 데스크 (매출 2배)"
+	},
+	"royal_gold_2x2": {
+		"name": "👑 로열 익세큐티브 골드 부스 (2x2 규격)",
+		"size": Vector2(2, 2),
+		"cost": 10000.0,
+		"pixel_size": Vector2(280, 200),
+		"desc": "황금 앰버 가죽 의자 & 리모컨 조명 럭셔리 부스 (평점 +0.5)"
 	}
 }
 
@@ -1046,10 +1060,13 @@ func buy_new_desk(type_key: String) -> bool:
 	if not can_afford(cost): return false
 	
 	add_money(-cost)
-	if type_key == "booth_2x2":
+	if type_key.contains("booth") or type_key.contains("island") or type_key.contains("gold"):
 		upgrades["private_booths"]["level"] += 1
 	else:
 		upgrades["open_seats"]["level"] += 1
+	
+	reputation = min(5.0, reputation + 0.2)
+	reputation_changed.emit(reputation)
 	save_game()
 	upgrade_purchased.emit("open_seats", upgrades["open_seats"]["level"])
 	return true

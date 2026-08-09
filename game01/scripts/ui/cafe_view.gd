@@ -267,12 +267,8 @@ func _draw() -> void:
 		draw_string(ThemeDB.fallback_font, d_pos + Vector2(-10, 6), "🪴", HORIZONTAL_ALIGNMENT_LEFT, -1, 16, Color.WHITE)
 		
 	# 5. Draw Zone Based View Content
-	if GameState.current_zone == "study":
-		draw_study_zone(w, h)
-	elif GameState.current_zone == "lounge":
-		draw_lounge_zone(w, h)
-	elif GameState.current_zone == "front":
-		draw_front_zone(w, h)
+	# 5. Draw Multi-Room Integrated Architectural Layout
+	draw_integrated_multi_room_layout(w, h)
 		
 	# 6. Draw Floating Action Texts
 	for ft in floating_texts:
@@ -280,10 +276,79 @@ func _draw() -> void:
 		c.a = ft["alpha"]
 		draw_string(ThemeDB.fallback_font, ft["pos"], ft["text"], HORIZONTAL_ALIGNMENT_CENTER, -1, 15, c)
 
-func draw_study_zone(w: float, h: float) -> void:
-	draw_rect(Rect2(20, 20, 260, 36), Color(0.1, 0.08, 0.07, 0.85), true)
-	draw_rect(Rect2(20, 20, 260, 36), Color(0.96, 0.62, 0.07), false, 2.0)
-	draw_string(ThemeDB.fallback_font, Vector2(35, 43), "🗺️ 메인 열공 존 (Study Zone)", HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color(0.96, 0.62, 0.07))
+func draw_integrated_multi_room_layout(w: float, h: float) -> void:
+	# ----------------------------------------------------
+	# ROOM 1: 📖 메인 집중 열공 방 (Main Focus Study Room)
+	# ----------------------------------------------------
+	var room1_rect = Rect2(30, 20, 680, h - 40)
+	draw_rect(room1_rect, Color(0.12, 0.10, 0.08, 0.75), true)
+	draw_rect(room1_rect, Color(0.96, 0.62, 0.07, 0.8), false, 3.0)
+	
+	# Room 1 Header Banner
+	var r1_banner = Rect2(40, 30, 260, 32)
+	draw_rect(r1_banner, Color(0.18, 0.14, 0.10, 0.95), true)
+	draw_rect(r1_banner, Color(0.96, 0.62, 0.07), false, 1.5)
+	draw_string(ThemeDB.fallback_font, Vector2(52, 52), "📖 메인 집중 열공 방 (Focus Room)", HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color(0.96, 0.62, 0.07))
+
+	# ----------------------------------------------------
+	# ROOM 2: ☕ 카페테리아 & 힐링 라운지 방 (Lounge & Coffee Bar)
+	# ----------------------------------------------------
+	var room2_rect = Rect2(730, 20, w - 750, 240)
+	draw_rect(room2_rect, Color(0.10, 0.14, 0.12, 0.75), true)
+	draw_rect(room2_rect, Color(0.1, 0.8, 0.4, 0.8), false, 3.0)
+	
+	# Room 2 Header Banner
+	var r2_banner = Rect2(740, 30, 250, 32)
+	draw_rect(r2_banner, Color(0.12, 0.20, 0.15, 0.95), true)
+	draw_rect(r2_banner, Color(0.1, 0.8, 0.4), false, 1.5)
+	draw_string(ThemeDB.fallback_font, Vector2(752, 52), "☕ 힐링 라운지 & 커피바 (Lounge)", HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color(0.1, 0.8, 0.4))
+	
+	# Render Coffee Bar Counter inside Room 2
+	var r2_bar = Rect2(750, 75, 230, 110)
+	if coffee_bar_texture != null:
+		draw_texture_rect(coffee_bar_texture, r2_bar, false)
+	else:
+		draw_rect(r2_bar, Color(0.24, 0.18, 0.14), true)
+	draw_rect(r2_bar, Color(0.96, 0.62, 0.07), false, 2.0)
+	draw_string(ThemeDB.fallback_font, Vector2(765, 135), "☕ 에스프레소 & 셀프 스낵바", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color.WHITE)
+
+	# ----------------------------------------------------
+	# ROOM 3: 🔑 프런트 & 스마트 사물함 방 (Front & Lockers)
+	# ----------------------------------------------------
+	var room3_rect = Rect2(730, 275, w - 750, h - 295)
+	draw_rect(room3_rect, Color(0.14, 0.12, 0.16, 0.75), true)
+	draw_rect(room3_rect, Color(0.8, 0.4, 0.9, 0.8), false, 3.0)
+	
+	# Room 3 Header Banner
+	var r3_banner = Rect2(740, 285, 250, 32)
+	draw_rect(r3_banner, Color(0.18, 0.15, 0.22, 0.95), true)
+	draw_rect(r3_banner, Color(0.8, 0.4, 0.9), false, 1.5)
+	draw_string(ThemeDB.fallback_font, Vector2(752, 307), "🔑 프런트 & 스마트 사물함 (Front)", HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color(0.8, 0.4, 0.9))
+
+	# Smart Lockers Wall Graphics in Room 3
+	var locker_rect = Rect2(750, 330, 230, 100)
+	draw_rect(locker_rect, Color(0.2, 0.18, 0.25), true)
+	draw_rect(locker_rect, Color(0.8, 0.4, 0.9), false, 1.5)
+	for lx in range(4):
+		for ly in range(2):
+			var box = Rect2(760 + lx * 52, 340 + ly * 42, 44, 34)
+			draw_rect(box, Color(0.28, 0.25, 0.35), true)
+			draw_rect(box, Color(0.5, 0.4, 0.6), false, 1.0)
+			draw_string(ThemeDB.fallback_font, box.position + Vector2(10, 22), "🔒%d" % (lx + ly*4 + 1), HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.8, 0.8, 0.9))
+
+	# ----------------------------------------------------
+	# Glass Door Archways Connecting Rooms
+	# ----------------------------------------------------
+	draw_rect(Rect2(710, 110, 20, 60), Color(0.2, 0.8, 1.0, 0.8), true)
+	draw_string(ThemeDB.fallback_font, Vector2(712, 145), "🚪", HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color.WHITE)
+
+	draw_rect(Rect2(710, 360, 20, 60), Color(0.2, 0.8, 1.0, 0.8), true)
+	draw_string(ThemeDB.fallback_font, Vector2(712, 395), "🚪", HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color.WHITE)
+
+	# ----------------------------------------------------
+	# Draw Desks & Booths inside ROOM 1 (Main Focus Study Room)
+	# ----------------------------------------------------
+	draw_study_zone(w, h)
 	
 	var gate_rect = Rect2(w - 140, 20, 120, 70)
 	draw_rect(gate_rect, Color(0.16, 0.13, 0.11, 0.9), true)

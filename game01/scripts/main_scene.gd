@@ -25,6 +25,7 @@ var bakery_panel: PanelContainer
 var casting_panel: PanelContainer
 var uniform_panel: PanelContainer
 var expansion_panel: PanelContainer
+var desk_shop_panel: PanelContainer
 
 func _ready() -> void:
 	if upgrade_panel: upgrade_panel.hide()
@@ -36,6 +37,16 @@ func _ready() -> void:
 		take_screenshot("live_visual_check.png")
 	)
 	
+	# Dynamically add Desk Shop Overlay
+	var ds_script = load("res://scripts/ui/desk_shop_panel.gd")
+	if ds_script != null:
+		desk_shop_panel = PanelContainer.new()
+		desk_shop_panel.set_script(ds_script)
+		desk_shop_panel.custom_minimum_size = Vector2(680, 500)
+		desk_shop_panel.set_anchors_and_offsets_preset(Control.PRESET_CENTER, Control.PRESET_MODE_MINSIZE)
+		desk_shop_panel.hide()
+		add_child(desk_shop_panel)
+
 	# Dynamically add Leaderboard Overlay
 	var lb_script = load("res://scripts/ui/leaderboard_panel.gd")
 	if lb_script != null:
@@ -45,7 +56,7 @@ func _ready() -> void:
 		leaderboard_panel.set_anchors_and_offsets_preset(Control.PRESET_CENTER, Control.PRESET_MODE_MINSIZE)
 		leaderboard_panel.hide()
 		add_child(leaderboard_panel)
-		
+
 	# Dynamically add Roasting Overlay
 	var roast_script = load("res://scripts/ui/roasting_panel.gd")
 	if roast_script != null:
@@ -109,6 +120,17 @@ func _ready() -> void:
 	# Dynamically add HUD Buttons to BottomBar
 	var bottom_hbox = $VBoxContainer/BottomBar/HBoxContainer
 	if bottom_hbox:
+		var btn_shop = Button.new()
+		btn_shop.text = "🛒 책상 상점"
+		btn_shop.custom_minimum_size = Vector2(110, 42)
+		bottom_hbox.add_child(btn_shop)
+		btn_shop.pressed.connect(func():
+			hide_all_overlays()
+			if desk_shop_panel:
+				desk_shop_panel.refresh_catalog()
+				desk_shop_panel.show()
+		)
+
 		var btn_roast = Button.new()
 		btn_roast.text = "☕ 로스팅"
 		btn_roast.custom_minimum_size = Vector2(110, 42)
@@ -172,6 +194,8 @@ func _ready() -> void:
 			hide_all_overlays()
 			if expansion_panel:
 				expansion_panel.refresh_expansion()
+				expansion_panel.show()
+		)el.refresh_expansion()
 				expansion_panel.show()
 		)
 	
@@ -250,6 +274,7 @@ func hide_all_overlays() -> void:
 	if casting_panel: casting_panel.hide()
 	if uniform_panel: uniform_panel.hide()
 	if expansion_panel: expansion_panel.hide()
+	if desk_shop_panel: desk_shop_panel.hide()
 
 func take_screenshot(path_name: String = "live_visual_check.png") -> void:
 	for i in range(8):
