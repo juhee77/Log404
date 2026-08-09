@@ -21,6 +21,10 @@ extends Control
 var leaderboard_panel: PanelContainer
 var roasting_panel: PanelContainer
 var quest_panel: PanelContainer
+var bakery_panel: PanelContainer
+var casting_panel: PanelContainer
+var uniform_panel: PanelContainer
+var expansion_panel: PanelContainer
 
 func _ready() -> void:
 	if upgrade_panel: upgrade_panel.hide()
@@ -61,6 +65,46 @@ func _ready() -> void:
 		quest_panel.set_anchors_and_offsets_preset(Control.PRESET_CENTER, Control.PRESET_MODE_MINSIZE)
 		quest_panel.hide()
 		add_child(quest_panel)
+
+	# Dynamically add Bakery Overlay
+	var b_script = load("res://scripts/ui/bakery_panel.gd")
+	if b_script != null:
+		bakery_panel = PanelContainer.new()
+		bakery_panel.set_script(b_script)
+		bakery_panel.custom_minimum_size = Vector2(500, 380)
+		bakery_panel.set_anchors_and_offsets_preset(Control.PRESET_CENTER, Control.PRESET_MODE_MINSIZE)
+		bakery_panel.hide()
+		add_child(bakery_panel)
+
+	# Dynamically add Casting Overlay
+	var c_script = load("res://scripts/ui/casting_panel.gd")
+	if c_script != null:
+		casting_panel = PanelContainer.new()
+		casting_panel.set_script(c_script)
+		casting_panel.custom_minimum_size = Vector2(500, 420)
+		casting_panel.set_anchors_and_offsets_preset(Control.PRESET_CENTER, Control.PRESET_MODE_MINSIZE)
+		casting_panel.hide()
+		add_child(casting_panel)
+
+	# Dynamically add Uniform Overlay
+	var u_script = load("res://scripts/ui/uniform_panel.gd")
+	if u_script != null:
+		uniform_panel = PanelContainer.new()
+		uniform_panel.set_script(u_script)
+		uniform_panel.custom_minimum_size = Vector2(500, 400)
+		uniform_panel.set_anchors_and_offsets_preset(Control.PRESET_CENTER, Control.PRESET_MODE_MINSIZE)
+		uniform_panel.hide()
+		add_child(uniform_panel)
+
+	# Dynamically add Expansion Overlay
+	var e_script = load("res://scripts/ui/expansion_panel.gd")
+	if e_script != null:
+		expansion_panel = PanelContainer.new()
+		expansion_panel.set_script(e_script)
+		expansion_panel.custom_minimum_size = Vector2(520, 400)
+		expansion_panel.set_anchors_and_offsets_preset(Control.PRESET_CENTER, Control.PRESET_MODE_MINSIZE)
+		expansion_panel.hide()
+		add_child(expansion_panel)
 	
 	# Dynamically add HUD Buttons to BottomBar
 	var bottom_hbox = $VBoxContainer/BottomBar/HBoxContainer
@@ -87,15 +131,48 @@ func _ready() -> void:
 				quest_panel.show()
 		)
 		
-		var btn_top10 = Button.new()
-		btn_top10.text = "🏆 전국 TOP 10 랭킹"
-		btn_top10.custom_minimum_size = Vector2(160, 40)
-		bottom_hbox.add_child(btn_top10)
-		btn_top10.pressed.connect(func():
+		var btn_bake = Button.new()
+		btn_bake.text = "🥐 오븐 베이킹"
+		btn_bake.custom_minimum_size = Vector2(130, 40)
+		bottom_hbox.add_child(btn_bake)
+		btn_bake.pressed.connect(func():
 			hide_all_overlays()
-			if leaderboard_panel:
-				leaderboard_panel.refresh_leaderboard()
-				leaderboard_panel.show()
+			if bakery_panel:
+				bakery_panel.refresh_ovens()
+				bakery_panel.show()
+		)
+
+		var btn_cast = Button.new()
+		btn_cast.text = "💬 길거리 캐스팅"
+		btn_cast.custom_minimum_size = Vector2(140, 40)
+		bottom_hbox.add_child(btn_cast)
+		btn_cast.pressed.connect(func():
+			hide_all_overlays()
+			if casting_panel:
+				casting_panel.refresh_casting()
+				casting_panel.show()
+		)
+
+		var btn_uni = Button.new()
+		btn_uni.text = "👔 알바 유니폼"
+		btn_uni.custom_minimum_size = Vector2(130, 40)
+		bottom_hbox.add_child(btn_uni)
+		btn_uni.pressed.connect(func():
+			hide_all_overlays()
+			if uniform_panel:
+				uniform_panel.refresh_uniforms()
+				uniform_panel.show()
+		)
+
+		var btn_exp = Button.new()
+		btn_exp.text = "🏰 매장 평수 확장"
+		btn_exp.custom_minimum_size = Vector2(140, 40)
+		bottom_hbox.add_child(btn_exp)
+		btn_exp.pressed.connect(func():
+			hide_all_overlays()
+			if expansion_panel:
+				expansion_panel.refresh_expansion()
+				expansion_panel.show()
 		)
 	
 	# Connect Map Navigation & Decorate Mode
@@ -150,6 +227,10 @@ func hide_all_overlays() -> void:
 	if leaderboard_panel: leaderboard_panel.hide()
 	if roasting_panel: roasting_panel.hide()
 	if quest_panel: quest_panel.hide()
+	if bakery_panel: bakery_panel.hide()
+	if casting_panel: casting_panel.hide()
+	if uniform_panel: uniform_panel.hide()
+	if expansion_panel: expansion_panel.hide()
 
 func take_screenshot(path_name: String = "live_visual_check.png") -> void:
 	await get_tree().process_frame
