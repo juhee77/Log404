@@ -984,6 +984,31 @@ func get_base_seat_position(index: int) -> Vector2:
 	var row = index / cols
 	return Vector2(start_x + col * (cell_w + 30.0) + cell_w*0.5, start_y + row * (cell_h + 30.0) + cell_h*0.5)
 
+var seat_rotations: Dictionary = {} # seat_index -> 0, 90, 180, 270 degrees
+
+func snap_to_grid(pos: Vector2, grid_size: float = 40.0) -> Vector2:
+	return Vector2(
+		snapped(pos.x, grid_size),
+		snapped(pos.y, grid_size)
+	)
+
+func set_seat_custom_offset_snapped(index: int, raw_offset: Vector2) -> void:
+	var base_pos = get_base_seat_position(index)
+	var target_world_pos = base_pos + raw_offset
+	var snapped_world_pos = snap_to_grid(target_world_pos, 40.0)
+	seat_custom_offsets[index] = snapped_world_pos - base_pos
+
+func rotate_seat(index: int) -> int:
+	var current_rot = seat_rotations.get(index, 0)
+	var new_rot = (current_rot + 90) % 360
+	seat_rotations[index] = new_rot
+	return new_rot
+
+func are_seats_adjacent(idx1: int, idx2: int) -> bool:
+	var p1 = get_seat_position(idx1)
+	var p2 = get_seat_position(idx2)
+	return p1.distance_to(p2) <= 190.0
+
 func get_seat_position(index: int) -> Vector2:
 	var base_pos = get_base_seat_position(index)
 	if seat_custom_offsets.has(index):

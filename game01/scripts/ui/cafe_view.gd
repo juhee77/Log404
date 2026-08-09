@@ -376,12 +376,22 @@ func draw_study_zone(w: float, h: float) -> void:
 		var label = "프라이빗 1인실 #%d" % (i + 1) if is_booth else "오픈 카페석 #%d" % (i + 1)
 		draw_string(ThemeDB.fallback_font, seat_pos + Vector2(10, 22), label, HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color(0.8, 0.8, 0.75))
 		
-		# Draw Desk Drag Handle Badge in Decorating Mode
+		# Draw Desk Drag Handle & Rotation Controls in Decorating Mode
 		if GameState.is_decorating_mode:
-			var tag_rect = Rect2(seat_pos.x + cell_w - 95, seat_pos.y + 6, 88, 22)
+			var tag_rect = Rect2(seat_pos.x + cell_w - 110, seat_pos.y + 6, 104, 22)
 			draw_rect(tag_rect, Color(0.2, 0.8, 0.4, 0.9) if i == selected_drag_seat else Color(0.1, 0.6, 0.9, 0.85), true)
-			var tag_text = "✋ 잡음!" if i == selected_drag_seat else "↔️ 자리이동"
+			var tag_text = "🧩 스냅 잡음!" if i == selected_drag_seat else "↔️ 40px 스냅"
 			draw_string(ThemeDB.fallback_font, tag_rect.position + Vector2(6, 15), tag_text, HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color.WHITE)
+
+		# Detect adjacent connected desks & draw island connection bridge
+		for other_idx in range(i + 1, total_capacity):
+			if GameState.are_seats_adjacent(i, other_idx):
+				var other_pos = GameState.get_seat_position(other_idx) - Vector2(cell_w*0.5, cell_h*0.5)
+				var mid_pos = (seat_pos + other_pos) * 0.5 + Vector2(cell_w*0.5, cell_h*0.5)
+				draw_line(seat_pos + Vector2(cell_w*0.5, cell_h*0.5), other_pos + Vector2(cell_w*0.5, cell_h*0.5), Color(0.2, 0.9, 0.5, 0.85), 3.0)
+				draw_rect(Rect2(mid_pos.x - 55, mid_pos.y - 12, 110, 24), Color(0.1, 0.12, 0.1, 0.9), true)
+				draw_rect(Rect2(mid_pos.x - 55, mid_pos.y - 12, 110, 24), Color(0.2, 0.9, 0.5), false, 1.5)
+				draw_string(ThemeDB.fallback_font, Vector2(mid_pos.x - 50, mid_pos.y + 4), "🔗 2인 몰입 섬", HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.2, 0.9, 0.5))
 		
 		# Draw Custom Partition / Curtain Overlays
 		if GameState.seat_partitions.has(i):
