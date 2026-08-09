@@ -22,6 +22,7 @@ var desk_open_texture: Texture2D
 
 func _ready() -> void:
 	custom_minimum_size = Vector2(800, 520)
+	mouse_filter = Control.MOUSE_FILTER_STOP
 	
 	if FileAccess.file_exists("res://assets/cafe_bg.png"):
 		var img = Image.load_from_file("res://assets/cafe_bg.png")
@@ -153,49 +154,45 @@ func _gui_input(event: InputEvent) -> void:
 		queue_redraw()
 		return
 
-	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 		var click_pos = event.position - view_offset
-		
-		# If Decorating Mode is Active, drag/reposition desks or place furniture
-		if GameState.is_decorating_mode:
+		if event.pressed:
 			var capacity = GameState.get_max_capacity()
-			
-			if selected_drag_seat != -1:
-				var grid_snapped_pos = (click_pos / 32.0).floor() * 32.0
-				var base_pos = GameState.get_base_seat_position(selected_drag_seat)
-				var new_offset = grid_snapped_pos - base_pos
-				GameState.set_seat_offset(selected_drag_seat, new_offset)
-				floating_texts.append({
-					"text": "📍 책상 위치 배치 완료!",
-					"pos": click_pos + Vector2(0, -30),
-					"alpha": 1.0,
-					"color": Color(0.96, 0.62, 0.07)
-				})
-				selected_drag_seat = -1
-				queue_redraw()
-				return
-				
 			for i in range(capacity):
 				var seat_pos = GameState.get_seat_position(i)
-				if click_pos.distance_to(seat_pos) < 60.0:
+				if click_pos.distance_to(seat_pos) < 80.0:
 					selected_drag_seat = i
+					is_dragging = true
+					drag_start_mouse_pos = event.position
 					floating_texts.append({
-						"text": "✋ 책상 선택됨! 이동할 위치로 마우스 클릭하세요.",
-						"pos": seat_pos + Vector2(0, -30),
+						"text": "🧲 책상 드래그 시작! 마우스로 원하는 위치로 이동하세요",
+						"pos": seat_pos + Vector2(0, -35),
 						"alpha": 1.0,
 						"color": Color(0.2, 0.9, 0.5)
 					})
 					queue_redraw()
 					return
-					
-			if GameState.add_decoration(click_pos, "plant"):
+		else:
+			if is_dragging and selected_drag_seat != -1:
+				is_dragging = false
+				var final_pos = GameState.get_seat_position(selected_drag_seat)
 				floating_texts.append({
-					"text": "🪴 공기정화 화분 배치! (⭐+0.08)",
-					"pos": click_pos + Vector2(0, -30),
+					"text": "📍 책상 마그네틱 배치 완료!",
+					"pos": final_pos + Vector2(0, -35),
 					"alpha": 1.0,
-					"color": Color(0.1, 0.8, 0.4)
+					"color": Color(0.96, 0.62, 0.07)
 				})
-			return
+				selected_drag_seat = -1
+				GameState.save_game()
+				queue_redraw()
+				return
+
+	if event is InputEventMouseMotion and is_dragging and selected_drag_seat != -1:
+		var target_pos = event.position - view_offset
+		var base_pos = GameState.get_base_seat_position(selected_drag_seat)
+		var raw_offset = target_pos - base_pos
+		GameState.set_seat_custom_offset_snapped(selected_drag_seat, raw_offset)
+		queue_redraw()
 		
 		# Check Mascot Cat Click
 		if click_pos.distance_to(GameState.cat_pos) < 35.0:
