@@ -22,6 +22,7 @@ var drag_start_mouse_pos: Vector2 = Vector2.ZERO
 var desk_booth_texture: Texture2D
 var desk_open_texture: Texture2D
 var desk_vip_texture: Texture2D
+var desk_island_texture: Texture2D
 var staff_barista_texture: Texture2D
 var staff_cleaner_texture: Texture2D
 
@@ -63,6 +64,11 @@ func _ready() -> void:
 		var img_v = Image.load_from_file("res://assets/desk_vip_ultrawide.png")
 		if img_v != null:
 			desk_vip_texture = ImageTexture.create_from_image(img_v)
+
+	if FileAccess.file_exists("res://assets/desk_island_2p.png"):
+		var img_i = Image.load_from_file("res://assets/desk_island_2p.png")
+		if img_i != null:
+			desk_island_texture = ImageTexture.create_from_image(img_i)
 
 	if FileAccess.file_exists("res://assets/staff_barista.png"):
 		var img_sb = Image.load_from_file("res://assets/staff_barista.png")
@@ -299,36 +305,51 @@ func draw_integrated_multi_room_layout(w: float, h: float) -> void:
 	# ROOM 1: 📖 메인 집중 열공 방 (Main Focus Study Room)
 	# ----------------------------------------------------
 	var room1_rect = Rect2(30, 20, 680, h - 40)
-	draw_rect(room1_rect, Color(0.12, 0.10, 0.08, 0.75), true)
-	draw_rect(room1_rect, Color(0.96, 0.62, 0.07, 0.8), false, 3.0)
+	draw_rect(room1_rect, Color(0.12, 0.10, 0.08, 0.45), true)
 	
 	# Room 1 Header Banner
 	var r1_banner = Rect2(40, 30, 260, 32)
 	draw_rect(r1_banner, Color(0.18, 0.14, 0.10, 0.95), true)
-	draw_rect(r1_banner, Color(0.96, 0.62, 0.07), false, 1.5)
 	draw_string(ThemeDB.fallback_font, Vector2(52, 52), "📖 메인 집중 열공 방 (Focus Room)", HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color(0.96, 0.62, 0.07))
 
 	# ----------------------------------------------------
 	# ROOM 2: ☕ 카페테리아 & 힐링 라운지 방 (Lounge & Coffee Bar)
 	# ----------------------------------------------------
 	var room2_rect = Rect2(730, 20, w - 750, 240)
-	draw_rect(room2_rect, Color(0.10, 0.14, 0.12, 0.75), true)
-	draw_rect(room2_rect, Color(0.1, 0.8, 0.4, 0.8), false, 3.0)
+	draw_rect(room2_rect, Color(0.10, 0.14, 0.12, 0.45), true)
 	
 	# Room 2 Header Banner
 	var r2_banner = Rect2(740, 30, 250, 32)
 	draw_rect(r2_banner, Color(0.12, 0.20, 0.15, 0.95), true)
-	draw_rect(r2_banner, Color(0.1, 0.8, 0.4), false, 1.5)
 	draw_string(ThemeDB.fallback_font, Vector2(752, 52), "☕ 힐링 라운지 & 커피바 (Lounge)", HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color(0.1, 0.8, 0.4))
 	
 	# Render Coffee Bar Counter inside Room 2
-	var r2_bar = Rect2(750, 75, 230, 110)
+	var r2_bar = Rect2(750, 75, 230, 100)
 	if coffee_bar_texture != null:
 		draw_texture_rect(coffee_bar_texture, r2_bar, false)
 	else:
 		draw_rect(r2_bar, Color(0.24, 0.18, 0.14), true)
-	draw_rect(r2_bar, Color(0.96, 0.62, 0.07), false, 2.0)
-	draw_string(ThemeDB.fallback_font, Vector2(765, 135), "☕ 에스프레소 & 셀프 스낵바", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color.WHITE)
+	draw_string(ThemeDB.fallback_font, Vector2(765, 125), "☕ 에스프레소 & 로스팅 바", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color.WHITE)
+
+	# Render Cake & Bakery Dessert Showcase Counter in Room 2 Lounge
+	var cake_bar = Rect2(750, 165, 230, 32)
+	draw_rect(cake_bar, Color(0.22, 0.16, 0.14, 0.95), true)
+	draw_string(ThemeDB.fallback_font, Vector2(760, 186), "🍰 블루베리 치즈케이크 & 🥐 크로와상 쇼케이스", HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(1.0, 0.85, 0.9))
+
+	# Render 2 Round Mahogany Cake Tasting Tables in Room 2 Lounge
+	var t1_center = Vector2(790, 215)
+	draw_circle(t1_center, 16.0, Color(0.28, 0.20, 0.16, 0.95))
+	draw_circle(t1_center, 14.0, Color(0.42, 0.30, 0.22))
+	draw_string(ThemeDB.fallback_font, t1_center + Vector2(-9, 5), "🍰☕", HORIZONTAL_ALIGNMENT_LEFT, -1, 9, Color.WHITE)
+	draw_string(ThemeDB.fallback_font, t1_center + Vector2(-26, 4), "🪑", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color.WHITE)
+	draw_string(ThemeDB.fallback_font, t1_center + Vector2(14, 4), "🪑", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color.WHITE)
+	
+	var t2_center = Vector2(930, 215)
+	draw_circle(t2_center, 16.0, Color(0.28, 0.20, 0.16, 0.95))
+	draw_circle(t2_center, 14.0, Color(0.42, 0.30, 0.22))
+	draw_string(ThemeDB.fallback_font, t2_center + Vector2(-9, 5), "🥐☕", HORIZONTAL_ALIGNMENT_LEFT, -1, 9, Color.WHITE)
+	draw_string(ThemeDB.fallback_font, t2_center + Vector2(-26, 4), "🪑", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color.WHITE)
+	draw_string(ThemeDB.fallback_font, t2_center + Vector2(14, 4), "🪑", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color.WHITE)
 
 	# Render Human Barista Staff Sprite in Room 2 Lounge
 	if staff_barista_texture != null:
@@ -339,24 +360,20 @@ func draw_integrated_multi_room_layout(w: float, h: float) -> void:
 	# ROOM 3: 🔑 프런트 & 스마트 사물함 방 (Front & Lockers)
 	# ----------------------------------------------------
 	var room3_rect = Rect2(730, 275, w - 750, h - 295)
-	draw_rect(room3_rect, Color(0.14, 0.12, 0.16, 0.75), true)
-	draw_rect(room3_rect, Color(0.8, 0.4, 0.9, 0.8), false, 3.0)
+	draw_rect(room3_rect, Color(0.14, 0.12, 0.16, 0.45), true)
 	
 	# Room 3 Header Banner
 	var r3_banner = Rect2(740, 285, 250, 32)
 	draw_rect(r3_banner, Color(0.18, 0.15, 0.22, 0.95), true)
-	draw_rect(r3_banner, Color(0.8, 0.4, 0.9), false, 1.5)
 	draw_string(ThemeDB.fallback_font, Vector2(752, 307), "🔑 프런트 & 스마트 사물함 (Front)", HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color(0.8, 0.4, 0.9))
 
 	# Smart Lockers Wall Graphics in Room 3
 	var locker_rect = Rect2(750, 330, 230, 100)
 	draw_rect(locker_rect, Color(0.2, 0.18, 0.25), true)
-	draw_rect(locker_rect, Color(0.8, 0.4, 0.9), false, 1.5)
 	for lx in range(4):
 		for ly in range(2):
 			var box = Rect2(760 + lx * 52, 340 + ly * 42, 44, 34)
 			draw_rect(box, Color(0.28, 0.25, 0.35), true)
-			draw_rect(box, Color(0.5, 0.4, 0.6), false, 1.0)
 			draw_string(ThemeDB.fallback_font, box.position + Vector2(10, 22), "🔒%d" % (lx + ly*4 + 1), HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.8, 0.8, 0.9))
 
 	# ----------------------------------------------------
@@ -382,7 +399,18 @@ func draw_integrated_multi_room_layout(w: float, h: float) -> void:
 	var start_x = 60.0
 	var start_y = 160.0
 	
-	for i in range(total_capacity):
+	# Collect seat indices and sort by Y-position for proper 2.5D depth ordering (Front items rendered ON TOP of Back items)
+	var seat_indices = []
+	for idx in range(total_capacity):
+		seat_indices.append(idx)
+		
+	seat_indices.sort_custom(func(a, b):
+		var pos_a = GameState.get_seat_position(a)
+		var pos_b = GameState.get_seat_position(b)
+		return pos_a.y < pos_b.y
+	)
+	
+	for i in seat_indices:
 		var col = i % cols
 		var row = i / cols
 		var is_booth = i >= GameState.upgrades["open_seats"]["level"] * 3
@@ -406,38 +434,32 @@ func draw_integrated_multi_room_layout(w: float, h: float) -> void:
 		])
 		draw_polygon(shadow_poly, PackedColorArray([Color(0.02, 0.02, 0.02, 0.4)]))
 
-		# 3D Desk Front Extrusion Face
-		var front_face = PackedVector2Array([
-			Vector2(seat_pos.x, seat_pos.y + cell_h),
-			Vector2(seat_pos.x + cell_w, seat_pos.y + cell_h),
-			Vector2(seat_pos.x + cell_w, seat_pos.y + cell_h + 12),
-			Vector2(seat_pos.x, seat_pos.y + cell_h + 12)
-		])
-		draw_polygon(front_face, PackedColorArray([Color(0.12, 0.09, 0.07, 0.95)]))
-
-		# 3D Desk Side Extrusion Face
-		var side_face = PackedVector2Array([
-			Vector2(seat_pos.x + cell_w, seat_pos.y),
-			Vector2(seat_pos.x + cell_w + 12, seat_pos.y + 12),
-			Vector2(seat_pos.x + cell_w + 12, seat_pos.y + cell_h + 12),
-			Vector2(seat_pos.x + cell_w, seat_pos.y + cell_h)
-		])
-		draw_polygon(side_face, PackedColorArray([Color(0.09, 0.07, 0.05, 0.95)]))
-
-		# 3D Desk Surface Top
-		draw_rect(desk_rect, desk_color, true)
-		draw_rect(desk_rect, border_color, false, 2.0)
-		
+		# 1. ALWAYS Render the existing desk PNG asset for EVERY desk (No desk ever disappears!)
 		if is_booth and desk_booth_texture != null:
-			draw_texture_rect(desk_booth_texture, desk_rect, false, Color(1, 1, 1, 0.95))
+			draw_texture_rect(desk_booth_texture, desk_rect, false, Color(1, 1, 1, 0.98))
 		elif not is_booth and desk_vip_texture != null and i % 2 == 1:
-			draw_texture_rect(desk_vip_texture, desk_rect, false, Color(1, 1, 1, 0.95))
+			draw_texture_rect(desk_vip_texture, desk_rect, false, Color(1, 1, 1, 0.98))
 		elif not is_booth and desk_open_texture != null:
-			draw_texture_rect(desk_open_texture, desk_rect, false, Color(1, 1, 1, 0.95))
+			draw_texture_rect(desk_open_texture, desk_rect, false, Color(1, 1, 1, 0.98))
+
+		# 2. When adjacent desks snap/attach, draw a seamless wooden joint extension connecting the existing desk images
+		for other_idx in range(i + 1, total_capacity):
+			if GameState.are_seats_adjacent(i, other_idx):
+				var other_pos = GameState.get_seat_position(other_idx)
+				var p1 = seat_pos + Vector2(cell_w * 0.5, cell_h * 0.5)
+				var p2 = other_pos + Vector2(cell_w * 0.5, cell_h * 0.5)
+				var mid_pos = (p1 + p2) * 0.5
+				
+				# Seamless Wood Joint Panel connecting existing desk images
+				draw_line(p1, p2, Color(0.28, 0.20, 0.14, 0.95), 14.0)
+				draw_line(p1, p2, Color(0.82, 0.55, 0.22, 0.85), 2.0)
+				var badge_rect = Rect2(mid_pos.x - 65, mid_pos.y - 12, 130, 24)
+				draw_rect(badge_rect, Color(0.12, 0.1, 0.08, 0.92), true)
+				draw_string(ThemeDB.fallback_font, Vector2(mid_pos.x - 58, mid_pos.y + 4), "🪵 이어진 통합 대형 데스크", HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.96, 0.62, 0.07))
 
 		if i == selected_drag_seat:
 			draw_rect(desk_rect, Color(0.2, 0.9, 0.5, 0.35), true)
-			draw_rect(desk_rect, Color(0.2, 1.0, 0.5), false, 4.0)
+			draw_rect(desk_rect, Color(0.2, 1.0, 0.5), false, 3.0)
 		
 		var label = "프라이빗 1인실 #%d" % (i + 1) if is_booth else "오픈 카페석 #%d" % (i + 1)
 		draw_string(ThemeDB.fallback_font, seat_pos + Vector2(10, 22), label, HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color(0.8, 0.8, 0.75))
@@ -448,16 +470,6 @@ func draw_integrated_multi_room_layout(w: float, h: float) -> void:
 			draw_rect(tag_rect, Color(0.2, 0.8, 0.4, 0.9) if i == selected_drag_seat else Color(0.1, 0.6, 0.9, 0.85), true)
 			var tag_text = "🧩 스냅 잡음!" if i == selected_drag_seat else "↔️ 40px 스냅"
 			draw_string(ThemeDB.fallback_font, tag_rect.position + Vector2(6, 15), tag_text, HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color.WHITE)
-
-		# Detect adjacent connected desks & draw island connection bridge
-		for other_idx in range(i + 1, total_capacity):
-			if GameState.are_seats_adjacent(i, other_idx):
-				var other_pos = GameState.get_seat_position(other_idx) - Vector2(cell_w*0.5, cell_h*0.5)
-				var mid_pos = (seat_pos + other_pos) * 0.5 + Vector2(cell_w*0.5, cell_h*0.5)
-				draw_line(seat_pos + Vector2(cell_w*0.5, cell_h*0.5), other_pos + Vector2(cell_w*0.5, cell_h*0.5), Color(0.2, 0.9, 0.5, 0.85), 3.0)
-				draw_rect(Rect2(mid_pos.x - 55, mid_pos.y - 12, 110, 24), Color(0.1, 0.12, 0.1, 0.9), true)
-				draw_rect(Rect2(mid_pos.x - 55, mid_pos.y - 12, 110, 24), Color(0.2, 0.9, 0.5), false, 1.5)
-				draw_string(ThemeDB.fallback_font, Vector2(mid_pos.x - 50, mid_pos.y + 4), "🔗 2인 몰입 섬", HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.2, 0.9, 0.5))
 		
 		# Draw Custom Partition / Curtain Overlays
 		if GameState.seat_partitions.has(i):
@@ -521,7 +533,11 @@ func draw_integrated_multi_room_layout(w: float, h: float) -> void:
 		draw_string(ThemeDB.fallback_font, draw_pos + Vector2(-8, -48), c["icon"], HORIZONTAL_ALIGNMENT_CENTER, -1, 14, Color.WHITE)
 		
 		if c["state"] == "WALKING_IN":
-			draw_string(ThemeDB.fallback_font, draw_pos + Vector2(-25, -65), "🚶 입실 중...", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(0.9, 0.9, 0.4))
+			draw_string(ThemeDB.fallback_font, draw_pos + Vector2(-25, -65), "🚶 라운지 이동", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(0.9, 0.9, 0.4))
+		elif c["state"] == "EATING_CAKE":
+			draw_string(ThemeDB.fallback_font, draw_pos + Vector2(-45, -65), "🍰 치즈케이크 얌얌! (+450₩)", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(1.0, 0.7, 0.8))
+		elif c["state"] == "WALKING_TO_SEAT":
+			draw_string(ThemeDB.fallback_font, draw_pos + Vector2(-25, -65), "🚶 열공방 이동", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(0.2, 0.9, 0.5))
 		elif c["state"] == "LEAVING":
 			draw_string(ThemeDB.fallback_font, draw_pos + Vector2(-25, -65), "👋 퇴실 중...", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(0.9, 0.6, 0.4))
 		elif c["state"] == "STUDYING":
@@ -550,7 +566,9 @@ func draw_integrated_multi_room_layout(w: float, h: float) -> void:
 				draw_string(ThemeDB.fallback_font, v_rect.position + Vector2(6, 16), "⚠️ " + v_msg, HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color.WHITE)
 				
 	if GameState.upgrades["staff_cleaner"]["level"] > 0:
-		var c_pos = GameState.cleaner_pos
+		var cur_floor = GameState.current_floor
+		var mgr = GameState.floor_cleaner_managers.get(cur_floor, GameState.floor_cleaner_managers[1])
+		var c_pos = mgr["pos"]
 		var c_bounce = sin(steam_time * 12.0) * 4.0
 		var c_render = c_pos + Vector2(0, c_bounce)
 		
@@ -559,7 +577,7 @@ func draw_integrated_multi_room_layout(w: float, h: float) -> void:
 		else:
 			draw_circle(c_render, 20.0, Color(0.96, 0.62, 0.07))
 			draw_string(ThemeDB.fallback_font, c_render + Vector2(-10, 7), "🧹", HORIZONTAL_ALIGNMENT_LEFT, -1, 16, Color.WHITE)
-		draw_string(ThemeDB.fallback_font, c_render + Vector2(-35, -35), "🧹 청소 매니저", HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color(0.96, 0.62, 0.07))
+		draw_string(ThemeDB.fallback_font, c_render + Vector2(-45, -35), "🧹 " + mgr["name"], HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color(0.96, 0.62, 0.07))
 
 func draw_lounge_zone(w: float, h: float) -> void:
 	draw_rect(Rect2(20, 20, 320, 36), Color(0.1, 0.08, 0.07, 0.85), true)

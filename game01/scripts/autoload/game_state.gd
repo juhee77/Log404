@@ -212,9 +212,14 @@ var active_villains: Dictionary = {}
 var snack_stock: int = 100
 var lockers_rented: int = 4
 
-# Staff Character Animated Positions
-var cleaner_pos: Vector2 = Vector2(700, 70)
-var cleaner_target: Vector2 = Vector2(700, 70)
+# Multi-Floor Dedicated Cleaner Managers (1F, 2F, 3F)
+var floor_cleaner_managers: Dictionary = {
+	1: { "name": "현우 매니저 (1F)", "pos": Vector2(320, 280), "target": Vector2(320, 280) },
+	2: { "name": "수진 매니저 (2F)", "pos": Vector2(350, 250), "target": Vector2(350, 250) },
+	3: { "name": "민호 매니저 (3F)", "pos": Vector2(400, 220), "target": Vector2(400, 220) }
+}
+var cleaner_pos: Vector2 = Vector2(320, 280)
+var cleaner_target: Vector2 = Vector2(320, 280)
 var cleaner_state: String = "IDLE"
 
 # Rebalanced Upgrades Configuration
@@ -812,8 +817,19 @@ func _process(delta: float) -> void:
 		var current_pos = c["pos"]
 		
 		if c["state"] == "WALKING_IN":
-			c["pos"] = current_pos.move_toward(target, delta * 120.0)
-			if c["pos"].distance_to(target) < 4.0:
+			var lounge_target = Vector2(850, 190)
+			c["pos"] = current_pos.move_toward(lounge_target, delta * 140.0)
+			if c["pos"].distance_to(lounge_target) < 8.0:
+				c["state"] = "EATING_CAKE"
+				c["eating_timer"] = 0.0
+				add_money(450.0)
+		elif c["state"] == "EATING_CAKE":
+			c["eating_timer"] += delta * 1.0
+			if c["eating_timer"] >= 2.5:
+				c["state"] = "WALKING_TO_SEAT"
+		elif c["state"] == "WALKING_TO_SEAT":
+			c["pos"] = current_pos.move_toward(target, delta * 130.0)
+			if c["pos"].distance_to(target) < 6.0:
 				c["state"] = "STUDYING"
 		elif c["state"] == "STUDYING":
 			c["study_time"] += delta
@@ -842,16 +858,22 @@ func _process(delta: float) -> void:
 		
 	var cleaner_lvl = upgrades["staff_cleaner"]["level"]
 	if cleaner_lvl > 0:
-		if dirty_seats.size() > 0:
-			var target_seat_pos = get_seat_position(dirty_seats[0])
-			cleaner_target = target_seat_pos
-			cleaner_pos = cleaner_pos.move_toward(cleaner_target, delta * (100.0 + cleaner_lvl * 40.0))
-			
-			if cleaner_pos.distance_to(cleaner_target) < 10.0:
-				clean_seat(dirty_seats[0])
-		else:
-			cleaner_target = Vector2(1050, 70)
-			cleaner_pos = cleaner_pos.move_toward(cleaner_target, delta * 80.0)
+		for fl in [1, 2, 3]:
+			var mgr = floor_cleaner_managers[fl]
+			var c_pos = mgr["pos"]
+			var c_target = mgr["target"]
+			if dirty_seats.size() > 0 and current_floor == fl:
+				c_target = get_seat_position(dirty_seats[0])
+				mgr["target"] = c_target
+				c_pos = c_pos.move_toward(c_target, delta * (100.0 + cleaner_lvl * 40.0))
+				if c_pos.distance_to(c_target) < 10.0:
+					clean_seat(dirty_seats[0])
+			else:
+				var patrol_x = 300.0 + (fl * 40) + sin(Time.get_ticks_msec() * 0.001 * fl) * 60.0
+				c_target = Vector2(patrol_x, 260.0 + cos(Time.get_ticks_msec() * 0.001) * 25.0)
+				c_pos = c_pos.move_toward(c_target, delta * 50.0)
+			mgr["pos"] = c_pos
+		cleaner_pos = floor_cleaner_managers[current_floor]["pos"]
 			
 	if upgrades["staff_counter"]["level"] > 0:
 		var auto_inc = upgrades["staff_counter"]["level"] * 20.0 * delta
