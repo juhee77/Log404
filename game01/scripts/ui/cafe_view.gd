@@ -21,6 +21,9 @@ var drag_start_mouse_pos: Vector2 = Vector2.ZERO
 
 var desk_booth_texture: Texture2D
 var desk_open_texture: Texture2D
+var desk_vip_texture: Texture2D
+var staff_barista_texture: Texture2D
+var staff_cleaner_texture: Texture2D
 
 func _ready() -> void:
 	custom_minimum_size = Vector2(800, 520)
@@ -55,6 +58,21 @@ func _ready() -> void:
 		var img_o = Image.load_from_file("res://assets/desk_open_cafe.png")
 		if img_o != null:
 			desk_open_texture = ImageTexture.create_from_image(img_o)
+
+	if FileAccess.file_exists("res://assets/desk_vip_ultrawide.png"):
+		var img_v = Image.load_from_file("res://assets/desk_vip_ultrawide.png")
+		if img_v != null:
+			desk_vip_texture = ImageTexture.create_from_image(img_v)
+
+	if FileAccess.file_exists("res://assets/staff_barista.png"):
+		var img_sb = Image.load_from_file("res://assets/staff_barista.png")
+		if img_sb != null:
+			staff_barista_texture = ImageTexture.create_from_image(img_sb)
+
+	if FileAccess.file_exists("res://assets/staff_cleaner.png"):
+		var img_sc = Image.load_from_file("res://assets/staff_cleaner.png")
+		if img_sc != null:
+			staff_cleaner_texture = ImageTexture.create_from_image(img_sc)
 		
 	GameState.zone_changed.connect(func(_z): queue_redraw())
 	GameState.upgrade_purchased.connect(func(_cat, _lvl): queue_redraw())
@@ -312,6 +330,11 @@ func draw_integrated_multi_room_layout(w: float, h: float) -> void:
 	draw_rect(r2_bar, Color(0.96, 0.62, 0.07), false, 2.0)
 	draw_string(ThemeDB.fallback_font, Vector2(765, 135), "☕ 에스프레소 & 셀프 스낵바", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color.WHITE)
 
+	# Render Human Barista Staff Sprite in Room 2 Lounge
+	if staff_barista_texture != null:
+		draw_texture_rect(staff_barista_texture, Rect2(840, 45, 52, 52), false)
+		draw_string(ThemeDB.fallback_font, Vector2(825, 42), "☕ 바리스타 민서", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(0.1, 0.8, 0.4))
+
 	# ----------------------------------------------------
 	# ROOM 3: 🔑 프런트 & 스마트 사물함 방 (Front & Lockers)
 	# ----------------------------------------------------
@@ -348,7 +371,6 @@ func draw_integrated_multi_room_layout(w: float, h: float) -> void:
 	# ----------------------------------------------------
 	# Draw Desks & Booths inside ROOM 1 (Main Focus Study Room)
 	# ----------------------------------------------------
-	draw_study_zone(w, h)
 	
 	var gate_rect = Rect2(w - 140, 20, 120, 70)
 	draw_rect(gate_rect, Color(0.16, 0.13, 0.11, 0.9), true)
@@ -407,9 +429,11 @@ func draw_integrated_multi_room_layout(w: float, h: float) -> void:
 		draw_rect(desk_rect, border_color, false, 2.0)
 		
 		if is_booth and desk_booth_texture != null:
-			draw_texture_rect(desk_booth_texture, desk_rect, false, Color(1, 1, 1, 0.9))
+			draw_texture_rect(desk_booth_texture, desk_rect, false, Color(1, 1, 1, 0.95))
+		elif not is_booth and desk_vip_texture != null and i % 2 == 1:
+			draw_texture_rect(desk_vip_texture, desk_rect, false, Color(1, 1, 1, 0.95))
 		elif not is_booth and desk_open_texture != null:
-			draw_texture_rect(desk_open_texture, desk_rect, false, Color(1, 1, 1, 0.9))
+			draw_texture_rect(desk_open_texture, desk_rect, false, Color(1, 1, 1, 0.95))
 
 		if i == selected_drag_seat:
 			draw_rect(desk_rect, Color(0.2, 0.9, 0.5, 0.35), true)
@@ -530,10 +554,12 @@ func draw_integrated_multi_room_layout(w: float, h: float) -> void:
 		var c_bounce = sin(steam_time * 12.0) * 4.0
 		var c_render = c_pos + Vector2(0, c_bounce)
 		
-		draw_circle(c_render, 24.0, Color(0.2, 0.2, 0.2))
-		draw_circle(c_render, 20.0, Color(0.96, 0.62, 0.07))
-		draw_string(ThemeDB.fallback_font, c_render + Vector2(-10, 7), "🧹", HORIZONTAL_ALIGNMENT_LEFT, -1, 16, Color.WHITE)
-		draw_string(ThemeDB.fallback_font, c_render + Vector2(-35, -28), "🤖 청소 알바", HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color(0.96, 0.62, 0.07))
+		if staff_cleaner_texture != null:
+			draw_texture_rect(staff_cleaner_texture, Rect2(c_render - Vector2(28, 52), Vector2(56, 56)), false)
+		else:
+			draw_circle(c_render, 20.0, Color(0.96, 0.62, 0.07))
+			draw_string(ThemeDB.fallback_font, c_render + Vector2(-10, 7), "🧹", HORIZONTAL_ALIGNMENT_LEFT, -1, 16, Color.WHITE)
+		draw_string(ThemeDB.fallback_font, c_render + Vector2(-35, -35), "🧹 청소 매니저", HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color(0.96, 0.62, 0.07))
 
 func draw_lounge_zone(w: float, h: float) -> void:
 	draw_rect(Rect2(20, 20, 320, 36), Color(0.1, 0.08, 0.07, 0.85), true)

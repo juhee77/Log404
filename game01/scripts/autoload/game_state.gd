@@ -19,6 +19,7 @@ signal time_of_day_changed(new_tod)
 signal weather_changed(new_weather)
 signal day_ended(summary_data)
 signal zone_changed(new_zone)
+signal floor_changed(new_floor)
 signal decor_mode_changed(is_active)
 signal achievement_unlocked(title, reward)
 
@@ -32,6 +33,10 @@ var game_time: float = 8.0
 var time_of_day: String = "DAY"
 var weather: String = "RAINY"
 var weather_timer: float = 0.0
+
+# Multi-Floor Building Systems (1F, 2F, 3F)
+var current_floor: int = 1
+var unlocked_floors: Array = [1]
 
 # Current Active Map Zone ("study", "lounge", "front")
 var current_zone: String = "study"
@@ -959,10 +964,31 @@ func get_customer_at_seat(seat_idx: int) -> Dictionary:
 			return c
 	return {}
 
+func change_floor(floor_num: int) -> void:
+	if not unlocked_floors.has(floor_num):
+		return
+	current_floor = floor_num
+	floor_changed.emit(current_floor)
+
+func buy_floor(floor_num: int) -> bool:
+	if unlocked_floors.has(floor_num): return true
+	var cost = 50000.0 if floor_num == 2 else 150000.0
+	if not can_afford(cost): return false
+	
+	add_money(-cost)
+	unlocked_floors.append(floor_num)
+	current_floor = floor_num
+	reputation = min(5.0, reputation + 0.3)
+	reputation_changed.emit(reputation)
+	floor_changed.emit(current_floor)
+	save_game()
+	return true
+
 func get_max_capacity() -> int:
 	var open = upgrades["open_seats"]["level"] * 3
 	var booth = upgrades["private_booths"]["level"] * 2
-	return max(4, open + booth)
+	var floor_bonus = (unlocked_floors.size() - 1) * 6
+	return max(4, open + booth + floor_bonus)
 
 func get_income_per_second_for_customer(c: Dictionary) -> float:
 	var base_rate = 12.0

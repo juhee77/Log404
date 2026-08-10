@@ -195,17 +195,30 @@ func _ready() -> void:
 			if expansion_panel:
 				expansion_panel.refresh_expansion()
 				expansion_panel.show()
-		)el.refresh_expansion()
-				expansion_panel.show()
 		)
 	
 	# Connect Map Navigation & Decorate Mode
 	if btn_zone_study:
-		btn_zone_study.pressed.connect(func(): GameState.change_zone("study"))
+		btn_zone_study.text = "🏢 1F 메인 스터디 존"
+		btn_zone_study.pressed.connect(func(): GameState.change_floor(1))
 	if btn_zone_lounge:
-		btn_zone_lounge.pressed.connect(func(): GameState.change_zone("lounge"))
+		btn_zone_lounge.text = "🏢 2F 노블리스 부스존"
+		btn_zone_lounge.pressed.connect(func():
+			if not GameState.unlocked_floors.has(2):
+				if GameState.buy_floor(2):
+					print("🎉 2층 노블리스 부스존 해금!")
+			else:
+				GameState.change_floor(2)
+		)
 	if btn_zone_front:
-		btn_zone_front.pressed.connect(func(): GameState.change_zone("front"))
+		btn_zone_front.text = "🌿 3F 루프탑 테라스"
+		btn_zone_front.pressed.connect(func():
+			if not GameState.unlocked_floors.has(3):
+				if GameState.buy_floor(3):
+					print("🎉 3층 루프탑 테라스 카페 해금!")
+			else:
+				GameState.change_floor(3)
+		)
 	if btn_decorate:
 		btn_decorate.pressed.connect(func():
 			var active = GameState.toggle_decorating_mode()
