@@ -216,6 +216,36 @@ var drink_recipes: Array = [
 	{ "id": "macchiato", "name": "카라멜 마키아또", "beans": 25, "price": 6500.0, "unlocked": false }
 ]
 
+# Study Cafe Unique Mechanics: Quietness & Equipment Rental
+var quietness_score: int = 98
+var exam_dday: int = 7
+var equipment_stock: Dictionary = {
+	"bookstand": { "name": "원목 독서대", "count": 8, "fee": 500.0 },
+	"headset": { "name": "노이즈 캔슬링 헤드셋", "count": 5, "fee": 1200.0 },
+	"silent_mouse": { "name": "무소음 마우스", "count": 6, "fee": 400.0 },
+	"charger": { "name": "고속 멀티 충전기", "count": 10, "fee": 300.0 }
+}
+
+func rent_equipment(eq_id: String) -> bool:
+	if not equipment_stock.has(eq_id): return false
+	var eq = equipment_stock[eq_id]
+	if eq["count"] <= 0: return false
+	eq["count"] -= 1
+	add_money(eq["fee"])
+	_play_sfx_safe("coin")
+	return true
+
+func return_equipment(eq_id: String) -> void:
+	if equipment_stock.has(eq_id):
+		equipment_stock[eq_id]["count"] += 1
+
+func resolve_noise_villain(villain_id: int) -> void:
+	if active_villains.has(villain_id):
+		active_villains.erase(villain_id)
+		quietness_score = clamp(quietness_score + 3, 0, 100)
+		add_money(800.0)
+		_play_sfx_safe("chime")
+
 # Snack Bar, Bakery Stock & Locker Stock
 var snack_stock: int = 100
 var lockers_rented: int = 4
