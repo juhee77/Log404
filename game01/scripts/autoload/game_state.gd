@@ -208,9 +208,19 @@ var dirty_seats: Array = []
 var active_orders: Dictionary = {}
 var active_villains: Dictionary = {}
 
-# Snack Bar & Locker Stock
+# Snack Bar, Bakery Stock & Locker Stock
 var snack_stock: int = 100
 var lockers_rented: int = 4
+var bakery_stock: Dictionary = {
+	"croissant": 15,
+	"cheesecake": 10
+}
+
+func bake_dessert(type_name: String, amount: int) -> void:
+	if not bakery_stock.has(type_name):
+		bakery_stock[type_name] = 0
+	bakery_stock[type_name] += amount
+	_play_sfx_safe("chime")
 
 # Multi-Floor Dedicated Cleaner Managers (1F, 2F, 3F)
 var floor_cleaner_managers: Dictionary = {

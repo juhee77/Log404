@@ -334,7 +334,10 @@ func draw_integrated_multi_room_layout(w: float, h: float) -> void:
 	# Render Cake & Bakery Dessert Showcase Counter in Room 2 Lounge
 	var cake_bar = Rect2(750, 165, 230, 32)
 	draw_rect(cake_bar, Color(0.22, 0.16, 0.14, 0.95), true)
-	draw_string(ThemeDB.fallback_font, Vector2(760, 186), "🍰 블루베리 치즈케이크 & 🥐 크로와상 쇼케이스", HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(1.0, 0.85, 0.9))
+	var c_cnt = GameState.bakery_stock.get("cheesecake", 0)
+	var r_cnt = GameState.bakery_stock.get("croissant", 0)
+	var showcase_text = "🍰 치즈케이크 x%d  |  🥐 크로와상 x%d" % [c_cnt, r_cnt]
+	draw_string(ThemeDB.fallback_font, Vector2(760, 186), showcase_text, HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(1.0, 0.85, 0.9))
 
 	# Render 2 Round Mahogany Cake Tasting Tables in Room 2 Lounge
 	var t1_center = Vector2(790, 215)

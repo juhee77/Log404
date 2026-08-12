@@ -101,6 +101,7 @@ func refresh_ovens() -> void:
 		action_btn.text = "🥐 오븐 베이킹"
 		var o_idx = idx
 		action_btn.pressed.connect(func():
+			GameState.bake_dessert(o["type"], o["yield"])
 			GameState.add_money(o["yield"] * o["price"])
 			GameState.update_quest_progress(1)
 			refresh_ovens()
