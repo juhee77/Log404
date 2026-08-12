@@ -208,6 +208,14 @@ var dirty_seats: Array = []
 var active_orders: Dictionary = {}
 var active_villains: Dictionary = {}
 
+# Drink Recipes Book
+var drink_recipes: Array = [
+	{ "id": "espresso", "name": "에스프레소", "beans": 10, "price": 3000.0, "unlocked": true },
+	{ "id": "americano", "name": "아이스 아메리카노", "beans": 15, "price": 4500.0, "unlocked": true },
+	{ "id": "latte", "name": "카페 라떼", "beans": 20, "price": 5500.0, "unlocked": true },
+	{ "id": "macchiato", "name": "카라멜 마키아또", "beans": 25, "price": 6500.0, "unlocked": false }
+]
+
 # Snack Bar, Bakery Stock & Locker Stock
 var snack_stock: int = 100
 var lockers_rented: int = 4
@@ -222,7 +230,27 @@ func bake_dessert(type_name: String, amount: int) -> void:
 	bakery_stock[type_name] += amount
 	_play_sfx_safe("chime")
 
-# Multi-Floor Dedicated Cleaner Managers (1F, 2F, 3F)
+func add_guest_intimacy(guest_id: String, xp_amount: int) -> bool:
+	if not guest_intimacy.has(guest_id): return false
+	var g = guest_intimacy[guest_id]
+	g["xp"] += xp_amount
+	if g["xp"] >= g["max_xp"]:
+		g["xp"] -= g["max_xp"]
+		g["level"] += 1
+		g["max_xp"] = int(g["max_xp"] * 1.4)
+		_play_sfx_safe("chime")
+		return true
+	return false
+
+func get_calculated_decor_score() -> int:
+	var base_score = decor_score
+	var custom_items_bonus = custom_decorations.size() * 35
+	var upgrade_bonus = upgrades["decor"]["level"] * 120
+	return base_score + custom_items_bonus + upgrade_bonus
+
+func get_revenue_multiplier() -> float:
+	var total_score = get_calculated_decor_score()
+	return 1.0 + (float(total_score) / 1000.0) * 0.5
 var floor_cleaner_managers: Dictionary = {
 	1: { "name": "현우 매니저 (1F)", "pos": Vector2(320, 280), "target": Vector2(320, 280) },
 	2: { "name": "수진 매니저 (2F)", "pos": Vector2(350, 250), "target": Vector2(350, 250) },
