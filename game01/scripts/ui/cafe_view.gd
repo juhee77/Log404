@@ -23,8 +23,11 @@ var desk_booth_texture: Texture2D
 var desk_open_texture: Texture2D
 var desk_vip_texture: Texture2D
 var desk_island_texture: Texture2D
-var staff_barista_texture: Texture2D
-var staff_cleaner_texture: Texture2D
+var staff_barista_texture: Texture2D = null
+var staff_cleaner_texture: Texture2D = null
+var staff_cat_navi_texture: Texture2D = null
+var action_laptop_texture: Texture2D = null
+var action_book_texture: Texture2D = null
 
 func _ready() -> void:
 	custom_minimum_size = Vector2(800, 520)
@@ -79,6 +82,21 @@ func _ready() -> void:
 		var img_sc = Image.load_from_file("res://assets/staff_cleaner.png")
 		if img_sc != null:
 			staff_cleaner_texture = ImageTexture.create_from_image(img_sc)
+
+	if FileAccess.file_exists("res://assets/staff_cat_navi.png"):
+		var img_cat = Image.load_from_file("res://assets/staff_cat_navi.png")
+		if img_cat != null:
+			staff_cat_navi_texture = ImageTexture.create_from_image(img_cat)
+
+	if FileAccess.file_exists("res://assets/action_laptop.png"):
+		var img_lap = Image.load_from_file("res://assets/action_laptop.png")
+		if img_lap != null:
+			action_laptop_texture = ImageTexture.create_from_image(img_lap)
+
+	if FileAccess.file_exists("res://assets/action_book.png"):
+		var img_bk = Image.load_from_file("res://assets/action_book.png")
+		if img_bk != null:
+			action_book_texture = ImageTexture.create_from_image(img_bk)
 		
 	GameState.zone_changed.connect(func(_z): queue_redraw())
 	GameState.upgrade_purchased.connect(func(_cat, _lvl): queue_redraw())
@@ -95,6 +113,7 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	steam_time += delta
+	GameState.update_navi_wandering(delta)
 	
 	var to_remove = []
 	for ft in floating_texts:
@@ -202,6 +221,18 @@ func _gui_input(event: InputEvent) -> void:
 					GameState.serve_order(first_cid)
 				return
 				
+			# Click Mascot Cat 'Navi' for Petting & Healing Buff
+			if GameState.current_floor == 1 and click_pos.distance_to(GameState.navi_pos) < 50.0:
+				var res = GameState.pet_navi()
+				floating_texts.append({
+					"text": res["text"],
+					"pos": GameState.navi_pos + Vector2(0, -35),
+					"alpha": 1.0,
+					"color": res["color"]
+				})
+				queue_redraw()
+				return
+				
 			# 3. Check Seat Selection & Drag Start
 			var capacity = GameState.get_max_capacity()
 			for i in range(capacity):
@@ -249,35 +280,60 @@ func _draw() -> void:
 	var w = rect.size.x
 	var h = rect.size.y
 	
-	# 1. Draw Background PNG Texture with Cozy Ambient Tint
+	# 1. Draw Background PNG Texture
 	if bg_texture != null:
 		draw_texture_rect(bg_texture, Rect2(0, 0, w, h), false)
-		draw_rect(Rect2(0, 0, w, h), Color(0.06, 0.05, 0.04, 0.52))
+		draw_rect(Rect2(0, 0, w, h), Color(0.04, 0.03, 0.02, 0.35))
 	else:
 		draw_rect(Rect2(0, 0, w, h), Color(0.12, 0.11, 0.10))
 		
-	# 2. Draw Real-Time Time-of-Day Ambient Lighting Overlay
+	# 2. Window-Only Day/Dusk/Night Sky Tint (Outdoor window view changes, indoor stays constant!)
+	var window_rect = Rect2(484 + view_offset.x, 60 + view_offset.y, 310, 240)
 	if GameState.time_of_day == "DUSK":
-		draw_rect(Rect2(0, 0, w, h), Color(1.0, 0.65, 0.2, 0.22))
+		draw_rect(window_rect, Color(1.0, 0.45, 0.12, 0.32)) # Sunset Dusk Sky
 	elif GameState.time_of_day == "NIGHT":
-		draw_rect(Rect2(0, 0, w, h), Color(0.1, 0.12, 0.3, 0.42))
+		draw_rect(window_rect, Color(0.04, 0.06, 0.28, 0.48)) # Starry Night Sky
+	else:
+		draw_rect(window_rect, Color(0.2, 0.6, 1.0, 0.12))  # Sunny Day Sky
+
+	# 3. 2.5D Warm Wooden Hardwood Floor Overlay (마루 바닥 질감)
+	var floor_rect = Rect2(0, 220 + view_offset.y, w, h)
+	draw_rect(floor_rect, Color(0.22, 0.15, 0.10, 0.38)) # Base Oak Wood Fill
 	
-	# Render Rain Weather Glass Waterdrops
+	# Draw Isometric Wood Plank Grain Lines
+	var plank_h = 32.0
+	for py in range(int((h - 220) / plank_h) + 2):
+		var y_pos = 220 + py * plank_h + view_offset.y
+		draw_line(Vector2(0, y_pos), Vector2(w, y_pos), Color(0.12, 0.08, 0.05, 0.4), 1.5)
+		draw_line(Vector2(0, y_pos + 1), Vector2(w, y_pos + 1), Color(0.38, 0.26, 0.18, 0.2), 1.0)
+		
+		# Offset Vertical Plank Joint Seams for staggered hardwood parquet floor
+		var x_offset = fmod(py * 75.0, 150.0)
+		for px in range(int(w / 150.0) + 2):
+			var x_pos = px * 150.0 + x_offset
+			draw_line(Vector2(x_pos, y_pos), Vector2(x_pos, y_pos + plank_h), Color(0.10, 0.06, 0.04, 0.35), 1.2)
+	
+	# Render Rain Weather Glass Waterdrops on Window
 	if GameState.weather == "RAINY":
 		var t_time = Time.get_ticks_msec() * 0.002
-		for r in range(16):
-			var rx = 100 + r * 45
-			var ry = fmod(r * 30 + t_time * 60, 240.0) + 60
-			draw_circle(Vector2(rx, ry) + view_offset, 3.5, Color(0.7, 0.85, 1.0, 0.55))
-			draw_line(Vector2(rx, ry - 12) + view_offset, Vector2(rx, ry) + view_offset, Color(0.7, 0.85, 1.0, 0.35), 1.5)
+		for r in range(12):
+			var rx = window_rect.position.x + fmod(r * 28, window_rect.size.x)
+			var ry = window_rect.position.y + fmod(r * 25 + t_time * 50, window_rect.size.y)
+			draw_circle(Vector2(rx, ry), 3.0, Color(0.7, 0.85, 1.0, 0.6))
+			draw_line(Vector2(rx, ry - 10), Vector2(rx, ry), Color(0.7, 0.85, 1.0, 0.4), 1.5)
 
-	# 3. Draw Grid Overlay & Banner in Decorating Mode
+	# 3. Draw 2.5D Isometric Diamond Grid Overlay & Banner in Decorating Mode
 	if GameState.is_decorating_mode:
-		var grid_step = 64.0
-		for x in range(0, int(w), int(grid_step)):
-			draw_line(Vector2(x, 0), Vector2(x, h), Color(0.96, 0.62, 0.07, 0.25), 1.0)
-		for y in range(0, int(h), int(grid_step)):
-			draw_line(Vector2(0, y), Vector2(w, y), Color(0.96, 0.62, 0.07, 0.25), 1.0)
+		var iso_w = 64.0
+		var iso_h = 32.0
+		for i in range(-15, int(w / iso_w) + 15):
+			var p1 = Vector2(i * iso_w, 0)
+			var p2 = p1 + Vector2(h * 2.0, h)
+			draw_line(p1, p2, Color(0.96, 0.62, 0.07, 0.22), 1.0)
+			
+			var p3 = Vector2(i * iso_w, 0)
+			var p4 = p3 + Vector2(-h * 2.0, h)
+			draw_line(p3, p4, Color(0.96, 0.62, 0.07, 0.22), 1.0)
 			
 		var banner_rect = Rect2(60, 20, w - 120, 36)
 		draw_rect(banner_rect, Color(0.12, 0.1, 0.08, 0.95), true)
@@ -428,14 +484,17 @@ func draw_integrated_multi_room_layout(w: float, h: float) -> void:
 		var border_color = Color(0.96, 0.62, 0.07) if not is_booth else Color(0.8, 0.4, 0.9)
 		
 		var desk_rect = Rect2(seat_pos.x, seat_pos.y, cell_w, cell_h)
-		# 3D Isometric Floor Shadow
-		var shadow_poly = PackedVector2Array([
-			Vector2(seat_pos.x + 8, seat_pos.y + cell_h + 14),
-			Vector2(seat_pos.x + cell_w + 14, seat_pos.y + cell_h + 14),
-			Vector2(seat_pos.x + cell_w + 22, seat_pos.y + cell_h + 22),
-			Vector2(seat_pos.x + 16, seat_pos.y + cell_h + 22)
+		# 2.5D Isometric Diamond Floor Base Pad
+		var iso_pad = PackedVector2Array([
+			seat_pos + Vector2(cell_w * 0.5, cell_h + 4),
+			seat_pos + Vector2(cell_w + 18, cell_h + 16),
+			seat_pos + Vector2(cell_w * 0.5, cell_h + 28),
+			seat_pos + Vector2(-18, cell_h + 16)
 		])
-		draw_polygon(shadow_poly, PackedColorArray([Color(0.02, 0.02, 0.02, 0.4)]))
+		draw_polygon(iso_pad, PackedColorArray([Color(0.04, 0.03, 0.02, 0.45)]))
+		var iso_pad_loop = iso_pad.duplicate()
+		iso_pad_loop.append(iso_pad[0])
+		draw_polyline(iso_pad_loop, Color(0.96, 0.62, 0.07, 0.35), 1.5)
 
 		# 1. ALWAYS Render the existing desk PNG asset for EVERY desk (No desk ever disappears!)
 		if is_booth and desk_booth_texture != null:
@@ -445,20 +504,15 @@ func draw_integrated_multi_room_layout(w: float, h: float) -> void:
 		elif not is_booth and desk_open_texture != null:
 			draw_texture_rect(desk_open_texture, desk_rect, false, Color(1, 1, 1, 0.98))
 
-		# 2. When adjacent desks snap/attach, draw a seamless wooden joint extension connecting the existing desk images
+		# 2. When adjacent desks physically touch, draw a subtle wooden joint panel between them
 		for other_idx in range(i + 1, total_capacity):
 			if GameState.are_seats_adjacent(i, other_idx):
 				var other_pos = GameState.get_seat_position(other_idx)
 				var p1 = seat_pos + Vector2(cell_w * 0.5, cell_h * 0.5)
 				var p2 = other_pos + Vector2(cell_w * 0.5, cell_h * 0.5)
-				var mid_pos = (p1 + p2) * 0.5
-				
-				# Seamless Wood Joint Panel connecting existing desk images
-				draw_line(p1, p2, Color(0.28, 0.20, 0.14, 0.95), 14.0)
-				draw_line(p1, p2, Color(0.82, 0.55, 0.22, 0.85), 2.0)
-				var badge_rect = Rect2(mid_pos.x - 65, mid_pos.y - 12, 130, 24)
-				draw_rect(badge_rect, Color(0.12, 0.1, 0.08, 0.92), true)
-				draw_string(ThemeDB.fallback_font, Vector2(mid_pos.x - 58, mid_pos.y + 4), "🪵 이어진 통합 대형 데스크", HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.96, 0.62, 0.07))
+				if p1.distance_to(p2) < 220.0:
+					var mid_pos = (p1 + p2) * 0.5
+					draw_line(p1, p2, Color(0.28, 0.20, 0.14, 0.6), 8.0)
 
 		if i == selected_drag_seat:
 			draw_rect(desk_rect, Color(0.2, 0.9, 0.5, 0.35), true)
@@ -549,6 +603,12 @@ func draw_integrated_multi_room_layout(w: float, h: float) -> void:
 			draw_rect(bar_rect, Color(0.1, 0.1, 0.1), true)
 			draw_rect(Rect2(bar_rect.position.x, bar_rect.position.y, bar_rect.size.x * p_ratio, 5), Color(0.1, 0.8, 0.4), true)
 			
+			# Render active study action item asset on student desk
+			if c_type == "developer" and action_laptop_texture != null:
+				draw_texture_rect(action_laptop_texture, Rect2(draw_pos.x + 12, draw_pos.y - 20, 28, 28), false)
+			elif action_book_texture != null:
+				draw_texture_rect(action_book_texture, Rect2(draw_pos.x + 12, draw_pos.y - 20, 28, 28), false)
+			
 			var cid = c["id"]
 			if GameState.active_orders.has(cid):
 				var order = GameState.active_orders[cid]
@@ -581,6 +641,22 @@ func draw_integrated_multi_room_layout(w: float, h: float) -> void:
 			draw_circle(c_render, 20.0, Color(0.96, 0.62, 0.07))
 			draw_string(ThemeDB.fallback_font, c_render + Vector2(-10, 7), "🧹", HORIZONTAL_ALIGNMENT_LEFT, -1, 16, Color.WHITE)
 		draw_string(ThemeDB.fallback_font, c_render + Vector2(-45, -35), "🧹 " + mgr["name"], HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color(0.96, 0.62, 0.07))
+
+	# Render Mascot Cat 'Navi' wandering in Room 1 (1F Only)
+	if GameState.current_floor == 1:
+		var n_pos = GameState.navi_pos
+		var n_bounce = abs(sin(steam_time * 8.0)) * 6.0
+		var n_render = n_pos + Vector2(0, -n_bounce)
+		
+		if staff_cat_navi_texture != null:
+			draw_texture_rect(staff_cat_navi_texture, Rect2(n_render - Vector2(24, 28), Vector2(52, 52)), false)
+		else:
+			var n_bg = Rect2(n_render.x - 22, n_render.y - 20, 44, 40)
+			draw_rect(n_bg, Color(0.12, 0.1, 0.08, 0.85), true)
+			draw_rect(n_bg, Color(1.0, 0.6, 0.8), false, 1.5)
+			draw_string(ThemeDB.fallback_font, n_render + Vector2(-12, 8), "🐱", HORIZONTAL_ALIGNMENT_LEFT, -1, 20, Color.WHITE)
+		var cat_label = "🐱 나비 (마스코트)" if not GameState.is_cat_buff_active() else "🐱 나비 (❤️ 집중+20%)"
+		draw_string(ThemeDB.fallback_font, n_render + Vector2(-45, -32), cat_label, HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(1.0, 0.6, 0.8))
 
 func draw_lounge_zone(w: float, h: float) -> void:
 	draw_rect(Rect2(20, 20, 320, 36), Color(0.1, 0.08, 0.07, 0.85), true)

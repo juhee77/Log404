@@ -276,6 +276,38 @@ func _ready() -> void:
 	)
 	add_child(spawn_timer)
 
+func capture_all_floor_screenshots() -> void:
+	for i in range(12):
+		await get_tree().process_frame
+	if not GameState.unlocked_floors.has(2):
+		GameState.unlocked_floors.append(2)
+	if not GameState.unlocked_floors.has(3):
+		GameState.unlocked_floors.append(3)
+	
+	# 1. Capture 1F
+	GameState.change_floor(1)
+	GameState.is_decorating_mode = false
+	await take_screenshot("screenshot_1f.png")
+	
+	# 2. Capture 2F
+	GameState.change_floor(2)
+	GameState.is_decorating_mode = false
+	await take_screenshot("screenshot_2f.png")
+	
+	# 3. Capture 3F
+	GameState.change_floor(3)
+	GameState.is_decorating_mode = false
+	await take_screenshot("screenshot_3f.png")
+	
+	# 4. Capture Decorating Mode Grid
+	GameState.change_floor(1)
+	GameState.is_decorating_mode = true
+	await take_screenshot("screenshot_decorating.png")
+	
+	# Reset to 1F
+	GameState.is_decorating_mode = false
+	GameState.change_floor(1)
+
 func hide_all_overlays() -> void:
 	if upgrade_panel: upgrade_panel.hide()
 	if review_panel: review_panel.hide()
@@ -290,8 +322,7 @@ func hide_all_overlays() -> void:
 	if desk_shop_panel: desk_shop_panel.hide()
 
 func take_screenshot(path_name: String = "live_visual_check.png") -> void:
-	for i in range(8):
-		await get_tree().process_frame
+	await get_tree().create_timer(0.25).timeout
 	var vp = get_viewport()
 	if vp != null:
 		var tex = vp.get_texture()
@@ -300,4 +331,4 @@ func take_screenshot(path_name: String = "live_visual_check.png") -> void:
 			if img != null:
 				var abs_path = ProjectSettings.globalize_path("res://" + path_name)
 				img.save_png(abs_path)
-				print("✔ Live visual screenshot saved to: ", abs_path)
+				print("✔ Screenshot saved to: ", abs_path)

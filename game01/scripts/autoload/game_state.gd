@@ -246,6 +246,66 @@ func resolve_noise_villain(villain_id: int) -> void:
 		add_money(800.0)
 		_play_sfx_safe("chime")
 
+# Realistic Study Cafe Atmosphere & Equipment Engines
+var white_noise_db: float = 45.0
+var ice_maker_stock: int = 100
+var exam_archive_count: int = 12
+var desk_lamp_mode: String = "4000K"
+
+func set_white_noise_level(db_level: float) -> void:
+	white_noise_db = clamp(db_level, 0.0, 65.0)
+	_play_sfx_safe("click")
+
+func refill_ice_machine() -> bool:
+	var cost = 500.0
+	if not can_afford(cost): return false
+	add_money(-cost)
+	ice_maker_stock = 100
+	_play_sfx_safe("chime")
+	return true
+
+func consume_ice_cube() -> bool:
+	if ice_maker_stock <= 0: return false
+	ice_maker_stock -= 1
+	return true
+
+# Mascot Cat 'Navi' Healing Engine
+var navi_pos: Vector2 = Vector2(480, 320)
+var navi_target: Vector2 = Vector2(480, 320)
+var navi_move_timer: float = 0.0
+var navi_happiness: int = 80
+var cat_buff_timer: float = 0.0
+
+var navi_waypoints: Array = [
+	Vector2(480, 170), # Coffee Lounge Bar
+	Vector2(260, 240), # Desk Zone #2
+	Vector2(420, 380), # Desk Zone #7
+	Vector2(620, 320), # Front Locker
+	Vector2(180, 380), # Entrance Gate
+	Vector2(360, 440)  # Main Aisle
+]
+
+func update_navi_wandering(delta: float) -> void:
+	if cat_buff_timer > 0.0:
+		cat_buff_timer -= delta
+		
+	navi_move_timer -= delta
+	if navi_move_timer <= 0.0:
+		navi_move_timer = randf_range(3.5, 6.0)
+		navi_target = navi_waypoints[randi() % navi_waypoints.size()]
+		
+	navi_pos = navi_pos.lerp(navi_target, delta * 1.8)
+
+func pet_navi() -> Dictionary:
+	navi_happiness = clamp(navi_happiness + 15, 0, 100)
+	cat_buff_timer = 15.0
+	add_guest_intimacy("navi", 25)
+	_play_sfx_safe("chime")
+	return { "text": "🐱 야옹~! 길냥이 나비 쓰다듬기! (집중력 +20% ❤️)", "color": Color(1.0, 0.4, 0.7) }
+
+func is_cat_buff_active() -> bool:
+	return cat_buff_timer > 0.0
+
 # Snack Bar, Bakery Stock & Locker Stock
 var snack_stock: int = 100
 var lockers_rented: int = 4

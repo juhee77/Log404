@@ -34,9 +34,9 @@ func update_hud() -> void:
 	if label_income:
 		label_income.text = "+%s ₩/초" % format_money(GameState.get_total_income_rate())
 	if label_rep:
-		label_rep.text = "⭐ %.1f | 🤫 %d%%" % [GameState.reputation, GameState.quietness_score]
+		label_rep.text = "⭐ %.1f | 🤫 %d%% | 🔊 %.0fdB" % [GameState.reputation, GameState.quietness_score, GameState.white_noise_db]
 	if label_cap:
-		label_cap.text = "👥 %d/%d명 | 📚 D-%d" % [GameState.active_customers.size(), GameState.get_max_capacity(), GameState.exam_dday]
+		label_cap.text = "👥 %d/%d명 | 📚 D-%d | 🧊 %d%%" % [GameState.active_customers.size(), GameState.get_max_capacity(), GameState.exam_dday, GameState.ice_maker_stock]
 	if label_temp:
 		label_temp.text = "🌡️ %.1f°C" % GameState.temperature
 	if label_time:
