@@ -390,6 +390,18 @@ func get_franchise_league_rank() -> Dictionary:
 	var total_score = int(reputation * 200 + decor_score * 5 + money * 0.01)
 	return { "rank": 1, "tier": "👑 전국 1위 명예의 전당 갓성비 스터디카페", "score": total_score }
 
+# Meeting Module 61: Kelvin Color Temperature Adjustable Desk Lamp Subsystem
+var current_kelvin_temp: int = 4500
+var kelvin_tuners_installed: int = 24
+
+func tune_kelvin_lamp(kelvin_val: int = 6500) -> Dictionary:
+	current_kelvin_temp = kelvin_val
+	add_money(3500.0)
+	reputation = min(5.0, reputation + 0.03)
+	_play_sfx_safe("chime")
+	var mode_name = "수학/이과 집중 (6500K 주광색)" if kelvin_val == 6500 else ("언어/독서 (4500K 주백색)" if kelvin_val == 4500 else "휴식/창의 (3000K 전구색)")
+	return { "success": true, "msg": "💡 독서등 켈빈 색온도 튜닝 완료! [%s] (+3,500 ₩ | 학습 몰입도 +25% ⚡)" % mode_name }
+
 func send_parent_sms_notification(student_name: String = "김수험", action_type: String = "입실") -> Dictionary:
 	total_sms_sent += 1
 	var fee = 400.0
