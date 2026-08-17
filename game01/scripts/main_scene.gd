@@ -28,9 +28,9 @@ var expansion_panel: PanelContainer
 var desk_shop_panel: PanelContainer
 
 func _ready() -> void:
-	if upgrade_panel: upgrade_panel.hide()
-	if review_panel: review_panel.hide()
-	if snack_panel: snack_panel.hide()
+	hide_all_overlays()
+	var report_overlay = get_node_or_null("DailyReportPanelOverlay")
+	if report_overlay != null: report_overlay.hide()
 	
 	var timer = get_tree().create_timer(1.0)
 	timer.timeout.connect(func():
@@ -42,7 +42,7 @@ func _ready() -> void:
 	if ds_script != null:
 		desk_shop_panel = PanelContainer.new()
 		desk_shop_panel.set_script(ds_script)
-		desk_shop_panel.custom_minimum_size = Vector2(680, 500)
+		desk_shop_panel.custom_minimum_size = Vector2(660, 460)
 		desk_shop_panel.set_anchors_and_offsets_preset(Control.PRESET_CENTER, Control.PRESET_MODE_MINSIZE)
 		desk_shop_panel.hide()
 		add_child(desk_shop_panel)
@@ -52,7 +52,7 @@ func _ready() -> void:
 	if lb_script != null:
 		leaderboard_panel = PanelContainer.new()
 		leaderboard_panel.set_script(lb_script)
-		leaderboard_panel.custom_minimum_size = Vector2(680, 500)
+		leaderboard_panel.custom_minimum_size = Vector2(660, 460)
 		leaderboard_panel.set_anchors_and_offsets_preset(Control.PRESET_CENTER, Control.PRESET_MODE_MINSIZE)
 		leaderboard_panel.hide()
 		add_child(leaderboard_panel)
@@ -62,7 +62,7 @@ func _ready() -> void:
 	if roast_script != null:
 		roasting_panel = PanelContainer.new()
 		roasting_panel.set_script(roast_script)
-		roasting_panel.custom_minimum_size = Vector2(680, 500)
+		roasting_panel.custom_minimum_size = Vector2(660, 460)
 		roasting_panel.set_anchors_and_offsets_preset(Control.PRESET_CENTER, Control.PRESET_MODE_MINSIZE)
 		roasting_panel.hide()
 		add_child(roasting_panel)
@@ -72,7 +72,7 @@ func _ready() -> void:
 	if q_script != null:
 		quest_panel = PanelContainer.new()
 		quest_panel.set_script(q_script)
-		quest_panel.custom_minimum_size = Vector2(680, 500)
+		quest_panel.custom_minimum_size = Vector2(660, 460)
 		quest_panel.set_anchors_and_offsets_preset(Control.PRESET_CENTER, Control.PRESET_MODE_MINSIZE)
 		quest_panel.hide()
 		add_child(quest_panel)
@@ -82,7 +82,7 @@ func _ready() -> void:
 	if b_script != null:
 		bakery_panel = PanelContainer.new()
 		bakery_panel.set_script(b_script)
-		bakery_panel.custom_minimum_size = Vector2(680, 500)
+		bakery_panel.custom_minimum_size = Vector2(660, 460)
 		bakery_panel.set_anchors_and_offsets_preset(Control.PRESET_CENTER, Control.PRESET_MODE_MINSIZE)
 		bakery_panel.hide()
 		add_child(bakery_panel)
@@ -92,7 +92,7 @@ func _ready() -> void:
 	if c_script != null:
 		casting_panel = PanelContainer.new()
 		casting_panel.set_script(c_script)
-		casting_panel.custom_minimum_size = Vector2(680, 500)
+		casting_panel.custom_minimum_size = Vector2(660, 460)
 		casting_panel.set_anchors_and_offsets_preset(Control.PRESET_CENTER, Control.PRESET_MODE_MINSIZE)
 		casting_panel.hide()
 		add_child(casting_panel)
@@ -102,7 +102,7 @@ func _ready() -> void:
 	if u_script != null:
 		uniform_panel = PanelContainer.new()
 		uniform_panel.set_script(u_script)
-		uniform_panel.custom_minimum_size = Vector2(680, 500)
+		uniform_panel.custom_minimum_size = Vector2(660, 460)
 		uniform_panel.set_anchors_and_offsets_preset(Control.PRESET_CENTER, Control.PRESET_MODE_MINSIZE)
 		uniform_panel.hide()
 		add_child(uniform_panel)
@@ -112,7 +112,7 @@ func _ready() -> void:
 	if e_script != null:
 		expansion_panel = PanelContainer.new()
 		expansion_panel.set_script(e_script)
-		expansion_panel.custom_minimum_size = Vector2(680, 500)
+		expansion_panel.custom_minimum_size = Vector2(660, 460)
 		expansion_panel.set_anchors_and_offsets_preset(Control.PRESET_CENTER, Control.PRESET_MODE_MINSIZE)
 		expansion_panel.hide()
 		add_child(expansion_panel)
@@ -197,25 +197,46 @@ func _ready() -> void:
 				expansion_panel.show()
 		)
 	
-	# Connect Map Navigation & Decorate Mode
+	# Connect Map Navigation & Floor Switching Engine
+	var update_floor_ui = func():
+		var cur = GameState.current_floor
+		if btn_zone_study:
+			btn_zone_study.text = "🏢 1F 메인 [선택됨]" if cur == 1 else "🏢 1F 메인 스터디 존"
+		if btn_zone_lounge:
+			if not GameState.unlocked_floors.has(2):
+				btn_zone_lounge.text = "🔒 2F 노블리스 (5만₩ 해금)"
+			else:
+				btn_zone_lounge.text = "🏢 2F 노블리스 [선택됨]" if cur == 2 else "🏢 2F 노블리스 부스존"
+		if btn_zone_front:
+			if not GameState.unlocked_floors.has(3):
+				btn_zone_front.text = "🔒 3F 루프탑 (15만₩ 해금)"
+			else:
+				btn_zone_front.text = "🌿 3F 루프탑 [선택됨]" if cur == 3 else "🌿 3F 루프탑 테라스"
+
+	update_floor_ui.call()
+	GameState.floor_changed.connect(func(_f): update_floor_ui.call())
+
 	if btn_zone_study:
-		btn_zone_study.text = "🏢 1F 메인 스터디 존"
 		btn_zone_study.pressed.connect(func(): GameState.change_floor(1))
 	if btn_zone_lounge:
-		btn_zone_lounge.text = "🏢 2F 노블리스 부스존"
 		btn_zone_lounge.pressed.connect(func():
 			if not GameState.unlocked_floors.has(2):
-				if GameState.buy_floor(2):
-					print("🎉 2층 노블리스 부스존 해금!")
+				if GameState.can_afford(50000.0):
+					if GameState.buy_floor(2):
+						if cafe_view: cafe_view.spawn_floating_text(Vector2(500, 250), "🎉 2층 노블리스 부스존 해금 완료!", Color(0.1, 0.9, 0.5))
+				else:
+					if cafe_view: cafe_view.spawn_floating_text(Vector2(500, 250), "❌ 2층 해금 자금(50,000 ₩)이 부족합니다!", Color(1.0, 0.3, 0.3))
 			else:
 				GameState.change_floor(2)
 		)
 	if btn_zone_front:
-		btn_zone_front.text = "🌿 3F 루프탑 테라스"
 		btn_zone_front.pressed.connect(func():
 			if not GameState.unlocked_floors.has(3):
-				if GameState.buy_floor(3):
-					print("🎉 3층 루프탑 테라스 카페 해금!")
+				if GameState.can_afford(150000.0):
+					if GameState.buy_floor(3):
+						if cafe_view: cafe_view.spawn_floating_text(Vector2(500, 250), "🎉 3층 루프탑 테라스 해금 완료!", Color(0.1, 0.9, 0.5))
+				else:
+					if cafe_view: cafe_view.spawn_floating_text(Vector2(500, 250), "❌ 3층 해금 자금(150,000 ₩)이 부족합니다!", Color(1.0, 0.3, 0.3))
 			else:
 				GameState.change_floor(3)
 		)

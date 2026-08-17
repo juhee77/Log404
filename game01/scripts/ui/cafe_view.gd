@@ -29,76 +29,37 @@ var staff_cat_navi_texture: Texture2D = null
 var action_laptop_texture: Texture2D = null
 var action_book_texture: Texture2D = null
 
+func load_tex_safe(path: String) -> Texture2D:
+	if ResourceLoader.exists(path):
+		var res = ResourceLoader.load(path)
+		if res is Texture2D:
+			return res
+	if FileAccess.file_exists(path):
+		var img = Image.load_from_file(path)
+		if img != null and not img.is_empty() and img.get_width() > 0:
+			return ImageTexture.create_from_image(img)
+	return null
+
 func _ready() -> void:
 	custom_minimum_size = Vector2(800, 520)
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	
-	if FileAccess.file_exists("res://assets/cafe_bg.png"):
-		var img = Image.load_from_file("res://assets/cafe_bg.png")
-		if img != null:
-			bg_texture = ImageTexture.create_from_image(img)
-			
-	if FileAccess.file_exists("res://assets/coffee_bar.png"):
-		var img_bar = Image.load_from_file("res://assets/coffee_bar.png")
-		if img_bar != null:
-			coffee_bar_texture = ImageTexture.create_from_image(img_bar)
-			
-	if FileAccess.file_exists("res://assets/customer_student.png"):
-		var img_s = Image.load_from_file("res://assets/customer_student.png")
-		if img_s != null:
-			student_texture = ImageTexture.create_from_image(img_s)
-			
-	if FileAccess.file_exists("res://assets/customer_developer.png"):
-		var img_d = Image.load_from_file("res://assets/customer_developer.png")
-		if img_d != null:
-			developer_texture = ImageTexture.create_from_image(img_d)
-
-	if FileAccess.file_exists("res://assets/desk_booth_1p.png"):
-		var img_b = Image.load_from_file("res://assets/desk_booth_1p.png")
-		if img_b != null:
-			desk_booth_texture = ImageTexture.create_from_image(img_b)
-
-	if FileAccess.file_exists("res://assets/desk_open_cafe.png"):
-		var img_o = Image.load_from_file("res://assets/desk_open_cafe.png")
-		if img_o != null:
-			desk_open_texture = ImageTexture.create_from_image(img_o)
-
-	if FileAccess.file_exists("res://assets/desk_vip_ultrawide.png"):
-		var img_v = Image.load_from_file("res://assets/desk_vip_ultrawide.png")
-		if img_v != null:
-			desk_vip_texture = ImageTexture.create_from_image(img_v)
-
-	if FileAccess.file_exists("res://assets/desk_island_2p.png"):
-		var img_i = Image.load_from_file("res://assets/desk_island_2p.png")
-		if img_i != null:
-			desk_island_texture = ImageTexture.create_from_image(img_i)
-
-	if FileAccess.file_exists("res://assets/staff_barista.png"):
-		var img_sb = Image.load_from_file("res://assets/staff_barista.png")
-		if img_sb != null:
-			staff_barista_texture = ImageTexture.create_from_image(img_sb)
-
-	if FileAccess.file_exists("res://assets/staff_cleaner.png"):
-		var img_sc = Image.load_from_file("res://assets/staff_cleaner.png")
-		if img_sc != null:
-			staff_cleaner_texture = ImageTexture.create_from_image(img_sc)
-
-	if ResourceLoader.exists("res://assets/staff_cat_navi.png"):
-		var tex_cat = load("res://assets/staff_cat_navi.png")
-		if tex_cat is Texture2D:
-			staff_cat_navi_texture = tex_cat
-
-	if ResourceLoader.exists("res://assets/action_laptop.png"):
-		var tex_lap = load("res://assets/action_laptop.png")
-		if tex_lap is Texture2D:
-			action_laptop_texture = tex_lap
-
-	if ResourceLoader.exists("res://assets/action_book.png"):
-		var tex_bk = load("res://assets/action_book.png")
-		if tex_bk is Texture2D:
-			action_book_texture = tex_bk
+	bg_texture = load_tex_safe("res://assets/cafe_bg.png")
+	coffee_bar_texture = load_tex_safe("res://assets/coffee_bar.png")
+	student_texture = load_tex_safe("res://assets/customer_student.png")
+	developer_texture = load_tex_safe("res://assets/customer_developer.png")
+	desk_booth_texture = load_tex_safe("res://assets/desk_booth_1p.png")
+	desk_open_texture = load_tex_safe("res://assets/desk_open_cafe.png")
+	desk_vip_texture = load_tex_safe("res://assets/desk_vip_ultrawide.png")
+	desk_island_texture = load_tex_safe("res://assets/desk_island_2p.png")
+	staff_barista_texture = load_tex_safe("res://assets/staff_barista.png")
+	staff_cleaner_texture = load_tex_safe("res://assets/staff_cleaner.png")
+	staff_cat_navi_texture = load_tex_safe("res://assets/staff_cat_navi.png")
+	action_laptop_texture = load_tex_safe("res://assets/action_laptop.png")
+	action_book_texture = load_tex_safe("res://assets/action_book.png")
 		
 	GameState.zone_changed.connect(func(_z): queue_redraw())
+	GameState.floor_changed.connect(func(_f): queue_redraw())
 	GameState.upgrade_purchased.connect(func(_cat, _lvl): queue_redraw())
 	GameState.customer_arrived.connect(func(_c): queue_redraw())
 	GameState.customer_left.connect(_on_customer_left)
@@ -113,7 +74,8 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	steam_time += delta
-	GameState.update_navi_wandering(delta)
+	if GameState != null and GameState.has_method("update_navi_wandering"):
+		GameState.update_navi_wandering(delta)
 	
 	var to_remove = []
 	for ft in floating_texts:
@@ -276,16 +238,30 @@ func _gui_input(event: InputEvent) -> void:
 		queue_redraw()
 
 func _draw() -> void:
+	if GameState == null: return
 	var rect = get_rect()
-	var w = rect.size.x
-	var h = rect.size.y
+	var w = max(rect.size.x, 1280.0)
+	var h = max(rect.size.y, 600.0)
 	
-	# 1. Draw Background PNG Texture
-	if bg_texture != null:
-		draw_texture_rect(bg_texture, Rect2(0, 0, w, h), false)
-		draw_rect(Rect2(0, 0, w, h), Color(0.04, 0.03, 0.02, 0.35))
-	else:
-		draw_rect(Rect2(0, 0, w, h), Color(0.12, 0.11, 0.10))
+	# 1. Render Clean 2.5D Vector Interior Architectural Wallpaper (No photographic image clash!)
+	# Base Warm Scandinavian Wood Panel Wall
+	draw_rect(Rect2(0, 0, w, h), Color(0.15, 0.12, 0.10), true)
+	
+	# Vertical Wood Slat Wall Paneling
+	var slat_w = 40.0
+	for sx in range(int(w / slat_w) + 2):
+		var x_pos = sx * slat_w
+		draw_line(Vector2(x_pos, 0), Vector2(x_pos, 220 + view_offset.y), Color(0.10, 0.08, 0.06, 0.4), 1.2)
+		draw_line(Vector2(x_pos + 1, 0), Vector2(x_pos + 1, 220 + view_offset.y), Color(0.24, 0.18, 0.14, 0.2), 1.0)
+		
+	# Indirect LED Ceiling Lighting Cove Line
+	draw_rect(Rect2(0, 0, w, 18), Color(0.12, 0.09, 0.07), true)
+	draw_line(Vector2(0, 18), Vector2(w, 18), Color(0.96, 0.62, 0.07, 0.85), 2.5) # Warm Amber LED Strip
+	draw_rect(Rect2(0, 18, w, 24), Color(0.96, 0.62, 0.07, 0.08), true) # Ceiling Glow Halo
+	
+	# Horizontal Wall Skirting / Dado Rail Molding Line
+	var dado_y = 218.0 + view_offset.y
+	draw_line(Vector2(0, dado_y), Vector2(w, dado_y), Color(0.35, 0.25, 0.18, 0.9), 4.0)
 		
 	# 2. Window-Only Day/Dusk/Night Sky Tint (Outdoor window view changes, indoor stays constant!)
 	var window_rect = Rect2(484 + view_offset.x, 60 + view_offset.y, 310, 240)
@@ -312,15 +288,6 @@ func _draw() -> void:
 		for px in range(int(w / 150.0) + 2):
 			var x_pos = px * 150.0 + x_offset
 			draw_line(Vector2(x_pos, y_pos), Vector2(x_pos, y_pos + plank_h), Color(0.10, 0.06, 0.04, 0.35), 1.2)
-	
-	# Render Rain Weather Glass Waterdrops on Window
-	if GameState.weather == "RAINY":
-		var t_time = Time.get_ticks_msec() * 0.002
-		for r in range(12):
-			var rx = window_rect.position.x + fmod(r * 28, window_rect.size.x)
-			var ry = window_rect.position.y + fmod(r * 25 + t_time * 50, window_rect.size.y)
-			draw_circle(Vector2(rx, ry), 3.0, Color(0.7, 0.85, 1.0, 0.6))
-			draw_line(Vector2(rx, ry - 10), Vector2(rx, ry), Color(0.7, 0.85, 1.0, 0.4), 1.5)
 
 	# 3. Draw 2.5D Isometric Diamond Grid Overlay & Banner in Decorating Mode
 	if GameState.is_decorating_mode:
@@ -357,53 +324,54 @@ func _draw() -> void:
 		draw_string(ThemeDB.fallback_font, ft["pos"], ft["text"], HORIZONTAL_ALIGNMENT_CENTER, -1, 15, c)
 
 func draw_integrated_multi_room_layout(w: float, h: float) -> void:
+	var vo = view_offset
 	# ----------------------------------------------------
 	# ROOM 1: 📖 메인 집중 열공 방 (Main Focus Study Room)
 	# ----------------------------------------------------
-	var room1_rect = Rect2(30, 20, 680, h - 40)
+	var room1_rect = Rect2(30 + vo.x, 20 + vo.y, 680, h - 40)
 	draw_rect(room1_rect, Color(0.12, 0.10, 0.08, 0.45), true)
 	
 	# Room 1 Header Banner
-	var r1_banner = Rect2(40, 30, 260, 32)
+	var r1_banner = Rect2(40 + vo.x, 30 + vo.y, 260, 32)
 	draw_rect(r1_banner, Color(0.18, 0.14, 0.10, 0.95), true)
-	draw_string(ThemeDB.fallback_font, Vector2(52, 52), "📖 메인 집중 열공 방 (Focus Room)", HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color(0.96, 0.62, 0.07))
+	draw_string(ThemeDB.fallback_font, Vector2(52 + vo.x, 52 + vo.y), "📖 메인 집중 열공 방 (Focus Room)", HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color(0.96, 0.62, 0.07))
 
 	# ----------------------------------------------------
 	# ROOM 2: ☕ 카페테리아 & 힐링 라운지 방 (Lounge & Coffee Bar)
 	# ----------------------------------------------------
-	var room2_rect = Rect2(730, 20, w - 750, 240)
+	var room2_rect = Rect2(730 + vo.x, 20 + vo.y, w - 750, 240)
 	draw_rect(room2_rect, Color(0.10, 0.14, 0.12, 0.45), true)
 	
 	# Room 2 Header Banner
-	var r2_banner = Rect2(740, 30, 250, 32)
+	var r2_banner = Rect2(740 + vo.x, 30 + vo.y, 250, 32)
 	draw_rect(r2_banner, Color(0.12, 0.20, 0.15, 0.95), true)
-	draw_string(ThemeDB.fallback_font, Vector2(752, 52), "☕ 힐링 라운지 & 커피바 (Lounge)", HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color(0.1, 0.8, 0.4))
+	draw_string(ThemeDB.fallback_font, Vector2(752 + vo.x, 52 + vo.y), "☕ 힐링 라운지 & 커피바 (Lounge)", HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color(0.1, 0.8, 0.4))
 	
 	# Render Coffee Bar Counter inside Room 2
-	var r2_bar = Rect2(750, 75, 230, 100)
+	var r2_bar = Rect2(750 + vo.x, 75 + vo.y, 230, 100)
 	if coffee_bar_texture != null:
 		draw_texture_rect(coffee_bar_texture, r2_bar, false)
 	else:
 		draw_rect(r2_bar, Color(0.24, 0.18, 0.14), true)
-	draw_string(ThemeDB.fallback_font, Vector2(765, 125), "☕ 에스프레소 & 로스팅 바", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color.WHITE)
+	draw_string(ThemeDB.fallback_font, Vector2(765 + vo.x, 125 + vo.y), "☕ 에스프레소 & 로스팅 바", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color.WHITE)
 
 	# Render Cake & Bakery Dessert Showcase Counter in Room 2 Lounge
-	var cake_bar = Rect2(750, 165, 230, 32)
+	var cake_bar = Rect2(750 + vo.x, 165 + vo.y, 230, 32)
 	draw_rect(cake_bar, Color(0.22, 0.16, 0.14, 0.95), true)
 	var c_cnt = GameState.bakery_stock.get("cheesecake", 0)
 	var r_cnt = GameState.bakery_stock.get("croissant", 0)
 	var showcase_text = "🍰 치즈케이크 x%d  |  🥐 크로와상 x%d" % [c_cnt, r_cnt]
-	draw_string(ThemeDB.fallback_font, Vector2(760, 186), showcase_text, HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(1.0, 0.85, 0.9))
+	draw_string(ThemeDB.fallback_font, Vector2(760 + vo.x, 186 + vo.y), showcase_text, HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(1.0, 0.85, 0.9))
 
 	# Render 2 Round Mahogany Cake Tasting Tables in Room 2 Lounge
-	var t1_center = Vector2(790, 215)
+	var t1_center = Vector2(790, 215) + vo
 	draw_circle(t1_center, 16.0, Color(0.28, 0.20, 0.16, 0.95))
 	draw_circle(t1_center, 14.0, Color(0.42, 0.30, 0.22))
 	draw_string(ThemeDB.fallback_font, t1_center + Vector2(-9, 5), "🍰☕", HORIZONTAL_ALIGNMENT_LEFT, -1, 9, Color.WHITE)
 	draw_string(ThemeDB.fallback_font, t1_center + Vector2(-26, 4), "🪑", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color.WHITE)
 	draw_string(ThemeDB.fallback_font, t1_center + Vector2(14, 4), "🪑", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color.WHITE)
 	
-	var t2_center = Vector2(930, 215)
+	var t2_center = Vector2(930, 215) + vo
 	draw_circle(t2_center, 16.0, Color(0.28, 0.20, 0.16, 0.95))
 	draw_circle(t2_center, 14.0, Color(0.42, 0.30, 0.22))
 	draw_string(ThemeDB.fallback_font, t2_center + Vector2(-9, 5), "🥐☕", HORIZONTAL_ALIGNMENT_LEFT, -1, 9, Color.WHITE)
@@ -412,46 +380,46 @@ func draw_integrated_multi_room_layout(w: float, h: float) -> void:
 
 	# Render Human Barista Staff Sprite in Room 2 Lounge
 	if staff_barista_texture != null:
-		draw_texture_rect(staff_barista_texture, Rect2(840, 45, 52, 52), false)
-		draw_string(ThemeDB.fallback_font, Vector2(825, 42), "☕ 바리스타 민서", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(0.1, 0.8, 0.4))
+		draw_texture_rect(staff_barista_texture, Rect2(840 + vo.x, 45 + vo.y, 52, 52), false)
+		draw_string(ThemeDB.fallback_font, Vector2(825 + vo.x, 42 + vo.y), "☕ 바리스타 민서", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(0.1, 0.8, 0.4))
 
 	# ----------------------------------------------------
 	# ROOM 3: 🔑 프런트 & 스마트 사물함 방 (Front & Lockers)
 	# ----------------------------------------------------
-	var room3_rect = Rect2(730, 275, w - 750, h - 295)
+	var room3_rect = Rect2(730 + vo.x, 275 + vo.y, w - 750, h - 295)
 	draw_rect(room3_rect, Color(0.14, 0.12, 0.16, 0.45), true)
 	
 	# Room 3 Header Banner
-	var r3_banner = Rect2(740, 285, 250, 32)
+	var r3_banner = Rect2(740 + vo.x, 285 + vo.y, 250, 32)
 	draw_rect(r3_banner, Color(0.18, 0.15, 0.22, 0.95), true)
-	draw_string(ThemeDB.fallback_font, Vector2(752, 307), "🔑 프런트 & 스마트 사물함 (Front)", HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color(0.8, 0.4, 0.9))
+	draw_string(ThemeDB.fallback_font, Vector2(752 + vo.x, 307 + vo.y), "🔑 프런트 & 스마트 사물함 (Front)", HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color(0.8, 0.4, 0.9))
 
 	# Smart Lockers Wall Graphics in Room 3
-	var locker_rect = Rect2(750, 330, 230, 100)
+	var locker_rect = Rect2(750 + vo.x, 330 + vo.y, 230, 100)
 	draw_rect(locker_rect, Color(0.2, 0.18, 0.25), true)
 	for lx in range(4):
 		for ly in range(2):
-			var box = Rect2(760 + lx * 52, 340 + ly * 42, 44, 34)
+			var box = Rect2(760 + lx * 52 + vo.x, 340 + ly * 42 + vo.y, 44, 34)
 			draw_rect(box, Color(0.28, 0.25, 0.35), true)
 			draw_string(ThemeDB.fallback_font, box.position + Vector2(10, 22), "🔒%d" % (lx + ly*4 + 1), HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.8, 0.8, 0.9))
 
 	# ----------------------------------------------------
 	# Glass Door Archways Connecting Rooms
 	# ----------------------------------------------------
-	draw_rect(Rect2(710, 110, 20, 60), Color(0.2, 0.8, 1.0, 0.8), true)
-	draw_string(ThemeDB.fallback_font, Vector2(712, 145), "🚪", HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color.WHITE)
+	draw_rect(Rect2(710 + vo.x, 110 + vo.y, 20, 60), Color(0.2, 0.8, 1.0, 0.8), true)
+	draw_string(ThemeDB.fallback_font, Vector2(712 + vo.x, 145 + vo.y), "🚪", HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color.WHITE)
 
-	draw_rect(Rect2(710, 360, 20, 60), Color(0.2, 0.8, 1.0, 0.8), true)
-	draw_string(ThemeDB.fallback_font, Vector2(712, 395), "🚪", HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color.WHITE)
+	draw_rect(Rect2(710 + vo.x, 360 + vo.y, 20, 60), Color(0.2, 0.8, 1.0, 0.8), true)
+	draw_string(ThemeDB.fallback_font, Vector2(712 + vo.x, 395 + vo.y), "🚪", HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color.WHITE)
 
 	# ----------------------------------------------------
 	# Draw Desks & Booths inside ROOM 1 (Main Focus Study Room)
 	# ----------------------------------------------------
 	
-	var gate_rect = Rect2(w - 140, 20, 120, 70)
+	var gate_rect = Rect2(w - 140 + vo.x, 20 + vo.y, 120, 70)
 	draw_rect(gate_rect, Color(0.16, 0.13, 0.11, 0.9), true)
 	draw_rect(gate_rect, Color(0.06, 0.72, 0.5), false, 2.0)
-	draw_string(ThemeDB.fallback_font, Vector2(w - 130, 55), "🚪 입출구 게이트", HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color(0.06, 0.72, 0.5))
+	draw_string(ThemeDB.fallback_font, Vector2(w - 130 + vo.x, 55 + vo.y), "🚪 입출구 게이트", HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color(0.06, 0.72, 0.5))
 	
 	var total_capacity = GameState.get_max_capacity()
 	var cols = 4
@@ -476,7 +444,8 @@ func draw_integrated_multi_room_layout(w: float, h: float) -> void:
 		var cell_w = 220.0 if is_booth else 140.0
 		var cell_h = 150.0 if is_booth else 90.0
 		
-		var seat_pos = Vector2(start_x + col * (160.0 + 30.0), start_y + row * (100.0 + 30.0))
+		# EVERY SEAT MOVES UNIFIED WITH VIEW_OFFSET!
+		var seat_pos = Vector2(start_x + col * (160.0 + 30.0), start_y + row * (100.0 + 30.0)) + vo
 		if GameState.seat_custom_offsets.has(i):
 			seat_pos += GameState.seat_custom_offsets[i]
 		
@@ -496,13 +465,38 @@ func draw_integrated_multi_room_layout(w: float, h: float) -> void:
 		iso_pad_loop.append(iso_pad[0])
 		draw_polyline(iso_pad_loop, Color(0.96, 0.62, 0.07, 0.35), 1.5)
 
-		# 1. ALWAYS Render the existing desk PNG asset for EVERY desk (No desk ever disappears!)
+		# 1. ALWAYS Render the desk PNG texture OR 2.5D Isometric Vector Fallback (No desk ever disappears!)
+		var drawn_tex = false
 		if is_booth and desk_booth_texture != null:
 			draw_texture_rect(desk_booth_texture, desk_rect, false, Color(1, 1, 1, 0.98))
+			drawn_tex = true
 		elif not is_booth and desk_vip_texture != null and i % 2 == 1:
 			draw_texture_rect(desk_vip_texture, desk_rect, false, Color(1, 1, 1, 0.98))
+			drawn_tex = true
 		elif not is_booth and desk_open_texture != null:
 			draw_texture_rect(desk_open_texture, desk_rect, false, Color(1, 1, 1, 0.98))
+			drawn_tex = true
+			
+		if not drawn_tex:
+			# ALWAYS Draw High-Quality 2.5D Wood Desk Vector Structure
+			draw_rect(desk_rect, Color(0.32, 0.22, 0.16, 0.95), true)
+			draw_rect(desk_rect, border_color, false, 2.5)
+			# Inner Desk Mat & LED Lamp Pad
+			var mat_rect = Rect2(desk_rect.position.x + 10, desk_rect.position.y + 10, cell_w - 20, cell_h - 20)
+			draw_rect(mat_rect, Color(0.18, 0.14, 0.12, 0.9), true)
+			draw_rect(mat_rect, Color(0.4, 0.3, 0.2), false, 1.0)
+			# Desk Partition Barrier
+			var part_rect = Rect2(desk_rect.position.x, desk_rect.position.y, cell_w, 14)
+			draw_rect(part_rect, Color(0.24, 0.18, 0.14), true)
+			draw_rect(part_rect, border_color, false, 1.0)
+			# Laptop / Study Icon
+			var study_icon = "💻" if not is_booth else "🖥️"
+			draw_string(ThemeDB.fallback_font, desk_rect.position + Vector2(cell_w * 0.4, cell_h * 0.58), study_icon, HORIZONTAL_ALIGNMENT_LEFT, -1, 18, Color.WHITE)
+			# Ergonomic Chair
+			var chair_rect = Rect2(desk_rect.position.x + cell_w * 0.3, desk_rect.position.y + cell_h + 2, cell_w * 0.4, 16)
+			draw_rect(chair_rect, Color(0.15, 0.12, 0.18, 0.95), true)
+			draw_rect(chair_rect, border_color, false, 1.5)
+			draw_string(ThemeDB.fallback_font, chair_rect.position + Vector2(cell_w * 0.1, 12), "🪑", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color.WHITE)
 
 		# 2. When adjacent desks physically touch, draw a subtle wooden joint panel between them
 		for other_idx in range(i + 1, total_capacity):
@@ -774,3 +768,15 @@ func get_customer_by_id(cid: int) -> Dictionary:
 		if c["id"] == cid:
 			return c
 	return {}
+
+func spawn_floating_text(pos: Vector2, text: String, color: Color = Color.WHITE) -> void:
+	var lbl = Label.new()
+	lbl.text = text
+	lbl.position = pos
+	lbl.add_theme_font_size_override("font_size", 16)
+	lbl.add_theme_color_override("font_color", color)
+	add_child(lbl)
+	var tw = create_tween()
+	tw.tween_property(lbl, "position", pos + Vector2(0, -35), 1.2)
+	tw.parallel().tween_property(lbl, "modulate:a", 0.0, 1.2)
+	tw.tween_callback(lbl.queue_free)

@@ -96,7 +96,8 @@ func refresh_casting() -> void:
 		vbox.add_child(name_lbl)
 		
 		var reward_lbl = Label.new()
-		reward_lbl.text = "달성 보상: %s" % g["reward"]
+		var r_text = g.get("reward", g.get("title", "원목 독서대"))
+		reward_lbl.text = "달성 보상: %s" % r_text
 		reward_lbl.add_theme_font_size_override("font_size", 12)
 		reward_lbl.add_theme_color_override("font_color", Color(0.8, 0.8, 0.75))
 		vbox.add_child(reward_lbl)

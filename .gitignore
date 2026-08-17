@@ -4,3 +4,5 @@
 .godot/
 *.import
 user://
+.agents/
+

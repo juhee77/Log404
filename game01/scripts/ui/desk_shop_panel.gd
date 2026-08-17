@@ -49,7 +49,8 @@ func _ready() -> void:
 
 	# Scroll Container for Desk Catalog
 	var scroll = ScrollContainer.new()
-	scroll.custom_minimum_size = Vector2(630, 380)
+	scroll.custom_minimum_size = Vector2(700, 380)
+	scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	main_vbox.add_child(scroll)
 
@@ -83,7 +84,8 @@ func refresh_catalog() -> void:
 	for key in catalog.keys():
 		var item = catalog[key]
 		var card = PanelContainer.new()
-		card.custom_minimum_size = Vector2(600, 75)
+		card.custom_minimum_size = Vector2(0, 75)
+		card.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		
 		var sb_card = StyleBoxFlat.new()
 		sb_card.bg_color = Color(0.14, 0.12, 0.10, 0.9)
@@ -91,7 +93,7 @@ func refresh_catalog() -> void:
 		sb_card.border_color = Color(0.3, 0.25, 0.2)
 		sb_card.set_corner_radius_all(8)
 		sb_card.content_margin_left = 14
-		sb_card.content_margin_right = 14
+		sb_card.content_margin_right = 18
 		sb_card.content_margin_top = 10
 		sb_card.content_margin_bottom = 10
 		card.add_theme_stylebox_override("panel", sb_card)

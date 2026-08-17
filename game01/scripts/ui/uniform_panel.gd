@@ -73,10 +73,11 @@ func refresh_uniforms() -> void:
 	
 	for idx in range(aprons.size()):
 		var card = PanelContainer.new()
+		card.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		var card_margin = MarginContainer.new()
 		card_margin.add_theme_constant_override("margin_left", 12)
 		card_margin.add_theme_constant_override("margin_top", 10)
-		card_margin.add_theme_constant_override("margin_right", 12)
+		card_margin.add_theme_constant_override("margin_right", 20)
 		card_margin.add_theme_constant_override("margin_bottom", 10)
 		card.add_child(card_margin)
 		

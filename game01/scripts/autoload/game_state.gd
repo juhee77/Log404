@@ -79,10 +79,13 @@ var bakery_ovens: Array = [
 
 # 3. Regular Guests Intimacy (❤️)
 var guest_intimacy: Dictionary = {
-	"suhyun": { "name": "재수생 수현", "level": 1, "xp": 0, "max_xp": 100, "reward": "원목 독서대" },
-	"minjun": { "name": "개발자 민준", "level": 1, "xp": 0, "max_xp": 100, "reward": "울트라와이드 모니터석" },
-	"hyunwoo": { "name": "고시생 현우", "level": 1, "xp": 0, "max_xp": 100, "reward": "기출 족보 서가" },
-	"navi": { "name": "고양이 나비", "level": 1, "xp": 0, "max_xp": 100, "reward": "황금 고양이 동상" }
+	"suhyun": { "name": "수험생 수현", "level": 1, "xp": 0, "max_xp": 100, "title": "초보 열공생" },
+	"su_hyun": { "name": "수험생 수현", "level": 1, "xp": 0, "max_xp": 100, "title": "초보 열공생" },
+	"minjun": { "name": "취준생 민준", "level": 1, "xp": 0, "max_xp": 100, "title": "열혈 서류 준비생" },
+	"min_jun": { "name": "취준생 민준", "level": 1, "xp": 0, "max_xp": 100, "title": "열혈 서류 준비생" },
+	"hyunwoo": { "name": "개발자 현우", "level": 1, "xp": 0, "max_xp": 100, "title": "코딩 에이스" },
+	"hyun_woo": { "name": "개발자 현우", "level": 1, "xp": 0, "max_xp": 100, "title": "코딩 에이스" },
+	"navi": { "name": "길냥이 나비", "level": 1, "xp": 0, "max_xp": 100, "title": "스터디 힐러" }
 }
 
 # 4. Decor Score (🌟) & Manager Level (XP)
@@ -278,6 +281,193 @@ func borrow_exam_paper() -> Dictionary:
 var vip_members_count: int = 5
 var herbal_tea_stock: int = 50
 
+# Meeting Module 40: 4-Person Soundproof Group Study Room Subsystem
+var group_study_room_count: int = 2
+var group_study_bookings: int = 0
+
+# Meeting Module 41: 25-5 Pomodoro Focus Timer Subsystem
+var pomodoro_sessions_completed: int = 0
+var pomodoro_focus_boost: float = 1.0
+
+# Meeting Module 42: 85% Sugar-Free Cacao Dark Chocolate Dispenser Subsystem
+var dark_chocolate_stock: int = 40
+var dark_chocolate_sales: int = 0
+
+# Meeting Module 43: Lavender & Eucalyptus Essential Oil Aroma Diffuser Subsystem
+var aroma_diffuser_active: bool = true
+var aroma_scent_type: String = "EUCALYPTUS"
+var aroma_refill_count: int = 10
+
+# Meeting Module 44: SNS Timestamp Study Challenge Subsystem
+var sns_posts_count: int = 0
+var viral_marketing_boost: float = 1.0
+
+# Meeting Module 45: High-Capacity Ice Maker & Gourmet Fruit Ade Station Subsystem
+var ade_syrup_stock: int = 60
+var ade_sales_count: int = 0
+
+# Meeting Module 46: Past Exam Question Bank & Mock Exam Archive Subsystem
+var exam_papers_borrowed: int = 0
+var student_satisfaction_boost: float = 1.0
+
+# Meeting Module 48: Rainy Day Outdoor Window Droplet Rendering
+# Handled in cafe_view.gd
+
+# Meeting Module 49: National Hall of Fame Leaderboard Subsystem
+var hall_of_fame_members: Array = [
+	{ "name": "수험생 수현", "achievement": "서울대 의예과 합격", "focus_hours": 1420 },
+	{ "name": "개발자 현우", "achievement": "구글 수석 엔지니어 입사", "focus_hours": 1280 }
+]
+
+# Meeting Module 50: Grand 50th-Milestone Landmark Party Celebration Subsystem
+var milestone_celebration_active: bool = true
+var grand_trophy_unlocked: bool = true
+
+# Meeting Module 51: AI Mock Exam Weakness Analysis & Counseling Subsystem
+var exam_counseling_sessions: int = 0
+var mental_care_boost: float = 1.0
+
+# Meeting Module 52: Hand-Drip Single Origin Specialty Coffee Bar Subsystem
+var handdrip_coffee_stock: int = 50
+var handdrip_sales_count: int = 0
+
+# Meeting Module 53: Premium ANC Headphones Rental Station Subsystem
+var anc_headphones_stock: int = 15
+var anc_rentals_count: int = 0
+
+# Meeting Module 54: Zero-Gravity Power Nap Capsule Subsystem
+var nap_capsules_installed: int = 4
+var nap_sessions_count: int = 0
+
+func use_nap_capsule() -> Dictionary:
+	nap_sessions_count += 1
+	var fee = 3000.0
+	add_money(fee)
+	reputation = min(5.0, reputation + 0.05)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "😴 15분 무중력 파워 냅 암막 수면 캡슐 이용 완료! (+3,000 ₩ | 뇌 피로 완화 만족도 +30% 💤)" }
+
+func rent_anc_headphones() -> Dictionary:
+	if anc_headphones_stock <= 0:
+		anc_headphones_stock += 10
+	anc_headphones_stock -= 1
+	anc_rentals_count += 1
+	var fee = 2500.0
+	add_money(fee)
+	reputation = min(5.0, reputation + 0.05)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "🎧 프리미엄 ANC 노이즈 캔슬링 헤드폰 대여 완료! (+2,500 ₩ | 몰입도 +35% 🔇)" }
+
+func brew_handdrip_coffee(bean_origin: String = "YIRGACHEFFE") -> Dictionary:
+	if handdrip_coffee_stock <= 0:
+		handdrip_coffee_stock += 30
+	handdrip_coffee_stock -= 1
+	handdrip_sales_count += 1
+	var revenue = 3800.0
+	add_money(revenue)
+	reputation = min(5.0, reputation + 0.06)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "☕ 에티오피아 예가체프 싱글 오리진 핸드드립 추출 완료! (+3,800 ₩ | 음료 매출 +45% ☕)" }
+
+func conduct_exam_counseling() -> Dictionary:
+	exam_counseling_sessions += 1
+	mental_care_boost = 1.30
+	reputation = min(5.0, reputation + 0.08)
+	add_guest_intimacy("su_hyun", 30)
+	var fee = 4500.0
+	add_money(fee)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "📋 수험 성적 과목별 약점 진단 & 1:1 슬럼프 멘토링 완료! (+4,500 ₩ | 친밀도 +30 XP ❤️)" }
+
+func trigger_milestone_celebration() -> Dictionary:
+	var bonus = 100000.0
+	add_money(bonus)
+	decor_score += 250
+	reputation = 5.0
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "🎉 Log404 Studio 50차 전면 완수 그랜드 랜드마크 파티 개최! (+100,000 ₩ | 평점 5.0 만점 🏆)" }
+
+func induct_hall_of_fame(member_name: String, title: String) -> Dictionary:
+	hall_of_fame_members.append({ "name": member_name, "achievement": title, "focus_hours": 1000 + randi() % 500 })
+	reputation = 5.0
+	decor_score += 120
+	var prize = 5000.0
+	add_money(prize)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "🏆 명예의 전당 등극 완료! 합격 상금 획득 (+5,000 ₩ | 평점 5.0 🌟)" }
+
+# Meeting Module 47: Ergonomic Luxury Mesh Chair Subsystem
+var ergonomic_chairs_installed: int = 10
+var chair_comfort_rating: float = 4.8
+
+func upgrade_ergonomic_chairs() -> Dictionary:
+	var cost = 45000.0
+	if not can_afford(cost):
+		return { "success": false, "msg": "❌ 자금이 부족합니다! (필요: 45,000 ₩)" }
+	add_money(-cost)
+	ergonomic_chairs_installed += 5
+	chair_comfort_rating = 5.0
+	decor_score += 85
+	reputation = min(5.0, reputation + 0.10)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "💺 풀옵션 요추지지 에르고노믹 메쉬 의자 교체 완료! (체류시간 +35% 🌟)" }
+
+
+
+func brew_fruit_ade(flavor: String = "GRAPE") -> Dictionary:
+	if ade_syrup_stock <= 0:
+		ade_syrup_stock += 40
+	ade_syrup_stock -= 1
+	ade_sales_count += 1
+	var revenue = 2200.0
+	add_money(revenue)
+	reputation = min(5.0, reputation + 0.05)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "🍹 꿀청포도 시원한 얼음 에이드 제조 완료! (+2,200 ₩ | 만족도 +30% ❄️)" }
+
+func post_sns_challenge() -> Dictionary:
+	sns_posts_count += 1
+	viral_marketing_boost = 1.35
+	reputation = min(5.0, reputation + 0.08)
+	var reward = 2500.0
+	add_money(reward)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "📸 열공 타임스탬프 SNS 인증 완료! 바이럴 마케팅 보너스 (+2,500 ₩ | 유입 +35% 🚀)" }
+
+func refill_aroma_diffuser(scent: String = "EUCALYPTUS") -> Dictionary:
+	aroma_scent_type = scent
+	aroma_refill_count += 5
+	reputation = min(5.0, reputation + 0.06)
+	decor_score += 45
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "🌿 천연 유칼립투스 아로마 디퓨저 리필 완료! (매장 평점 +0.06 🌟)" }
+
+func dispense_dark_chocolate() -> Dictionary:
+	if dark_chocolate_stock <= 0:
+		dark_chocolate_stock += 30
+	dark_chocolate_stock -= 1
+	dark_chocolate_sales += 1
+	var revenue = 1200.0
+	add_money(revenue)
+	reputation = min(5.0, reputation + 0.04)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "🍫 85% 무설탕 카카오 다크 초콜릿 제공! (+1,200 ₩ | 두뇌 활성화 +25% ❤️)" }
+
+func trigger_pomodoro_session() -> Dictionary:
+	pomodoro_sessions_completed += 1
+	pomodoro_focus_boost = 1.25
+	reputation = min(5.0, reputation + 0.05)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "⏱️ 25분 밀도 집중 포모도로 타이머 발동! (학습 몰입도 +25% ❤️)" }
+
+func rent_group_study_room() -> Dictionary:
+	var fee = 8000.0
+	group_study_bookings += 1
+	add_money(fee)
+	reputation = min(5.0, reputation + 0.08)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "🚪 4인 방음 스터디 그룹룸 대여 완료! (+8,000 ₩)" }
+
 func subscribe_vip_membership() -> Dictionary:
 	var fee = 15000.0
 	vip_members_count += 1
@@ -347,12 +537,6 @@ func pet_navi() -> Dictionary:
 	return { "text": "🐱 야옹~! 길냥이 나비 쓰다듬기! (집중력 +20% ❤️)", "color": Color(1.0, 0.4, 0.7) }
 
 # Regular Guest Intimacy Engine
-var guest_intimacy: Dictionary = {
-	"su_hyun": { "name": "수험생 수현", "level": 1, "xp": 0, "max_xp": 100, "title": "초보 열공생" },
-	"min_jun": { "name": "취준생 민준", "level": 1, "xp": 0, "max_xp": 100, "title": "열혈 서류 준비생" },
-	"hyun_woo": { "name": "개발자 현우", "level": 1, "xp": 0, "max_xp": 100, "title": "코딩 에이스" },
-	"navi": { "name": "길냥이 나비", "level": 1, "xp": 0, "max_xp": 100, "title": "스터디 힐러" }
-}
 
 func add_guest_intimacy(guest_key: String, xp_amount: int) -> Dictionary:
 	if not guest_intimacy.has(guest_key):
@@ -387,17 +571,7 @@ func bake_dessert(type_name: String, amount: int) -> void:
 	bakery_stock[type_name] += amount
 	_play_sfx_safe("chime")
 
-func add_guest_intimacy(guest_id: String, xp_amount: int) -> bool:
-	if not guest_intimacy.has(guest_id): return false
-	var g = guest_intimacy[guest_id]
-	g["xp"] += xp_amount
-	if g["xp"] >= g["max_xp"]:
-		g["xp"] -= g["max_xp"]
-		g["level"] += 1
-		g["max_xp"] = int(g["max_xp"] * 1.4)
-		_play_sfx_safe("chime")
-		return true
-	return false
+
 
 func get_calculated_decor_score() -> int:
 	var base_score = decor_score

@@ -29,6 +29,7 @@ func _process(_delta: float) -> void:
 	update_hud()
 
 func update_hud() -> void:
+	if GameState == null: return
 	if label_money:
 		label_money.text = "💰 %s ₩" % format_money(GameState.money)
 	if label_income:
