@@ -223,7 +223,9 @@ var equipment_stock: Dictionary = {
 	"bookstand": { "name": "원목 독서대", "count": 8, "fee": 500.0 },
 	"headset": { "name": "노이즈 캔슬링 헤드셋", "count": 5, "fee": 1200.0 },
 	"silent_mouse": { "name": "무소음 마우스", "count": 6, "fee": 400.0 },
-	"charger": { "name": "고속 멀티 충전기", "count": 10, "fee": 300.0 }
+	"charger": { "name": "고속 멀티 충전기", "count": 10, "fee": 300.0 },
+	"cushion": { "name": "인체공학 메모리폼 방석", "count": 7, "fee": 600.0 },
+	"eye_lamp": { "name": "시력보호 LED 독서등", "count": 6, "fee": 800.0 }
 }
 
 func rent_equipment(eq_id: String) -> bool:
@@ -250,7 +252,27 @@ func resolve_noise_villain(villain_id: int) -> void:
 var white_noise_db: float = 45.0
 var ice_maker_stock: int = 100
 var exam_archive_count: int = 12
+var exam_archive_level: int = 1
+var total_exam_papers_borrowed: int = 0
 var desk_lamp_mode: String = "4000K"
+
+func upgrade_exam_archive() -> bool:
+	var cost = 1200.0 * exam_archive_level
+	if not can_afford(cost): return false
+	add_money(-cost)
+	exam_archive_level += 1
+	exam_archive_count += 5
+	_play_sfx_safe("chime")
+	return true
+
+func borrow_exam_paper() -> Dictionary:
+	if exam_archive_count <= 0:
+		return { "success": false, "msg": "❌ 기출 족보가 모두 대여 중입니다!" }
+	exam_archive_count -= 1
+	total_exam_papers_borrowed += 1
+	add_money(1200.0)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "📚 전설의 기출 족보 대여 완료! (+1,200 ₩ 팁)" }
 
 func set_white_noise_level(db_level: float) -> void:
 	white_noise_db = clamp(db_level, 0.0, 65.0)
@@ -302,6 +324,30 @@ func pet_navi() -> Dictionary:
 	add_guest_intimacy("navi", 25)
 	_play_sfx_safe("chime")
 	return { "text": "🐱 야옹~! 길냥이 나비 쓰다듬기! (집중력 +20% ❤️)", "color": Color(1.0, 0.4, 0.7) }
+
+# Regular Guest Intimacy Engine
+var guest_intimacy: Dictionary = {
+	"su_hyun": { "name": "수험생 수현", "level": 1, "xp": 0, "max_xp": 100, "title": "초보 열공생" },
+	"min_jun": { "name": "취준생 민준", "level": 1, "xp": 0, "max_xp": 100, "title": "열혈 서류 준비생" },
+	"hyun_woo": { "name": "개발자 현우", "level": 1, "xp": 0, "max_xp": 100, "title": "코딩 에이스" },
+	"navi": { "name": "길냥이 나비", "level": 1, "xp": 0, "max_xp": 100, "title": "스터디 힐러" }
+}
+
+func add_guest_intimacy(guest_key: String, xp_amount: int) -> Dictionary:
+	if not guest_intimacy.has(guest_key):
+		guest_key = "su_hyun"
+	var g = guest_intimacy[guest_key]
+	g["xp"] += xp_amount
+	var leveled_up = false
+	if g["xp"] >= g["max_xp"]:
+		g["xp"] -= g["max_xp"]
+		g["level"] += 1
+		g["max_xp"] = int(g["max_xp"] * 1.5)
+		leveled_up = true
+		add_money(2000.0 * g["level"])
+		_play_sfx_safe("chime")
+	intimacy_changed.emit(g["name"], g["level"], g["xp"])
+	return { "leveled_up": leveled_up, "level": g["level"], "name": g["name"] }
 
 func is_cat_buff_active() -> bool:
 	return cat_buff_timer > 0.0

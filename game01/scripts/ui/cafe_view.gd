@@ -83,20 +83,20 @@ func _ready() -> void:
 		if img_sc != null:
 			staff_cleaner_texture = ImageTexture.create_from_image(img_sc)
 
-	if FileAccess.file_exists("res://assets/staff_cat_navi.png"):
-		var img_cat = Image.load_from_file("res://assets/staff_cat_navi.png")
-		if img_cat != null:
-			staff_cat_navi_texture = ImageTexture.create_from_image(img_cat)
+	if ResourceLoader.exists("res://assets/staff_cat_navi.png"):
+		var tex_cat = load("res://assets/staff_cat_navi.png")
+		if tex_cat is Texture2D:
+			staff_cat_navi_texture = tex_cat
 
-	if FileAccess.file_exists("res://assets/action_laptop.png"):
-		var img_lap = Image.load_from_file("res://assets/action_laptop.png")
-		if img_lap != null:
-			action_laptop_texture = ImageTexture.create_from_image(img_lap)
+	if ResourceLoader.exists("res://assets/action_laptop.png"):
+		var tex_lap = load("res://assets/action_laptop.png")
+		if tex_lap is Texture2D:
+			action_laptop_texture = tex_lap
 
-	if FileAccess.file_exists("res://assets/action_book.png"):
-		var img_bk = Image.load_from_file("res://assets/action_book.png")
-		if img_bk != null:
-			action_book_texture = ImageTexture.create_from_image(img_bk)
+	if ResourceLoader.exists("res://assets/action_book.png"):
+		var tex_bk = load("res://assets/action_book.png")
+		if tex_bk is Texture2D:
+			action_book_texture = tex_bk
 		
 	GameState.zone_changed.connect(func(_z): queue_redraw())
 	GameState.upgrade_purchased.connect(func(_cat, _lvl): queue_redraw())
