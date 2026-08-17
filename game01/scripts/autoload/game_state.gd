@@ -339,6 +339,18 @@ var anc_rentals_count: int = 0
 var nap_capsules_installed: int = 4
 var nap_sessions_count: int = 0
 
+# Meeting Module 55: AI Parent SMS Attendance Subsystem
+var parent_sms_enabled: bool = true
+var total_sms_sent: int = 0
+
+func send_parent_sms_notification(student_name: String = "김수험", action_type: String = "입실") -> Dictionary:
+	total_sms_sent += 1
+	var fee = 400.0
+	add_money(fee)
+	reputation = min(5.0, reputation + 0.02)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "📱 [학부모 안심 SMS] %s 학생 %s 안심 알림톡 발송 완료! (+400 ₩ | 매장 신뢰도 UP ✨)" % [student_name, action_type] }
+
 func use_nap_capsule() -> Dictionary:
 	nap_sessions_count += 1
 	var fee = 3000.0
