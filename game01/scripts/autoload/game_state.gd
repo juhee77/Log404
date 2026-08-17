@@ -274,6 +274,27 @@ func borrow_exam_paper() -> Dictionary:
 	_play_sfx_safe("chime")
 	return { "success": true, "msg": "📚 전설의 기출 족보 대여 완료! (+1,200 ₩ 팁)" }
 
+# VIP Monthly Fixed Membership & Organic Herbal Tea Bar Subsystems
+var vip_members_count: int = 5
+var herbal_tea_stock: int = 50
+
+func subscribe_vip_membership() -> Dictionary:
+	var fee = 15000.0
+	vip_members_count += 1
+	add_money(fee)
+	reputation = min(5.0, reputation + 0.15)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "👑 VIP 월 정기권 회원 등록 완료! (+15,000 ₩ 월정액 수금)" }
+
+func brew_herbal_tea(tea_type: String = "chamomile") -> Dictionary:
+	if herbal_tea_stock <= 0:
+		return { "success": false, "msg": "❌ 허브티 재고가 모두 소진되었습니다!" }
+	herbal_tea_stock -= 1
+	add_money(2500.0)
+	quietness_score = clamp(quietness_score + 2, 0, 100)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "🍵 오가닉 " + tea_type + " 허브티 추출 완료! (+2,500 ₩)" }
+
 func set_white_noise_level(db_level: float) -> void:
 	white_noise_db = clamp(db_level, 0.0, 65.0)
 	_play_sfx_safe("click")
