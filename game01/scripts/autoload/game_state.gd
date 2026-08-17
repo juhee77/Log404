@@ -343,6 +343,53 @@ var nap_sessions_count: int = 0
 var parent_sms_enabled: bool = true
 var total_sms_sent: int = 0
 
+# Meeting Module 56: Morning Croissant Brunch Subsystem
+var morning_croissant_stock: int = 30
+var morning_brunch_served: int = 0
+
+func bake_morning_croissant() -> Dictionary:
+	morning_croissant_stock += 20
+	var fee = 4200.0
+	add_money(fee)
+	reputation = min(5.0, reputation + 0.04)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "🥐 갓 구운 오가닉 버터 크로와상 브런치 셀프바 충전 완료! (+4,200 ₩ | 얼리버드 유입 +35% 🌅)" }
+
+# Meeting Module 57: Pass Exam Book Share Library Subsystem
+var pass_books_donated: int = 12
+
+func donate_pass_book(book_title: String = "2026 합격 수험서") -> Dictionary:
+	pass_books_donated += 1
+	decor_score += 15
+	reputation = min(5.0, reputation + 0.05)
+	_play_sfx_safe("fanfare")
+	return { "success": true, "msg": "📚 '%s' 합격 선배 나눔 서적 기증 완료! (인테리어 점수 +15 🌟 | 명성 UP)" % book_title }
+
+# Meeting Module 58: Ultrawide Curved Monitor Desks Subsystem
+var curved_monitors_count: int = 8
+
+func upgrade_curved_monitors() -> Dictionary:
+	curved_monitors_count += 2
+	decor_score += 25
+	add_money(5000.0)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "🖥️ 34인치 WQHD 울트라와이드 커브드 몰입형 모니터 석 추가 완료! (+5,000 ₩ | 몰입도 100% ⚡)" }
+
+# Meeting Module 59: Botanical Air Purifying Wall Subsystem
+var botanical_wall_level: int = 3
+
+func maintain_greenhouse_wall() -> Dictionary:
+	botanical_wall_level += 1
+	decor_score += 30
+	reputation = min(5.0, reputation + 0.06)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "🌿 천연 수경재배 미세먼지 정화 식물벽 영양제 공급 완료! (실내 공기 질 점수 +35% 🍃)" }
+
+# Meeting Module 60: Franchise League TOP 10 Hall of Fame Subsystem
+func get_franchise_league_rank() -> Dictionary:
+	var total_score = int(reputation * 200 + decor_score * 5 + money * 0.01)
+	return { "rank": 1, "tier": "👑 전국 1위 명예의 전당 갓성비 스터디카페", "score": total_score }
+
 func send_parent_sms_notification(student_name: String = "김수험", action_type: String = "입실") -> Dictionary:
 	total_sms_sent += 1
 	var fee = 400.0
