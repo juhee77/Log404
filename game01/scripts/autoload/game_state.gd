@@ -398,6 +398,18 @@ var kelvin_tuners_installed: int = 24
 var smoothie_stock: int = 25
 var smoothies_sold: int = 0
 
+# Meeting Module 63: Soundproof Group Meeting Room Subsystem
+var meeting_rooms_count: int = 2
+var meeting_room_reservations: int = 0
+
+func reserve_acoustic_meeting_room(hours: int = 2) -> Dictionary:
+	meeting_room_reservations += 1
+	var total_fee = 6500.0 * hours
+	add_money(total_fee)
+	reputation = min(5.0, reputation + 0.05)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "🗣️ 4인 전용 아쿠스틱 특수 흡음 완전 방음 미팅룸 %d시간 예약 완료! (+%s ₩ | 그룹 예약율 +30% 🚪)" % [hours, format_money(total_fee)] }
+
 func blend_protein_smoothie(flavor: String = "아보카도 망고 프로틴") -> Dictionary:
 	smoothies_sold += 1
 	var price = 4800.0
