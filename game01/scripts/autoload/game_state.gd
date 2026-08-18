@@ -406,6 +406,30 @@ var meeting_room_reservations: int = 0
 var badges_unlocked: int = 5
 var total_badge_rewards_claimed: int = 0
 
+# Meeting Module 65: Belgian Truffle Chocolate Buffet Subsystem
+var truffle_stock: int = 40
+var truffles_served: int = 0
+
+# Meeting Module 66: UV Desk Mat Sterilizer Subsystem
+var uv_desk_mats_installed: int = 24
+var uv_sterilizations_count: int = 0
+
+func sterilize_desk_mat(seat_idx: int = 0) -> Dictionary:
+	uv_sterilizations_count += 1
+	var fee = 3200.0
+	add_money(fee)
+	reputation = min(5.0, reputation + 0.03)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "✨ %d번 좌석 UV-C LED 자동 99.9%% 데스크 무균 소독 완료! (+3,200 ₩ | 위생 평점 UP 🛡️)" % (seat_idx + 1) }
+
+func dispense_truffle_chocolate() -> Dictionary:
+	truffles_served += 1
+	var price = 3600.0
+	add_money(price)
+	reputation = min(5.0, reputation + 0.04)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "🍫 벨기에 85% 수제 다크 트러플 초콜릿 디저트 제공 완료! (+3,600 ₩ | 뇌 당분 충전 몰입도 +25% 🧠)" }
+
 func claim_study_badge(badge_name: String = "🥇 하루 8시간 집중 골드 뱃지") -> Dictionary:
 	total_badge_rewards_claimed += 1
 	var bonus_reward = 2500.0
