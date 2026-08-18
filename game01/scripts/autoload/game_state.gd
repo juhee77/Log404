@@ -394,6 +394,18 @@ func get_franchise_league_rank() -> Dictionary:
 var current_kelvin_temp: int = 4500
 var kelvin_tuners_installed: int = 24
 
+# Meeting Module 62: Organic Protein Smoothie Bar Subsystem
+var smoothie_stock: int = 25
+var smoothies_sold: int = 0
+
+func blend_protein_smoothie(flavor: String = "아보카도 망고 프로틴") -> Dictionary:
+	smoothies_sold += 1
+	var price = 4800.0
+	add_money(price)
+	reputation = min(5.0, reputation + 0.04)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "🥤 100% 무설탕 %s 스무디 제조 완료! (+4,800 ₩ | 체력&집중력 +20% 🏋️‍♂️)" % flavor }
+
 func tune_kelvin_lamp(kelvin_val: int = 6500) -> Dictionary:
 	current_kelvin_temp = kelvin_val
 	add_money(3500.0)
