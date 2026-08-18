@@ -402,6 +402,18 @@ var smoothies_sold: int = 0
 var meeting_rooms_count: int = 2
 var meeting_room_reservations: int = 0
 
+# Meeting Module 64: Study Goal Badge App Subsystem
+var badges_unlocked: int = 5
+var total_badge_rewards_claimed: int = 0
+
+func claim_study_badge(badge_name: String = "🥇 하루 8시간 집중 골드 뱃지") -> Dictionary:
+	total_badge_rewards_claimed += 1
+	var bonus_reward = 2500.0
+	add_money(bonus_reward)
+	reputation = min(5.0, reputation + 0.05)
+	_play_sfx_safe("fanfare")
+	return { "success": true, "msg": "📱 [스마트 뱃지 앱] '%s' 획득 완료! (+2,500 ₩ 보상 | 재방문 연장률 +30% 🏆)" % badge_name }
+
 func reserve_acoustic_meeting_room(hours: int = 2) -> Dictionary:
 	meeting_room_reservations += 1
 	var total_fee = 6500.0 * hours
