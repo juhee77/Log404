@@ -4,5 +4,6 @@
 .godot/
 *.import
 user://
-.agents/
+.agents/*
+!.agents/AGENTS.md
 
