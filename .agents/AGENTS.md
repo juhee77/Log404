@@ -12,3 +12,8 @@
 ## 3. Engine & Platform Optimization
 - Keep Godot 4 mobile layout scaling set to `stretch/mode="canvas_items"`, `stretch/aspect="expand"`.
 - Maintain unified 2.5D scroll positioning across all rooms and objects.
+
+## 4. Autonomous Commit & Push Execution
+- During autonomous background iterations and task execution, automatically stage (`git add .`), commit (`git commit -m "..."`), and push to `origin main` for `/Users/juhee/IdeaProjects/Log404`.
+- Never prompt or block on commit actions; proceed autonomously.
+
