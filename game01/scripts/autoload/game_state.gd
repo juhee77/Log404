@@ -462,6 +462,17 @@ var latte_art_creations: int = 0
 # Meeting Module 72: Morning Croissant Toaster Oven Subsystem
 var toasted_croissants_count: int = 0
 
+# Meeting Module 73: Street Casting Quiz Minigame Subsystem
+var street_casting_quizzes_solved: int = 0
+
+func conduct_street_casting_quiz(guest_name: String = "단골 공시생 수현") -> Dictionary:
+	street_casting_quizzes_solved += 1
+	var prize = 3800.0
+	add_money(prize)
+	reputation = min(5.0, reputation + 0.05)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "🎯 길거리 [%s] 캐스팅 3단계 대화 퀴즈 성공! (+3,800 ₩ | 친밀도 +40 💖)" % guest_name }
+
 func toast_croissant(pastry_name: String = "🥐 스팀 바삭 버터 크로와상") -> Dictionary:
 	toasted_croissants_count += 1
 	var price = 4500.0
