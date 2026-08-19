@@ -459,6 +459,17 @@ func trigger_70th_milestone_event() -> Dictionary:
 # Meeting Module 71: Barista Latte Art Customizer Subsystem
 var latte_art_creations: int = 0
 
+# Meeting Module 72: Morning Croissant Toaster Oven Subsystem
+var toasted_croissants_count: int = 0
+
+func toast_croissant(pastry_name: String = "🥐 스팀 바삭 버터 크로와상") -> Dictionary:
+	toasted_croissants_count += 1
+	var price = 4500.0
+	add_money(price)
+	reputation = min(5.0, reputation + 0.05)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "🍞 발뮤다 스팀 오븐 [%s] 3분 노릇노릇 굽기 완료! (+4,500 ₩ | 브런치 만족도 +30% 🥐)" % pastry_name }
+
 func craft_latte_art(pattern: String = "🐱 귀여운 고양이 폼 아트") -> Dictionary:
 	latte_art_creations += 1
 	var price = 5200.0
