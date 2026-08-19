@@ -465,6 +465,19 @@ var toasted_croissants_count: int = 0
 # Meeting Module 73: Street Casting Quiz Minigame Subsystem
 var street_casting_quizzes_solved: int = 0
 
+# Meeting Module 74: Regular Guest Suhyun Intimacy Level Subsystem
+var suhyun_intimacy_level: int = 4
+var suhyun_interactions_count: int = 0
+
+func interact_regular_suhyun() -> Dictionary:
+	suhyun_interactions_count += 1
+	suhyun_intimacy_level += 1
+	var prize = 4200.0
+	add_money(prize)
+	reputation = min(5.0, reputation + 0.05)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "👩‍🎓 [단골 수험생 수현] 상담 대화 완료! (+4,200 ₩ | 친밀도 Lv.%d 💖 | 합격 확신 버프 UP)" % suhyun_intimacy_level }
+
 func conduct_street_casting_quiz(guest_name: String = "단골 공시생 수현") -> Dictionary:
 	street_casting_quizzes_solved += 1
 	var prize = 3800.0
