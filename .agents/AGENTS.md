@@ -13,7 +13,7 @@
 - Keep Godot 4 mobile layout scaling set to `stretch/mode="canvas_items"`, `stretch/aspect="expand"`.
 - Maintain unified 2.5D scroll positioning across all rooms and objects.
 
-## 4. Autonomous Commit & Push Execution
-- During autonomous background iterations and task execution, automatically stage (`git add .`), commit (`git commit -m "..."`), and push to `origin main` for `/Users/juhee/IdeaProjects/Log404`.
-- Never prompt or block on commit actions; proceed autonomously.
+## 4. Autonomous Commit-Only Execution
+- During autonomous background iterations and game development, automatically stage (`git add .`) and commit (`git commit -m "..."`) locally for `/Users/juhee/IdeaProjects/Log404`.
+- ABSOLUTE RULE: DO NOT execute `git push` during background iterations. Only perform local commits. Push only when explicitly requested by the user.
 
