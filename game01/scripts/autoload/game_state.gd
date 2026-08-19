@@ -414,6 +414,48 @@ var truffles_served: int = 0
 var uv_desk_mats_installed: int = 24
 var uv_sterilizations_count: int = 0
 
+# Meeting Module 67: Mascot Cat Wood Tower Subsystem
+var cat_tower_installed: bool = true
+var cat_tower_clicks: int = 0
+
+func interact_cat_tower() -> Dictionary:
+	cat_tower_clicks += 1
+	var heal_val = 20
+	navi_intimacy += heal_val
+	reputation = min(5.0, reputation + 0.04)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "🐱 마스코트 고양이 '나비'가 원목 캣타워 구름다리를 누빕니다! (친밀도 +20 🐾 | 힐링 가산 UP)" }
+
+# Meeting Module 68: Rain & Ocean Soundscape Acoustic Tuner Subsystem
+var active_soundscape: String = "RAIN_WOODS"
+
+func tune_soundscape(mode: String = "OCEAN_WAVES") -> Dictionary:
+	active_soundscape = mode
+	decor_score += 20
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "🎧 백색소음 입체 사운드스케이프 [%s] 설정 완료! (몰입도 +30%% 🌊)" % mode }
+
+# Meeting Module 69: National Study Marathon Championship Event Subsystem
+var marathon_participants: int = 48
+var marathon_completed: bool = false
+
+func start_study_marathon() -> Dictionary:
+	marathon_completed = true
+	var prize = 15000.0
+	add_money(prize)
+	reputation = min(5.0, reputation + 0.1)
+	_play_sfx_safe("fanfare")
+	return { "success": true, "msg": "🏃‍♂️ [전국 24시간 열공 마라톤 대회] 참가 수험생 48명 완주! (+15,000 ₩ 상금 | 명성 폭발 🏆)" }
+
+# Meeting Module 70: Grand 70th Milestone Celebration Event Subsystem
+func trigger_70th_milestone_event() -> Dictionary:
+	var bonus_money = 200000.0
+	add_money(bonus_money)
+	reputation = 5.0
+	decor_score += 100
+	_play_sfx_safe("fanfare")
+	return { "success": true, "msg": "🎉🎉 Log404 Studio 70개 전 모듈 대단원 달성 축하 파티! (+200,000 ₩ | 최고 명성 5.0 달성 👑)" }
+
 func sterilize_desk_mat(seat_idx: int = 0) -> Dictionary:
 	uv_sterilizations_count += 1
 	var fee = 3200.0
