@@ -456,6 +456,17 @@ func trigger_70th_milestone_event() -> Dictionary:
 	_play_sfx_safe("fanfare")
 	return { "success": true, "msg": "🎉🎉 Log404 Studio 70개 전 모듈 대단원 달성 축하 파티! (+200,000 ₩ | 최고 명성 5.0 달성 👑)" }
 
+# Meeting Module 71: Barista Latte Art Customizer Subsystem
+var latte_art_creations: int = 0
+
+func craft_latte_art(pattern: String = "🐱 귀여운 고양이 폼 아트") -> Dictionary:
+	latte_art_creations += 1
+	var price = 5200.0
+	add_money(price)
+	reputation = min(5.0, reputation + 0.05)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "☕ 바리스타 스페셜 [%s] 라떼 아트 완성! (+5,200 ₩ | 손님 감동 만족도 +25% ✨)" % pattern }
+
 func sterilize_desk_mat(seat_idx: int = 0) -> Dictionary:
 	uv_sterilizations_count += 1
 	var fee = 3200.0
