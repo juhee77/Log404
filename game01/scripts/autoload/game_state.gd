@@ -22,6 +22,8 @@ signal zone_changed(new_zone)
 signal floor_changed(new_floor)
 signal decor_mode_changed(is_active)
 signal achievement_unlocked(title, reward)
+signal theme_changed(new_theme)
+
 
 # Financial & Time Variables
 var money: float = 5000.0
@@ -115,11 +117,14 @@ var coffee_menu_unlocked: Array = ["아메리카노", "카페라떼", "아인슈
 var air_quality_score: float = 98.0
 
 func _play_sfx_safe(type: String) -> void:
+	if not is_inside_tree():
+		return
 	var sm = get_node_or_null("/root/SoundManager")
 	if sm != null:
 		if type == "click": sm.play_click_sfx()
 		elif type == "coin": sm.play_coin_sfx()
 		elif type == "chime": sm.play_chime_sfx()
+
 
 func toggle_seat_lamp(seat_index: int) -> bool:
 	var cur = lamp_states.get(seat_index, true)
@@ -417,6 +422,8 @@ var uv_sterilizations_count: int = 0
 # Meeting Module 67: Mascot Cat Wood Tower Subsystem
 var cat_tower_installed: bool = true
 var cat_tower_clicks: int = 0
+var navi_intimacy: int = 50
+
 
 func interact_cat_tower() -> Dictionary:
 	cat_tower_clicks += 1
@@ -468,6 +475,70 @@ var street_casting_quizzes_solved: int = 0
 # Meeting Module 74: Regular Guest Suhyun Intimacy Level Subsystem
 var suhyun_intimacy_level: int = 4
 var suhyun_interactions_count: int = 0
+
+# Meeting Module 75: Regular Guest Minjun Intimacy Level Subsystem
+var minjun_intimacy_level: int = 5
+var minjun_interactions_count: int = 0
+
+func interact_regular_minjun() -> Dictionary:
+	minjun_interactions_count += 1
+	minjun_intimacy_level += 1
+	var prize = 4500.0
+	add_money(prize)
+	reputation = min(5.0, reputation + 0.05)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "👨‍💻 [단골 개발자 민준] 코딩 디버깅 상담 완료! (+4,500 ₩ | 친밀도 Lv.%d 💖 | 밤샘 개발 버프 UP)" % minjun_intimacy_level }
+
+# Meeting Module 76: Regular Guest Hyunwoo Intimacy Level Subsystem
+var hyunwoo_intimacy_level: int = 3
+
+func interact_regular_hyunwoo() -> Dictionary:
+	hyunwoo_intimacy_level += 1
+	var prize = 4500.0
+	add_money(prize)
+	reputation = min(5.0, reputation + 0.05)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "🧑‍💼 [단골 기획자 현우] 사업 로드맵 상담 완료! (+4,500 ₩ | 친밀도 Lv.%d 💖)" % hyunwoo_intimacy_level }
+
+# Meeting Module 77: Mascot Cat Navi Churu Treats Subsystem
+var churu_treats_stock: int = 15
+
+func feed_navi_churu() -> Dictionary:
+	churu_treats_stock += 10
+	navi_intimacy += 50
+	reputation = min(5.0, reputation + 0.06)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "🐱 마스코트 '나비'에게 최고급 참치 츄르 간식을 급여했습니다! (친밀도 +50 🐾 | 매장 힐링 100%)" }
+
+# Meeting Module 78: Interior Decor Rating Score Subsystem
+func get_decor_rating_tier() -> String:
+	if decor_score >= 500:
+		return "💎 S-Tier 최고급 럭셔리 인테리어"
+	elif decor_score >= 250:
+		return "🌟 A-Tier 감성 원목 인테리어"
+	return "🌿 B-Tier 모던 스터디 카페"
+
+# Meeting Module 79: Store Territory Expansion Subsystem
+var territory_expansion_level: int = 2
+
+func expand_store_territory() -> Dictionary:
+	territory_expansion_level += 1
+	var cost = 50000.0
+	if money >= cost:
+		money -= cost
+		decor_score += 80
+		return { "success": true, "msg": "🏢 스터디 카페 매장 층수 확장 완료! (3층 오픈 | 인테리어 +80 🌟)" }
+	return { "success": false, "msg": "자금이 부족합니다. (필요 자금: 50,000 ₩)" }
+
+# Meeting Module 80: Main Story Quests Stage 01-10 Subsystem
+var story_stage: int = 10
+
+func complete_story_stage() -> Dictionary:
+	story_stage += 1
+	var reward = 10000.0
+	add_money(reward)
+	_play_sfx_safe("fanfare")
+	return { "success": true, "msg": "📖 메인 스토리 퀘스트 Stage %d 완료! (+10,000 ₩ 스토리 보상 🎉)" % story_stage }
 
 func interact_regular_suhyun() -> Dictionary:
 	suhyun_interactions_count += 1
@@ -565,6 +636,271 @@ func use_nap_capsule() -> Dictionary:
 	reputation = min(5.0, reputation + 0.05)
 	_play_sfx_safe("chime")
 	return { "success": true, "msg": "😴 15분 무중력 파워 냅 암막 수면 캡슐 이용 완료! (+3,000 ₩ | 뇌 피로 완화 만족도 +30% 💤)" }
+
+# Meeting Module 69: AI Focus & Noise Camera Monitoring Subsystem
+var ai_cam_installed: bool = true
+var ai_focus_score: float = 95.5
+var ai_scans_count: int = 0
+
+func scan_ai_focus_zone() -> Dictionary:
+	ai_scans_count += 1
+	var fee = 4500.0
+	add_money(fee)
+	reputation = min(5.0, reputation + 0.04)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "🤖 AI 시선 & 데시벨 소음 감지 카메라 스캔 완료! (+4,500 ₩ | 몰입도 95.5%% & ANC 자동 차음 🎯)" }
+
+# Meeting Module 70: Exam Season Burning Event Subsystem
+var current_season_event: String = "NORMAL"
+var exam_season_boost_active: bool = false
+var season_events_triggered: int = 0
+
+func trigger_exam_burning_season(season_mode: String = "MIDTERM_EXAM") -> Dictionary:
+	season_events_triggered += 1
+	current_season_event = season_mode
+	exam_season_boost_active = true
+	var bonus_revenue = 15000.0
+	add_money(bonus_revenue)
+	reputation = min(5.0, reputation + 0.06)
+	_play_sfx_safe("fanfare")
+	var event_name = "🔥 중간고사 올나잇 버닝 페스티벌" if season_mode == "MIDTERM_EXAM" else "☀️ 여름방학 에어컨 힐링 특수"
+	return { "success": true, "msg": "🎉 [%s] 개시! (+15,000 ₩ 매출 폭발 | 만석률 100%% & 음료 수요 +100%% 🏆)" % event_name }
+
+# Meeting Module 71: Multi-Theme Interior Decorator Subsystem
+var current_theme: String = "NATURE_WOOD"
+var themes_unlocked: Array = ["NATURE_WOOD", "CYBER_NEON", "NORDIC_WHITE"]
+
+func switch_cafe_theme(theme_id: String = "CYBER_NEON") -> Dictionary:
+	if theme_id in themes_unlocked:
+		current_theme = theme_id
+		decor_score += 50
+		reputation = min(5.0, reputation + 0.05)
+		theme_changed.emit(theme_id)
+		_play_sfx_safe("chime")
+		var theme_title = "자연 원목 힐링" if theme_id == "NATURE_WOOD" else ("사이버 퓨처 네온" if theme_id == "CYBER_NEON" else "북유럽 미니멀 화이트")
+		return { "success": true, "msg": "🎨 스터디 카페 2.5D 메인 인테리어 [%s 테마] 전환 완료! (데코 스코어 +50 ✨)" % theme_title }
+	return { "success": false, "msg": "해당 테마를 잠금 해제해야 합니다." }
+
+# Meeting Module 72: High-Protein Healthy Snack Subsystem
+var protein_snacks_sold: int = 0
+
+func dispense_protein_snack(snack_name: String = "아몬드 오트 프로틴 바") -> Dictionary:
+	protein_snacks_sold += 1
+	var price = 3800.0
+	add_money(price)
+	reputation = min(5.0, reputation + 0.04)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "🥜 100%% 수제 %s 제공 완료! (+3,800 ₩ | 뇌 포도당 & 근손실 방지 🧠)" % snack_name }
+
+
+# Meeting Module 73: Automated Smart Keycard Kiosk Subsystem
+var kiosk_checkins_count: int = 0
+
+func process_kiosk_checkin(seat_type: String = "1인 프리미엄 독서실") -> Dictionary:
+	kiosk_checkins_count += 1
+	var fee = 4200.0
+	add_money(fee)
+	reputation = min(5.0, reputation + 0.03)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "🔑 무인 스마트 키오스크 QR 바코드 [%s] 입출입 승인 완료! (+4,200 ₩ | 회전율 UP ⚡)" % seat_type }
+
+# Meeting Module 74: 1:1 Student Mentoring & Diagnostic Subsystem
+var student_mentoring_count: int = 0
+
+func conduct_student_mentoring(student_name: String = "김수험", subject: String = "수학") -> Dictionary:
+	student_mentoring_count += 1
+	var fee = 5500.0
+	add_money(fee)
+	reputation = min(5.0, reputation + 0.05)
+	_play_sfx_safe("fanfare")
+	return { "success": true, "msg": "🎓 [%s] 손님 %s 과목 1:1 학습 멘토링 & 모의고사 진단서 출력 완료! (+5,500 ₩ | 정기권 연장률 +35%% 📜)" % [student_name, subject] }
+
+
+# Meeting Module 75: ANC Headphone Dock Repair Subsystem
+var anc_repairs_count: int = 0
+
+func repair_anc_headphone(dock_idx: int = 1) -> Dictionary:
+	anc_repairs_count += 1
+	var fee = 2800.0
+	add_money(fee)
+	reputation = min(5.0, reputation + 0.03)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "🔧 %d번 헤드폰 도크 노이즈 캔슬링 쿠션 소독 및 튜닝 완료! (+2,800 ₩ | 청결 만족도 UP 🎧)" % dock_idx }
+
+# Meeting Module 76: Premium Acoustic Isolation Booth Subsystem
+var acoustic_booth_reservations: int = 0
+
+func reserve_acoustic_isolation_booth(hours: int = 3) -> Dictionary:
+	acoustic_booth_reservations += 1
+	var total_fee = 6800.0 * hours
+	add_money(total_fee)
+	reputation = min(5.0, reputation + 0.05)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "🚪 1인 완전 특수 방음 어쿠스틱 프라이빗 부스 %d시간 예약 완료! (+%s ₩ | 시험 집중 효율 +40%% 🤫)" % [hours, format_money(total_fee)] }
+
+# Meeting Module 77: Autonomous Floor Sanitation Robot Subsystem
+var robot_cleans_count: int = 0
+
+func deploy_sanitation_robot() -> Dictionary:
+	robot_cleans_count += 1
+	var fee = 3500.0
+	add_money(fee)
+	dirty_seats.clear()
+	reputation = min(5.0, reputation + 0.04)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "🤖 자율주행 바닥 로봇 청소기 작동 완료! (+3,500 ₩ | 전 좌석 쓱싹 즉시 청결 100%% 🧹)" }
+
+# Meeting Module 78: Cold Brew Nitro Coffee Tap Subsystem
+var nitro_cold_brews_sold: int = 0
+
+func dispense_nitro_cold_brew() -> Dictionary:
+	nitro_cold_brews_sold += 1
+	var price = 4600.0
+	add_money(price)
+	reputation = min(5.0, reputation + 0.04)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "☕ 멸균 질소 추출 나이트로 콜드브루 커피 탭 완성! (+4,600 ₩ | 부드러운 거품 뇌 각성 +30%% ⚡)" }
+
+# Meeting Module 79: Espresso Grinder Calibration & Extraction Tuning Subsystem
+var grinder_calibrations_count: int = 0
+
+func calibrate_espresso_grinder(microns: int = 250) -> Dictionary:
+	grinder_calibrations_count += 1
+	var fee = 3000.0
+	add_money(fee)
+	reputation = min(5.0, reputation + 0.03)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "⚙️ 초세밀 그라인더 분쇄도 %d미크론 정밀 캘리브레이션 완료! (+3,000 ₩ | 풍미 & 끄레마 점수 UP ☕)" % microns }
+
+# Meeting Module 80: Multi-Floor VIP Lounge Expansion Subsystem
+var vip_lounge_expansions: int = 0
+
+func unlock_vip_lounge_floor(floor_num: int = 2) -> Dictionary:
+	vip_lounge_expansions += 1
+	if not floor_num in unlocked_floors:
+		unlocked_floors.append(floor_num)
+	var bonus_rev = 20000.0
+	add_money(bonus_rev)
+	reputation = min(5.0, reputation + 0.08)
+	floor_changed.emit(floor_num)
+	_play_sfx_safe("fanfare")
+	return { "success": true, "msg": "🏢 %d층 VIP 프리미엄 라운지 콤플렉스 대규모 확장 개장! (+20,000 ₩ | 좌석 용량 +10석 & 매장 품격 🏆)" % floor_num }
+
+# Meeting Module 81: Smart Standing Desk Ergonomic Height Subsystem
+var standing_desk_tunes_count: int = 0
+
+func tune_standing_desk_height(seat_idx: int = 1, height_cm: int = 105) -> Dictionary:
+	standing_desk_tunes_count += 1
+	var fee = 3600.0
+	add_money(fee)
+	reputation = min(5.0, reputation + 0.03)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "🪑 %d번 좌석 전동 모션 모션 스탠딩 책상 높이 %dcm 자동 셋팅 완료! (+3,600 ₩ | 요추 건강 & 바른 자세 ⚡)" % [seat_idx + 1, height_cm] }
+
+# Meeting Module 82: Premium Aroma Essential Oil Diffuser Subsystem
+var aroma_diffusions_count: int = 0
+
+func dispense_aroma_scent(scent_name: String = "라벤더 로즈마리") -> Dictionary:
+	aroma_diffusions_count += 1
+	var fee = 3200.0
+	add_money(fee)
+	reputation = min(5.0, reputation + 0.04)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "🌿 천연 100%% 유기농 %s 아로마 디퓨저 향기 조율 완료! (+3,200 ₩ | 스트레스 완화 & 심신 안정 🌸)" % scent_name }
+
+# Meeting Module 83: Zero-Sugar Homemade Fruit Sparkling Ade Subsystem
+var sparkling_ades_sold: int = 0
+
+func blend_sparkling_ade(flavor: String = "자몽 레몬 에이드") -> Dictionary:
+	sparkling_ades_sold += 1
+	var price = 4400.0
+	add_money(price)
+	reputation = min(5.0, reputation + 0.04)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "🍹 무설탕 톡톡 스파클링 %s 탄산 제조 완료! (+4,400 ₩ | 청량감 100%% 뇌 피로 회복 🍋)" % flavor }
+
+# Meeting Module 84: High-Efficiency Solar Panel Power Generator Subsystem
+var solar_power_activations: int = 0
+
+func activate_solar_power_grid() -> Dictionary:
+	solar_power_activations += 1
+	var subsidy = 8500.0
+	add_money(subsidy)
+	reputation = min(5.0, reputation + 0.05)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "☀️ 옥상 태양광 자가 발전 그리드 가동 완료! (+8,500 ₩ 친환경 그린 에너지 보조금 수금 🔋)" }
+
+# Meeting Module 85: Franchise Benchmark Accreditation Subsystem
+var franchise_accreditations_count: int = 0
+
+func claim_franchise_accreditation() -> Dictionary:
+	franchise_accreditations_count += 1
+	var bonus_rev = 25000.0
+	add_money(bonus_rev)
+	reputation = min(5.0, reputation + 0.10)
+	_play_sfx_safe("fanfare")
+	return { "success": true, "msg": "🏆 대한민국 대표 프리미엄 5스타 스터디 카페 전국 프랜차이즈 공식 인증! (+25,000 ₩ 브랜드 보상금 👑)" }
+
+# Meeting Module 86: AI Smart Noise Cancellation Acoustic Panels Subsystem
+var acoustic_panels_tuned: int = 0
+
+func tune_acoustic_wall_panels(panel_idx: int = 1) -> Dictionary:
+	acoustic_panels_tuned += 1
+	var fee = 3900.0
+	add_money(fee)
+	reputation = min(5.0, reputation + 0.03)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "🧱 %d번 벽면 미세 타공 방음 어쿠스틱 패널 정밀 차음 조율 완료! (+3,900 ₩ | 잔향음 제거 & 데시벨 -15dB 🤫)" % panel_idx }
+
+# Meeting Module 87: Organic Matcha Green Tea Latte Barista Brew Subsystem
+var matcha_lattes_sold: int = 0
+
+func blend_matcha_latte(milk_type: String = "오트 밀크") -> Dictionary:
+	matcha_lattes_sold += 1
+	var price = 4800.0
+	add_money(price)
+	reputation = min(5.0, reputation + 0.04)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "🍵 교토 유기농 말차 & %s 말차 라떼 제조 완료! (+4,800 ₩ | 항산화 뇌 침착 집중력 +25%% 🌿)" % milk_type }
+
+# Meeting Module 88: High-Definition Multi-Monitor Study Dock Subsystem
+var multi_monitor_docks_rented: int = 0
+
+func setup_multi_monitor_dock(seat_idx: int = 2) -> Dictionary:
+	multi_monitor_docks_rented += 1
+	var fee = 5200.0
+	add_money(fee)
+	reputation = min(5.0, reputation + 0.04)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "🖥️ %d번 좌석 듀얼 4K 암 듀얼 모니터 대여 도크 장착 완료! (+5,200 ₩ | 코딩/논문 작업 생산성 +35%% ⚡)" % (seat_idx + 1) }
+
+# Meeting Module 89: 24/7 Smart Air Purifier HEPA Filter Subsystem
+var hepa_filters_replaced: int = 0
+
+func replace_hepa_filter() -> Dictionary:
+	hepa_filters_replaced += 1
+	air_quality_score = 100.0
+	var fee = 3400.0
+	add_money(fee)
+	reputation = min(5.0, reputation + 0.03)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "🍃 H14 항바이러스 초미세먼지 HEPA 필터 교체 완료! (+3,400 ₩ | 실내 공기질 100점 만점 맑음 ✨)" }
+
+# Meeting Module 90: Master Study Cafe Hall of Fame Trophy Subsystem
+var hall_of_fame_trophies: int = 0
+
+func claim_hall_of_fame_trophy() -> Dictionary:
+	hall_of_fame_trophies += 1
+	var bonus_rev = 30000.0
+	add_money(bonus_rev)
+	reputation = min(5.0, reputation + 0.15)
+	_play_sfx_safe("fanfare")
+	return { "success": true, "msg": "👑 전국 타이쿤 명예의 전당 전설의 마스터 스터디 카페 황금 트로피 입수! (+30,000 ₩ 최고 보상금 🏆)" }
+
+
+
+
+
 
 func rent_anc_headphones() -> Dictionary:
 	if anc_headphones_stock <= 0:
@@ -1804,3 +2140,16 @@ func load_game() -> void:
 		for key in saved_upgrades:
 			if upgrades.has(key):
 				upgrades[key]["level"] = saved_upgrades[key]
+
+func format_money(val: float) -> String:
+	var n = int(val)
+	var s = str(n)
+	var res = ""
+	var cnt = 0
+	for i in range(s.length() - 1, -1, -1):
+		if cnt > 0 and cnt % 3 == 0:
+			res = "," + res
+		res = s[i] + res
+		cnt += 1
+	return res
+

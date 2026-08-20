@@ -89,9 +89,83 @@ func _init() -> void:
 	var lb_script = load("res://scripts/ui/leaderboard_panel.gd")
 	assert(lb_script != null, "Leaderboard script res://scripts/ui/leaderboard_panel.gd must be valid!")
 	print("✔ Test 8 PASSED: TOP 10 Leaderboard panel script verified!")
+
+	# Test 9: New Advanced Tycoon Modules Verification
+	print("\n📌 [Test 9] Verifying Advanced Tycoon Modules (AI Focus, Exam Season, Multi-Theme, Protein Bar, Kiosk)...")
+	var res_ai = state.scan_ai_focus_zone()
+	assert(res_ai["success"] == true, "AI focus scan must succeed")
 	
+	var res_season = state.trigger_exam_burning_season("MIDTERM_EXAM")
+	assert(res_season["success"] == true, "Exam burning season must succeed")
+	
+	var res_theme = state.switch_cafe_theme("CYBER_NEON")
+	assert(res_theme["success"] == true, "Theme switch must succeed")
+	assert(state.current_theme == "CYBER_NEON", "Current theme should be CYBER_NEON")
+	
+	var res_snack = state.dispense_protein_snack()
+	assert(res_snack["success"] == true, "Protein snack dispense must succeed")
+	
+	var res_kiosk = state.process_kiosk_checkin()
+	assert(res_kiosk["success"] == true, "Kiosk check-in must succeed")
+	
+	var res_mentor = state.conduct_student_mentoring()
+	assert(res_mentor["success"] == true, "Student mentoring must succeed")
+	
+	var res_repair = state.repair_anc_headphone()
+	assert(res_repair["success"] == true, "ANC headphone repair must succeed")
+	
+	var res_booth = state.reserve_acoustic_isolation_booth()
+	assert(res_booth["success"] == true, "Acoustic booth reservation must succeed")
+	
+	var res_bot = state.deploy_sanitation_robot()
+	assert(res_bot["success"] == true, "Sanitation robot deploy must succeed")
+	
+	var res_nitro = state.dispense_nitro_cold_brew()
+	assert(res_nitro["success"] == true, "Nitro cold brew dispense must succeed")
+	
+	var res_grind = state.calibrate_espresso_grinder()
+	assert(res_grind["success"] == true, "Grinder calibration must succeed")
+	
+	var res_vip = state.unlock_vip_lounge_floor()
+	assert(res_vip["success"] == true, "VIP lounge unlock must succeed")
+	
+	var res_desk = state.tune_standing_desk_height()
+	assert(res_desk["success"] == true, "Standing desk tune must succeed")
+	
+	var res_aroma = state.dispense_aroma_scent()
+	assert(res_aroma["success"] == true, "Aroma scent dispense must succeed")
+	
+	var res_ade = state.blend_sparkling_ade()
+	assert(res_ade["success"] == true, "Sparkling ade blend must succeed")
+	
+	var res_solar = state.activate_solar_power_grid()
+	assert(res_solar["success"] == true, "Solar power activation must succeed")
+	
+	var res_fran = state.claim_franchise_accreditation()
+	assert(res_fran["success"] == true, "Franchise accreditation must succeed")
+	
+	var res_panel = state.tune_acoustic_wall_panels()
+	assert(res_panel["success"] == true, "Acoustic panel tune must succeed")
+	
+	var res_matcha = state.blend_matcha_latte()
+	assert(res_matcha["success"] == true, "Matcha latte blend must succeed")
+	
+	var res_mon = state.setup_multi_monitor_dock()
+	assert(res_mon["success"] == true, "Multi-monitor dock setup must succeed")
+	
+	var res_hepa = state.replace_hepa_filter()
+	assert(res_hepa["success"] == true, "HEPA filter replace must succeed")
+	
+	var res_trophy = state.claim_hall_of_fame_trophy()
+	assert(res_trophy["success"] == true, "Hall of fame trophy claim must succeed")
+	print("✔ Test 9 PASSED: All 22 Advanced Tycoon Modules verified!")
+
+
+
+
+
 	state.free()
 	print("\n=========================================================")
 	print("🎉 ALL 120-MODULE AUTOMATED VERIFICATION TESTS PASSED (100%) 🎉")
-	print("=========================================================")
+	print("=========================================================\n")
 	quit()
