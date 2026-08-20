@@ -533,6 +533,17 @@ func expand_store_territory() -> Dictionary:
 # Meeting Module 80: Main Story Quests Stage 01-10 Subsystem
 var story_stage: int = 10
 
+# Meeting Module 81: Main Story Quests Stage 11-20 Subsystem
+var story_stage_2: int = 15
+
+func advance_story_stage_11_20() -> Dictionary:
+	story_stage_2 += 1
+	var reward = 15000.0
+	add_money(reward)
+	reputation = min(5.0, reputation + 0.05)
+	_play_sfx_safe("fanfare")
+	return { "success": true, "msg": "📖 메인 스토리 퀘스트 Chapter 2 (Stage %d) 완수! (+15,000 ₩ 스토리 챕터 보상 🎉)" % story_stage_2 }
+
 func complete_story_stage() -> Dictionary:
 	story_stage += 1
 	var reward = 10000.0
@@ -896,6 +907,63 @@ func claim_hall_of_fame_trophy() -> Dictionary:
 	reputation = min(5.0, reputation + 0.15)
 	_play_sfx_safe("fanfare")
 	return { "success": true, "msg": "👑 전국 타이쿤 명예의 전당 전설의 마스터 스터디 카페 황금 트로피 입수! (+30,000 ₩ 최고 보상금 🏆)" }
+
+# Meeting Module 91: Smart Ergonomic Mesh Chair Lumbar Support Subsystem
+var lumbar_support_tunes_count: int = 0
+
+func tune_lumbar_chair_support(seat_idx: int = 1) -> Dictionary:
+	lumbar_support_tunes_count += 1
+	var fee = 3300.0
+	add_money(fee)
+	reputation = min(5.0, reputation + 0.03)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "🪑 %d번 좌석 인체공학 메쉬 체어 요추 피로 완화 서포트 정밀 조정 완료! (+3,300 ₩ | 피로도 -30%% ⚡)" % (seat_idx + 1) }
+
+# Meeting Module 92: Premium Handcrafted Honey Butter Scone Bakery Subsystem
+var honey_scones_baked: int = 0
+
+func bake_honey_butter_scone() -> Dictionary:
+	honey_scones_baked += 1
+	var price = 4200.0
+	add_money(price)
+	reputation = min(5.0, reputation + 0.04)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "🥐 천연 프랑스 고메 버터 & 꿀 갓 구운 오븐 스콘 완성! (+4,200 ₩ | 라운지 디저트 콤보 +20%% 🍯)" }
+
+# Meeting Module 93: Noise-Canceling Silent Keyboard & Mouse Rental Subsystem
+var silent_peripherals_rented: int = 0
+
+func rent_silent_peripherals(seat_idx: int = 0) -> Dictionary:
+	silent_peripherals_rented += 1
+	var fee = 2900.0
+	add_money(fee)
+	reputation = min(5.0, reputation + 0.03)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "⌨️ %d번 좌석 초무소음 무선 키보드 & 마우스 세트 대여 완료! (+2,900 ₩ | 정숙도 +100%% 🔇)" % (seat_idx + 1) }
+
+# Meeting Module 94: Intelligent Micro-Climate Temperature & Humidity Controller Subsystem
+var micro_climate_adjustments: int = 0
+
+func adjust_micro_climate(target_temp: float = 24.5, humidity_pct: int = 50) -> Dictionary:
+	micro_climate_adjustments += 1
+	temperature = target_temp
+	var fee = 3700.0
+	add_money(fee)
+	reputation = min(5.0, reputation + 0.04)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "🌡️ 항온항습 마이크로 클라이밋 %.1f°C & 습도 %d%% 자동 쾌적 셋팅! (+3,700 ₩ | 집중 쾌적지수 100점 ❄️)" % [target_temp, humidity_pct] }
+
+# Meeting Module 95: Nationwide Franchise Master Blueprint Subsystem
+var master_blueprints_issued: int = 0
+
+func issue_master_franchise_blueprint() -> Dictionary:
+	master_blueprints_issued += 1
+	var royalty_rev = 35000.0
+	add_money(royalty_rev)
+	reputation = min(5.0, reputation + 0.20)
+	_play_sfx_safe("fanfare")
+	return { "success": true, "msg": "📜 전국 100호점 스터디 카페 마스터 청사진 청구 및 가맹 로열티 입수! (+35,000 ₩ 로열티 수금 👑)" }
+
 
 
 

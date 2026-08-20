@@ -160,6 +160,43 @@ func _init() -> void:
 	assert(res_trophy["success"] == true, "Hall of fame trophy claim must succeed")
 	print("✔ Test 9 PASSED: All 22 Advanced Tycoon Modules verified!")
 
+	# Test 10: User Custom Modules & Round 5 Subsystems Verification
+	print("\n📌 [Test 10] Verifying User Regular Guest Subsystems & Round 5 Modules...")
+	var res_minjun = state.interact_regular_minjun()
+	assert(res_minjun["success"] == true, "Minjun interaction must succeed")
+	
+	var res_hyunwoo = state.interact_regular_hyunwoo()
+	assert(res_hyunwoo["success"] == true, "Hyunwoo interaction must succeed")
+	
+	var res_churu = state.feed_navi_churu()
+	assert(res_churu["success"] == true, "Churu feeding must succeed")
+	
+	var decor_tier = state.get_decor_rating_tier()
+	assert(decor_tier.length() > 0, "Decor rating tier string must be non-empty")
+	
+	var res_expand = state.expand_store_territory()
+	assert(res_expand.has("success"), "Store territory expansion must return Dictionary with success key")
+	
+	var res_story = state.complete_story_stage()
+	assert(res_story["success"] == true, "Story stage completion must succeed")
+	
+	var res_chair = state.tune_lumbar_chair_support()
+	assert(res_chair["success"] == true, "Lumbar chair support tune must succeed")
+	
+	var res_scone = state.bake_honey_butter_scone()
+	assert(res_scone["success"] == true, "Honey butter scone bake must succeed")
+	
+	var res_mouse = state.rent_silent_peripherals()
+	assert(res_mouse["success"] == true, "Silent peripherals rental must succeed")
+	
+	var res_climate = state.adjust_micro_climate()
+	assert(res_climate["success"] == true, "Micro-climate adjustment must succeed")
+	
+	var res_blueprint = state.issue_master_franchise_blueprint()
+	assert(res_blueprint["success"] == true, "Master franchise blueprint issue must succeed")
+	print("✔ Test 10 PASSED: User Modules & All Round 5 Subsystems verified!")
+
+
 
 
 
