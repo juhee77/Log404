@@ -1030,6 +1030,28 @@ var mock_exam_diagnoses_count: int = 0
 # Meeting Module 102: Handdrip Single Origin Coffee Bar Subsystem
 var handdrip_brews_count: int = 0
 
+# Meeting Module 103: ANC Headphones Rental Subsystem
+var anc_headphones_rented_count: int = 0
+
+func rent_anc_headphones(brand_name: String = "🎧 Sony WH-1000XM5 노이즈 캔슬링") -> Dictionary:
+	anc_headphones_rented_count += 1
+	var fee = 4200.0
+	add_money(fee)
+	reputation = min(5.0, reputation + 0.04)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "🎧 [%s] 노이즈 캔슬링 헤드폰 대여 완료! (+4,200 ₩ | 소음 완전 차단 몰입 +35%% 🤫)" % brand_name }
+
+# Meeting Module 104: Zero-Gravity Power Nap Pod Subsystem
+var power_nap_pods_used: int = 0
+
+func use_power_nap_pod() -> Dictionary:
+	power_nap_pods_used += 1
+	var fee = 6500.0
+	add_money(fee)
+	reputation = min(5.0, reputation + 0.05)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "🛌 무중력 리클라이너 30분 파워 냅 캡슐 이용 완료! (+6,500 ₩ | 뇌 쿨링 피로 회복 +50%% 💤)" }
+
 func brew_handdrip_single_origin(bean_name: String = "☕ 에티오피아 예가체프 G1 맑은 꽃향") -> Dictionary:
 	handdrip_brews_count += 1
 	var price = 5800.0
@@ -1219,6 +1241,62 @@ func claim_sovereign_gold_crown() -> Dictionary:
 	reputation = min(5.0, reputation + 0.60)
 	_play_sfx_safe("fanfare")
 	return { "success": true, "msg": "👑 [지존] 115개 타이쿤 모듈 전설 달성 유니버스 소버린 황금 왕관 획득! (+125,000 ₩ 지존 보상금 🏆)" }
+
+# Meeting Module 116: Smart Automatic Desk FIR Lumbar Heating Pad Subsystem
+var fir_heating_pads_tuned: int = 0
+
+func tune_desk_lumbar_heat(seat_idx: int = 1, temp_level: int = 42) -> Dictionary:
+	fir_heating_pads_tuned += 1
+	var fee = 3300.0
+	add_money(fee)
+	reputation = min(5.0, reputation + 0.03)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "♨️ %d번 좌석 원적외선 요추 온열 패드 %d°C 자동 온도 설정 완료! (+3,300 ₩ | 요추 통증 완화 +40%% 🧘)" % [(seat_idx + 1), temp_level] }
+
+# Meeting Module 117: Organic Cold-Pressed Dragonfruit Pitaya Smoothie Subsystem
+var dragonfruit_smoothies_sold: int = 0
+
+func blend_dragonfruit_smoothie() -> Dictionary:
+	dragonfruit_smoothies_sold += 1
+	var price = 5200.0
+	add_money(price)
+	reputation = min(5.0, reputation + 0.04)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "🌺 유기농 피타야 레드 드래곤후르츠 & 코코넛 스무디 완성! (+5,200 ₩ | 항산화 & 수분 체력 +35%% 🍹)" }
+
+# Meeting Module 118: Smart Ambient Circadian Rhythm Spectrum Lighting Controller Subsystem
+var circadian_lightings_adjusted: int = 0
+
+func adjust_circadian_lighting(kelvin_val: int = 5000) -> Dictionary:
+	circadian_lightings_adjusted += 1
+	var fee = 3900.0
+	add_money(fee)
+	reputation = min(5.0, reputation + 0.04)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "☀️ 24시간 서카디언 생체리듬 주광/주백색 %dK 스마트 색온도 자동 제어! (+3,900 ₩ | 수면 리듬 & 눈 피로 방지 ✨)" % kelvin_val }
+
+# Meeting Module 119: Automated Roasting Bean Silo De-Stoner & Sorting Machine Subsystem
+var bean_silos_sorted: int = 0
+
+func run_coffee_silo_destoner() -> Dictionary:
+	bean_silos_sorted += 1
+	var fee = 3600.0
+	add_money(fee)
+	reputation = min(5.0, reputation + 0.03)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "⚙️ 공압식 생두 디스토너 실로 불순물 & 돌 제거 정밀 분류 완료! (+3,600 ₩ | 원두 순도 100%% ☕)" }
+
+# Meeting Module 120: Grand Master Study Cafe Tycoon Universal Infinity Trophy Subsystem
+var universal_infinity_trophies_claimed: int = 0
+
+func claim_universal_infinity_trophy() -> Dictionary:
+	universal_infinity_trophies_claimed += 1
+	var bonus_rev = 200000.0
+	add_money(bonus_rev)
+	reputation = 5.0
+	_play_sfx_safe("fanfare")
+	return { "success": true, "msg": "👑 [🎉 120개 모듈 100%% 완벽 달성] 스터디 카페 타이쿤 유니버스 인피니티 트로피 입수! (+200,000 ₩ 최종 신화 보상 🏆)" }
+
 
 
 

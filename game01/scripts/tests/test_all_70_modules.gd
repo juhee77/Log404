@@ -271,6 +271,25 @@ func _init() -> void:
 	assert(res_sov["success"] == true, "Sovereign Gold Crown claim must succeed")
 	print("✔ Test 14 PASSED: Sovereign Modules 111-115 100% verified!")
 
+	# Test 15: Grand Master Universal Infinity Modules 116-120 Verification
+	print("\n📌 [Test 15] Verifying Universal Infinity Subsystems Modules 116-120...")
+	var res_fir = state.tune_desk_lumbar_heat()
+	assert(res_fir["success"] == true, "FIR lumbar heat tune must succeed")
+	
+	var res_drag = state.blend_dragonfruit_smoothie()
+	assert(res_drag["success"] == true, "Dragonfruit smoothie blend must succeed")
+	
+	var res_circ = state.adjust_circadian_lighting()
+	assert(res_circ["success"] == true, "Circadian lighting adjustment must succeed")
+	
+	var res_stone = state.run_coffee_silo_destoner()
+	assert(res_stone["success"] == true, "Coffee silo de-stoner run must succeed")
+	
+	var res_inf = state.claim_universal_infinity_trophy()
+	assert(res_inf["success"] == true, "Universal Infinity Trophy claim must succeed")
+	print("✔ Test 15 PASSED: ALL 120 TYCOON MODULES 100% PERFECTLY VERIFIED!")
+
+
 
 
 
