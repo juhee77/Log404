@@ -977,6 +977,118 @@ func issue_master_franchise_blueprint() -> Dictionary:
 	_play_sfx_safe("fanfare")
 	return { "success": true, "msg": "📜 전국 100호점 스터디 카페 마스터 청사진 청구 및 가맹 로열티 입수! (+35,000 ₩ 로열티 수금 👑)" }
 
+# Meeting Module 96: Premium Wireless Fast Charger Dock Subsystem
+var wireless_chargers_setup: int = 0
+
+func setup_fast_wireless_charger(seat_idx: int = 1) -> Dictionary:
+	wireless_chargers_setup += 1
+	var fee = 3100.0
+	add_money(fee)
+	reputation = min(5.0, reputation + 0.03)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "⚡ %d번 좌석 50W 고속 무선 충전 패드 도크 장착 완료! (+3,100 ₩ | 배터리 방전 걱정 제로 📱)" % (seat_idx + 1) }
+
+# Meeting Module 97: Cold-Pressed Organic Passionfruit Smoothie Subsystem
+var passionfruit_smoothies_sold: int = 0
+
+func blend_passionfruit_smoothie() -> Dictionary:
+	passionfruit_smoothies_sold += 1
+	var price = 4900.0
+	add_money(price)
+	reputation = min(5.0, reputation + 0.04)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "🍹 착즙 유기농 패션후르츠 & 망고 스무디 완성! (+4,900 ₩ | 비타민 C 뇌 활력 +30%% 🥭)" }
+
+# Meeting Module 98: Smart OLED Door Nameplate & Seat Status Indicator Subsystem
+var oled_nameplates_tuned: int = 0
+
+func tune_oled_seat_nameplate(seat_idx: int = 0, name_str: String = "열공 D-DAY 30") -> Dictionary:
+	oled_nameplates_tuned += 1
+	var fee = 3800.0
+	add_money(fee)
+	reputation = min(5.0, reputation + 0.04)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "🖥️ %d번 좌석 OLED 미니 네임플레이트 [%s] 디지털 셋팅 완료! (+3,800 ₩ | 몰입 각오 UP 🎯)" % [(seat_idx + 1), name_str] }
+
+# Meeting Module 99: Silent Anti-Vibration Footrest Cushion Subsystem
+var footrests_setup: int = 0
+
+func setup_ergonomic_footrest(seat_idx: int = 1) -> Dictionary:
+	footrests_setup += 1
+	var fee = 2700.0
+	add_money(fee)
+	reputation = min(5.0, reputation + 0.03)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "🦶 %d번 좌석 메모리폼 저반발 발받침대 쿠션 장착 완료! (+2,700 ₩ | 하체 혈액순환 & 피로 완화 🦿)" % (seat_idx + 1) }
+
+# Meeting Module 100: Global Franchise Hall of Fame Grand Diamond Medal Subsystem
+var grand_diamond_medals_claimed: int = 0
+
+func claim_grand_diamond_medal() -> Dictionary:
+	grand_diamond_medals_claimed += 1
+	var bonus_rev = 50000.0
+	add_money(bonus_rev)
+	reputation = min(5.0, reputation + 0.25)
+	_play_sfx_safe("fanfare")
+	return { "success": true, "msg": "💎 [경축] 100개 타이쿤 모듈 완벽달성 글로벌 명예의 전당 그랜드 다이아몬드 훈장 획득! (+50,000 ₩ 최고 보상금 👑)" }
+
+# Meeting Module 101: Cooling Gel Wrist Rest Pad Subsystem
+var wrist_rests_setup: int = 0
+
+func setup_gel_wrist_rest(seat_idx: int = 1) -> Dictionary:
+	wrist_rests_setup += 1
+	var fee = 2800.0
+	add_money(fee)
+	reputation = min(5.0, reputation + 0.03)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "⌨️ %d번 좌석 고밀도 쿨링 젤 손목 받침대 쿠션 대여 장착 완료! (+2,800 ₩ | 터널증후군 예방 & 손목 피로 -35%% 🖐️)" % (seat_idx + 1) }
+
+# Meeting Module 102: Cold-Brew Espresso Protein Shake Subsystem
+var espresso_protein_shakes_sold: int = 0
+
+func blend_espresso_protein_shake() -> Dictionary:
+	espresso_protein_shakes_sold += 1
+	var price = 5100.0
+	add_money(price)
+	reputation = min(5.0, reputation + 0.04)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "☕ 진한 에스프레소 콜드브루 & WPI 프로틴 쉐이크 제조 완료! (+5,100 ₩ | 뇌 포도당 & 지구력 +35%% 🏋️‍♂️)" }
+
+# Meeting Module 103: Smart Auto-Dimming Ambient Skylight Subsystem
+var skylight_tunes_count: int = 0
+
+func tune_ambient_skylight(tint_level: int = 40) -> Dictionary:
+	skylight_tunes_count += 1
+	var fee = 4100.0
+	add_money(fee)
+	reputation = min(5.0, reputation + 0.04)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "🌤️ 천장 일렉트로크로믹 스마트 글라스 조도 %d%% 자동 차광 조율! (+4,100 ₩ | 눈 피로 감소 & 자연광 조화 ☀️)" % tint_level }
+
+# Meeting Module 104: Silent Ultrasonic Desk Humidifier Subsystem
+var humidifiers_dispensed: int = 0
+
+func dispense_ultrasonic_mist(seat_idx: int = 0) -> Dictionary:
+	humidifiers_dispensed += 1
+	var fee = 3300.0
+	add_money(fee)
+	reputation = min(5.0, reputation + 0.03)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "💧 %d번 좌석 개인용 무소음 초음파 수분 미스트 가습기 작동! (+3,300 ₩ | 피부 & 목 안구 보습 100%% 🌫️)" % (seat_idx + 1) }
+
+# Meeting Module 105: Global Franchise Empire Crown Platinum Seal Subsystem
+var empire_platinum_seals_claimed: int = 0
+
+func claim_empire_platinum_seal() -> Dictionary:
+	empire_platinum_seals_claimed += 1
+	var bonus_rev = 75000.0
+	add_money(bonus_rev)
+	reputation = min(5.0, reputation + 0.30)
+	_play_sfx_safe("fanfare")
+	return { "success": true, "msg": "👑 [대업] 전국 200호점 글로벌 스터디 카페 제국 엠파이어 크라운 플래티넘 옥새 입수! (+75,000 ₩ 제국 보상금 🏆)" }
+
+
+
 
 
 

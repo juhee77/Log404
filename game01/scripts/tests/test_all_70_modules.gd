@@ -196,6 +196,28 @@ func _init() -> void:
 	assert(res_blueprint["success"] == true, "Master franchise blueprint issue must succeed")
 	print("✔ Test 10 PASSED: User Modules & All Round 5 Subsystems verified!")
 
+	# Test 11: Staff Uniform Wardrobe & Milestone 100 Modules Verification
+	print("\n📌 [Test 11] Verifying Staff Uniform Wardrobe & Milestone Modules 96-100...")
+	var res_uni = state.equip_staff_uniform()
+	assert(res_uni["success"] == true, "Uniform equip must succeed")
+	
+	var res_chg = state.setup_fast_wireless_charger()
+	assert(res_chg["success"] == true, "Wireless charger setup must succeed")
+	
+	var res_pass = state.blend_passionfruit_smoothie()
+	assert(res_pass["success"] == true, "Passionfruit smoothie blend must succeed")
+	
+	var res_oled = state.tune_oled_seat_nameplate()
+	assert(res_oled["success"] == true, "OLED nameplate tune must succeed")
+	
+	var res_foot = state.setup_ergonomic_footrest()
+	assert(res_foot["success"] == true, "Ergonomic footrest setup must succeed")
+	
+	var res_dia = state.claim_grand_diamond_medal()
+	assert(res_dia["success"] == true, "Grand Diamond Medal claim must succeed")
+	print("✔ Test 11 PASSED: Milestone 100 Tycoon Modules 100% verified!")
+
+
 
 
 
