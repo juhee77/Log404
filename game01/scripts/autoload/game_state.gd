@@ -536,6 +536,19 @@ var story_stage: int = 10
 # Meeting Module 81: Main Story Quests Stage 11-20 Subsystem
 var story_stage_2: int = 15
 
+# Meeting Module 85: Staff Uniform Apron Wardrobe Subsystem
+var active_staff_uniform: String = "MAHOGANY_OAK_APRON"
+var unlocked_uniforms: Array = ["MAHOGANY_OAK_APRON", "DENIM_BARISTA_APRON"]
+
+func equip_staff_uniform(uniform_id: String = "PASTEL_PINK_APRON") -> Dictionary:
+	if not unlocked_uniforms.has(uniform_id):
+		unlocked_uniforms.append(uniform_id)
+	active_staff_uniform = uniform_id
+	decor_score += 15
+	reputation = min(5.0, reputation + 0.05)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "👔 바리스타 및 알바 직원 유니폼 [%s] 교체 완료! (매장 품격 +15 🌟 | 명성 UP)" % uniform_id }
+
 func advance_story_stage_11_20() -> Dictionary:
 	story_stage_2 += 1
 	var reward = 15000.0
