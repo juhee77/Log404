@@ -1027,6 +1027,17 @@ var grand_diamond_medals_claimed: int = 0
 # Meeting Module 101: Mock Exam Diagnosis Center Subsystem
 var mock_exam_diagnoses_count: int = 0
 
+# Meeting Module 102: Handdrip Single Origin Coffee Bar Subsystem
+var handdrip_brews_count: int = 0
+
+func brew_handdrip_single_origin(bean_name: String = "☕ 에티오피아 예가체프 G1 맑은 꽃향") -> Dictionary:
+	handdrip_brews_count += 1
+	var price = 5800.0
+	add_money(price)
+	reputation = min(5.0, reputation + 0.05)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "☕ 프리미엄 핸드드립 바 [%s] 추출 완료! (+5,800 ₩ | 미각 감동 & 뇌 각성 +40%% 🌺)" % bean_name }
+
 func diagnose_mock_exam_slump(student_name: String = "단골 공시생 수현") -> Dictionary:
 	mock_exam_diagnoses_count += 1
 	var fee = 5200.0
@@ -1153,6 +1164,62 @@ func claim_imperial_throne_scepter() -> Dictionary:
 	reputation = min(5.0, reputation + 0.50)
 	_play_sfx_safe("fanfare")
 	return { "success": true, "msg": "👑 [신화] 전국 300호점 타이쿤 제왕 CEO 임페리얼 황금 홀 획득! (+100,000 ₩ 최고 신화 보상금 🏆)" }
+
+# Meeting Module 111: Premium Heated Ergonomic Seat Cushion Subsystem
+var heated_cushions_tuned: int = 0
+
+func tune_heated_seat_cushion(seat_idx: int = 1, temp_level: int = 38) -> Dictionary:
+	heated_cushions_tuned += 1
+	var fee = 3200.0
+	add_money(fee)
+	reputation = min(5.0, reputation + 0.03)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "🔥 %d번 좌석 3단계 온열 방석 온도 %d°C 조율 완료! (+3,200 ₩ | 동계 수험 추위 해소 & 피로도 -35%% ❄️)" % [(seat_idx + 1), temp_level] }
+
+# Meeting Module 112: Handcrafted Organic Blueberry Greek Yogurt Smoothie Subsystem
+var blueberry_smoothies_sold: int = 0
+
+func blend_blueberry_yogurt_smoothie() -> Dictionary:
+	blueberry_smoothies_sold += 1
+	var price = 5000.0
+	add_money(price)
+	reputation = min(5.0, reputation + 0.04)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "🫐 유기농 야생 블루베리 & 그릭 요거트 스무디 제조 완료! (+5,000 ₩ | 안토시아닌 시력 시야 선명도 +30%% 👁️)" }
+
+# Meeting Module 113: Smart IoT Wireless Page Turner Pedal Subsystem
+var page_turners_rented: int = 0
+
+func setup_page_turner_pedal(seat_idx: int = 0) -> Dictionary:
+	page_turners_rented += 1
+	var fee = 2900.0
+	add_money(fee)
+	reputation = min(5.0, reputation + 0.03)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "🦶 %d번 좌석 태블릿/PDF 무선 블루투스 무소음 페이저 페달 장착 완료! (+2,900 ₩ | 속독 리딩 효율 +25%% 📖)" % (seat_idx + 1) }
+
+# Meeting Module 114: Automated High-Pressure Espresso Steam Wand Sterilizer Subsystem
+var steam_wands_cleaned: int = 0
+
+func clean_barista_steam_wand() -> Dictionary:
+	steam_wands_cleaned += 1
+	var fee = 3400.0
+	add_money(fee)
+	reputation = min(5.0, reputation + 0.03)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "☕ 150°C 고온 고압 에스프레소 스팀 완드 자동 세척 & 멸균 완료! (+3,400 ₩ | 우유 폼 위생 점수 100점 ✨)" }
+
+# Meeting Module 115: Supreme Tycoon Universe Sovereign Gold Crown Subsystem
+var sovereign_gold_crowns_claimed: int = 0
+
+func claim_sovereign_gold_crown() -> Dictionary:
+	sovereign_gold_crowns_claimed += 1
+	var bonus_rev = 125000.0
+	add_money(bonus_rev)
+	reputation = min(5.0, reputation + 0.60)
+	_play_sfx_safe("fanfare")
+	return { "success": true, "msg": "👑 [지존] 115개 타이쿤 모듈 전설 달성 유니버스 소버린 황금 왕관 획득! (+125,000 ₩ 지존 보상금 🏆)" }
+
 
 
 
