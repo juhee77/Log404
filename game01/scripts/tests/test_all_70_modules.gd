@@ -217,6 +217,44 @@ func _init() -> void:
 	assert(res_dia["success"] == true, "Grand Diamond Medal claim must succeed")
 	print("✔ Test 11 PASSED: Milestone 100 Tycoon Modules 100% verified!")
 
+	# Test 12: Empire Expansion Modules 101-105 Verification
+	print("\n📌 [Test 12] Verifying Empire Expansion Subsystems Modules 101-105...")
+	var res_gel = state.setup_gel_wrist_rest()
+	assert(res_gel["success"] == true, "Gel wrist rest setup must succeed")
+	
+	var res_esp = state.blend_espresso_protein_shake()
+	assert(res_esp["success"] == true, "Espresso protein shake blend must succeed")
+	
+	var res_sky = state.tune_ambient_skylight()
+	assert(res_sky["success"] == true, "Ambient skylight tune must succeed")
+	
+	var res_mist = state.dispense_ultrasonic_mist()
+	assert(res_mist["success"] == true, "Ultrasonic mist dispense must succeed")
+	
+	var res_emp = state.claim_empire_platinum_seal()
+	assert(res_emp["success"] == true, "Empire Platinum Seal claim must succeed")
+	print("✔ Test 12 PASSED: Empire Modules 101-105 100% verified!")
+
+	# Test 13: Imperial Throne Modules 106-110 Verification
+	print("\n📌 [Test 13] Verifying Imperial Throne Subsystems Modules 106-110...")
+	var res_priv = state.setup_privacy_filter()
+	assert(res_priv["success"] == true, "Privacy filter setup must succeed")
+	
+	var res_hib = state.blend_hibiscus_tea()
+	assert(res_hib["success"] == true, "Hibiscus tea blend must succeed")
+	
+	var res_uv = state.sterilize_desk_dock()
+	assert(res_uv["success"] == true, "UV desk sterilization must succeed")
+	
+	var res_beat = state.play_brainwave_binaural_beat()
+	assert(res_beat["success"] == true, "Brainwave binaural beat play must succeed")
+	
+	var res_sce = state.claim_imperial_throne_scepter()
+	assert(res_sce["success"] == true, "Imperial throne scepter claim must succeed")
+	print("✔ Test 13 PASSED: Imperial Modules 106-110 100% verified!")
+
+
+
 
 
 

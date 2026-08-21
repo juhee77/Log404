@@ -1024,6 +1024,17 @@ func setup_ergonomic_footrest(seat_idx: int = 1) -> Dictionary:
 # Meeting Module 100: Global Franchise Hall of Fame Grand Diamond Medal Subsystem
 var grand_diamond_medals_claimed: int = 0
 
+# Meeting Module 101: Mock Exam Diagnosis Center Subsystem
+var mock_exam_diagnoses_count: int = 0
+
+func diagnose_mock_exam_slump(student_name: String = "단골 공시생 수현") -> Dictionary:
+	mock_exam_diagnoses_count += 1
+	var fee = 5200.0
+	add_money(fee)
+	reputation = min(5.0, reputation + 0.05)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "📝 [%s] 9월 모의고사 성적 약점 진단 & 슬럼프 처방 완료! (+5,200 ₩ | 합격 확률 +15%% 🎯)" % student_name }
+
 func claim_grand_diamond_medal() -> Dictionary:
 	grand_diamond_medals_claimed += 1
 	var bonus_rev = 50000.0
@@ -1086,6 +1097,63 @@ func claim_empire_platinum_seal() -> Dictionary:
 	reputation = min(5.0, reputation + 0.30)
 	_play_sfx_safe("fanfare")
 	return { "success": true, "msg": "👑 [대업] 전국 200호점 글로벌 스터디 카페 제국 엠파이어 크라운 플래티넘 옥새 입수! (+75,000 ₩ 제국 보상금 🏆)" }
+
+# Meeting Module 106: Smart Magnetic Privacy Screen Filter Subsystem
+var privacy_filters_rented: int = 0
+
+func setup_privacy_filter(seat_idx: int = 1) -> Dictionary:
+	privacy_filters_rented += 1
+	var fee = 2600.0
+	add_money(fee)
+	reputation = min(5.0, reputation + 0.03)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "🔒 %d번 좌석 마그네틱 보안 시선 차단 필터 대여 장착 완료! (+2,600 ₩ | 모의고사 성적 & 비밀 소스코드 보호 100%% 🙈)" % (seat_idx + 1) }
+
+# Meeting Module 107: Iced Organic Hibiscus Rosehip Immunity Tea Subsystem
+var hibiscus_teas_sold: int = 0
+
+func blend_hibiscus_tea() -> Dictionary:
+	hibiscus_teas_sold += 1
+	var price = 4700.0
+	add_money(price)
+	reputation = min(5.0, reputation + 0.04)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "🍹 유기농 히비스커스 & 로즈힙 꿀 레몬 아이스티 완성! (+4,700 ₩ | 안구 피로 회복 & 면역력 +30%% 🌺)" }
+
+# Meeting Module 108: Smart Auto-Sanitizing UV Desk Sterilization Subsystem
+var uv_docks_sterilized: int = 0
+
+func sterilize_desk_dock(seat_idx: int = 0) -> Dictionary:
+	uv_docks_sterilized += 1
+	var fee = 3600.0
+	add_money(fee)
+	reputation = min(5.0, reputation + 0.03)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "✨ %d번 좌석 고출력 UV-C LED 키보드 & 스마트폰 60초 살균 완료! (+3,600 ₩ | 잔여 세균 0.0%% 멸균 🛡️)" % (seat_idx + 1) }
+
+# Meeting Module 109: Low-Frequency Binaural Beats Brainwave Soundscape Subsystem
+var brainwave_streams_played: int = 0
+
+func play_brainwave_binaural_beat(freq_mode: String = "ALPHA_WAVE") -> Dictionary:
+	brainwave_streams_played += 1
+	var fee = 4200.0
+	add_money(fee)
+	reputation = min(5.0, reputation + 0.04)
+	_play_sfx_safe("chime")
+	var wave_name = "알파파 (8-12Hz 집중력 극대화)" if freq_mode == "ALPHA_WAVE" else "세타파 (4-8Hz 암기력 극대화)"
+	return { "success": true, "msg": "🎧 저주파 ANC 바이노럴 비트 [%s] 음원 스트리밍 작동! (+4,200 ₩ | 딥 집중도 +40%% 🧠)" % wave_name }
+
+# Meeting Module 110: Nationwide Franchisor CEO Imperial Throne Scepter Subsystem
+var imperial_scepters_claimed: int = 0
+
+func claim_imperial_throne_scepter() -> Dictionary:
+	imperial_scepters_claimed += 1
+	var bonus_rev = 100000.0
+	add_money(bonus_rev)
+	reputation = min(5.0, reputation + 0.50)
+	_play_sfx_safe("fanfare")
+	return { "success": true, "msg": "👑 [신화] 전국 300호점 타이쿤 제왕 CEO 임페리얼 황금 홀 획득! (+100,000 ₩ 최고 신화 보상금 🏆)" }
+
 
 
 
