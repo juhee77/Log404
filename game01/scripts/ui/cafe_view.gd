@@ -401,6 +401,14 @@ func _gui_input(event: InputEvent) -> void:
 				queue_redraw()
 				return
 
+			# Check Gravitational Wave Noise Cancellation Acoustic HUD Button Click (Top Right, left of TRS)
+			var grv_btn_x = trs_btn_x - 170.0
+			var grv_btn_rect = Rect2(grv_btn_x, 16, 160, 36)
+			if grv_btn_rect.has_point(screen_click):
+				GameState.toggle_grav_acoustic_hud()
+				queue_redraw()
+				return
+
 			# 1. Check Mascot Cat Click
 			if click_pos.distance_to(GameState.cat_pos) < 35.0:
 				GameState.pet_cat()
@@ -1206,6 +1214,28 @@ func draw_integrated_multi_room_layout(w: float, h: float) -> void:
 	draw_rect(trs_btn_rect, Color(0.3, 0.8, 1.0), false, 2.0)
 	var trs_btn_label = "💎 양자정산 ON" if GameState.is_treasury_hud_open else "💎 양자정산"
 	draw_string(ThemeDB.fallback_font, trs_btn_rect.position + Vector2(25, 24), trs_btn_label, HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color.WHITE)
+
+	# Render Gravitational Wave Noise Cancellation Acoustic HUD Toggle Button (Top Right HUD, left of TRS)
+	var grv_btn_x = trs_btn_x - 170.0
+	var grv_btn_rect = Rect2(grv_btn_x, 16, 160, 36)
+	var grv_btn_bg = Color(0.6, 0.2, 0.85, 0.95) if GameState.is_grav_acoustic_hud_open else Color(0.15, 0.18, 0.22, 0.9)
+	draw_rect(grv_btn_rect, grv_btn_bg, true)
+	draw_rect(grv_btn_rect, Color(0.8, 0.4, 1.0), false, 2.0)
+	var grv_btn_label = "🌌 중력파 ON" if GameState.is_grav_acoustic_hud_open else "🌌 중력파"
+	draw_string(ThemeDB.fallback_font, grv_btn_rect.position + Vector2(25, 24), grv_btn_label, HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color.WHITE)
+
+	# Render Gravitational Wave Noise Cancellation Acoustic HUD Panel if ON
+	if GameState.is_grav_acoustic_hud_open:
+		var grv_info = GameState.calculate_gravitational_acoustic_metrics()
+		var grv_panel_rect = Rect2(grv_btn_x - 40.0, 60, 240, 130)
+		draw_rect(grv_panel_rect, Color(0.06, 0.08, 0.12, 0.95), true)
+		draw_rect(grv_panel_rect, Color(0.8, 0.4, 1.0), false, 2.0)
+		
+		draw_string(ThemeDB.fallback_font, grv_panel_rect.position + Vector2(10, 22), "🌌 중력파 위상 상쇄 무소음 아쿠스틱", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(0.8, 0.4, 1.0))
+		draw_string(ThemeDB.fallback_font, grv_panel_rect.position + Vector2(10, 42), "🔊 음향 파형 상쇄 소음 상쇄율: %.3f%%" % grv_info["cancel_pct"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color.WHITE)
+		draw_string(ThemeDB.fallback_font, grv_panel_rect.position + Vector2(10, 60), "🌌 정적 존 배경 노이즈 플로어: %.3f dB" % grv_info["noise_floor_db"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.8, 0.4, 1.0))
+		draw_string(ThemeDB.fallback_font, grv_panel_rect.position + Vector2(10, 78), "🌌 아쿠스틱 차음 등급: %s" % grv_info["status"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.2, 0.95, 0.5))
+		draw_string(ThemeDB.fallback_font, grv_panel_rect.position + Vector2(10, 96), "💰 수험생 몰입 마라톤 이용권 수익: +%d%%" % int(grv_info["revenue_bonus"]), HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(1.0, 0.8, 0.2))
 
 	# Render Zero-Trust Quantum Cryptographic Blockchain Treasury HUD Panel if ON
 	if GameState.is_treasury_hud_open:

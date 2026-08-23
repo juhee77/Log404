@@ -2522,6 +2522,35 @@ func calculate_quantum_treasury_metrics() -> Dictionary:
 		"is_treasury_unlocked": is_treasury_unlocked
 	}
 
+# Iteration 169: Real-Time Store Gravitational Wave Waveform Noise Cancellation Acoustic Sound Absorber Subsystem
+var is_grav_acoustic_hud_open: bool = false
+
+func toggle_grav_acoustic_hud() -> bool:
+	is_grav_acoustic_hud_open = not is_grav_acoustic_hud_open
+	_play_sfx_safe("click")
+	return is_grav_acoustic_hud_open
+
+func calculate_gravitational_acoustic_metrics() -> Dictionary:
+	var cancel_pct = 95.0
+	var noise_floor_db = 15.0
+	var grav_status_str = "🌌 S 아쿠스틱 음향 상쇄 (15.0 dB)"
+	
+	var is_grav_unlocked = upgrades.has("anc_system") and upgrades["anc_system"]["level"] > 0
+	if is_grav_unlocked:
+		cancel_pct = 99.999
+		noise_floor_db = 0.001
+		grav_status_str = "👑 SSS급 중력파 위상 상쇄 완전 무소음 정적 존 (0.001 dB)"
+		
+	var focus_revenue_bonus = 36.0 if is_grav_unlocked else 18.0
+	
+	return {
+		"cancel_pct": cancel_pct,
+		"noise_floor_db": noise_floor_db,
+		"status": grav_status_str,
+		"revenue_bonus": focus_revenue_bonus,
+		"is_grav_unlocked": is_grav_unlocked
+	}
+
 func trigger_120th_milestone_event() -> Dictionary:
 	milestone_120_triggered = true
 	var grand_prize = 200000.0

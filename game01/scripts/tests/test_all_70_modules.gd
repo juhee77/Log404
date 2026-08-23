@@ -671,6 +671,18 @@ func _init() -> void:
 	assert(trs_info.has("status"), "Treasury metrics must calculate status string")
 	print("✔ Test 46 PASSED: Quantum Blockchain Treasury Engine 100% verified!")
 
+	# Test 47: Gravitational Wave Waveform Noise Cancellation Acoustic Subsystem Verification
+	print("\n📌 [Test 47] Verifying Gravitational Acoustic Engine...")
+	assert(state.is_grav_acoustic_hud_open == false, "Gravitational Acoustic HUD initial state should be false")
+	var grv_toggled = state.toggle_grav_acoustic_hud()
+	assert(grv_toggled == true and state.is_grav_acoustic_hud_open == true, "Gravitational Acoustic HUD should toggle to true")
+	
+	var grv_info = state.calculate_gravitational_acoustic_metrics()
+	assert(grv_info.has("cancel_pct") and grv_info["cancel_pct"] >= 90.0, "Gravitational Acoustic metrics must calculate cancel percentage")
+	assert(grv_info.has("noise_floor_db") and grv_info["noise_floor_db"] >= 0.0, "Gravitational Acoustic metrics must calculate noise floor dB")
+	assert(grv_info.has("status"), "Gravitational Acoustic metrics must calculate status string")
+	print("✔ Test 47 PASSED: Gravitational Acoustic Engine 100% verified!")
+
 
 
 
