@@ -17,6 +17,22 @@ func play_rain_soundscape() -> void:
 		# Rain soundscape logic here
 		pass
 
+func play_sfx(sound_name: String = "coin") -> void:
+	if sound_name == "click": play_click_sfx()
+	elif sound_name == "coin": play_coin_sfx()
+	elif sound_name == "chime": play_chime_sfx()
+	elif sound_name == "clean": play_clean_sfx()
+	else: play_coin_sfx()
+
+func play_varied_sfx(sound_name: String = "coin", min_pitch: float = 0.95, max_pitch: float = 1.05) -> void:
+	if sound_enabled and audio_player:
+		audio_player.pitch_scale = randf_range(min_pitch, max_pitch)
+		if sound_name == "coin": play_coin_sfx()
+		elif sound_name == "click": play_click_sfx()
+		elif sound_name == "chime": play_chime_sfx()
+		elif sound_name == "clean": play_clean_sfx()
+
+
 func _ready() -> void:
 	audio_player = AudioStreamPlayer.new()
 	add_child(audio_player)
