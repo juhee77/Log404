@@ -9,15 +9,15 @@ extends Control
 @onready var review_panel: PanelContainer = $ReviewPanelOverlay
 @onready var snack_panel: PanelContainer = $SnackRestockPanelOverlay
 
-@onready var btn_zone_study: Button = $VBoxContainer/ZoneBar/HBoxContainer/BtnZoneStudy
-@onready var btn_zone_lounge: Button = $VBoxContainer/ZoneBar/HBoxContainer/BtnZoneLounge
-@onready var btn_zone_front: Button = $VBoxContainer/ZoneBar/HBoxContainer/BtnZoneFront
-@onready var btn_decorate: Button = $VBoxContainer/ZoneBar/HBoxContainer/BtnDecorate
+@onready var btn_zone_study: Button = find_child("BtnZoneStudy", true, false)
+@onready var btn_zone_lounge: Button = find_child("BtnZoneLounge", true, false)
+@onready var btn_zone_front: Button = find_child("BtnZoneFront", true, false)
+@onready var btn_decorate: Button = find_child("BtnDecorate", true, false)
 
-@onready var btn_open_upgrades: Button = $VBoxContainer/BottomBar/HBoxContainer/BtnUpgrades
-@onready var btn_open_snack: Button = $VBoxContainer/BottomBar/HBoxContainer/BtnSnackMinigame
-@onready var btn_open_reviews: Button = $VBoxContainer/BottomBar/HBoxContainer/BtnReviews
-@onready var btn_toggle_sound: Button = $VBoxContainer/BottomBar/HBoxContainer/BtnSound
+@onready var btn_open_upgrades: Button = find_child("BtnUpgrades", true, false)
+@onready var btn_open_snack: Button = find_child("BtnSnackMinigame", true, false)
+@onready var btn_open_reviews: Button = find_child("BtnReviews", true, false)
+@onready var btn_toggle_sound: Button = find_child("BtnSound", true, false)
 var leaderboard_panel: PanelContainer
 var roasting_panel: PanelContainer
 var quest_panel: PanelContainer
@@ -26,6 +26,7 @@ var casting_panel: PanelContainer
 var uniform_panel: PanelContainer
 var expansion_panel: PanelContainer
 var desk_shop_panel: PanelContainer
+var tech_systems_panel: PanelContainer
 
 func _ready() -> void:
 	hide_all_overlays()
@@ -116,9 +117,27 @@ func _ready() -> void:
 		expansion_panel.set_anchors_and_offsets_preset(Control.PRESET_CENTER, Control.PRESET_MODE_MINSIZE)
 		expansion_panel.hide()
 		add_child(expansion_panel)
+
+	# Dynamically add Tech Systems Overlay
+	var ts_script = load("res://scripts/ui/tech_systems_panel.gd")
+	if ts_script != null:
+		tech_systems_panel = PanelContainer.new()
+		tech_systems_panel.set_script(ts_script)
+		tech_systems_panel.custom_minimum_size = Vector2(720, 500)
+		tech_systems_panel.set_anchors_and_offsets_preset(Control.PRESET_CENTER, Control.PRESET_MODE_MINSIZE)
+		tech_systems_panel.hide()
+		add_child(tech_systems_panel)
+
+	GameState.tech_systems_requested.connect(func():
+		hide_all_overlays()
+		if tech_systems_panel:
+			tech_systems_panel.refresh_cards()
+			tech_systems_panel.show()
+	)
 	
 	# Dynamically add HUD Buttons to BottomBar
-	var bottom_hbox = $VBoxContainer/BottomBar/HBoxContainer
+	var bottom_bar = get_node_or_null("VBoxContainer/BottomBar")
+	var bottom_hbox = bottom_bar.find_child("HBoxContainer", true, false) if bottom_bar else null
 	if bottom_hbox:
 		var btn_shop = Button.new()
 		btn_shop.text = "🛒 책상 상점"
@@ -341,6 +360,7 @@ func hide_all_overlays() -> void:
 	if uniform_panel: uniform_panel.hide()
 	if expansion_panel: expansion_panel.hide()
 	if desk_shop_panel: desk_shop_panel.hide()
+	if tech_systems_panel: tech_systems_panel.hide()
 
 func take_screenshot(path_name: String = "live_visual_check.png") -> void:
 	await get_tree().create_timer(0.25).timeout

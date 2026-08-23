@@ -2,15 +2,15 @@ extends PanelContainer
 
 # top_bar.gd - Top HUD Bar displaying continuous time-of-day & financial status
 
-@onready var label_money: Label = $HBoxContainer/MoneyBox/LabelMoney
-@onready var label_income: Label = $HBoxContainer/IncomeBox/LabelIncome
-@onready var label_rep: Label = $HBoxContainer/RepBox/LabelRep
-@onready var label_cap: Label = $HBoxContainer/CapBox/LabelCap
-@onready var label_temp: Label = $HBoxContainer/TempBox/LabelTemp
-@onready var label_time: Label = $HBoxContainer/TimeBox/LabelTime
+@onready var label_money: Label = find_child("LabelMoney", true, false)
+@onready var label_income: Label = find_child("LabelIncome", true, false)
+@onready var label_rep: Label = find_child("LabelRep", true, false)
+@onready var label_cap: Label = find_child("LabelCap", true, false)
+@onready var label_temp: Label = find_child("LabelTemp", true, false)
+@onready var label_time: Label = find_child("LabelTime", true, false)
 
-@onready var btn_temp_down: Button = $HBoxContainer/TempBox/BtnTempDown
-@onready var btn_temp_up: Button = $HBoxContainer/TempBox/BtnTempUp
+@onready var btn_temp_down: Button = find_child("BtnTempDown", true, false)
+@onready var btn_temp_up: Button = find_child("BtnTempUp", true, false)
 
 func _ready() -> void:
 	GameState.money_changed.connect(_on_money_changed)

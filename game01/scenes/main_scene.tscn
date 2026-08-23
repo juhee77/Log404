@@ -27,83 +27,90 @@ grow_vertical = 2
 theme_override_constants/separation = 0
 
 [node name="TopBar" type="PanelContainer" parent="VBoxContainer"]
-custom_minimum_size = Vector2(0, 56)
+custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
 script = ExtResource("2_top")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/TopBar"]
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/TopBar"]
 layout_mode = 2
+horizontal_scroll_mode = 1
+vertical_scroll_mode = 0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/TopBar/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
 alignment = 1
 
-[node name="MoneyBox" type="MarginContainer" parent="VBoxContainer/TopBar/HBoxContainer"]
+[node name="MoneyBox" type="MarginContainer" parent="VBoxContainer/TopBar/ScrollContainer/HBoxContainer"]
 layout_mode = 2
 theme_override_constants/margin_left = 12
 theme_override_constants/margin_right = 12
 
-[node name="LabelMoney" type="Label" parent="VBoxContainer/TopBar/HBoxContainer/MoneyBox"]
+[node name="LabelMoney" type="Label" parent="VBoxContainer/TopBar/ScrollContainer/HBoxContainer/MoneyBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.96, 0.62, 0.07, 1)
 theme_override_font_sizes/font_size = 18
 text = "💰 5,000 ₩"
 
-[node name="IncomeBox" type="MarginContainer" parent="VBoxContainer/TopBar/HBoxContainer"]
+[node name="IncomeBox" type="MarginContainer" parent="VBoxContainer/TopBar/ScrollContainer/HBoxContainer"]
 layout_mode = 2
 theme_override_constants/margin_left = 12
 theme_override_constants/margin_right = 12
 
-[node name="LabelIncome" type="Label" parent="VBoxContainer/TopBar/HBoxContainer/IncomeBox"]
+[node name="LabelIncome" type="Label" parent="VBoxContainer/TopBar/ScrollContainer/HBoxContainer/IncomeBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.06, 0.72, 0.5, 1)
 theme_override_font_sizes/font_size = 15
 text = "+0 ₩/초"
 
-[node name="RepBox" type="MarginContainer" parent="VBoxContainer/TopBar/HBoxContainer"]
+[node name="RepBox" type="MarginContainer" parent="VBoxContainer/TopBar/ScrollContainer/HBoxContainer"]
 layout_mode = 2
 theme_override_constants/margin_left = 12
 theme_override_constants/margin_right = 12
 
-[node name="LabelRep" type="Label" parent="VBoxContainer/TopBar/HBoxContainer/RepBox"]
+[node name="LabelRep" type="Label" parent="VBoxContainer/TopBar/ScrollContainer/HBoxContainer/RepBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.96, 0.62, 0.07, 1)
 theme_override_font_sizes/font_size = 15
 text = "⭐ 4.2 / 5.0"
 
-[node name="CapBox" type="MarginContainer" parent="VBoxContainer/TopBar/HBoxContainer"]
+[node name="CapBox" type="MarginContainer" parent="VBoxContainer/TopBar/ScrollContainer/HBoxContainer"]
 layout_mode = 2
 theme_override_constants/margin_left = 12
 theme_override_constants/margin_right = 12
 
-[node name="LabelCap" type="Label" parent="VBoxContainer/TopBar/HBoxContainer/CapBox"]
+[node name="LabelCap" type="Label" parent="VBoxContainer/TopBar/ScrollContainer/HBoxContainer/CapBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.8, 0.8, 0.75, 1)
 theme_override_font_sizes/font_size = 15
 text = "👥 0 / 4 명"
 
-[node name="TempBox" type="HBoxContainer" parent="VBoxContainer/TopBar/HBoxContainer"]
+[node name="TempBox" type="HBoxContainer" parent="VBoxContainer/TopBar/ScrollContainer/HBoxContainer"]
 layout_mode = 2
 
-[node name="BtnTempDown" type="Button" parent="VBoxContainer/TopBar/HBoxContainer/TempBox"]
+[node name="BtnTempDown" type="Button" parent="VBoxContainer/TopBar/ScrollContainer/HBoxContainer/TempBox"]
 custom_minimum_size = Vector2(28, 28)
 layout_mode = 2
 text = "❄️"
 
-[node name="LabelTemp" type="Label" parent="VBoxContainer/TopBar/HBoxContainer/TempBox"]
+[node name="LabelTemp" type="Label" parent="VBoxContainer/TopBar/ScrollContainer/HBoxContainer/TempBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.1, 0.8, 0.4, 1)
 theme_override_font_sizes/font_size = 15
 text = "🌡️ 24.0°C"
 
-[node name="BtnTempUp" type="Button" parent="VBoxContainer/TopBar/HBoxContainer/TempBox"]
+[node name="BtnTempUp" type="Button" parent="VBoxContainer/TopBar/ScrollContainer/HBoxContainer/TempBox"]
 custom_minimum_size = Vector2(28, 28)
 layout_mode = 2
 text = "🔥"
 
-[node name="TimeBox" type="MarginContainer" parent="VBoxContainer/TopBar/HBoxContainer"]
+[node name="TimeBox" type="MarginContainer" parent="VBoxContainer/TopBar/ScrollContainer/HBoxContainer"]
 layout_mode = 2
 theme_override_constants/margin_left = 12
 theme_override_constants/margin_right = 12
 
-[node name="LabelTime" type="Label" parent="VBoxContainer/TopBar/HBoxContainer/TimeBox"]
+[node name="LabelTime" type="Label" parent="VBoxContainer/TopBar/ScrollContainer/HBoxContainer/TimeBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.8, 0.8, 0.75, 1)
 theme_override_font_sizes/font_size = 15
@@ -113,27 +120,34 @@ text = "☀️ DAY 1  08:00 (낮)"
 custom_minimum_size = Vector2(0, 44)
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/ZoneBar"]
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/ZoneBar"]
 layout_mode = 2
+horizontal_scroll_mode = 1
+vertical_scroll_mode = 0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/ZoneBar/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
 alignment = 1
 
-[node name="BtnZoneStudy" type="Button" parent="VBoxContainer/ZoneBar/HBoxContainer"]
-custom_minimum_size = Vector2(160, 36)
+[node name="BtnZoneStudy" type="Button" parent="VBoxContainer/ZoneBar/ScrollContainer/HBoxContainer"]
+custom_minimum_size = Vector2(150, 36)
 layout_mode = 2
 text = "🗺️ 메인 열공 존"
 
-[node name="BtnZoneLounge" type="Button" parent="VBoxContainer/ZoneBar/HBoxContainer"]
-custom_minimum_size = Vector2(160, 36)
+[node name="BtnZoneLounge" type="Button" parent="VBoxContainer/ZoneBar/ScrollContainer/HBoxContainer"]
+custom_minimum_size = Vector2(150, 36)
 layout_mode = 2
 text = "☕ 스낵바 & 휴게실"
 
-[node name="BtnZoneFront" type="Button" parent="VBoxContainer/ZoneBar/HBoxContainer"]
-custom_minimum_size = Vector2(160, 36)
+[node name="BtnZoneFront" type="Button" parent="VBoxContainer/ZoneBar/ScrollContainer/HBoxContainer"]
+custom_minimum_size = Vector2(150, 36)
 layout_mode = 2
 text = "🔑 사물함 & 프런트"
 
-[node name="BtnDecorate" type="Button" parent="VBoxContainer/ZoneBar/HBoxContainer"]
-custom_minimum_size = Vector2(160, 36)
+[node name="BtnDecorate" type="Button" parent="VBoxContainer/ZoneBar/ScrollContainer/HBoxContainer"]
+custom_minimum_size = Vector2(150, 36)
 layout_mode = 2
 text = "🔨 인테리어 꾸미기"
 
@@ -151,27 +165,34 @@ script = ExtResource("3_cafe")
 custom_minimum_size = Vector2(0, 60)
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/BottomBar"]
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/BottomBar"]
 layout_mode = 2
+horizontal_scroll_mode = 1
+vertical_scroll_mode = 0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/BottomBar/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
 alignment = 1
 
-[node name="BtnUpgrades" type="Button" parent="VBoxContainer/BottomBar/HBoxContainer"]
-custom_minimum_size = Vector2(200, 44)
+[node name="BtnUpgrades" type="Button" parent="VBoxContainer/BottomBar/ScrollContainer/HBoxContainer"]
+custom_minimum_size = Vector2(180, 44)
 layout_mode = 2
 text = "🏭 좌석 & 시설 업그레이드"
 
-[node name="BtnSnackMinigame" type="Button" parent="VBoxContainer/BottomBar/HBoxContainer"]
-custom_minimum_size = Vector2(180, 44)
+[node name="BtnSnackMinigame" type="Button" parent="VBoxContainer/BottomBar/ScrollContainer/HBoxContainer"]
+custom_minimum_size = Vector2(160, 44)
 layout_mode = 2
 text = "🥐 스낵바 비품 충전"
 
-[node name="BtnReviews" type="Button" parent="VBoxContainer/BottomBar/HBoxContainer"]
-custom_minimum_size = Vector2(180, 44)
+[node name="BtnReviews" type="Button" parent="VBoxContainer/BottomBar/ScrollContainer/HBoxContainer"]
+custom_minimum_size = Vector2(150, 44)
 layout_mode = 2
 text = "⭐ 손님 리뷰 피드"
 
-[node name="BtnSound" type="Button" parent="VBoxContainer/BottomBar/HBoxContainer"]
-custom_minimum_size = Vector2(140, 44)
+[node name="BtnSound" type="Button" parent="VBoxContainer/BottomBar/ScrollContainer/HBoxContainer"]
+custom_minimum_size = Vector2(120, 44)
 layout_mode = 2
 text = "🔇 무음 모드"
 
