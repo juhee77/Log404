@@ -7,3 +7,8 @@ user://
 .agents/*
 !.agents/AGENTS.md
 
+# Architecture & Analysis Reports (Local Only)
+game_architecture_report.html
+*architecture_report*
+
+
