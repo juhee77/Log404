@@ -34,6 +34,11 @@ func load_tex_safe(path: String) -> Texture2D:
 		var res = load(path)
 		if res is Texture2D:
 			return res
+	var global_p = ProjectSettings.globalize_path(path)
+	if FileAccess.file_exists(path):
+		var img = Image.load_from_file(global_p)
+		if img != null:
+			return ImageTexture.create_from_image(img)
 	return null
 
 func _ready() -> void:
@@ -160,252 +165,19 @@ func _gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 		var click_pos = event.position - view_offset
 		if event.pressed:
-			# 0. Check Heatmap Mode Toggle Button Click (Top Right)
+			# 0. Check Clean Top Right Control Buttons Click
 			var screen_click = event.position
-			var btn_x = max(get_rect().size.x - 180.0, 1100.0)
-			var h_btn_rect = Rect2(btn_x, 16, 160, 36)
+			var btn_x = max(get_rect().size.x - 170.0, 750.0)
+			var h_btn_rect = Rect2(btn_x, 12, 160, 36)
 			if h_btn_rect.has_point(screen_click):
 				GameState.toggle_heatmap_mode()
 				queue_redraw()
 				return
 				
-			# Check Equalizer HUD Button Click
-			var eq_btn_x = btn_x - 170.0
-			var eq_btn_rect = Rect2(eq_btn_x, 16, 160, 36)
-			if eq_btn_rect.has_point(screen_click):
-				GameState.toggle_equalizer_hud()
-				queue_redraw()
-				return
-
-			# Check Power Grid HUD Button Click (Top Right, left of EQ)
-			var pg_btn_x = eq_btn_x - 170.0
-			var pg_btn_rect = Rect2(pg_btn_x, 16, 160, 36)
-			if pg_btn_rect.has_point(screen_click):
-				GameState.toggle_power_grid_hud()
-				queue_redraw()
-				return
-
-			# Check Air Quality HUD Button Click (Top Right, left of PG)
-			var aq_btn_x = pg_btn_x - 170.0
-			var aq_btn_rect = Rect2(aq_btn_x, 16, 160, 36)
-			if aq_btn_rect.has_point(screen_click):
-				GameState.toggle_air_quality_hud()
-				queue_redraw()
-				return
-
-			# Check Network HUD Button Click (Top Right, left of AQ)
-			var net_btn_x = aq_btn_x - 170.0
-			var net_btn_rect = Rect2(net_btn_x, 16, 160, 36)
-			if net_btn_rect.has_point(screen_click):
-				GameState.toggle_network_hud()
-				queue_redraw()
-				return
-
-			# Check Ergonomic Posture HUD Button Click (Top Right, left of NET)
-			var ergo_btn_x = net_btn_x - 170.0
-			var ergo_btn_rect = Rect2(ergo_btn_x, 16, 160, 36)
-			if ergo_btn_rect.has_point(screen_click):
-				GameState.toggle_ergonomic_hud()
-				queue_redraw()
-				return
-
-			# Check Biometric Pulse HUD Button Click (Top Right, left of ERGO)
-			var bio_btn_x = ergo_btn_x - 170.0
-			var bio_btn_rect = Rect2(bio_btn_x, 16, 160, 36)
-			if bio_btn_rect.has_point(screen_click):
-				GameState.toggle_biometric_hud()
-				queue_redraw()
-				return
-
-			# Check Quantum Security HUD Button Click (Top Right, left of BIO)
-			var q_btn_x = bio_btn_x - 170.0
-			var q_btn_rect = Rect2(q_btn_x, 16, 160, 36)
-			if q_btn_rect.has_point(screen_click):
-				GameState.toggle_quantum_hud()
-				queue_redraw()
-				return
-
-			# Check Botanical Bio-Wall HUD Button Click (Top Right, left of Q)
-			var b_btn_x = q_btn_x - 170.0
-			var b_btn_rect = Rect2(b_btn_x, 16, 160, 36)
-			if b_btn_rect.has_point(screen_click):
-				GameState.toggle_botanical_hud()
-				queue_redraw()
-				return
-
-			# Check Circadian Lighting HUD Button Click (Top Right, left of B)
-			var c_btn_x = b_btn_x - 170.0
-			var c_btn_rect = Rect2(c_btn_x, 16, 160, 36)
-			if c_btn_rect.has_point(screen_click):
-				GameState.toggle_circadian_hud()
-				queue_redraw()
-				return
-
-			# Check PMV Thermal Comfort HUD Button Click (Top Right, left of C)
-			var pmv_btn_x = c_btn_x - 170.0
-			var pmv_btn_rect = Rect2(pmv_btn_x, 16, 160, 36)
-			if pmv_btn_rect.has_point(screen_click):
-				GameState.toggle_pmv_hud()
-				queue_redraw()
-				return
-
-			# Check Autonomous AI Cleaning Drone HUD Button Click (Top Right, left of PMV)
-			var drn_btn_x = pmv_btn_x - 170.0
-			var drn_btn_rect = Rect2(drn_btn_x, 16, 160, 36)
-			if drn_btn_rect.has_point(screen_click):
-				GameState.toggle_cleaning_drone_hud()
-				queue_redraw()
-				return
-
-			# Check Customer Micro-Expression Emotion HUD Button Click (Top Right, left of DRONE)
-			var emo_btn_x = drn_btn_x - 170.0
-			var emo_btn_rect = Rect2(emo_btn_x, 16, 160, 36)
-			if emo_btn_rect.has_point(screen_click):
-				GameState.toggle_emotion_hud()
-				queue_redraw()
-				return
-
-			# Check Solar Sun-Tracking Shading HUD Button Click (Top Right, left of EMO)
-			var shd_btn_x = emo_btn_x - 170.0
-			var shd_btn_rect = Rect2(shd_btn_x, 16, 160, 36)
-			if shd_btn_rect.has_point(screen_click):
-				GameState.toggle_shading_hud()
-				queue_redraw()
-				return
-
-			# Check Smart Water Quality HUD Button Click (Top Right, left of SHD)
-			var wtr_btn_x = shd_btn_x - 170.0
-			var wtr_btn_rect = Rect2(wtr_btn_x, 16, 160, 36)
-			if wtr_btn_rect.has_point(screen_click):
-				GameState.toggle_water_hud()
-				queue_redraw()
-				return
-
-			# Check Neuro-Feedback Soundscape HUD Button Click (Top Right, left of WTR)
-			var nro_btn_x = wtr_btn_x - 170.0
-			var nro_btn_rect = Rect2(nro_btn_x, 16, 160, 36)
-			if nro_btn_rect.has_point(screen_click):
-				GameState.toggle_neuro_hud()
-				queue_redraw()
-				return
-
-			# Check Voice Command AI Butler HUD Button Click (Top Right, left of NRO)
-			var voi_btn_x = nro_btn_x - 170.0
-			var voi_btn_rect = Rect2(voi_btn_x, 16, 160, 36)
-			if voi_btn_rect.has_point(screen_click):
-				GameState.toggle_voice_ai_hud()
-				queue_redraw()
-				return
-
-			# Check Holographic AI Tutor HUD Button Click (Top Right, left of VOI)
-			var hlo_btn_x = voi_btn_x - 170.0
-			var hlo_btn_rect = Rect2(hlo_btn_x, 16, 160, 36)
-			if hlo_btn_rect.has_point(screen_click):
-				GameState.toggle_hologram_hud()
-				queue_redraw()
-				return
-
-			# Check Piezoelectric Floor Power HUD Button Click (Top Right, left of HLO)
-			var piz_btn_x = hlo_btn_x - 170.0
-			var piz_btn_rect = Rect2(piz_btn_x, 16, 160, 36)
-			if piz_btn_rect.has_point(screen_click):
-				GameState.toggle_piezo_hud()
-				queue_redraw()
-				return
-
-			# Check Autonomous Delivery Robot HUD Button Click (Top Right, left of PIZ)
-			var rbt_btn_x = piz_btn_x - 170.0
-			var rbt_btn_rect = Rect2(rbt_btn_x, 16, 160, 36)
-			if rbt_btn_rect.has_point(screen_click):
-				GameState.toggle_robot_hud()
-				queue_redraw()
-				return
-
-			# Check Quantum Security Shield HUD Button Click (Top Right, left of RBT)
-			var sld_btn_x = rbt_btn_x - 170.0
-			var sld_btn_rect = Rect2(sld_btn_x, 16, 160, 36)
-			if sld_btn_rect.has_point(screen_click):
-				GameState.toggle_shield_hud()
-				queue_redraw()
-				return
-
-			# Check Autonomous Satellite Network HUD Button Click (Top Right, left of SLD)
-			var sat_btn_x = sld_btn_x - 170.0
-			var sat_btn_rect = Rect2(sat_btn_x, 16, 160, 36)
-			if sat_btn_rect.has_point(screen_click):
-				GameState.toggle_satellite_hud()
-				queue_redraw()
-				return
-
-			# Check Fusion Nuclear Micro-Reactor HUD Button Click (Top Right, left of SAT)
-			var fsn_btn_x = sat_btn_x - 170.0
-			var fsn_btn_rect = Rect2(fsn_btn_x, 16, 160, 36)
-			if fsn_btn_rect.has_point(screen_click):
-				GameState.toggle_fusion_hud()
-				queue_redraw()
-				return
-
-			# Check Quantum Supercomputer AI Curriculum HUD Button Click (Top Right, left of FSN)
-			var cur_btn_x = fsn_btn_x - 170.0
-			var cur_btn_rect = Rect2(cur_btn_x, 16, 160, 36)
-			if cur_btn_rect.has_point(screen_click):
-				GameState.toggle_curriculum_hud()
-				queue_redraw()
-				return
-
-			# Check Atmospheric Water Generator HUD Button Click (Top Right, left of CUR)
-			var awg_btn_x = cur_btn_x - 170.0
-			var awg_btn_rect = Rect2(awg_btn_x, 16, 160, 36)
-			if awg_btn_rect.has_point(screen_click):
-				GameState.toggle_awg_hud()
-				queue_redraw()
-				return
-
-			# Check Hydroponic Vertical Farm HUD Button Click (Top Right, left of AWG)
-			var frm_btn_x = awg_btn_x - 170.0
-			var frm_btn_rect = Rect2(frm_btn_x, 16, 160, 36)
-			if frm_btn_rect.has_point(screen_click):
-				GameState.toggle_farm_hud()
-				queue_redraw()
-				return
-
-			# Check Autonomous Exoskeleton Ergonomic Posture HUD Button Click (Top Right, left of FRM)
-			var exo_btn_x = frm_btn_x - 170.0
-			var exo_btn_rect = Rect2(exo_btn_x, 16, 160, 36)
-			if exo_btn_rect.has_point(screen_click):
-				GameState.toggle_exo_hud()
-				queue_redraw()
-				return
-
-			# Check Quantum Entanglement Instant Teleportation HUD Button Click (Top Right, left of EXO)
-			var tp_btn_x = exo_btn_x - 170.0
-			var tp_btn_rect = Rect2(tp_btn_x, 16, 160, 36)
-			if tp_btn_rect.has_point(screen_click):
-				GameState.toggle_teleport_hud()
-				queue_redraw()
-				return
-
-			# Check Sub-Zero Nitrogen Cryogenic Preservation HUD Button Click (Top Right, left of TP)
-			var cry_btn_x = tp_btn_x - 170.0
-			var cry_btn_rect = Rect2(cry_btn_x, 16, 160, 36)
-			if cry_btn_rect.has_point(screen_click):
-				GameState.toggle_cryo_hud()
-				queue_redraw()
-				return
-
-			# Check Zero-Trust Quantum Cryptographic Blockchain Treasury HUD Button Click (Top Right, left of CRY)
-			var trs_btn_x = cry_btn_x - 170.0
-			var trs_btn_rect = Rect2(trs_btn_x, 16, 160, 36)
-			if trs_btn_rect.has_point(screen_click):
-				GameState.toggle_treasury_hud()
-				queue_redraw()
-				return
-
-			# Check Gravitational Wave Noise Cancellation Acoustic HUD Button Click (Top Right, left of TRS)
-			var grv_btn_x = trs_btn_x - 170.0
-			var grv_btn_rect = Rect2(grv_btn_x, 16, 160, 36)
-			if grv_btn_rect.has_point(screen_click):
-				GameState.toggle_grav_acoustic_hud()
+			var tech_btn_x = btn_x - 220.0
+			var tech_btn_rect = Rect2(tech_btn_x, 12, 210, 36)
+			if tech_btn_rect.has_point(screen_click):
+				GameState.tech_systems_requested.emit()
 				queue_redraw()
 				return
 
@@ -945,284 +717,253 @@ func draw_integrated_multi_room_layout(w: float, h: float) -> void:
 		var cat_label = "🐱 나비 (마스코트)" if not GameState.is_cat_buff_active() else "🐱 나비 (❤️ 집중+20%)"
 		draw_string(ThemeDB.fallback_font, n_render + Vector2(-45, -32), cat_label, HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(1.0, 0.6, 0.8))
 
-	# Render Heatmap Mode Toggle Button (Top Right HUD)
-	var btn_x = max(w - 180.0, 1100.0)
-	var heatmap_btn_rect = Rect2(btn_x, 16, 160, 36)
+	# Render Clean Top Right Control Buttons
+	var btn_x = max(w - 170.0, 750.0)
+	var heatmap_btn_rect = Rect2(btn_x, 12, 160, 36)
 	var btn_bg = Color(0.95, 0.4, 0.1, 0.95) if GameState.is_heatmap_mode else Color(0.15, 0.18, 0.22, 0.9)
 	draw_rect(heatmap_btn_rect, btn_bg, true)
 	draw_rect(heatmap_btn_rect, Color(1.0, 0.7, 0.2), false, 2.0)
 	var btn_label = "🔥 히트맵 ON" if GameState.is_heatmap_mode else "🔥 히트맵 분석"
 	draw_string(ThemeDB.fallback_font, heatmap_btn_rect.position + Vector2(24, 24), btn_label, HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color.WHITE)
 
-	# Render Acoustic Equalizer HUD Toggle Button (Top Right HUD, left of Heatmap)
-	var eq_btn_x = btn_x - 170.0
-	var eq_btn_rect = Rect2(eq_btn_x, 16, 160, 36)
-	var eq_btn_bg = Color(0.2, 0.6, 0.9, 0.95) if GameState.is_equalizer_hud_open else Color(0.15, 0.18, 0.22, 0.9)
-	draw_rect(eq_btn_rect, eq_btn_bg, true)
-	draw_rect(eq_btn_rect, Color(0.3, 0.7, 1.0), false, 2.0)
-	var eq_btn_label = "🎧 EQ 사운드 ON" if GameState.is_equalizer_hud_open else "🎧 EQ 사운드"
-	draw_string(ThemeDB.fallback_font, eq_btn_rect.position + Vector2(20, 24), eq_btn_label, HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color.WHITE)
+	var tech_btn_x = btn_x - 220.0
+	var tech_btn_rect = Rect2(tech_btn_x, 12, 210, 36)
+	draw_rect(tech_btn_rect, Color(0.1, 0.7, 0.75, 0.95), true)
+	draw_rect(tech_btn_rect, Color(0.2, 0.95, 0.85), false, 2.0)
+	draw_string(ThemeDB.fallback_font, tech_btn_rect.position + Vector2(15, 24), "🔬 첨단기술 관제센터", HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color.WHITE)
+	var hud_panel_x = max(w - 280.0, 500.0)
+	var eq_btn_x = hud_panel_x
+	var pg_btn_x = hud_panel_x
+	var aq_btn_x = hud_panel_x
+	var net_btn_x = hud_panel_x
+	var ergo_btn_x = hud_panel_x
+	var bio_btn_x = hud_panel_x
+	var q_btn_x = hud_panel_x
+	var b_btn_x = hud_panel_x
+	var c_btn_x = hud_panel_x
+	var pmv_btn_x = hud_panel_x
+	var drn_btn_x = hud_panel_x
+	var emo_btn_x = hud_panel_x
+	var shd_btn_x = hud_panel_x
+	var wtr_btn_x = hud_panel_x
+	var nro_btn_x = hud_panel_x
+	var voi_btn_x = hud_panel_x
+	var hlo_btn_x = hud_panel_x
+	var piz_btn_x = hud_panel_x
+	var rbt_btn_x = hud_panel_x
+	var sld_btn_x = hud_panel_x
+	var sat_btn_x = hud_panel_x
+	var fsn_btn_x = hud_panel_x
+	var cur_btn_x = hud_panel_x
+	var awg_btn_x = hud_panel_x
+	var frm_btn_x = hud_panel_x
+	var exo_btn_x = hud_panel_x
+	var tp_btn_x = hud_panel_x
+	var cry_btn_x = hud_panel_x
+	var trs_btn_x = hud_panel_x
+	var grv_btn_x = hud_panel_x
+	var olf_btn_x = hud_panel_x
+	var hrv_btn_x = hud_panel_x
+	var tes_btn_x = hud_panel_x
+	var tac_btn_x = hud_panel_x
+	var tel_btn_x = hud_panel_x
+	var ant_btn_x = hud_panel_x
+	var sup_btn_x = hud_panel_x
 
-	# Render Power Grid HUD Toggle Button (Top Right HUD, left of EQ)
-	var pg_btn_x = eq_btn_x - 170.0
-	var pg_btn_rect = Rect2(pg_btn_x, 16, 160, 36)
-	var pg_btn_bg = Color(0.1, 0.8, 0.4, 0.95) if GameState.is_power_grid_hud_open else Color(0.15, 0.18, 0.22, 0.9)
-	draw_rect(pg_btn_rect, pg_btn_bg, true)
-	draw_rect(pg_btn_rect, Color(0.2, 0.95, 0.5), false, 2.0)
-	var pg_btn_label = "⚡ 전력망 ON" if GameState.is_power_grid_hud_open else "⚡ 전력망 관리"
-	draw_string(ThemeDB.fallback_font, pg_btn_rect.position + Vector2(20, 24), pg_btn_label, HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color.WHITE)
+	# Render Holographic Multi-Dimensional Super-Computer AI HUD Panel if ON
+	if GameState.is_supercomputer_hud_open:
+		var sup_info = GameState.calculate_holographic_supercomputer_metrics()
+		var sup_panel_rect = Rect2(sup_btn_x - 40.0, 60, 240, 130)
+		draw_rect(sup_panel_rect, Color(0.06, 0.08, 0.12, 0.95), true)
+		draw_rect(sup_panel_rect, Color(0.2, 0.95, 0.85), false, 2.0)
+		
+		draw_string(ThemeDB.fallback_font, sup_panel_rect.position + Vector2(10, 22), "💻 홀로그램 다차원 슈퍼컴퓨터 AI 연산", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(0.2, 0.95, 0.85))
+		draw_string(ThemeDB.fallback_font, sup_panel_rect.position + Vector2(10, 42), "💻 슈퍼컴 AI 연산 처리 속도: %.1f PFLOPS" % sup_info["speed_pflops"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color.WHITE)
+		draw_string(ThemeDB.fallback_font, sup_panel_rect.position + Vector2(10, 60), "🧠 다차원 신경망 수용 예측 정밀도: %.4f%%" % sup_info["accuracy_pct"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.2, 0.95, 0.85))
+		draw_string(ThemeDB.fallback_font, sup_panel_rect.position + Vector2(10, 78), "💻 슈퍼컴 AI 등급: %s" % sup_info["status"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.2, 0.95, 0.5))
+		draw_string(ThemeDB.fallback_font, sup_panel_rect.position + Vector2(10, 96), "💰 지능형 매장 자율 최적화 순이익: +%d%%" % int(sup_info["income_bonus"]), HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(1.0, 0.8, 0.2))
 
-	# Render Air Quality HUD Toggle Button (Top Right HUD, left of PG)
-	var aq_btn_x = pg_btn_x - 170.0
-	var aq_btn_rect = Rect2(aq_btn_x, 16, 160, 36)
-	var aq_btn_bg = Color(0.1, 0.7, 0.9, 0.95) if GameState.is_air_quality_hud_open else Color(0.15, 0.18, 0.22, 0.9)
-	draw_rect(aq_btn_rect, aq_btn_bg, true)
-	draw_rect(aq_btn_rect, Color(0.3, 0.8, 1.0), false, 2.0)
-	var aq_btn_label = "🍃 공기질 ON" if GameState.is_air_quality_hud_open else "🍃 공기질 측정"
-	draw_string(ThemeDB.fallback_font, aq_btn_rect.position + Vector2(20, 24), aq_btn_label, HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color.WHITE)
+	# Render Sub-Quantum Multiverse Dimensional Bifurcation Portal HUD Panel if ON
+	if GameState.is_multiverse_hud_open:
+		var multi_info = GameState.calculate_multiverse_bifurcation_metrics()
+		var multi_panel_rect = Rect2(hud_panel_x - 40.0, 60, 240, 130)
+		draw_rect(multi_panel_rect, Color(0.06, 0.08, 0.12, 0.95), true)
+		draw_rect(multi_panel_rect, Color(0.6, 0.3, 0.95), false, 2.0)
+		
+		draw_string(ThemeDB.fallback_font, multi_panel_rect.position + Vector2(10, 22), "🌌 하위 퀀텀 다중우주 차원분기 포탈", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(0.8, 0.4, 1.0))
+		draw_string(ThemeDB.fallback_font, multi_panel_rect.position + Vector2(10, 42), "🌌 동시 가동 타임라인 가지: %.0f 개" % multi_info["branches"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color.WHITE)
+		draw_string(ThemeDB.fallback_font, multi_panel_rect.position + Vector2(10, 60), "🧠 다중 위상 양자 정렬 안정성: %.4f%%" % multi_info["stability_pct"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.8, 0.4, 1.0))
+		draw_string(ThemeDB.fallback_font, multi_panel_rect.position + Vector2(10, 78), "🌌 포탈 상태: %s" % multi_info["status"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.2, 0.95, 0.5))
+		draw_string(ThemeDB.fallback_font, multi_panel_rect.position + Vector2(10, 96), "💰 병렬 차원 학습 수확 매출 보너스: +%d%%" % int(multi_info["revenue_bonus"]), HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(1.0, 0.8, 0.2))
 
-	# Render Network HUD Toggle Button (Top Right HUD, left of AQ)
-	var net_btn_x = aq_btn_x - 170.0
-	var net_btn_rect = Rect2(net_btn_x, 16, 160, 36)
-	var net_btn_bg = Color(0.6, 0.3, 0.9, 0.95) if GameState.is_network_hud_open else Color(0.15, 0.18, 0.22, 0.9)
-	draw_rect(net_btn_rect, net_btn_bg, true)
-	draw_rect(net_btn_rect, Color(0.8, 0.4, 1.0), false, 2.0)
-	var net_btn_label = "📶 네트워크 ON" if GameState.is_network_hud_open else "📶 네트워크 트래픽"
-	draw_string(ThemeDB.fallback_font, net_btn_rect.position + Vector2(18, 24), net_btn_label, HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color.WHITE)
+	# Render Sub-Space Zero-Point Energy Capacitor HUD Panel if ON
+	if GameState.is_zero_point_hud_open:
+		var zp_info = GameState.calculate_zero_point_energy_metrics()
+		var zp_panel_rect = Rect2(hud_panel_x - 40.0, 60, 240, 130)
+		draw_rect(zp_panel_rect, Color(0.06, 0.08, 0.12, 0.95), true)
+		draw_rect(zp_panel_rect, Color(0.2, 0.9, 0.95), false, 2.0)
+		
+		draw_string(ThemeDB.fallback_font, zp_panel_rect.position + Vector2(10, 22), "⚡ 하위 공간 제로포인트 에너지 캡시터", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(0.2, 0.9, 0.95))
+		draw_string(ThemeDB.fallback_font, zp_panel_rect.position + Vector2(10, 42), "⚡ 진공 추출 에너지 밀도: %.1f GJ" % zp_info["density_gj"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color.WHITE)
+		draw_string(ThemeDB.fallback_font, zp_panel_rect.position + Vector2(10, 60), "🔮 카시미르 진공 진동수: %.1f GHz" % zp_info["casimir_ghz"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.2, 0.9, 0.95))
+		draw_string(ThemeDB.fallback_font, zp_panel_rect.position + Vector2(10, 78), "⚡ 캡시터 상태: %s" % zp_info["status"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.2, 0.95, 0.5))
+		draw_string(ThemeDB.fallback_font, zp_panel_rect.position + Vector2(10, 96), "💰 무한 진공 전력 유지비 절감 보너스: +%d%%" % int(zp_info["saving_bonus"]), HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(1.0, 0.8, 0.2))
 
-	# Render Ergonomic Posture HUD Toggle Button (Top Right HUD, left of NET)
-	var ergo_btn_x = net_btn_x - 170.0
-	var ergo_btn_rect = Rect2(ergo_btn_x, 16, 160, 36)
-	var ergo_btn_bg = Color(0.9, 0.5, 0.2, 0.95) if GameState.is_ergonomic_hud_open else Color(0.15, 0.18, 0.22, 0.9)
-	draw_rect(ergo_btn_rect, ergo_btn_bg, true)
-	draw_rect(ergo_btn_rect, Color(1.0, 0.6, 0.3), false, 2.0)
-	var ergo_btn_label = "🪑 모션데스크 ON" if GameState.is_ergonomic_hud_open else "🪑 모션데스크"
-	draw_string(ThemeDB.fallback_font, ergo_btn_rect.position + Vector2(18, 24), ergo_btn_label, HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color.WHITE)
+	# Render Hyper-Dimensional Chrono-Field Resonance Converter HUD Panel if ON
+	if GameState.is_chrono_resonance_hud_open:
+		var cr_info = GameState.calculate_chrono_resonance_metrics()
+		var cr_panel_rect = Rect2(hud_panel_x - 40.0, 60, 240, 130)
+		draw_rect(cr_panel_rect, Color(0.06, 0.08, 0.12, 0.95), true)
+		draw_rect(cr_panel_rect, Color(0.95, 0.8, 0.2), false, 2.0)
+		
+		draw_string(ThemeDB.fallback_font, cr_panel_rect.position + Vector2(10, 22), "⌛ 크로노 필드 양자 공명 변환기", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(0.95, 0.8, 0.2))
+		draw_string(ThemeDB.fallback_font, cr_panel_rect.position + Vector2(10, 42), "⌛ 크로노 공명 진동수: %.3f THz" % cr_info["freq_thz"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color.WHITE)
+		draw_string(ThemeDB.fallback_font, cr_panel_rect.position + Vector2(10, 60), "🔮 시간-에너지 변환 효율: %.1f%%" % cr_info["yield_bonus"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.95, 0.8, 0.2))
+		draw_string(ThemeDB.fallback_font, cr_panel_rect.position + Vector2(10, 78), "⌛ 변환기 상태: %s" % cr_info["status"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.2, 0.95, 0.5))
+		draw_string(ThemeDB.fallback_font, cr_panel_rect.position + Vector2(10, 96), "💰 초시공간 학습 수확 보너스: +%d%%" % int(cr_info["yield_bonus"]), HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(1.0, 0.8, 0.2))
 
-	# Render Biometric Pulse HUD Toggle Button (Top Right HUD, left of ERGO)
-	var bio_btn_x = ergo_btn_x - 170.0
-	var bio_btn_rect = Rect2(bio_btn_x, 16, 160, 36)
-	var bio_btn_bg = Color(0.9, 0.2, 0.4, 0.95) if GameState.is_biometric_hud_open else Color(0.15, 0.18, 0.22, 0.9)
-	draw_rect(bio_btn_rect, bio_btn_bg, true)
-	draw_rect(bio_btn_rect, Color(1.0, 0.4, 0.6), false, 2.0)
-	var bio_btn_label = "🫀 생체맥박 ON" if GameState.is_biometric_hud_open else "🫀 생체맥박"
-	draw_string(ThemeDB.fallback_font, bio_btn_rect.position + Vector2(20, 24), bio_btn_label, HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color.WHITE)
+	# Render Quantum AI Neural-Synapse Cognitive Accelerator HUD Panel if ON
+	if GameState.is_neural_cognitive_hud_open:
+		var nc_info = GameState.calculate_neural_cognitive_metrics()
+		var nc_panel_rect = Rect2(hud_panel_x - 40.0, 60, 240, 130)
+		draw_rect(nc_panel_rect, Color(0.06, 0.08, 0.12, 0.95), true)
+		draw_rect(nc_panel_rect, Color(0.4, 0.8, 1.0), false, 2.0)
+		
+		draw_string(ThemeDB.fallback_font, nc_panel_rect.position + Vector2(10, 22), "🧠 양자 AI 신경-시냅스 인지 가속기", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(0.4, 0.8, 1.0))
+		draw_string(ThemeDB.fallback_font, nc_panel_rect.position + Vector2(10, 42), "🧠 신경 시냅스 연산 밀도: %.1f TFLOPS" % nc_info["tflops"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color.WHITE)
+		draw_string(ThemeDB.fallback_font, nc_panel_rect.position + Vector2(10, 60), "🔮 인지 집중 학습 가속율: %.4f%%" % nc_info["efficiency_pct"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.4, 0.8, 1.0))
+		draw_string(ThemeDB.fallback_font, nc_panel_rect.position + Vector2(10, 78), "🧠 인지 가속기 상태: %s" % nc_info["status"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.2, 0.95, 0.5))
+		draw_string(ThemeDB.fallback_font, nc_panel_rect.position + Vector2(10, 96), "💰 시험 시즌 성적 수확 보너스: +%d%%" % int(nc_info["exam_bonus"]), HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(1.0, 0.8, 0.2))
 
-	# Render Quantum Security HUD Toggle Button (Top Right HUD, left of BIO)
-	var q_btn_x = bio_btn_x - 170.0
-	var q_btn_rect = Rect2(q_btn_x, 16, 160, 36)
-	var q_btn_bg = Color(0.1, 0.8, 0.6, 0.95) if GameState.is_quantum_hud_open else Color(0.15, 0.18, 0.22, 0.9)
-	draw_rect(q_btn_rect, q_btn_bg, true)
-	draw_rect(q_btn_rect, Color(0.2, 0.95, 0.7), false, 2.0)
-	var q_btn_label = "🔐 양자보안 ON" if GameState.is_quantum_hud_open else "🔐 양자보안 락"
-	draw_string(ThemeDB.fallback_font, q_btn_rect.position + Vector2(20, 24), q_btn_label, HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color.WHITE)
+	# Render Autonomous Bio-Rhythm Circadian Sleep-Cycle & Neuro-Rest Engine HUD Panel if ON
+	if GameState.is_bio_rest_hud_open:
+		var br_info = GameState.calculate_bio_rest_metrics()
+		var br_panel_rect = Rect2(hud_panel_x - 40.0, 60, 240, 130)
+		draw_rect(br_panel_rect, Color(0.06, 0.08, 0.12, 0.95), true)
+		draw_rect(br_panel_rect, Color(0.3, 0.95, 0.8), false, 2.0)
+		
+		draw_string(ThemeDB.fallback_font, br_panel_rect.position + Vector2(10, 22), "💤 자율 서카디안 신경휴식 캡슐", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(0.3, 0.95, 0.8))
+		draw_string(ThemeDB.fallback_font, br_panel_rect.position + Vector2(10, 42), "💤 멜라토닌 수면 동기화율: %.4f%%" % br_info["melatonin_pct"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color.WHITE)
+		draw_string(ThemeDB.fallback_font, br_panel_rect.position + Vector2(10, 60), "🔮 알파파 뇌파 유도 주파수: %.1f Hz" % br_info["alpha_hz"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.3, 0.95, 0.8))
+		draw_string(ThemeDB.fallback_font, br_panel_rect.position + Vector2(10, 78), "💤 신경휴식 캡슐 상태: %s" % br_info["status"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.2, 0.95, 0.5))
+		draw_string(ThemeDB.fallback_font, br_panel_rect.position + Vector2(10, 96), "💰 피로회복 & 피크 집중력 회복: +%d%%" % int(br_info["stamina_bonus"]), HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(1.0, 0.8, 0.2))
 
-	# Render Botanical Bio-Wall HUD Toggle Button (Top Right HUD, left of Q)
-	var b_btn_x = q_btn_x - 170.0
-	var b_btn_rect = Rect2(b_btn_x, 16, 160, 36)
-	var b_btn_bg = Color(0.2, 0.7, 0.3, 0.95) if GameState.is_botanical_hud_open else Color(0.15, 0.18, 0.22, 0.9)
-	draw_rect(b_btn_rect, b_btn_bg, true)
-	draw_rect(b_btn_rect, Color(0.3, 0.9, 0.4), false, 2.0)
-	var b_btn_label = "🌿 식물벽 ON" if GameState.is_botanical_hud_open else "🌿 식물벽 온습도"
-	draw_string(ThemeDB.fallback_font, b_btn_rect.position + Vector2(20, 24), b_btn_label, HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color.WHITE)
+	# Render Quantum Holographic Spatial-Acoustic Active Resonance Damping Engine HUD Panel if ON
+	if GameState.is_acoustic_damping_hud_open:
+		var ad_info = GameState.calculate_acoustic_damping_metrics()
+		var ad_panel_rect = Rect2(hud_panel_x - 40.0, 60, 240, 130)
+		draw_rect(ad_panel_rect, Color(0.06, 0.08, 0.12, 0.95), true)
+		draw_rect(ad_panel_rect, Color(0.9, 0.4, 0.95), false, 2.0)
+		
+		draw_string(ThemeDB.fallback_font, ad_panel_rect.position + Vector2(10, 22), "🔇 홀로그램 공간-음향 능동 감쇠기", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(0.9, 0.4, 0.95))
+		draw_string(ThemeDB.fallback_font, ad_panel_rect.position + Vector2(10, 42), "🔇 소음 위상 상쇄 레벨: %.1f dB" % ad_info["damping_db"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color.WHITE)
+		draw_string(ThemeDB.fallback_font, ad_panel_rect.position + Vector2(10, 60), "🔮 홀로그램 음장 위상 정렬: %.4f%%" % ad_info["coherence_pct"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.9, 0.4, 0.95))
+		draw_string(ThemeDB.fallback_font, ad_panel_rect.position + Vector2(10, 78), "🔇 감쇠기 상태: %s" % ad_info["status"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.2, 0.95, 0.5))
+		draw_string(ThemeDB.fallback_font, ad_panel_rect.position + Vector2(10, 96), "💰 무소음 극대 몰입 학습 보너스: +%d%%" % int(ad_info["focus_bonus"]), HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(1.0, 0.8, 0.2))
 
-	# Render Circadian Lighting HUD Toggle Button (Top Right HUD, left of B)
-	var c_btn_x = b_btn_x - 170.0
-	var c_btn_rect = Rect2(c_btn_x, 16, 160, 36)
-	var c_btn_bg = Color(0.95, 0.7, 0.2, 0.95) if GameState.is_circadian_hud_open else Color(0.15, 0.18, 0.22, 0.9)
-	draw_rect(c_btn_rect, c_btn_bg, true)
-	draw_rect(c_btn_rect, Color(1.0, 0.8, 0.3), false, 2.0)
-	var c_btn_label = "💡 스펙트럼 ON" if GameState.is_circadian_hud_open else "💡 조명스펙트럼"
-	draw_string(ThemeDB.fallback_font, c_btn_rect.position + Vector2(18, 24), c_btn_label, HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color.WHITE)
+	# Render Autonomous Bio-Robotic Molecular Nanite Sanitation Engine HUD Panel if ON
+	if GameState.is_nanite_sanitation_hud_open:
+		var ns_info = GameState.calculate_nanite_sanitation_metrics()
+		var ns_panel_rect = Rect2(hud_panel_x - 40.0, 60, 240, 130)
+		draw_rect(ns_panel_rect, Color(0.06, 0.08, 0.12, 0.95), true)
+		draw_rect(ns_panel_rect, Color(0.2, 0.85, 0.95), false, 2.0)
+		
+		draw_string(ThemeDB.fallback_font, ns_panel_rect.position + Vector2(10, 22), "🤖 분자 나노봇 자율 위생 소독 엔진", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(0.2, 0.85, 0.95))
+		draw_string(ThemeDB.fallback_font, ns_panel_rect.position + Vector2(10, 42), "🤖 가동 소독 나노봇 스웜 개체: %.0fM 개" % ns_info["count_m"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color.WHITE)
+		draw_string(ThemeDB.fallback_font, ns_panel_rect.position + Vector2(10, 60), "🔮 공기/표면 병원체 살균 순도: %.4f%%" % ns_info["sterilization_pct"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.2, 0.85, 0.95))
+		draw_string(ThemeDB.fallback_font, ns_panel_rect.position + Vector2(10, 78), "🤖 나노봇 스웜 상태: %s" % ns_info["status"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.2, 0.95, 0.5))
+		draw_string(ThemeDB.fallback_font, ns_panel_rect.position + Vector2(10, 96), "💰 초청정 멸균 청결도 신뢰 보너스: +%d%%" % int(ns_info["cleanliness_bonus"]), HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(1.0, 0.8, 0.2))
 
-	# Render PMV Thermal Comfort HUD Toggle Button (Top Right HUD, left of C)
-	var pmv_btn_x = c_btn_x - 170.0
-	var pmv_btn_rect = Rect2(pmv_btn_x, 16, 160, 36)
-	var pmv_btn_bg = Color(0.9, 0.3, 0.4, 0.95) if GameState.is_pmv_hud_open else Color(0.15, 0.18, 0.22, 0.9)
-	draw_rect(pmv_btn_rect, pmv_btn_bg, true)
-	draw_rect(pmv_btn_rect, Color(1.0, 0.5, 0.6), false, 2.0)
-	var pmv_btn_label = "🌡️ PMV쾌적 ON" if GameState.is_pmv_hud_open else "🌡️ PMV쾌적"
-	draw_string(ThemeDB.fallback_font, pmv_btn_rect.position + Vector2(20, 24), pmv_btn_label, HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color.WHITE)
+	# Render Autonomous Quantum-Entangled Sub-Atmospheric Gravitational Field Stabilizer HUD Panel if ON
+	if GameState.is_quantum_gravity_hud_open:
+		var qg_info = GameState.calculate_quantum_gravity_metrics()
+		var qg_panel_rect = Rect2(hud_panel_x - 40.0, 60, 240, 130)
+		draw_rect(qg_panel_rect, Color(0.06, 0.08, 0.12, 0.95), true)
+		draw_rect(qg_panel_rect, Color(0.4, 0.6, 1.0), false, 2.0)
+		
+		draw_string(ThemeDB.fallback_font, qg_panel_rect.position + Vector2(10, 22), "🌌 양자 얽힘 대기권-하위 중력장 안정기", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(0.4, 0.6, 1.0))
+		draw_string(ThemeDB.fallback_font, qg_panel_rect.position + Vector2(10, 42), "🌌 미세 중력장 궤도 안정율: %.4f%%" % qg_info["stability_pct"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color.WHITE)
+		draw_string(ThemeDB.fallback_font, qg_panel_rect.position + Vector2(10, 60), "🔮 중력자 입자 진동 플럭스: %.1f MHz" % qg_info["graviton_mhz"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.4, 0.6, 1.0))
+		draw_string(ThemeDB.fallback_font, qg_panel_rect.position + Vector2(10, 78), "🌌 중력장 안정기 상태: %s" % qg_info["status"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.2, 0.95, 0.5))
+		draw_string(ThemeDB.fallback_font, qg_panel_rect.position + Vector2(10, 96), "💰 척추 하중 분산 인체공학 보너스: +%d%%" % int(qg_info["ergonomic_bonus"]), HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(1.0, 0.8, 0.2))
 
-	# Render Autonomous AI Cleaning Drone HUD Toggle Button (Top Right HUD, left of PMV)
-	var drn_btn_x = pmv_btn_x - 170.0
-	var drn_btn_rect = Rect2(drn_btn_x, 16, 160, 36)
-	var drn_btn_bg = Color(0.1, 0.7, 0.9, 0.95) if GameState.is_cleaning_drone_hud_open else Color(0.15, 0.18, 0.22, 0.9)
-	draw_rect(drn_btn_rect, drn_btn_bg, true)
-	draw_rect(drn_btn_rect, Color(0.3, 0.85, 1.0), false, 2.0)
-	var drn_btn_label = "🤖 AI드론 ON" if GameState.is_cleaning_drone_hud_open else "🤖 AI드론"
-	draw_string(ThemeDB.fallback_font, drn_btn_rect.position + Vector2(25, 24), drn_btn_label, HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color.WHITE)
+	# Render Quantum Entanglement Antimatter Energy HUD Panel if ON
+	if GameState.is_antimatter_hud_open:
+		var ant_info = GameState.calculate_antimatter_energy_metrics()
+		var ant_panel_rect = Rect2(ant_btn_x - 40.0, 60, 240, 130)
+		draw_rect(ant_panel_rect, Color(0.06, 0.08, 0.12, 0.95), true)
+		draw_rect(ant_panel_rect, Color(0.85, 0.3, 1.0), false, 2.0)
+		
+		draw_string(ThemeDB.fallback_font, ant_panel_rect.position + Vector2(10, 22), "⚛️ 양자 얽힘 반물질 초청정 에너지", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(0.85, 0.3, 1.0))
+		draw_string(ThemeDB.fallback_font, ant_panel_rect.position + Vector2(10, 42), "⚛️ 반물질 가둠 자기장 안정율: %.4f%%" % ant_info["stability_pct"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color.WHITE)
+		draw_string(ThemeDB.fallback_font, ant_panel_rect.position + Vector2(10, 60), "🔋 양자 얽힘 전력 발전 출력: %.1f MW" % ant_info["output_mw"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.85, 0.3, 1.0))
+		draw_string(ThemeDB.fallback_font, ant_panel_rect.position + Vector2(10, 78), "⚛️ 초청정 에너지 발전 등급: %s" % ant_info["status"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.2, 0.95, 0.5))
+		draw_string(ThemeDB.fallback_font, ant_panel_rect.position + Vector2(10, 96), "💰 탄소배출 Zero 글로벌 ESG 마진: +%d%%" % int(ant_info["margin_bonus"]), HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(1.0, 0.8, 0.2))
 
-	# Render Customer Micro-Expression Emotion HUD Toggle Button (Top Right HUD, left of DRONE)
-	var emo_btn_x = drn_btn_x - 170.0
-	var emo_btn_rect = Rect2(emo_btn_x, 16, 160, 36)
-	var emo_btn_bg = Color(0.9, 0.4, 0.7, 0.95) if GameState.is_emotion_hud_open else Color(0.15, 0.18, 0.22, 0.9)
-	draw_rect(emo_btn_rect, emo_btn_bg, true)
-	draw_rect(emo_btn_rect, Color(1.0, 0.6, 0.8), false, 2.0)
-	var emo_btn_label = "😊 감정분석 ON" if GameState.is_emotion_hud_open else "😊 감정분석"
-	draw_string(ThemeDB.fallback_font, emo_btn_rect.position + Vector2(25, 24), emo_btn_label, HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color.WHITE)
+	# Render Sub-Conscious Neural Synapse Telepathic Memory Download HUD Panel if ON
+	if GameState.is_telepathic_hud_open:
+		var tel_info = GameState.calculate_neural_telepathic_metrics()
+		var tel_panel_rect = Rect2(tel_btn_x - 40.0, 60, 240, 130)
+		draw_rect(tel_panel_rect, Color(0.06, 0.08, 0.12, 0.95), true)
+		draw_rect(tel_panel_rect, Color(0.95, 0.4, 1.0), false, 2.0)
+		
+		draw_string(ThemeDB.fallback_font, tel_panel_rect.position + Vector2(10, 22), "🧠 텔레파시 신경 시냅스 지식 다운로드", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(0.95, 0.4, 1.0))
+		draw_string(ThemeDB.fallback_font, tel_panel_rect.position + Vector2(10, 42), "🧠 신경 시냅스 전송 속도: %.3f TB/s" % tel_info["speed_tbs"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color.WHITE)
+		draw_string(ThemeDB.fallback_font, tel_panel_rect.position + Vector2(10, 60), "🧠 잠재의식 장기 기억 고정율: %.3f%%" % tel_info["retention_pct"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.95, 0.4, 1.0))
+		draw_string(ThemeDB.fallback_font, tel_panel_rect.position + Vector2(10, 78), "🧠 시냅스 텔레파시 등급: %s" % tel_info["status"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.2, 0.95, 0.5))
+		draw_string(ThemeDB.fallback_font, tel_panel_rect.position + Vector2(10, 96), "💰 초지능 수험생 프리미엄 멤버십: +%d%%" % int(tel_info["revenue_bonus"]), HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(1.0, 0.8, 0.2))
 
-	# Render Solar Sun-Tracking Shading HUD Toggle Button (Top Right HUD, left of EMO)
-	var shd_btn_x = emo_btn_x - 170.0
-	var shd_btn_rect = Rect2(shd_btn_x, 16, 160, 36)
-	var shd_btn_bg = Color(0.9, 0.6, 0.2, 0.95) if GameState.is_shading_hud_open else Color(0.15, 0.18, 0.22, 0.9)
-	draw_rect(shd_btn_rect, shd_btn_bg, true)
-	draw_rect(shd_btn_rect, Color(1.0, 0.7, 0.3), false, 2.0)
-	var shd_btn_label = "🪟 자동블라인드 ON" if GameState.is_shading_hud_open else "🪟 자동블라인드"
-	draw_string(ThemeDB.fallback_font, shd_btn_rect.position + Vector2(15, 24), shd_btn_label, HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color.WHITE)
+	# Render Tachyon Chrono Temporal Acceleration HUD Panel if ON
+	if GameState.is_tachyon_hud_open:
+		var tac_info = GameState.calculate_tachyon_chrono_metrics()
+		var tac_panel_rect = Rect2(tac_btn_x - 40.0, 60, 240, 130)
+		draw_rect(tac_panel_rect, Color(0.06, 0.08, 0.12, 0.95), true)
+		draw_rect(tac_panel_rect, Color(1.0, 0.75, 0.2), false, 2.0)
+		
+		draw_string(ThemeDB.fallback_font, tac_panel_rect.position + Vector2(10, 22), "⏳ 타키온 초시공간 시간 왜곡 가속기", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(1.0, 0.75, 0.2))
+		draw_string(ThemeDB.fallback_font, tac_panel_rect.position + Vector2(10, 42), "⏳ 학습 시간 왜곡 가속 배율: %.1fx" % tac_info["dilation_mult"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color.WHITE)
+		draw_string(ThemeDB.fallback_font, tac_panel_rect.position + Vector2(10, 60), "🌌 시공간 엔트로피 안점감: %.3f%%" % tac_info["stability_pct"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(1.0, 0.75, 0.2))
+		draw_string(ThemeDB.fallback_font, tac_panel_rect.position + Vector2(10, 78), "⏳ 시공간 시간 가속 등급: %s" % tac_info["status"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.2, 0.95, 0.5))
+		draw_string(ThemeDB.fallback_font, tac_panel_rect.position + Vector2(10, 96), "💰 초단기 합격률 VIP 정기권 수익: +%d%%" % int(tac_info["revenue_bonus"]), HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(1.0, 0.8, 0.2))
 
-	# Render Smart Water Quality HUD Toggle Button (Top Right HUD, left of SHD)
-	var wtr_btn_x = shd_btn_x - 170.0
-	var wtr_btn_rect = Rect2(wtr_btn_x, 16, 160, 36)
-	var wtr_btn_bg = Color(0.1, 0.6, 0.9, 0.95) if GameState.is_water_hud_open else Color(0.15, 0.18, 0.22, 0.9)
-	draw_rect(wtr_btn_rect, wtr_btn_bg, true)
-	draw_rect(wtr_btn_rect, Color(0.3, 0.8, 1.0), false, 2.0)
-	var wtr_btn_label = "💧 수소수바 ON" if GameState.is_water_hud_open else "💧 수소수바"
-	draw_string(ThemeDB.fallback_font, wtr_btn_rect.position + Vector2(25, 24), wtr_btn_label, HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color.WHITE)
+	# Render Sub-Space Wormhole Tesseract Spatial Storage Expansion HUD Panel if ON
+	if GameState.is_tesseract_hud_open:
+		var tes_info = GameState.calculate_tesseract_expansion_metrics()
+		var tes_panel_rect = Rect2(tes_btn_x - 40.0, 60, 240, 130)
+		draw_rect(tes_panel_rect, Color(0.06, 0.08, 0.12, 0.95), true)
+		draw_rect(tes_panel_rect, Color(0.4, 0.8, 1.0), false, 2.0)
+		
+		draw_string(ThemeDB.fallback_font, tes_panel_rect.position + Vector2(10, 22), "🌀 4차원 테서랙트 웜홀 공간 왜곡 확장", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(0.4, 0.8, 1.0))
+		draw_string(ThemeDB.fallback_font, tes_panel_rect.position + Vector2(10, 42), "🌀 체적 공간 접힘 압축율: %.3f%%" % tes_info["compress_pct"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color.WHITE)
+		draw_string(ThemeDB.fallback_font, tes_panel_rect.position + Vector2(10, 60), "🌌 수용 인원 가상 멀티플라이어: %.1fx" % tes_info["capacity_mult"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.4, 0.8, 1.0))
+		draw_string(ThemeDB.fallback_font, tes_panel_rect.position + Vector2(10, 78), "🌀 공간 확장 영토 등급: %s" % tes_info["status"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.2, 0.95, 0.5))
+		draw_string(ThemeDB.fallback_font, tes_panel_rect.position + Vector2(10, 96), "💰 임대료 $0 무한 수용 확장 수익: +%d%%" % int(tes_info["revenue_bonus"]), HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(1.0, 0.8, 0.2))
 
-	# Render Neuro-Feedback Soundscape HUD Toggle Button (Top Right HUD, left of WTR)
-	var nro_btn_x = wtr_btn_x - 170.0
-	var nro_btn_rect = Rect2(nro_btn_x, 16, 160, 36)
-	var nro_btn_bg = Color(0.6, 0.3, 0.9, 0.95) if GameState.is_neuro_hud_open else Color(0.15, 0.18, 0.22, 0.9)
-	draw_rect(nro_btn_rect, nro_btn_bg, true)
-	draw_rect(nro_btn_rect, Color(0.8, 0.5, 1.0), false, 2.0)
-	var nro_btn_label = "🧠 뉴로피드백 ON" if GameState.is_neuro_hud_open else "🧠 뉴로피드백"
-	draw_string(ThemeDB.fallback_font, nro_btn_rect.position + Vector2(20, 24), nro_btn_label, HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color.WHITE)
+	# Render Sub-Atomic Particle Kinetic Energy Harvesting HUD Panel if ON
+	if GameState.is_harvesting_hud_open:
+		var hrv_info = GameState.calculate_electromagnetic_harvesting_metrics()
+		var hrv_panel_rect = Rect2(hrv_btn_x - 40.0, 60, 240, 130)
+		draw_rect(hrv_panel_rect, Color(0.06, 0.08, 0.12, 0.95), true)
+		draw_rect(hrv_panel_rect, Color(1.0, 0.85, 0.2), false, 2.0)
+		
+		draw_string(ThemeDB.fallback_font, hrv_panel_rect.position + Vector2(10, 22), "⚡ 무선 운동 전자기장 하베스팅", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(1.0, 0.85, 0.2))
+		draw_string(ThemeDB.fallback_font, hrv_panel_rect.position + Vector2(10, 42), "⚡ 전자기 포집 에너지 전환율: %.2f%%" % hrv_info["convert_pct"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color.WHITE)
+		draw_string(ThemeDB.fallback_font, hrv_panel_rect.position + Vector2(10, 60), "🔋 아원자 발전 전력 출력: %.1f kW" % hrv_info["power_kw"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(1.0, 0.85, 0.2))
+		draw_string(ThemeDB.fallback_font, hrv_panel_rect.position + Vector2(10, 78), "⚡ 하베스팅 전력 등급: %s" % hrv_info["status"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.2, 0.95, 0.5))
+		draw_string(ThemeDB.fallback_font, hrv_panel_rect.position + Vector2(10, 96), "💰 자가발전 매장 영업 순이익률: +%d%%" % int(hrv_info["margin_bonus"]), HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(1.0, 0.8, 0.2))
 
-	# Render Voice Command AI Butler HUD Toggle Button (Top Right HUD, left of NRO)
-	var voi_btn_x = nro_btn_x - 170.0
-	var voi_btn_rect = Rect2(voi_btn_x, 16, 160, 36)
-	var voi_btn_bg = Color(0.1, 0.7, 0.8, 0.95) if GameState.is_voice_ai_hud_open else Color(0.15, 0.18, 0.22, 0.9)
-	draw_rect(voi_btn_rect, voi_btn_bg, true)
-	draw_rect(voi_btn_rect, Color(0.3, 0.9, 1.0), false, 2.0)
-	var voi_btn_label = "🗣️ AI음성 ON" if GameState.is_voice_ai_hud_open else "🗣️ AI음성"
-	draw_string(ThemeDB.fallback_font, voi_btn_rect.position + Vector2(25, 24), voi_btn_label, HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color.WHITE)
-
-	# Render Holographic AI Tutor HUD Toggle Button (Top Right HUD, left of VOI)
-	var hlo_btn_x = voi_btn_x - 170.0
-	var hlo_btn_rect = Rect2(hlo_btn_x, 16, 160, 36)
-	var hlo_btn_bg = Color(0.6, 0.2, 0.9, 0.95) if GameState.is_hologram_hud_open else Color(0.15, 0.18, 0.22, 0.9)
-	draw_rect(hlo_btn_rect, hlo_btn_bg, true)
-	draw_rect(hlo_btn_rect, Color(0.8, 0.4, 1.0), false, 2.0)
-	var hlo_btn_label = "🔮 홀로그램 ON" if GameState.is_hologram_hud_open else "🔮 홀로그램"
-	draw_string(ThemeDB.fallback_font, hlo_btn_rect.position + Vector2(25, 24), hlo_btn_label, HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color.WHITE)
-
-	# Render Piezoelectric Floor Power HUD Toggle Button (Top Right HUD, left of HLO)
-	var piz_btn_x = hlo_btn_x - 170.0
-	var piz_btn_rect = Rect2(piz_btn_x, 16, 160, 36)
-	var piz_btn_bg = Color(0.1, 0.7, 0.4, 0.95) if GameState.is_piezo_hud_open else Color(0.15, 0.18, 0.22, 0.9)
-	draw_rect(piz_btn_rect, piz_btn_bg, true)
-	draw_rect(piz_btn_rect, Color(0.3, 0.9, 0.5), false, 2.0)
-	var piz_btn_label = "⚡ 압전발전 ON" if GameState.is_piezo_hud_open else "⚡ 압전발전"
-	draw_string(ThemeDB.fallback_font, piz_btn_rect.position + Vector2(25, 24), piz_btn_label, HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color.WHITE)
-
-	# Render Autonomous Delivery Robot HUD Toggle Button (Top Right HUD, left of PIZ)
-	var rbt_btn_x = piz_btn_x - 170.0
-	var rbt_btn_rect = Rect2(rbt_btn_x, 16, 160, 36)
-	var rbt_btn_bg = Color(0.1, 0.6, 0.7, 0.95) if GameState.is_robot_hud_open else Color(0.15, 0.18, 0.22, 0.9)
-	draw_rect(rbt_btn_rect, rbt_btn_bg, true)
-	draw_rect(rbt_btn_rect, Color(0.3, 0.8, 0.9), false, 2.0)
-	var rbt_btn_label = "🤖 서빙로봇 ON" if GameState.is_robot_hud_open else "🤖 서빙로봇"
-	draw_string(ThemeDB.fallback_font, rbt_btn_rect.position + Vector2(25, 24), rbt_btn_label, HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color.WHITE)
-
-	# Render Quantum Security Shield HUD Toggle Button (Top Right HUD, left of RBT)
-	var sld_btn_x = rbt_btn_x - 170.0
-	var sld_btn_rect = Rect2(sld_btn_x, 16, 160, 36)
-	var sld_btn_bg = Color(0.2, 0.5, 0.9, 0.95) if GameState.is_shield_hud_open else Color(0.15, 0.18, 0.22, 0.9)
-	draw_rect(sld_btn_rect, sld_btn_bg, true)
-	draw_rect(sld_btn_rect, Color(0.4, 0.7, 1.0), false, 2.0)
-	var sld_btn_label = "🛡️ 양자보안 ON" if GameState.is_shield_hud_open else "🛡️ 양자보안"
-	draw_string(ThemeDB.fallback_font, sld_btn_rect.position + Vector2(25, 24), sld_btn_label, HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color.WHITE)
-
-	# Render Autonomous Satellite Network HUD Toggle Button (Top Right HUD, left of SLD)
-	var sat_btn_x = sld_btn_x - 170.0
-	var sat_btn_rect = Rect2(sat_btn_x, 16, 160, 36)
-	var sat_btn_bg = Color(0.8, 0.6, 0.1, 0.95) if GameState.is_satellite_hud_open else Color(0.15, 0.18, 0.22, 0.9)
-	draw_rect(sat_btn_rect, sat_btn_bg, true)
-	draw_rect(sat_btn_rect, Color(1.0, 0.8, 0.3), false, 2.0)
-	var sat_btn_label = "📡 위성통신 ON" if GameState.is_satellite_hud_open else "📡 위성통신"
-	draw_string(ThemeDB.fallback_font, sat_btn_rect.position + Vector2(25, 24), sat_btn_label, HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color.WHITE)
-
-	# Render Fusion Nuclear Micro-Reactor HUD Toggle Button (Top Right HUD, left of SAT)
-	var fsn_btn_x = sat_btn_x - 170.0
-	var fsn_btn_rect = Rect2(fsn_btn_x, 16, 160, 36)
-	var fsn_btn_bg = Color(0.9, 0.4, 0.1, 0.95) if GameState.is_fusion_hud_open else Color(0.15, 0.18, 0.22, 0.9)
-	draw_rect(fsn_btn_rect, fsn_btn_bg, true)
-	draw_rect(fsn_btn_rect, Color(1.0, 0.6, 0.2), false, 2.0)
-	var fsn_btn_label = "⚛️ 핵융합 ON" if GameState.is_fusion_hud_open else "⚛️ 핵융합"
-	draw_string(ThemeDB.fallback_font, fsn_btn_rect.position + Vector2(25, 24), fsn_btn_label, HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color.WHITE)
-
-	# Render Quantum Supercomputer AI Curriculum HUD Toggle Button (Top Right HUD, left of FSN)
-	var cur_btn_x = fsn_btn_x - 170.0
-	var cur_btn_rect = Rect2(cur_btn_x, 16, 160, 36)
-	var cur_btn_bg = Color(0.7, 0.2, 0.8, 0.95) if GameState.is_curriculum_hud_open else Color(0.15, 0.18, 0.22, 0.9)
-	draw_rect(cur_btn_rect, cur_btn_bg, true)
-	draw_rect(cur_btn_rect, Color(0.9, 0.4, 1.0), false, 2.0)
-	var cur_btn_label = "💻 AI학습 ON" if GameState.is_curriculum_hud_open else "💻 AI학습"
-	draw_string(ThemeDB.fallback_font, cur_btn_rect.position + Vector2(25, 24), cur_btn_label, HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color.WHITE)
-
-	# Render Atmospheric Water Generator HUD Toggle Button (Top Right HUD, left of CUR)
-	var awg_btn_x = cur_btn_x - 170.0
-	var awg_btn_rect = Rect2(awg_btn_x, 16, 160, 36)
-	var awg_btn_bg = Color(0.1, 0.7, 0.7, 0.95) if GameState.is_awg_hud_open else Color(0.15, 0.18, 0.22, 0.9)
-	draw_rect(awg_btn_rect, awg_btn_bg, true)
-	draw_rect(awg_btn_rect, Color(0.3, 0.9, 0.9), false, 2.0)
-	var awg_btn_label = "🌊 대기집수 ON" if GameState.is_awg_hud_open else "🌊 대기집수"
-	draw_string(ThemeDB.fallback_font, awg_btn_rect.position + Vector2(25, 24), awg_btn_label, HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color.WHITE)
-
-	# Render Hydroponic Vertical Farm HUD Toggle Button (Top Right HUD, left of AWG)
-	var frm_btn_x = awg_btn_x - 170.0
-	var frm_btn_rect = Rect2(frm_btn_x, 16, 160, 36)
-	var frm_btn_bg = Color(0.1, 0.7, 0.3, 0.95) if GameState.is_farm_hud_open else Color(0.15, 0.18, 0.22, 0.9)
-	draw_rect(frm_btn_rect, frm_btn_bg, true)
-	draw_rect(frm_btn_rect, Color(0.3, 0.95, 0.4), false, 2.0)
-	var frm_btn_label = "🥗 수직농장 ON" if GameState.is_farm_hud_open else "🥗 수직농장"
-	draw_string(ThemeDB.fallback_font, frm_btn_rect.position + Vector2(25, 24), frm_btn_label, HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color.WHITE)
-
-	# Render Autonomous Exoskeleton Ergonomic Posture HUD Toggle Button (Top Right HUD, left of FRM)
-	var exo_btn_x = frm_btn_x - 170.0
-	var exo_btn_rect = Rect2(exo_btn_x, 16, 160, 36)
-	var exo_btn_bg = Color(0.85, 0.55, 0.1, 0.95) if GameState.is_exo_hud_open else Color(0.15, 0.18, 0.22, 0.9)
-	draw_rect(exo_btn_rect, exo_btn_bg, true)
-	draw_rect(exo_btn_rect, Color(1.0, 0.75, 0.2), false, 2.0)
-	var exo_btn_label = "🦾 척추보호 ON" if GameState.is_exo_hud_open else "🦾 척추보호"
-	draw_string(ThemeDB.fallback_font, exo_btn_rect.position + Vector2(25, 24), exo_btn_label, HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color.WHITE)
-
-	# Render Quantum Entanglement Instant Teleportation HUD Toggle Button (Top Right HUD, left of EXO)
-	var tp_btn_x = exo_btn_x - 170.0
-	var tp_btn_rect = Rect2(tp_btn_x, 16, 160, 36)
-	var tp_btn_bg = Color(0.5, 0.2, 0.9, 0.95) if GameState.is_teleport_hud_open else Color(0.15, 0.18, 0.22, 0.9)
-	draw_rect(tp_btn_rect, tp_btn_bg, true)
-	draw_rect(tp_btn_rect, Color(0.7, 0.4, 1.0), false, 2.0)
-	var tp_btn_label = "🌌 순간이동 ON" if GameState.is_teleport_hud_open else "🌌 순간이동"
-	draw_string(ThemeDB.fallback_font, tp_btn_rect.position + Vector2(25, 24), tp_btn_label, HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color.WHITE)
-
-	# Render Sub-Zero Nitrogen Cryogenic Preservation HUD Toggle Button (Top Right HUD, left of TP)
-	var cry_btn_x = tp_btn_x - 170.0
-	var cry_btn_rect = Rect2(cry_btn_x, 16, 160, 36)
-	var cry_btn_bg = Color(0.1, 0.6, 0.9, 0.95) if GameState.is_cryo_hud_open else Color(0.15, 0.18, 0.22, 0.9)
-	draw_rect(cry_btn_rect, cry_btn_bg, true)
-	draw_rect(cry_btn_rect, Color(0.3, 0.85, 1.0), false, 2.0)
-	var cry_btn_label = "❄️ 질소냉동 ON" if GameState.is_cryo_hud_open else "❄️ 질소냉동"
-	draw_string(ThemeDB.fallback_font, cry_btn_rect.position + Vector2(25, 24), cry_btn_label, HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color.WHITE)
-
-	# Render Zero-Trust Quantum Cryptographic Blockchain Treasury HUD Toggle Button (Top Right HUD, left of CRY)
-	var trs_btn_x = cry_btn_x - 170.0
-	var trs_btn_rect = Rect2(trs_btn_x, 16, 160, 36)
-	var trs_btn_bg = Color(0.1, 0.5, 0.9, 0.95) if GameState.is_treasury_hud_open else Color(0.15, 0.18, 0.22, 0.9)
-	draw_rect(trs_btn_rect, trs_btn_bg, true)
-	draw_rect(trs_btn_rect, Color(0.3, 0.8, 1.0), false, 2.0)
-	var trs_btn_label = "💎 양자정산 ON" if GameState.is_treasury_hud_open else "💎 양자정산"
-	draw_string(ThemeDB.fallback_font, trs_btn_rect.position + Vector2(25, 24), trs_btn_label, HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color.WHITE)
-
-	# Render Gravitational Wave Noise Cancellation Acoustic HUD Toggle Button (Top Right HUD, left of TRS)
-	var grv_btn_x = trs_btn_x - 170.0
-	var grv_btn_rect = Rect2(grv_btn_x, 16, 160, 36)
-	var grv_btn_bg = Color(0.6, 0.2, 0.85, 0.95) if GameState.is_grav_acoustic_hud_open else Color(0.15, 0.18, 0.22, 0.9)
-	draw_rect(grv_btn_rect, grv_btn_bg, true)
-	draw_rect(grv_btn_rect, Color(0.8, 0.4, 1.0), false, 2.0)
-	var grv_btn_label = "🌌 중력파 ON" if GameState.is_grav_acoustic_hud_open else "🌌 중력파"
-	draw_string(ThemeDB.fallback_font, grv_btn_rect.position + Vector2(25, 24), grv_btn_label, HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color.WHITE)
+	# Render Spatial Olfactory Aromatherapy Synthesizer HUD Panel if ON
+	if GameState.is_olfactory_hud_open:
+		var olf_info = GameState.calculate_olfactory_synthesizer_metrics()
+		var olf_panel_rect = Rect2(olf_btn_x - 40.0, 60, 240, 130)
+		draw_rect(olf_panel_rect, Color(0.06, 0.08, 0.12, 0.95), true)
+		draw_rect(olf_panel_rect, Color(0.3, 0.9, 0.5), false, 2.0)
+		
+		draw_string(ThemeDB.fallback_font, olf_panel_rect.position + Vector2(10, 22), "🌿 피톤치드 공간 후각 디퓨저 합성기", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(0.3, 0.9, 0.5))
+		draw_string(ThemeDB.fallback_font, olf_panel_rect.position + Vector2(10, 42), "🌿 공기 피톤치드 향미 순도: %.2f%%" % olf_info["purity_pct"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color.WHITE)
+		draw_string(ThemeDB.fallback_font, olf_panel_rect.position + Vector2(10, 60), "🧠 뇌파 아로마 릴렉싱 스트레스: %.2f PPM" % olf_info["stress_ppm"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.3, 0.9, 0.5))
+		draw_string(ThemeDB.fallback_font, olf_panel_rect.position + Vector2(10, 78), "🌿 아로마 디퓨징 등급: %s" % olf_info["status"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.2, 0.95, 0.5))
+		draw_string(ThemeDB.fallback_font, olf_panel_rect.position + Vector2(10, 96), "💰 집중력 피로 회복 단골 친밀도 수익: +%d%%" % int(olf_info["refresh_bonus"]), HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(1.0, 0.8, 0.2))
 
 	# Render Gravitational Wave Noise Cancellation Acoustic HUD Panel if ON
 	if GameState.is_grav_acoustic_hud_open:

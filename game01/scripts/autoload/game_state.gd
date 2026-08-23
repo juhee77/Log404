@@ -23,6 +23,7 @@ signal floor_changed(new_floor)
 signal decor_mode_changed(is_active)
 signal achievement_unlocked(title, reward)
 signal theme_changed(new_theme)
+signal tech_systems_requested()
 
 
 # Financial & Time Variables
@@ -2549,6 +2550,438 @@ func calculate_gravitational_acoustic_metrics() -> Dictionary:
 		"status": grav_status_str,
 		"revenue_bonus": focus_revenue_bonus,
 		"is_grav_unlocked": is_grav_unlocked
+	}
+
+# Iteration 170: Real-Time Store Spatial Olfactory Pheromone Aromatherapy Air Diffusion Synthesizer Subsystem
+var is_olfactory_hud_open: bool = false
+
+func toggle_olfactory_hud() -> bool:
+	is_olfactory_hud_open = not is_olfactory_hud_open
+	_play_sfx_safe("click")
+	return is_olfactory_hud_open
+
+func calculate_olfactory_synthesizer_metrics() -> Dictionary:
+	var scent_purity_pct = 90.0
+	var stress_threshold_ppm = 0.5
+	var olfactory_status_str = "🌿 S 라벤더 에센셜 디퓨저 (90.0%)"
+	
+	var is_olfactory_unlocked = upgrades.has("air_purifier") and upgrades["air_purifier"]["level"] > 0
+	if is_olfactory_unlocked:
+		scent_purity_pct = 99.98
+		stress_threshold_ppm = 0.01
+		olfactory_status_str = "👑 SSS급 피톤치드 알파 아로마 공간 디퓨저 (99.98%)"
+		
+	var mental_refresh_bonus = 37.0 if is_olfactory_unlocked else 18.0
+	
+	return {
+		"purity_pct": scent_purity_pct,
+		"stress_ppm": stress_threshold_ppm,
+		"status": olfactory_status_str,
+		"refresh_bonus": mental_refresh_bonus,
+		"is_olfactory_unlocked": is_olfactory_unlocked
+	}
+
+# Iteration 171: Real-Time Store Sub-Atomic Particle Electromagnetic Field Wireless Kinetic Energy Energy Harvesting Subsystem
+var is_harvesting_hud_open: bool = false
+
+func toggle_harvesting_hud() -> bool:
+	is_harvesting_hud_open = not is_harvesting_hud_open
+	_play_sfx_safe("click")
+	return is_harvesting_hud_open
+
+func calculate_electromagnetic_harvesting_metrics() -> Dictionary:
+	var convert_pct = 92.0
+	var gen_power_kw = 10.0
+	var harvest_status_str = "⚡ S 전자기 하베스터 (10.0 kW)"
+	
+	var is_harvest_unlocked = upgrades.has("solar_panel") and upgrades["solar_panel"]["level"] > 0
+	if is_harvest_unlocked:
+		convert_pct = 99.99
+		gen_power_kw = 50.0
+		harvest_status_str = "👑 SSS급 전자기장 무선 운동 에너지 하베스팅 (50.0 kW)"
+		
+	var power_margin_bonus = 38.0 if is_harvest_unlocked else 19.0
+	
+	return {
+		"convert_pct": convert_pct,
+		"power_kw": gen_power_kw,
+		"status": harvest_status_str,
+		"margin_bonus": power_margin_bonus,
+		"is_harvest_unlocked": is_harvest_unlocked
+	}
+
+# Iteration 172: Real-Time Store Sub-Space Wormhole Tesseract Spatial Storage Expansion Subsystem
+var is_tesseract_hud_open: bool = false
+
+func toggle_tesseract_hud() -> bool:
+	is_tesseract_hud_open = not is_tesseract_hud_open
+	_play_sfx_safe("click")
+	return is_tesseract_hud_open
+
+func calculate_tesseract_expansion_metrics() -> Dictionary:
+	var compress_pct = 95.0
+	var capacity_mult = 2.0
+	var tesseract_status_str = "🌀 S 테서랙트 웜홀 공간 확장 (2.0x)"
+	
+	var is_tesseract_unlocked = upgrades.has("study_desks") and upgrades["study_desks"]["level"] > 0
+	if is_tesseract_unlocked:
+		compress_pct = 99.999
+		capacity_mult = 10.0
+		tesseract_status_str = "👑 SSS급 4차원 테서랙트 웜홀 공간 왜곡 영토 확장 (10.0x)"
+		
+	var capacity_revenue_bonus = 39.0 if is_tesseract_unlocked else 19.5
+	
+	return {
+		"compress_pct": compress_pct,
+		"capacity_mult": capacity_mult,
+		"status": tesseract_status_str,
+		"revenue_bonus": capacity_revenue_bonus,
+		"is_tesseract_unlocked": is_tesseract_unlocked
+	}
+
+# Iteration 173: Real-Time Store Tachyon Chrono Temporal Acceleration Time Dilation Subsystem
+var is_tachyon_hud_open: bool = false
+
+func toggle_tachyon_hud() -> bool:
+	is_tachyon_hud_open = not is_tachyon_hud_open
+	_play_sfx_safe("click")
+	return is_tachyon_hud_open
+
+func calculate_tachyon_chrono_metrics() -> Dictionary:
+	var dilation_mult = 1.5
+	var stability_pct = 95.0
+	var tachyon_status_str = "⏳ S 크로노 가속기 (1.5x)"
+	
+	var is_tachyon_unlocked = upgrades.has("ai_tutor") and upgrades["ai_tutor"]["level"] > 0
+	if is_tachyon_unlocked:
+		dilation_mult = 3.0
+		stability_pct = 99.999
+		tachyon_status_str = "👑 SSS급 타키온 시공간 시간 왜곡 가속기 (3.0x)"
+		
+	var exam_revenue_bonus = 40.0 if is_tachyon_unlocked else 20.0
+	
+	return {
+		"dilation_mult": dilation_mult,
+		"stability_pct": stability_pct,
+		"status": tachyon_status_str,
+		"revenue_bonus": exam_revenue_bonus,
+		"is_tachyon_unlocked": is_tachyon_unlocked
+	}
+
+# Iteration 174: Real-Time Store Sub-Conscious Neural Synapse Telepathic Memory Download Subsystem
+var is_telepathic_hud_open: bool = false
+
+func toggle_telepathic_hud() -> bool:
+	is_telepathic_hud_open = not is_telepathic_hud_open
+	_play_sfx_safe("click")
+	return is_telepathic_hud_open
+
+func calculate_neural_telepathic_metrics() -> Dictionary:
+	var synapse_speed_tbs = 10.0
+	var retention_pct = 95.0
+	var telepathic_status_str = "🧠 S 텔레파시 시냅스 (10.0 TB/s)"
+	
+	var is_telepathic_unlocked = upgrades.has("wifi_router") and upgrades["wifi_router"]["level"] > 0
+	if is_telepathic_unlocked:
+		synapse_speed_tbs = 99.999
+		retention_pct = 99.999
+		telepathic_status_str = "👑 SSS급 텔레파시 신경 시냅스 지식 다운로드 (99.999 TB/s)"
+		
+	var memory_revenue_bonus = 41.0 if is_telepathic_unlocked else 20.5
+	
+	return {
+		"speed_tbs": synapse_speed_tbs,
+		"retention_pct": retention_pct,
+		"status": telepathic_status_str,
+		"revenue_bonus": memory_revenue_bonus,
+		"is_telepathic_unlocked": is_telepathic_unlocked
+	}
+
+# Iteration 175: Real-Time Store Quantum Entanglement Antimatter Thermal Clean Energy Subsystem
+var is_antimatter_hud_open: bool = false
+
+func toggle_antimatter_hud() -> bool:
+	is_antimatter_hud_open = not is_antimatter_hud_open
+	_play_sfx_safe("click")
+	return is_antimatter_hud_open
+
+func calculate_antimatter_energy_metrics() -> Dictionary:
+	var field_stability_pct = 96.0
+	var energy_output_mw = 20.0
+	var antimatter_status_str = "⚛️ S 반물질 발전기 (20.0 MW)"
+	
+	var is_antimatter_unlocked = upgrades.has("solar_panel") and upgrades["solar_panel"]["level"] > 0
+	if is_antimatter_unlocked:
+		field_stability_pct = 99.9999
+		energy_output_mw = 100.0
+		antimatter_status_str = "👑 SSS급 양자 얽힘 반물질 초청정 에너지 (100.0 MW)"
+		
+	var esg_margin_bonus = 42.0 if is_antimatter_unlocked else 21.0
+	
+	return {
+		"stability_pct": field_stability_pct,
+		"output_mw": energy_output_mw,
+		"status": antimatter_status_str,
+		"margin_bonus": esg_margin_bonus,
+		"is_antimatter_unlocked": is_antimatter_unlocked
+	}
+
+# Iteration 176: Real-Time Store Holographic Multi-Dimensional Super-Computer AI Brain Simulation Subsystem
+var is_supercomputer_hud_open: bool = false
+
+func toggle_supercomputer_hud() -> bool:
+	is_supercomputer_hud_open = not is_supercomputer_hud_open
+	_play_sfx_safe("click")
+	return is_supercomputer_hud_open
+
+func calculate_holographic_supercomputer_metrics() -> Dictionary:
+	var process_speed_pflops = 100.0
+	var accuracy_pct = 98.0
+	var supercomputer_status_str = "💻 S 홀로그램 AI (100.0 PFLOPS)"
+	
+	var is_supercomputer_unlocked = upgrades.has("kiosk") and upgrades["kiosk"]["level"] > 0
+	if is_supercomputer_unlocked:
+		process_speed_pflops = 1000.0
+		accuracy_pct = 99.9999
+		supercomputer_status_str = "👑 SSS급 홀로그램 다차원 슈퍼컴퓨터 AI 연산 (1,000.0 PFLOPS)"
+		
+	var net_income_bonus = 43.0 if is_supercomputer_unlocked else 21.5
+	
+	return {
+		"speed_pflops": process_speed_pflops,
+		"accuracy_pct": accuracy_pct,
+		"status": supercomputer_status_str,
+		"income_bonus": net_income_bonus,
+		"is_supercomputer_unlocked": is_supercomputer_unlocked
+	}
+
+# Iteration 177: Real-Time Sub-Quantum Multiverse Dimensional Bifurcation Portal Engine
+var is_multiverse_hud_open: bool = false
+
+func toggle_multiverse_hud() -> bool:
+	is_multiverse_hud_open = not is_multiverse_hud_open
+	_play_sfx_safe("click")
+	return is_multiverse_hud_open
+
+func calculate_multiverse_bifurcation_metrics() -> Dictionary:
+	var timeline_branches = 50.0
+	var stability_pct = 98.5
+	var multiverse_status_str = "🌌 S 다중우주 포탈 (50 타임라인)"
+	
+	var is_multiverse_unlocked = upgrades.has("study_desk") and upgrades["study_desk"]["level"] > 0
+	if is_multiverse_unlocked:
+		timeline_branches = 1000.0
+		stability_pct = 99.9999
+		multiverse_status_str = "👑 SSS급 하위 퀀텀 다중우주 차원분기 포탈 (1,000 타임라인)"
+		
+	var parallel_revenue_bonus = 44.0 if is_multiverse_unlocked else 22.0
+	
+	return {
+		"branches": timeline_branches,
+		"stability_pct": stability_pct,
+		"status": multiverse_status_str,
+		"revenue_bonus": parallel_revenue_bonus,
+		"is_multiverse_unlocked": is_multiverse_unlocked
+	}
+
+# Iteration 178: Sub-Space Zero-Point Energy Vacuum Fluctuation Capacitor Subsystem
+var is_zero_point_hud_open: bool = false
+
+func toggle_zero_point_hud() -> bool:
+	is_zero_point_hud_open = not is_zero_point_hud_open
+	_play_sfx_safe("click")
+	return is_zero_point_hud_open
+
+func calculate_zero_point_energy_metrics() -> Dictionary:
+	var vacuum_density_gj = 50.0
+	var casimir_freq_ghz = 500.0
+	var zero_point_status_str = "⚡ S 제로포인트 캡시터 (50 GJ)"
+	
+	var is_zero_point_unlocked = upgrades.has("solar_panel") and upgrades["solar_panel"]["level"] > 0
+	if is_zero_point_unlocked:
+		vacuum_density_gj = 500.0
+		casimir_freq_ghz = 1210.0
+		zero_point_status_str = "👑 SSS급 하위 공간 제로포인트 에너지 캡시터 (500 GJ | 1.21 THz)"
+		
+	var utility_saving_bonus = 45.0 if is_zero_point_unlocked else 22.5
+	
+	return {
+		"density_gj": vacuum_density_gj,
+		"casimir_ghz": casimir_freq_ghz,
+		"status": zero_point_status_str,
+		"saving_bonus": utility_saving_bonus,
+		"is_zero_point_unlocked": is_zero_point_unlocked
+	}
+
+# Iteration 179: Hyper-Dimensional Chrono-Field Quantum Resonance Converter Subsystem
+var is_chrono_resonance_hud_open: bool = false
+
+func toggle_chrono_resonance_hud() -> bool:
+	is_chrono_resonance_hud_open = not is_chrono_resonance_hud_open
+	_play_sfx_safe("click")
+	return is_chrono_resonance_hud_open
+
+func calculate_chrono_resonance_metrics() -> Dictionary:
+	var resonance_freq_thz = 10.0
+	var time_yield_bonus = 23.0
+	var chrono_res_status_str = "⌛ S급 크로노 필드 공명기 (10 THz)"
+	
+	var is_chrono_res_unlocked = upgrades.has("study_desk") and upgrades["study_desk"]["level"] > 0
+	if is_chrono_res_unlocked:
+		resonance_freq_thz = 99.999
+		time_yield_bonus = 46.0
+		chrono_res_status_str = "👑 SSS급 하이퍼 차원 크로노 필드 양자 공명 변환기 (99.999 THz | +46% 수확율)"
+		
+	return {
+		"freq_thz": resonance_freq_thz,
+		"yield_bonus": time_yield_bonus,
+		"status": chrono_res_status_str,
+		"is_chrono_res_unlocked": is_chrono_res_unlocked
+	}
+
+# Iteration 180: Quantum AI Neural-Synapse Cognitive Accelerator Subsystem
+var is_neural_cognitive_hud_open: bool = false
+
+func toggle_neural_cognitive_hud() -> bool:
+	is_neural_cognitive_hud_open = not is_neural_cognitive_hud_open
+	_play_sfx_safe("click")
+	return is_neural_cognitive_hud_open
+
+func calculate_neural_cognitive_metrics() -> Dictionary:
+	var synapse_tflops = 100.0
+	var cognitive_efficiency = 95.0
+	var cog_status_str = "🧠 S급 인지 가속기 (100.0 TFLOPS)"
+	
+	var is_cog_unlocked = upgrades.has("ai_focus") and upgrades["ai_focus"]["level"] > 0
+	if is_cog_unlocked:
+		synapse_tflops = 888.8
+		cognitive_efficiency = 99.9999
+		cog_status_str = "👑 SSS급 양자 AI 신경-시냅스 인지 가속기 (888.8 TFLOPS | 99.9999%)"
+		
+	var exam_score_bonus = 52.0 if is_cog_unlocked else 26.0
+	
+	return {
+		"tflops": synapse_tflops,
+		"efficiency_pct": cognitive_efficiency,
+		"status": cog_status_str,
+		"exam_bonus": exam_score_bonus,
+		"is_cog_unlocked": is_cog_unlocked
+	}
+
+# Iteration 181: Autonomous Bio-Rhythm Circadian Sleep-Cycle & Neuro-Rest Engine Subsystem
+var is_bio_rest_hud_open: bool = false
+
+func toggle_bio_rest_hud() -> bool:
+	is_bio_rest_hud_open = not is_bio_rest_hud_open
+	_play_sfx_safe("click")
+	return is_bio_rest_hud_open
+
+func calculate_bio_rest_metrics() -> Dictionary:
+	var melatonin_pct = 94.0
+	var alpha_hz = 10.5
+	var rest_status_str = "💤 S급 바이오 서카디안 캡슐 (10.5 Hz)"
+	
+	var is_rest_unlocked = upgrades.has("study_desk") and upgrades["study_desk"]["level"] > 0
+	if is_rest_unlocked:
+		melatonin_pct = 99.9999
+		alpha_hz = 14.8
+		rest_status_str = "👑 SSS급 자율 바이오리듬 서카디안 수면주기 신경휴식 캡슐 (99.9999% | 14.8 Hz)"
+		
+	var stamina_regen_bonus = 48.0 if is_rest_unlocked else 24.0
+	
+	return {
+		"melatonin_pct": melatonin_pct,
+		"alpha_hz": alpha_hz,
+		"status": rest_status_str,
+		"stamina_bonus": stamina_regen_bonus,
+		"is_rest_unlocked": is_rest_unlocked
+	}
+
+# Iteration 182: Quantum Holographic Spatial-Acoustic Active Resonance Damping Engine Subsystem
+var is_acoustic_damping_hud_open: bool = false
+
+func toggle_acoustic_damping_hud() -> bool:
+	is_acoustic_damping_hud_open = not is_acoustic_damping_hud_open
+	_play_sfx_safe("click")
+	return is_acoustic_damping_hud_open
+
+func calculate_acoustic_damping_metrics() -> Dictionary:
+	var damping_db = -60.0
+	var phase_coherence_pct = 96.0
+	var damping_status_str = "🔇 S급 홀로그램 음향 감쇠기 (-60.0 dB)"
+	
+	var is_damping_unlocked = upgrades.has("study_desk") and upgrades["study_desk"]["level"] > 0
+	if is_damping_unlocked:
+		damping_db = -95.0
+		phase_coherence_pct = 99.9999
+		damping_status_str = "👑 SSS급 양자 홀로그램 공간-음향 능동 공명 감쇠기 (-95.0 dB | 99.9999%)"
+		
+	var focus_concentration_bonus = 50.0 if is_damping_unlocked else 25.0
+	
+	return {
+		"damping_db": damping_db,
+		"coherence_pct": phase_coherence_pct,
+		"status": damping_status_str,
+		"focus_bonus": focus_concentration_bonus,
+		"is_damping_unlocked": is_damping_unlocked
+	}
+
+# Iteration 183: Autonomous Bio-Robotic Molecular Nanite Sanitation Engine Subsystem
+var is_nanite_sanitation_hud_open: bool = false
+
+func toggle_nanite_sanitation_hud() -> bool:
+	is_nanite_sanitation_hud_open = not is_nanite_sanitation_hud_open
+	_play_sfx_safe("click")
+	return is_nanite_sanitation_hud_open
+
+func calculate_nanite_sanitation_metrics() -> Dictionary:
+	var nanite_count_m = 50.0
+	var sterilization_pct = 97.0
+	var nanite_status_str = "🤖 S급 분자 나노봇 위생 스웜 (50M)"
+	
+	var is_nanite_unlocked = upgrades.has("air_purifier") and upgrades["air_purifier"]["level"] > 0
+	if is_nanite_unlocked:
+		nanite_count_m = 500.0
+		sterilization_pct = 99.9999
+		nanite_status_str = "👑 SSS급 자율 분자 나노봇 초청정 소독 스웜 (500M | 99.9999%)"
+		
+	var cleanliness_bonus = 50.0 if is_nanite_unlocked else 25.0
+	
+	return {
+		"count_m": nanite_count_m,
+		"sterilization_pct": sterilization_pct,
+		"status": nanite_status_str,
+		"cleanliness_bonus": cleanliness_bonus,
+		"is_nanite_unlocked": is_nanite_unlocked
+	}
+
+# Iteration 184: Autonomous Quantum-Entangled Sub-Atmospheric Gravitational Field Stabilizer Subsystem
+var is_quantum_gravity_hud_open: bool = false
+
+func toggle_quantum_gravity_hud() -> bool:
+	is_quantum_gravity_hud_open = not is_quantum_gravity_hud_open
+	_play_sfx_safe("click")
+	return is_quantum_gravity_hud_open
+
+func calculate_quantum_gravity_metrics() -> Dictionary:
+	var stability_pct = 95.0
+	var graviton_flux_mhz = 250.0
+	var gravity_status_str = "🌌 S급 중력장 안정기 (250 MHz)"
+	
+	var is_gravity_unlocked = upgrades.has("study_desk") and upgrades["study_desk"]["level"] > 0
+	if is_gravity_unlocked:
+		stability_pct = 99.9999
+		graviton_flux_mhz = 777.7
+		gravity_status_str = "👑 SSS급 자율 양자 얽힘 대기권-하위 중력장 안정화 엔진 (99.9999% | 777.7 MHz)"
+		
+	var ergonomic_bonus = 55.0 if is_gravity_unlocked else 27.5
+	
+	return {
+		"stability_pct": stability_pct,
+		"graviton_mhz": graviton_flux_mhz,
+		"status": gravity_status_str,
+		"ergonomic_bonus": ergonomic_bonus,
+		"is_gravity_unlocked": is_gravity_unlocked
 	}
 
 func trigger_120th_milestone_event() -> Dictionary:
