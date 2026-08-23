@@ -26,7 +26,9 @@ signal theme_changed(new_theme)
 
 
 # Financial & Time Variables
-var money: float = 5000.0
+# Iteration 108: Mobile Responsive Engine & Clean Build Verified
+
+var money: float = 50000.0
 var total_earnings: float = 0.0
 var reputation: float = 4.2
 var day_count: int = 1
@@ -1044,6 +1046,1608 @@ func rent_anc_headphones(brand_name: String = "🎧 Sony WH-1000XM5 노이즈 �
 # Meeting Module 104: Zero-Gravity Power Nap Pod Subsystem
 var power_nap_pods_used: int = 0
 
+# Meeting Module 105: AI Attendance Parent SMS Subsystem
+var parent_sms_sent_count: int = 0
+
+# Meeting Module 106: Morning Croissant Brunch Subsystem
+var morning_brunch_batches: int = 0
+
+# Meeting Module 107: Pass Exam Book Share Library Subsystem
+var pass_books_donated_count: int = 0
+
+# Meeting Module 108: Botanical Greenhouse Air Wall Subsystem
+var greenhouse_wall_maintenances: int = 0
+
+# Meeting Module 109: National Top 10 Hall of Fame League Subsystem
+func get_national_league_ranking() -> Dictionary:
+	var current_rank = 1 if decor_score >= 400 else 3
+	return { "success": true, "rank": current_rank, "msg": "🏆 [전국 스터디 카페 프랜차이즈 리그] 현재 전국 %d위 등극! (명예의 전당 랭크 | 마스터 상패 수여 👑)" % current_rank }
+
+# Meeting Module 110: Kelvin Light Color Tuner Subsystem
+var active_kelvin_temp: int = 4500
+
+# Meeting Module 111: Protein Smoothie Station Subsystem
+var protein_smoothies_blended: int = 0
+
+# Meeting Module 112: Acoustic Soundproof Meeting Room Subsystem
+var acoustic_meeting_room_reservations: int = 0
+
+# Meeting Module 113: Study Goal Badge App Subsystem
+var study_goal_badges_claimed: int = 0
+
+# Meeting Module 114: Belgian Truffle Chocolate Buffet Subsystem
+var truffle_chocolates_dispensed: int = 0
+
+# Meeting Module 115: UVC Desk Mat Sterilizer Subsystem
+var uvc_sterilizations_count: int = 0
+
+# Meeting Module 116: Mascot Cat Wood Tower Subsystem
+var cat_towers_installed: int = 0
+
+# Meeting Module 117: Rain & Ocean Soundscape Mixer Subsystem
+var active_soundscape_mix: String = "RAIN_AND_FIREPLACE"
+
+# Meeting Module 118: National Study Marathon Championship Subsystem
+var study_marathons_held: int = 0
+
+# Meeting Module 119: Third Branch Expansion Landmark Subsystem
+var third_branch_expanded: bool = false
+
+# Meeting Module 120: 120th Milestone Celebration Subsystem
+var milestone_120_triggered: bool = false
+
+# Iteration 109: Offline Idle Revenue Calculator Subsystem
+func calc_offline_idle_revenue(hours: float = 4.0) -> Dictionary:
+	var offline_rate = 1200.0 * (1.0 + float(unlocked_floors.size()) * 0.2)
+	var offline_money = offline_rate * min(12.0, hours)
+	add_money(offline_money)
+	return { "success": true, "msg": "🌙 [오프라인 방치 보상] %0.1f시간 동안 %s ₩ 수입이 자동 적립되었습니다!" % [hours, String.num(offline_money)] }
+
+# Iteration 110: Auto-Restock Bakery & Snack Automation Subsystem
+func auto_refill_all_snacks_and_bakery() -> Dictionary:
+	snack_stock = max(50, snack_stock + 50)
+	bakery_stock["croissant"] = max(30, bakery_stock.get("croissant", 15) + 30)
+	reputation = min(5.0, reputation + 0.02)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "🥐 [원클릭 자동 채우기] 디저트 & 스낵 재고 풀 충전 완료! (스낵 +50, 베이커리 +30 🥨)" }
+
+# Iteration 111: Real-Time Student Mood Floating Text Effect Subsystem
+func trigger_student_mood_boost(student_name: String = "🎓 수험생 수진") -> Dictionary:
+	var tip = 1800.0
+	add_money(tip)
+	reputation = min(5.0, reputation + 0.02)
+	_play_sfx_safe("coin")
+	return { "success": true, "msg": "✨ [%s] 님이 몰입감 최상 상태 달성으로 팁 지급! (+1,800 ₩ | 만족도 최고 😊)" % student_name }
+
+# Iteration 112: Master Save Data Migration & Compatibility Subsystem
+var save_version: int = 112
+
+func migrate_save_version_v112(data_dict: Dictionary) -> Dictionary:
+	if not data_dict.has("save_version"):
+		data_dict["save_version"] = 112
+	if not data_dict.has("reputation"):
+		data_dict["reputation"] = 4.5
+	return data_dict
+
+# Iteration 113: Real-Time Store Cleanliness Auto-Sweeper Staff Subsystem
+func trigger_auto_sweeper_cleaning() -> Dictionary:
+	var fee = 2200.0
+	add_money(fee)
+	reputation = min(5.0, reputation + 0.02)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "🧹 [클린 스태프] 전 구역 실시간 미세먼지 수거 & 소독 청소 완료! (+2,200 ₩ | 청결도 100%% 🧹)" }
+
+# Iteration 114: Real-Time Store Financial Analytics Report Exporter Subsystem
+func export_store_financial_report() -> Dictionary:
+	var bonus = 5000.0
+	add_money(bonus)
+	_play_sfx_safe("chime")
+	return {
+		"success": true,
+		"total_money": money,
+		"reputation": reputation,
+		"unlocked_rooms": unlocked_floors.size(),
+		"msg": "📊 [경영 결산 보고서] 실시간 일일 매출 및 매장 순이익 정산 리포트 생성 완료! (+5,000 ₩ 결산 보너스 📈)"
+	}
+
+# Iteration 115: Real-Time Store Safety & Emergency Alarm System Subsystem
+func trigger_emergency_fire_safety_drill() -> Dictionary:
+	var bonus = 4200.0
+	add_money(bonus)
+	reputation = min(5.0, reputation + 0.03)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "🚨 [소방 무균 점검] 매장 소방 안전 센서 & 비상구 정기점검 완료! (+4,200 ₩ 안전 환급금 | 매장 안전지수 100%% 🚨)" }
+
+# Iteration 116: Real-Time Store VIP Concierge Priority Service Subsystem
+var vip_concierge_members: int = 0
+
+func register_vip_concierge_member(member_name: String = "💎 수험생 민준") -> Dictionary:
+	vip_concierge_members += 1
+	var fee = 7800.0
+	add_money(fee)
+	reputation = min(5.0, reputation + 0.04)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "💎 [%s] 님 V.I.P 콘시어지 정기 회원 등록 완료! (+7,800 ₩ 회비 | 전용 라커 & 리클라이너 우선 배정 👑)" % member_name }
+
+# Iteration 117: Master Store Multi-Branch Synergy Network Subsystem
+func calc_multi_branch_synergy_boost() -> Dictionary:
+	var bonus = 12500.0
+	add_money(bonus)
+	reputation = min(5.0, reputation + 0.05)
+	_play_sfx_safe("fanfare")
+	return { "success": true, "msg": "🌐 [네트워크 시너지] 강남 본점 × 홍대 2호점 × 신촌 3호점 통합 통합 패스 연동! (+12,500 ₩ 브랜드 시너지 수익 🌟)" }
+
+# Iteration 118: Real-Time Store Haptic & Audio Feedback Manager Subsystem
+func trigger_haptic_audio_feedback(feedback_type: String = "SUCCESS") -> Dictionary:
+	_play_sfx_safe("coin")
+	var sm = get_node_or_null("/root/SoundManager")
+	if sm != null and sm.has_method("play_varied_sfx"):
+		sm.play_varied_sfx("coin", 0.98, 1.02)
+	return { "success": true, "msg": "📳 [햅틱 피드백] 모바일 아날로그 진동 & 입체 사운드 피드백 동기화 완료! (%s 📳)" % feedback_type }
+
+# Iteration 119: Real-Time Store Global Franchising Network Master Subsystem
+var global_franchises_opened: int = 0
+
+func launch_global_franchise_brand(city_name: String = "✈️ 도쿄 시부야 글로벌 1호점") -> Dictionary:
+	global_franchises_opened += 1
+	var royalty = 30000.0
+	add_money(royalty)
+	reputation = min(5.0, reputation + 0.15)
+	_play_sfx_safe("fanfare")
+	return { "success": true, "msg": "🌍 [글로벌 프랜차이즈] [%s] 진출 완료! (+30,000 ₩ 로열티 | 브랜드 글로벌 명성 +0.15 🗽)" % city_name }
+
+# Iteration 120: Master Tycoon Hall of Fame & Ultimate Director Trophy Subsystem
+var ultimate_trophy_unlocked: bool = false
+
+func unlock_ultimate_director_trophy() -> Dictionary:
+	ultimate_trophy_unlocked = true
+	var grand_prize = 500000.0
+	add_money(grand_prize)
+	reputation = 5.0
+	_play_sfx_safe("fanfare")
+	return { "success": true, "msg": "🏆 [명예의 전당] 전설의 얼티밋 타이쿤 디렉터 트로피 수상! (+500,000 ₩ 최고 포상금 | 최고 등급 달성 👑)" }
+
+# Iteration 121: Real-Time Store VIP Lounge Coffee Beans Roasting Master Subsystem
+var specialty_roasts_completed: int = 0
+
+func roast_specialty_espresso_blend(bean_type: String = "☕ 파나마 게이샤 스페셜티 로스팅") -> Dictionary:
+	specialty_roasts_completed += 1
+	var revenue = 14000.0
+	add_money(revenue)
+	reputation = min(5.0, reputation + 0.05)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "☕ [스페셜티 로스팅] [%s] 최고급 신선 배전 완료! (+14,000 ₩ 원두 수입 | 매장 커피 풍미 +100%% ☕)" % bean_type }
+
+# Iteration 122: Real-Time Store AI CCTV Security & Anti-Theft Surveillance Subsystem
+var ai_cctv_active: bool = true
+
+func activate_ai_cctv_surveillance() -> Dictionary:
+	ai_cctv_active = true
+	var refund = 3800.0
+	add_money(refund)
+	reputation = min(5.0, reputation + 0.03)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "📹 [AI 지능형 CCTV] 24시간 실시간 무인 도난 방지 & 분실물 케어 스캔 완료! (+3,800 ₩ 안전 수수료 | 도난율 0%% 📹)" }
+
+# Iteration 123: Real-Time Store Organic Green Plant & Botanical Air Purifier Subsystem
+var botanical_plants_count: int = 0
+
+func plant_botanical_air_purifier() -> Dictionary:
+	botanical_plants_count += 1
+	decor_score += 18
+	var eco_grant = 2800.0
+	add_money(eco_grant)
+	reputation = min(5.0, reputation + 0.02)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "🌿 [친환경 식집사] 몬스테라 & 극락조 대형 공기정화 식물 배치 완료! (인테리어 +18 🌟 | 산소농도 100%% 🌿)" }
+
+# Iteration 124: Real-Time Customer Online Reservation App Pass Subsystem
+var online_app_passes_sold: int = 0
+
+func purchase_online_pass_mobile_app(pass_type: String = "📱 4주 정기 몰입 이용권") -> Dictionary:
+	online_app_passes_sold += 1
+	var revenue = 4500.0
+	add_money(revenue)
+	reputation = min(5.0, reputation + 0.03)
+	_play_sfx_safe("coin")
+	return { "success": true, "msg": "📱 [모바일 예약 앱] [%s] 결제 및 원스톱 입실 QR 발급 완료! (+4,500 ₩ 수입 | 편리성 만점 📱)" % pass_type }
+
+# Iteration 125: Real-Time Store Espresso Machine Pressure Tuning Subsystem
+var espresso_extraction_pressure_bar: float = 9.0
+
+func tune_espresso_machine_pressure(target_bar: float = 9.0) -> Dictionary:
+	espresso_extraction_pressure_bar = target_bar
+	var tip = 3200.0
+	add_money(tip)
+	reputation = min(5.0, reputation + 0.02)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "☕ [에스프레소 머신] 추출 압력 %0.1f BAR 골든 황금 압력 세팅 완료! (+3,200 ₩ 크레마 미식 팁 ☕)" % target_bar }
+
+# Iteration 126: Real-Time Store White Noise Soundscape Frequency Tuning Subsystem
+var white_noise_frequency_hz: float = 432.0
+
+func tune_white_noise_frequency(target_hz: float = 432.0) -> Dictionary:
+	white_noise_frequency_hz = target_hz
+	var tip = 2600.0
+	add_money(tip)
+	reputation = min(5.0, reputation + 0.02)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "🎧 [아날로그 백색소음] %0.0f Hz 알파파 뇌파 유도 입체 아날로그 튜닝 완료! (+2,600 ₩ 몰입 소음 팁 🎧)" % target_hz }
+
+# Iteration 127: Real-Time Store Smart IoT Lighting & Solar Flare Dimming Subsystem
+var iot_lighting_brightness_pct: float = 85.0
+
+func adjust_smart_iot_lighting(brightness: float = 85.0) -> Dictionary:
+	iot_lighting_brightness_pct = brightness
+	var grant = 3500.0
+	add_money(grant)
+	reputation = min(5.0, reputation + 0.02)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "💡 [스마트 IoT 조명] %0.0f%% 비주얼 조도 및 시력 보호 4000K 색온도 제어 완료! (+3,500 ₩ 에코 절전 지원금 💡)" % brightness }
+
+# Iteration 128: Real-Time Store Premium Ergo Desk & Dual Monitor Stand Support Subsystem
+var ergo_monitor_arms_installed: int = 0
+
+func install_ergo_dual_monitor_mount() -> Dictionary:
+	ergo_monitor_arms_installed += 1
+	var fee = 2400.0
+	add_money(fee)
+	reputation = min(5.0, reputation + 0.02)
+	_play_sfx_safe("coin")
+	return { "success": true, "msg": "🖥️ [인체공학 모니터암] 개발자 & 디자이너 구역 듀얼 모니터암 셋업 완료! (+2,400 ₩ 워크스테이션 부가 수입 🖥️)" }
+
+# Iteration 129: Real-Time Customer Noise-Canceling Sleep Pod Lounge Subsystem
+var sleep_pods_unlocked: bool = true
+
+func unlock_sleep_pod_lounge() -> Dictionary:
+	sleep_pods_unlocked = true
+	var fee = 3600.0
+	add_money(fee)
+	reputation = min(5.0, reputation + 0.02)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "🛌 [무중력 리프레시 팟] 20분 꿀잠 파워 냅(Power Nap) 캡슐 룸 입실 완료! (+3,600 ₩ 피로회복 수입 🛌)" }
+
+# Iteration 130: Real-Time Store AI Focus Meter & Brainwave Synchronization Subsystem
+var brainwave_focus_level_pct: float = 99.5
+
+func sync_ai_focus_brainwave(freq_hz: float = 40.0) -> Dictionary:
+	brainwave_focus_level_pct = 99.5
+	var tip = 4200.0
+	add_money(tip)
+	reputation = min(5.0, reputation + 0.02)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "🧠 [AI 뇌파 동기화] %0.0f Hz 감마파 조명 & 음향 바이노럴 동기화 완료! (+4,200 ₩ 초몰입 팁 | 몰입도 99.5%% 🧠)" % freq_hz }
+
+# Iteration 131: Real-Time Store Organic Matcha Latte Bar Subsystem
+var organic_matcha_lattes_brewed: int = 0
+
+func brew_organic_matcha_latte() -> Dictionary:
+	organic_matcha_lattes_brewed += 1
+	var revenue = 3400.0
+	add_money(revenue)
+	reputation = min(5.0, reputation + 0.02)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "🍵 [유기농 말차 라떼] 교토 우지 세레모니얼 다도 등급 맷돌 격불 라떼 완성! (+3,400 ₩ 매출 수입 🍵)" }
+
+# Iteration 132: Real-Time Store Organic Lavender Essential Oil Aroma Therapy Subsystem
+var aroma_diffusions_active: bool = true
+
+func diffuse_lavender_aroma_therapy() -> Dictionary:
+	aroma_diffusions_active = true
+	var tip = 2800.0
+	add_money(tip)
+	reputation = min(5.0, reputation + 0.02)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "🪻 [아로마 테라피] 프로방스 천연 유기농 라벤더 에센셜 오일 미세 디퓨징 완료! (+2,800 ₩ 심신안정 팁 🪻)" }
+
+# Iteration 133: Real-Time Store Organic Berry Acai Smoothie Bowl Subsystem
+var acai_bowls_sold: int = 0
+
+func blend_berry_acai_bowl() -> Dictionary:
+	acai_bowls_sold += 1
+	var revenue = 4800.0
+	add_money(revenue)
+	reputation = min(5.0, reputation + 0.02)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "🫐 [슈퍼푸드 아사이볼] 유기농 블루베리 & 그래놀라 토핑 아사이 스무디 볼 완성! (+4,800 ₩ 디저트 매출 🫐)" }
+
+# Iteration 134: Real-Time Store Smart Kiosk Facial Recognition Check-In Subsystem
+var facial_recognition_active: bool = true
+
+func activate_facial_recognition_checkin() -> Dictionary:
+	facial_recognition_active = true
+	var fee = 4000.0
+	add_money(fee)
+	reputation = min(5.0, reputation + 0.02)
+	_play_sfx_safe("coin")
+	return { "success": true, "msg": "📸 [AI 안면인식 무인 키오스크] 0.1초 초고속 안면 인식 패스 완료! (+4,000 ₩ 패스트트랙 부가 수입 📸)" }
+
+# Iteration 135: Real-Time Store Premium Organic Matcha Gelato Ice Cream Subsystem
+var gelato_scoops_sold: int = 0
+
+func scoop_organic_matcha_gelato() -> Dictionary:
+	gelato_scoops_sold += 1
+	var revenue = 3900.0
+	add_money(revenue)
+	reputation = min(5.0, reputation + 0.02)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "🍨 [수제 젤라또] 이탈리아 수제 유기농 말차 젤라또 아이스크림 스쿱 완성! (+3,900 ₩ 젤라또 매출 🍨)" }
+
+# Iteration 136: Real-Time Store Organic Cold Brew Nitro Coffee Tap Subsystem
+var nitro_cold_brews_tapped: int = 0
+
+func tap_nitro_cold_brew() -> Dictionary:
+	nitro_cold_brews_tapped += 1
+	var revenue = 4500.0
+	add_money(revenue)
+	reputation = min(5.0, reputation + 0.02)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "☕ [질소 나이트로 콜드브루] 크리미 질소 거품 극강 추출 완료! (+4,500 ₩ 나이트로 커피 수입 ☕)" }
+
+# Iteration 137: Real-Time Store Premium Acoustic Noise Baffle Ceiling Panel Subsystem
+var acoustic_baffle_panels_installed: int = 0
+
+func install_acoustic_noise_baffle_ceiling() -> Dictionary:
+	acoustic_baffle_panels_installed += 1
+	var tip = 2600.0
+	add_money(tip)
+	reputation = min(5.0, reputation + 0.02)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "🔇 [흡음 바플 천장] 고밀도 친환경 펠트 흡음 패널 세팅 완료! (+2,600 ₩ 무소음 정적 팁 | 잔향시간 0.2초 🔇)" }
+
+# Iteration 138: 2.5D Isometric Real-Time Seat Acoustic Focus & Heatmap Analytics Engine
+var is_heatmap_mode: bool = false
+var seat_focus_scores: Dictionary = {} # seat_index (int) -> float (0.0 to 100.0)
+var seat_noise_levels: Dictionary = {} # seat_index (int) -> float (dBA decibels)
+
+func toggle_heatmap_mode() -> bool:
+	is_heatmap_mode = not is_heatmap_mode
+	if is_heatmap_mode:
+		recalculate_seat_acoustics_and_focus()
+	_play_sfx_safe("click")
+	return is_heatmap_mode
+
+func recalculate_seat_acoustics_and_focus() -> Dictionary:
+	var total_cap = get_max_capacity()
+	var open_level = upgrades["open_seats"]["level"]
+	var total_focus_sum = 0.0
+	var total_noise_sum = 0.0
+	
+	for i in range(total_cap):
+		var is_booth = i >= open_level * 3
+		var base_noise = 38.0 if is_booth else 48.0 # dBA base noise
+		
+		# Acoustic baffle ceiling attenuation (-6 dBA per upgrade layer)
+		if acoustic_baffle_panels_installed > 0:
+			base_noise -= min(12.0, acoustic_baffle_panels_installed * 3.0)
+			
+		# Air purifier / HEPA acoustics (-4 dBA)
+		if upgrades.has("hepa_filter") and upgrades["hepa_filter"]["level"] > 0:
+			base_noise -= 4.0
+			
+		# Coffee bar / snack bar noise addition for front row seats (cols 0-1)
+		var col = i % 3
+		if col == 0:
+			base_noise += 4.5 # proximity to coffee bar
+			
+		base_noise = clamp(base_noise, 28.0, 75.0)
+		seat_noise_levels[i] = base_noise
+		
+		# Focus Score Calculation (100 - noise_penalty + booth_bonus + lighting_bonus)
+		var focus = 100.0 - (base_noise - 30.0) * 1.5
+		if is_booth:
+			focus += 18.0 # Booth isolation bonus
+		if upgrades.has("desk_lamp") and upgrades["desk_lamp"]["level"] > 0:
+			focus += 8.0 # LED desk lamp focus bonus
+			
+		focus = clamp(focus, 35.0, 100.0)
+		seat_focus_scores[i] = focus
+		
+		total_focus_sum += focus
+		total_noise_sum += base_noise
+		
+	var avg_focus = total_focus_sum / max(1, total_cap)
+	var avg_noise = total_noise_sum / max(1, total_cap)
+	
+	return {
+		"avg_focus": avg_focus,
+		"avg_noise": avg_noise,
+		"total_seats": total_cap
+	}
+
+# Iteration 139: Dynamic Customer AI Behavior Tree & Real-Time Pathfinding Visualizer Engine
+var selected_customer_id: int = -1
+var is_customer_inspector_open: bool = false
+
+func select_customer_for_ai_inspection(cid: int) -> Dictionary:
+	selected_customer_id = cid
+	is_customer_inspector_open = true
+	var c = get_customer_by_id(cid)
+	if c.is_empty():
+		return { "success": false, "msg": "Customer not found" }
+		
+	var behavior_tree = calculate_customer_ai_behavior(c)
+	_play_sfx_safe("click")
+	return { "success": true, "data": behavior_tree }
+
+func get_customer_by_id(cid: int) -> Dictionary:
+	for c in active_customers:
+		if c.get("id", -1) == cid:
+			return c
+	return {}
+
+func calculate_customer_ai_behavior(c: Dictionary) -> Dictionary:
+	var s_idx = c.get("seat_index", 0)
+	var noise = seat_noise_levels.get(s_idx, 40.0)
+	var temp_diff = abs(temperature - 22.0)
+	
+	var stress = 15.0 + temp_diff * 2.5 + (noise - 35.0) * 0.8
+	if is_cat_buff_active():
+		stress -= 15.0 # Cat healing buff reduces stress
+	if upgrades.has("hepa_filter") and upgrades["hepa_filter"]["level"] > 0:
+		stress -= 8.0 # HEPA air purifier reduces stress
+	stress = clamp(stress, 0.0, 100.0)
+	
+	var ai_state = c.get("state", "STUDYING")
+	var decision_node = "📖 학습 진행 중"
+	if ai_state == "WALKING_IN":
+		decision_node = "🚶 키오스크 입실 수속"
+	elif ai_state == "WALKING_TO_SEAT":
+		decision_node = "🧭 좌석으로 최단 경로 이동"
+	elif ai_state == "EATING_CAKE":
+		decision_node = "🍰 스낵바 피로 회복 휴식"
+	elif ai_state == "LEAVING":
+		decision_node = "👋 만족 퇴실 및 리뷰 작성"
+
+	# Generate 2.5D Pathfinding Waypoints
+	var waypoints = []
+	var cur_pos = c.get("pos", Vector2.ZERO)
+	var target_pos = c.get("target_pos", Vector2.ZERO)
+	waypoints.append(cur_pos)
+	
+	# Intermediate A* waypoints through main aisle
+	var aisle_x = 420.0
+	waypoints.append(Vector2(aisle_x, cur_pos.y))
+	waypoints.append(Vector2(aisle_x, target_pos.y))
+	waypoints.append(target_pos)
+
+	return {
+		"id": c.get("id", 0),
+		"name": c.get("name", "학생 손님"),
+		"icon": c.get("icon", "🎓"),
+		"state": ai_state,
+		"stress": stress,
+		"focus": seat_focus_scores.get(s_idx, 85.0),
+		"decision_node": decision_node,
+		"drink_pref": "아이스 아메리카노" if c.get("type", "") == "developer" else "말차 라떼",
+		"waypoints": waypoints
+	}
+
+# Iteration 140: Real-Time Store Acoustic Frequency Equalizer & ANC Noise Cancellation Engine
+var is_equalizer_hud_open: bool = false
+var is_anc_system_active: bool = true
+
+func toggle_equalizer_hud() -> bool:
+	is_equalizer_hud_open = not is_equalizer_hud_open
+	_play_sfx_safe("click")
+	return is_equalizer_hud_open
+
+func calculate_acoustic_equalizer_spectrum() -> Dictionary:
+	var total_cap = get_max_capacity()
+	var active_cust_count = active_customers.size()
+	
+	# Frequency Band Energy Calculation (16 Bands)
+	var bands = []
+	var base_noise = 38.0
+	if acoustic_baffle_panels_installed > 0:
+		base_noise -= min(12.0, acoustic_baffle_panels_installed * 3.0)
+		
+	for b_idx in range(16):
+		var freq_ratio = b_idx / 15.0
+		var energy = 0.2 + sin(game_time * 4.0 + b_idx * 0.8) * 0.25 + randf() * 0.15
+		
+		# Low Frequencies (HVAC & Footsteps)
+		if b_idx < 4:
+			energy += 0.25 if abs(temperature - 22.0) > 3.0 else 0.1
+		# Mid Frequencies (Keyboard typing & Chatter)
+		elif b_idx >= 4 and b_idx < 12:
+			energy += (active_cust_count * 0.04)
+		# High Frequencies (Coffee grinder & Dishes)
+		else:
+			energy += (active_orders.size() * 0.08)
+			
+		if is_anc_system_active and upgrades.has("anc_headphones") and upgrades["anc_headphones"]["level"] > 0:
+			energy *= 0.35 # ANC Noise Cancellation 65% attenuation
+			
+		energy = clamp(energy, 0.05, 1.0)
+		bands.append(energy)
+		
+	var anc_suppression_pct = 65.0 if (is_anc_system_active and upgrades.has("anc_headphones") and upgrades["anc_headphones"]["level"] > 0) else 15.0
+	
+	return {
+		"bands": bands,
+		"bass_db": 20.0 + bands[1] * 30.0,
+		"mid_db": 25.0 + bands[7] * 35.0,
+		"treble_db": 18.0 + bands[14] * 25.0,
+		"anc_suppression": anc_suppression_pct,
+		"is_anc_active": is_anc_system_active
+	}
+
+# Iteration 141: Real-Time Store Power Grid Load & Renewable Solar/Battery Energy Engine
+var is_power_grid_hud_open: bool = false
+var ess_battery_kwh: float = 75.0 # Max capacity 100.0 kWh
+
+func toggle_power_grid_hud() -> bool:
+	is_power_grid_hud_open = not is_power_grid_hud_open
+	_play_sfx_safe("click")
+	return is_power_grid_hud_open
+
+func calculate_power_grid_energy_status() -> Dictionary:
+	var total_cap = get_max_capacity()
+	
+	# Base Consumption (kW)
+	var load_kw = 3.2 # Base lighting & servers
+	load_kw += total_cap * 0.15 # Desk lamps & laptops
+	if abs(temperature - 22.0) > 3.0:
+		load_kw += 4.5 # HVAC AC load
+	if roasters[0]["state"] == "ROASTING":
+		load_kw += 3.8 # Coffee roaster heating element
+	if upgrades.has("fast_charger") and upgrades["fast_charger"]["level"] > 0:
+		load_kw += 1.8 # 100W fast charging docks
+		
+	# Solar Generation (kW) based on time of day
+	var solar_kw = 0.0
+	if time_of_day == "DAY":
+		solar_kw = 12.5
+	elif time_of_day == "DUSK":
+		solar_kw = 3.5
+	else:
+		solar_kw = 0.0
+		
+	# ESS Battery Charge/Discharge Simulation
+	var net_kw = solar_kw - load_kw
+	if net_kw > 0:
+		ess_battery_kwh = min(100.0, ess_battery_kwh + net_kw * 0.05)
+	else:
+		ess_battery_kwh = max(0.0, ess_battery_kwh + net_kw * 0.05)
+		
+	var grid_import_kw = max(0.0, load_kw - solar_kw - (ess_battery_kwh * 0.1))
+	var bill_savings_pct = clamp((solar_kw + (100.0 - ess_battery_kwh) * 0.2) / max(1.0, load_kw) * 100.0, 0.0, 95.0)
+	var co2_reduced_kg = solar_kw * 0.42 # 0.42kg CO2 reduced per kWh solar
+	
+	return {
+		"load_kw": load_kw,
+		"solar_kw": solar_kw,
+		"ess_battery_pct": (ess_battery_kwh / 100.0) * 100.0,
+		"grid_import_kw": grid_import_kw,
+		"savings_pct": bill_savings_pct,
+		"co2_reduced_kg": co2_reduced_kg
+	}
+
+# Iteration 142: Real-Time Store Indoor Air Quality & Micro-Dust PM2.5 Bio-Filter Ventilation Engine
+var is_air_quality_hud_open: bool = false
+
+func toggle_air_quality_hud() -> bool:
+	is_air_quality_hud_open = not is_air_quality_hud_open
+	_play_sfx_safe("click")
+	return is_air_quality_hud_open
+
+func calculate_indoor_air_quality_metrics() -> Dictionary:
+	var total_cap = get_max_capacity()
+	var active_cust_count = active_customers.size()
+	
+	# Base CO2 (ppm) and PM2.5 (ug/m3)
+	var co2_ppm = 450.0 + active_cust_count * 45.0 # CO2 increases with occupants
+	var pm25_ug = 18.0 + active_cust_count * 1.2
+	
+	# HEPA & Bio-Scrubber attenuation
+	if upgrades.has("hepa_filter") and upgrades["hepa_filter"]["level"] > 0:
+		pm25_ug *= 0.25 # 75% PM2.5 reduction
+		co2_ppm -= 200.0
+		
+	co2_ppm = clamp(co2_ppm, 380.0, 1800.0)
+	pm25_ug = clamp(pm25_ug, 3.0, 120.0)
+	
+	var aqi_score = int((co2_ppm - 380.0) * 0.05 + pm25_ug * 0.8)
+	aqi_score = clamp(aqi_score, 10, 200)
+	
+	var status_str = "🩵 최상 (Good)"
+	if aqi_score > 100 or co2_ppm > 1000:
+		status_str = "🔴 환기 필요 (Unhealthy)"
+	elif aqi_score > 50:
+		status_str = "💚 보통 (Moderate)"
+		
+	var oxygen_focus_bonus = 12.0 if co2_ppm < 600.0 else (5.0 if co2_ppm < 900.0 else -10.0)
+	
+	return {
+		"co2_ppm": co2_ppm,
+		"pm25_ug": pm25_ug,
+		"aqi": aqi_score,
+		"status": status_str,
+		"focus_bonus": oxygen_focus_bonus
+	}
+
+# Iteration 143: Real-Time Dynamic Store Network Bandwidth & Wi-Fi 7 Traffic Traffic Optimizer Engine
+var is_network_hud_open: bool = false
+
+func toggle_network_hud() -> bool:
+	is_network_hud_open = not is_network_hud_open
+	_play_sfx_safe("click")
+	return is_network_hud_open
+
+func calculate_network_bandwidth_metrics() -> Dictionary:
+	var total_cap = get_max_capacity()
+	var active_cust_count = active_customers.size()
+	
+	# Bandwidth Load Calculation (Mbps)
+	var load_mbps = 120.0 # Base cloud print & smart kiosk telemetry
+	for c in active_customers:
+		if c.get("type", "") == "developer":
+			load_mbps += 140.0 # High bandwidth dev traffic (Docker, Git, IDEs)
+		else:
+			load_mbps += 45.0 # 4K video lectures
+			
+	# Ping Latency (ms) & QOS Suppression
+	var ping_ms = 4.5 + (load_mbps / 100.0) * 0.8
+	var is_wifi7_unlocked = upgrades.has("wifi_mesh") and upgrades["wifi_mesh"]["level"] > 0
+	
+	if is_wifi7_unlocked:
+		ping_ms = max(2.0, ping_ms * 0.3) # Wi-Fi 7 MLO (Multi-Link Operation) 70% latency reduction
+		
+	var dev_speed_bonus = 15.0 if ping_ms < 8.0 else (5.0 if ping_ms < 18.0 else -5.0)
+	var band_6ghz_pct = 68.0 if is_wifi7_unlocked else 0.0
+	var band_5ghz_pct = 24.0 if is_wifi7_unlocked else 65.0
+	var band_2g_pct = 8.0 if is_wifi7_unlocked else 35.0
+	
+	return {
+		"load_mbps": load_mbps,
+		"ping_ms": ping_ms,
+		"dev_bonus": dev_speed_bonus,
+		"band_6g": band_6ghz_pct,
+		"band_5g": band_5ghz_pct,
+		"band_2g": band_2g_pct,
+		"is_wifi7": is_wifi7_unlocked
+	}
+
+# Iteration 144: Real-Time Smart Ergonomic Desk Motor Sensor & Posture Correction Engine
+var is_ergonomic_hud_open: bool = false
+var is_standing_desk_active: bool = false
+
+func toggle_ergonomic_hud() -> bool:
+	is_ergonomic_hud_open = not is_ergonomic_hud_open
+	_play_sfx_safe("click")
+	return is_ergonomic_hud_open
+
+func calculate_ergonomic_posture_metrics() -> Dictionary:
+	var total_cap = get_max_capacity()
+	var active_cust_count = active_customers.size()
+	
+	# Sitting Fatigue & Posture Score
+	var posture_fatigue = clamp(active_cust_count * 5.5 + (100.0 - ai_focus_score) * 0.4, 10.0, 95.0)
+	var is_ergo_unlocked = upgrades.has("vip_lounge") and upgrades["vip_lounge"]["level"] > 0
+	
+	if is_ergo_unlocked and posture_fatigue > 60.0:
+		is_standing_desk_active = true
+	else:
+		is_standing_desk_active = false
+		
+	var desk_height_cm = 110.0 if is_standing_desk_active else 72.0
+	var posture_score = 95 - int(posture_fatigue * 0.5)
+	if is_ergo_unlocked:
+		posture_score = min(99, posture_score + 20)
+		
+	var stamina_recovery_pct = 25.0 if is_standing_desk_active else (10.0 if is_ergo_unlocked else 0.0)
+	var turtle_neck_alert = posture_fatigue > 70.0 and not is_standing_desk_active
+	
+	return {
+		"fatigue": posture_fatigue,
+		"desk_height": desk_height_cm,
+		"is_standing": is_standing_desk_active,
+		"posture_score": posture_score,
+		"recovery_pct": stamina_recovery_pct,
+		"turtle_neck_alert": turtle_neck_alert,
+		"is_ergo_unlocked": is_ergo_unlocked
+	}
+
+# Iteration 145: Real-Time Smart Biometric Pulse & Stress Relaxation Soundscape Engine
+var is_biometric_hud_open: bool = false
+
+func toggle_biometric_hud() -> bool:
+	is_biometric_hud_open = not is_biometric_hud_open
+	_play_sfx_safe("click")
+	return is_biometric_hud_open
+
+func calculate_biometric_pulse_metrics() -> Dictionary:
+	var total_cap = get_max_capacity()
+	var active_cust_count = active_customers.size()
+	
+	# Base Occupant BPM (60 ~ 115)
+	var avg_bpm = 68.0 + active_cust_count * 2.2 + abs(temperature - 22.0) * 1.5
+	if upgrades.has("espresso") and upgrades["espresso"]["level"] > 0:
+		avg_bpm += 4.0 # Caffeine speedup
+		
+	avg_bpm = clamp(avg_bpm, 60.0, 115.0)
+	
+	var stress_index = clamp((avg_bpm - 65.0) * 1.8, 5.0, 95.0)
+	var soundscape_mode = "432Hz 힐링 바이노럴 비트"
+	
+	if stress_index > 65.0:
+		soundscape_mode = "🌊 심해 아쿠아 릴렉세이션"
+		avg_bpm -= 8.0 # Relaxation soundscape attenuation
+	elif stress_index > 40.0:
+		soundscape_mode = "🌧️ 우드랜드 젠더 레인"
+	else:
+		soundscape_mode = "🎵 델타파 알파 부스트"
+		
+	var bpm_stability_bonus = 18.0 if avg_bpm < 74.0 else (8.0 if avg_bpm < 86.0 else -12.0)
+	var heart_state_str = "🩵 안온 (Optimal)"
+	if avg_bpm > 90.0:
+		heart_state_str = "🔴 스트레스 고조 (High Stress)"
+	elif avg_bpm > 76.0:
+		heart_state_str = "💛 집중 각성 (Elevated)"
+		
+	return {
+		"bpm": avg_bpm,
+		"stress": stress_index,
+		"soundscape": soundscape_mode,
+		"stability_bonus": bpm_stability_bonus,
+		"heart_state": heart_state_str
+	}
+
+# Iteration 146: Real-Time Smart Quantum Encryption Key & Digital Lock Subsystem
+var is_quantum_hud_open: bool = false
+
+func toggle_quantum_hud() -> bool:
+	is_quantum_hud_open = not is_quantum_hud_open
+	_play_sfx_safe("click")
+	return is_quantum_hud_open
+
+func calculate_quantum_security_metrics() -> Dictionary:
+	var total_cap = get_max_capacity()
+	var active_cust_count = active_customers.size()
+	
+	# Quantum Key Entropy (0~100%)
+	var qkd_entropy = 99.8
+	var is_kiosk_unlocked = upgrades.has("kiosk") and upgrades["kiosk"]["level"] > 0
+	if not is_kiosk_unlocked:
+		qkd_entropy = 65.0
+		
+	var gate_latency_sec = 0.4 if is_kiosk_unlocked else 1.8
+	var sec_rating = "👑 A+ (Quantum-Safe)" if is_kiosk_unlocked else "🛡️ B (Standard Keypad)"
+	
+	var trust_bonus_pct = 22.0 if is_kiosk_unlocked else 5.0
+	var spoof_attempts_blocked = int(active_cust_count * 0.8) + 12
+	
+	return {
+		"entropy": qkd_entropy,
+		"latency": gate_latency_sec,
+		"rating": sec_rating,
+		"trust_bonus": trust_bonus_pct,
+		"blocked_spoofs": spoof_attempts_blocked
+	}
+
+# Iteration 147: Real-Time Store Micro-Climate Humidity & Botanical Bio-Wall Transpiration Subsystem
+var is_botanical_hud_open: bool = false
+
+func toggle_botanical_hud() -> bool:
+	is_botanical_hud_open = not is_botanical_hud_open
+	_play_sfx_safe("click")
+	return is_botanical_hud_open
+
+func calculate_botanical_humidity_metrics() -> Dictionary:
+	var total_cap = get_max_capacity()
+	var active_cust_count = active_customers.size()
+	
+	# Base Humidity (% RH)
+	var humidity_rh = 40.0 - abs(temperature - 22.0) * 1.8 # AC lowers humidity
+	var is_biowall_unlocked = upgrades.has("air_purifier") and upgrades["air_purifier"]["level"] > 0
+	
+	var transpiration_l_hr = 0.0
+	if is_biowall_unlocked:
+		transpiration_l_hr = 4.2
+		humidity_rh += 15.0 # Bio-Wall restores optimal moisture
+		
+	humidity_rh = clamp(humidity_rh, 25.0, 75.0)
+	
+	var comfort_str = "🟢 최적 쾌적 (55% RH)"
+	if humidity_rh < 40.0:
+		comfort_str = "🟧 건조 경보 (Eye Dry)"
+	elif humidity_rh > 65.0:
+		comfort_str = "🩵 과습 (High Moisture)"
+		
+	var eye_relief_bonus = 14.0 if (humidity_rh >= 45.0 and humidity_rh <= 60.0) else (5.0 if humidity_rh >= 35.0 else -8.0)
+	
+	return {
+		"humidity_rh": humidity_rh,
+		"transpiration_rate": transpiration_l_hr,
+		"comfort_status": comfort_str,
+		"eye_relief_bonus": eye_relief_bonus,
+		"is_biowall_unlocked": is_biowall_unlocked
+	}
+
+# Iteration 148: Real-Time Store Solar Circadian Spectrum Lighting & Blue-Light Filter Subsystem
+var is_circadian_hud_open: bool = false
+
+func toggle_circadian_hud() -> bool:
+	is_circadian_hud_open = not is_circadian_hud_open
+	_play_sfx_safe("click")
+	return is_circadian_hud_open
+
+func calculate_circadian_spectrum_metrics() -> Dictionary:
+	var kelvin_k = 6500.0
+	var phase_str = "🩵 각성 피크 (6500K Peak)"
+	var bluelight_cut_pct = 15.0
+	
+	if time_of_day == "DAY":
+		kelvin_k = 6500.0
+		phase_str = "🩵 낮 고집중 각성 (6500K Peak)"
+		bluelight_cut_pct = 20.0
+	elif time_of_day == "DUSK":
+		kelvin_k = 4500.0
+		phase_str = "☀️ 석양 포근 집중 (4500K Warm)"
+		bluelight_cut_pct = 55.0
+	else:
+		kelvin_k = 2700.0
+		phase_str = "🌅 심야 멜라토닌 보호 (2700K Night)"
+		bluelight_cut_pct = 85.0
+		
+	var is_lighting_unlocked = upgrades.has("vip_lounge") and upgrades["vip_lounge"]["level"] > 0
+	if is_lighting_unlocked:
+		bluelight_cut_pct = min(99.0, bluelight_cut_pct + 15.0)
+		
+	var night_endurance_bonus = 16.0 if time_of_day == "NIGHT" else 8.0
+	
+	return {
+		"kelvin": kelvin_k,
+		"phase": phase_str,
+		"bluelight_cut": bluelight_cut_pct,
+		"endurance_bonus": night_endurance_bonus,
+		"is_lighting_unlocked": is_lighting_unlocked
+	}
+
+# Iteration 149: Real-Time Store Thermal Comfort PMV & Radiometric Floor Cooling/Heating Subsystem
+var is_pmv_hud_open: bool = false
+
+func toggle_pmv_hud() -> bool:
+	is_pmv_hud_open = not is_pmv_hud_open
+	_play_sfx_safe("click")
+	return is_pmv_hud_open
+
+func calculate_pmv_thermal_comfort_metrics() -> Dictionary:
+	var total_cap = get_max_capacity()
+	var active_cust_count = active_customers.size()
+	
+	# PMV Model (Fanger Thermal Comfort Model: -3.0 Cold to +3.0 Hot, 0.0 Ideal Neutral)
+	var pmv_score = (temperature - 22.5) * 0.28
+	var radiant_floor_temp_c = temperature - 0.5
+	var ppd_discomfort_pct = clamp(5.0 + abs(pmv_score) * 22.0, 5.0, 95.0)
+	
+	var is_radiant_floor_unlocked = upgrades.has("hepa_filter") and upgrades["hepa_filter"]["level"] > 0
+	if is_radiant_floor_unlocked:
+		pmv_score *= 0.2 # Radiant floor maintains ideal neutrality
+		radiant_floor_temp_c = 23.0
+		ppd_discomfort_pct = 4.8
+		
+	var pmv_status = "🟢 중립 쾌적 (Ideal Neutral 0.0)"
+	if pmv_score > 0.5:
+		pmv_status = "🔴 덥고 답답함 (Warm Discomfort)"
+	elif pmv_score < -0.5:
+		pmv_status = "🩵 쌀쌀함 (Cool Draft)"
+		
+	var thermal_neutrality_bonus = 15.0 if abs(pmv_score) <= 0.2 else (6.0 if abs(pmv_score) <= 0.6 else -10.0)
+	
+	return {
+		"pmv": pmv_score,
+		"floor_temp": radiant_floor_temp_c,
+		"ppd": ppd_discomfort_pct,
+		"status": pmv_status,
+		"neutrality_bonus": thermal_neutrality_bonus,
+		"is_radiant_floor": is_radiant_floor_unlocked
+	}
+
+# Iteration 150: Real-Time Store Autonomous AI Cleaning Drone & UV-C Disinfection Robotic Subsystem
+var is_cleaning_drone_hud_open: bool = false
+
+func toggle_cleaning_drone_hud() -> bool:
+	is_cleaning_drone_hud_open = not is_cleaning_drone_hud_open
+	_play_sfx_safe("click")
+	return is_cleaning_drone_hud_open
+
+func calculate_cleaning_drone_metrics() -> Dictionary:
+	var total_cap = get_max_capacity()
+	var active_cust_count = active_customers.size()
+	
+	# Hygiene & Disinfection Metrics
+	var hygiene_pct = clamp(98.5 - active_cust_count * 1.5, 60.0, 99.9)
+	var uvc_output_mw = 450.0 # 450 mW/cm2 UV-C Sterilization
+	var drone_battery_pct = 94.0
+	
+	var is_drone_unlocked = upgrades.has("robot_cleaner") and upgrades["robot_cleaner"]["level"] > 0
+	if is_drone_unlocked:
+		hygiene_pct = 99.9
+		uvc_output_mw = 1200.0
+		drone_battery_pct = 88.5
+		
+	var rating_str = "🌟 SSS 바이러스 프리 (Clean 99.9%)" if hygiene_pct >= 99.0 else ("🟢 S 쾌적 위생" if hygiene_pct >= 85.0 else "🧹 A 일반")
+	var reputation_bonus_pct = 20.0 if is_drone_unlocked else 8.0
+	
+	return {
+		"hygiene_pct": hygiene_pct,
+		"uvc_mw": uvc_output_mw,
+		"battery_pct": drone_battery_pct,
+		"rating": rating_str,
+		"reputation_bonus": reputation_bonus_pct,
+		"is_drone_unlocked": is_drone_unlocked
+	}
+
+# Iteration 151: Real-Time Store Customer Facial Micro-Expression & Mood Emotion AI Analyzer Subsystem
+var is_emotion_hud_open: bool = false
+
+func toggle_emotion_hud() -> bool:
+	is_emotion_hud_open = not is_emotion_hud_open
+	_play_sfx_safe("click")
+	return is_emotion_hud_open
+
+func calculate_customer_emotion_metrics() -> Dictionary:
+	var total_cap = get_max_capacity()
+	var active_cust_count = active_customers.size()
+	
+	# Micro-Expression Emotion Index
+	var happiness_pct = clamp(85.0 + decor_score * 0.1 - active_cust_count * 0.5, 50.0, 99.0)
+	var stress_pct = clamp(35.0 - decor_score * 0.05 + active_cust_count * 0.8, 5.0, 75.0)
+	
+	var is_emotion_ai_unlocked = upgrades.has("study_planner") and upgrades["study_planner"]["level"] > 0
+	if is_emotion_ai_unlocked:
+		happiness_pct = min(99.0, happiness_pct + 10.0)
+		stress_pct = max(4.0, stress_pct - 15.0)
+		
+	var mood_str = "😊 최상 몰입 (Peak Focus 95%)"
+	if stress_pct > 50.0:
+		mood_str = "😫 피로 스트레스 (High Stress)"
+	elif happiness_pct < 70.0:
+		mood_str = "🧘 평온 지속 (Neutral Serenity)"
+		
+	var retention_bonus = 18.0 if happiness_pct >= 85.0 else (8.0 if happiness_pct >= 70.0 else -5.0)
+	
+	return {
+		"happiness": happiness_pct,
+		"stress": stress_pct,
+		"mood": mood_str,
+		"retention_bonus": retention_bonus,
+		"is_emotion_ai_unlocked": is_emotion_ai_unlocked
+	}
+
+# Iteration 152: Real-Time Store Dynamic Solar Sun-Tracking Motorized Blind & Shading Controller Subsystem
+var is_shading_hud_open: bool = false
+
+func toggle_shading_hud() -> bool:
+	is_shading_hud_open = not is_shading_hud_open
+	_play_sfx_safe("click")
+	return is_shading_hud_open
+
+func calculate_solar_shading_metrics() -> Dictionary:
+	var solar_altitude_deg = 65.0
+	var blind_angle_pct = 75.0
+	var status_str = "😎 눈부심 완전 차단 (Glare 100% Blocked)"
+	
+	if time_of_day == "DAY":
+		solar_altitude_deg = 65.0
+		blind_angle_pct = 75.0
+		status_str = "😎 직사광선 눈부심 차단 (Solar Tracking)"
+	elif time_of_day == "DUSK":
+		solar_altitude_deg = 20.0
+		blind_angle_pct = 40.0
+		status_str = "☀️ 석양 노을 채광 모드 (Warm Ambient)"
+	else:
+		solar_altitude_deg = 0.0
+		blind_angle_pct = 95.0
+		status_str = "🌙 야간 사생활 보호 차폐 (Night Closed)"
+		
+	var is_shading_unlocked = upgrades.has("premium_desk") and upgrades["premium_desk"]["level"] > 0
+	var visibility_bonus = 17.0 if is_shading_unlocked else 7.0
+	
+	return {
+		"solar_altitude": solar_altitude_deg,
+		"blind_angle": blind_angle_pct,
+		"status": status_str,
+		"visibility_bonus": visibility_bonus,
+		"is_shading_unlocked": is_shading_unlocked
+	}
+
+# Iteration 153: Real-Time Store High-Precision Smart Water Quality & Electrolyte Hydration Bar Subsystem
+var is_water_hud_open: bool = false
+
+func toggle_water_hud() -> bool:
+	is_water_hud_open = not is_water_hud_open
+	_play_sfx_safe("click")
+	return is_water_hud_open
+
+func calculate_water_quality_metrics() -> Dictionary:
+	var tds_ppm = 8.0 # 8 ppm Ultra-Pure RO
+	var hydrogen_ppm = 1.25 # 1.25 ppm Active Hydrogen
+	var rating_str = "💎 프리미엄 RO 나노 수소수 (TDS 8ppm)"
+	
+	var is_water_unlocked = upgrades.has("coffee_roaster") and upgrades["coffee_roaster"]["level"] > 0
+	if is_water_unlocked:
+		tds_ppm = 4.2
+		hydrogen_ppm = 1.60
+		rating_str = "💎 SSS급 나노 전해질 수소수 (TDS 4.2ppm)"
+		
+	var brain_stamina_bonus = 19.0 if is_water_unlocked else 9.0
+	
+	return {
+		"tds": tds_ppm,
+		"hydrogen": hydrogen_ppm,
+		"rating": rating_str,
+		"brain_stamina_bonus": brain_stamina_bonus,
+		"is_water_unlocked": is_water_unlocked
+	}
+
+# Iteration 154: Real-Time Store EEG Brainwave Focus & Neuro-Feedback Soundscape Synthesizer Subsystem
+var is_neuro_hud_open: bool = false
+
+func toggle_neuro_hud() -> bool:
+	is_neuro_hud_open = not is_neuro_hud_open
+	_play_sfx_safe("click")
+	return is_neuro_hud_open
+
+func calculate_neuro_feedback_metrics() -> Dictionary:
+	var alpha_dominance_pct = 78.5
+	var beta_alertness_pct = 64.0
+	var neuro_state_str = "🧠 알파파 몰입 (Deep Alpha 10Hz)"
+	
+	var is_neuro_unlocked = upgrades.has("study_planner") and upgrades["study_planner"]["level"] > 0
+	if is_neuro_unlocked:
+		alpha_dominance_pct = 94.2
+		beta_alertness_pct = 82.0
+		neuro_state_str = "👑 SSS급 바이노럴 알파 뉴로피드백"
+		
+	var memory_synapse_bonus = 21.0 if is_neuro_unlocked else 10.0
+	
+	return {
+		"alpha_pct": alpha_dominance_pct,
+		"beta_pct": beta_alertness_pct,
+		"state": neuro_state_str,
+		"synapse_bonus": memory_synapse_bonus,
+		"is_neuro_unlocked": is_neuro_unlocked
+	}
+
+# Iteration 155: Real-Time Store Dynamic Voice Command AI Butler & Kiosk Audio Assistant Subsystem
+var is_voice_ai_hud_open: bool = false
+
+func toggle_voice_ai_hud() -> bool:
+	is_voice_ai_hud_open = not is_voice_ai_hud_open
+	_play_sfx_safe("click")
+	return is_voice_ai_hud_open
+
+func calculate_voice_ai_butler_metrics() -> Dictionary:
+	var stt_accuracy_pct = 95.0
+	var nlp_latency_sec = 0.35
+	var assistant_rating_str = "🗣️ S 오디오키오스크 안내 (NLP 95%)"
+	
+	var is_voice_unlocked = upgrades.has("kiosk_system") and upgrades["kiosk_system"]["level"] > 0
+	if is_voice_unlocked:
+		stt_accuracy_pct = 99.4
+		nlp_latency_sec = 0.15
+		assistant_rating_str = "👑 SSS급 실시간 음성 AI 집사 (NLP 99.4%)"
+		
+	var kiosk_revenue_bonus = 23.0 if is_voice_unlocked else 10.0
+	
+	return {
+		"accuracy": stt_accuracy_pct,
+		"latency": nlp_latency_sec,
+		"rating": assistant_rating_str,
+		"revenue_bonus": kiosk_revenue_bonus,
+		"is_voice_unlocked": is_voice_unlocked
+	}
+
+# Iteration 156: Real-Time Store Holographic 3D Virtual AI Tutor & Lecture Assistant Subsystem
+var is_hologram_hud_open: bool = false
+
+func toggle_hologram_hud() -> bool:
+	is_hologram_hud_open = not is_hologram_hud_open
+	_play_sfx_safe("click")
+	return is_hologram_hud_open
+
+func calculate_holographic_tutor_metrics() -> Dictionary:
+	var hologram_fps = 60.0
+	var resolution_k = "4K Spatial"
+	var tutor_status_str = "🔮 S 입체 강의 홀로그램 (60 FPS)"
+	
+	var is_holo_unlocked = upgrades.has("vip_lounge") and upgrades["vip_lounge"]["level"] > 0
+	if is_holo_unlocked:
+		hologram_fps = 120.0
+		resolution_k = "8K Volumetric"
+		tutor_status_str = "👑 SSS급 3D 홀로그램 AI 튜터 (120 FPS)"
+		
+	var exam_pass_bonus = 25.0 if is_holo_unlocked else 12.0
+	
+	return {
+		"fps": hologram_fps,
+		"resolution": resolution_k,
+		"status": tutor_status_str,
+		"exam_pass_bonus": exam_pass_bonus,
+		"is_holo_unlocked": is_holo_unlocked
+	}
+
+# Iteration 157: Real-Time Store Kinetic Energy Harvesting & Piezoelectric Floor Power Generation Subsystem
+var is_piezo_hud_open: bool = false
+
+func toggle_piezo_hud() -> bool:
+	is_piezo_hud_open = not is_piezo_hud_open
+	_play_sfx_safe("click")
+	return is_piezo_hud_open
+
+func calculate_piezoelectric_energy_metrics() -> Dictionary:
+	var total_cap = get_max_capacity()
+	var active_cust_count = active_customers.size()
+	
+	# Kinetic Generation
+	var kinetic_power_kw = active_cust_count * 0.45 + 1.2 # 1.2 kW base
+	var carbon_offset_kg = kinetic_power_kw * 14.5
+	var piezo_rating_str = "⚡ S 수확 발전 모드 (Kinetic 2.4kW)"
+	
+	var is_piezo_unlocked = upgrades.has("hepa_filter") and upgrades["hepa_filter"]["level"] > 0
+	if is_piezo_unlocked:
+		kinetic_power_kw += 3.8
+		carbon_offset_kg += 45.0
+		piezo_rating_str = "👑 SSS급 압전 자가발전 (Energy Net-Zero)"
+		
+	var eco_reputation_bonus = 22.0 if is_piezo_unlocked else 10.0
+	
+	return {
+		"power_kw": kinetic_power_kw,
+		"carbon_offset": carbon_offset_kg,
+		"rating": piezo_rating_str,
+		"eco_bonus": eco_reputation_bonus,
+		"is_piezo_unlocked": is_piezo_unlocked
+	}
+
+# Iteration 158: Real-Time Store Autonomous Delivery Robot & Tabletop Refreshment Service Subsystem
+var is_robot_hud_open: bool = false
+
+func toggle_robot_hud() -> bool:
+	is_robot_hud_open = not is_robot_hud_open
+	_play_sfx_safe("click")
+	return is_robot_hud_open
+
+func calculate_delivery_robot_metrics() -> Dictionary:
+	var active_robots = 2
+	var delivery_latency_sec = 45.0
+	var robot_status_str = "🤖 S 라율주행 서빙 로봇 (45s)"
+	
+	var is_robot_unlocked = upgrades.has("premium_cafe") and upgrades["premium_cafe"]["level"] > 0
+	if is_robot_unlocked:
+		active_robots = 5
+		delivery_latency_sec = 18.0
+		robot_status_str = "👑 SSS급 자율주행 AI 라스트마일 로봇 (18s)"
+		
+	var snack_revenue_bonus = 24.0 if is_robot_unlocked else 11.0
+	
+	return {
+		"robots_count": active_robots,
+		"latency": delivery_latency_sec,
+		"status": robot_status_str,
+		"snack_bonus": snack_revenue_bonus,
+		"is_robot_unlocked": is_robot_unlocked
+	}
+
+# Iteration 159: Real-Time Store Quantum Encryption & Biometric Data Security Shield Subsystem
+var is_shield_hud_open: bool = false
+
+func toggle_shield_hud() -> bool:
+	is_shield_hud_open = not is_shield_hud_open
+	_play_sfx_safe("click")
+	return is_shield_hud_open
+
+func calculate_quantum_security_shield_metrics() -> Dictionary:
+	var qkd_refresh_sec = 0.05
+	var defense_pct = 99.9
+	var shield_status_str = "🛡️ S 차세대 암호화 쉴드 (99.9%)"
+	
+	var is_shield_unlocked = upgrades.has("cctv_system") and upgrades["cctv_system"]["level"] > 0
+	if is_shield_unlocked:
+		qkd_refresh_sec = 0.001
+		defense_pct = 99.999
+		shield_status_str = "👑 SSS급 양자 암호 쉴드 (QKD Zero-Trust)"
+		
+	var vip_trust_bonus = 26.0 if is_shield_unlocked else 12.0
+	
+	return {
+		"qkd_refresh": qkd_refresh_sec,
+		"defense_pct": defense_pct,
+		"status": shield_status_str,
+		"trust_bonus": vip_trust_bonus,
+		"is_shield_unlocked": is_shield_unlocked
+	}
+
+# Iteration 160: Real-Time Store Autonomous Satellite Network & High-Altitude Drone Data Relay Subsystem
+var is_satellite_hud_open: bool = false
+
+func toggle_satellite_hud() -> bool:
+	is_satellite_hud_open = not is_satellite_hud_open
+	_play_sfx_safe("click")
+	return is_satellite_hud_open
+
+func calculate_satellite_relay_metrics() -> Dictionary:
+	var bandwidth_gbps = 25.0
+	var latency_ms = 12.5
+	var sat_status_str = "📡 S 드론 네트워크 리레이 (25 Gbps)"
+	
+	var is_sat_unlocked = upgrades.has("high_speed_wifi") and upgrades["high_speed_wifi"]["level"] > 0
+	if is_sat_unlocked:
+		bandwidth_gbps = 100.0
+		latency_ms = 2.0
+		sat_status_str = "👑 SSS급 양자 저궤도 위성 리레이 (100 Gbps)"
+		
+	var global_empire_bonus = 27.0 if is_sat_unlocked else 13.0
+	
+	return {
+		"bandwidth": bandwidth_gbps,
+		"latency": latency_ms,
+		"status": sat_status_str,
+		"empire_bonus": global_empire_bonus,
+		"is_sat_unlocked": is_sat_unlocked
+	}
+
+# Iteration 161: Real-Time Store Fusion Nuclear Micro-Reactor & Wireless Resonance Power Subsystem
+var is_fusion_hud_open: bool = false
+
+func toggle_fusion_hud() -> bool:
+	is_fusion_hud_open = not is_fusion_hud_open
+	_play_sfx_safe("click")
+	return is_fusion_hud_open
+
+func calculate_fusion_reactor_metrics() -> Dictionary:
+	var fusion_power_mw = 5.0
+	var wireless_eff_pct = 95.0
+	var fusion_status_str = "⚛️ S 초소형 SMR 발전 (5.0 MW)"
+	
+	var is_fusion_unlocked = upgrades.has("solar_panel") and upgrades["solar_panel"]["level"] > 0
+	if is_fusion_unlocked:
+		fusion_power_mw = 25.0
+		wireless_eff_pct = 99.9
+		fusion_status_str = "👑 SSS급 무제한 SMR 핵융합 발전 (Power Sovereignty)"
+		
+	var profit_margin_bonus = 28.0 if is_fusion_unlocked else 14.0
+	
+	return {
+		"power_mw": fusion_power_mw,
+		"wireless_eff": wireless_eff_pct,
+		"status": fusion_status_str,
+		"profit_bonus": profit_margin_bonus,
+		"is_fusion_unlocked": is_fusion_unlocked
+	}
+
+# Iteration 162: Real-Time Store Quantum Supercomputer AI Curriculum Generator & Neural Exam Predictor Subsystem
+var is_curriculum_hud_open: bool = false
+
+func toggle_curriculum_hud() -> bool:
+	is_curriculum_hud_open = not is_curriculum_hud_open
+	_play_sfx_safe("click")
+	return is_curriculum_hud_open
+
+func calculate_quantum_curriculum_metrics() -> Dictionary:
+	var compute_pflops = 2.5
+	var predict_precision_pct = 96.5
+	var curriculum_status_str = "💻 S 신경망 커리큘럼 예측기 (96.5%)"
+	
+	var is_curr_unlocked = upgrades.has("study_planner") and upgrades["study_planner"]["level"] > 0
+	if is_curr_unlocked:
+		compute_pflops = 10.0
+		predict_precision_pct = 99.8
+		curriculum_status_str = "👑 SSS급 양자 AI 시험 예측기 (99.8% Precision)"
+		
+	var premium_seat_bonus = 30.0 if is_curr_unlocked else 15.0
+	
+	return {
+		"pflops": compute_pflops,
+		"precision": predict_precision_pct,
+		"status": curriculum_status_str,
+		"seat_bonus": premium_seat_bonus,
+		"is_curr_unlocked": is_curr_unlocked
+	}
+
+# Iteration 163: Real-Time Store Dynamic Solar Atmospheric Water Generator & Mineral Electrolyte Bar Subsystem
+var is_awg_hud_open: bool = false
+
+func toggle_awg_hud() -> bool:
+	is_awg_hud_open = not is_awg_hud_open
+	_play_sfx_safe("click")
+	return is_awg_hud_open
+
+func calculate_atmospheric_water_metrics() -> Dictionary:
+	var water_output_l = 45.0
+	var mineral_mg = 120.0
+	var awg_status_str = "🌊 S 대기 집수 정수기 (45L/day)"
+	
+	var is_awg_unlocked = upgrades.has("coffee_roaster") and upgrades["coffee_roaster"]["level"] > 0
+	if is_awg_unlocked:
+		water_output_l = 120.0
+		mineral_mg = 180.0
+		awg_status_str = "👑 SSS급 공기 집수 태양광 수소전해질 바 (120L/day)"
+		
+	var vitality_duration_bonus = 29.0 if is_awg_unlocked else 14.0
+	
+	return {
+		"output_l": water_output_l,
+		"mineral_mg": mineral_mg,
+		"status": awg_status_str,
+		"vitality_bonus": vitality_duration_bonus,
+		"is_awg_unlocked": is_awg_unlocked
+	}
+
+# Iteration 164: Real-Time Store Zero-Gravity Hydroponic Bio-Nutrient Vertical Farming & Fresh Superfood Smoothie Bar Subsystem
+var is_farm_hud_open: bool = false
+
+func toggle_farm_hud() -> bool:
+	is_farm_hud_open = not is_farm_hud_open
+	_play_sfx_safe("click")
+	return is_farm_hud_open
+
+func calculate_hydroponic_farm_metrics() -> Dictionary:
+	var yield_kg = 10.0
+	var absorption_pct = 90.0
+	var farm_status_str = "🥗 S 스마트 수경재배 수직농장 (10kg/day)"
+	
+	var is_farm_unlocked = upgrades.has("protein_bar") and upgrades["protein_bar"]["level"] > 0
+	if is_farm_unlocked:
+		yield_kg = 35.0
+		absorption_pct = 99.5
+		farm_status_str = "👑 SSS급 무균 수경재배 수직농장 & 스무디 바 (35kg/day)"
+		
+	var superfood_profit_bonus = 31.0 if is_farm_unlocked else 15.0
+	
+	return {
+		"yield_kg": yield_kg,
+		"absorption": absorption_pct,
+		"status": farm_status_str,
+		"profit_bonus": superfood_profit_bonus,
+		"is_farm_unlocked": is_farm_unlocked
+	}
+
+# Iteration 165: Real-Time Store Autonomous Exoskeleton Ergonomic Posture Assistance & Spinal Health Protection Subsystem
+var is_exo_hud_open: bool = false
+
+func toggle_exo_hud() -> bool:
+	is_exo_hud_open = not is_exo_hud_open
+	_play_sfx_safe("click")
+	return is_exo_hud_open
+
+func calculate_exoskeleton_posture_metrics() -> Dictionary:
+	var support_force_n = 15.0
+	var fatigue_reduction_pct = 92.0
+	var exo_status_str = "🦾 S 하이브리드 자세 보정 (15N Support)"
+	
+	var is_exo_unlocked = upgrades.has("ergonomic_chair") and upgrades["ergonomic_chair"]["level"] > 0
+	if is_exo_unlocked:
+		support_force_n = 45.0
+		fatigue_reduction_pct = 99.2
+		exo_status_str = "👑 SSS급 자율 능동 척추 외골격 (45N Support)"
+		
+	var marathon_session_bonus = 32.0 if is_exo_unlocked else 16.0
+	
+	return {
+		"support_force": support_force_n,
+		"fatigue_reduction": fatigue_reduction_pct,
+		"status": exo_status_str,
+		"session_bonus": marathon_session_bonus,
+		"is_exo_unlocked": is_exo_unlocked
+	}
+
+# Iteration 166: Real-Time Store Quantum Entanglement Sub-Space Instant Teleportation Delivery & Courier Relay Subsystem
+var is_teleport_hud_open: bool = false
+
+func toggle_teleport_hud() -> bool:
+	is_teleport_hud_open = not is_teleport_hud_open
+	_play_sfx_safe("click")
+	return is_teleport_hud_open
+
+func calculate_quantum_teleportation_metrics() -> Dictionary:
+	var latency_sec = 0.5
+	var stability_pct = 98.0
+	var tp_status_str = "🌌 S 초고속 양자 리레이 배송 (0.5s)"
+	
+	var is_tp_unlocked = upgrades.has("kiosk") and upgrades["kiosk"]["level"] > 0
+	if is_tp_unlocked:
+		latency_sec = 0.001
+		stability_pct = 99.999
+		tp_status_str = "👑 SSS급 양자 얽힘 섭스페이스 순간이동 (0.001s)"
+		
+	var instant_order_bonus = 33.0 if is_tp_unlocked else 16.0
+	
+	return {
+		"latency": latency_sec,
+		"stability": stability_pct,
+		"status": tp_status_str,
+		"order_bonus": instant_order_bonus,
+		"is_tp_unlocked": is_tp_unlocked
+	}
+
+# Iteration 167: Real-Time Store Sub-Zero Nitrogen Molecular Flash Freeze & Precision Coffee Bean Preservation Subsystem
+var is_cryo_hud_open: bool = false
+
+func toggle_cryo_hud() -> bool:
+	is_cryo_hud_open = not is_cryo_hud_open
+	_play_sfx_safe("click")
+	return is_cryo_hud_open
+
+func calculate_cryogenic_roaster_metrics() -> Dictionary:
+	var temp_celsius = -20.0
+	var aroma_preserve_pct = 95.0
+	var cryo_status_str = "❄️ S 초저온 급속 냉동 보존 (-20℃)"
+	
+	var is_cryo_unlocked = upgrades.has("coffee_roaster") and upgrades["coffee_roaster"]["level"] > 0
+	if is_cryo_unlocked:
+		temp_celsius = -196.0
+		aroma_preserve_pct = 99.99
+		cryo_status_str = "👑 SSS급 -196℃ 액체질소 분자 급속냉동 원두 보존"
+		
+	var specialty_price_bonus = 34.0 if is_cryo_unlocked else 17.0
+	
+	return {
+		"temp_c": temp_celsius,
+		"aroma_pct": aroma_preserve_pct,
+		"status": cryo_status_str,
+		"price_bonus": specialty_price_bonus,
+		"is_cryo_unlocked": is_cryo_unlocked
+	}
+
+# Iteration 168: Real-Time Store Zero-Trust Quantum Cryptographic Blockchain Decentralized Franchise Financial Treasury Subsystem
+var is_treasury_hud_open: bool = false
+
+func toggle_treasury_hud() -> bool:
+	is_treasury_hud_open = not is_treasury_hud_open
+	_play_sfx_safe("click")
+	return is_treasury_hud_open
+
+func calculate_quantum_treasury_metrics() -> Dictionary:
+	var settle_speed_sec = 0.01
+	var security_pct = 99.5
+	var treasury_status_str = "💎 S 양자 체인 정산망 (0.01s)"
+	
+	var is_treasury_unlocked = upgrades.has("kiosk") and upgrades["kiosk"]["level"] > 0
+	if is_treasury_unlocked:
+		settle_speed_sec = 0.0001
+		security_pct = 100.0
+		treasury_status_str = "👑 SSS급 zk-SNARKs 양자 탈중앙화 결제 지불망 (0.0001s)"
+		
+	var dividend_yield_bonus = 35.0 if is_treasury_unlocked else 17.0
+	
+	return {
+		"settle_speed": settle_speed_sec,
+		"security": security_pct,
+		"status": treasury_status_str,
+		"dividend_bonus": dividend_yield_bonus,
+		"is_treasury_unlocked": is_treasury_unlocked
+	}
+
+func trigger_120th_milestone_event() -> Dictionary:
+	milestone_120_triggered = true
+	var grand_prize = 200000.0
+	add_money(grand_prize)
+	reputation = min(5.0, reputation + 0.25)
+	_play_sfx_safe("fanfare")
+	return { "success": true, "msg": "🎆 [대축제] 120개 전 모듈 자율 순환 개발 완수 & 무결성 100% 달성 마일스톤 기념! (+200,000 ₩ 축하금 | 명성 최고 수치 달성 👑)" }
+
+func expand_third_franchise_landmark() -> Dictionary:
+	third_branch_expanded = true
+	decor_score += 120
+	var grant = 50000.0
+	add_money(grant)
+	reputation = min(5.0, reputation + 0.15)
+	_play_sfx_safe("fanfare")
+	return { "success": true, "msg": "🏢 [직영 3호점 신촌 메가 랜드마크] 축 오픈! (+50,000 ₩ 축하금 | 수용 좌석 100석 추가 🌟)" }
+
+func start_national_study_marathon() -> Dictionary:
+	study_marathons_held += 1
+	var prize_money = 15000.0
+	add_money(prize_money)
+	reputation = min(5.0, reputation + 0.1)
+	_play_sfx_safe("fanfare")
+	return { "success": true, "msg": "🏃‍♂️ [전국 수험생] 24시간 무박 스터디 마라톤 챔피언십 개최 및 우승! (+15,000 ₩ 상금 | 명성 +0.10 🎉)" }
+
+func mix_rain_ocean_soundscape(preset_name: String = "🌧️ 숲속 빗소리 & 모닥불 ASMR") -> Dictionary:
+	active_soundscape_mix = preset_name
+	var fee = 3500.0
+	add_money(fee)
+	reputation = min(5.0, reputation + 0.04)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "🎧 [절차적 오디오] 사운드스케이프 [%s] 입체 믹싱 완료! (+3,500 ₩ | 몰입 백색소음 +30%% 🌊)" % preset_name }
+
+func upgrade_cat_scratching_tower() -> Dictionary:
+	cat_towers_installed += 1
+	decor_score += 25
+	navi_intimacy += 50
+	var bonus_money = 3800.0
+	add_money(bonus_money)
+	reputation = min(5.0, reputation + 0.05)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "🐾 [마스코트 냥이] 삼삼원목 캣타워 & 캣폴 구름다리 업그레이드 완료! (인테리어 +25 🌟 | 친밀도 +50 🐱)" }
+
+func sterilize_desk_mat_hygiene(seat_idx: int = 1) -> Dictionary:
+	uvc_sterilizations_count += 1
+	var fee = 3200.0
+	add_money(fee)
+	reputation = min(5.0, reputation + 0.03)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "✨ [%d번 좌석] UV-C 무균 데스크 매트 살균 완료! (+3,200 ₩ | 99.9%% 바이러스 위생 케어 🦠)" % (seat_idx + 1) }
+
+func dispense_truffle_chocolate_buffet() -> Dictionary:
+	truffle_chocolates_dispensed += 1
+	var price = 3600.0
+	add_money(price)
+	reputation = min(5.0, reputation + 0.04)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "🍫 [스윗 디저트 바] 벨기에 수제 퐁당 트러플 생초콜릿 디스펜서 제공 완료! (+3,600 ₩ | 당 충전 & 뇌 회복 +30%% 🍫)" }
+
+func claim_study_goal_badge(badge_name: String = "🏅 100시간 몰입 달성 마스터 뱃지") -> Dictionary:
+	study_goal_badges_claimed += 1
+	var reward = 2500.0
+	add_money(reward)
+	reputation = min(5.0, reputation + 0.03)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "📱 [모바일 열공 앱] [%s] 획득 완료! (+2,500 ₩ | 성취감 버프 🌟)" % badge_name }
+
+func reserve_acoustic_meeting_room_b(hours: int = 2) -> Dictionary:
+	acoustic_meeting_room_reservations += 1
+	var total_fee = 6500.0 * hours
+	add_money(total_fee)
+	reputation = min(5.0, reputation + 0.06)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "🎙️ [4인 방음 미팅룸 B] %d시간 예약 완료! (+%s ₩ | 그룹 스터디 & PT 몰입 100%% 👥)" % [hours, String.num(total_fee)] }
+
+func blend_protein_smoothie_shake(flavor: String = "🥛 딸기 바나나 100% WPI 무설탕 프로틴") -> Dictionary:
+	protein_smoothies_blended += 1
+	var price = 4800.0
+	add_money(price)
+	reputation = min(5.0, reputation + 0.05)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "🥤 헬시 헬스 케어 [%s] 프로틴 스무디 블렌딩 완료! (+4,800 ₩ | 체력 충전 +20%% 💪)" % flavor }
+
+func tune_kelvin_light_color(kelvin: int = 6500) -> Dictionary:
+	active_kelvin_temp = kelvin
+	decor_score += 15
+	var bonus_money = 3600.0
+	add_money(bonus_money)
+	reputation = min(5.0, reputation + 0.04)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "💡 [스마트 LED] 켈빈 조명 색온도 [%dK] 튜닝 완료! (인테리어 +15 🌟 | 암기 몰입 최적화 💡)" % kelvin }
+
+func maintain_greenhouse_air_wall() -> Dictionary:
+	greenhouse_wall_maintenances += 1
+	decor_score += 30
+	var bonus_money = 4800.0
+	add_money(bonus_money)
+	reputation = min(5.0, reputation + 0.06)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "🌿 [초록 온실 바이오월] 천연 이끼 & 수경재배 공기정화 월 스프레이 관리 완료! (인테리어 +30 🌟 | 피톤치드 힐링 +4,800 ₩)" }
+
+func donate_pass_book_to_library(book_title: String = "📘 2026 공무원 행정법 합격 필기노트") -> Dictionary:
+	pass_books_donated_count += 1
+	decor_score += 15
+	var bonus_money = 3500.0
+	add_money(bonus_money)
+	reputation = min(5.0, reputation + 0.05)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "📚 [%s] 합격자 기증 수험서 나눔 서가 등록 완료! (인테리어 +15 🌟 | 선배 기운 기증 +3,500 ₩)" % book_title }
+
+func bake_morning_croissant_brunch() -> Dictionary:
+	morning_brunch_batches += 1
+	var revenue = 4200.0
+	add_money(revenue)
+	reputation = min(5.0, reputation + 0.05)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "🥐 [아침 8시 갓 구운 브런치] 버터 크로와상 세트 완성! (+4,200 ₩ | 아침 수험생 등교율 +35%% ☕)" }
+
+func send_ai_attendance_parent_sms(student_name: String = "단골 공시생 수현") -> Dictionary:
+	parent_sms_sent_count += 1
+	var fee = 400.0
+	add_money(fee)
+	reputation = min(5.0, reputation + 0.02)
+	_play_sfx_safe("chime")
+	return { "success": true, "msg": "📱 [AI 입실 인식] %s 학부모님께 안심 입실 알림톡 발송 완료! (+400 ₩ | 신뢰도 UP 📲)" % student_name }
+
 func use_power_nap_pod() -> Dictionary:
 	power_nap_pods_used += 1
 	var fee = 6500.0
@@ -1308,7 +2912,7 @@ func claim_universal_infinity_trophy() -> Dictionary:
 
 
 
-func rent_anc_headphones() -> Dictionary:
+func rent_anc_headphones_basic() -> Dictionary:
 	if anc_headphones_stock <= 0:
 		anc_headphones_stock += 10
 	anc_headphones_stock -= 1
@@ -1318,6 +2922,7 @@ func rent_anc_headphones() -> Dictionary:
 	reputation = min(5.0, reputation + 0.05)
 	_play_sfx_safe("chime")
 	return { "success": true, "msg": "🎧 프리미엄 ANC 노이즈 캔슬링 헤드폰 대여 완료! (+2,500 ₩ | 몰입도 +35% 🔇)" }
+
 
 func brew_handdrip_coffee(bean_origin: String = "YIRGACHEFFE") -> Dictionary:
 	if handdrip_coffee_stock <= 0:
