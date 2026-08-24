@@ -887,6 +887,110 @@ func draw_integrated_multi_room_layout(w: float, h: float) -> void:
 		draw_string(ThemeDB.fallback_font, qg_panel_rect.position + Vector2(10, 78), "🌌 중력장 안정기 상태: %s" % qg_info["status"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.2, 0.95, 0.5))
 		draw_string(ThemeDB.fallback_font, qg_panel_rect.position + Vector2(10, 96), "💰 척추 하중 분산 인체공학 보너스: +%d%%" % int(qg_info["ergonomic_bonus"]), HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(1.0, 0.8, 0.2))
 
+	# Render Autonomous Bio-Synaptic Neural-Memory Crystal Knowledge Synthesizer HUD Panel if ON
+	if GameState.is_memory_crystal_hud_open:
+		var mc_info = GameState.calculate_memory_crystal_metrics()
+		var mc_panel_rect = Rect2(hud_panel_x - 40.0, 60, 240, 130)
+		draw_rect(mc_panel_rect, Color(0.06, 0.08, 0.12, 0.95), true)
+		draw_rect(mc_panel_rect, Color(0.7, 0.4, 0.95), false, 2.0)
+		
+		draw_string(ThemeDB.fallback_font, mc_panel_rect.position + Vector2(10, 22), "💎 신경-메모리 결정체 지식 합성기", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(0.7, 0.4, 0.95))
+		draw_string(ThemeDB.fallback_font, mc_panel_rect.position + Vector2(10, 42), "💎 결정체 전송 속도: %.1f Gbps" % mc_info["synthesis_gbps"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color.WHITE)
+		draw_string(ThemeDB.fallback_font, mc_panel_rect.position + Vector2(10, 60), "🔮 장기 시냅스 파동 유지율: %.4f%%" % mc_info["retention_pct"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.7, 0.4, 0.95))
+		draw_string(ThemeDB.fallback_font, mc_panel_rect.position + Vector2(10, 78), "💎 결정체 합성기 상태: %s" % mc_info["status"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.2, 0.95, 0.5))
+		draw_string(ThemeDB.fallback_font, mc_panel_rect.position + Vector2(10, 96), "💰 시험 만점 마스터리 성적 보너스: +%d%%" % int(mc_info["mastery_bonus"]), HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(1.0, 0.8, 0.2))
+
+	# Render Autonomous Super-Conductive Zero-Resistance Power Matrix Grid HUD Panel if ON
+	if GameState.is_superconductive_power_hud_open:
+		var sp_info = GameState.calculate_superconductive_power_metrics()
+		var sp_panel_rect = Rect2(hud_panel_x - 40.0, 60, 240, 130)
+		draw_rect(sp_panel_rect, Color(0.06, 0.08, 0.12, 0.95), true)
+		draw_rect(sp_panel_rect, Color(0.95, 0.9, 0.2), false, 2.0)
+		
+		draw_string(ThemeDB.fallback_font, sp_panel_rect.position + Vector2(10, 22), "⚡ 초전도 제로-저항 전력 그리드", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(0.95, 0.9, 0.2))
+		draw_string(ThemeDB.fallback_font, sp_panel_rect.position + Vector2(10, 42), "⚡ 제로-손실 전력 송전 효율: %.4f%%" % sp_info["efficiency_pct"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color.WHITE)
+		draw_string(ThemeDB.fallback_font, sp_panel_rect.position + Vector2(10, 60), "🔮 임계 서모 전도 온실: %.2f K" % sp_info["temp_k"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.95, 0.9, 0.2))
+		draw_string(ThemeDB.fallback_font, sp_panel_rect.position + Vector2(10, 78), "⚡ 초전도 전력 그리드 상태: %s" % sp_info["status"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.2, 0.95, 0.5))
+		draw_string(ThemeDB.fallback_font, sp_panel_rect.position + Vector2(10, 96), "💰 매장 총 전기/유틸리티 유지비 절감: -%d%%" % int(sp_info["cost_saving"]), HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(1.0, 0.8, 0.2))
+
+	# Render Autonomous Bio-Photonic Quantum Solar-Spectrum Photosynthesis Air-Regenerator HUD Panel if ON
+	if GameState.is_biophotonic_air_hud_open:
+		var ba_info = GameState.calculate_biophotonic_air_metrics()
+		var ba_panel_rect = Rect2(hud_panel_x - 40.0, 60, 240, 130)
+		draw_rect(ba_panel_rect, Color(0.06, 0.08, 0.12, 0.95), true)
+		draw_rect(ba_panel_rect, Color(0.3, 0.95, 0.5), false, 2.0)
+		
+		draw_string(ThemeDB.fallback_font, ba_panel_rect.position + Vector2(10, 22), "🌿 퀀텀 광합성 공기재생기", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(0.3, 0.95, 0.5))
+		draw_string(ThemeDB.fallback_font, ba_panel_rect.position + Vector2(10, 42), "🌿 산소 생성 멸균 순도: %.4f%%" % ba_info["oxygen_purity"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color.WHITE)
+		draw_string(ThemeDB.fallback_font, ba_panel_rect.position + Vector2(10, 60), "🔮 이산화탄소 집진 포집: -%.1f PPM" % ba_info["co2_scrubbed"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.3, 0.95, 0.5))
+		draw_string(ThemeDB.fallback_font, ba_panel_rect.position + Vector2(10, 78), "🌿 공기재생기 상태: %s" % ba_info["status"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.2, 0.95, 0.5))
+		draw_string(ThemeDB.fallback_font, ba_panel_rect.position + Vector2(10, 96), "💰 뇌 활성화 인지 각성도 보너스: +%d%%" % int(ba_info["alertness_bonus"]), HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(1.0, 0.8, 0.2))
+
+	# Render Autonomous Sub-Quantum Dark-Matter Zero-Point Gravity Deflection Matrix HUD Panel if ON
+	if GameState.is_dark_matter_gravity_hud_open:
+		var dm_info = GameState.calculate_dark_matter_gravity_metrics()
+		var dm_panel_rect = Rect2(hud_panel_x - 40.0, 60, 240, 130)
+		draw_rect(dm_panel_rect, Color(0.06, 0.08, 0.12, 0.95), true)
+		draw_rect(dm_panel_rect, Color(0.5, 0.3, 0.95), false, 2.0)
+		
+		draw_string(ThemeDB.fallback_font, dm_panel_rect.position + Vector2(10, 22), "🌌 아원자 다크매터 중력편향 엔진", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(0.5, 0.3, 0.95))
+		draw_string(ThemeDB.fallback_font, dm_panel_rect.position + Vector2(10, 42), "🌌 다크매터 입자 집진 밀도: %.4f g/cm³" % dm_info["density_gcm3"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color.WHITE)
+		draw_string(ThemeDB.fallback_font, dm_panel_rect.position + Vector2(10, 60), "🔮 공간 미세 중력 편향 각도: %.4f°" % dm_info["deflection_deg"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.5, 0.3, 0.95))
+		draw_string(ThemeDB.fallback_font, dm_panel_rect.position + Vector2(10, 78), "🌌 중력 편향 엔진 상태: %s" % dm_info["status"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.2, 0.95, 0.5))
+		draw_string(ThemeDB.fallback_font, dm_panel_rect.position + Vector2(10, 96), "💰 신체 피로 무중력 제로 부유 보너스: +%d%%" % int(dm_info["levitation_bonus"]), HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(1.0, 0.8, 0.2))
+
+	# Render Autonomous Bio-Dynamic Sub-Molecular Peptide Neuro-Stimulator HUD Panel if ON
+	if GameState.is_peptide_stimulator_hud_open:
+		var pep_info = GameState.calculate_peptide_stimulator_metrics()
+		var pep_panel_rect = Rect2(hud_panel_x - 40.0, 60, 240, 130)
+		draw_rect(pep_panel_rect, Color(0.06, 0.08, 0.12, 0.95), true)
+		draw_rect(pep_panel_rect, Color(0.2, 0.95, 0.7), false, 2.0)
+		
+		draw_string(ThemeDB.fallback_font, pep_panel_rect.position + Vector2(10, 22), "🧬 바이오-다이내믹 펩타이드 신경자극기", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(0.2, 0.95, 0.7))
+		draw_string(ThemeDB.fallback_font, pep_panel_rect.position + Vector2(10, 42), "🧬 바이오 펩타이드 농도: %.4f PPM" % pep_info["peptide_ppm"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color.WHITE)
+		draw_string(ThemeDB.fallback_font, pep_panel_rect.position + Vector2(10, 60), "🔮 시냅스 신경 전달 펄스 속도: %.1f m/s" % pep_info["speed_ms"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.2, 0.95, 0.7))
+		draw_string(ThemeDB.fallback_font, pep_panel_rect.position + Vector2(10, 78), "🧬 신경 자극기 상태: %s" % pep_info["status"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.2, 0.95, 0.5))
+		draw_string(ThemeDB.fallback_font, pep_panel_rect.position + Vector2(10, 96), "💰 인지 체력 & 집중 지속 지구력: +%d%%" % int(pep_info["endurance_bonus"]), HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(1.0, 0.8, 0.2))
+
+	# Render Autonomous Global Quantum-Mesh Franchise Landmark Satellite Network HUD Panel if ON
+	if GameState.is_satellite_mesh_hud_open:
+		var sat_info = GameState.calculate_satellite_mesh_metrics()
+		var sat_panel_rect = Rect2(hud_panel_x - 40.0, 60, 240, 130)
+		draw_rect(sat_panel_rect, Color(0.06, 0.08, 0.12, 0.95), true)
+		draw_rect(sat_panel_rect, Color(0.3, 0.7, 0.95), false, 2.0)
+		
+		draw_string(ThemeDB.fallback_font, sat_panel_rect.position + Vector2(10, 22), "🛰️ 글로벌 퀀텀-메쉬 위성 네트워크", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(0.3, 0.7, 0.95))
+		draw_string(ThemeDB.fallback_font, sat_panel_rect.position + Vector2(10, 42), "🛰️ 궤도 중계 퀀텀 대역폭: %.1f Tbps" % sat_info["bandwidth_tbps"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color.WHITE)
+		draw_string(ThemeDB.fallback_font, sat_panel_rect.position + Vector2(10, 60), "🔮 전 지구 랜드마크 레이턴시: %.4f ms" % sat_info["latency_ms"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.3, 0.7, 0.95))
+		draw_string(ThemeDB.fallback_font, sat_panel_rect.position + Vector2(10, 78), "🛰️ 위성 네트워크 상태: %s" % sat_info["status"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.2, 0.95, 0.5))
+		draw_string(ThemeDB.fallback_font, sat_panel_rect.position + Vector2(10, 96), "💰 글로벌 로열티 재정 수익율: +%d%%" % int(sat_info["royalty_bonus"]), HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(1.0, 0.8, 0.2))
+
+	# Render Autonomous Cryogenic Quantum-Infused Nitrogen Roast Energy Synthesizer HUD Panel if ON
+	if GameState.is_cryo_roaster_hud_open:
+		var cryo_info = GameState.calculate_cryo_roaster_metrics()
+		var cryo_panel_rect = Rect2(hud_panel_x - 40.0, 60, 240, 130)
+		draw_rect(cryo_panel_rect, Color(0.06, 0.08, 0.12, 0.95), true)
+		draw_rect(cryo_panel_rect, Color(0.4, 0.85, 1.0), false, 2.0)
+		
+		draw_string(ThemeDB.fallback_font, cryo_panel_rect.position + Vector2(10, 22), "❄️ 극저온 퀀텀 액체질소 영하로스팅", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(0.4, 0.85, 1.0))
+		draw_string(ThemeDB.fallback_font, cryo_panel_rect.position + Vector2(10, 42), "❄️ 영하 로스팅 추출 온도: %.1f °C" % cryo_info["temp_celsius"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color.WHITE)
+		draw_string(ThemeDB.fallback_font, cryo_panel_rect.position + Vector2(10, 60), "🔮 항산화 풍미 분자 보존율: %.4f%%" % cryo_info["retention_pct"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.4, 0.85, 1.0))
+		draw_string(ThemeDB.fallback_font, cryo_panel_rect.position + Vector2(10, 78), "❄️ 영하 로스팅 합성기 상태: %s" % cryo_info["status"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.2, 0.95, 0.5))
+		draw_string(ThemeDB.fallback_font, cryo_panel_rect.position + Vector2(10, 96), "💰 프리미엄 음료 만족 재방문율: +%d%%" % int(cryo_info["satisfaction_bonus"]), HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(1.0, 0.8, 0.2))
+
+	# Render Autonomous Bio-Robotic Kinetic Exoskeleton Posture Corrector HUD Panel if ON
+	if GameState.is_exoskeleton_corrector_hud_open:
+		var exo_corr_info = GameState.calculate_exoskeleton_corrector_metrics()
+		var exo_corr_panel_rect = Rect2(hud_panel_x - 40.0, 60, 240, 130)
+		draw_rect(exo_corr_panel_rect, Color(0.06, 0.08, 0.12, 0.95), true)
+		draw_rect(exo_corr_panel_rect, Color(0.95, 0.6, 0.2), false, 2.0)
+		
+		draw_string(ThemeDB.fallback_font, exo_corr_panel_rect.position + Vector2(10, 22), "🦾 생체역학 외골격 체형교정기", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(0.95, 0.6, 0.2))
+		draw_string(ThemeDB.fallback_font, exo_corr_panel_rect.position + Vector2(10, 42), "🦾 척추 배열 자율 정밀도: %.4f%%" % exo_corr_info["alignment_pct"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color.WHITE)
+		draw_string(ThemeDB.fallback_font, exo_corr_panel_rect.position + Vector2(10, 60), "🔮 미세진동 근육 피로 감쇄율: %.1f%%" % exo_corr_info["fatigue_red_pct"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.95, 0.6, 0.2))
+		draw_string(ThemeDB.fallback_font, exo_corr_panel_rect.position + Vector2(10, 78), "🦾 체형 교정기 상태: %s" % exo_corr_info["status"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.2, 0.95, 0.5))
+		draw_string(ThemeDB.fallback_font, exo_corr_panel_rect.position + Vector2(10, 96), "💰 마라톤 몰입 학업 집중 보너스: +%d%%" % int(exo_corr_info["focus_bonus"]), HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(1.0, 0.8, 0.2))
+
 	# Render Quantum Entanglement Antimatter Energy HUD Panel if ON
 	if GameState.is_antimatter_hud_open:
 		var ant_info = GameState.calculate_antimatter_energy_metrics()
