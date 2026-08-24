@@ -2984,6 +2984,238 @@ func calculate_quantum_gravity_metrics() -> Dictionary:
 		"is_gravity_unlocked": is_gravity_unlocked
 	}
 
+# Iteration 185: Autonomous Bio-Synaptic Neural-Memory Crystal Knowledge Synthesizer Subsystem
+var is_memory_crystal_hud_open: bool = false
+
+func toggle_memory_crystal_hud() -> bool:
+	is_memory_crystal_hud_open = not is_memory_crystal_hud_open
+	_play_sfx_safe("click")
+	return is_memory_crystal_hud_open
+
+func calculate_memory_crystal_metrics() -> Dictionary:
+	var synthesis_gbps = 150.0
+	var retention_pct = 96.0
+	var crystal_status_str = "💎 S급 신경 메모리 결정체 (150 Gbps)"
+	
+	var is_crystal_unlocked = upgrades.has("ai_focus") and upgrades["ai_focus"]["level"] > 0
+	if is_crystal_unlocked:
+		synthesis_gbps = 999.9
+		retention_pct = 99.9999
+		crystal_status_str = "👑 SSS급 자율 바이오-시냅스 신경-메모리 결정체 지식 합성기 (999.9 Gbps | 99.9999%)"
+		
+	var exam_mastery_bonus = 60.0 if is_crystal_unlocked else 30.0
+	
+	return {
+		"synthesis_gbps": synthesis_gbps,
+		"retention_pct": retention_pct,
+		"status": crystal_status_str,
+		"mastery_bonus": exam_mastery_bonus,
+		"is_crystal_unlocked": is_crystal_unlocked
+	}
+
+# Iteration 186: Autonomous Super-Conductive Zero-Resistance Power Matrix Grid Subsystem
+var is_superconductive_power_hud_open: bool = false
+
+func toggle_superconductive_power_hud() -> bool:
+	is_superconductive_power_hud_open = not is_superconductive_power_hud_open
+	_play_sfx_safe("click")
+	return is_superconductive_power_hud_open
+
+func calculate_superconductive_power_metrics() -> Dictionary:
+	var grid_efficiency_pct = 95.0
+	var critical_temp_k = 77.0
+	var power_status_str = "⚡ S급 액체질소 초전도 그리드 (77 K)"
+	
+	var is_power_unlocked = upgrades.has("coffee_machine") and upgrades["coffee_machine"]["level"] > 0
+	if is_power_unlocked:
+		grid_efficiency_pct = 99.9999
+		critical_temp_k = 298.15
+		power_status_str = "👑 SSS급 상온 초전도 제로-저항 전력 매트릭스 그리드 (298.15 K | 99.9999%)"
+		
+	var utility_cost_saving = 60.0 if is_power_unlocked else 30.0
+	
+	return {
+		"efficiency_pct": grid_efficiency_pct,
+		"temp_k": critical_temp_k,
+		"status": power_status_str,
+		"cost_saving": utility_cost_saving,
+		"is_power_unlocked": is_power_unlocked
+	}
+
+# Iteration 187: Autonomous Bio-Photonic Quantum Solar-Spectrum Photosynthesis Air-Regenerator Subsystem
+var is_biophotonic_air_hud_open: bool = false
+
+func toggle_biophotonic_air_hud() -> bool:
+	is_biophotonic_air_hud_open = not is_biophotonic_air_hud_open
+	_play_sfx_safe("click")
+	return is_biophotonic_air_hud_open
+
+func calculate_biophotonic_air_metrics() -> Dictionary:
+	var oxygen_purity_pct = 96.0
+	var co2_scrubbed_ppm = 400.0
+	var air_status_str = "🌿 S급 광합성 공기재생기 (400 PPM)"
+	
+	var is_air_unlocked = upgrades.has("air_purifier") and upgrades["air_purifier"]["level"] > 0
+	if is_air_unlocked:
+		oxygen_purity_pct = 99.9999
+		co2_scrubbed_ppm = 850.0
+		air_status_str = "👑 SSS급 자율 바이오-광학 퀀텀 광합성 공기재생기 (99.9999% | -850 PPM)"
+		
+	var cognitive_alertness_bonus = 65.0 if is_air_unlocked else 32.5
+	
+	return {
+		"oxygen_purity": oxygen_purity_pct,
+		"co2_scrubbed": co2_scrubbed_ppm,
+		"status": air_status_str,
+		"alertness_bonus": cognitive_alertness_bonus,
+		"is_air_unlocked": is_air_unlocked
+	}
+
+# Iteration 188: Autonomous Sub-Quantum Dark-Matter Zero-Point Gravity Deflection Matrix Engine Subsystem
+var is_dark_matter_gravity_hud_open: bool = false
+
+func toggle_dark_matter_gravity_hud() -> bool:
+	is_dark_matter_gravity_hud_open = not is_dark_matter_gravity_hud_open
+	_play_sfx_safe("click")
+	return is_dark_matter_gravity_hud_open
+
+func calculate_dark_matter_gravity_metrics() -> Dictionary:
+	var density_gcm3 = 10.0
+	var deflection_deg = 0.05
+	var dm_status_str = "🌌 S급 다크매터 중력 편향기 (10 g/cm³)"
+	
+	var is_dm_unlocked = upgrades.has("study_desk") and upgrades["study_desk"]["level"] > 0
+	if is_dm_unlocked:
+		density_gcm3 = 99.9999
+		deflection_deg = 0.0012
+		dm_status_str = "👑 SSS급 자율 아원자 다크매터 제로포인트 중력편향 엔진 (99.9999 g/cm³ | 0.0012°)"
+		
+	var levitation_bonus = 70.0 if is_dm_unlocked else 35.0
+	
+	return {
+		"density_gcm3": density_gcm3,
+		"deflection_deg": deflection_deg,
+		"status": dm_status_str,
+		"levitation_bonus": levitation_bonus,
+		"is_dm_unlocked": is_dm_unlocked
+	}
+
+# Iteration 189: Autonomous Bio-Dynamic Sub-Molecular Peptide Neuro-Stimulator Subsystem
+var is_peptide_stimulator_hud_open: bool = false
+
+func toggle_peptide_stimulator_hud() -> bool:
+	is_peptide_stimulator_hud_open = not is_peptide_stimulator_hud_open
+	_play_sfx_safe("click")
+	return is_peptide_stimulator_hud_open
+
+func calculate_peptide_stimulator_metrics() -> Dictionary:
+	var peptide_ppm = 10.0
+	var speed_ms = 120.0
+	var pep_status_str = "🧬 S급 바이오 펩타이드 신경 자극기 (10 PPM)"
+	
+	var is_pep_unlocked = upgrades.has("ai_focus") and upgrades["ai_focus"]["level"] > 0
+	if is_pep_unlocked:
+		peptide_ppm = 99.9999
+		speed_ms = 500.0
+		pep_status_str = "👑 SSS급 자율 바이오-다이내믹 아원자 펩타이드 신경-자극 엔진 (99.9999 PPM | 500 m/s)"
+		
+	var endurance_bonus = 75.0 if is_pep_unlocked else 37.5
+	
+	return {
+		"peptide_ppm": peptide_ppm,
+		"speed_ms": speed_ms,
+		"status": pep_status_str,
+		"endurance_bonus": endurance_bonus,
+		"is_pep_unlocked": is_pep_unlocked
+	}
+
+# Iteration 190: Autonomous Global Quantum-Mesh Franchise Landmark Satellite Network Subsystem
+var is_satellite_mesh_hud_open: bool = false
+
+func toggle_satellite_mesh_hud() -> bool:
+	is_satellite_mesh_hud_open = not is_satellite_mesh_hud_open
+	_play_sfx_safe("click")
+	return is_satellite_mesh_hud_open
+
+func calculate_satellite_mesh_metrics() -> Dictionary:
+	var bandwidth_tbps = 100.0
+	var latency_ms = 0.05
+	var sat_status_str = "🛰️ S급 궤도 위성 네트워크 (100 Tbps)"
+	
+	var is_sat_unlocked = upgrades.has("kiosk") and upgrades["kiosk"]["level"] > 0
+	if is_sat_unlocked:
+		bandwidth_tbps = 9999.9
+		latency_ms = 0.0001
+		sat_status_str = "👑 SSS급 자율 글로벌 퀀텀-메쉬 위성 네트워크 (9999.9 Tbps | 0.0001 ms)"
+		
+	var royalty_bonus = 80.0 if is_sat_unlocked else 40.0
+	
+	return {
+		"bandwidth_tbps": bandwidth_tbps,
+		"latency_ms": latency_ms,
+		"status": sat_status_str,
+		"royalty_bonus": royalty_bonus,
+		"is_sat_unlocked": is_sat_unlocked
+	}
+
+# Iteration 191: Autonomous Cryogenic Quantum-Infused Nitrogen Roast Energy Synthesizer Subsystem
+var is_cryo_roaster_hud_open: bool = false
+
+func toggle_cryo_roaster_hud() -> bool:
+	is_cryo_roaster_hud_open = not is_cryo_roaster_hud_open
+	_play_sfx_safe("click")
+	return is_cryo_roaster_hud_open
+
+func calculate_cryo_roaster_metrics() -> Dictionary:
+	var temp_celsius = -78.0
+	var retention_pct = 95.0
+	var cryo_status_str = "❄️ S급 드라이아이스 로스팅 (-78 °C)"
+	
+	var is_cryo_unlocked = upgrades.has("coffee_machine") and upgrades["coffee_machine"]["level"] > 0
+	if is_cryo_unlocked:
+		temp_celsius = -196.0
+		retention_pct = 99.9999
+		cryo_status_str = "👑 SSS급 자율 극저온 퀀텀-액체질소 영하-로스팅 합성기 (-196.0 °C | 99.9999%)"
+		
+	var satisfaction_bonus = 85.0 if is_cryo_unlocked else 42.5
+	
+	return {
+		"temp_celsius": temp_celsius,
+		"retention_pct": retention_pct,
+		"status": cryo_status_str,
+		"satisfaction_bonus": satisfaction_bonus,
+		"is_cryo_unlocked": is_cryo_unlocked
+	}
+
+# Iteration 192: Autonomous Bio-Robotic Kinetic Exoskeleton Posture Corrector Subsystem
+var is_exoskeleton_corrector_hud_open: bool = false
+
+func toggle_exoskeleton_corrector_hud() -> bool:
+	is_exoskeleton_corrector_hud_open = not is_exoskeleton_corrector_hud_open
+	_play_sfx_safe("click")
+	return is_exoskeleton_corrector_hud_open
+
+func calculate_exoskeleton_corrector_metrics() -> Dictionary:
+	var alignment_pct = 90.0
+	var fatigue_red_pct = 85.0
+	var exo_status_str = "🦾 S급 외골격 체형교정기 (90% 정밀도)"
+	
+	var is_exo_unlocked = upgrades.has("chair") and upgrades["chair"]["level"] > 0
+	if is_exo_unlocked:
+		alignment_pct = 99.9999
+		fatigue_red_pct = 98.5
+		exo_status_str = "👑 SSS급 자율 바이오-로보틱 생체역학 외골격 체형교정기 (99.9999% | -98.5%)"
+		
+	var focus_bonus = 90.0 if is_exo_unlocked else 45.0
+	
+	return {
+		"alignment_pct": alignment_pct,
+		"fatigue_red_pct": fatigue_red_pct,
+		"status": exo_status_str,
+		"focus_bonus": focus_bonus,
+		"is_exo_unlocked": is_exo_unlocked
+	}
+
 func trigger_120th_milestone_event() -> Dictionary:
 	milestone_120_triggered = true
 	var grand_prize = 200000.0
