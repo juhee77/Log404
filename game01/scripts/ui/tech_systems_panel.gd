@@ -21,7 +21,9 @@ var tech_modules = [
 			{"id": "zero_point", "title": "⚡ 하위 공간 제로포인트 에너지 캡시터", "toggle_func": "toggle_zero_point_hud", "metrics_func": "calculate_zero_point_energy_metrics", "open_var": "is_zero_point_hud_open"},
 			{"id": "nanite_sanitation", "title": "🤖 분자 나노봇 자율 위생 소독 엔진", "toggle_func": "toggle_nanite_sanitation_hud", "metrics_func": "calculate_nanite_sanitation_metrics", "open_var": "is_nanite_sanitation_hud_open"},
 			{"id": "superconductive_power", "title": "⚡ 초전도 제로-저항 전력 그리드", "toggle_func": "toggle_superconductive_power_hud", "metrics_func": "calculate_superconductive_power_metrics", "open_var": "is_superconductive_power_hud_open"},
-			{"id": "biophotonic_air", "title": "🌿 바이오-광학 퀀텀 태양광 광합성 공기재생기", "toggle_func": "toggle_biophotonic_air_hud", "metrics_func": "calculate_biophotonic_air_metrics", "open_var": "is_biophotonic_air_hud_open"}
+			{"id": "biophotonic_air", "title": "🌿 바이오-광학 퀀텀 태양광 광합성 공기재생기", "toggle_func": "toggle_biophotonic_air_hud", "metrics_func": "calculate_biophotonic_air_metrics", "open_var": "is_biophotonic_air_hud_open"},
+			{"id": "photonic_power", "title": "⚡ 자율 초전도 포토닉 레이저 무선 전력 전송 네트워크", "toggle_func": "toggle_photonic_power_hud", "metrics_func": "calculate_photonic_power_metrics", "open_var": "is_photonic_power_hud_open"},
+			{"id": "dark_energy_converter", "title": "🌌 자율 아원자 다크매터 암흑에너지 차원 전환기", "toggle_func": "toggle_dark_energy_converter_hud", "metrics_func": "calculate_dark_energy_converter_metrics", "open_var": "is_dark_energy_converter_hud_open"}
 		]
 	},
 	{
@@ -35,7 +37,9 @@ var tech_modules = [
 			{"id": "chrono_res", "title": "⌛ 크로노 필드 양자 공명 변환기", "toggle_func": "toggle_chrono_resonance_hud", "metrics_func": "calculate_chrono_resonance_metrics", "open_var": "is_chrono_resonance_hud_open"},
 			{"id": "acoustic_damping", "title": "🔇 홀로그램 공간-음향 능동 공명 감쇠기", "toggle_func": "toggle_acoustic_damping_hud", "metrics_func": "calculate_acoustic_damping_metrics", "open_var": "is_acoustic_damping_hud_open"},
 			{"id": "quantum_gravity", "title": "🌌 양자 얽힘 대기권-하위 중력장 안정화 엔진", "toggle_func": "toggle_quantum_gravity_hud", "metrics_func": "calculate_quantum_gravity_metrics", "open_var": "is_quantum_gravity_hud_open"},
-			{"id": "dark_matter_gravity", "title": "🌌 아원자 다크매터 제로포인트 중력편향 엔진", "toggle_func": "toggle_dark_matter_gravity_hud", "metrics_func": "calculate_dark_matter_gravity_metrics", "open_var": "is_dark_matter_gravity_hud_open"}
+			{"id": "dark_matter_gravity", "title": "🌌 아원자 다크매터 제로포인트 중력편향 엔진", "toggle_func": "toggle_dark_matter_gravity_hud", "metrics_func": "calculate_dark_matter_gravity_metrics", "open_var": "is_dark_matter_gravity_hud_open"},
+			{"id": "chrono_dilation", "title": "⏳ 자율 아원자 퀀텀-시간지연 크로노 필드 안정기", "toggle_func": "toggle_chrono_dilation_hud", "metrics_func": "calculate_chrono_dilation_metrics", "open_var": "is_chrono_dilation_hud_open"},
+			{"id": "singularity_power", "title": "🌌 자율 초전도 퀀텀 싱귤래리티 사건의지평선 중력우물 발전소", "toggle_func": "toggle_singularity_power_hud", "metrics_func": "calculate_singularity_power_metrics", "open_var": "is_singularity_power_hud_open"}
 		]
 	},
 	{
@@ -49,7 +53,9 @@ var tech_modules = [
 			{"id": "neural_cog", "title": "🧠 양자 AI 신경-시냅스 인지 가속기", "toggle_func": "toggle_neural_cognitive_hud", "metrics_func": "calculate_neural_cognitive_metrics", "open_var": "is_neural_cognitive_hud_open"},
 			{"id": "bio_rest", "title": "💤 자율 서카디안 신경휴식 캡슐", "toggle_func": "toggle_bio_rest_hud", "metrics_func": "calculate_bio_rest_metrics", "open_var": "is_bio_rest_hud_open"},
 			{"id": "memory_crystal", "title": "💎 신경-메모리 결정체 지식 합성기", "toggle_func": "toggle_memory_crystal_hud", "metrics_func": "calculate_memory_crystal_metrics", "open_var": "is_memory_crystal_hud_open"},
-			{"id": "peptide_stimulator", "title": "🧬 바이오-다이내믹 아원자 펩타이드 신경-자극기", "toggle_func": "toggle_peptide_stimulator_hud", "metrics_func": "calculate_peptide_stimulator_metrics", "open_var": "is_peptide_stimulator_hud_open"}
+			{"id": "peptide_stimulator", "title": "🧬 바이오-다이내믹 아원자 펩타이드 신경-자극기", "toggle_func": "toggle_peptide_stimulator_hud", "metrics_func": "calculate_peptide_stimulator_metrics", "open_var": "is_peptide_stimulator_hud_open"},
+			{"id": "neural_crystallizer", "title": "💎 자율 바이오-시냅스 신경-패턴 인지 기억 결정체화 엔진", "toggle_func": "toggle_neural_crystallizer_hud", "metrics_func": "calculate_neural_crystallizer_metrics", "open_var": "is_neural_crystallizer_hud_open"},
+			{"id": "transmutation_reactor", "title": "⚛️ 자율 바이오-포토닉 신경-공명 기억-결정체 변무테이션 리액터", "toggle_func": "toggle_transmutation_reactor_hud", "metrics_func": "calculate_transmutation_reactor_metrics", "open_var": "is_transmutation_reactor_hud_open"}
 		]
 	},
 	{
@@ -62,7 +68,11 @@ var tech_modules = [
 			{"id": "water_gen", "title": "💧 대기 수자원 생성기", "toggle_func": "toggle_water_gen_hud", "metrics_func": "calculate_water_generator_metrics", "open_var": "is_water_gen_hud_open"},
 			{"id": "satellite_mesh", "title": "🛰️ 글로벌 퀀텀-메쉬 위성 네트워크", "toggle_func": "toggle_satellite_mesh_hud", "metrics_func": "calculate_satellite_mesh_metrics", "open_var": "is_satellite_mesh_hud_open"},
 			{"id": "cryo_roaster", "title": "❄️ 극저온 퀀텀-액체질소 영하-로스팅 합성기", "toggle_func": "toggle_cryo_roaster_hud", "metrics_func": "calculate_cryo_roaster_metrics", "open_var": "is_cryo_roaster_hud_open"},
-			{"id": "exoskeleton_corrector", "title": "🦾 자율 바이오-로보틱 생체역학 외골격 체형교정기", "toggle_func": "toggle_exoskeleton_corrector_hud", "metrics_func": "calculate_exoskeleton_corrector_metrics", "open_var": "is_exoskeleton_corrector_hud_open"}
+			{"id": "exoskeleton_corrector", "title": "🦾 자율 바이오-로보틱 생체역학 외골격 체형교정기", "toggle_func": "toggle_exoskeleton_corrector_hud", "metrics_func": "calculate_exoskeleton_corrector_metrics", "open_var": "is_exoskeleton_corrector_hud_open"},
+			{"id": "atmospheric_water", "title": "💧 자율 대기 수자원 응축 순수 생성기", "toggle_func": "toggle_nano_atmospheric_water_hud", "metrics_func": "calculate_nano_atmospheric_water_metrics", "open_var": "is_nano_atmospheric_water_hud_open"},
+			{"id": "aeroponic_botanical", "title": "🌿 자율 에어로포닉 수직 식물원 영양-안개 분사기", "toggle_func": "toggle_aeroponic_botanical_hud", "metrics_func": "calculate_aeroponic_botanical_metrics", "open_var": "is_aeroponic_botanical_hud_open"},
+			{"id": "maglev_floor", "title": "🧲 자율 초전도 자기장 양자 부유 바닥 매트릭스", "toggle_func": "toggle_maglev_floor_hud", "metrics_func": "calculate_maglev_floor_metrics", "open_var": "is_maglev_floor_hud_open"},
+			{"id": "franchise_ledger", "title": "🌐 자율 글로벌 퀀텀 얽힘 프랜차이즈 가맹 원장 노드 리레이", "toggle_func": "toggle_franchise_ledger_hud", "metrics_func": "calculate_franchise_ledger_metrics", "open_var": "is_franchise_ledger_hud_open"}
 		]
 	}
 ]

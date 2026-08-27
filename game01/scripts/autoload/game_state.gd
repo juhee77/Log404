@@ -3216,6 +3216,371 @@ func calculate_exoskeleton_corrector_metrics() -> Dictionary:
 		"is_exo_unlocked": is_exo_unlocked
 	}
 
+# Iteration 193: Autonomous Atmospheric Vapor-Harvesting Pure Water Generator Subsystem
+# Iteration 193: Autonomous Atmospheric Vapor-Harvesting Pure Water Generator Subsystem
+var is_nano_atmospheric_water_hud_open: bool = false
+
+func toggle_nano_atmospheric_water_hud() -> bool:
+	is_nano_atmospheric_water_hud_open = not is_nano_atmospheric_water_hud_open
+	_play_sfx_safe("click")
+	return is_nano_atmospheric_water_hud_open
+
+func calculate_nano_atmospheric_water_metrics() -> Dictionary:
+	var extraction_rate_l_day = 200.0
+	var water_purity_pct = 99.0
+	var water_status_str = "💧 S급 대기 수자원 생성기 (200 L/일)"
+	
+	var is_water_unlocked = upgrades.has("coffee_machine") and upgrades["coffee_machine"]["level"] > 0
+	if is_water_unlocked:
+		extraction_rate_l_day = 999.9
+		water_purity_pct = 99.9999
+		water_status_str = "👑 SSS급 자율 대기 수자원 응축 순수 생성기 (999.9 L/일 | 99.9999%)"
+		
+	var utility_saving_bonus = 92.0 if is_water_unlocked else 46.0
+	
+	return {
+		"extraction_rate_l_day": extraction_rate_l_day,
+		"water_purity_pct": water_purity_pct,
+		"status": water_status_str,
+		"utility_saving_bonus": utility_saving_bonus,
+		"is_water_unlocked": is_water_unlocked
+	}
+
+# Iteration 194: Autonomous Aeroponic Vertical Botanical Nutrient-Mist Injector Subsystem
+var is_aeroponic_botanical_hud_open: bool = false
+
+func toggle_aeroponic_botanical_hud() -> bool:
+	is_aeroponic_botanical_hud_open = not is_aeroponic_botanical_hud_open
+	_play_sfx_safe("click")
+	return is_aeroponic_botanical_hud_open
+
+func calculate_aeroponic_botanical_metrics() -> Dictionary:
+	var mist_micron = 15.0
+	var oxygen_boost_pct = 92.0
+	var aero_status_str = "🌿 S급 초음파 미세안개 영하 분사기 (15 µm)"
+	
+	var is_aero_unlocked = upgrades.has("interior") and upgrades["interior"]["level"] > 0
+	if is_aero_unlocked:
+		mist_micron = 5.0
+		oxygen_boost_pct = 99.9999
+		aero_status_str = "👑 SSS급 자율 에어로포닉 수직 식물원 영양-안개 분사 엔진 (5.0 µm | 99.9999%)"
+		
+	var restoration_bonus = 95.0 if is_aero_unlocked else 47.5
+	
+	return {
+		"mist_micron": mist_micron,
+		"oxygen_boost_pct": oxygen_boost_pct,
+		"status": aero_status_str,
+		"restoration_bonus": restoration_bonus,
+		"is_aero_unlocked": is_aero_unlocked
+	}
+
+# Iteration 195: Autonomous Super-Conductive Magnetic Quantum Levitation Floor Matrix Subsystem
+var is_maglev_floor_hud_open: bool = false
+
+func toggle_maglev_floor_hud() -> bool:
+	is_maglev_floor_hud_open = not is_maglev_floor_hud_open
+	_play_sfx_safe("click")
+	return is_maglev_floor_hud_open
+
+func calculate_maglev_floor_metrics() -> Dictionary:
+	var flux_tesla = 2.5
+	var stability_pct = 95.0
+	var maglev_status_str = "🧲 S급 자기부유 바닥 (2.5 Tesla)"
+	
+	var is_maglev_unlocked = upgrades.has("interior") and upgrades["interior"]["level"] > 0
+	if is_maglev_unlocked:
+		flux_tesla = 15.0
+		stability_pct = 99.9999
+		maglev_status_str = "👑 SSS급 자율 초전도 자기장 양자 부유 바닥 매트릭스 (15.0 T | 99.9999%)"
+		
+	var isolation_bonus = 98.0 if is_maglev_unlocked else 49.0
+	
+	return {
+		"flux_tesla": flux_tesla,
+		"stability_pct": stability_pct,
+		"status": maglev_status_str,
+		"isolation_bonus": isolation_bonus,
+		"is_maglev_unlocked": is_maglev_unlocked
+	}
+
+# Iteration 196: Autonomous Quantum-Entangled Sub-Space Temporal Chrono-Dilation Field Stabilizer Subsystem
+var is_chrono_dilation_hud_open: bool = false
+
+func toggle_chrono_dilation_hud() -> bool:
+	is_chrono_dilation_hud_open = not is_chrono_dilation_hud_open
+	_play_sfx_safe("click")
+	return is_chrono_dilation_hud_open
+
+func calculate_chrono_dilation_metrics() -> Dictionary:
+	var time_dilation_factor = 1.05
+	var chronon_stability_pct = 95.0
+	var chrono_status_str = "⏳ S급 크로노 시간지연 필드 (1.05x)"
+	
+	var is_chrono_unlocked = upgrades.has("study_desk") and upgrades["study_desk"]["level"] > 0
+	if is_chrono_unlocked:
+		time_dilation_factor = 1.25
+		chronon_stability_pct = 99.9999
+		chrono_status_str = "👑 SSS급 자율 아원자 퀀텀-시간지연 크로노 필드 안정기 (1.25x | 99.9999%)"
+		
+	var efficiency_bonus = 100.0 if is_chrono_unlocked else 50.0
+	
+	return {
+		"time_dilation_factor": time_dilation_factor,
+		"chronon_stability_pct": chronon_stability_pct,
+		"status": chrono_status_str,
+		"efficiency_bonus": efficiency_bonus,
+		"is_chrono_unlocked": is_chrono_unlocked
+	}
+
+# Iteration 197: Autonomous Bio-Synaptic Neural-Pattern Cognition Memory Crystallizer Subsystem
+var is_neural_crystallizer_hud_open: bool = false
+
+func toggle_neural_crystallizer_hud() -> bool:
+	is_neural_crystallizer_hud_open = not is_neural_crystallizer_hud_open
+	_play_sfx_safe("click")
+	return is_neural_crystallizer_hud_open
+
+func calculate_neural_crystallizer_metrics() -> Dictionary:
+	var speed_mbps = 500.0
+	var recall_pct = 95.0
+	var crys_status_str = "💎 S급 신경 패턴 결정체화기 (500 Mbps)"
+	
+	var is_crys_unlocked = upgrades.has("ai_focus") and upgrades["ai_focus"]["level"] > 0
+	if is_crys_unlocked:
+		speed_mbps = 9999.9
+		recall_pct = 99.9999
+		crys_status_str = "👑 SSS급 자율 바이오-시냅스 신경-패턴 인지 기억 결정체화 엔진 (9999.9 Mbps | 99.9999%)"
+		
+	var mastery_bonus = 105.0 if is_crys_unlocked else 52.5
+	
+	return {
+		"speed_mbps": speed_mbps,
+		"recall_pct": recall_pct,
+		"status": crys_status_str,
+		"mastery_bonus": mastery_bonus,
+		"is_crys_unlocked": is_crys_unlocked
+	}
+
+# Iteration 198: Autonomous Super-Conductive Photonic Laser Wireless Power Transmission Network Subsystem
+var is_photonic_power_hud_open: bool = false
+
+func toggle_photonic_power_hud() -> bool:
+	is_photonic_power_hud_open = not is_photonic_power_hud_open
+	_play_sfx_safe("click")
+	return is_photonic_power_hud_open
+
+func calculate_photonic_power_metrics() -> Dictionary:
+	var laser_kw = 5.0
+	var efficiency_pct = 95.0
+	var photonic_status_str = "⚡ S급 포토닉 무선전력 전송기 (5.0 kW)"
+	
+	var is_photonic_unlocked = upgrades.has("solar_ess") and upgrades["solar_ess"]["level"] > 0
+	if is_photonic_unlocked:
+		laser_kw = 50.0
+		efficiency_pct = 99.9999
+		photonic_status_str = "👑 SSS급 자율 초전도 포토닉 레이저 무선 전력 전송 네트워크 (50.0 kW | 99.9999%)"
+		
+	var grid_saving_bonus = 110.0 if is_photonic_unlocked else 55.0
+	
+	return {
+		"laser_kw": laser_kw,
+		"efficiency_pct": efficiency_pct,
+		"status": photonic_status_str,
+		"grid_saving_bonus": grid_saving_bonus,
+		"is_photonic_unlocked": is_photonic_unlocked
+	}
+
+# Iteration 199: Autonomous Sub-Quantum Dark-Matter Dark-Energy Dimensional Energy Converter Subsystem
+var is_dark_energy_converter_hud_open: bool = false
+
+func toggle_dark_energy_converter_hud() -> bool:
+	is_dark_energy_converter_hud_open = not is_dark_energy_converter_hud_open
+	_play_sfx_safe("click")
+	return is_dark_energy_converter_hud_open
+
+func calculate_dark_energy_converter_metrics() -> Dictionary:
+	var density_joule = 1.0e15
+	var expansion_pct = 95.0
+	var de_status_str = "🌌 S급 암흑에너지 차원 전환기 (1.0e15 J/m³)"
+	
+	var is_de_unlocked = upgrades.has("solar_ess") and upgrades["solar_ess"]["level"] > 0
+	if is_de_unlocked:
+		density_joule = 9.9999e18
+		expansion_pct = 99.9999
+		de_status_str = "👑 SSS급 자율 아원자 다크매터 암흑에너지 차원 전환기 (9.9999e18 J/m³ | 99.9999%)"
+		
+	var cosmic_energy_bonus = 115.0 if is_de_unlocked else 57.5
+	
+	return {
+		"density_joule": density_joule,
+		"expansion_pct": expansion_pct,
+		"status": de_status_str,
+		"cosmic_energy_bonus": cosmic_energy_bonus,
+		"is_de_unlocked": is_de_unlocked
+	}
+
+# Iteration 200: Autonomous Super-Conductive Quantum Singularity Event-Horizon Gravity-Well Power-Station Subsystem
+var is_singularity_power_hud_open: bool = false
+
+func toggle_singularity_power_hud() -> bool:
+	is_singularity_power_hud_open = not is_singularity_power_hud_open
+	_play_sfx_safe("click")
+	return is_singularity_power_hud_open
+
+func calculate_singularity_power_metrics() -> Dictionary:
+	var mass_kg = 1.0e20
+	var hawking_gw = 50.0
+	var sing_status_str = "🌌 S급 싱귤래리티 중력우물 발전소 (50.0 GW)"
+	
+	var is_sing_unlocked = upgrades.has("solar_ess") and upgrades["solar_ess"]["level"] > 0
+	if is_sing_unlocked:
+		mass_kg = 1.989e30
+		hawking_gw = 999.9
+		sing_status_str = "👑 SSS급 자율 초전도 퀀텀 싱귤래리티 사건의지평선 중력우물 발전소 (999.9 GW | 1.989e30 kg)"
+		
+	var infinite_power_bonus = 120.0 if is_sing_unlocked else 60.0
+	
+	return {
+		"mass_kg": mass_kg,
+		"hawking_gw": hawking_gw,
+		"status": sing_status_str,
+		"infinite_power_bonus": infinite_power_bonus,
+		"is_sing_unlocked": is_sing_unlocked
+	}
+
+# Iteration 201: Autonomous Bio-Photonic Neural-Resonance Memory-Crystal Transmutation Reactor Subsystem
+var is_transmutation_reactor_hud_open: bool = false
+
+func toggle_transmutation_reactor_hud() -> bool:
+	is_transmutation_reactor_hud_open = not is_transmutation_reactor_hud_open
+	_play_sfx_safe("click")
+	return is_transmutation_reactor_hud_open
+
+func calculate_transmutation_reactor_metrics() -> Dictionary:
+	var rate_gbps = 5.0
+	var purity_pct = 95.0
+	var trans_status_str = "⚛️ S급 신경-공명 기억-변무테이션 리액터 (5.0 Gbps)"
+	
+	var is_trans_unlocked = upgrades.has("ai_focus") and upgrades["ai_focus"]["level"] > 0
+	if is_trans_unlocked:
+		rate_gbps = 99.9999
+		purity_pct = 99.9999
+		trans_status_str = "👑 SSS급 자율 바이오-포토닉 신경-공명 기억-결정체 변무테이션 리액터 (99.9999 Gbps | 99.9999%)"
+		
+	var absorption_bonus = 125.0 if is_trans_unlocked else 62.5
+	
+	return {
+		"rate_gbps": rate_gbps,
+		"purity_pct": purity_pct,
+		"status": trans_status_str,
+		"absorption_bonus": absorption_bonus,
+		"is_trans_unlocked": is_trans_unlocked
+	}
+
+# Iteration 202: Autonomous Global Quantum-Entangled Franchise Franchise-Ledger Node Relay Subsystem
+var is_franchise_ledger_hud_open: bool = false
+
+func toggle_franchise_ledger_hud() -> bool:
+	is_franchise_ledger_hud_open = not is_franchise_ledger_hud_open
+	_play_sfx_safe("click")
+	return is_franchise_ledger_hud_open
+
+func calculate_franchise_ledger_metrics() -> Dictionary:
+	var sync_latency_ms = 0.01
+	var active_nodes = 100
+	var ledger_status_str = "🌐 S급 글로벌 프랜차이즈 원장 노드 (100 노드)"
+	
+	var is_ledger_unlocked = upgrades.has("kiosk") and upgrades["kiosk"]["level"] > 0
+	if is_ledger_unlocked:
+		sync_latency_ms = 0.0000001
+		active_nodes = 10000
+		ledger_status_str = "👑 SSS급 자율 글로벌 퀀텀 얽힘 프랜차이즈 가맹 원장 노드 리레이 (10000 노드 | 1e-7 ms)"
+		
+	var royalty_bonus = 130.0 if is_ledger_unlocked else 65.0
+	
+	return {
+		"sync_latency_ms": sync_latency_ms,
+		"active_nodes": active_nodes,
+		"status": ledger_status_str,
+		"royalty_bonus": royalty_bonus,
+		"is_ledger_unlocked": is_ledger_unlocked
+	}
+
+# Iteration 203: Dynamic 2.5D Atmospheric Weather & Window Lighting Shader System
+var current_weather_type: String = "rainy" # "sunny", "rainy", "snowy", "cloudy"
+var weather_cycle_timer: float = 0.0
+
+func cycle_weather() -> String:
+	var weathers = ["sunny", "rainy", "snowy", "cloudy"]
+	var idx = weathers.find(current_weather_type)
+	idx = (idx + 1) % weathers.size()
+	current_weather_type = weathers[idx]
+	return current_weather_type
+
+func get_weather_info() -> Dictionary:
+	var weather_name = "☀️ 맑음 (따스한 햇살)"
+	var coffee_craving_bonus = 10.0
+	var ambient_color = Color(1.0, 0.98, 0.9)
+	
+	match current_weather_type:
+		"rainy":
+			weather_name = "🌧️ 빗소리 레이니 데이 (아늑한 감성 분위기)"
+			coffee_craving_bonus = 25.0
+			ambient_color = Color(0.7, 0.75, 0.9)
+		"snowy":
+			weather_name = "❄️ 포근한 눈 내리는 날 (따뜻한 라떼 인기 뿜뿜)"
+			coffee_craving_bonus = 30.0
+			ambient_color = Color(0.85, 0.9, 1.0)
+		"cloudy":
+			weather_name = "☁️ 구름 많은 운치 있는 날 (집중하기 좋은 조명)"
+			coffee_craving_bonus = 15.0
+			ambient_color = Color(0.8, 0.82, 0.88)
+		_:
+			weather_name = "☀️ 맑음 (따스한 햇살)"
+			coffee_craving_bonus = 10.0
+			ambient_color = Color(1.0, 0.98, 0.9)
+			
+	return {
+		"weather_type": current_weather_type,
+		"weather_name": weather_name,
+		"coffee_craving_bonus": coffee_craving_bonus,
+		"ambient_color": ambient_color
+	}
+
+# Iteration 204: Interactive 2.5D Desk Placement & Magnetic Grid Snapping Visual Feedback
+var seat_custom_positions: Dictionary = {} # seat_idx -> Vector2
+var seat_orientations: Dictionary = {} # seat_idx -> int (0, 90, 180, 270 degrees)
+
+func get_nearest_grid_snap(raw_pos: Vector2) -> Vector2:
+	var tile_w = 110.0
+	var tile_h = 75.0
+	var start_x = 60.0
+	var start_y = 160.0
+	
+	var col = round((raw_pos.x - start_x) / tile_w)
+	var row = round((raw_pos.y - start_y) / tile_h)
+	
+	col = clamp(col, 0, 4)
+	row = clamp(row, 0, 3)
+	
+	var snapped_x = start_x + col * tile_w
+	var snapped_y = start_y + row * tile_h
+	return Vector2(snapped_x, snapped_y)
+
+func move_seat_position(seat_idx: int, target_pos: Vector2) -> Vector2:
+	var snapped = get_nearest_grid_snap(target_pos)
+	seat_custom_positions[seat_idx] = snapped
+	_play_sfx_safe("click")
+	return snapped
+
+func rotate_seat_placement(seat_idx: int) -> int:
+	var cur_rot = seat_orientations.get(seat_idx, 0)
+	var new_rot = (cur_rot + 90) % 360
+	seat_orientations[seat_idx] = new_rot
+	_play_sfx_safe("click")
+	return new_rot
+
 func trigger_120th_milestone_event() -> Dictionary:
 	milestone_120_triggered = true
 	var grand_prize = 200000.0
@@ -4749,6 +5114,8 @@ func buy_new_desk(type_key: String) -> bool:
 	return true
 
 func get_seat_position(index: int) -> Vector2:
+	if seat_custom_positions.has(index):
+		return seat_custom_positions[index]
 	var base_pos = get_base_seat_position(index)
 	if seat_custom_offsets.has(index):
 		return base_pos + seat_custom_offsets[index]
