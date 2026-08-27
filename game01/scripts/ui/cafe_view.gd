@@ -353,6 +353,13 @@ func draw_integrated_multi_room_layout(w: float, h: float) -> void:
 	draw_rect(r1_banner, Color(0.18, 0.14, 0.10, 0.95), true)
 	draw_string(ThemeDB.fallback_font, Vector2(52 + vo.x, 52 + vo.y), "📖 메인 집중 열공 방 (Focus Room)", HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color(0.96, 0.62, 0.07))
 
+	# Render 2.5D Atmospheric Weather Banner & Ambient Window Lighting
+	var weather_info = GameState.get_weather_info()
+	var w_banner = Rect2(320 + vo.x, 30 + vo.y, 380, 32)
+	draw_rect(w_banner, Color(0.10, 0.12, 0.18, 0.95), true)
+	draw_rect(w_banner, weather_info["ambient_color"], false, 1.5)
+	draw_string(ThemeDB.fallback_font, Vector2(330 + vo.x, 52 + vo.y), "%s (+%d%% 매출/몰입)" % [weather_info["weather_name"], int(weather_info["coffee_craving_bonus"])], HORIZONTAL_ALIGNMENT_LEFT, -1, 11, weather_info["ambient_color"])
+
 	# ----------------------------------------------------
 	# ROOM 2: ☕ 카페테리아 & 힐링 라운지 방 (Lounge & Coffee Bar)
 	# ----------------------------------------------------
@@ -443,6 +450,16 @@ func draw_integrated_multi_room_layout(w: float, h: float) -> void:
 	var start_x = 60.0
 	var start_y = 160.0
 	
+	# Draw 2.5D Magnetic Placement Grid Overlay when dragging a seat
+	if is_dragging and selected_drag_seat != -1:
+		var grid_tile_w = 110.0
+		var grid_tile_h = 75.0
+		for gc in range(5):
+			for gr in range(4):
+				var g_rect = Rect2(start_x + gc * grid_tile_w + vo.x, start_y + gr * grid_tile_h + vo.y, grid_tile_w - 5, grid_tile_h - 5)
+				draw_rect(g_rect, Color(0.2, 0.8, 1.0, 0.12), true)
+				draw_rect(g_rect, Color(0.2, 0.8, 1.0, 0.45), false, 1.0)
+
 	# Collect seat indices and sort by Y-position for proper 2.5D depth ordering (Front items rendered ON TOP of Back items)
 	var seat_indices = []
 	for idx in range(total_capacity):
@@ -633,6 +650,17 @@ func draw_integrated_multi_room_layout(w: float, h: float) -> void:
 			var bar_rect = Rect2(draw_pos.x - 40, draw_pos.y + 24, 80, 5)
 			draw_rect(bar_rect, Color(0.1, 0.1, 0.1), true)
 			draw_rect(Rect2(bar_rect.position.x, bar_rect.position.y, bar_rect.size.x * p_ratio, 5), Color(0.1, 0.8, 0.4), true)
+			
+			# Render 2.5D Weather Dynamic Reaction Speech Bubbles above head
+			var w_type = GameState.current_weather_type
+			if w_type == "rainy":
+				draw_string(ThemeDB.fallback_font, draw_pos + Vector2(-35, -65), "🌧️ 빗소리 아늑하다 ☕", HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.7, 0.85, 1.0))
+			elif w_type == "snowy":
+				draw_string(ThemeDB.fallback_font, draw_pos + Vector2(-35, -65), "❄️ 눈 오니 라떼 최고!", HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.9, 0.95, 1.0))
+			elif w_type == "cloudy":
+				draw_string(ThemeDB.fallback_font, draw_pos + Vector2(-35, -65), "☁️ 아늑해서 몰입 최고 💻", HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.85, 0.9, 0.95))
+			else:
+				draw_string(ThemeDB.fallback_font, draw_pos + Vector2(-35, -65), "☀️ 햇살 따스하다 📖", HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(1.0, 0.9, 0.5))
 			
 			# Render active study action item asset on student desk
 			if c_type == "developer" and action_laptop_texture != null:
@@ -939,6 +967,97 @@ func draw_integrated_multi_room_layout(w: float, h: float) -> void:
 		draw_string(ThemeDB.fallback_font, dm_panel_rect.position + Vector2(10, 78), "🌌 중력 편향 엔진 상태: %s" % dm_info["status"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.2, 0.95, 0.5))
 		draw_string(ThemeDB.fallback_font, dm_panel_rect.position + Vector2(10, 96), "💰 신체 피로 무중력 제로 부유 보너스: +%d%%" % int(dm_info["levitation_bonus"]), HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(1.0, 0.8, 0.2))
 
+	# Render Autonomous Quantum-Entangled Sub-Space Temporal Chrono-Dilation Field Stabilizer HUD Panel if ON
+	if GameState.is_chrono_dilation_hud_open:
+		var chrono_dil_info = GameState.calculate_chrono_dilation_metrics()
+		var chrono_dil_panel_rect = Rect2(hud_panel_x - 40.0, 60, 240, 130)
+		draw_rect(chrono_dil_panel_rect, Color(0.06, 0.08, 0.12, 0.95), true)
+		draw_rect(chrono_dil_panel_rect, Color(0.95, 0.7, 0.2), false, 2.0)
+		
+		draw_string(ThemeDB.fallback_font, chrono_dil_panel_rect.position + Vector2(10, 22), "⏳ 퀀텀 시간지연 크로노 필드 안정기", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(0.95, 0.7, 0.2))
+		draw_string(ThemeDB.fallback_font, chrono_dil_panel_rect.position + Vector2(10, 42), "⏳ 서브스페이스 주관적 시간지연 배율: %.2fx" % chrono_dil_info["time_dilation_factor"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color.WHITE)
+		draw_string(ThemeDB.fallback_font, chrono_dil_panel_rect.position + Vector2(10, 60), "🔮 크로논 장 위상 교정 정밀도: %.4f%%" % chrono_dil_info["chronon_stability_pct"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.95, 0.7, 0.2))
+		draw_string(ThemeDB.fallback_font, chrono_dil_panel_rect.position + Vector2(10, 78), "⏳ 크로노 필드 상태: %s" % chrono_dil_info["status"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.2, 0.95, 0.5))
+		draw_string(ThemeDB.fallback_font, chrono_dil_panel_rect.position + Vector2(10, 96), "💰 주관적 학업 집중 체감 효율: +%d%%" % int(chrono_dil_info["efficiency_bonus"]), HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(1.0, 0.8, 0.2))
+
+	# Render Autonomous Bio-Synaptic Neural-Pattern Cognition Memory Crystallizer HUD Panel if ON
+	if GameState.is_neural_crystallizer_hud_open:
+		var crys_info = GameState.calculate_neural_crystallizer_metrics()
+		var crys_panel_rect = Rect2(hud_panel_x - 40.0, 60, 240, 130)
+		draw_rect(crys_panel_rect, Color(0.06, 0.08, 0.12, 0.95), true)
+		draw_rect(crys_panel_rect, Color(0.4, 0.7, 1.0), false, 2.0)
+		
+		draw_string(ThemeDB.fallback_font, crys_panel_rect.position + Vector2(10, 22), "💎 바이오시냅스 신경패턴 결정체화기", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(0.4, 0.7, 1.0))
+		draw_string(ThemeDB.fallback_font, crys_panel_rect.position + Vector2(10, 42), "💎 인지 기억 결정체화 속도: %.1f Mbps" % crys_info["speed_mbps"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color.WHITE)
+		draw_string(ThemeDB.fallback_font, crys_panel_rect.position + Vector2(10, 60), "🔮 시냅스 장기 회상 인지 정밀도: %.4f%%" % crys_info["recall_pct"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.4, 0.7, 1.0))
+		draw_string(ThemeDB.fallback_font, crys_panel_rect.position + Vector2(10, 78), "💎 신경 결정체화기 상태: %s" % crys_info["status"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.2, 0.95, 0.5))
+		draw_string(ThemeDB.fallback_font, crys_panel_rect.position + Vector2(10, 96), "💰 시험 만점 암기 정복 보너스: +%d%%" % int(crys_info["mastery_bonus"]), HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(1.0, 0.8, 0.2))
+
+	# Render Autonomous Super-Conductive Photonic Laser Wireless Power Transmission Network HUD Panel if ON
+	if GameState.is_photonic_power_hud_open:
+		var photonic_info = GameState.calculate_photonic_power_metrics()
+		var photonic_panel_rect = Rect2(hud_panel_x - 40.0, 60, 240, 130)
+		draw_rect(photonic_panel_rect, Color(0.06, 0.08, 0.12, 0.95), true)
+		draw_rect(photonic_panel_rect, Color(1.0, 0.4, 0.2), false, 2.0)
+		
+		draw_string(ThemeDB.fallback_font, photonic_panel_rect.position + Vector2(10, 22), "⚡ 초전도 포토닉 무선전력 전송망", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(1.0, 0.4, 0.2))
+		draw_string(ThemeDB.fallback_font, photonic_panel_rect.position + Vector2(10, 42), "⚡ 적외선 포토닉 레이저 출력: %.1f kW" % photonic_info["laser_kw"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color.WHITE)
+		draw_string(ThemeDB.fallback_font, photonic_panel_rect.position + Vector2(10, 60), "🔮 무선 전력 수신 수송 효율: %.4f%%" % photonic_info["efficiency_pct"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(1.0, 0.4, 0.2))
+		draw_string(ThemeDB.fallback_font, photonic_panel_rect.position + Vector2(10, 78), "⚡ 무선전력 전송망 상태: %s" % photonic_info["status"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.2, 0.95, 0.5))
+		draw_string(ThemeDB.fallback_font, photonic_panel_rect.position + Vector2(10, 96), "💰 케이블 Zero 전력 그리드 절감 보너스: +%d%%" % int(photonic_info["grid_saving_bonus"]), HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(1.0, 0.8, 0.2))
+
+	# Render Autonomous Sub-Quantum Dark-Matter Dark-Energy Dimensional Energy Converter HUD Panel if ON
+	if GameState.is_dark_energy_converter_hud_open:
+		var de_info = GameState.calculate_dark_energy_converter_metrics()
+		var de_panel_rect = Rect2(hud_panel_x - 40.0, 60, 240, 130)
+		draw_rect(de_panel_rect, Color(0.06, 0.08, 0.12, 0.95), true)
+		draw_rect(de_panel_rect, Color(0.6, 0.3, 0.95), false, 2.0)
+		
+		draw_string(ThemeDB.fallback_font, de_panel_rect.position + Vector2(10, 22), "🌌 아원자 암흑에너지 차원 전환기", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(0.6, 0.3, 0.95))
+		draw_string(ThemeDB.fallback_font, de_panel_rect.position + Vector2(10, 42), "🌌 암흑에너지 전환 밀도: %.1e J/m³" % de_info["density_joule"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color.WHITE)
+		draw_string(ThemeDB.fallback_font, de_panel_rect.position + Vector2(10, 60), "🔮 우주 팽창 에너지 수송 효율: %.4f%%" % de_info["expansion_pct"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.6, 0.3, 0.95))
+		draw_string(ThemeDB.fallback_font, de_panel_rect.position + Vector2(10, 78), "🌌 차원 전환기 상태: %s" % de_info["status"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.2, 0.95, 0.5))
+		draw_string(ThemeDB.fallback_font, de_panel_rect.position + Vector2(10, 96), "💰 무한 공간 에너지 공급 효율: +%d%%" % int(de_info["cosmic_energy_bonus"]), HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(1.0, 0.8, 0.2))
+
+	# Render Autonomous Super-Conductive Quantum Singularity Event-Horizon Gravity-Well Power-Station HUD Panel if ON
+	if GameState.is_singularity_power_hud_open:
+		var sing_info = GameState.calculate_singularity_power_metrics()
+		var sing_panel_rect = Rect2(hud_panel_x - 40.0, 60, 240, 130)
+		draw_rect(sing_panel_rect, Color(0.06, 0.08, 0.12, 0.95), true)
+		draw_rect(sing_panel_rect, Color(0.9, 0.2, 0.95), false, 2.0)
+		
+		draw_string(ThemeDB.fallback_font, sing_panel_rect.position + Vector2(10, 22), "🌌 퀀텀 싱귤래리티 중력우물 발전소", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(0.9, 0.2, 0.95))
+		draw_string(ThemeDB.fallback_font, sing_panel_rect.position + Vector2(10, 42), "🌌 인공 싱귤래리티 질량: %.3e kg" % sing_info["mass_kg"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color.WHITE)
+		draw_string(ThemeDB.fallback_font, sing_panel_rect.position + Vector2(10, 60), "🔮 호킹 방사 & 펜로즈 과정 발전: %.1f GW" % sing_info["hawking_gw"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.9, 0.2, 0.95))
+		draw_string(ThemeDB.fallback_font, sing_panel_rect.position + Vector2(10, 78), "🌌 중력우물 발전소 상태: %s" % sing_info["status"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.2, 0.95, 0.5))
+		draw_string(ThemeDB.fallback_font, sing_panel_rect.position + Vector2(10, 96), "💰 무한 중력 에너지 전력망 공급: +%d%%" % int(sing_info["infinite_power_bonus"]), HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(1.0, 0.8, 0.2))
+
+	# Render Autonomous Bio-Photonic Neural-Resonance Memory-Crystal Transmutation Reactor HUD Panel if ON
+	if GameState.is_transmutation_reactor_hud_open:
+		var trans_info = GameState.calculate_transmutation_reactor_metrics()
+		var trans_panel_rect = Rect2(hud_panel_x - 40.0, 60, 240, 130)
+		draw_rect(trans_panel_rect, Color(0.06, 0.08, 0.12, 0.95), true)
+		draw_rect(trans_panel_rect, Color(0.2, 0.7, 0.95), false, 2.0)
+		
+		draw_string(ThemeDB.fallback_font, trans_panel_rect.position + Vector2(10, 22), "⚛️ 기억-결정체 변무테이션 리액터", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(0.2, 0.7, 0.95))
+		draw_string(ThemeDB.fallback_font, trans_panel_rect.position + Vector2(10, 42), "⚛️ 신경 변무테이션 처리 속도: %.4f Gbps" % trans_info["rate_gbps"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color.WHITE)
+		draw_string(ThemeDB.fallback_font, trans_panel_rect.position + Vector2(10, 60), "🔮 포토닉 공명 격자 정밀도: %.4f%%" % trans_info["purity_pct"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.2, 0.7, 0.95))
+		draw_string(ThemeDB.fallback_font, trans_panel_rect.position + Vector2(10, 78), "⚛️ 리액터 연산 상태: %s" % trans_info["status"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.2, 0.95, 0.5))
+		draw_string(ThemeDB.fallback_font, trans_panel_rect.position + Vector2(10, 96), "💰 초고속 학습 수용 & 인지 흡수 보너스: +%d%%" % int(trans_info["absorption_bonus"]), HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(1.0, 0.8, 0.2))
+
+	# Render Autonomous Global Quantum-Entangled Franchise Franchise-Ledger Node Relay HUD Panel if ON
+	if GameState.is_franchise_ledger_hud_open:
+		var ledger_info = GameState.calculate_franchise_ledger_metrics()
+		var ledger_panel_rect = Rect2(hud_panel_x - 40.0, 60, 240, 130)
+		draw_rect(ledger_panel_rect, Color(0.06, 0.08, 0.12, 0.95), true)
+		draw_rect(ledger_panel_rect, Color(0.2, 0.8, 1.0), false, 2.0)
+		
+		draw_string(ThemeDB.fallback_font, ledger_panel_rect.position + Vector2(10, 22), "🌐 퀀텀 프랜차이즈 가맹원장 노드리레이", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(0.2, 0.8, 1.0))
+		draw_string(ThemeDB.fallback_font, ledger_panel_rect.position + Vector2(10, 42), "🌐 글로벌 얽힘 동기화 동결 지연: %.7f ms" % ledger_info["sync_latency_ms"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color.WHITE)
+		draw_string(ThemeDB.fallback_font, ledger_panel_rect.position + Vector2(10, 60), "🔮 전세계 수용 활성 노드 수: %d 개소" % ledger_info["active_nodes"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.2, 0.8, 1.0))
+		draw_string(ThemeDB.fallback_font, ledger_panel_rect.position + Vector2(10, 78), "🌐 가맹원장 리레이 상태: %s" % ledger_info["status"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.2, 0.95, 0.5))
+		draw_string(ThemeDB.fallback_font, ledger_panel_rect.position + Vector2(10, 96), "💰 가맹 로열티 자동 수수료 지분: +%d%%" % int(ledger_info["royalty_bonus"]), HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(1.0, 0.8, 0.2))
+
 	# Render Autonomous Bio-Dynamic Sub-Molecular Peptide Neuro-Stimulator HUD Panel if ON
 	if GameState.is_peptide_stimulator_hud_open:
 		var pep_info = GameState.calculate_peptide_stimulator_metrics()
@@ -990,6 +1109,45 @@ func draw_integrated_multi_room_layout(w: float, h: float) -> void:
 		draw_string(ThemeDB.fallback_font, exo_corr_panel_rect.position + Vector2(10, 60), "🔮 미세진동 근육 피로 감쇄율: %.1f%%" % exo_corr_info["fatigue_red_pct"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.95, 0.6, 0.2))
 		draw_string(ThemeDB.fallback_font, exo_corr_panel_rect.position + Vector2(10, 78), "🦾 체형 교정기 상태: %s" % exo_corr_info["status"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.2, 0.95, 0.5))
 		draw_string(ThemeDB.fallback_font, exo_corr_panel_rect.position + Vector2(10, 96), "💰 마라톤 몰입 학업 집중 보너스: +%d%%" % int(exo_corr_info["focus_bonus"]), HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(1.0, 0.8, 0.2))
+
+	# Render Autonomous Atmospheric Vapor-Harvesting Pure Water Generator HUD Panel if ON
+	if GameState.is_nano_atmospheric_water_hud_open:
+		var water_harvest_info = GameState.calculate_nano_atmospheric_water_metrics()
+		var water_harvest_panel_rect = Rect2(hud_panel_x - 40.0, 60, 240, 130)
+		draw_rect(water_harvest_panel_rect, Color(0.06, 0.08, 0.12, 0.95), true)
+		draw_rect(water_harvest_panel_rect, Color(0.2, 0.8, 1.0), false, 2.0)
+		
+		draw_string(ThemeDB.fallback_font, water_harvest_panel_rect.position + Vector2(10, 22), "💧 자율 대기 수자원 응축 순수 생성기", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(0.2, 0.8, 1.0))
+		draw_string(ThemeDB.fallback_font, water_harvest_panel_rect.position + Vector2(10, 42), "💧 대기 수증기 응축 생성량: %.1f L/일" % water_harvest_info["extraction_rate_l_day"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color.WHITE)
+		draw_string(ThemeDB.fallback_font, water_harvest_panel_rect.position + Vector2(10, 60), "🔮 자외선 멸균 수질 순도율: %.4f%%" % water_harvest_info["water_purity_pct"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.2, 0.8, 1.0))
+		draw_string(ThemeDB.fallback_font, water_harvest_panel_rect.position + Vector2(10, 78), "💧 수자원 생성기 상태: %s" % water_harvest_info["status"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.2, 0.95, 0.5))
+		draw_string(ThemeDB.fallback_font, water_harvest_panel_rect.position + Vector2(10, 96), "💰 수도 세금 절감 & 음료 신선도 보너스: +%d%%" % int(water_harvest_info["utility_saving_bonus"]), HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(1.0, 0.8, 0.2))
+
+	# Render Autonomous Aeroponic Vertical Botanical Nutrient-Mist Injector HUD Panel if ON
+	if GameState.is_aeroponic_botanical_hud_open:
+		var aero_info = GameState.calculate_aeroponic_botanical_metrics()
+		var aero_panel_rect = Rect2(hud_panel_x - 40.0, 60, 240, 130)
+		draw_rect(aero_panel_rect, Color(0.06, 0.08, 0.12, 0.95), true)
+		draw_rect(aero_panel_rect, Color(0.3, 0.95, 0.5), false, 2.0)
+		
+		draw_string(ThemeDB.fallback_font, aero_panel_rect.position + Vector2(10, 22), "🌿 에어로포닉 수직식물원 영양안개분사", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(0.3, 0.95, 0.5))
+		draw_string(ThemeDB.fallback_font, aero_panel_rect.position + Vector2(10, 42), "🌿 초음파 미세안개 입자 직경: %.1f µm" % aero_info["mist_micron"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color.WHITE)
+		draw_string(ThemeDB.fallback_font, aero_panel_rect.position + Vector2(10, 60), "🔮 식물 증산 작용 생체산소 증대율: %.4f%%" % aero_info["oxygen_boost_pct"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.3, 0.95, 0.5))
+		draw_string(ThemeDB.fallback_font, aero_panel_rect.position + Vector2(10, 78), "🌿 영양안개 분사기 상태: %s" % aero_info["status"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.2, 0.95, 0.5))
+		draw_string(ThemeDB.fallback_font, aero_panel_rect.position + Vector2(10, 96), "💰 피톤치드 심신 안정 뇌피로 해소: +%d%%" % int(aero_info["restoration_bonus"]), HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(1.0, 0.8, 0.2))
+
+	# Render Autonomous Super-Conductive Magnetic Quantum Levitation Floor Matrix HUD Panel if ON
+	if GameState.is_maglev_floor_hud_open:
+		var maglev_info = GameState.calculate_maglev_floor_metrics()
+		var maglev_panel_rect = Rect2(hud_panel_x - 40.0, 60, 240, 130)
+		draw_rect(maglev_panel_rect, Color(0.06, 0.08, 0.12, 0.95), true)
+		draw_rect(maglev_panel_rect, Color(0.95, 0.8, 0.2), false, 2.0)
+		
+		draw_string(ThemeDB.fallback_font, maglev_panel_rect.position + Vector2(10, 22), "🧲 초전도 자기장 양자부유 바닥매트릭스", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(0.95, 0.8, 0.2))
+		draw_string(ThemeDB.fallback_font, maglev_panel_rect.position + Vector2(10, 42), "🧲 초전도 자속 밀도: %.1f Tesla" % maglev_info["flux_tesla"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color.WHITE)
+		draw_string(ThemeDB.fallback_font, maglev_panel_rect.position + Vector2(10, 60), "🔮 마이스너 효과 부유 안정성: %.4f%%" % maglev_info["stability_pct"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.95, 0.8, 0.2))
+		draw_string(ThemeDB.fallback_font, maglev_panel_rect.position + Vector2(10, 78), "🧲 양자 부유 바닥 상태: %s" % maglev_info["status"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.2, 0.95, 0.5))
+		draw_string(ThemeDB.fallback_font, maglev_panel_rect.position + Vector2(10, 96), "💰 미세진동 Zero 음향 부유 차음: +%d%%" % int(maglev_info["isolation_bonus"]), HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(1.0, 0.8, 0.2))
 
 	# Render Quantum Entanglement Antimatter Energy HUD Panel if ON
 	if GameState.is_antimatter_hud_open:
