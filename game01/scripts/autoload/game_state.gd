@@ -3803,6 +3803,99 @@ func harvest_vertical_garden_herbs() -> Dictionary:
 		"msg": "🌿 [수경재배 수직정원] 유기농 페퍼민트/허브 수확 완료! (+2,500 ₩ 허브 판매 & 청정 산소 99.8% 뿜뿜 🌿)"
 	}
 
+# Iteration 215: Interactive AI Autonomous Cleaning Drone & UV-C Disinfection Swarm System
+var total_disinfections_performed: int = 0
+
+func deploy_cleaning_drone_swarm() -> Dictionary:
+	dirty_seats.clear()
+	total_disinfections_performed += 1
+	reputation = min(5.0, reputation + 0.10)
+	reputation_changed.emit(reputation)
+	
+	_play_sfx_safe("fanfare")
+	return {
+		"success": true,
+		"disinfections_performed": total_disinfections_performed,
+		"msg": "🤖 [자율 AI 방역 드론] 전 층 UV-C 입체 군집 살균 완료! (오염 좌석 100% 청정 원복 & 위생 평점 ⭐+0.10 상승 🛡️)"
+	}
+
+# Iteration 216: Interactive Quantum Security Shield & Blockchain Membership System
+var blockchain_verified_members: Array = []
+
+func verify_blockchain_vip_membership(member_id: int = 1001) -> Dictionary:
+	if not blockchain_verified_members.has(member_id):
+		blockchain_verified_members.append(member_id)
+		
+	var bonus_retention = 5000.0
+	add_money(bonus_retention)
+	reputation = min(5.0, reputation + 0.05)
+	reputation_changed.emit(reputation)
+	
+	_play_sfx_safe("fanfare")
+	return {
+		"success": true,
+		"member_id": member_id,
+		"total_verified": blockchain_verified_members.size(),
+		"msg": "🔐 [퀀텀 보안 쉴드] 회원 %d번 블록체인 VIP 키 검증 완료! (무단 침입 0%% & +5,000 ₩ 정기권 유지 수금 🔐)" % member_id
+	}
+
+# Iteration 217: Interactive Autonomous Satellite Network & Global Franchise Data Node Relay System
+var satellite_synced_nodes: int = 0
+
+func sync_global_franchise_satellite_node() -> Dictionary:
+	satellite_synced_nodes += 1
+	var royalty = 10000.0
+	add_money(royalty)
+	reputation = min(5.0, reputation + 0.10)
+	reputation_changed.emit(reputation)
+	
+	_play_sfx_safe("fanfare")
+	return {
+		"success": true,
+		"synced_nodes": satellite_synced_nodes,
+		"royalty": royalty,
+		"msg": "🛰️ [위성 네트워크] 저궤도 통신 위성 노드 동기화 완수! (+10,000 ₩ 글로벌 가맹점 로열티 수금 & 명성 ⭐+0.10 상승 📡)"
+	}
+
+# Iteration 218: Interactive Fusion Nuclear Micro-Reactor Zero-Carbon Energy Grid System
+var fusion_reactor_active: bool = false
+var green_esg_grants_collected: float = 0.0
+
+func activate_fusion_micro_reactor() -> Dictionary:
+	fusion_reactor_active = true
+	var esg_grant = 15000.0
+	green_esg_grants_collected += esg_grant
+	add_money(esg_grant)
+	reputation = min(5.0, reputation + 0.15)
+	reputation_changed.emit(reputation)
+	
+	_play_sfx_safe("fanfare")
+	return {
+		"success": true,
+		"esg_grant": esg_grant,
+		"total_esg_grants": green_esg_grants_collected,
+		"msg": "⚛️ [친환경 융합 소형 원자로] 가동 완료! (무제한 무탄소 전력 수급 & ESG 정부 지원금 +15,000 ₩ 수금 ⚡)"
+	}
+
+# Iteration 219: Interactive Quantum AI Personalized Adaptive Learning Curriculum System
+var ai_curriculums_generated: int = 0
+
+func generate_quantum_ai_curriculum(student_id: int = 1) -> Dictionary:
+	ai_curriculums_generated += 1
+	var tip = 8000.0
+	add_money(tip)
+	reputation = min(5.0, reputation + 0.10)
+	reputation_changed.emit(reputation)
+	
+	_play_sfx_safe("fanfare")
+	return {
+		"success": true,
+		"student_id": student_id,
+		"total_curriculums": ai_curriculums_generated,
+		"tip": tip,
+		"msg": "🧠 [퀀텀 AI 맞춤 커리큘럼] 학생 %d번 초개인화 학습 로드맵 생성 완료! (성적 상승률 +50%% & 감사 팁 +8,000 ₩ 수금 🎓)" % student_id
+	}
+
 func trigger_120th_milestone_event() -> Dictionary:
 	milestone_120_triggered = true
 	var grand_prize = 200000.0
@@ -4383,13 +4476,20 @@ func pet_navi() -> Dictionary:
 	reputation = min(5.0, reputation + 0.05)
 	reputation_changed.emit(reputation)
 	add_guest_intimacy("navi", 25)
+	
+	if navi_pet_count > 10:
+		navi_mood_level = "최고로 행복함 ✨"
+	elif navi_pet_count > 5:
+		navi_mood_level = "매우 기쁨 💖"
+	else:
+		navi_mood_level = "행복함 🐾"
+		
 	_play_sfx_safe("chime")
 	return {
-		"success": true,
-		"pet_count": navi_pet_count,
+		"text": "🐱 야옹~! 길냥이 나비 골골송! (평점 ⭐+0.05 | 집중력 +20% ❤️)",
+		"color": Color(1.0, 0.4, 0.7),
 		"mood": navi_mood_level,
-		"text": "🐱 야옹~! 길냥이 나비 쓰다듬기! (집중력 +20% ❤️)",
-		"color": Color(1.0, 0.4, 0.7)
+		"pet_count": navi_pet_count
 	}
 
 # Regular Guest Intimacy Engine
