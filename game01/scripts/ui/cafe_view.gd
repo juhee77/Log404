@@ -387,6 +387,17 @@ func draw_integrated_multi_room_layout(w: float, h: float) -> void:
 	var showcase_text = "🍰 치즈케이크 x%d  |  🥐 크로와상 x%d" % [c_cnt, r_cnt]
 	draw_string(ThemeDB.fallback_font, Vector2(760 + vo.x, 186 + vo.y), showcase_text, HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(1.0, 0.85, 0.9))
 
+	# Render 2.5D QTE Restock Timing Meter Overlay if active
+	if GameState.is_qte_mini_game_active:
+		var qte_rect = Rect2(745 + vo.x, 160 + vo.y, 240, 42)
+		draw_rect(qte_rect, Color(0.08, 0.06, 0.12, 0.95), true)
+		draw_rect(qte_rect, Color(1.0, 0.8, 0.2), false, 2.0)
+		
+		# Sweet-spot target zone
+		var target_x = qte_rect.position.x + qte_rect.size.x * 0.85
+		draw_rect(Rect2(target_x - 15, qte_rect.position.y + 4, 30, qte_rect.size.y - 8), Color(0.2, 0.9, 0.5, 0.7), true)
+		draw_string(ThemeDB.fallback_font, qte_rect.position + Vector2(8, 26), "🍰 핫타임 QTE! PERFECT 존 타격!", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(1.0, 0.85, 0.3))
+
 	# Render 2 Round Mahogany Cake Tasting Tables in Room 2 Lounge
 	var t1_center = Vector2(790, 215) + vo
 	draw_circle(t1_center, 16.0, Color(0.28, 0.20, 0.16, 0.95))
@@ -661,6 +672,11 @@ func draw_integrated_multi_room_layout(w: float, h: float) -> void:
 				draw_string(ThemeDB.fallback_font, draw_pos + Vector2(-35, -65), "☁️ 아늑해서 몰입 최고 💻", HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.85, 0.9, 0.95))
 			else:
 				draw_string(ThemeDB.fallback_font, draw_pos + Vector2(-35, -65), "☀️ 햇살 따스하다 📖", HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(1.0, 0.9, 0.5))
+			
+			# Render 2.5D Student Mentoring Diagnosis Badge if active
+			if GameState.student_mentoring_records.has(c["id"]):
+				var m_rec = GameState.student_mentoring_records[c["id"]]
+				draw_string(ThemeDB.fallback_font, draw_pos + Vector2(-45, -82), "🎓 1:1 멘토링: %s" % m_rec["rank_title"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(1.0, 0.8, 0.2))
 			
 			# Render active study action item asset on student desk
 			if c_type == "developer" and action_laptop_texture != null:

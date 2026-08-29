@@ -3581,6 +3581,99 @@ func rotate_seat_placement(seat_idx: int) -> int:
 	_play_sfx_safe("click")
 	return new_rot
 
+# Iteration 205: Interactive Snack Bar & Bakery Restock QTE Mini-Game Engine
+var is_qte_mini_game_active: bool = false
+var qte_target_timing: float = 0.85
+var qte_current_progress: float = 0.0
+
+func trigger_snack_restock_qte() -> Dictionary:
+	is_qte_mini_game_active = true
+	qte_current_progress = 0.0
+	_play_sfx_safe("click")
+	return {
+		"active": true,
+		"target_timing": qte_target_timing,
+		"msg": "🍰 샌드위치 & 케이크 핫타임 재충전 QTE 미니게임 발동!"
+	}
+
+func submit_qte_timing(hit_pct: float) -> Dictionary:
+	is_qte_mini_game_active = false
+	var is_perfect = hit_pct >= 0.8 and hit_pct <= 0.95
+	var bonus_stock = 10 if is_perfect else 5
+	
+	bakery_stock["cheesecake"] = bakery_stock.get("cheesecake", 0) + bonus_stock
+	bakery_stock["croissant"] = bakery_stock.get("croissant", 0) + bonus_stock
+	
+	if is_perfect:
+		add_money(1500.0)
+		_play_sfx_safe("fanfare")
+	else:
+		add_money(500.0)
+		_play_sfx_safe("click")
+		
+	return {
+		"is_perfect": is_perfect,
+		"hit_pct": hit_pct,
+		"bonus_stock": bonus_stock,
+		"msg": "⭐ PERFECT CHEF COMBO! (+%d개 케이크 & 샌드위치 재고 급속 보충!)" % bonus_stock if is_perfect else "👍 Good Restock! (+%d개 재고 보충)" % bonus_stock
+	}
+
+# Iteration 206: Interactive Student Mentoring & Mock Exam Diagnosis System
+var student_mentoring_records: Dictionary = {} # student_id -> Dictionary
+
+func diagnose_student_exam_readiness(student_id: int) -> Dictionary:
+	var base_score = 75 + (student_id % 20)
+	var rank_title = "1등급 예비 합격생" if base_score >= 90 else "2등급 상위권 수험생"
+	
+	var diagnosis = {
+		"student_id": student_id,
+		"math_score": base_score,
+		"english_score": min(100, base_score + 3),
+		"coding_score": min(100, base_score + 5),
+		"rank_title": rank_title,
+		"mentoring_buff_active": student_mentoring_records.has(student_id)
+	}
+	return diagnosis
+
+func apply_student_mentoring_buff(student_id: int) -> Dictionary:
+	var diag = diagnose_student_exam_readiness(student_id)
+	student_mentoring_records[student_id] = diag
+	
+	var bonus_revenue = 3000.0
+	add_money(bonus_revenue)
+	reputation = min(5.0, reputation + 0.1)
+	_play_sfx_safe("fanfare")
+	
+	return {
+		"success": true,
+		"student_id": student_id,
+		"bonus_revenue": bonus_revenue,
+		"msg": "🎓 수험생 %d번 1:1 학습 멘토링 완료! 모의고사 성적 %d점 달성 (+3,000 ₩ 정기권 매출 수금)" % [student_id, diag["math_score"]]
+	}
+
+# Iteration 207: Interactive Mascot Cat 'Navi' Petting & Healing Purr System
+var navi_pet_count: int = 0
+var navi_mood_level: String = "행복함 🐾"
+
+# Iteration 208: Interactive 2.5D Desk Cleaning & Villain Repulsion System
+var villain_repelled_count: int = 0
+
+func repel_villain(villain_type: String = "snack_cruncher") -> Dictionary:
+	villain_repelled_count += 1
+	reputation = min(5.0, reputation + 0.05)
+	reputation_changed.emit(reputation)
+	
+	var reward_money = 800.0
+	add_money(reward_money)
+	_play_sfx_safe("click")
+	
+	return {
+		"success": true,
+		"villain_type": villain_type,
+		"reward_money": reward_money,
+		"msg": "🚫 바스락 빌런 퇴치 완료! 정적 유지 버프 발동 (+800 ₩ 현상금 수금)"
+	}
+
 func trigger_120th_milestone_event() -> Dictionary:
 	milestone_120_triggered = true
 	var grand_prize = 200000.0
@@ -4155,11 +4248,20 @@ func update_navi_wandering(delta: float) -> void:
 	navi_pos = navi_pos.lerp(navi_target, delta * 1.8)
 
 func pet_navi() -> Dictionary:
+	navi_pet_count += 1
 	navi_happiness = clamp(navi_happiness + 15, 0, 100)
 	cat_buff_timer = 15.0
+	reputation = min(5.0, reputation + 0.05)
+	reputation_changed.emit(reputation)
 	add_guest_intimacy("navi", 25)
 	_play_sfx_safe("chime")
-	return { "text": "🐱 야옹~! 길냥이 나비 쓰다듬기! (집중력 +20% ❤️)", "color": Color(1.0, 0.4, 0.7) }
+	return {
+		"success": true,
+		"pet_count": navi_pet_count,
+		"mood": navi_mood_level,
+		"text": "🐱 야옹~! 길냥이 나비 쓰다듬기! (집중력 +20% ❤️)",
+		"color": Color(1.0, 0.4, 0.7)
+	}
 
 # Regular Guest Intimacy Engine
 

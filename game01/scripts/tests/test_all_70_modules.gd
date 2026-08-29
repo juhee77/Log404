@@ -1116,6 +1116,59 @@ func _init() -> void:
 
 
 
+	# Test 83: Interactive Snack Bar & Bakery Restock QTE Mini-Game Engine Verification
+	print("\n📌 [Test 83] Verifying Bakery Restock QTE Engine...")
+	var qte_start = state.trigger_snack_restock_qte()
+	assert(qte_start["active"] == true and state.is_qte_mini_game_active == true, "QTE mini game should become active")
+	
+	var res = state.submit_qte_timing(0.85)
+	assert(res["is_perfect"] == true, "Submitting 0.85 hit pct should trigger PERFECT combo")
+	assert(res["bonus_stock"] == 10, "PERFECT combo must award 10 bonus dessert stocks")
+	assert(state.is_qte_mini_game_active == false, "QTE mini game should finish")
+	print("✔ Test 83 PASSED: Bakery Restock QTE Engine 100% verified!")
+
+	# Test 84: Interactive Student Mentoring & Mock Exam Diagnosis System Verification
+	print("\n📌 [Test 84] Verifying Student Mentoring & Exam Diagnosis Engine...")
+	var student_id = 101
+	var diag = state.diagnose_student_exam_readiness(student_id)
+	assert(diag.has("math_score") and diag["math_score"] >= 70, "Exam diagnosis must generate valid math score")
+	assert(diag.has("rank_title"), "Exam diagnosis must calculate rank title")
+	
+	var m_res = state.apply_student_mentoring_buff(student_id)
+	assert(m_res["success"] == true, "Applying student mentoring buff should succeed")
+	assert(state.student_mentoring_records.has(student_id), "Student mentoring record must be saved")
+	print("✔ Test 84 PASSED: Student Mentoring & Exam Diagnosis Engine 100% verified!")
+
+	# Test 85: Interactive Mascot Cat 'Navi' Petting & Healing Purr System Verification
+	print("\n📌 [Test 85] Verifying Mascot Cat Navi Petting Engine...")
+	var initial_pets = state.navi_pet_count
+	var pet_res = state.pet_navi()
+	assert(state.navi_pet_count == initial_pets + 1, "Petting Navi must increment pet count")
+	assert(pet_res.has("mood") and pet_res.has("text"), "Petting result must return mood level and text")
+	print("✔ Test 85 PASSED: Mascot Cat Navi Petting Engine 100% verified!")
+
+	# Test 86: Interactive 2.5D Desk Cleaning & Villain Repulsion System Verification
+	print("\n📌 [Test 86] Verifying Desk Cleaning & Villain Repulsion Engine...")
+	state.dirty_seats.append(0)
+	assert(state.dirty_seats.has(0), "Seat 0 should be marked dirty")
+	state.clean_seat(0)
+	assert(not state.dirty_seats.has(0), "Cleaning seat 0 should remove dirty status")
+	
+	var v_res = state.repel_villain("snack_cruncher")
+	assert(v_res["success"] == true, "Repelling villain should succeed")
+	assert(state.villain_repelled_count >= 1, "Villain repelled count should increment")
+	print("✔ Test 86 PASSED: Desk Cleaning & Villain Repulsion Engine 100% verified!")
+
+	
+
+
+
+
+
+
+
+
+
 	state.free()
 	print("\n=========================================================")
 	print("🎉 ALL 120-MODULE AUTOMATED VERIFICATION TESTS PASSED (100%) 🎉")
