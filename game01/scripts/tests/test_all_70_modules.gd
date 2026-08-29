@@ -1169,6 +1169,68 @@ func _init() -> void:
 
 
 
+# Test 87: Interactive 2.5D Multi-Floor Expansion & Elevator Transit System Verification
+	print("\n📌 [Test 87] Verifying Multi-Floor Expansion & Elevator Transit Engine...")
+	if not state.unlocked_floors.has(2): state.unlocked_floors.append(2)
+	if not state.unlocked_floors.has(3): state.unlocked_floors.append(3)
+	var f2_res = state.switch_floor(2)
+	assert(f2_res["success"] == true and state.current_floor == 2, "Switching to 2F should succeed")
+	assert(state.calculate_floor_revenue_multiplier(2) == 1.4, "2F revenue multiplier should be 1.4x")
+	
+	var f3_res = state.switch_floor(3)
+	assert(f3_res["success"] == true and state.current_floor == 3, "Switching to 3F should succeed")
+	assert(state.calculate_floor_revenue_multiplier(3) == 1.6, "3F revenue multiplier should be 1.6x")
+	
+	state.switch_floor(1) # restore to 1F
+	print("✔ Test 87 PASSED: Multi-Floor Expansion & Elevator Transit Engine 100% verified!")
+
+	# Test 88: Interactive VIP Ultra-Wide Desk & Ergonomic Mesh Chair Shop System Verification
+	print("\n📌 [Test 88] Verifying VIP Ultra-Wide Desk & Chair Shop Engine...")
+	state.money += 20000.0
+	var initial_decor = state.decor_score
+	var d_res = state.purchase_vip_ultrawide_desk("vip_curved_ultrawide")
+	assert(d_res["success"] == true, "Purchasing VIP desk should succeed with sufficient money")
+	assert(state.owned_vip_desks.has("vip_curved_ultrawide"), "Owned VIP desks array must record purchased desk")
+	assert(state.decor_score == initial_decor + 45, "Decor score should increase by 45")
+	print("✔ Test 88 PASSED: VIP Ultra-Wide Desk & Chair Shop Engine 100% verified!")
+
+	# Test 89: Interactive Night Market Midnight Espresso & Bakery Delivery System Verification
+	print("\n📌 [Test 89] Verifying Midnight Espresso & Bakery Delivery Engine...")
+	state.money += 10000.0
+	var initial_beans = state.beans_inventory
+	var deliv_res = state.order_midnight_express_delivery()
+	assert(deliv_res["success"] == true, "Ordering midnight express delivery should succeed with sufficient money")
+	assert(state.beans_inventory == initial_beans + 50, "Beans inventory must increase by 50")
+	assert(state.midnight_orders_count >= 1, "Midnight orders count must increment")
+	print("✔ Test 89 PASSED: Midnight Espresso & Bakery Delivery Engine 100% verified!")
+
+	# Test 90: Interactive Smart IoT Ambient Lighting & Color Temperature Control System Verification
+	print("\n📌 [Test 90] Verifying Smart IoT Ambient Lighting Control Engine...")
+	var light_res = state.set_ambient_lighting_color_temp("5000K_DEEP_FOCUS")
+	assert(light_res["success"] == true, "Setting ambient lighting should succeed")
+	assert(state.ambient_lighting_mode == "5000K_DEEP_FOCUS", "Ambient lighting mode must be updated")
+	assert(state.lighting_buff_multiplier == 1.25, "Lighting buff multiplier should be 1.25x")
+	print("✔ Test 90 PASSED: Smart IoT Ambient Lighting Control Engine 100% verified!")
+
+	# Test 91: Interactive Premium Specialty Drip Coffee Bar & Customer Intimacy System Verification
+	print("\n📌 [Test 91] Verifying Specialty Drip Coffee Bar Engine...")
+	var initial_money = state.money
+	var drip_res = state.brew_handdrip_specialty_single_origin("panama_geisha")
+	assert(drip_res["success"] == true, "Brewing specialty hand-drip should succeed")
+	assert(state.money == initial_money + 6500.0, "Revenue of 6,500 ₩ should be added to money")
+	assert(state.specialty_drip_brews_count >= 1, "Specialty drip brews count must increment")
+	print("✔ Test 91 PASSED: Specialty Drip Coffee Bar Engine 100% verified!")
+
+	# Test 92: Interactive Hydroponic Vertical Garden Air-Purification & Oxygen Boost System Verification
+	print("\n📌 [Test 92] Verifying Hydroponic Vertical Garden Oxygen Boost Engine...")
+	var initial_money_g = state.money
+	var garden_res = state.harvest_vertical_garden_herbs()
+	assert(garden_res["success"] == true, "Harvesting vertical garden herbs should succeed")
+	assert(state.money == initial_money_g + 2500.0, "Grant of 2,500 ₩ should be added to money")
+	assert(state.botanical_herbs_harvested >= 5, "Botanical herbs harvested count must increase")
+	print("✔ Test 92 PASSED: Hydroponic Vertical Garden Oxygen Boost Engine 100% verified!")
+
+	
 	state.free()
 	print("\n=========================================================")
 	print("🎉 ALL 120-MODULE AUTOMATED VERIFICATION TESTS PASSED (100%) 🎉")

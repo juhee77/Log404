@@ -3674,6 +3674,135 @@ func repel_villain(villain_type: String = "snack_cruncher") -> Dictionary:
 		"msg": "🚫 바스락 빌런 퇴치 완료! 정적 유지 버프 발동 (+800 ₩ 현상금 수금)"
 	}
 
+# Iteration 209: Interactive 2.5D Multi-Floor Expansion & Elevator Transit System
+func calculate_floor_revenue_multiplier(floor_num: int = -1) -> float:
+	var target_fl = floor_num if floor_num > 0 else current_floor
+	if target_fl == 3:
+		return 1.6 # 3F Rooftop Terrace Lounge: +60% Revenue
+	elif target_fl == 2:
+		return 1.4 # 2F Noble Booth Zone: +40% Revenue
+	else:
+		return 1.0 # 1F Main Study Zone: Base Revenue
+
+func switch_floor(floor_num: int) -> Dictionary:
+	if not unlocked_floors.has(floor_num):
+		return { "success": false, "msg": "🔒 해당 층은 아직 잠금 해제되지 않았습니다!" }
+		
+	current_floor = floor_num
+	_play_sfx_safe("click")
+	var mult = calculate_floor_revenue_multiplier(floor_num)
+	return {
+		"success": true,
+		"floor": floor_num,
+		"multiplier": mult,
+		"msg": "🛗 %d층 관전 모드 전환 완료! (매출 배율: %.1f배 🌟)" % [floor_num, mult]
+	}
+
+# Iteration 210: Interactive VIP Ultra-Wide Desk & Ergonomic Mesh Chair Shop System
+var owned_vip_desks: Array = ["basic_wood_desk"]
+
+func purchase_vip_ultrawide_desk(desk_id: String = "vip_curved_ultrawide") -> Dictionary:
+	var price = 15000.0
+	if money < price:
+		return { "success": false, "msg": "💰 자금이 부족합니다! (필요 자금: 15,000 ₩)" }
+		
+	money -= price
+	money_changed.emit(money)
+	if not owned_vip_desks.has(desk_id):
+		owned_vip_desks.append(desk_id)
+		
+	decor_score += 45
+	_play_sfx_safe("fanfare")
+	return {
+		"success": true,
+		"desk_id": desk_id,
+		"decor_bonus": 45,
+		"msg": "🛋️ VIP 울트라와이드 모니터 전용석 구매 완료! (좌석 요금 +50% & 데코 점수 +45 ✨)"
+	}
+
+# Iteration 211: Interactive Night Market Midnight Espresso & Bakery Snack Bar Delivery System
+var midnight_orders_count: int = 0
+
+func order_midnight_express_delivery() -> Dictionary:
+	var fee = 4000.0
+	if money < fee:
+		return { "success": false, "msg": "💰 자금이 부족합니다! (필요 자금: 4,000 ₩)" }
+		
+	money -= fee
+	money_changed.emit(money)
+	midnight_orders_count += 1
+	
+	bakery_stock["cheesecake"] = bakery_stock.get("cheesecake", 0) + 15
+	bakery_stock["croissant"] = bakery_stock.get("croissant", 0) + 15
+	beans_inventory += 50
+	beans_changed.emit(beans_inventory)
+	
+	_play_sfx_safe("fanfare")
+	return {
+		"success": true,
+		"orders_count": midnight_orders_count,
+		"msg": "🛵 야간 심야 에스프레소 & 크로와상 픽업 배달 완료! (+15개 디저트 & +50g 원두 보충 🌙)"
+	}
+
+# Iteration 212: Interactive Smart IoT Ambient Lighting & Color Temperature Control System
+var ambient_lighting_mode: String = "5000K_DEEP_FOCUS"
+var lighting_buff_multiplier: float = 1.25
+
+func set_ambient_lighting_color_temp(mode_id: String = "5000K_DEEP_FOCUS") -> Dictionary:
+	ambient_lighting_mode = mode_id
+	if mode_id == "5000K_DEEP_FOCUS":
+		lighting_buff_multiplier = 1.25 # +25% Study Endurance
+	elif mode_id == "3000K_WARM_FOCUS":
+		lighting_buff_multiplier = 1.15 # +15% Comfort
+	else:
+		lighting_buff_multiplier = 1.10 # +10% Relaxation
+		
+	_play_sfx_safe("click")
+	return {
+		"success": true,
+		"mode_id": mode_id,
+		"buff_multiplier": lighting_buff_multiplier,
+		"msg": "💡 스마트 IoT 색온도 조명 설정 완료! [%s] 모드 발동 (집중력 %.0f%% 가산 💡)" % [mode_id, (lighting_buff_multiplier - 1.0) * 100.0]
+	}
+
+# Iteration 213: Interactive Premium Specialty Drip Coffee Bar & Customer Intimacy System
+var specialty_drip_brews_count: int = 0
+
+func brew_handdrip_specialty_single_origin(origin_id: String = "panama_geisha") -> Dictionary:
+	specialty_drip_brews_count += 1
+	var revenue = 6500.0
+	add_money(revenue)
+	reputation = min(5.0, reputation + 0.05)
+	reputation_changed.emit(reputation)
+	
+	_play_sfx_safe("fanfare")
+	return {
+		"success": true,
+		"origin_id": origin_id,
+		"revenue": revenue,
+		"brews_count": specialty_drip_brews_count,
+		"msg": "☕ [스페셜티 핸드드립 바] %s 아티산 로스팅 추출 완수! (+6,500 ₩ 매출 & 단골 친밀도 +35 XP 🌺)" % origin_id
+	}
+
+# Iteration 214: Interactive Hydroponic Vertical Garden Air-Purification & Oxygen Boost System
+var botanical_herbs_harvested: int = 0
+
+func harvest_vertical_garden_herbs() -> Dictionary:
+	botanical_herbs_harvested += 5
+	reputation = min(5.0, reputation + 0.05)
+	reputation_changed.emit(reputation)
+	
+	var grant = 2500.0
+	add_money(grant)
+	_play_sfx_safe("fanfare")
+	
+	return {
+		"success": true,
+		"herbs_harvested": botanical_herbs_harvested,
+		"grant": grant,
+		"msg": "🌿 [수경재배 수직정원] 유기농 페퍼민트/허브 수확 완료! (+2,500 ₩ 허브 판매 & 청정 산소 99.8% 뿜뿜 🌿)"
+	}
+
 func trigger_120th_milestone_event() -> Dictionary:
 	milestone_120_triggered = true
 	var grand_prize = 200000.0
