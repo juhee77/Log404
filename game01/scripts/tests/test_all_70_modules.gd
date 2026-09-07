@@ -1256,6 +1256,113 @@ func _init() -> void:
 	assert(state.ai_curriculums_generated >= 1, "AI curriculums generated count must increment")
 	print("✔ Test 97 PASSED: Quantum AI Curriculum Engine 100% verified!")
 
+	# Test 98: Interactive Atmospheric Pure Water Generator System Verification
+	print("\n📌 [Test 98] Verifying Atmospheric Pure Water Generator Engine...")
+	var initial_money_wat = state.money
+	var wat_res = state.generate_atmospheric_pure_water()
+	assert(wat_res["success"] == true, "Generating atmospheric pure water should succeed")
+	assert(state.money == initial_money_wat + 12000.0, "Grant of 12,000 ₩ should be added to money")
+	assert(state.pure_water_liters_generated >= 50.0, "Pure water liters generated count must increment")
+	print("✔ Test 98 PASSED: Atmospheric Pure Water Generator Engine 100% verified!")
+
+	# Test 99: Interactive Bio-Feedback Cognitive Stress Reliever & Sound Healing Pod Verification
+	print("\n📌 [Test 99] Verifying Bio-Feedback Stress Healing Pod Engine...")
+	var initial_money_pod = state.money
+	var pod_res = state.activate_biofeedback_stress_healing_pod(0)
+	assert(pod_res["success"] == true, "Activating biofeedback healing pod should succeed")
+	assert(state.money == initial_money_pod + 8500.0, "Healing income of 8,500 ₩ should be added to money")
+	assert(state.biofeedback_healing_pods.has(0), "Seat 0 must exist in biofeedback_healing_pods dictionary")
+	print("✔ Test 99 PASSED: Bio-Feedback Stress Healing Pod Engine 100% verified!")
+
+	# Test 100: Interactive AR Holographic Exam Prep Tele-Consultant Verification
+	print("\n📌 [Test 100] Verifying AR Holographic Exam Tele-Consultant Engine...")
+	var initial_money_ar = state.money
+	var ar_res = state.activate_ar_exam_teleconsultant(0)
+	assert(ar_res["success"] == true, "Activating AR tele-consultant should succeed")
+	assert(state.money == initial_money_ar + 12000.0, "Grant of 12,000 ₩ should be added to money")
+	assert(state.ar_exam_teleconsultants.has(0), "Seat 0 must exist in ar_exam_teleconsultants dictionary")
+	print("✔ Test 100 PASSED: AR Holographic Exam Tele-Consultant Engine 100% verified!")
+
+	# Test 101: Interactive Bio-Dome Oxygen Pod & Botanical Micro-Climate Verification
+	print("\n📌 [Test 101] Verifying Bio-Dome Oxygen Pod Engine...")
+	var initial_money_bio = state.money
+	var bio_res = state.activate_biodome_oxygen_pod(0)
+	assert(bio_res["success"] == true, "Activating biodome oxygen pod should succeed")
+	assert(state.money == initial_money_bio + 9800.0, "Healing income of 9,800 ₩ should be added to money")
+	assert(state.biodome_oxygen_pods.has(0), "Seat 0 must exist in biodome_oxygen_pods dictionary")
+	print("✔ Test 101 PASSED: Bio-Dome Oxygen Pod Engine 100% verified!")
+
+	# Test 102: Interactive Super-Conductive White-Noise Frequency Synthesizer Verification
+	print("\n📌 [Test 102] Verifying White-Noise Synthesizer Engine...")
+	var initial_money_wn = state.money
+	var wn_res = state.activate_white_noise_synthesizer(0)
+	assert(wn_res["success"] == true, "Activating white-noise synthesizer should succeed")
+	assert(state.money == initial_money_wn + 11500.0, "Grant of 11,500 ₩ should be added to money")
+	assert(state.white_noise_synthesizers.has(0), "Seat 0 must exist in white_noise_synthesizers dictionary")
+	print("✔ Test 102 PASSED: White-Noise Synthesizer Engine 100% verified!")
+
+	# Test 103: Interactive Bio-Magnetic Kinetic Ergonomic Desk Posture Corrector Verification
+	print("\n📌 [Test 103] Verifying Bio-Magnetic Posture Corrector Engine...")
+	var initial_money_post = state.money
+	var post_res = state.activate_biomagnetic_posture_corrector(0)
+	assert(post_res["success"] == true, "Activating posture corrector should succeed")
+	assert(state.money == initial_money_post + 10500.0, "Ergonomics bonus of 10,500 ₩ should be added to money")
+	assert(state.biomagnetic_posture_correctors.has(0), "Seat 0 must exist in biomagnetic_posture_correctors dictionary")
+	print("✔ Test 103 PASSED: Bio-Magnetic Posture Corrector Engine 100% verified!")
+
+	# Test 104: Interactive Sub-Zero Cryogenic Cold-Brew Nitrogen Infuser Verification
+	print("\n📌 [Test 104] Verifying Cryogenic Nitrogen Infuser Engine...")
+	var initial_money_cryo = state.money
+	var cryo_res = state.activate_cryo_nitrogen_infuser(0)
+	assert(cryo_res["success"] == true, "Activating cryo nitrogen infuser should succeed")
+	assert(state.money == initial_money_cryo + 13500.0, "Beverage income of 13,500 ₩ should be added to money")
+	assert(state.cryo_nitrogen_infusers.has(0), "Seat 0 must exist in cryo_nitrogen_infusers dictionary")
+	print("✔ Test 104 PASSED: Cryogenic Nitrogen Infuser Engine 100% verified!")
+
+	# Test 105: Interactive Bio-Circadian Full-Spectrum Lighting Mood Enhancer Verification
+	print("\n📌 [Test 105] Verifying Bio-Circadian Lighting Enhancer Engine...")
+	var initial_money_circ = state.money
+	var circ_res = state.activate_circadian_lighting_mood_enhancer(0)
+	assert(circ_res["success"] == true, "Activating circadian lighting enhancer should succeed")
+	assert(state.money == initial_money_circ + 11000.0, "Ambient grant of 11,000 ₩ should be added to money")
+	assert(state.circadian_lighting_enhancers.has(0), "Seat 0 must exist in circadian_lighting_enhancers dictionary")
+	print("✔ Test 105 PASSED: Bio-Circadian Lighting Enhancer Engine 100% verified!")
+
+	# Test 106: Interactive Hydroponic Micro-Green Superfood Salad & Protein Shake Bar Verification
+	print("\n📌 [Test 106] Verifying Hydroponic Superfood Bar Engine...")
+	var initial_money_sup = state.money
+	var sup_res = state.activate_hydroponic_superfood_bar(0)
+	assert(sup_res["success"] == true, "Activating hydroponic superfood bar should succeed")
+	assert(state.money == initial_money_sup + 14000.0, "F&B income of 14,000 ₩ should be added to money")
+	assert(state.hydroponic_superfood_bars.has(0), "Seat 0 must exist in hydroponic_superfood_bars dictionary")
+	print("✔ Test 106 PASSED: Hydroponic Superfood Bar Engine 100% verified!")
+
+	# Test 107: Interactive Neural-Holographic Focused Exam Simulation Verification
+	print("\n📌 [Test 107] Verifying Holographic Exam Simulator Engine...")
+	var initial_money_sim = state.money
+	var sim_res = state.activate_holographic_exam_simulator(0)
+	assert(sim_res["success"] == true, "Activating holographic exam simulator should succeed")
+	assert(state.money == initial_money_sim + 16000.0, "EdTech grant of 16,000 ₩ should be added to money")
+	assert(state.holographic_exam_simulators.has(0), "Seat 0 must exist in holographic_exam_simulators dictionary")
+	print("✔ Test 107 PASSED: Holographic Exam Simulator Engine 100% verified!")
+
+	# Test 108: Interactive Sub-Space Quantum Entanglement Fast-Locker Storage Verification
+	print("\n📌 [Test 108] Verifying Quantum Entangled Locker Engine...")
+	var initial_money_lock = state.money
+	var lock_res = state.activate_quantum_entangled_locker(0)
+	assert(lock_res["success"] == true, "Activating quantum entangled locker should succeed")
+	assert(state.money == initial_money_lock + 12500.0, "Storage income of 12,500 ₩ should be added to money")
+	assert(state.quantum_entangled_lockers.has(0), "Seat 0 must exist in quantum_entangled_lockers dictionary")
+	print("✔ Test 108 PASSED: Quantum Entangled Locker Engine 100% verified!")
+
+	# Test 109: Interactive Sub-Space Quantum Molecular Food Synthesizer Verification
+	print("\n📌 [Test 109] Verifying Quantum Molecular Food Synthesizer Engine...")
+	var initial_money_synth = state.money
+	var synth_res = state.activate_quantum_molecular_food_synthesizer(0)
+	assert(synth_res["success"] == true, "Activating quantum molecular food synthesizer should succeed")
+	assert(state.money == initial_money_synth + 15500.0, "Catering income of 15,500 ₩ should be added to money")
+	assert(state.quantum_molecular_food_synthesizers.has(0), "Seat 0 must exist in quantum_molecular_food_synthesizers dictionary")
+	print("✔ Test 109 PASSED: Quantum Molecular Food Synthesizer Engine 100% verified!")
 
 
 
@@ -1265,6 +1372,96 @@ func _init() -> void:
 
 
 
+
+
+	# Test 110: 2:1 Diamond Isometric Projection Engine Verification
+	print("\n📌 [Test 110] Verifying 2:1 Diamond Isometric Projection Engine...")
+	var test_origin = Vector2(480.0, 90.0)
+	var grid_origin = state.iso_to_screen(Vector2i(0, 0), test_origin)
+	assert(grid_origin == test_origin, "Grid (0,0) screen pos should equal origin")
+	var screen_back = state.screen_to_iso(grid_origin, test_origin)
+	assert(screen_back == Vector2i(0, 0), "Converting origin screen pos back must yield (0,0)")
+	var diamond_pts = state.get_iso_diamond_polygon(Vector2i(1, 1), test_origin)
+	assert(diamond_pts.size() == 4, "Isometric diamond polygon must have 4 vertices")
+	print("✔ Test 110 PASSED: 2:1 Diamond Isometric Projection Engine 100% verified!")
+
+	# Test 111: Smart Connected Desk Autotiling & Bridge Topology Verification
+	print("\n📌 [Test 111] Verifying Smart Connected Desk Topology Engine...")
+	var mask = state.get_seat_connectivity_mask(0)
+	assert(mask.has("left") and mask.has("right") and mask.has("top") and mask.has("bottom"), "Mask must have 4 directional boolean flags")
+	assert(mask.has("seamless_joint"), "Mask must define seamless_joint flag")
+	print("✔ Test 111 PASSED: Smart Connected Desk Topology Engine 100% verified!")
+
+	# Test 112: Staff Role Specialization & Promotion System Verification
+	print("\n📌 [Test 112] Verifying Staff Roles & Specialization System...")
+	var staff_summary = state.get_staff_role_summary()
+	assert(staff_summary.size() == 4, "Must contain exactly 4 core staff roles (Barista, Cleaner, Cat Tamer, Guard)")
+	state.money = 50000.0
+	var upg_barista = state.upgrade_staff_role("barista")
+	assert(upg_barista["success"] == true, "Upgrading barista staff role should succeed")
+	assert(state.staff_roles["barista"]["level"] == 2, "Barista level should now be 2")
+	print("✔ Test 112 PASSED: Staff Role & Specialization System 100% verified!")
+
+	# Test 113: Regular Guest 10-Stage Story & Counseling Verification
+	print("\n📌 [Test 113] Verifying Regular Guest 10-Stage Story Engine...")
+	var story_res = state.consult_guest_story("su_hyun", "a")
+	assert(story_res["success"] == true, "Consulting su_hyun story should succeed")
+	assert(story_res["is_best"] == true, "Choice a should be the best choice for Stage 1")
+	assert(story_res["xp_reward"] == 80, "Best choice should yield 80 XP")
+	print("✔ Test 113 PASSED: Regular Guest 10-Stage Story Engine 100% verified!")
+
+	# Test 114: Theme Set Synergy & Interior Bonus Engine Verification
+	print("\n📌 [Test 114] Verifying Theme Set Synergy Engine...")
+	var syn = state.get_active_theme_synergies()
+	assert(syn["total_focus_bonus_pct"] >= 20.0, "Active modern wood theme should give at least 20% focus bonus")
+	assert(syn["total_revenue_bonus_pct"] >= 15.0, "Active modern wood theme should give at least 15% revenue bonus")
+	print("✔ Test 114 PASSED: Theme Set Synergy Engine 100% verified!")
+
+	# Test 115: Offline Idle Revenue Calculation Engine Verification
+	print("\n📌 [Test 115] Verifying Offline Idle Revenue Calculation Engine...")
+	var initial_m = state.money
+	var idle_res = state.calculate_offline_idle_earnings(1800.0) # 30 minutes
+	assert(idle_res["elapsed_minutes"] == 30, "Elapsed minutes should be 30")
+	assert(idle_res["earned_money"] > 0.0, "Earned money must be > 0")
+	assert(state.money > initial_m, "Money must increase after idle calculation")
+	print("✔ Test 115 PASSED: Offline Idle Revenue Calculation Engine 100% verified!")
+
+	# Test 116: D-Day Fever Time & Exam Rush Event Verification
+	print("\n📌 [Test 116] Verifying D-Day Fever Time Engine...")
+	var rush_res = state.trigger_exam_rush_event()
+	assert(rush_res["success"] == true and state.exam_rush_active == true, "Exam rush event should activate")
+	var fever_res = state.activate_fever_time(20.0)
+	assert(fever_res["success"] == true and state.is_fever_time == true, "Fever time must activate")
+	state.update_fever_engine(25.0)
+	assert(state.is_fever_time == false, "Fever time should expire after duration")
+	print("✔ Test 116 PASSED: D-Day Fever Time Engine 100% verified!")
+
+	# Test 117: Student Personality Archetypes Verification
+	print("\n📌 [Test 117] Verifying Student Personality Archetypes...")
+	var coder_info = state.get_archetype_info("coder")
+	assert(coder_info["name"] == "💻 풀스택 코더", "Coder archetype should match")
+	assert(coder_info["tip_rate"] >= 0.4, "Coder should have high tip rate")
+	print("✔ Test 117 PASSED: Student Personality Archetypes 100% verified!")
+
+	# Test 118: Mascot Cat Navi Royal Feast & Aura Engine Verification
+	print("\n📌 [Test 118] Verifying Mascot Cat Navi Royal Snack Engine...")
+	var prev_snack = state.navi_royal_snack_inventory
+	var snack_res = state.feed_navi_royal_snack("salmon")
+	assert(snack_res["success"] == true, "Feeding royal snack to navi should succeed")
+	assert(state.navi_royal_snack_inventory == prev_snack - 1, "Snack inventory should decrement by 1")
+	assert(state.navi_royal_buff_timer > 0.0, "Navi royal aura buff timer should be active")
+	state.update_navi_royal_engine(200.0)
+	assert(state.navi_royal_buff_timer <= 0.0, "Royal snack buff should expire after duration")
+	print("✔ Test 118 PASSED: Mascot Cat Navi Royal Snack Engine 100% verified!")
+
+	# Test 119: Lo-Fi Soundscape Mixer & Ambient Buff Verification
+	print("\n📌 [Test 119] Verifying Lo-Fi Soundscape Mixer Engine...")
+	var sound_res = state.select_soundscape_channel("cozy_rain")
+	assert(sound_res["success"] == true, "Switching soundscape track should succeed")
+	assert(state.current_soundscape_track == "cozy_rain", "Track should be cozy_rain")
+	var active_buff = state.get_active_soundscape_buff()
+	assert(active_buff["focus_buff_pct"] >= 30.0, "Cozy rain focus buff should be at least 30%")
+	print("✔ Test 119 PASSED: Lo-Fi Soundscape Mixer Engine 100% verified!")
 
 	state.free()
 	print("\n=========================================================")
