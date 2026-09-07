@@ -18,6 +18,7 @@ var developer_texture: Texture2D
 var selected_drag_seat: int = -1
 var is_dragging: bool = false
 var drag_start_mouse_pos: Vector2 = Vector2.ZERO
+var drag_grab_offset: Vector2 = Vector2.ZERO
 
 var desk_booth_texture: Texture2D
 var desk_open_texture: Texture2D
@@ -30,12 +31,14 @@ var action_laptop_texture: Texture2D = null
 var action_book_texture: Texture2D = null
 
 func load_tex_safe(path: String) -> Texture2D:
-	if ResourceLoader.exists(path):
+	if path == "":
+		return null
+	if FileAccess.file_exists(path) or ResourceLoader.exists(path):
 		var res = load(path)
 		if res is Texture2D:
 			return res
 	var global_p = ProjectSettings.globalize_path(path)
-	if FileAccess.file_exists(path):
+	if FileAccess.file_exists(global_p):
 		var img = Image.load_from_file(global_p)
 		if img != null:
 			return ImageTexture.create_from_image(img)
@@ -158,13 +161,53 @@ func _gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion and is_panning:
 		view_offset = event.position - pan_start_pos
 		view_offset.x = clamp(view_offset.x, -400.0, 200.0)
-		view_offset.y = clamp(view_offset.y, -400.0, 200.0)
+		view_offset.y = clamp(view_offset.y, -400.0, 50.0)
 		queue_redraw()
-		return
 
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 		var click_pos = event.position - view_offset
 		if event.pressed:
+			# HIGHEST PRIORITY: If a seat is ALREADY selected to be moved, move to ANY clicked tile (Blue or Brown floor!)
+			if selected_drag_seat != -1 and not is_dragging:
+				var clicked_another = false
+				var cap = GameState.get_max_capacity()
+				for i in range(cap):
+					if i == selected_drag_seat: continue
+					var s_pos = GameState.get_seat_position(i)
+					var booth = i >= GameState.upgrades["open_seats"]["level"] * 3
+					var cw = 200.0 if booth else 150.0
+					var ch = 130.0 if booth else 80.0
+					var d_rect = Rect2(s_pos.x - 10, s_pos.y - 10, cw + 20, ch + 20)
+					if d_rect.has_point(click_pos):
+						clicked_another = true
+						selected_drag_seat = i
+						floating_texts.append({
+							"text": "🧩 책상 #%d 선택됨! 이동할 위치(격자 칸)를 클릭하세요" % [i + 1],
+							"pos": s_pos + Vector2(0, -35),
+							"alpha": 1.0,
+							"color": Color(0.2, 0.9, 0.5)
+						})
+						queue_redraw()
+						return
+				
+				if not clicked_another:
+					# Instantly move currently selected seat to clicked target tile on floor!
+					var base_pos = GameState.get_base_seat_position(selected_drag_seat)
+					var raw_offset = click_pos - base_pos
+					GameState.set_seat_custom_offset_snapped(selected_drag_seat, raw_offset)
+					var new_pos = GameState.get_seat_position(selected_drag_seat)
+					floating_texts.append({
+						"text": "📍 책상 #%d 원하는 위치 배치 완료!" % [selected_drag_seat + 1],
+						"pos": new_pos + Vector2(0, -35),
+						"alpha": 1.0,
+						"color": Color(0.96, 0.62, 0.07)
+					})
+					selected_drag_seat = -1
+					is_dragging = false
+					GameState.save_game()
+					queue_redraw()
+					return
+
 			# 0. Check Clean Top Right Control Buttons Click
 			var screen_click = event.position
 			var btn_x = max(get_rect().size.x - 170.0, 750.0)
@@ -192,8 +235,8 @@ func _gui_input(event: InputEvent) -> void:
 				})
 				return
 
-			# 2. Check Coffee Bar Click
-			var bar_rect = Rect2(30, 30, 220, 150)
+			# 2. Check Coffee Bar Click (Updated to Room 2 position!)
+			var bar_rect = Rect2(750, 75, 230, 100)
 			if bar_rect.has_point(click_pos):
 				if GameState.active_orders.size() > 0:
 					var first_cid = GameState.active_orders.keys()[0]
@@ -211,21 +254,27 @@ func _gui_input(event: InputEvent) -> void:
 				})
 				queue_redraw()
 				return
-				
+			
 			# 3. Check Seat Selection & Drag Start
 			var capacity = GameState.get_max_capacity()
 			for i in range(capacity):
 				var seat_pos = GameState.get_seat_position(i)
-				if click_pos.distance_to(seat_pos) < 80.0:
+				var is_booth = i >= GameState.upgrades["open_seats"]["level"] * 3
+				var cell_w = 200.0 if is_booth else 150.0
+				var cell_h = 130.0 if is_booth else 80.0
+				var desk_hit_rect = Rect2(seat_pos.x - 10, seat_pos.y - 10, cell_w + 20, cell_h + 20)
+				
+				if desk_hit_rect.has_point(click_pos):
 					if GameState.dirty_seats.has(i):
 						GameState.clean_seat(i)
 						return
 						
 					selected_drag_seat = i
-					is_dragging = true
+					is_dragging = false
+					drag_grab_offset = click_pos - seat_pos
 					drag_start_mouse_pos = event.position
 					floating_texts.append({
-						"text": "🧲 책상 드래그 시작! 마우스로 이동하세요",
+						"text": "🧩 책상 선택됨! 원하는 칸을 클릭하거나 끌어서 이동하세요",
 						"pos": seat_pos + Vector2(0, -35),
 						"alpha": 1.0,
 						"color": Color(0.2, 0.9, 0.5)
@@ -245,14 +294,26 @@ func _gui_input(event: InputEvent) -> void:
 				selected_drag_seat = -1
 				GameState.save_game()
 				queue_redraw()
+				return�틱 배치 완료!",
+					"pos": final_pos + Vector2(0, -35),
+					"alpha": 1.0,
+					"color": Color(0.96, 0.62, 0.07)
+				})
+				selected_drag_seat = -1
+				GameState.save_game()
+				queue_redraw()
 				return
 
-	if event is InputEventMouseMotion and is_dragging and selected_drag_seat != -1:
-		var target_pos = event.position - view_offset
-		var base_pos = GameState.get_base_seat_position(selected_drag_seat)
-		var raw_offset = target_pos - base_pos
-		GameState.set_seat_custom_offset_snapped(selected_drag_seat, raw_offset)
-		queue_redraw()
+	if event is InputEventMouseMotion and selected_drag_seat != -1:
+		if (event.button_mask & MOUSE_BUTTON_MASK_LEFT) != 0:
+			if drag_start_mouse_pos.distance_to(event.position) > 4.0:
+				is_dragging = true
+			if is_dragging:
+				var target_pos = event.position - view_offset - drag_grab_offset
+				var base_pos = GameState.get_base_seat_position(selected_drag_seat)
+				var raw_offset = target_pos - base_pos
+				GameState.set_seat_custom_offset_snapped(selected_drag_seat, raw_offset)
+				queue_redraw()
 
 func _draw() -> void:
 	if GameState == null: return
@@ -306,23 +367,14 @@ func _draw() -> void:
 			var x_pos = px * 150.0 + x_offset
 			draw_line(Vector2(x_pos, y_pos), Vector2(x_pos, y_pos + plank_h), Color(0.10, 0.06, 0.04, 0.35), 1.2)
 
-	# 3. Draw 2.5D Isometric Diamond Grid Overlay & Banner in Decorating Mode
+	# 3. Draw Full 2.5D Isometric Diamond Grid Pattern & Banner across Floor
+	draw_full_isometric_floor_grid(w, h)
+	
 	if GameState.is_decorating_mode:
-		var iso_w = 64.0
-		var iso_h = 32.0
-		for i in range(-15, int(w / iso_w) + 15):
-			var p1 = Vector2(i * iso_w, 0)
-			var p2 = p1 + Vector2(h * 2.0, h)
-			draw_line(p1, p2, Color(0.96, 0.62, 0.07, 0.22), 1.0)
-			
-			var p3 = Vector2(i * iso_w, 0)
-			var p4 = p3 + Vector2(-h * 2.0, h)
-			draw_line(p3, p4, Color(0.96, 0.62, 0.07, 0.22), 1.0)
-			
 		var banner_rect = Rect2(60, 20, w - 120, 36)
 		draw_rect(banner_rect, Color(0.12, 0.1, 0.08, 0.95), true)
 		draw_rect(banner_rect, Color(0.96, 0.62, 0.07), false, 2.0)
-		draw_string(ThemeDB.fallback_font, Vector2(75, 43), "🔨 책상 자리 옮기기 모드: 책상을 클릭하여 잡은 후, 원하시는 위치를 클릭해 재배치하세요!", HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color(0.96, 0.62, 0.07))
+		draw_string(ThemeDB.fallback_font, Vector2(75, 43), "🔨 책상 자리 옮기기 모드: 책상을 클릭하여 잡은 후, 타일 격자에 맞춰 원하시는 위치로 재배치하세요!", HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color(0.96, 0.62, 0.07))
 		
 	# 4. Draw Custom Placed Furniture/Decorations
 	for dec in GameState.custom_decorations:
@@ -339,6 +391,44 @@ func _draw() -> void:
 		var c = ft["color"]
 		c.a = ft["alpha"]
 		draw_string(ThemeDB.fallback_font, ft["pos"], ft["text"], HORIZONTAL_ALIGNMENT_CENTER, -1, 15, c)
+
+func draw_full_isometric_floor_grid(_w: float, _h: float) -> void:
+	var vo = view_offset
+	# Draw Isometric Floor Tile Grid across ALL Floor Spaces (Both Blue Focus Room & Brown Lounge/Corridor)
+	var grid_step_x = 150.0
+	var grid_step_y = 80.0
+	var start_x = 30.0 + vo.x
+	var start_y = 60.0 + vo.y
+	
+	var is_active_grid = GameState.is_decorating_mode or is_dragging
+	var line_alpha = 0.55 if is_active_grid else 0.22
+	var line_color = Color(0.96, 0.62, 0.07, line_alpha) if is_active_grid else Color(0.55, 0.42, 0.30, line_alpha)
+	var node_color = Color(0.2, 0.9, 0.5, 0.8) if is_active_grid else Color(0.96, 0.62, 0.07, 0.45)
+	
+	# Draw Full 2.5D Isometric Diamond Grid Tiles across ALL Blue & Brown floor areas (9 cols x 7 rows = 63 Placeable Cells)
+	for gr in range(7):
+		for gc in range(9):
+			var tile_top_left = Vector2(start_x + gc * grid_step_x, start_y + gr * grid_step_y)
+			
+			# 2.5D Isometric Diamond Polygon for each floor tile
+			var diamond_poly = PackedVector2Array([
+				tile_top_left + Vector2(grid_step_x * 0.5, 0),
+				tile_top_left + Vector2(grid_step_x, grid_step_y * 0.5),
+				tile_top_left + Vector2(grid_step_x * 0.5, grid_step_y),
+				tile_top_left + Vector2(0, grid_step_y * 0.5)
+			])
+			
+			# Tile Fill & Grid Line Rendering
+			var fill_col = Color(0.96, 0.62, 0.07, 0.08) if is_active_grid else Color(0.2, 0.15, 0.1, 0.03)
+			draw_colored_polygon(diamond_poly, fill_col)
+			
+			var diamond_loop = diamond_poly.duplicate()
+			diamond_loop.append(diamond_poly[0])
+			draw_polyline(diamond_loop, line_color, 1.4 if is_active_grid else 1.0)
+			
+			# Draw Grid Node Anchor Point Dots at intersections
+			draw_circle(tile_top_left + Vector2(grid_step_x * 0.5, 0), 2.5, node_color)
+			draw_circle(tile_top_left + Vector2(grid_step_x * 0.5, grid_step_y * 0.5), 2.0, Color(0.2, 0.8, 1.0, 0.4))
 
 func draw_integrated_multi_room_layout(w: float, h: float) -> void:
 	var vo = view_offset
@@ -427,51 +517,60 @@ func draw_integrated_multi_room_layout(w: float, h: float) -> void:
 	# Room 3 Header Banner
 	var r3_banner = Rect2(740 + vo.x, 285 + vo.y, 250, 32)
 	draw_rect(r3_banner, Color(0.18, 0.15, 0.22, 0.95), true)
+	draw_rect(r3_banner, Color(0.8, 0.4, 0.9, 0.5), false, 1.5)
 	draw_string(ThemeDB.fallback_font, Vector2(752 + vo.x, 307 + vo.y), "🔑 프런트 & 스마트 사물함 (Front)", HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color(0.8, 0.4, 0.9))
 
 	# Smart Lockers Wall Graphics in Room 3
-	var locker_rect = Rect2(750 + vo.x, 330 + vo.y, 230, 100)
+	var locker_rect = Rect2(750 + vo.x, 330 + vo.y, 230, 110)
 	draw_rect(locker_rect, Color(0.2, 0.18, 0.25), true)
+	draw_rect(locker_rect, Color(0.8, 0.4, 0.9, 0.4), false, 1.5)
 	for lx in range(4):
 		for ly in range(2):
-			var box = Rect2(760 + lx * 52 + vo.x, 340 + ly * 42 + vo.y, 44, 34)
+			var box = Rect2(760 + lx * 52 + vo.x, 340 + ly * 44 + vo.y, 46, 36)
 			draw_rect(box, Color(0.28, 0.25, 0.35), true)
-			draw_string(ThemeDB.fallback_font, box.position + Vector2(10, 22), "🔒%d" % (lx + ly*4 + 1), HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.8, 0.8, 0.9))
+			draw_rect(box, Color(0.5, 0.4, 0.6, 0.4), false, 1.0)
+			draw_string(ThemeDB.fallback_font, box.position + Vector2(10, 23), "🔒%d" % (lx + ly*4 + 1), HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.8, 0.8, 0.9))
 
-	# ----------------------------------------------------
 	# Glass Door Archways Connecting Rooms
-	# ----------------------------------------------------
 	draw_rect(Rect2(710 + vo.x, 110 + vo.y, 20, 60), Color(0.2, 0.8, 1.0, 0.8), true)
 	draw_string(ThemeDB.fallback_font, Vector2(712 + vo.x, 145 + vo.y), "🚪", HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color.WHITE)
 
 	draw_rect(Rect2(710 + vo.x, 360 + vo.y, 20, 60), Color(0.2, 0.8, 1.0, 0.8), true)
 	draw_string(ThemeDB.fallback_font, Vector2(712 + vo.x, 395 + vo.y), "🚪", HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color.WHITE)
 
+	# Gate Corridor at Room 3 Lower Entrance
+	var gate_rect = Rect2(750 + vo.x, 455 + vo.y, 230, 42)
+	draw_rect(gate_rect, Color(0.12, 0.18, 0.16, 0.95), true)
+	draw_rect(gate_rect, Color(0.06, 0.72, 0.5), false, 2.0)
+	draw_string(ThemeDB.fallback_font, Vector2(765 + vo.x, 481 + vo.y), "🚪 입출구 무인 게이트 (스마트 출입)", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(0.06, 0.72, 0.5))
+
 	# ----------------------------------------------------
 	# Draw Desks & Booths inside ROOM 1 (Main Focus Study Room)
 	# ----------------------------------------------------
-	
-	var gate_rect = Rect2(w - 140 + vo.x, 20 + vo.y, 120, 70)
-	draw_rect(gate_rect, Color(0.16, 0.13, 0.11, 0.9), true)
-	draw_rect(gate_rect, Color(0.06, 0.72, 0.5), false, 2.0)
-	draw_string(ThemeDB.fallback_font, Vector2(w - 130 + vo.x, 55 + vo.y), "🚪 입출구 게이트", HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color(0.06, 0.72, 0.5))
-	
 	var total_capacity = GameState.get_max_capacity()
-	var cols = 4
-	var start_x = 60.0
-	var start_y = 160.0
+	var cols = 3
+	var start_x = 30.0
+	var start_y = 60.0
 	
-	# Draw 2.5D Magnetic Placement Grid Overlay when dragging a seat
+	# Draw 2.5D Magnetic Placement Grid Overlay when dragging a seat (Covers ALL Blue & Brown floor areas!)
 	if is_dragging and selected_drag_seat != -1:
-		var grid_tile_w = 110.0
-		var grid_tile_h = 75.0
-		for gc in range(5):
-			for gr in range(4):
-				var g_rect = Rect2(start_x + gc * grid_tile_w + vo.x, start_y + gr * grid_tile_h + vo.y, grid_tile_w - 5, grid_tile_h - 5)
-				draw_rect(g_rect, Color(0.2, 0.8, 1.0, 0.12), true)
-				draw_rect(g_rect, Color(0.2, 0.8, 1.0, 0.45), false, 1.0)
+		var grid_tile_w = 150.0
+		var grid_tile_h = 80.0
+		for gc in range(9):
+			for gr in range(7):
+				var center_pt = Vector2(start_x + gc * grid_tile_w + grid_tile_w*0.5 + vo.x, start_y + gr * grid_tile_h + grid_tile_h*0.5 + vo.y)
+				var iso_grid_diamond = PackedVector2Array([
+					center_pt + Vector2(0, -grid_tile_h * 0.5),
+					center_pt + Vector2(grid_tile_w * 0.5, 0),
+					center_pt + Vector2(0, grid_tile_h * 0.5),
+					center_pt + Vector2(-grid_tile_w * 0.5, 0)
+				])
+				draw_colored_polygon(iso_grid_diamond, Color(0.2, 0.8, 1.0, 0.15))
+				var iso_loop = iso_grid_diamond.duplicate()
+				iso_loop.append(iso_grid_diamond[0])
+				draw_polyline(iso_loop, Color(0.2, 0.8, 1.0, 0.6), 1.5)
 
-	# Collect seat indices and sort by Y-position for proper 2.5D depth ordering (Front items rendered ON TOP of Back items)
+	# Collect seat indices and sort by Y-position for proper 2.5D depth ordering
 	var seat_indices = []
 	for idx in range(total_capacity):
 		seat_indices.append(idx)
@@ -486,72 +585,104 @@ func draw_integrated_multi_room_layout(w: float, h: float) -> void:
 		var col = i % cols
 		var row = i / cols
 		var is_booth = i >= GameState.upgrades["open_seats"]["level"] * 3
-		var cell_w = 220.0 if is_booth else 140.0
-		var cell_h = 150.0 if is_booth else 90.0
+		var cell_w = 200.0 if is_booth else 150.0
+		var cell_h = 130.0 if is_booth else 80.0
 		
-		# EVERY SEAT MOVES UNIFIED WITH VIEW_OFFSET!
-		var seat_pos = Vector2(start_x + col * (160.0 + 30.0), start_y + row * (100.0 + 30.0)) + vo
-		if GameState.seat_custom_offsets.has(i):
-			seat_pos += GameState.seat_custom_offsets[i]
+		# Seamless 0px-gap connected desk placement matching floor grid coordinates!
+		var seat_pos = GameState.get_seat_position(i) + vo
 		
 		var desk_color = Color(0.18, 0.14, 0.12, 0.85) if not is_booth else Color(0.15, 0.12, 0.18, 0.85)
 		var border_color = Color(0.96, 0.62, 0.07) if not is_booth else Color(0.8, 0.4, 0.9)
 		
 		var desk_rect = Rect2(seat_pos.x, seat_pos.y, cell_w, cell_h)
-		# 2.5D Isometric Diamond Floor Base Pad
-		var iso_pad = PackedVector2Array([
-			seat_pos + Vector2(cell_w * 0.5, cell_h + 4),
-			seat_pos + Vector2(cell_w + 18, cell_h + 16),
-			seat_pos + Vector2(cell_w * 0.5, cell_h + 28),
-			seat_pos + Vector2(-18, cell_h + 16)
+		# 2.5D Isometric Diamond Ground Base Shadow & Placement Footprint Area (하단 격자 좌표와 100% 동일 위치 일치!)
+		var shadow_center = seat_pos + Vector2(75.0, 40.0)
+		var shadow_radius_x = 75.0
+		var shadow_radius_y = 40.0
+		
+		# Ground Shadow Base Ellipse Polygon (부드러운 지면 그림자 영역)
+		var shadow_points = PackedVector2Array()
+		var shadow_num_pts = 16
+		for pt_idx in range(shadow_num_pts):
+			var angle = (float(pt_idx) / shadow_num_pts) * TAU
+			var pt = shadow_center + Vector2(cos(angle) * (shadow_radius_x * 0.9), sin(angle) * (shadow_radius_y * 0.9))
+			shadow_points.append(pt)
+		
+		# Draw ambient ground contact shadow (soft ambient shadow underneath desk base)
+		draw_colored_polygon(shadow_points, Color(0.02, 0.015, 0.01, 0.42))
+		
+		# 2.5D Isometric Ground Tile Footprint Polygon (바닥 배치 가이드 영역)
+		var footprint_poly = PackedVector2Array([
+			seat_pos + Vector2(75.0, 0),
+			seat_pos + Vector2(150.0, 40.0),
+			seat_pos + Vector2(75.0, 80.0),
+			seat_pos + Vector2(0, 40.0)
 		])
-		draw_polygon(iso_pad, PackedColorArray([Color(0.04, 0.03, 0.02, 0.45)]))
-		var iso_pad_loop = iso_pad.duplicate()
-		iso_pad_loop.append(iso_pad[0])
-		draw_polyline(iso_pad_loop, Color(0.96, 0.62, 0.07, 0.35), 1.5)
+		
+		if GameState.is_decorating_mode or i == selected_drag_seat:
+			# Highlight active ground footprint zone in decorating/drag mode
+			var fp_color = Color(0.2, 0.9, 0.5, 0.32) if i == selected_drag_seat else Color(0.96, 0.62, 0.07, 0.22)
+			var fp_outline = Color(0.2, 1.0, 0.5, 0.9) if i == selected_drag_seat else Color(0.96, 0.62, 0.07, 0.75)
+			draw_colored_polygon(footprint_poly, fp_color)
+			var fp_loop = footprint_poly.duplicate()
+			fp_loop.append(footprint_poly[0])
+			draw_polyline(fp_loop, fp_outline, 2.0)
+			
+			# Draw ground footprint crosshairs/guide lines
+			draw_line(shadow_center + Vector2(-shadow_radius_x, 0), shadow_center + Vector2(shadow_radius_x, 0), fp_outline * Color(1,1,1,0.5), 1.0)
+			draw_line(shadow_center + Vector2(0, -shadow_radius_y), shadow_center + Vector2(0, shadow_radius_y), fp_outline * Color(1,1,1,0.5), 1.0)
+		else:
+			# Subtle ambient footprint outline on floor tile
+			var ambient_outline = Color(0.35, 0.28, 0.20, 0.30)
+			var fp_loop = footprint_poly.duplicate()
+			fp_loop.append(footprint_poly[0])
+			draw_polyline(fp_loop, ambient_outline, 1.2)
 
-		# 1. ALWAYS Render the desk PNG texture OR 2.5D Isometric Vector Fallback (No desk ever disappears!)
+		# 2.5D Seamless Connected Desk Tops & Continuous Partitions (Smart Autotiling)
+		var conn_mask = GameState.get_seat_connectivity_mask(i)
+		if conn_mask["right"]:
+			# Draw smooth wooden bridge connecting right neighbor (Seamless continuous desk top)
+			var bridge_top = Rect2(seat_pos.x + cell_w - 6, seat_pos.y + 12, 16, cell_h - 24)
+			draw_rect(bridge_top, Color(0.38, 0.28, 0.20, 0.95), true)
+			draw_rect(bridge_top, Color(0.96, 0.62, 0.07, 0.4), false, 1.0)
+			var part_bridge = Rect2(seat_pos.x + cell_w - 6, seat_pos.y, 16, 14)
+			draw_rect(part_bridge, Color(0.26, 0.20, 0.16, 0.98), true)
+			draw_rect(part_bridge, border_color, false, 1.0)
+		if conn_mask["bottom"]:
+			var v_bridge = Rect2(seat_pos.x + 8, seat_pos.y + cell_h - 4, cell_w - 16, 10)
+			draw_rect(v_bridge, Color(0.24, 0.18, 0.14, 0.92), true)
+			draw_rect(v_bridge, border_color * Color(1,1,1,0.5), false, 1.0)
+
+		# 1. Render Each Seat with its Original 2.5D Desk Art Asset (Clean Grid Order, No Image Swapping!)
 		var drawn_tex = false
+		var tex_draw_rect = Rect2(seat_pos.x, seat_pos.y, cell_w, cell_h)
+		
 		if is_booth and desk_booth_texture != null:
-			draw_texture_rect(desk_booth_texture, desk_rect, false, Color(1, 1, 1, 0.98))
+			draw_texture_rect(desk_booth_texture, tex_draw_rect, false, Color(1, 1, 1, 0.98))
 			drawn_tex = true
 		elif not is_booth and desk_vip_texture != null and i % 2 == 1:
-			draw_texture_rect(desk_vip_texture, desk_rect, false, Color(1, 1, 1, 0.98))
+			draw_texture_rect(desk_vip_texture, tex_draw_rect, false, Color(1, 1, 1, 0.98))
 			drawn_tex = true
 		elif not is_booth and desk_open_texture != null:
-			draw_texture_rect(desk_open_texture, desk_rect, false, Color(1, 1, 1, 0.98))
+			draw_texture_rect(desk_open_texture, tex_draw_rect, false, Color(1, 1, 1, 0.98))
 			drawn_tex = true
-			
+
 		if not drawn_tex:
-			# ALWAYS Draw High-Quality 2.5D Wood Desk Vector Structure
+			# High-Quality 2.5D Vector Fallback with 3D Bevel Depth
 			draw_rect(desk_rect, Color(0.32, 0.22, 0.16, 0.95), true)
 			draw_rect(desk_rect, border_color, false, 2.5)
-			# Inner Desk Mat & LED Lamp Pad
 			var mat_rect = Rect2(desk_rect.position.x + 10, desk_rect.position.y + 10, cell_w - 20, cell_h - 20)
 			draw_rect(mat_rect, Color(0.18, 0.14, 0.12, 0.9), true)
 			draw_rect(mat_rect, Color(0.4, 0.3, 0.2), false, 1.0)
-			# Desk Partition Barrier
 			var part_rect = Rect2(desk_rect.position.x, desk_rect.position.y, cell_w, 14)
 			draw_rect(part_rect, Color(0.24, 0.18, 0.14), true)
 			draw_rect(part_rect, border_color, false, 1.0)
-			# Laptop / Study Icon
 			var study_icon = "💻" if not is_booth else "🖥️"
 			draw_string(ThemeDB.fallback_font, desk_rect.position + Vector2(cell_w * 0.4, cell_h * 0.58), study_icon, HORIZONTAL_ALIGNMENT_LEFT, -1, 18, Color.WHITE)
-			# Ergonomic Chair
 			var chair_rect = Rect2(desk_rect.position.x + cell_w * 0.3, desk_rect.position.y + cell_h + 2, cell_w * 0.4, 16)
 			draw_rect(chair_rect, Color(0.15, 0.12, 0.18, 0.95), true)
 			draw_rect(chair_rect, border_color, false, 1.5)
 			draw_string(ThemeDB.fallback_font, chair_rect.position + Vector2(cell_w * 0.1, 12), "🪑", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color.WHITE)
-
-		# 2. When adjacent desks physically touch, draw a subtle wooden joint panel between them
-		for other_idx in range(i + 1, total_capacity):
-			if GameState.are_seats_adjacent(i, other_idx):
-				var other_pos = GameState.get_seat_position(other_idx)
-				var p1 = seat_pos + Vector2(cell_w * 0.5, cell_h * 0.5)
-				var p2 = other_pos + Vector2(cell_w * 0.5, cell_h * 0.5)
-				if p1.distance_to(p2) < 220.0:
-					var mid_pos = (p1 + p2) * 0.5
-					draw_line(p1, p2, Color(0.28, 0.20, 0.14, 0.6), 8.0)
 
 		if i == selected_drag_seat:
 			draw_rect(desk_rect, Color(0.2, 0.9, 0.5, 0.35), true)
@@ -735,15 +866,41 @@ func draw_integrated_multi_room_layout(w: float, h: float) -> void:
 		var cur_floor = GameState.current_floor
 		var mgr = GameState.floor_cleaner_managers.get(cur_floor, GameState.floor_cleaner_managers[1])
 		var c_pos = mgr["pos"]
-		var c_bounce = sin(steam_time * 12.0) * 4.0
+		var c_state = mgr.get("state", "IDLE")
+		var c_bounce = sin(steam_time * 12.0) * (4.0 if c_state == "WALKING" else 1.5)
 		var c_render = c_pos + Vector2(0, c_bounce)
 		
+		# Modern Store Manager character visuals (apron, tablet & smart badge)
 		if staff_cleaner_texture != null:
 			draw_texture_rect(staff_cleaner_texture, Rect2(c_render - Vector2(28, 52), Vector2(56, 56)), false)
 		else:
-			draw_circle(c_render, 20.0, Color(0.96, 0.62, 0.07))
-			draw_string(ThemeDB.fallback_font, c_render + Vector2(-10, 7), "🧹", HORIZONTAL_ALIGNMENT_LEFT, -1, 16, Color.WHITE)
-		draw_string(ThemeDB.fallback_font, c_render + Vector2(-45, -35), "🧹 " + mgr["name"], HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color(0.96, 0.62, 0.07))
+			# Modern Store Manager Vector Drawing
+			draw_circle(c_render + Vector2(0, -32), 14.0, Color(0.96, 0.82, 0.72)) # Face
+			draw_rect(Rect2(c_render.x - 14, c_render.y - 18, 28, 24), Color(0.12, 0.22, 0.38), true) # Navy Uniform
+			draw_rect(Rect2(c_render.x - 10, c_render.y - 14, 20, 20), Color(0.96, 0.62, 0.07, 0.9), true) # Smart Apron
+			draw_string(ThemeDB.fallback_font, c_render + Vector2(-6, -26), "📱", HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color.WHITE) # Smart Tablet
+			
+		var mgr_label = "✨ " + mgr["name"]
+		draw_string(ThemeDB.fallback_font, c_render + Vector2(-48, -48), mgr_label, HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color(0.96, 0.62, 0.07))
+		
+		# Action status bubbles above Store Manager
+		if c_state == "CLEANING":
+			var bubble_r = Rect2(c_render.x - 65, c_render.y - 75, 130, 22)
+			draw_rect(bubble_r, Color(0.1, 0.12, 0.18, 0.95), true)
+			draw_rect(bubble_r, Color(0.2, 0.9, 0.5), false, 1.5)
+			draw_string(ThemeDB.fallback_font, bubble_r.position + Vector2(8, 15), "✨ 쓱싹 소독 정돈 중...", HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.2, 0.95, 0.6))
+			
+			# Sparkling cleaning particles on target desk
+			var t_seat = mgr.get("clean_target_seat", -1)
+			if t_seat != -1:
+				var s_pos = GameState.get_seat_position(t_seat)
+				draw_circle(s_pos + Vector2(50, 40), 12.0 + sin(steam_time * 20.0) * 4.0, Color(0.2, 0.9, 0.5, 0.4))
+				draw_string(ThemeDB.fallback_font, s_pos + Vector2(30, 45), "✨🧼✨", HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color.WHITE)
+		elif c_state == "WALKING":
+			var bubble_r = Rect2(c_render.x - 65, c_render.y - 75, 130, 22)
+			draw_rect(bubble_r, Color(0.1, 0.12, 0.18, 0.95), true)
+			draw_rect(bubble_r, Color(0.96, 0.62, 0.07), false, 1.5)
+			draw_string(ThemeDB.fallback_font, bubble_r.position + Vector2(8, 15), "🚶 소독동선 이동 중...", HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.96, 0.62, 0.07))
 
 	# Render Mascot Cat 'Navi' wandering in Room 1 (1F Only)
 	if GameState.current_floor == 1:
