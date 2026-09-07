@@ -3896,6 +3896,24 @@ func generate_quantum_ai_curriculum(student_id: int = 1) -> Dictionary:
 		"msg": "🧠 [퀀텀 AI 맞춤 커리큘럼] 학생 %d번 초개인화 학습 로드맵 생성 완료! (성적 상승률 +50%% & 감사 팁 +8,000 ₩ 수금 🎓)" % student_id
 	}
 
+# Iteration 220: Interactive Atmospheric Pure Water Generator & Bio-Nutrient Hydration Station System
+var pure_water_liters_generated: float = 0.0
+
+func generate_atmospheric_pure_water() -> Dictionary:
+	pure_water_liters_generated += 50.0
+	var cert_grant = 12000.0
+	add_money(cert_grant)
+	reputation = min(5.0, reputation + 0.10)
+	reputation_changed.emit(reputation)
+	
+	_play_sfx_safe("fanfare")
+	return {
+		"success": true,
+		"liters_generated": pure_water_liters_generated,
+		"grant": cert_grant,
+		"msg": "💧 [대기질 음용수 생성기] 50L 초순수 알칼리수 생성 완수! (수분 집중력 +30%% & 친환경 보조금 +12,000 ₩ 수금 💧)"
+	}
+
 func trigger_120th_milestone_event() -> Dictionary:
 	milestone_120_triggered = true
 	var grand_prize = 200000.0
@@ -4539,9 +4557,9 @@ func get_revenue_multiplier() -> float:
 	var total_score = get_calculated_decor_score()
 	return 1.0 + (float(total_score) / 1000.0) * 0.5
 var floor_cleaner_managers: Dictionary = {
-	1: { "name": "현우 매니저 (1F)", "pos": Vector2(320, 280), "target": Vector2(320, 280) },
-	2: { "name": "수진 매니저 (2F)", "pos": Vector2(350, 250), "target": Vector2(350, 250) },
-	3: { "name": "민호 매니저 (3F)", "pos": Vector2(400, 220), "target": Vector2(400, 220) }
+	1: { "name": "민준 총괄 매니저 (1F)", "pos": Vector2(320, 280), "target": Vector2(320, 280), "state": "IDLE", "clean_timer": 0.0, "clean_target_seat": -1 },
+	2: { "name": "지은 라운지 큐레이터 (2F)", "pos": Vector2(350, 250), "target": Vector2(350, 250), "state": "IDLE", "clean_timer": 0.0, "clean_target_seat": -1 },
+	3: { "name": "태양 프런트 캡틴 (3F)", "pos": Vector2(400, 220), "target": Vector2(400, 220), "state": "IDLE", "clean_timer": 0.0, "clean_target_seat": -1 }
 }
 var cleaner_pos: Vector2 = Vector2(320, 280)
 var cleaner_target: Vector2 = Vector2(320, 280)
@@ -4550,12 +4568,12 @@ var cleaner_state: String = "IDLE"
 # Rebalanced Upgrades Configuration
 var upgrades: Dictionary = {
 	"staff_cleaner": {
-		"name": "🧹 자동 청소 로봇 & 알바",
+		"name": "✨ 스터디카페 전담 매장 매니저",
 		"level": 0,
 		"max_level": 3,
 		"base_cost": 500.0,
 		"cost_mult": 1.8,
-		"desc": "퇴실한 좌석으로 걸어가 자동으로 쓱싹 청소합니다"
+		"desc": "매장을 상시 순찰하며 빈 좌석으로 직접 걸어가 소독 정돈합니다"
 	},
 	"open_seats": {
 		"name": "일반 오픈석",
@@ -5187,18 +5205,36 @@ func _process(delta: float) -> void:
 			var mgr = floor_cleaner_managers[fl]
 			var c_pos = mgr["pos"]
 			var c_target = mgr["target"]
-			if dirty_seats.size() > 0 and current_floor == fl:
-				c_target = get_seat_position(dirty_seats[0])
+			var c_timer = mgr.get("clean_timer", 0.0)
+			
+			if c_timer > 0.0:
+				c_timer -= delta
+				mgr["clean_timer"] = c_timer
+				mgr["state"] = "CLEANING"
+				if c_timer <= 0.0:
+					var target_s = mgr.get("clean_target_seat", -1)
+					if target_s != -1 and dirty_seats.has(target_s):
+						clean_seat(target_s)
+					mgr["clean_target_seat"] = -1
+					mgr["state"] = "IDLE"
+			elif dirty_seats.size() > 0 and current_floor == fl:
+				var target_s = dirty_seats[0]
+				c_target = get_seat_position(target_s)
 				mgr["target"] = c_target
-				c_pos = c_pos.move_toward(c_target, delta * (100.0 + cleaner_lvl * 40.0))
-				if c_pos.distance_to(c_target) < 10.0:
-					clean_seat(dirty_seats[0])
+				mgr["state"] = "WALKING"
+				c_pos = c_pos.move_toward(c_target, delta * (140.0 + cleaner_lvl * 40.0))
+				if c_pos.distance_to(c_target) < 15.0:
+					mgr["clean_target_seat"] = target_s
+					mgr["clean_timer"] = 1.2
+					mgr["state"] = "CLEANING"
 			else:
 				var patrol_x = 300.0 + (fl * 40) + sin(Time.get_ticks_msec() * 0.001 * fl) * 60.0
 				c_target = Vector2(patrol_x, 260.0 + cos(Time.get_ticks_msec() * 0.001) * 25.0)
+				mgr["state"] = "PATROL"
 				c_pos = c_pos.move_toward(c_target, delta * 50.0)
 			mgr["pos"] = c_pos
 		cleaner_pos = floor_cleaner_managers[current_floor]["pos"]
+		cleaner_state = floor_cleaner_managers[current_floor].get("state", "IDLE")
 			
 	if upgrades["staff_counter"]["level"] > 0:
 		var auto_inc = upgrades["staff_counter"]["level"] * 20.0 * delta
@@ -5354,22 +5390,27 @@ func get_total_income_rate() -> float:
 	return total
 
 func get_base_seat_position(index: int) -> Vector2:
-	var cols = 4
-	var start_x = 60.0
-	var start_y = 160.0
-	var cell_w = 160.0
-	var cell_h = 100.0
+	var cols = 3
+	var start_x = 30.0
+	var start_y = 60.0
+	var cell_w = 150.0
+	var cell_h = 80.0
 	var col = index % cols
 	var row = index / cols
-	return Vector2(start_x + col * (cell_w + 30.0) + cell_w*0.5, start_y + row * (cell_h + 30.0) + cell_h*0.5)
+	return Vector2(start_x + col * cell_w, start_y + row * cell_h)
 
 var seat_rotations: Dictionary = {} # seat_index -> 0, 90, 180, 270 degrees
 
-func snap_to_grid(pos: Vector2, grid_size: float = 40.0) -> Vector2:
-	return Vector2(
-		snapped(pos.x, grid_size),
-		snapped(pos.y, grid_size)
-	)
+func snap_to_grid(pos: Vector2, _grid_size: float = 40.0) -> Vector2:
+	# 0px-gap Seamless Grid Lock across ALL Blue & Brown floor spaces (9 cols x 7 rows = 63 Cells)
+	var cell_w = 150.0
+	var cell_h = 80.0
+	var start_x = 30.0
+	var start_y = 60.0
+	var rel = pos - Vector2(start_x, start_y)
+	var g_col = clamp(round(rel.x / cell_w), 0, 8)
+	var g_row = clamp(round(rel.y / cell_h), 0, 6)
+	return Vector2(start_x + g_col * cell_w, start_y + g_row * cell_h)
 
 func set_seat_custom_offset_snapped(index: int, raw_offset: Vector2) -> void:
 	var base_pos = get_base_seat_position(index)
@@ -5382,6 +5423,7 @@ func rotate_seat(index: int) -> int:
 	var new_rot = (current_rot + 90) % 360
 	seat_rotations[index] = new_rot
 	return new_rot
+	
 
 func are_seats_adjacent(idx1: int, idx2: int) -> bool:
 	var p1 = get_seat_position(idx1)
@@ -5556,3 +5598,628 @@ func format_money(val: float) -> String:
 		cnt += 1
 	return res
 
+# Iteration 221: Bio-Feedback Stress Reliever & Sound Healing Pod System
+var biofeedback_healing_pods: Dictionary = {}
+
+func activate_biofeedback_stress_healing_pod(seat_index: int) -> Dictionary:
+	var bonus_income = 8500.0
+	add_money(bonus_income)
+	reputation = min(5.0, reputation + 0.08)
+	biofeedback_healing_pods[seat_index] = {
+		"level": 1,
+		"alpha_wave_freq": 10.5,
+		"stress_reduction_pct": 45.0,
+		"concentration_boost_pct": 35.0,
+		"timestamp": Time.get_ticks_msec()
+	}
+	save_game()
+	return {
+		"success": true,
+		"income": bonus_income,
+		"text": "🧠 뇌파 알파파 힐링 파드 가동! 스트레스 -45% & 매출 +8,500 ₩ ✨"
+	}
+
+# Iteration 222: AR Holographic Exam Prep Tele-Consultant System
+var ar_exam_teleconsultants: Dictionary = {}
+
+func activate_ar_exam_teleconsultant(seat_index: int) -> Dictionary:
+	var grant_income = 12000.0
+	add_money(grant_income)
+	reputation = min(5.0, reputation + 0.12)
+	ar_exam_teleconsultants[seat_index] = {
+		"level": 1,
+		"exam_pass_boost_pct": 40.0,
+		"revenue_mult": 1.25,
+		"timestamp": Time.get_ticks_msec()
+	}
+	save_game()
+	return {
+		"success": true,
+		"income": grant_income,
+		"text": "👓 증강현실 AI 시험대비 텔레-컨설턴트 접속! 합격률 +40% & 매출 +12,000 ₩ 🎓"
+	}
+
+# Iteration 223: Bio-Dome Oxygen Pod & Botanical Micro-Climate System
+var biodome_oxygen_pods: Dictionary = {}
+
+func activate_biodome_oxygen_pod(seat_index: int) -> Dictionary:
+	var bonus_income = 9800.0
+	add_money(bonus_income)
+	reputation = min(5.0, reputation + 0.10)
+	biodome_oxygen_pods[seat_index] = {
+		"level": 1,
+		"oxygen_purity_pct": 99.5,
+		"fatigue_recovery_boost_pct": 50.0,
+		"timestamp": Time.get_ticks_msec()
+	}
+	save_game()
+	return {
+		"success": true,
+		"income": bonus_income,
+		"text": "🌿 바이오돔 숲속 피톤치드 산소 힐링 가동! 피로 회복 +50% & 매출 +9,800 ₩ 🌲"
+	}
+
+# Iteration 224: White-Noise Frequency Synthesizer System
+var white_noise_synthesizers: Dictionary = {}
+
+func activate_white_noise_synthesizer(seat_index: int) -> Dictionary:
+	var bonus_income = 11500.0
+	add_money(bonus_income)
+	white_noise_db = max(20.0, white_noise_db - 15.0)
+	reputation = min(5.0, reputation + 0.09)
+	white_noise_synthesizers[seat_index] = {
+		"level": 1,
+		"noise_cancellation_db": 15.0,
+		"focus_duration_boost_pct": 45.0,
+		"timestamp": Time.get_ticks_msec()
+	}
+	save_game()
+	return {
+		"success": true,
+		"income": bonus_income,
+		"text": "🎧 초전도 백색소음 주파수 합성기 가동! 데시벨 -15dB & 매출 +11,500 ₩ 🎵"
+	}
+
+# Iteration 225: Bio-Magnetic Kinetic Ergonomic Desk Posture Corrector System
+var biomagnetic_posture_correctors: Dictionary = {}
+
+func activate_biomagnetic_posture_corrector(seat_index: int) -> Dictionary:
+	var bonus_income = 10500.0
+	add_money(bonus_income)
+	reputation = min(5.0, reputation + 0.11)
+	biomagnetic_posture_correctors[seat_index] = {
+		"level": 1,
+		"spine_alignment_pct": 98.0,
+		"study_efficiency_boost_pct": 38.0,
+		"timestamp": Time.get_ticks_msec()
+	}
+	save_game()
+	return {
+		"success": true,
+		"income": bonus_income,
+		"text": "🪑 생체 자기장 자세 교정 엔진 가동! 공부 효율 +38% & 매출 +10,500 ₩ ⚡"
+	}
+
+# Iteration 226: Sub-Zero Cryogenic Cold-Brew Nitrogen Infuser System
+var cryo_nitrogen_infusers: Dictionary = {}
+
+func activate_cryo_nitrogen_infuser(seat_index: int) -> Dictionary:
+	var bonus_income = 13500.0
+	add_money(bonus_income)
+	reputation = min(5.0, reputation + 0.13)
+	cryo_nitrogen_infusers[seat_index] = {
+		"level": 1,
+		"alertness_boost_pct": 45.0,
+		"temperature_celsius": -2.5,
+		"timestamp": Time.get_ticks_msec()
+	}
+	save_game()
+	return {
+		"success": true,
+		"income": bonus_income,
+		"text": "❄️ 극저온 질소 콜드브루 인퓨저 추출! 각성도 +45% & 매출 +13,500 ₩ ☕"
+	}
+
+# Iteration 227: Bio-Circadian Full-Spectrum Lighting Mood Enhancer System
+var circadian_lighting_enhancers: Dictionary = {}
+
+func activate_circadian_lighting_mood_enhancer(seat_index: int) -> Dictionary:
+	var bonus_income = 11000.0
+	add_money(bonus_income)
+	reputation = min(5.0, reputation + 0.10)
+	circadian_lighting_enhancers[seat_index] = {
+		"level": 1,
+		"color_temp_kelvin": 4000.0,
+		"satisfaction_boost_pct": 35.0,
+		"timestamp": Time.get_ticks_msec()
+	}
+	save_game()
+	return {
+		"success": true,
+		"income": bonus_income,
+		"text": "💡 바이오 서카디안 생체 리듬 감성 조명 가동! 만족도 +35% & 매출 +11,000 ₩ 🌟"
+	}
+
+# Iteration 228: Hydroponic Micro-Green Superfood Salad & Protein Shake Bar System
+var hydroponic_superfood_bars: Dictionary = {}
+
+func activate_hydroponic_superfood_bar(seat_index: int) -> Dictionary:
+	var bonus_income = 14000.0
+	add_money(bonus_income)
+	reputation = min(5.0, reputation + 0.14)
+	hydroponic_superfood_bars[seat_index] = {
+		"level": 1,
+		"stamina_boost_pct": 40.0,
+		"nutrient_density_score": 99.0,
+		"timestamp": Time.get_ticks_msec()
+	}
+	save_game()
+	return {
+		"success": true,
+		"income": bonus_income,
+		"text": "🥗 하이드로포닉 샐러드 & 프로틴 셰이크 제공! 체력 +40% & 매출 +14,000 ₩ 🥑"
+	}
+
+# Iteration 229: Neural-Holographic Focused Exam Simulation System
+var holographic_exam_simulators: Dictionary = {}
+
+func activate_holographic_exam_simulator(seat_index: int) -> Dictionary:
+	var bonus_income = 16000.0
+	add_money(bonus_income)
+	reputation = min(5.0, reputation + 0.15)
+	holographic_exam_simulators[seat_index] = {
+		"level": 1,
+		"exam_readiness_boost_pct": 50.0,
+		"simulation_accuracy_pct": 99.5,
+		"timestamp": Time.get_ticks_msec()
+	}
+	save_game()
+	return {
+		"success": true,
+		"income": bonus_income,
+		"text": "📱 신경 홀로그램 실전 모의고사 시뮬레이터 작동! 실전 감각 +50% & 보조금 +16,000 ₩ 🎓"
+	}
+
+# Iteration 230: Sub-Space Quantum Entanglement Fast-Locker Storage System
+var quantum_entangled_lockers: Dictionary = {}
+
+func activate_quantum_entangled_locker(seat_index: int) -> Dictionary:
+	var bonus_income = 12500.0
+	add_money(bonus_income)
+	reputation = min(5.0, reputation + 0.12)
+	quantum_entangled_lockers[seat_index] = {
+		"level": 1,
+		"retrieval_speed_ms": 0.1,
+		"convenience_boost_pct": 45.0,
+		"timestamp": Time.get_ticks_msec()
+	}
+	save_game()
+	return {
+		"success": true,
+		"income": bonus_income,
+		"text": "🗄️ 양자 얽힘 순간이동 스마트 사물함 연결! 편의성 +45% & 이용료 +12,500 ₩ ⚡"
+	}
+
+# Iteration 231: Sub-Space Quantum Molecular Food Synthesizer System
+var quantum_molecular_food_synthesizers: Dictionary = {}
+
+func activate_quantum_molecular_food_synthesizer(seat_index: int) -> Dictionary:
+	var bonus_income = 15500.0
+	add_money(bonus_income)
+	reputation = min(5.0, reputation + 0.16)
+	quantum_molecular_food_synthesizers[seat_index] = {
+		"level": 1,
+		"synthesis_speed_sec": 0.5,
+		"delight_boost_pct": 48.0,
+		"timestamp": Time.get_ticks_msec()
+	}
+	save_game()
+	return {
+		"success": true,
+		"income": bonus_income,
+		"text": "🍮 양자 분자 요리 스낵 하이테크 연성 작동! 만족감 +48% & 매출 +15,500 ₩ 🍰"
+	}
+
+# ========================================================
+# 📐 ISOMETRIC 2:1 PROJECTION & SMART CONNECTED DESK ENGINE
+# ========================================================
+
+const ISO_TILE_WIDTH: float = 120.0
+const ISO_TILE_HEIGHT: float = 60.0
+const ISO_ORIGIN: Vector2 = Vector2(480.0, 90.0)
+
+# Convert 2D Grid Cell Coordinate to Screen Isometric Position (Center of Tile)
+func iso_to_screen(grid_pos: Vector2i, origin: Vector2 = ISO_ORIGIN) -> Vector2:
+	var sx = origin.x + float(grid_pos.x - grid_pos.y) * (ISO_TILE_WIDTH * 0.5)
+	var sy = origin.y + float(grid_pos.x + grid_pos.y) * (ISO_TILE_HEIGHT * 0.5)
+	return Vector2(sx, sy)
+
+# Convert Screen Position to Nearest 2D Isometric Grid Coordinate
+func screen_to_iso(screen_pos: Vector2, origin: Vector2 = ISO_ORIGIN) -> Vector2i:
+	var rel_x = (screen_pos.x - origin.x) / (ISO_TILE_WIDTH * 0.5)
+	var rel_y = (screen_pos.y - origin.y) / (ISO_TILE_HEIGHT * 0.5)
+	var gx = int(round((rel_y + rel_x) * 0.5))
+	var gy = int(round((rel_y - rel_x) * 0.5))
+	return Vector2i(gx, gy)
+
+# Return 4 Diamond Vertices for Isometric Tile (Top, Right, Bottom, Left)
+func get_iso_diamond_polygon(grid_pos: Vector2i, origin: Vector2 = ISO_ORIGIN) -> PackedVector2Array:
+	var center = iso_to_screen(grid_pos, origin)
+	var half_w = ISO_TILE_WIDTH * 0.5
+	var half_h = ISO_TILE_HEIGHT * 0.5
+	return PackedVector2Array([
+		center + Vector2(0, -half_h),
+		center + Vector2(half_w, 0),
+		center + Vector2(0, half_h),
+		center + Vector2(-half_w, 0)
+	])
+
+# Calculate Smart Connected Desk Topology Mask for Seamless Desk Top & Partition Linking
+func get_seat_connectivity_mask(seat_index: int) -> Dictionary:
+	var current_pos = get_seat_position(seat_index)
+	var cap = get_max_capacity()
+	
+	var mask = {
+		"left": false,
+		"right": false,
+		"top": false,
+		"bottom": false,
+		"connected_count": 0,
+		"seamless_joint": false
+	}
+	
+	for other_idx in range(cap):
+		if other_idx == seat_index:
+			continue
+		var other_pos = get_seat_position(other_idx)
+		var diff = other_pos - current_pos
+		
+		# Horizontal Neighbor connection (X difference ~150px, Y diff < 30px)
+		if abs(diff.y) < 35.0:
+			if diff.x > 80.0 and diff.x < 220.0:
+				mask["right"] = true
+				mask["connected_count"] += 1
+			elif diff.x < -80.0 and diff.x > -220.0:
+				mask["left"] = true
+				mask["connected_count"] += 1
+		# Vertical Neighbor connection (Y diff ~80px, X diff < 35px)
+		elif abs(diff.x) < 40.0:
+			if diff.y > 50.0 and diff.y < 120.0:
+				mask["bottom"] = true
+				mask["connected_count"] += 1
+			elif diff.y < -50.0 and diff.y > -120.0:
+				mask["top"] = true
+				mask["connected_count"] += 1
+				
+	mask["seamless_joint"] = (mask["left"] or mask["right"])
+	return mask
+
+# ========================================================
+# 👥 STAFF ROLE & SPECIALIZATION SYSTEM (스태프 롤 시스템)
+# ========================================================
+
+var staff_roles: Dictionary = {
+	"barista": {
+		"name": "☕ 수석 바리스타 (Barista)",
+		"title": "황금 크레마 장인",
+		"level": 1,
+		"unlocked": true,
+		"coffee_speed_bonus_pct": 35.0,
+		"tip_chance_pct": 25.0,
+		"desc": "음료 제조 시간 35% 단축 & 손님 감동 팁 발생 확률 +25%"
+	},
+	"cleaner": {
+		"name": "🧹 청소 총괄 매니저 (Cleaner Master)",
+		"title": "티끌 하나 없는 완벽주의자",
+		"level": 1,
+		"unlocked": true,
+		"clean_speed_multiplier": 2.0,
+		"clean_reward_bonus": 50.0,
+		"desc": "더러워진 좌석 2배속 자동 감지 청소 & 청소 완료 시 추가 보너스 +50₩"
+	},
+	"cat_tamer": {
+		"name": "🐱 힐링 캣마스터 (Cat Tamer)",
+		"title": "냥심 저격 전문가",
+		"level": 1,
+		"unlocked": true,
+		"cat_intimacy_gain_multiplier": 2.0,
+		"study_focus_buff_pct": 30.0,
+		"desc": "길냥이 나비 호감도 획득량 2배 & 매장 손님 학업 집중도 +30%"
+	},
+	"guard": {
+		"name": "🛡️ 스마트 안심 가드 (Quiet Guard)",
+		"title": "열공 지킴이",
+		"level": 1,
+		"unlocked": true,
+		"auto_repel_villains": true,
+		"reputation_shield_pct": 100.0,
+		"desc": "소음/통화 빌런 등장 시 자동 경고 조치 및 카페 평점 100% 방어"
+	}
+}
+
+func upgrade_staff_role(role_id: String) -> Dictionary:
+	if not staff_roles.has(role_id):
+		return { "success": false, "msg": "존재하지 않는 스태프 롤입니다." }
+	var role = staff_roles[role_id]
+	var cost = float(role["level"]) * 3000.0
+	if money < cost:
+		return { "success": false, "msg": "자금이 부족합니다! (필요: %d ₩)" % int(cost) }
+	
+	add_money(-cost)
+	role["level"] += 1
+	if role_id == "barista":
+		role["coffee_speed_bonus_pct"] += 10.0
+		role["tip_chance_pct"] += 5.0
+	elif role_id == "cleaner":
+		role["clean_speed_multiplier"] += 0.5
+		role["clean_reward_bonus"] += 25.0
+	elif role_id == "cat_tamer":
+		role["study_focus_buff_pct"] += 10.0
+	elif role_id == "guard":
+		role["reputation_shield_pct"] = min(100.0, role["reputation_shield_pct"] + 5.0)
+	
+	reputation = min(5.0, reputation + 0.05)
+	reputation_changed.emit(reputation)
+	save_game()
+	return {
+		"success": true,
+		"new_level": role["level"],
+		"name": role["name"],
+		"msg": "⭐ %s Level %d 진급 완료! 능력치 대폭 강화 ✨" % [role["name"], role["level"]]
+	}
+
+func get_staff_role_summary() -> Array:
+	var result = []
+	for r_id in staff_roles.keys():
+		var r = staff_roles[r_id]
+		result.append({
+			"id": r_id,
+			"name": r["name"],
+			"level": r["level"],
+			"desc": r["desc"],
+			"upgrade_cost": float(r["level"]) * 3000.0
+		})
+	return result
+
+
+
+# ========================================================
+# 📖 REGULAR GUEST 10-STAGE STORY & COUNSELING ENGINE
+# ========================================================
+
+var guest_story_chapters: Dictionary = {
+	"su_hyun": [
+		{ "stage": 1, "title": "오리엔테이션", "dialogue": "수능 D-100... 여기서 열심히 해볼게요!", "choice_a": "따뜻한 아메리카노 줄게", "choice_b": "목표 대학이 어디야?", "best_choice": "a" },
+		{ "stage": 2, "title": "첫 모의고사", "dialogue": "수학 4등급 나왔어요... 너무 속상해요.", "choice_a": "오답 노트부터 차근차근!", "choice_b": "다음엔 잘할 수 있어!", "best_choice": "a" },
+		{ "stage": 3, "title": "심야 집중", "dialogue": "새벽 2시까지 공부해도 될까요?", "choice_a": "스탠드 조명 켜줄게, 힘내!", "choice_b": "잠도 푹 자야 해", "best_choice": "a" },
+		{ "stage": 4, "title": "슬럼프 극복", "dialogue": "집중이 안 돼요... 잠시 바람 쐬고 올까요?", "choice_a": "루프탑 테라스에서 라떼 한잔해", "choice_b": "그래도 앉아있어야 해", "best_choice": "a" },
+		{ "stage": 5, "title": "D-30 최종 스퍼트", "dialogue": "이제 진짜 한 달 남았어요. 떨려요.", "choice_a": "넌 이미 최고야, 멘탈 관리하자", "choice_b": "기출문제 10회독 돌리자", "best_choice": "a" },
+		{ "stage": 6, "title": "킬러 문항 정복", "dialogue": "킬러 22번 풀었어요! 감 잡았습니다.", "choice_a": "수능 대박의 징조네!", "choice_b": "자만하지 마", "best_choice": "a" },
+		{ "stage": 7, "title": "컨디션 조절", "dialogue": "감기 기운이 살짝 있는데 어쩌죠?", "choice_a": "카모마일 허브티 타줄게", "choice_b": "약 먹고 자", "best_choice": "a" },
+		{ "stage": 8, "title": "수능 전야", "dialogue": "내일이 수능이에요... 사장님 감사했어요.", "choice_a": "수능 대박 찹쌀떡 선물!", "choice_b": "실수만 하지 마", "best_choice": "a" },
+		{ "stage": 9, "title": "가채점 파티", "dialogue": "가채점 올 1등급 나왔어요!!", "choice_a": "축하해! 축하 베이커리 뷔페 쏜다!", "choice_b": "마킹은 잘했지?", "best_choice": "a" },
+		{ "stage": 10, "title": "명예의 전당 등극", "dialogue": "서울대 의대 최종 합격했습니다!!", "choice_a": "수현 전설의 합격패 헌정 👑", "choice_b": "대학 가서도 단골해", "best_choice": "a" }
+	],
+	"min_jun": [
+		{ "stage": 1, "title": "취준의 시작", "dialogue": "하반기 대기업 공채 시즌 시작입니다.", "choice_a": "초고속 와이파이석 배정 완료!", "choice_b": "자소서 몇 개 쓸 거야?", "best_choice": "a" },
+		{ "stage": 2, "title": "자소서 50개", "dialogue": "자소서 50개 썼는데 손목이 시려요.", "choice_a": "손목 받침대 대여해줄게", "choice_b": "더 많이 써야 해", "best_choice": "a" },
+		{ "stage": 3, "title": "인적성 검사", "dialogue": "GSAT 인적성 합격했습니다!", "choice_a": "합격 기운 아인슈페너 서비스!", "choice_b": "면접이 진짜야", "best_choice": "a" },
+		{ "stage": 4, "title": "면접 정장 준비", "dialogue": "내일 1차 실무진 면접이에요.", "choice_a": "자신감 있게 말하면 합격이야", "choice_b": "목소리 크게 내", "best_choice": "a" },
+		{ "stage": 5, "title": "최종 임원 면접", "dialogue": "임원 면접실 들어갑니다... 떨려요.", "choice_a": "너의 열정을 보여주고 와!", "choice_b": "솔직하게만 해", "best_choice": "a" },
+		{ "stage": 6, "title": "최종 합격 통보", "dialogue": "삼성전자 최종 합격 문자 받았습니다!!", "choice_a": "축하 파티! 골든 트로피 수여 🏆", "choice_b": "첫 월급 턱 잊지 마", "best_choice": "a" }
+	]
+}
+
+func consult_guest_story(guest_key: String, choice: String) -> Dictionary:
+	if not guest_story_chapters.has(guest_key):
+		return { "success": false, "msg": "스토리가 준비 중인 단골손님입니다." }
+	
+	var current_lvl = guest_intimacy.get(guest_key, {}).get("level", 1)
+	var chapters = guest_story_chapters[guest_key]
+	var chapter_idx = clamp(current_lvl - 1, 0, chapters.size() - 1)
+	var cur_chapter = chapters[chapter_idx]
+	
+	var is_best = (choice == cur_chapter["best_choice"])
+	var xp_reward = 80 if is_best else 40
+	var money_reward = 3000.0 if is_best else 1000.0
+	
+	add_money(money_reward)
+	add_guest_intimacy(guest_key, xp_reward)
+	reputation = min(5.0, reputation + 0.08)
+	reputation_changed.emit(reputation)
+	_play_sfx_safe("chime")
+	
+	return {
+		"success": true,
+		"stage": cur_chapter["stage"],
+		"title": cur_chapter["title"],
+		"is_best": is_best,
+		"xp_reward": xp_reward,
+		"money_reward": money_reward,
+		"reaction": "❤️ 감동적인 조언에 손님의 눈빛이 반짝입니다! (친밀도 +%d XP, 보상 +%d ₩)" % [xp_reward, int(money_reward)]
+	}
+
+# ========================================================
+# 🎨 THEME SET SYNERGY & INTERIOR BONUS ENGINE
+# ========================================================
+
+var interior_themes: Dictionary = {
+	"modern_wood": { "name": "🌿 프리미엄 모던 우드 테마", "focus_bonus": 20.0, "revenue_bonus": 15.0, "active": true },
+	"cyber_neon": { "name": "⚡ 미래형 사이버 네온 테마", "focus_bonus": 25.0, "revenue_bonus": 20.0, "active": false },
+	"royal_gold": { "name": "👑 로열 익세큐티브 골드 테마", "focus_bonus": 35.0, "revenue_bonus": 30.0, "active": false }
+}
+
+func get_active_theme_synergies() -> Dictionary:
+	var total_focus = 0.0
+	var total_rev = 0.0
+	for t_id in interior_themes.keys():
+		var t = interior_themes[t_id]
+		if t["active"]:
+			total_focus += t["focus_bonus"]
+			total_rev += t["revenue_bonus"]
+	return {
+		"total_focus_bonus_pct": total_focus,
+		"total_revenue_bonus_pct": total_rev,
+		"decor_score_boost": int(total_focus * 10)
+	}
+
+# ========================================================
+# ⏰ OFFLINE IDLE REVENUE CALCULATION ENGINE
+# ========================================================
+
+func calculate_offline_idle_earnings(elapsed_seconds: float) -> Dictionary:
+	var capped_seconds = min(elapsed_seconds, 8.0 * 3600.0) # Max 8 hours idle
+	var base_rate_per_min = 250.0 + (manager_level * 50.0) + (decor_score * 0.2)
+	var earned_money = (capped_seconds / 60.0) * base_rate_per_min
+	var beans_roasted = int((capped_seconds / 60.0) * 1.5)
+	
+	add_money(earned_money)
+	beans_inventory += beans_roasted
+	save_game()
+	
+	return {
+		"elapsed_minutes": int(capped_seconds / 60.0),
+		"earned_money": earned_money,
+		"beans_roasted": beans_roasted,
+		"msg": "☕ 부재중 방치 수익: %d분 동안 +%d ₩ & 원두 +%d개 수확 완료! ✨" % [int(capped_seconds / 60.0), int(earned_money), beans_roasted]
+	}
+
+# ========================================================
+# 🔥 D-DAY EXAM COUNTDOWN & FEVER TIME ENGINE
+# ========================================================
+
+var is_fever_time: bool = false
+var fever_timer: float = 0.0
+var fever_multiplier: float = 2.5
+var exam_rush_active: bool = false
+
+func trigger_exam_rush_event() -> Dictionary:
+	exam_rush_active = true
+	var boost_msg = "🔥 수능/공시 D-Day 임박! 열공 러시 돌입! (손님 방문율 2배 & 음료 주문량 폭증! 📚)"
+	reputation = min(5.0, reputation + 0.1)
+	reputation_changed.emit(reputation)
+	_play_sfx_safe("chime")
+	return {
+		"success": true,
+		"rush_active": true,
+		"msg": boost_msg
+	}
+
+func activate_fever_time(duration: float = 30.0) -> Dictionary:
+	is_fever_time = true
+	fever_timer = duration
+	_play_sfx_safe("chime")
+	return {
+		"success": true,
+		"duration": duration,
+		"multiplier": fever_multiplier,
+		"msg": "✨✨ 황금 열공 피버 타임 발동! (매출 & 집중도 x%.1f배 폭풍 상승!) ✨✨" % fever_multiplier
+	}
+
+func update_fever_engine(delta: float) -> void:
+	if is_fever_time:
+		fever_timer -= delta
+		if fever_timer <= 0.0:
+			is_fever_time = false
+			fever_timer = 0.0
+
+# ========================================================
+# 👥 STUDENT PERSONALITY ARCHETYPES & AURA BUFF ENGINE
+# ========================================================
+
+var student_archetypes: Dictionary = {
+	"coder": {
+		"name": "💻 풀스택 코더",
+		"fav_seat": "vip_2x1",
+		"fav_drink": "에스프레소 더블샷",
+		"stay_duration_mult": 1.5,
+		"tip_rate": 0.4
+	},
+	"examinee": {
+		"name": "📖 고시/수능생",
+		"fav_seat": "booth_2x2",
+		"fav_drink": "캐모마일 허브티",
+		"stay_duration_mult": 2.0,
+		"tip_rate": 0.25
+	},
+	"job_seeker": {
+		"name": "📄 열혈 취준생",
+		"fav_seat": "open_1x1",
+		"fav_drink": "아메리카노 & 크로와상",
+		"stay_duration_mult": 1.2,
+		"tip_rate": 0.3
+	},
+	"cat_lover": {
+		"name": "🐾 힐링 냥덕후",
+		"fav_seat": "open_1x1",
+		"fav_drink": "달콤 바닐라 라떼",
+		"stay_duration_mult": 1.0,
+		"tip_rate": 0.5
+	}
+}
+
+func get_archetype_info(arch_id: String) -> Dictionary:
+	return student_archetypes.get(arch_id, student_archetypes["examinee"])
+
+# ========================================================
+# 🐱 MASCOT CAT NAVI ROYAL FEAST & AURA BUFF ENGINE
+# ========================================================
+
+var navi_royal_snack_inventory: int = 5
+var navi_royal_buff_timer: float = 0.0
+
+func feed_navi_royal_snack(snack_type: String = "salmon") -> Dictionary:
+	if navi_royal_snack_inventory <= 0:
+		return { "success": false, "msg": "로열 간식이 부족합니다! 상점에서 구매해주세요." }
+	
+	navi_royal_snack_inventory -= 1
+	navi_royal_buff_timer = 180.0
+	navi_happiness = min(100, navi_happiness + 30)
+	add_guest_intimacy("navi", 50)
+	reputation = min(5.0, reputation + 0.1)
+	reputation_changed.emit(reputation)
+	_play_sfx_safe("chime")
+	
+	return {
+		"success": true,
+		"happiness": navi_happiness,
+		"buff_timer": navi_royal_buff_timer,
+		"msg": "🐟 로열 연어 간식 급여 완료! 나비가 골골송을 부르며 매장 전체에 집중력 +40% 오라를 발산합니다! 💖"
+	}
+
+func update_navi_royal_engine(delta: float) -> void:
+	if navi_royal_buff_timer > 0.0:
+		navi_royal_buff_timer -= delta
+
+# ========================================================
+# 🎵 LO-FI SOUNDSCAPE MIXER & AMBIENT BUFF ENGINE
+# ========================================================
+
+var current_soundscape_track: String = "lofi_beats"
+var soundscape_tracks: Dictionary = {
+	"lofi_beats": { "name": "🎧 심야 로파이 스터디 비트", "focus_buff_pct": 25.0, "tip_bonus_pct": 20.0 },
+	"cozy_rain": { "name": "🌧️ 빗소리 & 따뜻한 벽난로", "focus_buff_pct": 30.0, "tip_bonus_pct": 15.0 },
+	"white_noise": { "name": "🌊 깊은 몰입 화이트 노이즈", "focus_buff_pct": 35.0, "tip_bonus_pct": 10.0 },
+	"midnight_jazz": { "name": "🎷 미드나잇 재즈 라운지", "focus_buff_pct": 20.0, "tip_bonus_pct": 30.0 }
+}
+
+func select_soundscape_channel(track_id: String) -> Dictionary:
+	if not soundscape_tracks.has(track_id):
+		track_id = "lofi_beats"
+	current_soundscape_track = track_id
+	var track_info = soundscape_tracks[track_id]
+	reputation = min(5.0, reputation + 0.05)
+	reputation_changed.emit(reputation)
+	_play_sfx_safe("chime")
+	
+	return {
+		"success": true,
+		"track_id": track_id,
+		"name": track_info["name"],
+		"focus_buff_pct": track_info["focus_buff_pct"],
+		"tip_bonus_pct": track_info["tip_bonus_pct"],
+		"msg": "🎵 사운드스케이프 변경: [%s] 재생 중! (몰입도 +%.0f%% | 팁 보너스 +%.0f%%) ✨" % [track_info["name"], track_info["focus_buff_pct"], track_info["tip_bonus_pct"]]
+	}
+
+func get_active_soundscape_buff() -> Dictionary:
+	return soundscape_tracks.get(current_soundscape_track, soundscape_tracks["lofi_beats"])
