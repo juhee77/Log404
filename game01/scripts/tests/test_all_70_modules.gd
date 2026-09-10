@@ -1124,8 +1124,8 @@ func _init() -> void:
 	assert(diag.has("math_score") and diag["math_score"] >= 70, "Exam diagnosis must generate valid math score")
 	assert(diag.has("rank_title"), "Exam diagnosis must calculate rank title")
 	
-	var m_res = state.apply_student_mentoring_buff(student_id)
-	assert(m_res["success"] == true, "Applying student mentoring buff should succeed")
+	var mentor_res = state.apply_student_mentoring_buff(student_id)
+	assert(mentor_res["success"] == true, "Applying student mentoring buff should succeed")
 	assert(state.student_mentoring_records.has(student_id), "Student mentoring record must be saved")
 	print("✔ Test 84 PASSED: Student Mentoring & Exam Diagnosis Engine 100% verified!")
 
@@ -1463,8 +1463,96 @@ func _init() -> void:
 	assert(active_buff["focus_buff_pct"] >= 30.0, "Cozy rain focus buff should be at least 30%")
 	print("✔ Test 119 PASSED: Lo-Fi Soundscape Mixer Engine 100% verified!")
 
+	# Test 120: Interior Layout Presets & 120th Grand Milestone Verification
+	print("\n📌 [Test 120] Verifying Interior Layout Presets & 120th Grand Milestone Engine...")
+	state.seat_custom_offsets[0] = Vector2(120, 60)
+	var final_p_save_res = state.save_layout_preset(1, "나만의 황금 독서실")
+	assert(final_p_save_res["success"] == true, "Saving layout preset to slot 1 should succeed")
+	state.seat_custom_offsets.clear()
+	var final_p_load_res = state.load_layout_preset(1)
+	assert(final_p_load_res["success"] == true, "Loading layout preset from slot 1 should succeed")
+	assert(state.seat_custom_offsets[0] == Vector2(120, 60), "Loaded offsets must match saved offsets")
+	var grand_120th_res = state.celebrate_120th_milestone()
+	assert(grand_120th_res["success"] == true and state.reputation == 5.0, "120th Milestone celebration must award full 5.0 reputation")
+	print("✔ Test 120 PASSED: Interior Layout Presets & 120th Grand Milestone Engine 100% verified!")
+
+	# Test 121: Quantum Teleportation Parcel Locker Engine Verification
+	print("\n📌 [Test 121] Verifying Quantum Teleportation Parcel Locker Engine...")
+	var locker_res = state.activate_quantum_parcel_locker()
+	assert(locker_res["success"] == true, "Quantum parcel locker activation must succeed")
+	assert(locker_res["income"] == 2500.0, "Parcel locker bonus income should be 2500")
+	print("✔ Test 121 PASSED: Quantum Teleportation Parcel Locker Engine 100% verified!")
+
+	# Test 122: 6G Quantum Wi-Fi Router Engine Verification
+	print("\n📌 [Test 122] Verifying 6G Quantum Wi-Fi Router Engine...")
+	var wifi_res = state.activate_quantum_wifi_router()
+	assert(wifi_res["success"] == true, "Quantum Wi-Fi router activation must succeed")
+	assert(wifi_res["income"] == 3000.0, "Wi-Fi router bonus income should be 3000")
+	print("✔ Test 122 PASSED: 6G Quantum Wi-Fi Router Engine 100% verified!")
+
+	# Test 123: Zero-Gravity Ergonomic Reclining Study Chair Engine Verification
+	print("\n📌 [Test 123] Verifying Zero-Gravity Ergonomic Reclining Study Chair Engine...")
+	var chair_res = state.activate_zero_gravity_chair()
+	assert(chair_res["success"] == true, "Zero-gravity chair activation must succeed")
+	assert(chair_res["income"] == 3500.0, "Zero-gravity chair bonus income should be 3500")
+	print("✔ Test 123 PASSED: Zero-Gravity Ergonomic Reclining Study Chair Engine 100% verified!")
+
+	# Test 124: Quantum Nanite Air-Purification & Oxygen-Dome Pod Engine Verification
+	print("\n📌 [Test 124] Verifying Quantum Nanite Oxygen Pod Engine...")
+	var nanite_pod_res = state.activate_nanite_oxygen_pod()
+	assert(nanite_pod_res["success"] == true, "Nanite oxygen pod activation must succeed")
+	assert(nanite_pod_res["income"] == 4000.0, "Oxygen pod bonus income should be 4000")
+	print("✔ Test 124 PASSED: Quantum Nanite Oxygen Pod Engine 100% verified!")
+
+	# Test 125: Sub-Space Climate Control System Engine Verification
+	print("\n📌 [Test 125] Verifying Sub-Space Climate Control System Engine...")
+	var climate_res = state.activate_subspace_climate_control()
+	assert(climate_res["success"] == true, "Sub-space climate control activation must succeed")
+	assert(climate_res["income"] == 4500.0, "Climate control bonus income should be 4500")
+	print("✔ Test 125 PASSED: Sub-Space Climate Control System Engine 100% verified!")
+
+	# Test 126: Quantum Holographic AI Tutoring Pod Engine Verification
+	print("\n📌 [Test 126] Verifying Quantum Holographic AI Tutoring Pod Engine...")
+	var tutor_res = state.activate_quantum_holographic_ai_tutoring_pod()
+	assert(tutor_res["success"] == true, "Quantum holographic AI tutoring pod activation must succeed")
+	assert(tutor_res["income"] == 5000.0, "AI tutoring pod bonus income should be 5000")
+	print("✔ Test 126 PASSED: Quantum Holographic AI Tutoring Pod Engine 100% verified!")
+
+	# Test 127: Neural Biometric Sleep-Wake Rhythm Synchronizer Engine Verification
+	print("\n📌 [Test 127] Verifying Neural Biometric Sleep-Wake Rhythm Synchronizer Engine...")
+	var sync_res = state.activate_neural_sleep_wake_synchronizer()
+	assert(sync_res["success"] == true, "Neural sleep-wake synchronizer activation must succeed")
+	assert(sync_res["income"] == 5500.0, "Synchronizer bonus income should be 5500")
+	print("✔ Test 127 PASSED: Neural Biometric Sleep-Wake Rhythm Synchronizer Engine 100% verified!")
+
+	# Test 128: Sub-Quantum Tachyon Telepathy Learning Pod Engine Verification
+	print("\n📌 [Test 128] Verifying Sub-Quantum Tachyon Telepathy Learning Pod Engine...")
+	var tachyon_res = state.activate_tachyon_telepathy_learning_pod()
+	assert(tachyon_res["success"] == true, "Tachyon telepathy learning pod activation must succeed")
+	assert(tachyon_res["income"] == 6000.0, "Tachyon pod bonus income should be 6000")
+	print("✔ Test 128 PASSED: Sub-Quantum Tachyon Telepathy Learning Pod Engine 100% verified!")
+
+	# Test 129: Quantum Zero-Point Energy Supercapacitor Array Engine Verification
+	print("\n📌 [Test 129] Verifying Quantum Zero-Point Energy Supercapacitor Array Engine...")
+	var zpe_res = state.activate_zero_point_energy_supercapacitor()
+	assert(zpe_res["success"] == true, "Zero-point energy supercapacitor activation must succeed")
+	assert(zpe_res["income"] == 6500.0, "Supercapacitor bonus income should be 6500")
+	print("✔ Test 129 PASSED: Quantum Zero-Point Energy Supercapacitor Array Engine 100% verified!")
+
+	# Test 130: Sub-Space Warp-Drive Coffee Bean Transporter Engine Verification
+	print("\n📌 [Test 130] Verifying Sub-Space Warp-Drive Coffee Bean Transporter Engine...")
+	var warp_res = state.activate_warp_drive_coffee_transporter()
+	assert(warp_res["success"] == true, "Warp drive coffee transporter activation must succeed")
+	assert(warp_res["income"] == 7000.0, "Warp drive coffee transporter bonus income should be 7000")
+	print("✔ Test 130 PASSED: Sub-Space Warp-Drive Coffee Bean Transporter Engine 100% verified!")
+
 	state.free()
 	print("\n=========================================================")
-	print("🎉 ALL 120-MODULE AUTOMATED VERIFICATION TESTS PASSED (100%) 🎉")
+	print("🎉 ALL 130-MODULE AUTOMATED VERIFICATION TESTS PASSED (100%) 🎉")
 	print("=========================================================\n")
 	quit()
+
+
+
+
+

@@ -6223,3 +6223,197 @@ func select_soundscape_channel(track_id: String) -> Dictionary:
 
 func get_active_soundscape_buff() -> Dictionary:
 	return soundscape_tracks.get(current_soundscape_track, soundscape_tracks["lofi_beats"])
+
+# ========================================================
+# 🏰 INTERIOR LAYOUT PRESETS & 120TH MILESTONE CELEBRATION
+# ========================================================
+
+var layout_presets: Dictionary = {
+	1: { "name": "기본 오픈형 독서실", "offsets": {}, "partitions": {} },
+	2: { "name": "프라이빗 1인실 집중존", "offsets": {}, "partitions": {} },
+	3: { "name": "로열 익세큐티브 라운지", "offsets": {}, "partitions": {} }
+}
+
+func save_layout_preset(slot: int, custom_name: String = "") -> Dictionary:
+	if slot < 1 or slot > 3:
+		return { "success": false, "msg": "유효하지 않은 프리셋 슬롯입니다 (1~3)." }
+	
+	var name_to_use = custom_name if custom_name != "" else "배치 프리셋 #%d" % slot
+	layout_presets[slot] = {
+		"name": name_to_use,
+		"offsets": seat_custom_offsets.duplicate(true),
+		"partitions": seat_partitions.duplicate(true),
+		"saved_at": Time.get_datetime_string_from_system()
+	}
+	save_game()
+	_play_sfx_safe("chime")
+	return {
+		"success": true,
+		"slot": slot,
+		"name": name_to_use,
+		"msg": "💾 [%s] 슬롯 %d에 인테리어 배치가 안전하게 저장되었습니다! ✨" % [name_to_use, slot]
+	}
+
+func load_layout_preset(slot: int) -> Dictionary:
+	if not layout_presets.has(slot) or layout_presets[slot]["offsets"].is_empty():
+		return { "success": false, "msg": "저장된 배치 데이터가 없습니다." }
+	
+	var preset = layout_presets[slot]
+	seat_custom_offsets = preset["offsets"].duplicate(true)
+	seat_partitions = preset["partitions"].duplicate(true)
+	save_game()
+	_play_sfx_safe("coin")
+	return {
+		"success": true,
+		"slot": slot,
+		"name": preset["name"],
+		"msg": "📍 [%s] 인테리어 배치를 성공적으로 불러왔습니다! 🎨" % preset["name"]
+	}
+
+func celebrate_120th_milestone() -> Dictionary:
+	var grand_prize = 500000.0
+	add_money(grand_prize)
+	decor_score += 500
+	reputation = 5.0
+	reputation_changed.emit(reputation)
+	_play_sfx_safe("chime")
+	return {
+		"success": true,
+		"prize": grand_prize,
+		"msg": "🎉🎉 Log404 Studio 120개 모듈 전면 완수 그랜드 마일스톤 달성! (+500,000 ₩ | 꾸미기 +500점 | 평점 5.0 만점 🏆) 🎉🎉"
+	}
+
+func activate_quantum_parcel_locker() -> Dictionary:
+	var bonus_income = 2500.0
+	add_money(bonus_income)
+	decor_score += 150
+	reputation = min(5.0, reputation + 0.1)
+	reputation_changed.emit(reputation)
+	_play_sfx_safe("coin")
+	return {
+		"success": true,
+		"income": bonus_income,
+		"msg": "📦 퀀텀 무인 스마트 택배 시스템 가동 완료! (수험 용품 직배송 +2,500 ₩ | 꾸미기 +150점) ✨"
+	}
+
+func activate_quantum_wifi_router() -> Dictionary:
+	var bonus_income = 3000.0
+	add_money(bonus_income)
+	decor_score += 180
+	reputation = min(5.0, reputation + 0.1)
+	reputation_changed.emit(reputation)
+	_play_sfx_safe("coin")
+	return {
+		"success": true,
+		"income": bonus_income,
+		"msg": "🌐 초고속 6G 퀀텀 와이파이 시스템 개통! (인터넷 속도 극대화 +3,000 ₩ | 꾸미기 +180점) ⚡"
+	}
+
+func activate_zero_gravity_chair() -> Dictionary:
+	var bonus_income = 3500.0
+	add_money(bonus_income)
+	decor_score += 200
+	reputation = min(5.0, reputation + 0.1)
+	reputation_changed.emit(reputation)
+	_play_sfx_safe("coin")
+	return {
+		"success": true,
+		"income": bonus_income,
+		"msg": "🪑 무중력 인체공학 리클라이닝 모션체어 설치 완료! (피로도 제로화 +3,500 ₩ | 꾸미기 +200점) 🪶"
+	}
+
+func activate_nanite_oxygen_pod() -> Dictionary:
+	var bonus_income = 4000.0
+	add_money(bonus_income)
+	decor_score += 220
+	reputation = min(5.0, reputation + 0.1)
+	reputation_changed.emit(reputation)
+	_play_sfx_safe("coin")
+	return {
+		"success": true,
+		"income": bonus_income,
+		"msg": "🌿 무균 퀀텀 공기청정 & 고농도 산소 돔 Pod 가동! (뇌 활성화 극대화 +4,000 ₩ | 꾸미기 +220점) 💨"
+	}
+
+func activate_subspace_climate_control() -> Dictionary:
+	var bonus_income = 4500.0
+	add_money(bonus_income)
+	decor_score += 250
+	reputation = min(5.0, reputation + 0.1)
+	reputation_changed.emit(reputation)
+	_play_sfx_safe("coin")
+	return {
+		"success": true,
+		"income": bonus_income,
+		"msg": "❄️ 퀀텀 항온항습 서브스페이스 스마트 에어컨 가동! (최적 쾌적 환경 +4,500 ₩ | 꾸미기 +250점) 🌡️"
+	}
+
+func activate_quantum_holographic_ai_tutoring_pod() -> Dictionary:
+	var bonus_income = 5000.0
+	add_money(bonus_income)
+	decor_score += 280
+	reputation = min(5.0, reputation + 0.1)
+	reputation_changed.emit(reputation)
+	_play_sfx_safe("coin")
+	return {
+		"success": true,
+		"income": bonus_income,
+		"msg": "🎓 퀀텀 홀로그램 AI 초개인화 맞춤 튜터링 룸 개장! (성적 폭승 보장 +5,000 ₩ | 꾸미기 +280점) 🤖"
+	}
+
+func activate_neural_sleep_wake_synchronizer() -> Dictionary:
+	var bonus_income = 5500.0
+	add_money(bonus_income)
+	decor_score += 300
+	reputation = min(5.0, reputation + 0.1)
+	reputation_changed.emit(reputation)
+	_play_sfx_safe("coin")
+	return {
+		"success": true,
+		"income": bonus_income,
+		"msg": "🧠 뉴럴 생체시계 수면-각성 몽환 동기화 시스템 작동! (집중력 극한 상승 +5,500 ₩ | 꾸미기 +300점) ⚡"
+	}
+
+func activate_tachyon_telepathy_learning_pod() -> Dictionary:
+	var bonus_income = 6000.0
+	add_money(bonus_income)
+	decor_score += 320
+	reputation = min(5.0, reputation + 0.1)
+	reputation_changed.emit(reputation)
+	_play_sfx_safe("coin")
+	return {
+		"success": true,
+		"income": bonus_income,
+		"msg": "🌌 서브퀀텀 타키온 텔레파시 초고속 학업 전달 Pod 가동! (공부 효율 500% 초월 +6,000 ₩ | 꾸미기 +320점) 🚀"
+	}
+
+func activate_zero_point_energy_supercapacitor() -> Dictionary:
+	var bonus_income = 6500.0
+	add_money(bonus_income)
+	decor_score += 350
+	reputation = min(5.0, reputation + 0.1)
+	reputation_changed.emit(reputation)
+	_play_sfx_safe("coin")
+	return {
+		"success": true,
+		"income": bonus_income,
+		"msg": "⚡ 퀀텀 영점 에너지 슈퍼커패시터 그리드 가동! (매장 전력 무한 공급 +6,500 ₩ | 꾸미기 +350점) 🔋"
+	}
+
+func activate_warp_drive_coffee_transporter() -> Dictionary:
+	var bonus_income = 7000.0
+	add_money(bonus_income)
+	decor_score += 400
+	reputation = min(5.0, reputation + 0.1)
+	reputation_changed.emit(reputation)
+	_play_sfx_safe("coin")
+	return {
+		"success": true,
+		"income": bonus_income,
+		"msg": "☕ 서브스페이스 워프 드라이브 프리미엄 원두 순간이동 공급망 개통! (최상급 원두 공급 +7,000 ₩ | 꾸미기 +400점) ☕"
+	}
+
+
+
+
+

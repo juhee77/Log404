@@ -33,15 +33,15 @@ var action_book_texture: Texture2D = null
 func load_tex_safe(path: String) -> Texture2D:
 	if path == "":
 		return null
-	if FileAccess.file_exists(path) or ResourceLoader.exists(path):
-		var res = load(path)
-		if res is Texture2D:
-			return res
 	var global_p = ProjectSettings.globalize_path(path)
 	if FileAccess.file_exists(global_p):
 		var img = Image.load_from_file(global_p)
 		if img != null:
 			return ImageTexture.create_from_image(img)
+	if ResourceLoader.exists(path):
+		var res = load(path)
+		if res is Texture2D:
+			return res
 	return null
 
 func _ready() -> void:
@@ -287,14 +287,6 @@ func _gui_input(event: InputEvent) -> void:
 				var final_pos = GameState.get_seat_position(selected_drag_seat)
 				floating_texts.append({
 					"text": "📍 책상 마그네틱 배치 완료!",
-					"pos": final_pos + Vector2(0, -35),
-					"alpha": 1.0,
-					"color": Color(0.96, 0.62, 0.07)
-				})
-				selected_drag_seat = -1
-				GameState.save_game()
-				queue_redraw()
-				return�틱 배치 완료!",
 					"pos": final_pos + Vector2(0, -35),
 					"alpha": 1.0,
 					"color": Color(0.96, 0.62, 0.07)
