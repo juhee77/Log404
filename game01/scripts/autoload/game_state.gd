@@ -6413,6 +6413,160 @@ func activate_warp_drive_coffee_transporter() -> Dictionary:
 		"msg": "☕ 서브스페이스 워프 드라이브 프리미엄 원두 순간이동 공급망 개통! (최상급 원두 공급 +7,000 ₩ | 꾸미기 +400점) ☕"
 	}
 
+func activate_quantum_molecular_cyber_cafe() -> Dictionary:
+	var bonus_income = 7500.0
+	add_money(bonus_income)
+	decor_score += 450
+	reputation = min(5.0, reputation + 0.1)
+	reputation_changed.emit(reputation)
+	_play_sfx_safe("coin")
+	return {
+		"success": true,
+		"income": bonus_income,
+		"msg": "💻 퀀텀 분자물질 합성 제로레이턴시 미래형 사이버 카페 개장! (초고속 네트워크 +7,500 ₩ | 꾸미기 +450점) 🎮"
+	}
+
+func activate_cybernetic_holographic_lounge() -> Dictionary:
+	var bonus_income = 8000.0
+	add_money(bonus_income)
+	decor_score += 500
+	reputation = min(5.0, reputation + 0.1)
+	reputation_changed.emit(reputation)
+	_play_sfx_safe("coin")
+	return {
+		"success": true,
+		"income": bonus_income,
+		"msg": "🍹 사이버네틱 홀로그래픽 스마트 버추얼 라운지 & 바 시스템 가동! (휴식 만족도 최상급 +8,000 ₩ | 꾸미기 +500점) 🍸"
+	}
+
+func activate_omni_gravity_focus_pod() -> Dictionary:
+	var bonus_income = 8500.0
+	add_money(bonus_income)
+	decor_score += 550
+	reputation = min(5.0, reputation + 0.1)
+	reputation_changed.emit(reputation)
+	_play_sfx_safe("coin")
+	return {
+		"success": true,
+		"income": bonus_income,
+		"msg": "🌌 옴니 무중력 집중 포커스 캡슐 Pod 배열 가동! (무중력 집중 환경 +8,500 ₩ | 꾸미기 +550점) 🧘"
+	}
+
+func activate_hyperdimensional_temporal_pod() -> Dictionary:
+	var bonus_income = 9000.0
+	add_money(bonus_income)
+	decor_score += 600
+	reputation = min(5.0, reputation + 0.1)
+	reputation_changed.emit(reputation)
+	_play_sfx_safe("coin")
+	return {
+		"success": true,
+		"income": bonus_income,
+		"msg": "⌛ 하이퍼디멘셔널 시공간 정지 무한 학업 Pod 배열 가동! (시간 정지 학습 +9,000 ₩ | 꾸미기 +600점) 🌀"
+	}
+
+func activate_multiversal_knowledge_nexus() -> Dictionary:
+	var bonus_income = 9500.0
+	add_money(bonus_income)
+	decor_score += 650
+	reputation = min(5.0, reputation + 0.1)
+	reputation_changed.emit(reputation)
+	_play_sfx_safe("coin")
+	return {
+		"success": true,
+		"income": bonus_income,
+		"msg": "🌐 멀티버스 지식 넥서스 & 뉴럴 인터페이스 허브 개장! (다차원 통합 학습 +9,500 ₩ | 꾸미기 +650점) 🔮"
+	}
+
+func activate_singularity_quantum_core() -> Dictionary:
+	var bonus_income = 10000.0
+	add_money(bonus_income)
+	decor_score += 700
+	reputation = min(5.0, reputation + 0.1)
+	reputation_changed.emit(reputation)
+	_play_sfx_safe("coin")
+	return {
+		"success": true,
+		"income": bonus_income,
+		"msg": "⚛️ 싱귤래리티 퀀텀 코어 에너지 생성기 & 초월적 학습 매트릭스 설치! (+10,000 ₩ | 꾸미기 +700점) 🌟"
+	}
+
+func activate_quantum_entanglement_teleporter() -> Dictionary:
+	var bonus_income = 10500.0
+	add_money(bonus_income)
+	decor_score += 750
+	reputation = min(5.0, reputation + 0.1)
+	reputation_changed.emit(reputation)
+	_play_sfx_safe("coin")
+	return {
+		"success": true,
+		"income": bonus_income,
+		"msg": "✨ 초광속 퀀텀 얽힘 순간이동 통학 네트워크 전격 구축! (+10,500 ₩ | 꾸미기 +750점) 🌀"
+	}
+
+func activate_cosmic_mindwave_synchronizer() -> Dictionary:
+	var bonus_income = 11000.0
+	add_money(bonus_income)
+	decor_score += 800
+	reputation = min(5.0, reputation + 0.1)
+	reputation_changed.emit(reputation)
+	_play_sfx_safe("coin")
+	return {
+		"success": true,
+		"income": bonus_income,
+		"msg": "🌌 유니버설 우주 뇌파 동기화 & 무한 몰입 오라 필드 생성! (+11,000 ₩ | 꾸미기 +800점) 🌠"
+	}
+
+func activate_omnipresent_ai_governance() -> Dictionary:
+	var bonus_income = 12000.0
+	add_money(bonus_income)
+	decor_score += 850
+	reputation = min(5.0, reputation + 0.1)
+	reputation_changed.emit(reputation)
+	_play_sfx_safe("coin")
+	return {
+		"success": true,
+		"income": bonus_income,
+		"msg": "🌐 옴니프레젠트 퀀텀 AI 자율 매장 거버넌스 총괄 거버너 가동! (+12,000 ₩ | 꾸미기 +850점) 🤖"
+	}
+
+func activate_140th_grand_milestone() -> Dictionary:
+	var bonus_income = 15000.0
+	add_money(bonus_income)
+	decor_score += 1000
+	reputation = 5.0
+	reputation_changed.emit(reputation)
+	_play_sfx_safe("coin")
+	return {
+		"success": true,
+		"income": bonus_income,
+		"msg": "👑 140번째 모듈 달성 기념! 얼티밋 옴니버스 코스믹 제국 스터디카페 스테이션 그랜드 마일스톤! (+15,000 ₩ | 꾸미기 +1,000점 | 평판 MAX) 🎉"
+	}
+
+func activate_quantum_chrono_shield() -> Dictionary:
+	var bonus_income = 16000.0
+	add_money(bonus_income)
+	decor_score += 1100
+	reputation = 5.0
+	reputation_changed.emit(reputation)
+	_play_sfx_safe("coin")
+	return {
+		"success": true,
+		"income": bonus_income,
+		"msg": "🛡️ 하이퍼디멘셔널 퀀텀 시공간 크로노 실드 & 방음 에너지 베리어 가동! (+16,000 ₩ | 꾸미기 +1,100점) ⚡"
+	}
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
