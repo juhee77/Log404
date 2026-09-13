@@ -6556,6 +6556,159 @@ func activate_quantum_chrono_shield() -> Dictionary:
 		"msg": "🛡️ 하이퍼디멘셔널 퀀텀 시공간 크로노 실드 & 방음 에너지 베리어 가동! (+16,000 ₩ | 꾸미기 +1,100점) ⚡"
 	}
 
+func activate_multiversal_telepathic_ai_tutor_network() -> Dictionary:
+	var bonus_income = 17500.0
+	add_money(bonus_income)
+	decor_score += 1200
+	reputation = 5.0
+	reputation_changed.emit(reputation)
+	_play_sfx_safe("coin")
+	return {
+		"success": true,
+		"income": bonus_income,
+		"msg": "🧠 멀티버스 텔레파시 초지능 AI 튜터 뇌파 튜토링 네트워크 가동! (+17,500 ₩ | 꾸미기 +1,200점 | 초고속 학습 수수료) 🔮"
+	}
+
+func activate_omni_dimensional_zero_point_energy_grid() -> Dictionary:
+	var bonus_income = 19000.0
+	add_money(bonus_income)
+	decor_score += 1300
+	reputation = 5.0
+	reputation_changed.emit(reputation)
+	_play_sfx_safe("coin")
+	return {
+		"success": true,
+		"income": bonus_income,
+		"msg": "⚡ 옴니 차원 영점 에너지 무한 발전 그리드 시스템 가동! (+19,000 ₩ | 꾸미기 +1,300점 | 무제한 프리미엄 전력 공급) 🔋"
+	}
+
+func activate_cosmic_singularity_hyper_dimension_study_lounge() -> Dictionary:
+	var bonus_income = 20500.0
+	add_money(bonus_income)
+	decor_score += 1400
+	reputation = 5.0
+	reputation_changed.emit(reputation)
+	_play_sfx_safe("coin")
+	return {
+		"success": true,
+		"income": bonus_income,
+		"msg": "🌌 우주 싱귤래리티 초차원 하이퍼 스터디 라운지 개장! (+20,500 ₩ | 꾸미기 +1,400점 | 무한 지식 싱귤래리티) 🪐"
+	}
+
+func activate_omni_cosmic_hyper_cube_quantum_space() -> Dictionary:
+	var bonus_income = 22000.0
+	add_money(bonus_income)
+	decor_score += 1500
+	reputation = 5.0
+	reputation_changed.emit(reputation)
+	_play_sfx_safe("coin")
+	return {
+		"success": true,
+		"income": bonus_income,
+		"msg": "🧊 옴니 코스믹 하이퍼큐브 4차원 퀀텀 공간 확장! (+22,000 ₩ | 꾸미기 +1,500점 | 무한 매트릭스 확장) 🧊"
+	}
+
+func activate_hyper_dimensional_sub_space_wormhole_transport() -> Dictionary:
+	var bonus_income = 23500.0
+	add_money(bonus_income)
+	decor_score += 1600
+	reputation = 5.0
+	reputation_changed.emit(reputation)
+	_play_sfx_safe("coin")
+	return {
+		"success": true,
+		"income": bonus_income,
+		"msg": "🌀 초차원 아공간 웜홀 순간이동 통학 게이트 가동! (+23,500 ₩ | 꾸미기 +1,600점 | 0초 전은하계 통학) 🌌"
+	}
+
+func activate_hyper_quantum_neural_synapse_booster() -> Dictionary:
+	var bonus_income = 25000.0
+	add_money(bonus_income)
+	decor_score += 1700
+	reputation = 5.0
+	reputation_changed.emit(reputation)
+	_play_sfx_safe("coin")
+	return {
+		"success": true,
+		"income": bonus_income,
+		"msg": "⚡ 하이퍼 퀀텀 신경 시냅스 초가속 부스터 인핸서 활성화! (+25,000 ₩ | 꾸미기 +1,700점 | 암기력 1,000% 증폭) ⚡"
+	}
+
+func activate_omni_cosmic_quantum_ai_exam_prediction_matrix() -> Dictionary:
+	var bonus_income = 26500.0
+	add_money(bonus_income)
+	decor_score += 1800
+	reputation = 5.0
+	reputation_changed.emit(reputation)
+	_play_sfx_safe("coin")
+	return {
+		"success": true,
+		"income": bonus_income,
+		"msg": "📊 옴니 코스믹 퀀텀 AI 적중 시험 적중 예측 매트릭스 가동! (+26,500 ₩ | 꾸미기 +1,800점 | 시험 적중률 100%) 💯"
+	}
+
+func activate_transcendent_omni_mind_learning_aura() -> Dictionary:
+	var bonus_income = 28000.0
+	add_money(bonus_income)
+	decor_score += 1900
+	reputation = 5.0
+	reputation_changed.emit(reputation)
+	_play_sfx_safe("coin")
+	return {
+		"success": true,
+		"income": bonus_income,
+		"msg": "🌟 트랜센던트 옴니마인드 전지적 초월 학습 오라 필드 투사! (+28,000 ₩ | 꾸미기 +1,900점 | 몰입도 999%) ✨"
+	}
+
+func activate_150th_grand_milestone_omniverse_sovereignty() -> Dictionary:
+	var bonus_income = 30000.0
+	add_money(bonus_income)
+	decor_score += 2000
+	reputation = 5.0
+	reputation_changed.emit(reputation)
+	_play_sfx_safe("coin")
+	return {
+		"success": true,
+		"income": bonus_income,
+		"msg": "👑 150번째 모듈 전설적 달성! 옴니버스 초월 주권 스터디 제국 스테이션 마일스톤! (+30,000 ₩ | 꾸미기 +2,000점 | 평판 MAX 5.0) 🏆"
+	}
+
+func activate_quantum_hyper_spatial_folding_lounge() -> Dictionary:
+	var bonus_income = 31500.0
+	add_money(bonus_income)
+	decor_score += 2100
+	reputation = 5.0
+	reputation_changed.emit(reputation)
+	_play_sfx_safe("coin")
+	return {
+		"success": true,
+		"income": bonus_income,
+		"msg": "🌌 퀀텀 하이퍼 공간 접기 라운지 매트릭스 전격 개장! (+31,500 ₩ | 꾸미기 +2,100점 | 공간 접기 10배 확장) 💫"
+	}
+
+func activate_omni_cosmic_chrono_dilation_study_chamber() -> Dictionary:
+	var bonus_income = 33000.0
+	add_money(bonus_income)
+	decor_score += 2200
+	reputation = 5.0
+	reputation_changed.emit(reputation)
+	_play_sfx_safe("coin")
+	return {
+		"success": true,
+		"income": bonus_income,
+		"msg": "⏳ 옴니 코스믹 시간 팽창 초차원 몰입 체임버 가동! (+33,000 ₩ | 꾸미기 +2,200점 | 1시간 공부로 10시간 효과) ⌛"
+	}
+
+
+
+
+
+
+
+
+
+
+
 
 
 

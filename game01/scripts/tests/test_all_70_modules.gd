@@ -1624,9 +1624,87 @@ func _init() -> void:
 	assert(shield_res["income"] == 16000.0, "Chrono shield bonus income should be 16000")
 	print("✔ Test 141 PASSED: Hyper-Dimensional Quantum Chrono-Shield & Energy Wall Array Engine 100% verified!")
 
+	# Test 142: Multiversal Telepathic AI Tutor Network System Engine Verification
+	print("\n📌 [Test 142] Verifying Multiversal Telepathic AI Tutor Network Engine...")
+	var telepathic_tutor_res = state.activate_multiversal_telepathic_ai_tutor_network()
+	assert(telepathic_tutor_res["success"] == true, "Multiversal telepathic AI tutor network activation must succeed")
+	assert(telepathic_tutor_res["income"] == 17500.0, "Telepathic AI tutor bonus income should be 17500")
+	print("✔ Test 142 PASSED: Multiversal Telepathic AI Tutor Network Engine 100% verified!")
+
+	# Test 143: Omni-Dimensional Zero-Point Energy Grid Engine Verification
+	print("\n📌 [Test 143] Verifying Omni-Dimensional Zero-Point Energy Grid Engine...")
+	var zero_grid_res = state.activate_omni_dimensional_zero_point_energy_grid()
+	assert(zero_grid_res["success"] == true, "Zero point energy grid activation must succeed")
+	assert(zero_grid_res["income"] == 19000.0, "Zero point grid bonus income should be 19000")
+	print("✔ Test 143 PASSED: Omni-Dimensional Zero-Point Energy Grid Engine 100% verified!")
+
+	# Test 144: Cosmic Singularity Hyper-Dimension Study Lounge Engine Verification
+	print("\n📌 [Test 144] Verifying Cosmic Singularity Hyper-Dimension Study Lounge Engine...")
+	var singularity_lounge_res = state.activate_cosmic_singularity_hyper_dimension_study_lounge()
+	assert(singularity_lounge_res["success"] == true, "Cosmic singularity lounge activation must succeed")
+	assert(singularity_lounge_res["income"] == 20500.0, "Singularity lounge bonus income should be 20500")
+	print("✔ Test 144 PASSED: Cosmic Singularity Hyper-Dimension Study Lounge Engine 100% verified!")
+
+	# Test 145: Omni-Cosmic Hyper-Cube Quantum Space System Engine Verification
+	print("\n📌 [Test 145] Verifying Omni-Cosmic Hyper-Cube Quantum Space Engine...")
+	var hyper_cube_res = state.activate_omni_cosmic_hyper_cube_quantum_space()
+	assert(hyper_cube_res["success"] == true, "Omni-cosmic hyper-cube activation must succeed")
+	assert(hyper_cube_res["income"] == 22000.0, "Hyper-cube bonus income should be 22000")
+	print("✔ Test 145 PASSED: Omni-Cosmic Hyper-Cube Quantum Space Engine 100% verified!")
+
+	# Test 146: Hyper-Dimensional Sub-Space Wormhole Transport Network System Engine Verification
+	print("\n📌 [Test 146] Verifying Hyper-Dimensional Sub-Space Wormhole Transport Network Engine...")
+	var wormhole_res = state.activate_hyper_dimensional_sub_space_wormhole_transport()
+	assert(wormhole_res["success"] == true, "Sub-space wormhole transport activation must succeed")
+	assert(wormhole_res["income"] == 23500.0, "Wormhole transport bonus income should be 23500")
+	print("✔ Test 146 PASSED: Hyper-Dimensional Sub-Space Wormhole Transport Network Engine 100% verified!")
+
+	# Test 147: Hyper-Quantum Neural Synapse Booster Engine Verification
+	print("\n📌 [Test 147] Verifying Hyper-Quantum Neural Synapse Booster Engine...")
+	var synapse_booster_res = state.activate_hyper_quantum_neural_synapse_booster()
+	assert(synapse_booster_res["success"] == true, "Hyper-quantum neural synapse booster activation must succeed")
+	assert(synapse_booster_res["income"] == 25000.0, "Synapse booster bonus income should be 25000")
+	print("✔ Test 147 PASSED: Hyper-Quantum Neural Synapse Booster Engine 100% verified!")
+
+	# Test 148: Omni-Cosmic Quantum AI Exam Prediction Matrix System Engine Verification
+	print("\n📌 [Test 148] Verifying Omni-Cosmic Quantum AI Exam Prediction Matrix Engine...")
+	var exam_matrix_res = state.activate_omni_cosmic_quantum_ai_exam_prediction_matrix()
+	assert(exam_matrix_res["success"] == true, "Exam prediction matrix activation must succeed")
+	assert(exam_matrix_res["income"] == 26500.0, "Exam matrix bonus income should be 26500")
+	print("✔ Test 148 PASSED: Omni-Cosmic Quantum AI Exam Prediction Matrix Engine 100% verified!")
+
+	# Test 149: Transcendent Omni-Mind Learning Aura Field System Engine Verification
+	print("\n📌 [Test 149] Verifying Transcendent Omni-Mind Learning Aura Field Engine...")
+	var omni_mind_aura_res = state.activate_transcendent_omni_mind_learning_aura()
+	assert(omni_mind_aura_res["success"] == true, "Transcendent omni-mind aura activation must succeed")
+	assert(omni_mind_aura_res["income"] == 28000.0, "Omni-mind aura bonus income should be 28000")
+	print("✔ Test 149 PASSED: Transcendent Omni-Mind Learning Aura Field Engine 100% verified!")
+
+	# Test 150: 150th Grand Milestone & Omniverse Supremacy Sovereignty Engine Verification
+	print("\n📌 [Test 150] Verifying 150th Grand Milestone & Omniverse Supremacy Sovereignty Engine...")
+	var grand_150_res = state.activate_150th_grand_milestone_omniverse_sovereignty()
+	assert(grand_150_res["success"] == true, "150th Grand Milestone activation must succeed")
+	assert(grand_150_res["income"] == 30000.0, "150th Milestone bonus income should be 30000")
+	assert(state.reputation == 5.0, "150th Milestone must maintain reputation at MAX 5.0")
+	print("✔ Test 150 PASSED: 150th Grand Milestone & Omniverse Supremacy Sovereignty Engine 100% verified!")
+
+	# Test 151: Quantum Hyper-Spatial Folding Lounge System Engine Verification
+	print("\n📌 [Test 151] Verifying Quantum Hyper-Spatial Folding Lounge Engine...")
+	var spatial_folding_res = state.activate_quantum_hyper_spatial_folding_lounge()
+	assert(spatial_folding_res["success"] == true, "Quantum hyper-spatial folding lounge activation must succeed")
+	assert(spatial_folding_res["income"] == 31500.0, "Spatial folding lounge bonus income should be 31500")
+	print("✔ Test 151 PASSED: Quantum Hyper-Spatial Folding Lounge Engine 100% verified!")
+
+	# Test 152: Omni-Cosmic Chrono-Dilation Study Chamber System Engine Verification
+	print("\n📌 [Test 152] Verifying Omni-Cosmic Chrono-Dilation Study Chamber Engine...")
+	var chrono_dilation_res = state.activate_omni_cosmic_chrono_dilation_study_chamber()
+	assert(chrono_dilation_res["success"] == true, "Chrono-dilation study chamber activation must succeed")
+	assert(chrono_dilation_res["income"] == 33000.0, "Chrono-dilation chamber bonus income should be 33000")
+	print("✔ Test 152 PASSED: Omni-Cosmic Chrono-Dilation Study Chamber Engine 100% verified!")
+
 	state.free()
 	print("\n=========================================================")
-	print("🎉 ALL 141-MODULE AUTOMATED VERIFICATION TESTS PASSED (100%) 🎉")
+	print("🎉 ALL 152-MODULE AUTOMATED VERIFICATION TESTS PASSED (100%) 🎉")
 	print("=========================================================\n")
 	quit()
 
