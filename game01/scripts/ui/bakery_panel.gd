@@ -104,7 +104,7 @@ func refresh_ovens() -> void:
 		action_btn.pressed.connect(func():
 			GameState.bake_dessert(o["type"], o["yield"])
 			GameState.add_money(o["yield"] * o["price"])
-			GameState.update_quest_progress(1)
+			GameState.report_quest_action("bake")
 			refresh_ovens()
 		)
 		hbox.add_child(action_btn)

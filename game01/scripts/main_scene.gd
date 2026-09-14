@@ -73,8 +73,15 @@ func _ready() -> void:
 	if q_script != null:
 		quest_panel = PanelContainer.new()
 		quest_panel.set_script(q_script)
-		quest_panel.custom_minimum_size = Vector2(660, 460)
-		quest_panel.set_anchors_and_offsets_preset(Control.PRESET_CENTER, Control.PRESET_MODE_MINSIZE)
+		# MINSIZE preset measured the panel before its content existed, so the
+		# story panel hung off the right edge. Anchor it and give it explicit
+		# offsets around the centre instead.
+		quest_panel.custom_minimum_size = Vector2(680, 500)
+		quest_panel.set_anchors_preset(Control.PRESET_CENTER)
+		quest_panel.offset_left = -340.0
+		quest_panel.offset_top = -250.0
+		quest_panel.offset_right = 340.0
+		quest_panel.offset_bottom = 250.0
 		quest_panel.hide()
 		add_child(quest_panel)
 

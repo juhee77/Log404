@@ -117,7 +117,7 @@ func refresh_expansion() -> void:
 				if GameState.decor_score >= st["req_score"]:
 					st["unlocked"] = true
 					GameState.add_money(-st["cost"])
-					GameState.update_quest_progress(1)
+					GameState.report_quest_action("expand")
 					refresh_expansion()
 			)
 			

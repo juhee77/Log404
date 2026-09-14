@@ -99,14 +99,114 @@ var manager_level: int = 1
 var manager_xp: int = 0
 var max_manager_xp: int = 500
 
-# 5. Main Story Quests (50 Stages)
+# 5. 메인 스토리: 「등대 독서실」 — 5막 32단계
+# 물려받은 낡은 독서실을 동네에서 가장 오래 머물고 싶은 스터디카페로
+# 되살리는 이야기. 각 퀘스트는 kind 로 실제 게임 행동과 1:1 로 묶여 있어서,
+# 아무 행동이나 현재 퀘스트를 밀어 올리던 예전 방식과 달리 해당 행동을
+# 했을 때만 진행된다.
 var current_quest_index: int = 1
-var quests_data: Array = [
-	{ "id": 1, "title": "☕ 브라질 산토스 원두 1회 로스팅하기", "target": 1, "current": 0, "reward_money": 1000.0, "reward_xp": 50 },
-	{ "id": 2, "title": "🥐 아침 크로와상 1회 오븐 베이킹하기", "target": 1, "current": 0, "reward_money": 2000.0, "reward_xp": 100 },
-	{ "id": 3, "title": "🚶 길거리 손님 캐스팅 1회 성공하기", "target": 1, "current": 0, "reward_money": 3000.0, "reward_xp": 150 },
-	{ "id": 4, "title": "🌟 꾸미기 점수 600점 달성하기", "target": 600, "current": 450, "reward_money": 5000.0, "reward_xp": 300 }
+
+var story_acts: Array = [
+	{
+		"act": 1, "title": "🕯️ 1막 — 불을 다시 켜다",
+		"intro": "30년을 버틴 「등대 독서실」을 물려받았다. 형광등은 깜빡이고 열람실엔 아무도 없다.\n삼촌은 열쇠만 남기고 떠났다. — \"여긴 원래, 밤에 불이 꺼지지 않는 곳이었어.\""
+	},
+	{
+		"act": 2, "title": "☕ 2막 — 단골이 생기다",
+		"intro": "한 명이 두 명이 되고, 두 명이 매일 같은 자리에 앉기 시작했다.\n어느 날 앞치마를 든 사람이 문을 열었다. — \"여기 로스터, 아직 쓰세요?\""
+	},
+	{
+		"act": 3, "title": "🏢 3막 — 길 건너 포커스존",
+		"intro": "길 건너에 24시간 프랜차이즈 「포커스존」이 열렸다. 통유리, 대형 간판, 첫 달 반값.\n단골 자리가 하루가 다르게 비어간다. 민서가 물었다. — \"우리는 뭐가 달라요?\""
+	},
+	{
+		"act": 4, "title": "🔑 4막 — 2층, 노블리스",
+		"intro": "포커스존이 못 하는 걸 하기로 했다. 1인실, 제대로 된 의자, 스탠드 하나하나.\n2층 계단의 먼지를 걷어냈다."
+	},
+	{
+		"act": 5, "title": "🌇 5막 — 루프탑, 그리고 D-DAY",
+		"intro": "수능이 한 달 남았다. 새벽 세 시에도 3번 자리 스탠드는 켜져 있다.\n옥상 문을 열었다. 숨 쉴 곳이 필요했다."
+	}
 ]
+
+var quests_data: Array = [
+	# ── 1막 ──────────────────────────────────────────────
+	{ "id": 1, "act": 1, "kind": "roast", "title": "☕ 첫 원두를 볶는다", "target": 1, "current": 0, "reward_money": 1000.0, "reward_xp": 50,
+	  "story": "구석에서 먼지 쌓인 로스터를 찾았다. 일단, 커피부터." },
+	{ "id": 2, "act": 1, "kind": "clean", "title": "🧹 책상 세 자리를 닦아낸다", "target": 3, "current": 0, "reward_money": 1200.0, "reward_xp": 60,
+	  "story": "먼지를 걷어내자 낙서가 나왔다. '수능 D-30 화이팅'" },
+	{ "id": 3, "act": 1, "kind": "arrange", "title": "🪑 책상을 앉고 싶은 자리로 옮긴다", "target": 3, "current": 0, "reward_money": 1500.0, "reward_xp": 70,
+	  "story": "줄 맞춘 책상은 독서실이고, 숨 쉴 틈이 있는 배치는 카페다." },
+	{ "id": 4, "act": 1, "kind": "bake", "title": "🥐 아침 빵을 굽는다", "target": 1, "current": 0, "reward_money": 2000.0, "reward_xp": 80,
+	  "story": "새벽에 오는 사람에겐 빵 냄새가 간판이다." },
+	{ "id": 5, "act": 1, "kind": "serve", "title": "🫖 첫 손님에게 음료를 낸다", "target": 1, "current": 0, "reward_money": 2500.0, "reward_xp": 100,
+	  "story": "첫 손님은 교복 차림이었다. \"여기… 해요?\" \"해요.\"" },
+	{ "id": 6, "act": 1, "kind": "stat", "stat": "reputation", "title": "⭐ 평점 4.3 달성", "target": 4.3, "current": 0.0, "reward_money": 4000.0, "reward_xp": 150,
+	  "story": "첫 리뷰가 달렸다. '조용하고 커피가 맛있어요. 의자가 좀…'" },
+
+	# ── 2막 ──────────────────────────────────────────────
+	{ "id": 7, "act": 2, "kind": "roast", "title": "☕ 원두 5회 로스팅", "target": 5, "current": 0, "reward_money": 5000.0, "reward_xp": 180,
+	  "story": "민서는 프랜차이즈를 그만두고 왔다고 했다. \"거긴 원두를 안 볶아요. 갈기만 하죠.\"" },
+	{ "id": 8, "act": 2, "kind": "decorate", "title": "🪴 소품 3개 놓기", "target": 3, "current": 0, "reward_money": 5500.0, "reward_xp": 200,
+	  "story": "화분 하나로 사람이 더 오래 앉는다는 걸 알게 됐다." },
+	{ "id": 9, "act": 2, "kind": "partition", "title": "🔇 칸막이 2개 설치", "target": 2, "current": 0, "reward_money": 6000.0, "reward_xp": 220,
+	  "story": "\"옆자리 타이핑 소리요.\" 리뷰는 늘 구체적이다." },
+	{ "id": 10, "act": 2, "kind": "expand", "title": "🪑 좌석 확장 1회", "target": 1, "current": 0, "reward_money": 7000.0, "reward_xp": 250,
+	  "story": "자리가 없어 돌아간 손님이 오늘만 세 명." },
+	{ "id": 11, "act": 2, "kind": "pet", "title": "🐱 나비와 다섯 번 인사하기", "target": 5, "current": 0, "reward_money": 4000.0, "reward_xp": 150,
+	  "story": "원래 독서실에 살던 고양이였다. 삼촌이 밥을 줬다고 한다." },
+	{ "id": 12, "act": 2, "kind": "bake", "title": "🍰 디저트 10개 굽기", "target": 10, "current": 0, "reward_money": 8000.0, "reward_xp": 280,
+	  "story": "시험기간엔 당이 팔린다." },
+	{ "id": 13, "act": 2, "kind": "stat", "stat": "decor_score", "title": "🌟 꾸미기 점수 600 달성", "target": 600.0, "current": 0.0, "reward_money": 10000.0, "reward_xp": 350,
+	  "story": "\"독서실 같지 않아서 좋아요.\" 최고의 칭찬이었다." },
+
+	# ── 3막 ──────────────────────────────────────────────
+	{ "id": 14, "act": 3, "kind": "cast", "title": "🚶 길거리 캐스팅 3회 성공", "target": 3, "current": 0, "reward_money": 12000.0, "reward_xp": 400,
+	  "story": "전단지를 들고 나갔다. 이 가게가 생긴 뒤 처음으로." },
+	{ "id": 15, "act": 3, "kind": "clean", "title": "🧹 자리 청소 15회", "target": 15, "current": 0, "reward_money": 13000.0, "reward_xp": 420,
+	  "story": "포커스존은 무인이다. 우리는 사람이 있다." },
+	{ "id": 16, "act": 3, "kind": "serve", "title": "☕ 음료 30잔 서빙", "target": 30, "current": 0, "reward_money": 16000.0, "reward_xp": 450,
+	  "story": "이름을 외우기 시작했다. 아메리카노 연하게, 3번 자리." },
+	{ "id": 17, "act": 3, "kind": "stat", "stat": "reputation", "title": "⭐ 평점 4.6 회복", "target": 4.6, "current": 0.0, "reward_money": 20000.0, "reward_xp": 500,
+	  "story": "별점이 다시 올라간 날, 민서가 케이크를 사왔다." },
+	{ "id": 18, "act": 3, "kind": "stat", "stat": "total_earnings", "title": "💰 누적 매출 20만원", "target": 200000.0, "current": 0.0, "reward_money": 25000.0, "reward_xp": 550,
+	  "story": "버텼다. 그 말밖에는 안 나왔다." },
+	{ "id": 19, "act": 3, "kind": "stat", "stat": "capacity", "title": "🪑 좌석 12석 확보", "target": 12.0, "current": 0.0, "reward_money": 28000.0, "reward_xp": 600,
+	  "story": "돌아갔던 손님이 다시 왔다." },
+	{ "id": 20, "act": 3, "kind": "stat", "stat": "manager_level", "title": "🏅 매니저 레벨 5 달성", "target": 5.0, "current": 0.0, "reward_money": 32000.0, "reward_xp": 650,
+	  "story": "강 팀장이 찾아와 명함을 놓고 갔다. \"인수 생각 있으시면 연락 주세요.\"" },
+
+	# ── 4막 ──────────────────────────────────────────────
+	{ "id": 21, "act": 4, "kind": "stat", "stat": "floors", "title": "🏢 2층 노블리스 해금", "target": 2.0, "current": 0.0, "reward_money": 40000.0, "reward_xp": 700,
+	  "story": "계단 끝 철문을 열자, 30년 치 먼지 위로 빛이 들어왔다." },
+	{ "id": 22, "act": 4, "kind": "expand", "title": "🔑 좌석 4회 추가 확장", "target": 4, "current": 0, "reward_money": 45000.0, "reward_xp": 750,
+	  "story": "1인실은 비싸다. 그래서 아무나 못 만든다." },
+	{ "id": 23, "act": 4, "kind": "partition", "title": "🎪 방음 커튼 5개 설치", "target": 5, "current": 0, "reward_money": 48000.0, "reward_xp": 780,
+	  "story": "소리를 없애는 게 아니라, 소리를 각자에게 돌려주는 일." },
+	{ "id": 24, "act": 4, "kind": "roast", "title": "☕ 시그니처 원두 20회 로스팅", "target": 20, "current": 0, "reward_money": 52000.0, "reward_xp": 800,
+	  "story": "민서가 배합표를 벽에 붙였다. \"이건 우리 거예요.\"" },
+	{ "id": 25, "act": 4, "kind": "stat", "stat": "decor_score", "title": "🌟 꾸미기 점수 1200 달성", "target": 1200.0, "current": 0.0, "reward_money": 60000.0, "reward_xp": 900,
+	  "story": "손님이 사진을 찍어 올리기 시작했다." },
+	{ "id": 26, "act": 4, "kind": "stat", "stat": "reputation", "title": "⭐ 평점 4.8 달성", "target": 4.8, "current": 0.0, "reward_money": 70000.0, "reward_xp": 1000,
+	  "story": "포커스존 첫 달 쿠폰이 끝났다. 아무도 돌아가지 않았다." },
+
+	# ── 5막 ──────────────────────────────────────────────
+	{ "id": 27, "act": 5, "kind": "stat", "stat": "floors", "title": "🌇 3층 루프탑 해금", "target": 3.0, "current": 0.0, "reward_money": 80000.0, "reward_xp": 1100,
+	  "story": "공부만 하다 죽을 순 없으니까. 하늘 볼 자리 하나쯤은." },
+	{ "id": 28, "act": 5, "kind": "bake", "title": "🍞 야식 베이킹 30회", "target": 30, "current": 0, "reward_money": 85000.0, "reward_xp": 1200,
+	  "story": "새벽 두 시의 빵 냄새는 거의 응원에 가깝다." },
+	{ "id": 29, "act": 5, "kind": "clean", "title": "🧹 밤샘 자리 청소 30회", "target": 30, "current": 0, "reward_money": 90000.0, "reward_xp": 1250,
+	  "story": "아이들이 자는 사이에 치운다. 깨우지 않는 게 요령이다." },
+	{ "id": 30, "act": 5, "kind": "stat", "stat": "lifetime_visitors", "title": "👥 누적 손님 100명", "target": 100.0, "current": 0.0, "reward_money": 110000.0, "reward_xp": 1400,
+	  "story": "백 명이 이 자리에 앉았다 갔다는 뜻이다." },
+	{ "id": 31, "act": 5, "kind": "stat", "stat": "total_earnings", "title": "💰 누적 매출 100만원", "target": 1000000.0, "current": 0.0, "reward_money": 150000.0, "reward_xp": 1600,
+	  "story": "삼촌에게 전화를 걸었다. 받지 않았다." },
+	{ "id": 32, "act": 5, "kind": "stat", "stat": "reputation", "title": "⭐ 평점 5.0 — 등대", "target": 5.0, "current": 0.0, "reward_money": 300000.0, "reward_xp": 3000,
+	  "story": "시험이 끝난 날, 한 아이가 문을 열고 들어와 말했다.\n\"여기 불 켜져 있어서 버텼어요.\"\n등대는, 원래 그런 일을 하는 곳이다." }
+]
+
+# 누적 방문객 (스토리 지표)
+var lifetime_visitors: int = 0
 
 # Interior Decorating Mode & Custom Partitions
 var is_decorating_mode: bool = false
@@ -147,6 +247,7 @@ func install_partition(seat_index: int, type: String = "divider") -> bool:
 	reputation = min(5.0, reputation + 0.1)
 	reputation_changed.emit(reputation)
 	_play_sfx_safe("coin")
+	report_quest_action("partition")
 	return true
 
 func start_roasting(roaster_idx: int) -> bool:
@@ -170,8 +271,7 @@ func harvest_beans(roaster_idx: int) -> bool:
 	roaster_updated.emit(roaster_idx, r)
 	_play_sfx_safe("coin")
 	
-	if current_quest_index == 1:
-		update_quest_progress(1)
+	report_quest_action("roast")
 	return true
 
 func repair_burnt_beans(roaster_idx: int) -> bool:
@@ -196,16 +296,72 @@ func add_manager_xp(xp_amount: int) -> void:
 		max_manager_xp = int(max_manager_xp * 1.5)
 		_play_sfx_safe("chime")
 
+func get_current_quest() -> Dictionary:
+	var idx = current_quest_index - 1
+	if idx < 0 or idx >= quests_data.size():
+		return {}
+	return quests_data[idx]
+
+func get_act_info(act_no: int) -> Dictionary:
+	for a in story_acts:
+		if a["act"] == act_no:
+			return a
+	return {}
+
+# Live value behind a "stat" quest (평점, 누적 매출, 좌석 수 …).
+func get_quest_stat(stat_name: String) -> float:
+	match stat_name:
+		"reputation": return reputation
+		"decor_score": return float(decor_score)
+		"total_earnings": return total_earnings
+		"money": return money
+		"manager_level": return float(manager_level)
+		"capacity": return float(get_max_capacity())
+		"floors": return float(unlocked_floors.size())
+		"lifetime_visitors": return float(lifetime_visitors)
+		"day_count": return float(day_count)
+	return 0.0
+
+func _award_quest(q: Dictionary) -> void:
+	add_money(q["reward_money"])
+	add_manager_xp(q["reward_xp"])
+	current_quest_index += 1
+	_play_sfx_safe("chime")
+
+# Stat quests track a running total, so they can complete without the player
+# performing any particular action. Called from _process.
+func refresh_stat_quests() -> void:
+	var q = get_current_quest()
+	if q.is_empty() or q.get("kind", "") != "stat":
+		return
+	var value = get_quest_stat(q.get("stat", ""))
+	if value <= q["current"]:
+		return
+	q["current"] = min(float(q["target"]), value)
+	if q["current"] >= q["target"]:
+		_award_quest(q)
+	quest_updated.emit(q)
+
+# The single entry point for action quests. A report only advances the story if
+# the CURRENT quest is actually asking for that action - previously any action
+# pushed whatever quest happened to be active, so baking could finish a
+# roasting quest.
+func report_quest_action(kind: String, amount: int = 1) -> void:
+	var q = get_current_quest()
+	if q.is_empty() or q.get("kind", "") != kind:
+		return
+	q["current"] = min(q["target"], q["current"] + amount)
+	if q["current"] >= q["target"]:
+		_award_quest(q)
+	quest_updated.emit(q)
+
+# Kept for older call sites and the test suite: advances the current quest
+# whatever it is asking for.
 func update_quest_progress(amount: int = 1) -> void:
-	if current_quest_index - 1 < quests_data.size():
-		var q = quests_data[current_quest_index - 1]
-		q["current"] = min(q["target"], q["current"] + amount)
-		if q["current"] >= q["target"]:
-			add_money(q["reward_money"])
-			add_manager_xp(q["reward_xp"])
-			current_quest_index += 1
-			_play_sfx_safe("chime")
-		quest_updated.emit(q)
+	var q = get_current_quest()
+	if q.is_empty():
+		return
+	report_quest_action(q.get("kind", ""), amount)
 
 # Daily Statistics Counter
 var daily_seat_rev: float = 0.0
@@ -3553,23 +3709,13 @@ var seat_custom_positions: Dictionary = {} # seat_idx -> Vector2
 var seat_orientations: Dictionary = {} # seat_idx -> int (0, 90, 180, 270 degrees)
 
 func get_nearest_grid_snap(raw_pos: Vector2) -> Vector2:
-	var tile_w = 110.0
-	var tile_h = 75.0
-	var start_x = 60.0
-	var start_y = 160.0
-	
-	var col = round((raw_pos.x - start_x) / tile_w)
-	var row = round((raw_pos.y - start_y) / tile_h)
-	
-	col = clamp(col, 0, 4)
-	row = clamp(row, 0, 3)
-	
-	var snapped_x = start_x + col * tile_w
-	var snapped_y = start_y + row * tile_h
-	return Vector2(snapped_x, snapped_y)
+	# Delegates to the one isometric grid. This used to be a second, rectangular
+	# 110x75 grid that silently fought with the drag-and-drop snapping.
+	return snap_to_grid(raw_pos)
 
 func move_seat_position(seat_idx: int, target_pos: Vector2) -> Vector2:
-	var snapped = get_nearest_grid_snap(target_pos)
+	var result = place_seat_at_world(seat_idx, target_pos)
+	var snapped: Vector2 = result["pos"]
 	seat_custom_positions[seat_idx] = snapped
 	_play_sfx_safe("click")
 	return snapped
@@ -4503,6 +4649,7 @@ func pet_navi() -> Dictionary:
 		navi_mood_level = "행복함 🐾"
 		
 	_play_sfx_safe("chime")
+	report_quest_action("pet")
 	return {
 		"text": "🐱 야옹~! 길냥이 나비 골골송! (평점 ⭐+0.05 | 집중력 +20% ❤️)",
 		"color": Color(1.0, 0.4, 0.7),
@@ -5065,6 +5212,7 @@ func pet_cat() -> void:
 	reputation = min(5.0, reputation + 0.05)
 	reputation_changed.emit(reputation)
 	_play_sfx_safe("chime")
+	report_quest_action("pet")
 
 func toggle_decorating_mode() -> bool:
 	is_decorating_mode = not is_decorating_mode
@@ -5079,6 +5227,7 @@ func add_decoration(pos: Vector2, type: String = "plant") -> bool:
 	reputation = min(5.0, reputation + 0.08)
 	reputation_changed.emit(reputation)
 	_play_sfx_safe("coin")
+	report_quest_action("decorate")
 	return true
 
 func _ready() -> void:
@@ -5089,6 +5238,8 @@ func change_zone(new_zone: String) -> void:
 	zone_changed.emit(new_zone)
 
 func _process(delta: float) -> void:
+	refresh_stat_quests()
+
 	# Update Roasters Timers
 	for idx in range(roasters.size()):
 		var r = roasters[idx]
@@ -5258,6 +5409,7 @@ func spawn_customer() -> void:
 			
 	if free_seat == -1: return
 	
+	lifetime_visitors += 1
 	var template = CUSTOMER_TYPES[randi() % CUSTOMER_TYPES.size()]
 	var cid = randi()
 	var entrance_pos = Vector2(1150, 70)
@@ -5318,6 +5470,7 @@ func serve_order(customer_id: int) -> bool:
 	daily_drink_rev += tip
 	active_orders.erase(customer_id)
 	order_served.emit(customer_id, tip)
+	report_quest_action("serve")
 	return true
 
 func warn_villain(customer_id: int) -> void:
@@ -5336,6 +5489,7 @@ func clean_seat(seat_index: int) -> void:
 		add_money(80.0)
 		daily_clean_rev += 80.0
 		seat_cleaned.emit(seat_index)
+		report_quest_action("clean")
 
 func adjust_temperature(delta_t: float) -> void:
 	temperature = clamp(temperature + delta_t, 18.0, 30.0)
@@ -5390,33 +5544,17 @@ func get_total_income_rate() -> float:
 	return total
 
 func get_base_seat_position(index: int) -> Vector2:
-	var cols = 3
-	var start_x = 30.0
-	var start_y = 60.0
-	var cell_w = 150.0
-	var cell_h = 80.0
-	var col = index % cols
-	var row = index / cols
-	return Vector2(start_x + col * cell_w, start_y + row * cell_h)
+	# World position of the CENTRE of the isometric tile this seat starts on.
+	return iso_to_screen(get_base_seat_cell(index))
 
 var seat_rotations: Dictionary = {} # seat_index -> 0, 90, 180, 270 degrees
 
 func snap_to_grid(pos: Vector2, _grid_size: float = 40.0) -> Vector2:
-	# 0px-gap Seamless Grid Lock across ALL Blue & Brown floor spaces (9 cols x 7 rows = 63 Cells)
-	var cell_w = 150.0
-	var cell_h = 80.0
-	var start_x = 30.0
-	var start_y = 60.0
-	var rel = pos - Vector2(start_x, start_y)
-	var g_col = clamp(round(rel.x / cell_w), 0, 8)
-	var g_row = clamp(round(rel.y / cell_h), 0, 6)
-	return Vector2(start_x + g_col * cell_w, start_y + g_row * cell_h)
+	# Magnetic snap onto the centre of the nearest isometric floor tile.
+	return iso_to_screen(clamp_iso_cell(screen_to_iso(pos)))
 
-func set_seat_custom_offset_snapped(index: int, raw_offset: Vector2) -> void:
-	var base_pos = get_base_seat_position(index)
-	var target_world_pos = base_pos + raw_offset
-	var snapped_world_pos = snap_to_grid(target_world_pos, 40.0)
-	seat_custom_offsets[index] = snapped_world_pos - base_pos
+func set_seat_custom_offset_snapped(index: int, raw_offset: Vector2) -> Dictionary:
+	return place_seat_at_world(index, get_base_seat_position(index) + raw_offset)
 
 func rotate_seat(index: int) -> int:
 	var current_rot = seat_rotations.get(index, 0)
@@ -5426,9 +5564,9 @@ func rotate_seat(index: int) -> int:
 	
 
 func are_seats_adjacent(idx1: int, idx2: int) -> bool:
-	var p1 = get_seat_position(idx1)
-	var p2 = get_seat_position(idx2)
-	return p1.distance_to(p2) <= 190.0
+	var c1 = get_seat_cell(idx1)
+	var c2 = get_seat_cell(idx2)
+	return max(abs(c1.x - c2.x), abs(c1.y - c2.y)) <= 1 and c1 != c2
 
 var desk_catalog: Dictionary = {
 	"open_1x1": {
@@ -5487,8 +5625,9 @@ func buy_new_desk(type_key: String) -> bool:
 	return true
 
 func get_seat_position(index: int) -> Vector2:
-	if seat_custom_positions.has(index):
-		return seat_custom_positions[index]
+	# Centre of the isometric tile the desk sits on. seat_custom_offsets is the
+	# single source of truth; seat_custom_positions is only a mirror kept for the
+	# older placement API so the two systems can no longer disagree.
 	var base_pos = get_base_seat_position(index)
 	if seat_custom_offsets.has(index):
 		return base_pos + seat_custom_offsets[index]
@@ -5556,10 +5695,15 @@ func save_game() -> void:
 		"reputation": reputation,
 		"day_count": day_count,
 		"temperature": temperature,
-		"upgrades": {}
+		"upgrades": {},
+		"seat_cells": {}
 	}
 	for key in upgrades:
 		data["upgrades"][key] = upgrades[key]["level"]
+	# Persist the isometric desk layout - previously every placement was lost on reload.
+	for seat_idx in seat_custom_offsets:
+		var cell = get_seat_cell(int(seat_idx))
+		data["seat_cells"][str(seat_idx)] = [cell.x, cell.y]
 		
 	var file = FileAccess.open("user://study_cafe_tycoon_save.json", FileAccess.WRITE)
 	if file:
@@ -5585,6 +5729,15 @@ func load_game() -> void:
 		for key in saved_upgrades:
 			if upgrades.has(key):
 				upgrades[key]["level"] = saved_upgrades[key]
+		
+		seat_custom_offsets.clear()
+		var saved_cells = data.get("seat_cells", {})
+		for seat_key in saved_cells:
+			var raw_cell = saved_cells[seat_key]
+			if raw_cell is Array and raw_cell.size() == 2:
+				var idx = int(seat_key)
+				var cell = clamp_iso_cell(Vector2i(int(raw_cell[0]), int(raw_cell[1])))
+				seat_custom_offsets[idx] = iso_to_screen(cell) - get_base_seat_position(idx)
 
 func format_money(val: float) -> String:
 	var n = int(val)
@@ -5824,9 +5977,16 @@ func activate_quantum_molecular_food_synthesizer(seat_index: int) -> Dictionary:
 # 📐 ISOMETRIC 2:1 PROJECTION & SMART CONNECTED DESK ENGINE
 # ========================================================
 
-const ISO_TILE_WIDTH: float = 120.0
-const ISO_TILE_HEIGHT: float = 60.0
-const ISO_ORIGIN: Vector2 = Vector2(480.0, 90.0)
+const ISO_TILE_WIDTH: float = 128.0
+const ISO_TILE_HEIGHT: float = 64.0
+const ISO_ORIGIN: Vector2 = Vector2(495.0, 190.0)
+
+# Placeable floor area of the Main Focus Room, measured in isometric cells.
+# The diamond spans (COLS + ROWS) * TILE_W/2 = 768px wide and 384px tall, which
+# fits inside the widened 930px Room 1 panel with the desk art's overhang above
+# the back row still clearing the room banners.
+const ISO_GRID_COLS: int = 6
+const ISO_GRID_ROWS: int = 6
 
 # Convert 2D Grid Cell Coordinate to Screen Isometric Position (Center of Tile)
 func iso_to_screen(grid_pos: Vector2i, origin: Vector2 = ISO_ORIGIN) -> Vector2:
@@ -5854,10 +6014,114 @@ func get_iso_diamond_polygon(grid_pos: Vector2i, origin: Vector2 = ISO_ORIGIN) -
 		center + Vector2(-half_w, 0)
 	])
 
+# Point-in-diamond test for an isometric tile (used for picking desks on the floor)
+func is_point_in_iso_tile(point: Vector2, grid_pos: Vector2i, origin: Vector2 = ISO_ORIGIN) -> bool:
+	var center = iso_to_screen(grid_pos, origin)
+	var d = point - center
+	return abs(d.x) / (ISO_TILE_WIDTH * 0.5) + abs(d.y) / (ISO_TILE_HEIGHT * 0.5) <= 1.0
+
+func is_iso_cell_in_bounds(cell: Vector2i) -> bool:
+	return cell.x >= 0 and cell.x < ISO_GRID_COLS and cell.y >= 0 and cell.y < ISO_GRID_ROWS
+
+func clamp_iso_cell(cell: Vector2i) -> Vector2i:
+	return Vector2i(clampi(cell.x, 0, ISO_GRID_COLS - 1), clampi(cell.y, 0, ISO_GRID_ROWS - 1))
+
+# Default isometric layout: seats fill the diamond floor cell by cell.
+# Desks fill the floor the way a real study cafe is laid out: two banks of desks
+# with a walking aisle down row 1 and column 3, rather than one solid block
+# jammed into the corner. The aisles are still placeable - they are simply the
+# last cells handed out - so the player can fill them if they want to.
+var _default_seat_cells: Array = []
+
+func _build_default_seat_cells() -> Array:
+	var pref: Array = []
+	# Cells (x+y) even are never screen-adjacent to one another, so desks placed
+	# on them keep a full tile of walking space on every side.
+	for parity in [0, 1]:
+		for y in range(ISO_GRID_ROWS):
+			for x in range(ISO_GRID_COLS):
+				if (x + y) % 2 == 0 and x % 2 == parity:
+					pref.append(Vector2i(x, y))
+	# The in-between tiles stay placeable - they are simply handed out last.
+	for y in range(ISO_GRID_ROWS):
+		for x in range(ISO_GRID_COLS):
+			var c = Vector2i(x, y)
+			if not pref.has(c):
+				pref.append(c)
+	return pref
+
+func get_base_seat_cell(index: int) -> Vector2i:
+	if _default_seat_cells.is_empty():
+		_default_seat_cells = _build_default_seat_cells()
+	return _default_seat_cells[posmod(index, _default_seat_cells.size())]
+
+# The isometric cell a seat currently stands on (derived from its world position,
+# so offsets and cells can never drift out of sync).
+func get_seat_cell(index: int) -> Vector2i:
+	return clamp_iso_cell(screen_to_iso(get_seat_position(index)))
+
+func get_seat_index_at_cell(cell: Vector2i, ignore_index: int = -1) -> int:
+	for i in range(get_max_capacity()):
+		if i == ignore_index:
+			continue
+		if get_seat_cell(i) == cell:
+			return i
+	return -1
+
+func is_iso_cell_free(cell: Vector2i, ignore_index: int = -1) -> bool:
+	return is_iso_cell_in_bounds(cell) and get_seat_index_at_cell(cell, ignore_index) == -1
+
+# Ring search outward from the requested cell so a drop on an occupied tile
+# still lands somewhere sensible instead of stacking two desks on one tile.
+func find_nearest_free_iso_cell(cell: Vector2i, ignore_index: int = -1) -> Vector2i:
+	if is_iso_cell_free(cell, ignore_index):
+		return cell
+	var max_ring = max(ISO_GRID_COLS, ISO_GRID_ROWS)
+	for ring in range(1, max_ring + 1):
+		for dx in range(-ring, ring + 1):
+			for dy in range(-ring, ring + 1):
+				if max(abs(dx), abs(dy)) != ring:
+					continue
+				var probe = cell + Vector2i(dx, dy)
+				if is_iso_cell_free(probe, ignore_index):
+					return probe
+	return cell
+
+# Single entry point for every desk move. Snaps to the isometric grid, keeps the
+# desk inside the floor, and refuses to drop two desks on the same tile.
+func place_seat_at_cell(index: int, cell: Vector2i) -> Dictionary:
+	var was_in_bounds = is_iso_cell_in_bounds(cell)
+	var target = clamp_iso_cell(cell)
+	var blocked_by = get_seat_index_at_cell(target, index)
+	var relocated = false
+	if blocked_by != -1:
+		target = find_nearest_free_iso_cell(target, index)
+		relocated = true
+	seat_custom_offsets[index] = iso_to_screen(target) - get_base_seat_position(index)
+	report_quest_action("arrange")
+	var msg = "📍 책상 #%d 배치 완료! (칸 %d, %d)" % [index + 1, target.x, target.y]
+	if relocated:
+		msg = "🧲 이미 다른 책상이 있어 가장 가까운 빈 칸(%d, %d)으로 배치했습니다!" % [target.x, target.y]
+	elif not was_in_bounds:
+		msg = "↩️ 바닥 격자 밖이라 가장 가까운 칸(%d, %d)으로 배치했습니다!" % [target.x, target.y]
+	save_game()
+	return {
+		"success": true,
+		"cell": target,
+		"pos": iso_to_screen(target),
+		"relocated": relocated,
+		"clamped": not was_in_bounds,
+		"msg": msg
+	}
+
+func place_seat_at_world(index: int, world_pos: Vector2) -> Dictionary:
+	return place_seat_at_cell(index, screen_to_iso(world_pos))
+
 # Calculate Smart Connected Desk Topology Mask for Seamless Desk Top & Partition Linking
 func get_seat_connectivity_mask(seat_index: int) -> Dictionary:
-	var current_pos = get_seat_position(seat_index)
-	var cap = get_max_capacity()
+	# Neighbours are decided on the isometric grid, not by pixel distance, so the
+	# seamless desk bridges stay correct no matter where the player drags a desk.
+	var cell = get_seat_cell(seat_index)
 	
 	var mask = {
 		"left": false,
@@ -5868,29 +6132,18 @@ func get_seat_connectivity_mask(seat_index: int) -> Dictionary:
 		"seamless_joint": false
 	}
 	
-	for other_idx in range(cap):
-		if other_idx == seat_index:
-			continue
-		var other_pos = get_seat_position(other_idx)
-		var diff = other_pos - current_pos
-		
-		# Horizontal Neighbor connection (X difference ~150px, Y diff < 30px)
-		if abs(diff.y) < 35.0:
-			if diff.x > 80.0 and diff.x < 220.0:
-				mask["right"] = true
-				mask["connected_count"] += 1
-			elif diff.x < -80.0 and diff.x > -220.0:
-				mask["left"] = true
-				mask["connected_count"] += 1
-		# Vertical Neighbor connection (Y diff ~80px, X diff < 35px)
-		elif abs(diff.x) < 40.0:
-			if diff.y > 50.0 and diff.y < 120.0:
-				mask["bottom"] = true
-				mask["connected_count"] += 1
-			elif diff.y < -50.0 and diff.y > -120.0:
-				mask["top"] = true
-				mask["connected_count"] += 1
-				
+	var neighbours = {
+		"right": Vector2i(1, 0),
+		"left": Vector2i(-1, 0),
+		"bottom": Vector2i(0, 1),
+		"top": Vector2i(0, -1)
+	}
+	for dir_name in neighbours:
+		var probe = cell + neighbours[dir_name]
+		if is_iso_cell_in_bounds(probe) and get_seat_index_at_cell(probe, seat_index) != -1:
+			mask[dir_name] = true
+			mask["connected_count"] += 1
+	
 	mask["seamless_joint"] = (mask["left"] or mask["right"])
 	return mask
 

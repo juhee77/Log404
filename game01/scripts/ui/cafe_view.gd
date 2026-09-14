@@ -19,6 +19,7 @@ var selected_drag_seat: int = -1
 var is_dragging: bool = false
 var drag_start_mouse_pos: Vector2 = Vector2.ZERO
 var drag_grab_offset: Vector2 = Vector2.ZERO
+var hover_cell: Vector2i = Vector2i(-1, -1)
 
 var desk_booth_texture: Texture2D
 var desk_open_texture: Texture2D
@@ -169,56 +170,44 @@ func _gui_input(event: InputEvent) -> void:
 		if event.pressed:
 			# HIGHEST PRIORITY: If a seat is ALREADY selected to be moved, move to ANY clicked tile (Blue or Brown floor!)
 			if selected_drag_seat != -1 and not is_dragging:
-				var clicked_another = false
-				var cap = GameState.get_max_capacity()
-				for i in range(cap):
-					if i == selected_drag_seat: continue
-					var s_pos = GameState.get_seat_position(i)
-					var booth = i >= GameState.upgrades["open_seats"]["level"] * 3
-					var cw = 200.0 if booth else 150.0
-					var ch = 130.0 if booth else 80.0
-					var d_rect = Rect2(s_pos.x - 10, s_pos.y - 10, cw + 20, ch + 20)
-					if d_rect.has_point(click_pos):
-						clicked_another = true
-						selected_drag_seat = i
-						floating_texts.append({
-							"text": "🧩 책상 #%d 선택됨! 이동할 위치(격자 칸)를 클릭하세요" % [i + 1],
-							"pos": s_pos + Vector2(0, -35),
-							"alpha": 1.0,
-							"color": Color(0.2, 0.9, 0.5)
-						})
-						queue_redraw()
-						return
-				
-				if not clicked_another:
-					# Instantly move currently selected seat to clicked target tile on floor!
-					var base_pos = GameState.get_base_seat_position(selected_drag_seat)
-					var raw_offset = click_pos - base_pos
-					GameState.set_seat_custom_offset_snapped(selected_drag_seat, raw_offset)
-					var new_pos = GameState.get_seat_position(selected_drag_seat)
+				var other_seat = pick_seat_at(click_pos)
+				if other_seat != -1 and other_seat != selected_drag_seat:
+					selected_drag_seat = other_seat
 					floating_texts.append({
-						"text": "📍 책상 #%d 원하는 위치 배치 완료!" % [selected_drag_seat + 1],
-						"pos": new_pos + Vector2(0, -35),
+						"text": "🧩 책상 #%d 선택됨! 이동할 타일을 클릭하세요" % [other_seat + 1],
+						"pos": GameState.get_seat_position(other_seat) + Vector2(0, -70),
 						"alpha": 1.0,
-						"color": Color(0.96, 0.62, 0.07)
+						"color": Color(0.2, 0.9, 0.5)
+					})
+					queue_redraw()
+					return
+				
+				if other_seat == -1:
+					# Move the selected desk onto the isometric tile that was clicked.
+					var result = GameState.place_seat_at_world(selected_drag_seat, click_pos)
+					floating_texts.append({
+						"text": result["msg"],
+						"pos": result["pos"] + Vector2(0, -70),
+						"alpha": 1.0,
+						"color": Color(0.96, 0.62, 0.07) if not result["relocated"] else Color(1.0, 0.75, 0.3)
 					})
 					selected_drag_seat = -1
 					is_dragging = false
-					GameState.save_game()
+					hover_cell = Vector2i(-1, -1)
 					queue_redraw()
 					return
 
 			# 0. Check Clean Top Right Control Buttons Click
 			var screen_click = event.position
-			var btn_x = max(get_rect().size.x - 170.0, 750.0)
-			var h_btn_rect = Rect2(btn_x, 12, 160, 36)
+			var btn_x = 706.0
+			var h_btn_rect = Rect2(btn_x, 50, 160, 36)
 			if h_btn_rect.has_point(screen_click):
 				GameState.toggle_heatmap_mode()
 				queue_redraw()
 				return
 				
-			var tech_btn_x = btn_x - 220.0
-			var tech_btn_rect = Rect2(tech_btn_x, 12, 210, 36)
+			var tech_btn_x = btn_x
+			var tech_btn_rect = Rect2(tech_btn_x, 8, 210, 36)
 			if tech_btn_rect.has_point(screen_click):
 				GameState.tech_systems_requested.emit()
 				queue_redraw()
@@ -236,7 +225,7 @@ func _gui_input(event: InputEvent) -> void:
 				return
 
 			# 2. Check Coffee Bar Click (Updated to Room 2 position!)
-			var bar_rect = Rect2(750, 75, 230, 100)
+			var bar_rect = Rect2(1000, 75, 230, 100)
 			if bar_rect.has_point(click_pos):
 				if GameState.active_orders.size() > 0:
 					var first_cid = GameState.active_orders.keys()[0]
@@ -255,56 +244,56 @@ func _gui_input(event: InputEvent) -> void:
 				queue_redraw()
 				return
 			
-			# 3. Check Seat Selection & Drag Start
-			var capacity = GameState.get_max_capacity()
-			for i in range(capacity):
-				var seat_pos = GameState.get_seat_position(i)
-				var is_booth = i >= GameState.upgrades["open_seats"]["level"] * 3
-				var cell_w = 200.0 if is_booth else 150.0
-				var cell_h = 130.0 if is_booth else 80.0
-				var desk_hit_rect = Rect2(seat_pos.x - 10, seat_pos.y - 10, cell_w + 20, cell_h + 20)
-				
-				if desk_hit_rect.has_point(click_pos):
-					if GameState.dirty_seats.has(i):
-						GameState.clean_seat(i)
-						return
-						
-					selected_drag_seat = i
-					is_dragging = false
-					drag_grab_offset = click_pos - seat_pos
-					drag_start_mouse_pos = event.position
-					floating_texts.append({
-						"text": "🧩 책상 선택됨! 원하는 칸을 클릭하거나 끌어서 이동하세요",
-						"pos": seat_pos + Vector2(0, -35),
-						"alpha": 1.0,
-						"color": Color(0.2, 0.9, 0.5)
-					})
-					queue_redraw()
+			# 3. Check Seat Selection & Drag Start (front-most desk wins)
+			var hit_seat = pick_seat_at(click_pos)
+			if hit_seat != -1:
+				if GameState.dirty_seats.has(hit_seat):
+					GameState.clean_seat(hit_seat)
 					return
+				
+				var seat_pos = GameState.get_seat_position(hit_seat)
+				selected_drag_seat = hit_seat
+				is_dragging = false
+				drag_grab_offset = click_pos - seat_pos
+				drag_start_mouse_pos = event.position
+				hover_cell = GameState.get_seat_cell(hit_seat)
+				floating_texts.append({
+					"text": "🧩 책상 선택됨! 원하는 타일을 클릭하거나 끌어서 이동하세요",
+					"pos": seat_pos + Vector2(0, -70),
+					"alpha": 1.0,
+					"color": Color(0.2, 0.9, 0.5)
+				})
+				queue_redraw()
+				return
 		else:
 			if is_dragging and selected_drag_seat != -1:
 				is_dragging = false
-				var final_pos = GameState.get_seat_position(selected_drag_seat)
+				var drop_pos = event.position - view_offset - drag_grab_offset
+				var result = GameState.place_seat_at_world(selected_drag_seat, drop_pos)
 				floating_texts.append({
-					"text": "📍 책상 마그네틱 배치 완료!",
-					"pos": final_pos + Vector2(0, -35),
+					"text": result["msg"],
+					"pos": result["pos"] + Vector2(0, -70),
 					"alpha": 1.0,
-					"color": Color(0.96, 0.62, 0.07)
+					"color": Color(0.96, 0.62, 0.07) if not result["relocated"] else Color(1.0, 0.75, 0.3)
 				})
 				selected_drag_seat = -1
-				GameState.save_game()
+				hover_cell = Vector2i(-1, -1)
 				queue_redraw()
 				return
 
-	if event is InputEventMouseMotion and selected_drag_seat != -1:
-		if (event.button_mask & MOUSE_BUTTON_MASK_LEFT) != 0:
+	if event is InputEventMouseMotion:
+		var motion_world = event.position - view_offset
+		if selected_drag_seat != -1 and (event.button_mask & MOUSE_BUTTON_MASK_LEFT) != 0:
 			if drag_start_mouse_pos.distance_to(event.position) > 4.0:
 				is_dragging = true
 			if is_dragging:
-				var target_pos = event.position - view_offset - drag_grab_offset
-				var base_pos = GameState.get_base_seat_position(selected_drag_seat)
-				var raw_offset = target_pos - base_pos
-				GameState.set_seat_custom_offset_snapped(selected_drag_seat, raw_offset)
+				# Live-preview the snap target; the move is committed on release.
+				hover_cell = GameState.clamp_iso_cell(GameState.screen_to_iso(motion_world - drag_grab_offset))
+				queue_redraw()
+		elif GameState.is_decorating_mode or selected_drag_seat != -1:
+			var new_hover = GameState.clamp_iso_cell(GameState.screen_to_iso(motion_world))
+			if new_hover != hover_cell:
+				hover_cell = new_hover
 				queue_redraw()
 
 func _draw() -> void:
@@ -386,48 +375,54 @@ func _draw() -> void:
 
 func draw_full_isometric_floor_grid(_w: float, _h: float) -> void:
 	var vo = view_offset
-	# Draw Isometric Floor Tile Grid across ALL Floor Spaces (Both Blue Focus Room & Brown Lounge/Corridor)
-	var grid_step_x = 150.0
-	var grid_step_y = 80.0
-	var start_x = 30.0 + vo.x
-	var start_y = 60.0 + vo.y
-	
-	var is_active_grid = GameState.is_decorating_mode or is_dragging
+	# True 2:1 isometric diamond floor. Tiles are produced by the shared
+	# GameState projection, so what is drawn and what a desk snaps to are the
+	# same thing - previously the diamonds were only painted on top of a
+	# rectangular grid and never actually tiled (they touched at the corners
+	# and left diamond-shaped holes between them).
+	var is_active_grid = GameState.is_decorating_mode or is_dragging or selected_drag_seat != -1
 	var line_alpha = 0.55 if is_active_grid else 0.22
 	var line_color = Color(0.96, 0.62, 0.07, line_alpha) if is_active_grid else Color(0.55, 0.42, 0.30, line_alpha)
-	var node_color = Color(0.2, 0.9, 0.5, 0.8) if is_active_grid else Color(0.96, 0.62, 0.07, 0.45)
 	
-	# Draw Full 2.5D Isometric Diamond Grid Tiles across ALL Blue & Brown floor areas (9 cols x 7 rows = 63 Placeable Cells)
-	for gr in range(7):
-		for gc in range(9):
-			var tile_top_left = Vector2(start_x + gc * grid_step_x, start_y + gr * grid_step_y)
+	for gy in range(GameState.ISO_GRID_ROWS):
+		for gx in range(GameState.ISO_GRID_COLS):
+			var cell = Vector2i(gx, gy)
+			var diamond_poly = GameState.get_iso_diamond_polygon(cell)
+			for pt_idx in range(diamond_poly.size()):
+				diamond_poly[pt_idx] += vo
 			
-			# 2.5D Isometric Diamond Polygon for each floor tile
-			var diamond_poly = PackedVector2Array([
-				tile_top_left + Vector2(grid_step_x * 0.5, 0),
-				tile_top_left + Vector2(grid_step_x, grid_step_y * 0.5),
-				tile_top_left + Vector2(grid_step_x * 0.5, grid_step_y),
-				tile_top_left + Vector2(0, grid_step_y * 0.5)
-			])
+			# Occupancy is only needed while the player is actually placing a desk.
+			var occupant = GameState.get_seat_index_at_cell(cell, selected_drag_seat) if is_active_grid else -1
+			var is_hovered = is_active_grid and cell == hover_cell
 			
-			# Tile Fill & Grid Line Rendering
-			var fill_col = Color(0.96, 0.62, 0.07, 0.08) if is_active_grid else Color(0.2, 0.15, 0.1, 0.03)
+			var fill_col = Color(0.2, 0.15, 0.1, 0.03)
+			if is_active_grid:
+				fill_col = Color(0.96, 0.62, 0.07, 0.08)
+				if occupant != -1:
+					fill_col = Color(0.9, 0.25, 0.25, 0.18)   # tile already taken
+				if is_hovered:
+					fill_col = Color(0.9, 0.25, 0.25, 0.38) if occupant != -1 else Color(0.2, 0.95, 0.6, 0.38)
 			draw_colored_polygon(diamond_poly, fill_col)
 			
 			var diamond_loop = diamond_poly.duplicate()
 			diamond_loop.append(diamond_poly[0])
-			draw_polyline(diamond_loop, line_color, 1.4 if is_active_grid else 1.0)
+			var outline = line_color
+			var thickness = 1.4 if is_active_grid else 1.0
+			if is_hovered:
+				outline = Color(1.0, 0.35, 0.35) if occupant != -1 else Color(0.2, 1.0, 0.6)
+				thickness = 3.0
+			draw_polyline(diamond_loop, outline, thickness)
 			
-			# Draw Grid Node Anchor Point Dots at intersections
-			draw_circle(tile_top_left + Vector2(grid_step_x * 0.5, 0), 2.5, node_color)
-			draw_circle(tile_top_left + Vector2(grid_step_x * 0.5, grid_step_y * 0.5), 2.0, Color(0.2, 0.8, 1.0, 0.4))
+			if is_active_grid:
+				var center = GameState.iso_to_screen(cell) + vo
+				draw_circle(center, 2.0, Color(0.2, 0.8, 1.0, 0.45))
 
 func draw_integrated_multi_room_layout(w: float, h: float) -> void:
 	var vo = view_offset
 	# ----------------------------------------------------
 	# ROOM 1: 📖 메인 집중 열공 방 (Main Focus Study Room)
 	# ----------------------------------------------------
-	var room1_rect = Rect2(30 + vo.x, 20 + vo.y, 680, h - 40)
+	var room1_rect = Rect2(30 + vo.x, 20 + vo.y, 930, h - 40)
 	draw_rect(room1_rect, Color(0.12, 0.10, 0.08, 0.45), true)
 	
 	# Room 1 Header Banner
@@ -445,33 +440,32 @@ func draw_integrated_multi_room_layout(w: float, h: float) -> void:
 	# ----------------------------------------------------
 	# ROOM 2: ☕ 카페테리아 & 힐링 라운지 방 (Lounge & Coffee Bar)
 	# ----------------------------------------------------
-	var room2_rect = Rect2(730 + vo.x, 20 + vo.y, w - 750, 240)
+	var room2_rect = Rect2(980 + vo.x, 20 + vo.y, w - 1000, 240)
 	draw_rect(room2_rect, Color(0.10, 0.14, 0.12, 0.45), true)
 	
 	# Room 2 Header Banner
-	var r2_banner = Rect2(740 + vo.x, 30 + vo.y, 250, 32)
+	var r2_banner = Rect2(990 + vo.x, 30 + vo.y, 250, 32)
 	draw_rect(r2_banner, Color(0.12, 0.20, 0.15, 0.95), true)
-	draw_string(ThemeDB.fallback_font, Vector2(752 + vo.x, 52 + vo.y), "☕ 힐링 라운지 & 커피바 (Lounge)", HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color(0.1, 0.8, 0.4))
+	draw_string(ThemeDB.fallback_font, Vector2(1002 + vo.x, 52 + vo.y), "☕ 힐링 라운지 & 커피바 (Lounge)", HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color(0.1, 0.8, 0.4))
 	
-	# Render Coffee Bar Counter inside Room 2
-	var r2_bar = Rect2(750 + vo.x, 75 + vo.y, 230, 100)
-	if coffee_bar_texture != null:
-		draw_texture_rect(coffee_bar_texture, r2_bar, false)
-	else:
-		draw_rect(r2_bar, Color(0.24, 0.18, 0.14), true)
-	draw_string(ThemeDB.fallback_font, Vector2(765 + vo.x, 125 + vo.y), "☕ 에스프레소 & 로스팅 바", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color.WHITE)
+	# Render the Coffee Bar as actual furniture (counter run, espresso machine,
+	# pastry case, stools, back shelf) instead of one flat pasted photo.
+	draw_lounge_bar()
+	draw_string(ThemeDB.fallback_font, Vector2(992 + vo.x, 160 + vo.y), "☕ 에스프레소 & 로스팅 바", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(0.85, 0.80, 0.72))
 
-	# Render Cake & Bakery Dessert Showcase Counter in Room 2 Lounge
-	var cake_bar = Rect2(750 + vo.x, 165 + vo.y, 230, 32)
-	draw_rect(cake_bar, Color(0.22, 0.16, 0.14, 0.95), true)
+	# Today's bakery stock on an A-frame chalkboard rather than a flat strip.
+	var board_base = Vector2(1035, 248) + vo
+	draw_prop("menu_board", board_base, 1.15)
+	var board_r = menu_board_rect(board_base, 1.15)
 	var c_cnt = GameState.bakery_stock.get("cheesecake", 0)
 	var r_cnt = GameState.bakery_stock.get("croissant", 0)
-	var showcase_text = "🍰 치즈케이크 x%d  |  🥐 크로와상 x%d" % [c_cnt, r_cnt]
-	draw_string(ThemeDB.fallback_font, Vector2(760 + vo.x, 186 + vo.y), showcase_text, HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(1.0, 0.85, 0.9))
+	draw_string(ThemeDB.fallback_font, board_r.position + Vector2(8, 17), "☕ TODAY'S BAKE", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(0.95, 0.88, 0.70))
+	draw_string(ThemeDB.fallback_font, board_r.position + Vector2(8, 33), "🍰 치즈케이크 x%d" % c_cnt, HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(1.0, 0.85, 0.9))
+	draw_string(ThemeDB.fallback_font, board_r.position + Vector2(8, 47), "🥐 크로와상 x%d" % r_cnt, HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(1.0, 0.90, 0.78))
 
 	# Render 2.5D QTE Restock Timing Meter Overlay if active
 	if GameState.is_qte_mini_game_active:
-		var qte_rect = Rect2(745 + vo.x, 160 + vo.y, 240, 42)
+		var qte_rect = Rect2(995 + vo.x, 206 + vo.y, 240, 42)
 		draw_rect(qte_rect, Color(0.08, 0.06, 0.12, 0.95), true)
 		draw_rect(qte_rect, Color(1.0, 0.8, 0.2), false, 2.0)
 		
@@ -480,117 +474,90 @@ func draw_integrated_multi_room_layout(w: float, h: float) -> void:
 		draw_rect(Rect2(target_x - 15, qte_rect.position.y + 4, 30, qte_rect.size.y - 8), Color(0.2, 0.9, 0.5, 0.7), true)
 		draw_string(ThemeDB.fallback_font, qte_rect.position + Vector2(8, 26), "🍰 핫타임 QTE! PERFECT 존 타격!", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(1.0, 0.85, 0.3))
 
-	# Render 2 Round Mahogany Cake Tasting Tables in Room 2 Lounge
-	var t1_center = Vector2(790, 215) + vo
-	draw_circle(t1_center, 16.0, Color(0.28, 0.20, 0.16, 0.95))
-	draw_circle(t1_center, 14.0, Color(0.42, 0.30, 0.22))
-	draw_string(ThemeDB.fallback_font, t1_center + Vector2(-9, 5), "🍰☕", HORIZONTAL_ALIGNMENT_LEFT, -1, 9, Color.WHITE)
-	draw_string(ThemeDB.fallback_font, t1_center + Vector2(-26, 4), "🪑", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color.WHITE)
-	draw_string(ThemeDB.fallback_font, t1_center + Vector2(14, 4), "🪑", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color.WHITE)
-	
-	var t2_center = Vector2(930, 215) + vo
-	draw_circle(t2_center, 16.0, Color(0.28, 0.20, 0.16, 0.95))
-	draw_circle(t2_center, 14.0, Color(0.42, 0.30, 0.22))
-	draw_string(ThemeDB.fallback_font, t2_center + Vector2(-9, 5), "🥐☕", HORIZONTAL_ALIGNMENT_LEFT, -1, 9, Color.WHITE)
-	draw_string(ThemeDB.fallback_font, t2_center + Vector2(-26, 4), "🪑", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color.WHITE)
-	draw_string(ThemeDB.fallback_font, t2_center + Vector2(14, 4), "🪑", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color.WHITE)
+	# Two lounge tables, built as furniture rather than emoji on a circle.
+	draw_prop("round_table", Vector2(1163, 222) + vo, 0.55)
+	draw_prop("plant", Vector2(1243, 238) + vo, 0.46)
 
 	# Render Human Barista Staff Sprite in Room 2 Lounge
 	if staff_barista_texture != null:
-		draw_texture_rect(staff_barista_texture, Rect2(840 + vo.x, 45 + vo.y, 52, 52), false)
-		draw_string(ThemeDB.fallback_font, Vector2(825 + vo.x, 42 + vo.y), "☕ 바리스타 민서", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(0.1, 0.8, 0.4))
+		draw_texture_rect(staff_barista_texture, Rect2(1012 + vo.x, 96 + vo.y, 50, 50), false)
+		draw_string(ThemeDB.fallback_font, Vector2(992 + vo.x, 92 + vo.y), "☕ 바리스타 민서", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(0.1, 0.8, 0.4))
 
 	# ----------------------------------------------------
 	# ROOM 3: 🔑 프런트 & 스마트 사물함 방 (Front & Lockers)
 	# ----------------------------------------------------
-	var room3_rect = Rect2(730 + vo.x, 275 + vo.y, w - 750, h - 295)
+	var room3_rect = Rect2(980 + vo.x, 275 + vo.y, w - 1000, h - 295)
 	draw_rect(room3_rect, Color(0.14, 0.12, 0.16, 0.45), true)
 	
 	# Room 3 Header Banner
-	var r3_banner = Rect2(740 + vo.x, 285 + vo.y, 250, 32)
+	var r3_banner = Rect2(990 + vo.x, 285 + vo.y, 250, 32)
 	draw_rect(r3_banner, Color(0.18, 0.15, 0.22, 0.95), true)
 	draw_rect(r3_banner, Color(0.8, 0.4, 0.9, 0.5), false, 1.5)
-	draw_string(ThemeDB.fallback_font, Vector2(752 + vo.x, 307 + vo.y), "🔑 프런트 & 스마트 사물함 (Front)", HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color(0.8, 0.4, 0.9))
+	draw_string(ThemeDB.fallback_font, Vector2(1002 + vo.x, 307 + vo.y), "🔑 프런트 & 스마트 사물함 (Front)", HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color(0.8, 0.4, 0.9))
 
-	# Smart Lockers Wall Graphics in Room 3
-	var locker_rect = Rect2(750 + vo.x, 330 + vo.y, 230, 110)
-	draw_rect(locker_rect, Color(0.2, 0.18, 0.25), true)
-	draw_rect(locker_rect, Color(0.8, 0.4, 0.9, 0.4), false, 1.5)
-	for lx in range(4):
-		for ly in range(2):
-			var box = Rect2(760 + lx * 52 + vo.x, 340 + ly * 44 + vo.y, 46, 36)
-			draw_rect(box, Color(0.28, 0.25, 0.35), true)
-			draw_rect(box, Color(0.5, 0.4, 0.6, 0.4), false, 1.0)
-			draw_string(ThemeDB.fallback_font, box.position + Vector2(10, 23), "🔒%d" % (lx + ly*4 + 1), HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.8, 0.8, 0.9))
+	# Two isometric locker banks standing against the wall, numbered 1-8, with
+	# keypad LEDs and one door left open - not a grid of flat boxes.
+	_prop_locker_bank(Vector2(1040, 398) + vo, 0.95, 1)
+	_prop_locker_bank(Vector2(1118, 437) + vo, 0.95, 5)
+	draw_prop("umbrella_stand", Vector2(1218, 388) + vo, 0.85)
+	draw_prop("plant", Vector2(1008, 462) + vo, 0.60)
 
 	# Glass Door Archways Connecting Rooms
-	draw_rect(Rect2(710 + vo.x, 110 + vo.y, 20, 60), Color(0.2, 0.8, 1.0, 0.8), true)
-	draw_string(ThemeDB.fallback_font, Vector2(712 + vo.x, 145 + vo.y), "🚪", HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color.WHITE)
+	draw_rect(Rect2(960 + vo.x, 110 + vo.y, 20, 60), Color(0.2, 0.8, 1.0, 0.8), true)
+	draw_string(ThemeDB.fallback_font, Vector2(962 + vo.x, 145 + vo.y), "🚪", HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color.WHITE)
 
-	draw_rect(Rect2(710 + vo.x, 360 + vo.y, 20, 60), Color(0.2, 0.8, 1.0, 0.8), true)
-	draw_string(ThemeDB.fallback_font, Vector2(712 + vo.x, 395 + vo.y), "🚪", HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color.WHITE)
+	draw_rect(Rect2(960 + vo.x, 360 + vo.y, 20, 60), Color(0.2, 0.8, 1.0, 0.8), true)
+	draw_string(ThemeDB.fallback_font, Vector2(962 + vo.x, 395 + vo.y), "🚪", HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color.WHITE)
 
-	# Gate Corridor at Room 3 Lower Entrance
-	var gate_rect = Rect2(750 + vo.x, 455 + vo.y, 230, 42)
-	draw_rect(gate_rect, Color(0.12, 0.18, 0.16, 0.95), true)
-	draw_rect(gate_rect, Color(0.06, 0.72, 0.5), false, 2.0)
-	draw_string(ThemeDB.fallback_font, Vector2(765 + vo.x, 481 + vo.y), "🚪 입출구 무인 게이트 (스마트 출입)", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(0.06, 0.72, 0.5))
+	# Reception counter and the entry speed gates
+	# Everything stays above y=555: the CafeView is only 566px tall, so anything
+	# lower disappears behind the bottom action bar.
+	draw_prop("reception", Vector2(1050, 500) + vo, 0.85)
+	draw_string(ThemeDB.fallback_font, Vector2(998 + vo.x, 526 + vo.y), "🛎️ 무인 프런트 키오스크", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(0.8, 0.4, 0.9))
+	draw_prop("speed_gate", Vector2(1168, 468) + vo, 0.9)
+	draw_string(ThemeDB.fallback_font, Vector2(1136 + vo.x, 522 + vo.y), "🚪 스마트 출입 게이트", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(0.06, 0.72, 0.5))
 
 	# ----------------------------------------------------
 	# Draw Desks & Booths inside ROOM 1 (Main Focus Study Room)
 	# ----------------------------------------------------
-	var total_capacity = GameState.get_max_capacity()
-	var cols = 3
-	var start_x = 30.0
-	var start_y = 60.0
-	
-	# Draw 2.5D Magnetic Placement Grid Overlay when dragging a seat (Covers ALL Blue & Brown floor areas!)
-	if is_dragging and selected_drag_seat != -1:
-		var grid_tile_w = 150.0
-		var grid_tile_h = 80.0
-		for gc in range(9):
-			for gr in range(7):
-				var center_pt = Vector2(start_x + gc * grid_tile_w + grid_tile_w*0.5 + vo.x, start_y + gr * grid_tile_h + grid_tile_h*0.5 + vo.y)
-				var iso_grid_diamond = PackedVector2Array([
-					center_pt + Vector2(0, -grid_tile_h * 0.5),
-					center_pt + Vector2(grid_tile_w * 0.5, 0),
-					center_pt + Vector2(0, grid_tile_h * 0.5),
-					center_pt + Vector2(-grid_tile_w * 0.5, 0)
-				])
-				draw_colored_polygon(iso_grid_diamond, Color(0.2, 0.8, 1.0, 0.15))
-				var iso_loop = iso_grid_diamond.duplicate()
-				iso_loop.append(iso_grid_diamond[0])
-				draw_polyline(iso_loop, Color(0.2, 0.8, 1.0, 0.6), 1.5)
+	# Rug first, then the back wall fixtures, then the desks, then the fixtures
+	# that stand in front of them - one consistent painter's order for the room.
+	draw_floor_rug(Vector2i(1, 1), Vector2i(4, 4), Color(0.26, 0.18, 0.13, 0.40))
+	draw_room1_props(true)
 
-	# Collect seat indices and sort by Y-position for proper 2.5D depth ordering
-	var seat_indices = []
-	for idx in range(total_capacity):
-		seat_indices.append(idx)
-		
-	seat_indices.sort_custom(func(a, b):
-		var pos_a = GameState.get_seat_position(a)
-		var pos_b = GameState.get_seat_position(b)
-		return pos_a.y < pos_b.y
-	)
+	# Painter's algorithm over the isometric diagonal (back tiles first)
+	var seat_indices = get_seats_in_depth_order()
+	
+	# Ghost preview of where the dragged desk will land
+	if is_dragging and selected_drag_seat != -1 and GameState.is_iso_cell_in_bounds(hover_cell):
+		var ghost_size = get_desk_sprite_size(selected_drag_seat)
+		var ghost_center = GameState.iso_to_screen(hover_cell) + vo
+		var ghost_bottom = ghost_center.y + GameState.ISO_TILE_HEIGHT * 0.5 + ghost_size.y * 0.09
+		var ghost_rect = Rect2(Vector2(ghost_center.x - ghost_size.x * 0.5, ghost_bottom - ghost_size.y), ghost_size)
+		var ghost_blocked = GameState.get_seat_index_at_cell(hover_cell, selected_drag_seat) != -1
+		var ghost_col = Color(0.9, 0.25, 0.25, 0.25) if ghost_blocked else Color(0.2, 0.95, 0.6, 0.25)
+		draw_rect(ghost_rect, ghost_col, true)
+		draw_rect(ghost_rect, Color(1.0, 0.4, 0.4, 0.9) if ghost_blocked else Color(0.2, 1.0, 0.6, 0.9), false, 2.0)
 	
 	for i in seat_indices:
-		var col = i % cols
-		var row = i / cols
+		var iso_cell = GameState.get_seat_cell(i)
+		var tile_center = GameState.iso_to_screen(iso_cell) + vo
 		var is_booth = i >= GameState.upgrades["open_seats"]["level"] * 3
-		var cell_w = 200.0 if is_booth else 150.0
-		var cell_h = 130.0 if is_booth else 80.0
+		var sprite_size = get_desk_sprite_size(i)
+		var cell_w = sprite_size.x
+		var cell_h = sprite_size.y
 		
-		# Seamless 0px-gap connected desk placement matching floor grid coordinates!
-		var seat_pos = GameState.get_seat_position(i) + vo
+		# Desk art anchored bottom-centre on its isometric floor tile
+		var seat_pos = get_desk_rect(i).position + vo
 		
 		var desk_color = Color(0.18, 0.14, 0.12, 0.85) if not is_booth else Color(0.15, 0.12, 0.18, 0.85)
 		var border_color = Color(0.96, 0.62, 0.07) if not is_booth else Color(0.8, 0.4, 0.9)
 		
 		var desk_rect = Rect2(seat_pos.x, seat_pos.y, cell_w, cell_h)
-		# 2.5D Isometric Diamond Ground Base Shadow & Placement Footprint Area (하단 격자 좌표와 100% 동일 위치 일치!)
-		var shadow_center = seat_pos + Vector2(75.0, 40.0)
-		var shadow_radius_x = 75.0
-		var shadow_radius_y = 40.0
+		# Ground shadow sits on the isometric tile centre, not on the sprite rect
+		var shadow_center = tile_center
+		var shadow_radius_x = GameState.ISO_TILE_WIDTH * 0.5
+		var shadow_radius_y = GameState.ISO_TILE_HEIGHT * 0.5
 		
 		# Ground Shadow Base Ellipse Polygon (부드러운 지면 그림자 영역)
 		var shadow_points = PackedVector2Array()
@@ -604,12 +571,9 @@ func draw_integrated_multi_room_layout(w: float, h: float) -> void:
 		draw_colored_polygon(shadow_points, Color(0.02, 0.015, 0.01, 0.42))
 		
 		# 2.5D Isometric Ground Tile Footprint Polygon (바닥 배치 가이드 영역)
-		var footprint_poly = PackedVector2Array([
-			seat_pos + Vector2(75.0, 0),
-			seat_pos + Vector2(150.0, 40.0),
-			seat_pos + Vector2(75.0, 80.0),
-			seat_pos + Vector2(0, 40.0)
-		])
+		var footprint_poly = GameState.get_iso_diamond_polygon(iso_cell)
+		for fp_idx in range(footprint_poly.size()):
+			footprint_poly[fp_idx] += vo
 		
 		if GameState.is_decorating_mode or i == selected_drag_seat:
 			# Highlight active ground footprint zone in decorating/drag mode
@@ -680,15 +644,17 @@ func draw_integrated_multi_room_layout(w: float, h: float) -> void:
 			draw_rect(desk_rect, Color(0.2, 0.9, 0.5, 0.35), true)
 			draw_rect(desk_rect, Color(0.2, 1.0, 0.5), false, 3.0)
 		
-		var label = "프라이빗 1인실 #%d" % (i + 1) if is_booth else "오픈 카페석 #%d" % (i + 1)
-		draw_string(ThemeDB.fallback_font, seat_pos + Vector2(10, 22), label, HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color(0.8, 0.8, 0.75))
+		# Short tag above the desk; full names overlapped every desk behind them
+		# once the desks were packed onto real isometric tiles.
+		var label = "🔒#%d" % (i + 1) if is_booth else "#%d" % (i + 1)
+		draw_string(ThemeDB.fallback_font, Vector2(tile_center.x - 30, seat_pos.y - 6), label, HORIZONTAL_ALIGNMENT_CENTER, 60, 12, Color(0.8, 0.8, 0.75))
 		
 		# Draw Desk Drag Handle & Rotation Controls in Decorating Mode
 		if GameState.is_decorating_mode:
-			var tag_rect = Rect2(seat_pos.x + cell_w - 110, seat_pos.y + 6, 104, 22)
+			var tag_rect = Rect2(tile_center.x - 30, tile_center.y - 9, 60, 18)
 			draw_rect(tag_rect, Color(0.2, 0.8, 0.4, 0.9) if i == selected_drag_seat else Color(0.1, 0.6, 0.9, 0.85), true)
-			var tag_text = "🧩 스냅 잡음!" if i == selected_drag_seat else "↔️ 40px 스냅"
-			draw_string(ThemeDB.fallback_font, tag_rect.position + Vector2(6, 15), tag_text, HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color.WHITE)
+			var tag_text = "🧩 이동중" if i == selected_drag_seat else "◇%d,%d" % [iso_cell.x, iso_cell.y]
+			draw_string(ThemeDB.fallback_font, tag_rect.position + Vector2(0, 13), tag_text, HORIZONTAL_ALIGNMENT_CENTER, 60, 11, Color.WHITE)
 		
 		# Draw Custom Partition / Curtain Overlays
 		if GameState.seat_partitions.has(i):
@@ -747,7 +713,10 @@ func draw_integrated_multi_room_layout(w: float, h: float) -> void:
 			var customer_at_seat = get_customer_at_seat(i)
 			if customer_at_seat.is_empty():
 				draw_string(ThemeDB.fallback_font, seat_pos + Vector2(cell_w*0.35, cell_h*0.6), "비어있음", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(0.5, 0.5, 0.5, 0.6))
-				
+
+	# Fixtures standing in front of / beside the desk block
+	draw_room1_props(false)
+
 	for c in GameState.active_customers:
 		var raw_pos = c["pos"]
 		var draw_pos = raw_pos + view_offset
@@ -911,19 +880,19 @@ func draw_integrated_multi_room_layout(w: float, h: float) -> void:
 		draw_string(ThemeDB.fallback_font, n_render + Vector2(-45, -32), cat_label, HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(1.0, 0.6, 0.8))
 
 	# Render Clean Top Right Control Buttons
-	var btn_x = max(w - 170.0, 750.0)
-	var heatmap_btn_rect = Rect2(btn_x, 12, 160, 36)
+	var btn_x = 706.0
+	var heatmap_btn_rect = Rect2(btn_x, 50, 160, 36)
 	var btn_bg = Color(0.95, 0.4, 0.1, 0.95) if GameState.is_heatmap_mode else Color(0.15, 0.18, 0.22, 0.9)
 	draw_rect(heatmap_btn_rect, btn_bg, true)
 	draw_rect(heatmap_btn_rect, Color(1.0, 0.7, 0.2), false, 2.0)
 	var btn_label = "🔥 히트맵 ON" if GameState.is_heatmap_mode else "🔥 히트맵 분석"
 	draw_string(ThemeDB.fallback_font, heatmap_btn_rect.position + Vector2(24, 24), btn_label, HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color.WHITE)
 
-	var tech_btn_x = btn_x - 220.0
-	var tech_btn_rect = Rect2(tech_btn_x, 12, 210, 36)
+	var tech_btn_x = btn_x
+	var tech_btn_rect = Rect2(tech_btn_x, 8, 210, 36)
 	draw_rect(tech_btn_rect, Color(0.1, 0.7, 0.75, 0.95), true)
 	draw_rect(tech_btn_rect, Color(0.2, 0.95, 0.85), false, 2.0)
-	draw_string(ThemeDB.fallback_font, tech_btn_rect.position + Vector2(15, 24), "🔬 첨단기술 관제센터", HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color.WHITE)
+	draw_string(ThemeDB.fallback_font, tech_btn_rect.position + Vector2(15, 24), "🛠️ 매장 설비 관제실", HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color.WHITE)
 	var hud_panel_x = max(w - 280.0, 500.0)
 	var eq_btn_x = hud_panel_x
 	var pg_btn_x = hud_panel_x
@@ -1795,7 +1764,7 @@ func draw_integrated_multi_room_layout(w: float, h: float) -> void:
 
 	# Render Heatmap HUD Legend Panel (Top Right below button) if ON
 	if GameState.is_heatmap_mode:
-		var hud_rect = Rect2(btn_x - 40.0, 60, 200, 105)
+		var hud_rect = Rect2(btn_x, 92, 200, 105)
 		draw_rect(hud_rect, Color(0.08, 0.09, 0.12, 0.92), true)
 		draw_rect(hud_rect, Color(0.95, 0.6, 0.1), false, 2.0)
 		draw_string(ThemeDB.fallback_font, hud_rect.position + Vector2(10, 22), "📊 2.5D 몰입도 & 소음 히트맵", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(0.95, 0.7, 0.1))
@@ -1931,3 +1900,516 @@ func spawn_floating_text(pos: Vector2, text: String, color: Color = Color.WHITE)
 	tw.tween_property(lbl, "position", pos + Vector2(0, -35), 1.2)
 	tw.parallel().tween_property(lbl, "modulate:a", 0.0, 1.2)
 	tw.tween_callback(lbl.queue_free)
+
+
+# ----------------------------------------------------
+# 2.5D Isometric Desk Placement Helpers
+# ----------------------------------------------------
+
+# The desk art is square 1024x1024 isometric pixel art, so it is drawn into a
+# square rect - the old non-square rect stretched every desk out of proportion.
+# 1.2 x tile width makes the furniture's own footprint cover roughly one tile.
+# ══════════════════════════════════════════════════════════════
+# 🪑 ISOMETRIC PROP KIT
+# Every fixture in the cafe is built from these solids instead of being pasted
+# in as a flat rectangle or one big photo, so props share the floor's 2:1
+# projection and a single light direction (top brightest, left lit, right in
+# shade). That is what makes the room read as a place rather than a collage.
+# ══════════════════════════════════════════════════════════════
+
+const FACE_LEFT_SHADE: float = 0.74
+const FACE_RIGHT_SHADE: float = 0.52
+
+func shade(col: Color, f: float) -> Color:
+	return Color(col.r * f, col.g * f, col.b * f, col.a)
+
+func iso_diamond(center: Vector2, hw: float, hh: float) -> PackedVector2Array:
+	return PackedVector2Array([
+		center + Vector2(0, -hh), center + Vector2(hw, 0),
+		center + Vector2(0, hh), center + Vector2(-hw, 0)
+	])
+
+func stroke_poly(poly: PackedVector2Array, col: Color, width: float = 1.0) -> void:
+	var loop = poly.duplicate()
+	loop.append(poly[0])
+	draw_polyline(loop, col, width)
+
+# A box standing on the floor: footprint diamond extruded upward.
+func draw_iso_prism(base: Vector2, hw: float, hh: float, height: float, col: Color, top_col: Color = Color(0, 0, 0, 0)) -> void:
+	var up = Vector2(0, -height)
+	var b = base + Vector2(0, hh)
+	var l = base + Vector2(-hw, 0)
+	var r = base + Vector2(hw, 0)
+	draw_colored_polygon(PackedVector2Array([l + up, b + up, b, l]), shade(col, FACE_LEFT_SHADE))
+	draw_colored_polygon(PackedVector2Array([b + up, r + up, r, b]), shade(col, FACE_RIGHT_SHADE))
+	var top = iso_diamond(base + up, hw, hh)
+	draw_colored_polygon(top, top_col if top_col.a > 0.0 else col)
+	stroke_poly(top, shade(col, 0.4), 1.0)
+	draw_line(b + up, b, shade(col, 0.35), 1.0)
+
+func fill_ellipse(center: Vector2, rx: float, ry: float, col: Color, segments: int = 18) -> void:
+	var pts = PackedVector2Array()
+	for i in range(segments):
+		var a = (float(i) / segments) * TAU
+		pts.append(center + Vector2(cos(a) * rx, sin(a) * ry))
+	draw_colored_polygon(pts, col)
+
+# An upright cylinder: bins, stools, pots, table pedestals.
+func draw_iso_cylinder(base: Vector2, rx: float, ry: float, height: float, col: Color) -> void:
+	fill_ellipse(base, rx, ry, shade(col, 0.55))
+	draw_colored_polygon(PackedVector2Array([
+		base + Vector2(-rx, 0), base + Vector2(-rx, -height),
+		base + Vector2(rx, -height), base + Vector2(rx, 0)
+	]), shade(col, FACE_RIGHT_SHADE))
+	draw_colored_polygon(PackedVector2Array([
+		base + Vector2(-rx, 0), base + Vector2(-rx, -height),
+		base + Vector2(-rx * 0.25, -height), base + Vector2(-rx * 0.25, 0)
+	]), shade(col, FACE_LEFT_SHADE))
+	fill_ellipse(base + Vector2(0, -height), rx, ry, col)
+
+# Soft contact shadow so a prop looks planted on the floor instead of floating.
+func draw_prop_shadow(base: Vector2, hw: float, hh: float) -> void:
+	fill_ellipse(base, hw * 0.92, hh * 0.92, Color(0.02, 0.015, 0.01, 0.35))
+
+# ── The furniture catalogue ───────────────────────────────────
+# `s` scales a prop to the tile it stands on, so the same piece works on the
+# big study-room tiles and the smaller lounge tiles.
+
+func draw_prop(kind: String, base: Vector2, s: float = 1.0) -> void:
+	match kind:
+		"counter": _prop_counter(base, s)
+		"counter_end": _prop_counter(base, s, true)
+		"espresso": _prop_espresso(base, s)
+		"display_case": _prop_display_case(base, s)
+		"back_shelf": _prop_back_shelf(base, s)
+		"stool": _prop_stool(base, s)
+		"round_table": _prop_round_table(base, s)
+		"bookshelf": _prop_bookshelf(base, s)
+		"plant": _prop_plant(base, s)
+		"water": _prop_water_cooler(base, s)
+		"bin": _prop_bin(base, s)
+		"floor_lamp": _prop_floor_lamp(base, s)
+		"sofa": _prop_sofa(base, s)
+		"printer": _prop_printer(base, s)
+		"locker_bank": _prop_locker_bank(base, s)
+		"reception": _prop_reception(base, s)
+		"speed_gate": _prop_speed_gate(base, s)
+		"menu_board": _prop_menu_board(base, s)
+		"umbrella_stand": _prop_umbrella_stand(base, s)
+
+func _prop_counter(base: Vector2, s: float, is_end: bool = false) -> void:
+	var hw = 36.0 * s
+	var hh = 18.0 * s
+	draw_prop_shadow(base, hw, hh)
+	# Cabinet body with a lighter stone worktop on it.
+	draw_iso_prism(base, hw, hh, 34.0 * s, Color(0.30, 0.21, 0.15), Color(0.44, 0.33, 0.25))
+	var top = base + Vector2(0, -34.0 * s)
+	draw_iso_prism(top, hw, hh, 4.0 * s, Color(0.16, 0.15, 0.16), Color(0.26, 0.25, 0.27))
+	# Front panel grooves - a plain slab reads as a cardboard box.
+	for g in range(2):
+		var gy = -10.0 * s - g * 11.0 * s
+		draw_line(base + Vector2(-hw * 0.8, gy + hh * 0.4), base + Vector2(0, gy + hh), Color(0.20, 0.14, 0.10, 0.8), 1.0)
+		draw_line(base + Vector2(0, gy + hh), base + Vector2(hw * 0.8, gy + hh * 0.4), Color(0.14, 0.10, 0.07, 0.8), 1.0)
+	if is_end:
+		# Till + tip jar on the end section.
+		var t = top + Vector2(0, -4.0 * s)
+		draw_iso_prism(t + Vector2(-8 * s, 2 * s), 9 * s, 5 * s, 10 * s, Color(0.20, 0.22, 0.26))
+		draw_iso_cylinder(t + Vector2(12 * s, 3 * s), 4 * s, 2 * s, 9 * s, Color(0.75, 0.72, 0.55))
+
+func _prop_espresso(base: Vector2, s: float) -> void:
+	# Sits on top of a counter, so no floor shadow.
+	var hw = 22.0 * s
+	var hh = 11.0 * s
+	draw_iso_prism(base, hw, hh, 13.0 * s, Color(0.22, 0.22, 0.24))
+	var body = base + Vector2(0, -13.0 * s)
+	draw_iso_prism(body, hw * 0.92, hh * 0.92, 20.0 * s, Color(0.52, 0.13, 0.11), Color(0.72, 0.70, 0.68))
+	# Group heads, steam wand and a row of warming cups.
+	draw_circle(base + Vector2(-7 * s, -9 * s), 3.0 * s, Color(0.16, 0.16, 0.18))
+	draw_circle(base + Vector2(6 * s, -6 * s), 3.0 * s, Color(0.16, 0.16, 0.18))
+	draw_line(base + Vector2(15 * s, -14 * s), base + Vector2(17 * s, -4 * s), Color(0.80, 0.80, 0.84), 2.0 * s)
+	for c in range(3):
+		fill_ellipse(base + Vector2((-10 + c * 9) * s, (-34 - c * 2) * s), 3.2 * s, 1.8 * s, Color(0.90, 0.88, 0.85))
+
+func _prop_display_case(base: Vector2, s: float) -> void:
+	var hw = 34.0 * s
+	var hh = 17.0 * s
+	draw_prop_shadow(base, hw, hh)
+	draw_iso_prism(base, hw, hh, 26.0 * s, Color(0.26, 0.19, 0.14), Color(0.34, 0.26, 0.20))
+	var shelf = base + Vector2(0, -26.0 * s)
+	# Cakes on the shelf, then the glass hood over them.
+	var cakes = [Color(0.94, 0.80, 0.62), Color(0.86, 0.44, 0.52), Color(0.78, 0.60, 0.38)]
+	for ci in range(cakes.size()):
+		draw_iso_cylinder(shelf + Vector2((-16 + ci * 16) * s, (4 - ci * 3) * s), 6 * s, 3 * s, 7 * s, cakes[ci])
+	draw_iso_prism(shelf, hw * 0.96, hh * 0.96, 22.0 * s, Color(0.62, 0.82, 0.90, 0.26), Color(0.75, 0.90, 0.96, 0.34))
+
+func _prop_back_shelf(base: Vector2, s: float) -> void:
+	var hw = 32.0 * s
+	var hh = 16.0 * s
+	draw_prop_shadow(base, hw * 0.8, hh * 0.8)
+	draw_iso_prism(base, hw, hh, 62.0 * s, Color(0.25, 0.18, 0.13), Color(0.33, 0.24, 0.18))
+	# Bean sacks, syrup bottles and stacked cups on three shelves.
+	for lvl in range(3):
+		var y = -18.0 * s - lvl * 20.0 * s
+		draw_line(base + Vector2(-hw * 0.85, y + hh * 0.45), base + Vector2(hw * 0.85, y + hh * 0.45), Color(0.18, 0.13, 0.09), 1.5 * s)
+		for it in range(3):
+			var ix = (-18 + it * 17) * s
+			var iy = y + hh * 0.45 - (it - 1) * 3.0 * s
+			var col = [Color(0.55, 0.35, 0.20), Color(0.85, 0.85, 0.82), Color(0.35, 0.55, 0.40)][(lvl + it) % 3]
+			draw_iso_prism(base + Vector2(ix, iy), 5 * s, 2.6 * s, 11 * s, col)
+
+func _prop_stool(base: Vector2, s: float) -> void:
+	draw_prop_shadow(base, 10 * s, 5 * s)
+	draw_iso_cylinder(base, 3.0 * s, 1.6 * s, 22.0 * s, Color(0.30, 0.30, 0.33))
+	fill_ellipse(base + Vector2(0, -9 * s), 7.0 * s, 3.4 * s, Color(0.24, 0.24, 0.27))
+	draw_iso_cylinder(base + Vector2(0, -22 * s), 11.0 * s, 5.5 * s, 5.0 * s, Color(0.46, 0.28, 0.20))
+
+func _prop_round_table(base: Vector2, s: float) -> void:
+	draw_prop_shadow(base, 22 * s, 11 * s)
+	draw_iso_cylinder(base, 4.0 * s, 2.2 * s, 24.0 * s, Color(0.28, 0.22, 0.18))
+	draw_iso_cylinder(base + Vector2(0, -24 * s), 21.0 * s, 10.5 * s, 4.0 * s, Color(0.48, 0.34, 0.24))
+	# A drink and a slice actually left on the table.
+	draw_iso_cylinder(base + Vector2(-5 * s, -27 * s), 3.5 * s, 1.8 * s, 8 * s, Color(0.92, 0.90, 0.86))
+	draw_iso_prism(base + Vector2(7 * s, -26 * s), 5 * s, 2.5 * s, 5 * s, Color(0.88, 0.52, 0.56))
+	# Two chairs tucked in either side.
+	for side in [-1.0, 1.0]:
+		var cp = base + Vector2(26 * s * side, 13 * s * side)
+		draw_iso_cylinder(cp, 8.0 * s, 4.0 * s, 16.0 * s, Color(0.32, 0.26, 0.22))
+		draw_iso_prism(cp + Vector2(0, -16 * s), 9 * s, 4.5 * s, 14 * s, Color(0.24, 0.24, 0.28))
+
+func _prop_bookshelf(base: Vector2, s: float) -> void:
+	var hw = 30.0 * s
+	var hh = 15.0 * s
+	draw_prop_shadow(base, hw * 0.85, hh * 0.85)
+	draw_iso_prism(base, hw, hh, 74.0 * s, Color(0.27, 0.19, 0.14), Color(0.35, 0.25, 0.19))
+	for lvl in range(4):
+		var y = -14.0 * s - lvl * 18.0 * s
+		draw_line(base + Vector2(-hw * 0.86, y + hh * 0.46), base + Vector2(hw * 0.86, y + hh * 0.46), Color(0.17, 0.12, 0.09), 1.4 * s)
+		for bk in range(6):
+			var bx = (-21 + bk * 8) * s
+			var by = y + hh * 0.46 - (bk - 2) * 1.6 * s
+			var bc = [Color(0.70, 0.28, 0.24), Color(0.24, 0.42, 0.62), Color(0.72, 0.60, 0.28),
+					  Color(0.32, 0.52, 0.38), Color(0.56, 0.34, 0.60), Color(0.80, 0.76, 0.68)][bk]
+			draw_iso_prism(base + Vector2(bx, by), 2.4 * s, 1.3 * s, (10 + (bk % 3) * 3) * s, bc)
+
+func _prop_plant(base: Vector2, s: float) -> void:
+	draw_prop_shadow(base, 14 * s, 7 * s)
+	draw_iso_cylinder(base, 11.0 * s, 5.5 * s, 18.0 * s, Color(0.62, 0.36, 0.24))
+	fill_ellipse(base + Vector2(0, -18 * s), 11.0 * s, 5.5 * s, Color(0.24, 0.17, 0.12))
+	# Layered fronds rather than one green blob.
+	var leaf = [Vector2(0, -46), Vector2(-13, -34), Vector2(13, -36), Vector2(-7, -52), Vector2(8, -50)]
+	var greens = [Color(0.18, 0.46, 0.26), Color(0.22, 0.55, 0.30), Color(0.26, 0.62, 0.34),
+				  Color(0.20, 0.50, 0.28), Color(0.28, 0.66, 0.38)]
+	for li in range(leaf.size()):
+		fill_ellipse(base + leaf[li] * s, 10.0 * s, 7.0 * s, greens[li])
+	draw_line(base + Vector2(0, -18 * s), base + Vector2(0, -42 * s), Color(0.20, 0.40, 0.22), 2.0 * s)
+
+func _prop_water_cooler(base: Vector2, s: float) -> void:
+	draw_prop_shadow(base, 14 * s, 7 * s)
+	draw_iso_prism(base, 13.0 * s, 6.5 * s, 42.0 * s, Color(0.82, 0.84, 0.86), Color(0.90, 0.92, 0.94))
+	draw_iso_cylinder(base + Vector2(0, -42 * s), 11.0 * s, 5.5 * s, 26.0 * s, Color(0.42, 0.70, 0.86, 0.85))
+	draw_iso_prism(base + Vector2(0, -18 * s), 4.0 * s, 2.0 * s, 4.0 * s, Color(0.30, 0.46, 0.56))
+	for cup in range(2):
+		draw_iso_cylinder(base + Vector2((9 + cup * 5) * s, (-30 - cup * 4) * s), 2.6 * s, 1.3 * s, 5 * s, Color(0.92, 0.92, 0.90))
+
+func _prop_bin(base: Vector2, s: float) -> void:
+	draw_prop_shadow(base, 11 * s, 5.5 * s)
+	draw_iso_cylinder(base, 10.0 * s, 5.0 * s, 24.0 * s, Color(0.26, 0.28, 0.30))
+	fill_ellipse(base + Vector2(0, -24 * s), 10.5 * s, 5.2 * s, Color(0.18, 0.20, 0.22))
+	fill_ellipse(base + Vector2(0, -25 * s), 6.0 * s, 3.0 * s, Color(0.10, 0.11, 0.12))
+
+func _prop_floor_lamp(base: Vector2, s: float) -> void:
+	draw_prop_shadow(base, 10 * s, 5 * s)
+	fill_ellipse(base, 9.0 * s, 4.5 * s, Color(0.22, 0.20, 0.18))
+	draw_line(base, base + Vector2(0, -64 * s), Color(0.34, 0.30, 0.26), 2.5 * s)
+	var shade_top = base + Vector2(0, -78 * s)
+	draw_colored_polygon(PackedVector2Array([
+		shade_top + Vector2(-9 * s, 0), shade_top + Vector2(9 * s, 0),
+		shade_top + Vector2(15 * s, 16 * s), shade_top + Vector2(-15 * s, 16 * s)
+	]), Color(0.86, 0.72, 0.46))
+	fill_ellipse(base + Vector2(0, -60 * s), 20.0 * s, 10.0 * s, Color(1.0, 0.82, 0.45, 0.12))
+
+func _prop_sofa(base: Vector2, s: float) -> void:
+	var hw = 34.0 * s
+	var hh = 17.0 * s
+	draw_prop_shadow(base, hw, hh)
+	draw_iso_prism(base, hw, hh, 15.0 * s, Color(0.34, 0.30, 0.40), Color(0.46, 0.41, 0.54))
+	draw_iso_prism(base + Vector2(-hw * 0.55, -hh * 0.45), hw * 0.42, hh * 0.42, 30.0 * s, Color(0.38, 0.34, 0.46))
+	draw_iso_prism(base + Vector2(hw * 0.55, -hh * 0.45), hw * 0.42, hh * 0.42, 30.0 * s, Color(0.32, 0.28, 0.40))
+	for cu in range(2):
+		draw_iso_prism(base + Vector2((-12 + cu * 24) * s, (-6 + cu * 6) * s - 15 * s), 10 * s, 5 * s, 6 * s, Color(0.56, 0.48, 0.62))
+
+func _prop_printer(base: Vector2, s: float) -> void:
+	draw_prop_shadow(base, 16 * s, 8 * s)
+	draw_iso_prism(base, 15.0 * s, 7.5 * s, 26.0 * s, Color(0.30, 0.31, 0.34), Color(0.40, 0.41, 0.44))
+	draw_iso_prism(base + Vector2(0, -26 * s), 13.0 * s, 6.5 * s, 8.0 * s, Color(0.22, 0.23, 0.26))
+	draw_colored_polygon(iso_diamond(base + Vector2(2 * s, -30 * s), 9 * s, 4.5 * s), Color(0.92, 0.92, 0.90))
+	draw_circle(base + Vector2(-8 * s, -30 * s), 1.8 * s, Color(0.2, 0.9, 0.4))
+
+# ── Drawing onto the face of a solid ──────────────────────────
+# Face coordinates: u runs along the face (0 = front corner, 1 = outer corner),
+# t runs up it (0 = floor, 1 = top). Quads drawn this way get the same
+# foreshortening as the solid, so locker doors and gate glass sit ON the
+# furniture instead of floating over it as flat rectangles.
+func face_pt(base: Vector2, hw: float, hh: float, height: float, u: float, t: float, left: bool = false) -> Vector2:
+	var b = base + Vector2(0, hh)
+	var outer = base + Vector2(-hw, 0) if left else base + Vector2(hw, 0)
+	return b.lerp(outer, u) + Vector2(0, -height * t)
+
+func draw_face_quad(base: Vector2, hw: float, hh: float, height: float,
+		u0: float, u1: float, t0: float, t1: float, col: Color, left: bool = false) -> void:
+	draw_colored_polygon(PackedVector2Array([
+		face_pt(base, hw, hh, height, u0, t0, left),
+		face_pt(base, hw, hh, height, u1, t0, left),
+		face_pt(base, hw, hh, height, u1, t1, left),
+		face_pt(base, hw, hh, height, u0, t1, left)
+	]), col)
+
+func face_center(base: Vector2, hw: float, hh: float, height: float,
+		u0: float, u1: float, t0: float, t1: float, left: bool = false) -> Vector2:
+	return (face_pt(base, hw, hh, height, u0, t0, left) + face_pt(base, hw, hh, height, u1, t1, left)) * 0.5
+
+# A bank of four smart lockers. `start_no` numbers the doors for the player.
+func _prop_locker_bank(base: Vector2, s: float, start_no: int = 1) -> void:
+	var hw = 32.0 * s
+	var hh = 16.0 * s
+	var height = 66.0 * s
+	draw_prop_shadow(base, hw, hh)
+	draw_iso_prism(base, hw, hh, height, Color(0.24, 0.21, 0.30), Color(0.32, 0.28, 0.40))
+	# Doors stack two high on the right-hand face; each gets a number plate, a
+	# handle and a keypad LED so the bank reads as eight real lockers.
+	var cols = [[0.05, 0.49], [0.51, 0.95]]
+	var rows = [[0.52, 0.95], [0.06, 0.49]]
+	var n = start_no
+	for r in range(rows.size()):
+		for c in range(cols.size()):
+			var u0 = cols[c][0]
+			var u1 = cols[c][1]
+			var t0 = rows[r][0]
+			var t1 = rows[r][1]
+			var ajar = (n == start_no + 2)   # one door left open - the bank is in use
+			draw_face_quad(base, hw, hh, height, u0, u1, t0, t1,
+				Color(0.12, 0.10, 0.15) if ajar else Color(0.37, 0.33, 0.47))
+			var mid = face_center(base, hw, hh, height, u0, u1, t0, t1)
+			if ajar:
+				draw_colored_polygon(PackedVector2Array([
+					face_pt(base, hw, hh, height, u1, t0), face_pt(base, hw, hh, height, u1, t1),
+					face_pt(base, hw, hh, height, u1, t1) + Vector2(14 * s, -6 * s),
+					face_pt(base, hw, hh, height, u1, t0) + Vector2(14 * s, -6 * s)
+				]), Color(0.44, 0.40, 0.54))
+			else:
+				draw_line(mid + Vector2(5 * s, -1 * s), mid + Vector2(5 * s, 5 * s), Color(0.82, 0.80, 0.88), 1.6 * s)
+				draw_circle(mid + Vector2(-7 * s, -5 * s), 1.5 * s, Color(0.25, 0.95, 0.55))
+			var plate = Rect2(mid.x - 8 * s, mid.y - 9 * s, 16 * s, 11 * s)
+			draw_rect(plate, Color(0.08, 0.07, 0.11, 0.85), true)
+			draw_string(ThemeDB.fallback_font, Vector2(plate.position.x, plate.position.y + 9 * s), "%d" % n,
+				HORIZONTAL_ALIGNMENT_CENTER, 16 * s, int(10 * s), Color(0.90, 0.88, 0.96))
+			n += 1
+
+# Reception counter: transaction top, kiosk screen, card reader and a bell.
+func _prop_reception(base: Vector2, s: float) -> void:
+	var hw = 40.0 * s
+	var hh = 20.0 * s
+	draw_prop_shadow(base, hw, hh)
+	draw_iso_prism(base, hw, hh, 36.0 * s, Color(0.30, 0.22, 0.30), Color(0.46, 0.34, 0.44))
+	var top = base + Vector2(0, -36.0 * s)
+	draw_iso_prism(top, hw * 1.06, hh * 1.06, 5.0 * s, Color(0.18, 0.16, 0.20), Color(0.30, 0.27, 0.34))
+	# front panel inlay
+	draw_face_quad(base, hw, hh, 36.0 * s, 0.12, 0.88, 0.15, 0.85, Color(0.24, 0.18, 0.26))
+	var deck = top + Vector2(0, -5.0 * s)
+	# kiosk monitor, angled toward the customer
+	draw_iso_prism(deck + Vector2(-12 * s, 2 * s), 4 * s, 2 * s, 6 * s, Color(0.22, 0.22, 0.26))
+	draw_colored_polygon(PackedVector2Array([
+		deck + Vector2(-24 * s, -6 * s), deck + Vector2(0 * s, -18 * s),
+		deck + Vector2(0 * s, -34 * s), deck + Vector2(-24 * s, -22 * s)
+	]), Color(0.16, 0.52, 0.62))
+	draw_colored_polygon(PackedVector2Array([
+		deck + Vector2(-21 * s, -9 * s), deck + Vector2(-3 * s, -18 * s),
+		deck + Vector2(-3 * s, -31 * s), deck + Vector2(-21 * s, -22 * s)
+	]), Color(0.35, 0.85, 0.95, 0.85))
+	# card reader + call bell
+	draw_iso_prism(deck + Vector2(14 * s, 5 * s), 5 * s, 2.5 * s, 7 * s, Color(0.26, 0.27, 0.32))
+	fill_ellipse(deck + Vector2(26 * s, 9 * s), 5 * s, 3 * s, Color(0.72, 0.68, 0.35))
+	fill_ellipse(deck + Vector2(26 * s, 6 * s), 4.4 * s, 3.4 * s, Color(0.88, 0.82, 0.42))
+
+# Speed gates: two pedestals with glass flaps and a walk-through indicator.
+func _prop_speed_gate(base: Vector2, s: float) -> void:
+	var span = Vector2(46 * s, 23 * s)   # offset to the second pedestal
+	for side in range(2):
+		var p = base + span * float(side)
+		var hw = 11.0 * s
+		var hh = 5.5 * s
+		var height = 30.0 * s
+		draw_prop_shadow(p, hw, hh)
+		draw_iso_prism(p, hw, hh, height, Color(0.20, 0.26, 0.24), Color(0.30, 0.38, 0.35))
+		# glass flap folded into the pedestal
+		draw_colored_polygon(PackedVector2Array([
+			p + Vector2(0, -height), p + Vector2(20 * s, -height + 10 * s),
+			p + Vector2(20 * s, -height + 26 * s), p + Vector2(0, -height + 16 * s)
+		]), Color(0.35, 0.85, 0.80, 0.32))
+		# top status lamp
+		fill_ellipse(p + Vector2(0, -height - 1 * s), hw * 0.55, hh * 0.55, Color(0.10, 0.85, 0.55))
+	# green go-arrow on the floor between the pedestals
+	var mid = base + span * 0.5 + Vector2(10 * s, 14 * s)
+	draw_colored_polygon(PackedVector2Array([
+		mid + Vector2(-9 * s, -4 * s), mid + Vector2(2 * s, 1 * s),
+		mid + Vector2(-9 * s, 6 * s)
+	]), Color(0.12, 0.85, 0.55, 0.75))
+
+# A-frame chalkboard. The caller writes the day's menu onto `board_rect`.
+func menu_board_rect(base: Vector2, s: float) -> Rect2:
+	return Rect2(base.x - 44 * s, base.y - 62 * s, 88 * s, 46 * s)
+
+func _prop_menu_board(base: Vector2, s: float) -> void:
+	draw_prop_shadow(base, 26 * s, 13 * s)
+	draw_line(base + Vector2(-16 * s, 2 * s), base + Vector2(-6 * s, -54 * s), Color(0.38, 0.27, 0.18), 3.5 * s)
+	draw_line(base + Vector2(18 * s, 6 * s), base + Vector2(8 * s, -54 * s), Color(0.30, 0.21, 0.14), 3.5 * s)
+	var r = menu_board_rect(base, s)
+	draw_rect(r.grow(3.0 * s), Color(0.40, 0.28, 0.18), true)
+	draw_rect(r, Color(0.13, 0.15, 0.14), true)
+	draw_rect(r, Color(0.55, 0.42, 0.28), false, 1.5)
+	draw_rect(r.grow(-4.0 * s), Color(0.62, 0.66, 0.60, 0.35), false, 1.0)
+
+func _prop_umbrella_stand(base: Vector2, s: float) -> void:
+	draw_prop_shadow(base, 9 * s, 4.5 * s)
+	draw_iso_cylinder(base, 8.5 * s, 4.2 * s, 20.0 * s, Color(0.28, 0.30, 0.34))
+	for u in range(3):
+		var top = base + Vector2((-4 + u * 4) * s, (-20 - 16 - u * 3) * s)
+		draw_line(base + Vector2((-3 + u * 3) * s, -20 * s), top, [Color(0.72, 0.28, 0.30), Color(0.26, 0.42, 0.68), Color(0.30, 0.54, 0.36)][u], 2.6 * s)
+
+# ── Where the fixtures stand ──────────────────────────────────
+# Study-room props sit on cells just OUTSIDE the placeable 6x4 grid, so they
+# dress the walls without ever stealing a tile the player wants for a desk.
+const ROOM1_PROPS: Array = [
+	{"kind": "bookshelf",  "cell": Vector2i(0, -1)},
+	{"kind": "bookshelf",  "cell": Vector2i(1, -1)},
+	{"kind": "printer",    "cell": Vector2i(2, -1)},
+	{"kind": "plant",      "cell": Vector2i(-1, 0)},
+	{"kind": "water",      "cell": Vector2i(-1, 1)},
+	{"kind": "sofa",       "cell": Vector2i(-1, 2)},
+	{"kind": "floor_lamp", "cell": Vector2i(-1, 3)},
+	{"kind": "plant",      "cell": Vector2i(6, 1)},
+	{"kind": "bin",        "cell": Vector2i(6, 2)},
+	{"kind": "plant",      "cell": Vector2i(3, 6)},
+]
+
+# The coffee bar has its own smaller isometric frame inside the lounge panel:
+# a real counter run with a machine, a pastry case, stools and a back shelf,
+# replacing the single flat coffee_bar.png that used to be pasted here.
+const LOUNGE_ORIGIN: Vector2 = Vector2(1080.0, 118.0)
+const LOUNGE_TILE_W: float = 76.0
+const LOUNGE_TILE_H: float = 38.0
+const LOUNGE_SCALE: float = 0.5
+# Three isometric rows - back bar, counter run, stools - is what fits in the
+# lounge panel without colliding with its banner or the bakery stock strip.
+const LOUNGE_PROPS: Array = [
+	{"kind": "back_shelf",   "cell": Vector2i(0, -1)},
+	{"kind": "back_shelf",   "cell": Vector2i(1, -1)},
+	{"kind": "counter",      "cell": Vector2i(0, 0)},
+	{"kind": "espresso",     "cell": Vector2i(0, 0), "lift": 20.0},
+	{"kind": "counter",      "cell": Vector2i(1, 0)},
+	{"kind": "counter_end",  "cell": Vector2i(2, 0)},
+	{"kind": "display_case", "cell": Vector2i(2, 0), "lift": 20.0},
+	{"kind": "stool",        "cell": Vector2i(0, 1)},
+	{"kind": "stool",        "cell": Vector2i(1, 1)},
+]
+
+func lounge_to_screen(cell: Vector2i) -> Vector2:
+	return LOUNGE_ORIGIN + Vector2(
+		float(cell.x - cell.y) * LOUNGE_TILE_W * 0.5,
+		float(cell.x + cell.y) * LOUNGE_TILE_H * 0.5
+	)
+
+# A woven rug under the study block. Drawn straight onto the floor diamonds so
+# it follows the same projection as everything standing on it.
+func draw_floor_rug(from_cell: Vector2i, to_cell: Vector2i, col: Color) -> void:
+	var vo = view_offset
+	var a = GameState.iso_to_screen(Vector2i(from_cell.x, from_cell.y)) + vo
+	var b = GameState.iso_to_screen(Vector2i(to_cell.x, from_cell.y)) + vo
+	var c = GameState.iso_to_screen(Vector2i(to_cell.x, to_cell.y)) + vo
+	var d = GameState.iso_to_screen(Vector2i(from_cell.x, to_cell.y)) + vo
+	var hw = GameState.ISO_TILE_WIDTH * 0.5
+	var hh = GameState.ISO_TILE_HEIGHT * 0.5
+	var poly = PackedVector2Array([
+		a + Vector2(0, -hh), b + Vector2(hw, 0), c + Vector2(0, hh), d + Vector2(-hw, 0)
+	])
+	draw_colored_polygon(poly, col)
+	stroke_poly(poly, shade(col, 1.6), 2.0)
+	var inner = PackedVector2Array()
+	for pt in poly:
+		inner.append(pt.lerp((a + c) * 0.5, 0.12))
+	stroke_poly(inner, shade(col, 1.35), 1.2)
+
+# Wall fixtures split into the two depth bands around the desk block: the back
+# wall run is painted before the desks, the front/right pieces after, so nothing
+# floats in front of furniture it is standing behind.
+func draw_room1_props(back_band: bool) -> void:
+	var vo = view_offset
+	var picked = []
+	for prop in ROOM1_PROPS:
+		var c = prop["cell"]
+		var is_back = c.x < 0 or c.y < 0
+		if is_back == back_band:
+			picked.append(prop)
+	picked.sort_custom(func(a, b): return (a["cell"].x + a["cell"].y) < (b["cell"].x + b["cell"].y))
+	for prop in picked:
+		draw_prop(prop["kind"], GameState.iso_to_screen(prop["cell"]) + vo, 0.72)
+
+# The lounge, built piece by piece and depth-sorted like the study room.
+func draw_lounge_bar() -> void:
+	var vo = view_offset
+	var order = LOUNGE_PROPS.duplicate()
+	order.sort_custom(func(a, b):
+		var ca = a["cell"]
+		var cb = b["cell"]
+		var da = ca.x + ca.y
+		var db = cb.x + cb.y
+		if da == db:
+			return a.get("lift", 0.0) < b.get("lift", 0.0)
+		return da < db
+	)
+	for prop in order:
+		var pos = lounge_to_screen(prop["cell"]) + vo - Vector2(0, prop.get("lift", 0.0))
+		draw_prop(prop["kind"], pos, LOUNGE_SCALE)
+
+func get_desk_sprite_size(seat_index: int) -> Vector2:
+	var is_booth = seat_index >= GameState.upgrades["open_seats"]["level"] * 3
+	var side = GameState.ISO_TILE_WIDTH * (1.18 if is_booth else 1.05)
+	return Vector2(side, side)
+
+# Desk art is anchored bottom-centre on the isometric tile it stands on, which is
+# what makes a sprite read as "sitting on" a diamond floor tile. The extra sink
+# accounts for the transparent padding under the furniture in the source art.
+func get_desk_rect(seat_index: int) -> Rect2:
+	var tile_center = GameState.get_seat_position(seat_index)
+	var size = get_desk_sprite_size(seat_index)
+	var bottom_y = tile_center.y + GameState.ISO_TILE_HEIGHT * 0.5 + size.y * 0.09
+	return Rect2(Vector2(tile_center.x - size.x * 0.5, bottom_y - size.y), size)
+
+# Back-to-front painter's order for the isometric view: tiles further along the
+# (x + y) diagonal are nearer the camera and must be drawn last.
+func get_seats_in_depth_order() -> Array:
+	var indices = []
+	for i in range(GameState.get_max_capacity()):
+		indices.append(i)
+	indices.sort_custom(func(a, b):
+		var ca = GameState.get_seat_cell(a)
+		var cb = GameState.get_seat_cell(b)
+		var da = ca.x + ca.y
+		var db = cb.x + cb.y
+		if da == db:
+			return ca.x < cb.x
+		return da < db
+	)
+	return indices
+
+# Pick the desk under the cursor, testing front-most first so overlapping desks
+# resolve to the one the player can actually see.
+func pick_seat_at(world_pos: Vector2) -> int:
+	var order = get_seats_in_depth_order()
+	for k in range(order.size() - 1, -1, -1):
+		var i = order[k]
+		if get_desk_rect(i).has_point(world_pos):
+			return i
+		if GameState.is_point_in_iso_tile(world_pos, GameState.get_seat_cell(i)):
+			return i
+	return -1

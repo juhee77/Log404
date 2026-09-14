@@ -1097,10 +1097,15 @@ func _init() -> void:
 	var raw_test_pos = Vector2(185.0, 240.0)
 	var snapped_pos = state.get_nearest_grid_snap(raw_test_pos)
 	assert(snapped_pos is Vector2, "Grid snap must return a Vector2 position")
+	assert(snapped_pos == state.iso_to_screen(state.screen_to_iso(snapped_pos)), "Snap must land exactly on an isometric tile centre")
 	
 	var moved_pos = state.move_seat_position(0, raw_test_pos)
-	assert(moved_pos == snapped_pos, "Moving seat must snap to nearest grid position")
 	assert(state.seat_custom_positions.has(0), "Custom seat position must be registered")
+	assert(moved_pos == state.get_seat_position(0), "Moving a seat must report the tile it actually landed on")
+	assert(state.is_iso_cell_in_bounds(state.get_seat_cell(0)), "A moved seat must stay inside the placeable floor")
+	# A desk takes the requested tile, or the nearest free one - it never stacks
+	# on top of another desk.
+	assert(state.get_seat_index_at_cell(state.get_seat_cell(0), 0) == -1, "Two desks must never share one isometric tile")
 	
 	var rot = state.rotate_seat_placement(0)
 	assert(rot >= 0 and rot < 360, "Rotating seat must return valid degree orientation")

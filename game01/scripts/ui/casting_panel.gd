@@ -113,7 +113,7 @@ func refresh_casting() -> void:
 				cur_g["xp"] -= cur_g["max_xp"]
 				cur_g["level"] += 1
 			GameState.add_money(500.0)
-			GameState.update_quest_progress(1)
+			GameState.report_quest_action("cast")
 			refresh_casting()
 		)
 		hbox.add_child(cast_btn)
