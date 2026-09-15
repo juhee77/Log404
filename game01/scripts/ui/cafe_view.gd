@@ -495,7 +495,8 @@ func draw_integrated_multi_room_layout(w: float, h: float) -> void:
 
 	# Render Human Barista Staff Sprite in Room 2 Lounge
 	if staff_barista_texture != null:
-		draw_texture_rect(staff_barista_texture, Rect2(1012 + vo.x, 96 + vo.y, 50, 50), false)
+		draw_character_shadow(Vector2(1036, 146) + vo, 34.0)
+		draw_character(staff_barista_texture, "staff_barista", Vector2(1036, 146) + vo, 66.0)
 		draw_string(ThemeDB.fallback_font, Vector2(992 + vo.x, 92 + vo.y), "☕ 바리스타 민서", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(0.1, 0.8, 0.4))
 
 	# ----------------------------------------------------
@@ -524,6 +525,10 @@ func draw_integrated_multi_room_layout(w: float, h: float) -> void:
 	else:
 		_prop_locker_bank(Vector2(1040, 398) + vo, 0.95, 1)
 		_prop_locker_bank(Vector2(1118, 437) + vo, 0.95, 5)
+		draw_string(ThemeDB.fallback_font, Vector2(998 + vo.x, 350 + vo.y),
+			"🔑 대여중 %d / %d칸   임대수익 +%d₩/초" % [GameState.lockers_rented,
+			max(GameState.get_locker_capacity(), 8), int(GameState.get_locker_rent_rate())],
+			HORIZONTAL_ALIGNMENT_LEFT, -1, 11, th2["accent"])
 		draw_prop("umbrella_stand", Vector2(1218, 388) + vo, 0.85)
 		draw_prop("plant", Vector2(1008, 462) + vo, 0.60)
 
@@ -540,7 +545,7 @@ func draw_integrated_multi_room_layout(w: float, h: float) -> void:
 	if front_style == "front":
 		draw_prop("reception", Vector2(1050, 500) + vo, 0.85)
 		draw_string(ThemeDB.fallback_font, Vector2(998 + vo.x, 526 + vo.y), "🛎️ 무인 프런트 키오스크", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(0.8, 0.4, 0.9))
-		draw_prop("speed_gate", Vector2(1168, 468) + vo, 0.9)
+		draw_prop("speed_gate", GameState.ENTRANCE_POS + Vector2(-16, -30) + vo, 0.9)
 		draw_string(ThemeDB.fallback_font, Vector2(1136 + vo.x, 522 + vo.y), "🚪 스마트 출입 게이트", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(0.06, 0.72, 0.5))
 	elif front_style == "vip":
 		draw_prop("sofa", Vector2(1070, 500) + vo, 0.72)
@@ -760,9 +765,9 @@ func draw_integrated_multi_room_layout(w: float, h: float) -> void:
 			char_tex = developer_texture if developer_texture else student_texture
 			
 		if char_tex != null:
-			var sprite_size = Vector2(48, 48)
-			var sprite_rect = Rect2(draw_pos - Vector2(24, 44), sprite_size)
-			draw_texture_rect(char_tex, sprite_rect, false)
+			draw_character_shadow(draw_pos, 34.0)
+			draw_character(char_tex, "customer_developer" if c_type == "developer" else "customer_student",
+				draw_pos, 62.0)
 		else:
 			# Fallback vector character drawing
 			var body_rect = Rect2(draw_pos.x - 14, draw_pos.y - 30, 28, 30)
@@ -865,7 +870,8 @@ func draw_integrated_multi_room_layout(w: float, h: float) -> void:
 		
 		# Modern Store Manager character visuals (apron, tablet & smart badge)
 		if staff_cleaner_texture != null:
-			draw_texture_rect(staff_cleaner_texture, Rect2(c_render - Vector2(28, 52), Vector2(56, 56)), false)
+			draw_character_shadow(c_render, 36.0)
+			draw_character(staff_cleaner_texture, "staff_cleaner", c_render, 66.0)
 		else:
 			# Modern Store Manager Vector Drawing
 			draw_circle(c_render + Vector2(0, -32), 14.0, Color(0.96, 0.82, 0.72)) # Face
@@ -902,7 +908,8 @@ func draw_integrated_multi_room_layout(w: float, h: float) -> void:
 		var n_render = n_pos + Vector2(0, -n_bounce)
 		
 		if staff_cat_navi_texture != null:
-			draw_texture_rect(staff_cat_navi_texture, Rect2(n_render - Vector2(24, 28), Vector2(52, 52)), false)
+			draw_character_shadow(n_render, 40.0)
+			draw_character(staff_cat_navi_texture, "staff_cat_navi", n_render, 52.0)
 		else:
 			var n_bg = Rect2(n_render.x - 22, n_render.y - 20, 44, 40)
 			draw_rect(n_bg, Color(0.12, 0.1, 0.08, 0.85), true)
@@ -1942,6 +1949,40 @@ func spawn_floating_text(pos: Vector2, text: String, color: Color = Color.WHITE)
 # square rect - the old non-square rect stretched every desk out of proportion.
 # 1.2 x tile width makes the furniture's own footprint cover roughly one tile.
 # ══════════════════════════════════════════════════════════════
+# 🧍 CHARACTER SPRITES
+# The character art is full-body, roughly 1:2 tall, sitting inside a 1024²
+# canvas with 30-60% empty padding. It was being blitted as the whole square
+# texture into a square 48x48 rect, which squashed every character to half
+# height and shrank them to a blob inside their own padding. These are the
+# measured opaque bounds of each file; the sprite is drawn from that region at
+# its true aspect and anchored at the feet.
+# ══════════════════════════════════════════════════════════════
+
+const CHAR_CONTENT: Dictionary = {
+	"customer_student":   Rect2(317, 65, 399, 922),
+	"customer_developer": Rect2(217, 63, 544, 940),
+	"staff_barista":      Rect2(275, 87, 396, 863),
+	"staff_cleaner":      Rect2(255, 52, 488, 919),
+	"staff_cat_navi":     Rect2(210, 157, 692, 780)
+}
+
+# Draws a character standing on `feet`, `height` pixels tall, keeping the art's
+# own proportions. Returns the rect actually drawn so callers can hang labels.
+func draw_character(tex: Texture2D, key: String, feet: Vector2, height: float, tint: Color = Color.WHITE) -> Rect2:
+	if tex == null:
+		return Rect2(feet, Vector2.ZERO)
+	var src: Rect2 = CHAR_CONTENT.get(key, Rect2(Vector2.ZERO, tex.get_size()))
+	var aspect = src.size.x / src.size.y
+	var size = Vector2(height * aspect, height)
+	var dest = Rect2(feet - Vector2(size.x * 0.5, size.y), size)
+	draw_texture_rect_region(tex, dest, src, tint)
+	return dest
+
+# Soft contact shadow so a character reads as standing on the floor.
+func draw_character_shadow(feet: Vector2, width: float) -> void:
+	fill_ellipse(feet, width * 0.42, width * 0.18, Color(0.02, 0.015, 0.01, 0.34))
+
+# ══════════════════════════════════════════════════════════════
 # 🏢 FLOOR THEMES
 # Every floor used to draw the exact same room - same walls, same floor, same
 # desks, same side panels - so 1F/2F/3F were indistinguishable. Each floor now
@@ -2361,7 +2402,10 @@ func _prop_locker_bank(base: Vector2, s: float, start_no: int = 1) -> void:
 				]), Color(0.44, 0.40, 0.54))
 			else:
 				draw_line(mid + Vector2(5 * s, -1 * s), mid + Vector2(5 * s, 5 * s), Color(0.82, 0.80, 0.88), 1.6 * s)
-				draw_circle(mid + Vector2(-7 * s, -5 * s), 1.5 * s, Color(0.25, 0.95, 0.55))
+				# LED reflects real state: green = rented, dim amber = vacant
+				var rented = GameState.is_locker_rented(n)
+				draw_circle(mid + Vector2(-7 * s, -5 * s), 1.5 * s,
+					Color(0.25, 0.95, 0.55) if rented else Color(0.55, 0.45, 0.25))
 			var plate = Rect2(mid.x - 8 * s, mid.y - 9 * s, 16 * s, 11 * s)
 			draw_rect(plate, Color(0.08, 0.07, 0.11, 0.85), true)
 			draw_string(ThemeDB.fallback_font, Vector2(plate.position.x, plate.position.y + 9 * s), "%d" % n,

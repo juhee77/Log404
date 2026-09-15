@@ -4678,9 +4678,16 @@ func add_guest_intimacy(guest_key: String, xp_amount: int) -> Dictionary:
 func is_cat_buff_active() -> bool:
 	return cat_buff_timer > 0.0
 
+# ── 손님 동선 기준점 ──────────────────────────────────────────
+# 손님이 걸어가는 좌표가 cafe_view 의 그림과 따로 하드코딩돼 있어서, 라운지
+# 패널을 오른쪽으로 옮긴 뒤로 손님들이 아무것도 없는 빈 바닥으로 걸어가
+# 보이지 않는 케이크를 먹고 있었다. 렌더러가 이 상수를 함께 쓴다.
+const ENTRANCE_POS: Vector2 = Vector2(1178, 498)   # 스마트 출입 게이트 앞
+const COUNTER_POS: Vector2 = Vector2(1058, 172)    # 커피바 주문대 앞
+
 # Snack Bar, Bakery Stock & Locker Stock
 var snack_stock: int = 100
-var lockers_rented: int = 4
+var lockers_rented: int = 0
 var bakery_stock: Dictionary = {
 	"croissant": 15,
 	"cheesecake": 10
@@ -5240,6 +5247,13 @@ func change_zone(new_zone: String) -> void:
 func _process(delta: float) -> void:
 	refresh_stat_quests()
 
+	# 사물함 월 대여료
+	refresh_lockers_rented()
+	if lockers_rented > 0:
+		var rent = get_locker_rent_rate() * delta
+		add_money(rent)
+		daily_seat_rev += rent
+
 	# Update Roasters Timers
 	for idx in range(roasters.size()):
 		var r = roasters[idx]
@@ -5303,7 +5317,7 @@ func _process(delta: float) -> void:
 		spawn_timer = 0.0
 		spawn_customer()
 	
-	var entrance_pos = Vector2(1150, 70)
+	var entrance_pos = ENTRANCE_POS
 	var to_remove = []
 	
 	for c in active_customers:
@@ -5311,12 +5325,24 @@ func _process(delta: float) -> void:
 		var current_pos = c["pos"]
 		
 		if c["state"] == "WALKING_IN":
-			var lounge_target = Vector2(850, 190)
-			c["pos"] = current_pos.move_toward(lounge_target, delta * 140.0)
-			if c["pos"].distance_to(lounge_target) < 8.0:
+			c["pos"] = current_pos.move_toward(COUNTER_POS, delta * 140.0)
+			if c["pos"].distance_to(COUNTER_POS) < 8.0:
 				c["state"] = "EATING_CAKE"
 				c["eating_timer"] = 0.0
-				add_money(450.0)
+				# 주문은 실제 베이커리 재고를 소비한다. 재고가 없으면 음료만
+				# 사 간다 - 예전에는 재고와 무관하게 무조건 450원이 들어왔다.
+				var picked = ""
+				for kind in ["cheesecake", "croissant"]:
+					if bakery_stock.get(kind, 0) > 0:
+						picked = kind
+						break
+				if picked != "":
+					bakery_stock[picked] -= 1
+					add_money(450.0)
+					daily_drink_rev += 450.0
+				else:
+					add_money(150.0)
+					daily_drink_rev += 150.0
 		elif c["state"] == "EATING_CAKE":
 			c["eating_timer"] += delta * 1.0
 			if c["eating_timer"] >= 2.5:
@@ -5412,7 +5438,7 @@ func spawn_customer() -> void:
 	lifetime_visitors += 1
 	var template = CUSTOMER_TYPES[randi() % CUSTOMER_TYPES.size()]
 	var cid = randi()
-	var entrance_pos = Vector2(1150, 70)
+	var entrance_pos = ENTRANCE_POS
 	var seat_target = get_seat_position(free_seat)
 	
 	var customer = {
@@ -5556,12 +5582,30 @@ func get_income_per_second_for_customer(c: Dictionary) -> float:
 	var branch_mult = 1.0 + (upgrades["branch_expansion"]["level"] * 0.5)
 	return base_rate * c["pay_rate"] * chair_mult * wifi_mult * noise_mult * branch_mult
 
+# ── 사물함 대여 ───────────────────────────────────────────────
+# 사물함은 그림만 있고 로직이 전혀 없었다. lockers_rented 는 선언만 된 채
+# 어디서도 읽거나 쓰이지 않았고, lockers 업그레이드를 사도 수익에 반영되는
+# 곳이 없었다. 이제 단골 절반이 사물함을 빌리고 월 대여료가 들어온다.
+func get_locker_capacity() -> int:
+	return upgrades["lockers"]["level"] * 2
+
+func refresh_lockers_rented() -> int:
+	lockers_rented = min(get_locker_capacity(), int(get_max_capacity() * 0.5))
+	return lockers_rented
+
+func get_locker_rent_rate() -> float:
+	return float(lockers_rented) * 2.5
+
+func is_locker_rented(locker_no: int) -> bool:
+	return locker_no <= lockers_rented
+
 func get_total_income_rate() -> float:
 	var total = 0.0
 	for c in active_customers:
 		total += get_income_per_second_for_customer(c)
 	if upgrades["staff_counter"]["level"] > 0:
 		total += upgrades["staff_counter"]["level"] * 20.0
+	total += get_locker_rent_rate()
 	return total
 
 func get_base_seat_position(index: int) -> Vector2:
