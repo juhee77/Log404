@@ -48,6 +48,9 @@ func load_tex_safe(path: String) -> Texture2D:
 func _ready() -> void:
 	custom_minimum_size = Vector2(800, 520)
 	mouse_filter = Control.MOUSE_FILTER_STOP
+	# Controls do not clip by default, so the room's wall peak was drawing up
+	# over the floor-tab bar above this view.
+	clip_contents = true
 	
 	bg_texture = load_tex_safe("res://assets/cafe_bg.png")
 	coffee_bar_texture = load_tex_safe("res://assets/coffee_bar.png")
@@ -162,8 +165,8 @@ func _gui_input(event: InputEvent) -> void:
 				
 	if event is InputEventMouseMotion and is_panning:
 		view_offset = event.position - pan_start_pos
-		view_offset.x = clamp(view_offset.x, -400.0, 200.0)
-		view_offset.y = clamp(view_offset.y, -400.0, 50.0)
+		view_offset.x = clamp(view_offset.x, -180.0, 180.0)
+		view_offset.y = clamp(view_offset.y, -140.0, 70.0)
 		queue_redraw()
 
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
@@ -337,8 +340,8 @@ func _draw() -> void:
 		# north-west wall (L -> T), in shade; north-east wall (T -> R), lit
 		draw_wall_plane(L, T, th, false)
 		draw_wall_plane(T, R, th, true)
-		draw_wall_window(L, T, 0.30, 0.62, th)
-		draw_wall_window(T, R, 0.24, 0.55, th)
+		draw_wall_window(L, T, 0.26, 0.52, th)
+		draw_wall_window(T, R, 0.16, 0.40, th)
 		draw_wall_door(T, R, th)
 
 		# ceiling cove along the top of each wall
@@ -346,14 +349,7 @@ func _draw() -> void:
 		wall_line(T, R, 0.0, 1.0, 1.0, Color(th["accent"], 0.85), 2.5)
 
 	# 2. Floor surface: the diamond itself, not a full-width rectangle
-	if style == "deck":
-		draw_rect(Rect2(0, horizon, w, h), th["floor"])
-	else:
-		var fc = room_corners()
-		draw_colored_polygon(PackedVector2Array([
-			fc["T"] + view_offset, fc["R"] + view_offset,
-			fc["B"] + view_offset, fc["L"] + view_offset
-		]), th["floor"])
+	draw_floor_plan(th)
 	var plank_h = 32.0 if style != "carpet" else 26.0
 	for py in range(int((h - 220) / plank_h) + 2 if style == "deck" else 0):
 		var y_pos = horizon + py * plank_h
@@ -417,8 +413,8 @@ func draw_full_isometric_floor_grid(_w: float, _h: float) -> void:
 	var line_alpha = 0.55 if is_active_grid else 0.22
 	var line_color = Color(theme()["accent"], line_alpha) if is_active_grid else Color(theme()["grid"], line_alpha)
 	
-	for gy in range(GameState.ISO_GRID_ROWS):
-		for gx in range(GameState.ISO_GRID_COLS):
+	for gy in range(GameState.STUDY_Y0, GameState.STUDY_Y1 + 1):
+		for gx in range(GameState.STUDY_X0, GameState.STUDY_X1 + 1):
 			var cell = Vector2i(gx, gy)
 			var diamond_poly = GameState.get_iso_diamond_polygon(cell)
 			for pt_idx in range(diamond_poly.size()):
@@ -452,132 +448,94 @@ func draw_full_isometric_floor_grid(_w: float, _h: float) -> void:
 
 func draw_integrated_multi_room_layout(w: float, h: float) -> void:
 	var vo = view_offset
-	# ----------------------------------------------------
-	# ROOM 1: 📖 메인 집중 열공 방 (Main Focus Study Room)
-	# ----------------------------------------------------
 	var th2 = theme()
-	var room1_rect = Rect2(30 + vo.x, 20 + vo.y, 930, h - 40)
-	draw_rect(room1_rect, th2["panel"], true)
-	
-	# Room 1 Header Banner
-	var r1_banner = Rect2(40 + vo.x, 30 + vo.y, 290, 32)
-	draw_rect(r1_banner, Color(th2["wall"], 0.95), true)
-	draw_rect(r1_banner, Color(th2["accent"], 0.5), false, 1.5)
-	draw_string(ThemeDB.fallback_font, Vector2(52 + vo.x, 52 + vo.y), th2["room_name"], HORIZONTAL_ALIGNMENT_LEFT, -1, 13, th2["accent"])
 
-	# Render 2.5D Atmospheric Weather Banner & Ambient Window Lighting
-	var weather_info = GameState.get_weather_info()
-	var w_banner = Rect2(320 + vo.x, 30 + vo.y, 380, 32)
-	draw_rect(w_banner, Color(0.10, 0.12, 0.18, 0.95), true)
-	draw_rect(w_banner, weather_info["ambient_color"], false, 1.5)
-	draw_string(ThemeDB.fallback_font, Vector2(330 + vo.x, 52 + vo.y), "%s (+%d%% 매출/몰입)" % [weather_info["weather_name"], int(weather_info["coffee_craving_bonus"])], HORIZONTAL_ALIGNMENT_LEFT, -1, 11, weather_info["ambient_color"])
+	# ── Partition walls between the three zones, with doorways ──
+	# study | lounge+front  (runs along the x = 5|6 boundary)
+	var div1 = rect_corners(6, 0, 6, GameState.FLOOR_ROWS - 1)
+	draw_partition(div1["T"] + vo, div1["L"] + vo, th2, 54.0, 0.44, 0.62)
+	# lounge | front  (runs along the y = 3|4 boundary)
+	var div2 = rect_corners(6, 4, GameState.FLOOR_COLS - 1, 4)
+	draw_partition(div2["T"] + vo, div2["R"] + vo, th2, 50.0, 0.28, 0.50)
 
-	# ----------------------------------------------------
-	# ROOM 2: ☕ 카페테리아 & 힐링 라운지 방 (Lounge & Coffee Bar)
-	# ----------------------------------------------------
-	var room2_rect = Rect2(980 + vo.x, 20 + vo.y, w - 1000, 240)
-	draw_rect(room2_rect, th2["panel"], true)
-	
-	# Room 2 Header Banner
-	var r2_banner = Rect2(990 + vo.x, 30 + vo.y, 250, 32)
-	draw_rect(r2_banner, Color(th2["wall"], 0.95), true)
-	draw_rect(r2_banner, Color(th2["accent"], 0.5), false, 1.5)
-	draw_string(ThemeDB.fallback_font, Vector2(1002 + vo.x, 52 + vo.y), th2["lounge_name"], HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color(0.1, 0.8, 0.4))
-	
-	# Render the Coffee Bar as actual furniture (counter run, espresso machine,
-	# pastry case, stools, back shelf) instead of one flat pasted photo.
+	# ── Zone names as flat floor decals, so nothing sits in front of furniture ──
+	for z in ZONES:
+		if z["name"] == "":
+			continue
+		var c = zone_center(z["id"]) + vo
+		draw_string(ThemeDB.fallback_font, Vector2(c.x - 110, c.y + 6), zone_label(z, th2),
+			HORIZONTAL_ALIGNMENT_CENTER, 220, 11, Color(th2["accent"], 0.30))
+
+	# ── Zone legend, parked in the empty top-left margin ──
+	var lg_y = 24.0
+	for z in ZONES:
+		if z["name"] == "":
+			continue
+		draw_rect(Rect2(14, lg_y, 12, 12), z["tint"], true)
+		draw_rect(Rect2(14, lg_y, 12, 12), Color(th2["accent"], 0.6), false, 1.0)
+		draw_string(ThemeDB.fallback_font, Vector2(32, lg_y + 11), zone_label(z, th2),
+			HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(0.82, 0.80, 0.76))
+		lg_y += 18.0
+
+	# ── LOUNGE ZONE fixtures, standing on their own cells ──
 	draw_lounge_bar()
-	draw_string(ThemeDB.fallback_font, Vector2(992 + vo.x, 160 + vo.y), th2["bar_label"], HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(0.85, 0.80, 0.72))
+	var barista_at = GameState.iso_to_screen(Vector2i(6, 1)) + vo
+	if staff_barista_texture != null:
+		draw_character_shadow(barista_at, 34.0)
+		draw_character(staff_barista_texture, "staff_barista", barista_at, 62.0)
+		draw_string(ThemeDB.fallback_font, barista_at + Vector2(-42, -70), "☕ 바리스타 민서",
+			HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(0.1, 0.8, 0.4))
 
-	# Today's bakery stock on an A-frame chalkboard rather than a flat strip.
-	var board_base = Vector2(1035, 248) + vo
-	draw_prop("menu_board", board_base, 1.15)
-	var board_r = menu_board_rect(board_base, 1.15)
+	# chalkboard menu + lounge seating
+	var board_base = GameState.iso_to_screen(Vector2i(9, 1)) + vo
+	draw_prop("menu_board", board_base, 0.95)
+	var board_r = menu_board_rect(board_base, 0.95)
 	var c_cnt = GameState.bakery_stock.get("cheesecake", 0)
 	var r_cnt = GameState.bakery_stock.get("croissant", 0)
-	draw_string(ThemeDB.fallback_font, board_r.position + Vector2(8, 17), th2["menu_title"], HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(0.95, 0.88, 0.70))
-	draw_string(ThemeDB.fallback_font, board_r.position + Vector2(8, 33), "🍰 치즈케이크 x%d" % c_cnt, HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(1.0, 0.85, 0.9))
-	draw_string(ThemeDB.fallback_font, board_r.position + Vector2(8, 47), "🥐 크로와상 x%d" % r_cnt, HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(1.0, 0.90, 0.78))
+	draw_string(ThemeDB.fallback_font, board_r.position + Vector2(7, 15), th2["menu_title"],
+		HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.95, 0.88, 0.70))
+	draw_string(ThemeDB.fallback_font, board_r.position + Vector2(7, 29), "🍰 x%d" % c_cnt,
+		HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(1.0, 0.85, 0.9))
+	draw_string(ThemeDB.fallback_font, board_r.position + Vector2(7, 41), "🥐 x%d" % r_cnt,
+		HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(1.0, 0.90, 0.78))
+	draw_prop("round_table", GameState.iso_to_screen(Vector2i(8, 3)) + vo, 0.62)
+	draw_prop("plant", GameState.iso_to_screen(Vector2i(9, 3)) + vo, 0.55)
 
-	# Render 2.5D QTE Restock Timing Meter Overlay if active
 	if GameState.is_qte_mini_game_active:
-		var qte_rect = Rect2(995 + vo.x, 206 + vo.y, 240, 42)
+		var qte_rect = Rect2(zone_center("lounge").x - 120 + vo.x, zone_center("lounge").y + 60 + vo.y, 240, 42)
 		draw_rect(qte_rect, Color(0.08, 0.06, 0.12, 0.95), true)
 		draw_rect(qte_rect, Color(1.0, 0.8, 0.2), false, 2.0)
-		
-		# Sweet-spot target zone
 		var target_x = qte_rect.position.x + qte_rect.size.x * 0.85
 		draw_rect(Rect2(target_x - 15, qte_rect.position.y + 4, 30, qte_rect.size.y - 8), Color(0.2, 0.9, 0.5, 0.7), true)
 		draw_string(ThemeDB.fallback_font, qte_rect.position + Vector2(8, 26), "🍰 핫타임 QTE! PERFECT 존 타격!", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(1.0, 0.85, 0.3))
 
-	# Two lounge tables, built as furniture rather than emoji on a circle.
-	draw_prop("round_table", Vector2(1163, 222) + vo, 0.55)
-	draw_prop("plant", Vector2(1243, 238) + vo, 0.46)
-
-	# Render Human Barista Staff Sprite in Room 2 Lounge
-	if staff_barista_texture != null:
-		draw_character_shadow(Vector2(1036, 146) + vo, 34.0)
-		draw_character(staff_barista_texture, "staff_barista", Vector2(1036, 146) + vo, 66.0)
-		draw_string(ThemeDB.fallback_font, Vector2(992 + vo.x, 92 + vo.y), "☕ 바리스타 민서", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(0.1, 0.8, 0.4))
-
-	# ----------------------------------------------------
-	# ROOM 3: 🔑 프런트 & 스마트 사물함 방 (Front & Lockers)
-	# ----------------------------------------------------
-	var room3_rect = Rect2(980 + vo.x, 275 + vo.y, w - 1000, h - 295)
-	draw_rect(room3_rect, th2["panel"], true)
-	
-	# Room 3 Header Banner
-	var r3_banner = Rect2(990 + vo.x, 285 + vo.y, 250, 32)
-	draw_rect(r3_banner, Color(th2["wall"], 0.95), true)
-	draw_rect(r3_banner, Color(th2["accent"], 0.5), false, 1.5)
-	draw_string(ThemeDB.fallback_font, Vector2(1002 + vo.x, 307 + vo.y), th2["front_name"], HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color(0.8, 0.4, 0.9))
-
-	# Two isometric locker banks standing against the wall, numbered 1-8, with
-	# keypad LEDs and one door left open - not a grid of flat boxes.
+	# ── FRONT ZONE fixtures ──
 	var front_style = th2["front_style"]
 	if front_style == "garden":
-		# A rooftop has no front desk or lockers - it has planting beds.
-		draw_prop("planter", Vector2(1048, 392) + vo, 0.78)
-		draw_prop("parasol", Vector2(1160, 418) + vo, 0.70)
-		draw_prop("planter", Vector2(1078, 470) + vo, 0.78)
-		draw_prop("plant", Vector2(1218, 388) + vo, 0.62)
-		draw_prop("sofa", Vector2(1180, 506) + vo, 0.62)
-		draw_prop("bin", Vector2(1250, 478) + vo, 0.66)
+		draw_prop("planter", GameState.iso_to_screen(Vector2i(6, 5)) + vo, 0.72)
+		draw_prop("parasol", GameState.iso_to_screen(Vector2i(8, 5)) + vo, 0.68)
+		draw_prop("planter", GameState.iso_to_screen(Vector2i(7, 7)) + vo, 0.72)
+		draw_prop("sofa", GameState.iso_to_screen(Vector2i(9, 6)) + vo, 0.60)
 	else:
-		_prop_locker_bank(Vector2(1040, 398) + vo, 0.95, 1)
-		_prop_locker_bank(Vector2(1118, 437) + vo, 0.95, 5)
-		draw_string(ThemeDB.fallback_font, Vector2(998 + vo.x, 350 + vo.y),
-			"🔑 대여중 %d / %d칸   임대수익 +%d₩/초" % [GameState.lockers_rented,
+		_prop_locker_bank(GameState.iso_to_screen(Vector2i(6, 5)) + vo, 0.82, 1)
+		_prop_locker_bank(GameState.iso_to_screen(Vector2i(7, 5)) + vo, 0.82, 5)
+		draw_prop("umbrella_stand", GameState.iso_to_screen(Vector2i(6, 6)) + vo, 0.75)
+		draw_string(ThemeDB.fallback_font, Vector2(32, 96),
+			"🔑 사물함 %d/%d칸 대여   +%d₩/초" % [GameState.lockers_rented,
 			max(GameState.get_locker_capacity(), 8), int(GameState.get_locker_rent_rate())],
 			HORIZONTAL_ALIGNMENT_LEFT, -1, 11, th2["accent"])
-		draw_prop("umbrella_stand", Vector2(1218, 388) + vo, 0.85)
-		draw_prop("plant", Vector2(1008, 462) + vo, 0.60)
 
-	# Glass Door Archways Connecting Rooms
-	# (the old flat blue door rectangles lived here; the real door is now part of
-	#  the isometric wall shell)
-
-	# Reception counter and the entry speed gates
-	# Everything stays above y=555: the CafeView is only 566px tall, so anything
-	# lower disappears behind the bottom action bar.
 	if front_style == "front":
-		draw_prop("reception", Vector2(1050, 500) + vo, 0.85)
-		draw_string(ThemeDB.fallback_font, Vector2(998 + vo.x, 526 + vo.y), "🛎️ 무인 프런트 키오스크", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(0.8, 0.4, 0.9))
-		draw_prop("speed_gate", GameState.ENTRANCE_POS + Vector2(-16, -30) + vo, 0.9)
-		draw_string(ThemeDB.fallback_font, Vector2(1136 + vo.x, 522 + vo.y), "🚪 스마트 출입 게이트", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(0.06, 0.72, 0.5))
+		draw_prop("reception", GameState.iso_to_screen(Vector2i(8, 6)) + vo, 0.78)
+		draw_prop("speed_gate", GameState.iso_to_screen(GameState.ENTRANCE_CELL) + vo + Vector2(-14, -26), 0.8)
 	elif front_style == "vip":
-		draw_prop("sofa", Vector2(1070, 500) + vo, 0.72)
-		draw_prop("floor_lamp", Vector2(1168, 480) + vo, 0.72)
-		draw_string(ThemeDB.fallback_font, Vector2(998 + vo.x, 536 + vo.y), "🥂 회원 전용 라운지 좌석", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, th2["accent"])
-	else:
-		draw_string(ThemeDB.fallback_font, Vector2(998 + vo.x, 548 + vo.y), "🌿 야외 화단 & 테라스 벤치", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, th2["accent"])
+		draw_prop("sofa", GameState.iso_to_screen(Vector2i(8, 6)) + vo, 0.66)
+		draw_prop("floor_lamp", GameState.iso_to_screen(Vector2i(9, 6)) + vo, 0.66)
 
 	# ----------------------------------------------------
-	# Draw Desks & Booths inside ROOM 1 (Main Focus Study Room)
+	# Draw Desks & Booths inside the STUDY zone
 	# ----------------------------------------------------
-	# Rug first, then the back wall fixtures, then the desks, then the fixtures
-	# that stand in front of them - one consistent painter's order for the room.
-	draw_floor_rug(Vector2i(1, 1), Vector2i(4, 4), Color(0.26, 0.18, 0.13, 0.40))
+	draw_floor_rug(Vector2i(1, 3), Vector2i(4, 6), Color(0.26, 0.18, 0.13, 0.40))
 	draw_room1_props(true)
 
 	# Painter's algorithm over the isometric diagonal (back tiles first)
@@ -1967,6 +1925,105 @@ func spawn_floating_text(pos: Vector2, text: String, color: Color = Color.WHITE)
 # square rect - the old non-square rect stretched every desk out of proportion.
 # 1.2 x tile width makes the furniture's own footprint cover roughly one tile.
 # ══════════════════════════════════════════════════════════════
+# 🗺️ FLOOR PLAN
+# One continuous isometric floor. The lounge and the front desk used to be flat
+# rectangular panels bolted to the side of the screen; they are now zones of the
+# same floor, separated by isometric partition walls with doorways in them.
+# ══════════════════════════════════════════════════════════════
+
+const ZONES: Array = [
+	{"id": "study",  "x0": 0, "y0": 2, "x1": 5, "y1": 7,
+	 "name": "📖 메인 집중 열공 방", "tint": Color(0.36, 0.25, 0.16)},
+	{"id": "lounge", "x0": 6, "y0": 0, "x1": 9, "y1": 3,
+	 "name": "☕ 힐링 라운지 & 커피바", "tint": Color(0.22, 0.27, 0.22)},
+	{"id": "front",  "x0": 6, "y0": 4, "x1": 9, "y1": 7,
+	 "name": "🔑 프런트 & 스마트 사물함", "tint": Color(0.25, 0.21, 0.32)},
+	{"id": "hall",   "x0": 0, "y0": 0, "x1": 5, "y1": 1,
+	 "name": "", "tint": Color(0.17, 0.15, 0.13)}
+]
+
+func zone_label(z: Dictionary, th: Dictionary) -> String:
+	match z["id"]:
+		"study": return th["room_name"]
+		"lounge": return th["lounge_name"]
+		"front": return th["front_name"]
+	return z["name"]
+
+func zone_of(cell: Vector2i) -> Dictionary:
+	for z in ZONES:
+		if cell.x >= z["x0"] and cell.x <= z["x1"] and cell.y >= z["y0"] and cell.y <= z["y1"]:
+			return z
+	return {}
+
+func zone_by_id(zid: String) -> Dictionary:
+	for z in ZONES:
+		if z["id"] == zid:
+			return z
+	return {}
+
+# Screen position of a zone's centre, for labels and fixture placement.
+func zone_center(zid: String) -> Vector2:
+	var z = zone_by_id(zid)
+	if z.is_empty():
+		return Vector2.ZERO
+	return (GameState.iso_to_screen(Vector2i(z["x0"], z["y0"]))
+		+ GameState.iso_to_screen(Vector2i(z["x1"], z["y1"]))) * 0.5
+
+# The four outer corners of a cell rectangle, in world space.
+func rect_corners(x0: int, y0: int, x1: int, y1: int) -> Dictionary:
+	var hw = GameState.ISO_TILE_WIDTH * 0.5
+	var hh = GameState.ISO_TILE_HEIGHT * 0.5
+	return {
+		"T": GameState.iso_to_screen(Vector2i(x0, y0)) + Vector2(0, -hh),
+		"R": GameState.iso_to_screen(Vector2i(x1, y0)) + Vector2(hw, 0),
+		"B": GameState.iso_to_screen(Vector2i(x1, y1)) + Vector2(0, hh),
+		"L": GameState.iso_to_screen(Vector2i(x0, y1)) + Vector2(-hw, 0)
+	}
+
+# Paint every zone's floor, tinted so the areas read as separate rooms.
+func draw_floor_plan(th: Dictionary) -> void:
+	var vo = view_offset
+	for z in ZONES:
+		var c = rect_corners(z["x0"], z["y0"], z["x1"], z["y1"])
+		var tint: Color = z["tint"]
+		if th["style"] == "carpet":
+			tint = tint.lerp(Color(0.26, 0.14, 0.19), 0.6)
+		elif th["style"] == "deck":
+			tint = tint.lerp(Color(0.30, 0.21, 0.13), 0.5)
+		draw_colored_polygon(PackedVector2Array([
+			c["T"] + vo, c["R"] + vo, c["B"] + vo, c["L"] + vo
+		]), tint)
+
+# A partition wall standing along one edge of the plan, with an optional
+# doorway left open in it.
+func draw_partition(a: Vector2, b: Vector2, th: Dictionary, height: float,
+		gap0: float = -1.0, gap1: float = -1.0) -> void:
+	var col = shade(th["wall_face"], 0.86)
+	var segs: Array = []
+	if gap0 < 0.0:
+		segs.append([0.0, 1.0])
+	else:
+		segs.append([0.0, gap0])
+		segs.append([gap1, 1.0])
+	for seg in segs:
+		var u0 = seg[0]
+		var u1 = seg[1]
+		if u1 - u0 < 0.001:
+			continue
+		draw_colored_polygon(PackedVector2Array([
+			a.lerp(b, u0), a.lerp(b, u1),
+			a.lerp(b, u1) + Vector2(0, -height), a.lerp(b, u0) + Vector2(0, -height)
+		]), col)
+		# capping strip along the top so the wall reads as having thickness
+		draw_line(a.lerp(b, u0) + Vector2(0, -height), a.lerp(b, u1) + Vector2(0, -height),
+			shade(col, 1.45), 3.0)
+		draw_line(a.lerp(b, u0), a.lerp(b, u1), shade(col, 0.55), 2.0)
+	# the reveal on each side of the doorway
+	if gap0 >= 0.0:
+		for u in [gap0, gap1]:
+			draw_line(a.lerp(b, u), a.lerp(b, u) + Vector2(0, -height), shade(col, 1.3), 2.0)
+
+# ══════════════════════════════════════════════════════════════
 # 🧱 ISOMETRIC ROOM SHELL
 # The room used to be a flat 2D backdrop - a full-width rectangle of "wall"
 # across the top, a horizon line, and a rectangle of "floor" below it - with an
@@ -1977,21 +2034,12 @@ func spawn_floating_text(pos: Vector2, text: String, color: Color = Color.WHITE)
 # floor's projection.
 # ══════════════════════════════════════════════════════════════
 
-const WALL_HEIGHT: float = 156.0
+const WALL_HEIGHT: float = 118.0
 
 # The four corners of the floor diamond, in world space.
 # T is the far corner, R/L the side corners, B the near corner.
 func room_corners() -> Dictionary:
-	var hw = GameState.ISO_TILE_WIDTH * 0.5
-	var hh = GameState.ISO_TILE_HEIGHT * 0.5
-	var cols = GameState.ISO_GRID_COLS - 1
-	var rows = GameState.ISO_GRID_ROWS - 1
-	return {
-		"T": GameState.iso_to_screen(Vector2i(0, 0)) + Vector2(0, -hh),
-		"R": GameState.iso_to_screen(Vector2i(cols, 0)) + Vector2(hw, 0),
-		"B": GameState.iso_to_screen(Vector2i(cols, rows)) + Vector2(0, hh),
-		"L": GameState.iso_to_screen(Vector2i(0, rows)) + Vector2(-hw, 0)
-	}
+	return rect_corners(0, 0, GameState.FLOOR_COLS - 1, GameState.FLOOR_ROWS - 1)
 
 # A point on a wall plane. u runs along the base from `a` to `b`, v runs up it.
 func wall_pt(a: Vector2, b: Vector2, u: float, v: float) -> Vector2:
@@ -2771,48 +2819,43 @@ func _prop_patio_heater(base: Vector2, s: float) -> void:
 # dress the walls without ever stealing a tile the player wants for a desk.
 const FLOOR_PROPS: Dictionary = {
 	2: [
-		{"kind": "bookshelf",  "cell": Vector2i(0, -1)},
-		{"kind": "floor_lamp", "cell": Vector2i(1, -1)},
-		{"kind": "bookshelf",  "cell": Vector2i(2, -1)},
-		{"kind": "sofa",       "cell": Vector2i(-1, 0)},
-		{"kind": "floor_lamp", "cell": Vector2i(-1, 1)},
-		{"kind": "plant",      "cell": Vector2i(-1, 2)},
-		{"kind": "sofa",       "cell": Vector2i(-1, 3)},
-		{"kind": "water",      "cell": Vector2i(6, 1)},
-		{"kind": "bin",        "cell": Vector2i(6, 2)},
-		{"kind": "floor_lamp", "cell": Vector2i(3, 6)},
+		{"kind": "bookshelf",  "cell": Vector2i(0, 1)},
+		{"kind": "floor_lamp", "cell": Vector2i(1, 1)},
+		{"kind": "bookshelf",  "cell": Vector2i(2, 1)},
+		{"kind": "floor_lamp", "cell": Vector2i(4, 1)},
+		{"kind": "sofa",       "cell": Vector2i(0, 8)},
+		{"kind": "floor_lamp", "cell": Vector2i(2, 8)},
+		{"kind": "plant",      "cell": Vector2i(4, 8)},
+		{"kind": "bin",        "cell": Vector2i(5, 8)},
 	],
 	3: [
-		{"kind": "planter",      "cell": Vector2i(0, -1)},
-		{"kind": "planter",      "cell": Vector2i(1, -1)},
-		{"kind": "patio_heater", "cell": Vector2i(2, -1)},
-		{"kind": "parasol",      "cell": Vector2i(-1, 0)},
-		{"kind": "planter",      "cell": Vector2i(-1, 1)},
-		{"kind": "plant",        "cell": Vector2i(-1, 2)},
-		{"kind": "sofa",         "cell": Vector2i(-1, 3)},
-		{"kind": "parasol",      "cell": Vector2i(6, 1)},
-		{"kind": "bin",          "cell": Vector2i(6, 2)},
-		{"kind": "planter",      "cell": Vector2i(3, 6)},
+		{"kind": "planter",      "cell": Vector2i(0, 1)},
+		{"kind": "planter",      "cell": Vector2i(1, 1)},
+		{"kind": "patio_heater", "cell": Vector2i(2, 1)},
+		{"kind": "parasol",      "cell": Vector2i(4, 1)},
+		{"kind": "planter",      "cell": Vector2i(0, 8)},
+		{"kind": "parasol",      "cell": Vector2i(2, 8)},
+		{"kind": "planter",      "cell": Vector2i(4, 8)},
+		{"kind": "bin",          "cell": Vector2i(5, 8)},
 	]
 }
 
 const ROOM1_PROPS: Array = [
-	{"kind": "bookshelf",  "cell": Vector2i(0, -1)},
-	{"kind": "bookshelf",  "cell": Vector2i(1, -1)},
-	{"kind": "printer",    "cell": Vector2i(2, -1)},
-	{"kind": "plant",      "cell": Vector2i(-1, 0)},
-	{"kind": "water",      "cell": Vector2i(-1, 1)},
-	{"kind": "sofa",       "cell": Vector2i(-1, 2)},
-	{"kind": "floor_lamp", "cell": Vector2i(-1, 3)},
-	{"kind": "plant",      "cell": Vector2i(6, 1)},
-	{"kind": "bin",        "cell": Vector2i(6, 2)},
-	{"kind": "plant",      "cell": Vector2i(3, 6)},
+	{"kind": "bookshelf",  "cell": Vector2i(0, 1)},
+	{"kind": "bookshelf",  "cell": Vector2i(1, 1)},
+	{"kind": "printer",    "cell": Vector2i(2, 1)},
+	{"kind": "water",      "cell": Vector2i(3, 1)},
+	{"kind": "plant",      "cell": Vector2i(4, 1)},
+	{"kind": "sofa",       "cell": Vector2i(0, 8)},
+	{"kind": "floor_lamp", "cell": Vector2i(2, 8)},
+	{"kind": "plant",      "cell": Vector2i(4, 8)},
+	{"kind": "bin",        "cell": Vector2i(5, 8)},
 ]
 
 # The coffee bar has its own smaller isometric frame inside the lounge panel:
 # a real counter run with a machine, a pastry case, stools and a back shelf,
 # replacing the single flat coffee_bar.png that used to be pasted here.
-const LOUNGE_ORIGIN: Vector2 = Vector2(1080.0, 118.0)
+const LOUNGE_ANCHOR_CELL: Vector2i = Vector2i(7, 0)
 const LOUNGE_TILE_W: float = 76.0
 const LOUNGE_TILE_H: float = 38.0
 const LOUNGE_SCALE: float = 0.5
@@ -2831,7 +2874,7 @@ const LOUNGE_PROPS: Array = [
 ]
 
 func lounge_to_screen(cell: Vector2i) -> Vector2:
-	return LOUNGE_ORIGIN + Vector2(
+	return GameState.iso_to_screen(LOUNGE_ANCHOR_CELL) + Vector2(
 		float(cell.x - cell.y) * LOUNGE_TILE_W * 0.5,
 		float(cell.x + cell.y) * LOUNGE_TILE_H * 0.5
 	)
@@ -2864,7 +2907,7 @@ func draw_room1_props(back_band: bool) -> void:
 	var picked = []
 	for prop in FLOOR_PROPS.get(GameState.current_floor, ROOM1_PROPS):
 		var c = prop["cell"]
-		var is_back = c.x < 0 or c.y < 0
+		var is_back = c.y < GameState.STUDY_Y0
 		if is_back == back_band:
 			picked.append(prop)
 	picked.sort_custom(func(a, b): return (a["cell"].x + a["cell"].y) < (b["cell"].x + b["cell"].y))

@@ -4682,8 +4682,9 @@ func is_cat_buff_active() -> bool:
 # 손님이 걸어가는 좌표가 cafe_view 의 그림과 따로 하드코딩돼 있어서, 라운지
 # 패널을 오른쪽으로 옮긴 뒤로 손님들이 아무것도 없는 빈 바닥으로 걸어가
 # 보이지 않는 케이크를 먹고 있었다. 렌더러가 이 상수를 함께 쓴다.
-const ENTRANCE_POS: Vector2 = Vector2(1178, 498)   # 스마트 출입 게이트 앞
-const COUNTER_POS: Vector2 = Vector2(1058, 172)    # 커피바 주문대 앞
+# 평면도 위의 실제 칸을 좌표로 환산해 쓴다.
+const ENTRANCE_CELL: Vector2i = Vector2i(9, 7)     # 프런트 구역 입구
+const COUNTER_CELL: Vector2i = Vector2i(7, 2)      # 커피바 주문대 앞
 
 # Snack Bar, Bakery Stock & Locker Stock
 var snack_stock: int = 100
@@ -5317,7 +5318,7 @@ func _process(delta: float) -> void:
 		spawn_timer = 0.0
 		spawn_customer()
 	
-	var entrance_pos = ENTRANCE_POS
+	var entrance_pos = iso_to_screen(ENTRANCE_CELL)
 	var to_remove = []
 	
 	for c in active_customers:
@@ -5325,8 +5326,9 @@ func _process(delta: float) -> void:
 		var current_pos = c["pos"]
 		
 		if c["state"] == "WALKING_IN":
-			c["pos"] = current_pos.move_toward(COUNTER_POS, delta * 140.0)
-			if c["pos"].distance_to(COUNTER_POS) < 8.0:
+			var counter_pos = iso_to_screen(COUNTER_CELL)
+			c["pos"] = current_pos.move_toward(counter_pos, delta * 140.0)
+			if c["pos"].distance_to(counter_pos) < 8.0:
 				c["state"] = "EATING_CAKE"
 				c["eating_timer"] = 0.0
 				# 주문은 실제 베이커리 재고를 소비한다. 재고가 없으면 음료만
@@ -5438,7 +5440,7 @@ func spawn_customer() -> void:
 	lifetime_visitors += 1
 	var template = CUSTOMER_TYPES[randi() % CUSTOMER_TYPES.size()]
 	var cid = randi()
-	var entrance_pos = ENTRANCE_POS
+	var entrance_pos = iso_to_screen(ENTRANCE_CELL)
 	var seat_target = get_seat_position(free_seat)
 	
 	var customer = {
@@ -6068,14 +6070,23 @@ func activate_quantum_molecular_food_synthesizer(seat_index: int) -> Dictionary:
 # 📐 ISOMETRIC 2:1 PROJECTION & SMART CONNECTED DESK ENGINE
 # ========================================================
 
-const ISO_TILE_WIDTH: float = 128.0
-const ISO_TILE_HEIGHT: float = 64.0
-const ISO_ORIGIN: Vector2 = Vector2(495.0, 190.0)
+const ISO_TILE_WIDTH: float = 96.0
+const ISO_TILE_HEIGHT: float = 48.0
+const ISO_ORIGIN: Vector2 = Vector2(560.0, 152.0)
 
 # Placeable floor area of the Main Focus Room, measured in isometric cells.
-# The diamond spans (COLS + ROWS) * TILE_W/2 = 768px wide and 384px tall, which
-# fits inside the widened 930px Room 1 panel with the desk art's overhang above
-# the back row still clearing the room banners.
+# ── 매장 전체 평면도 ──────────────────────────────────────────
+# 예전에는 열공방만 아이소메트릭 마름모였고 라운지·프런트는 화면 옆에 붙인
+# 납작한 사각형 패널이었다. 이제 세 구역이 하나의 연속된 바닥 위에 있다.
+# 전체 마름모는 (COLS+ROWS) * TILE_W/2 = 864px 폭, 432px 높이.
+const FLOOR_COLS: int = 10
+const FLOOR_ROWS: int = 8
+
+# 그중 책상을 놓을 수 있는 열공방 구역. 배치 격자는 예전과 같은 6x6 이다.
+const STUDY_X0: int = 0
+const STUDY_Y0: int = 2
+const STUDY_X1: int = 5
+const STUDY_Y1: int = 7
 const ISO_GRID_COLS: int = 6
 const ISO_GRID_ROWS: int = 6
 
@@ -6111,11 +6122,15 @@ func is_point_in_iso_tile(point: Vector2, grid_pos: Vector2i, origin: Vector2 = 
 	var d = point - center
 	return abs(d.x) / (ISO_TILE_WIDTH * 0.5) + abs(d.y) / (ISO_TILE_HEIGHT * 0.5) <= 1.0
 
+# 책상을 놓을 수 있는 칸인가 (열공방 구역 안인가)
 func is_iso_cell_in_bounds(cell: Vector2i) -> bool:
-	return cell.x >= 0 and cell.x < ISO_GRID_COLS and cell.y >= 0 and cell.y < ISO_GRID_ROWS
+	return cell.x >= STUDY_X0 and cell.x <= STUDY_X1 and cell.y >= STUDY_Y0 and cell.y <= STUDY_Y1
 
 func clamp_iso_cell(cell: Vector2i) -> Vector2i:
-	return Vector2i(clampi(cell.x, 0, ISO_GRID_COLS - 1), clampi(cell.y, 0, ISO_GRID_ROWS - 1))
+	return Vector2i(clampi(cell.x, STUDY_X0, STUDY_X1), clampi(cell.y, STUDY_Y0, STUDY_Y1))
+
+func is_floor_cell(cell: Vector2i) -> bool:
+	return cell.x >= 0 and cell.x < FLOOR_COLS and cell.y >= 0 and cell.y < FLOOR_ROWS
 
 # Default isometric layout: seats fill the diamond floor cell by cell.
 # Desks fill the floor the way a real study cafe is laid out: two banks of desks
@@ -6129,13 +6144,13 @@ func _build_default_seat_cells() -> Array:
 	# Cells (x+y) even are never screen-adjacent to one another, so desks placed
 	# on them keep a full tile of walking space on every side.
 	for parity in [0, 1]:
-		for y in range(ISO_GRID_ROWS):
-			for x in range(ISO_GRID_COLS):
+		for y in range(STUDY_Y0, STUDY_Y1 + 1):
+			for x in range(STUDY_X0, STUDY_X1 + 1):
 				if (x + y) % 2 == 0 and x % 2 == parity:
 					pref.append(Vector2i(x, y))
 	# The in-between tiles stay placeable - they are simply handed out last.
-	for y in range(ISO_GRID_ROWS):
-		for x in range(ISO_GRID_COLS):
+	for y in range(STUDY_Y0, STUDY_Y1 + 1):
+		for x in range(STUDY_X0, STUDY_X1 + 1):
 			var c = Vector2i(x, y)
 			if not pref.has(c):
 				pref.append(c)
