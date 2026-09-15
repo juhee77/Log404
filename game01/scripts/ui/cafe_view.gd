@@ -78,6 +78,7 @@ func _ready() -> void:
 	GameState.decor_mode_changed.connect(func(_active): queue_redraw())
 
 func _process(delta: float) -> void:
+	update_door(delta)
 	steam_time += delta
 	if GameState != null and GameState.has_method("update_navi_wandering"):
 		GameState.update_navi_wandering(delta)
@@ -325,39 +326,36 @@ func _draw() -> void:
 		draw_rooftop_sky(w, horizon)
 		draw_rooftop_railing(w, horizon)
 	else:
-		draw_rect(Rect2(0, 0, w, h), th["wall"], true)
-		var slat_w = 40.0 if style == "wood" else 96.0
-		for sx in range(int(w / slat_w) + 2):
-			var x_pos = sx * slat_w
-			draw_line(Vector2(x_pos, 0), Vector2(x_pos, horizon), Color(th["wall_line"], 0.4), 1.2)
-			draw_line(Vector2(x_pos + 1, 0), Vector2(x_pos + 1, horizon), Color(th["wall_hi"], 0.2), 1.0)
-		if style == "carpet":
-			# panelled wainscot with a gold picture rail
-			draw_rect(Rect2(0, horizon - 74, w, 74), Color(0.17, 0.11, 0.17, 0.75), true)
-			draw_line(Vector2(0, horizon - 74), Vector2(w, horizon - 74), Color(th["accent"], 0.7), 2.0)
-			for px in range(int(w / 96.0) + 1):
-				var fx = px * 96.0 + 14
-				draw_rect(Rect2(fx, horizon - 62, 68, 48), Color(0.22, 0.15, 0.22, 0.6), false, 1.2)
+		# Dark void behind the room, then the two isometric wall planes that rise
+		# from the back edges of the floor diamond.
+		draw_rect(Rect2(0, 0, w, h), shade(th["wall"], 0.45), true)
+		var c = room_corners()
+		var T = c["T"] + view_offset
+		var R = c["R"] + view_offset
+		var L = c["L"] + view_offset
 
-		# Indirect ceiling cove, tinted to the floor's accent
-		draw_rect(Rect2(0, 0, w, 18), Color(th["wall_line"], 1.0), true)
-		draw_line(Vector2(0, 18), Vector2(w, 18), Color(th["accent"], 0.85), 2.5)
-		draw_rect(Rect2(0, 18, w, 24), Color(th["accent"], 0.08), true)
-		draw_line(Vector2(0, horizon - 2), Vector2(w, horizon - 2), Color(th["wall_hi"], 0.9), 4.0)
+		# north-west wall (L -> T), in shade; north-east wall (T -> R), lit
+		draw_wall_plane(L, T, th, false)
+		draw_wall_plane(T, R, th, true)
+		draw_wall_window(L, T, 0.30, 0.62, th)
+		draw_wall_window(T, R, 0.24, 0.55, th)
+		draw_wall_door(T, R, th)
 
-		# Window view (indoor floors only)
-		var window_rect = Rect2(484 + view_offset.x, 60 + view_offset.y, 310, 240)
-		if GameState.time_of_day == "DUSK":
-			draw_rect(window_rect, Color(1.0, 0.45, 0.12, 0.32))
-		elif GameState.time_of_day == "NIGHT":
-			draw_rect(window_rect, Color(0.04, 0.06, 0.28, 0.48))
-		else:
-			draw_rect(window_rect, Color(0.2, 0.6, 1.0, 0.12))
+		# ceiling cove along the top of each wall
+		wall_line(L, T, 0.0, 1.0, 1.0, Color(th["accent"], 0.75), 2.5)
+		wall_line(T, R, 0.0, 1.0, 1.0, Color(th["accent"], 0.85), 2.5)
 
-	# 2. Floor surface: planks, carpet weave or decking
-	draw_rect(Rect2(0, horizon, w, h), th["floor"])
+	# 2. Floor surface: the diamond itself, not a full-width rectangle
+	if style == "deck":
+		draw_rect(Rect2(0, horizon, w, h), th["floor"])
+	else:
+		var fc = room_corners()
+		draw_colored_polygon(PackedVector2Array([
+			fc["T"] + view_offset, fc["R"] + view_offset,
+			fc["B"] + view_offset, fc["L"] + view_offset
+		]), th["floor"])
 	var plank_h = 32.0 if style != "carpet" else 26.0
-	for py in range(int((h - 220) / plank_h) + 2):
+	for py in range(int((h - 220) / plank_h) + 2 if style == "deck" else 0):
 		var y_pos = horizon + py * plank_h
 		draw_line(Vector2(0, y_pos), Vector2(w, y_pos), Color(th["floor_line"], 0.4), 1.5)
 		draw_line(Vector2(0, y_pos + 1), Vector2(w, y_pos + 1), Color(th["wall_hi"], 0.18), 1.0)
@@ -556,11 +554,8 @@ func draw_integrated_multi_room_layout(w: float, h: float) -> void:
 		draw_prop("plant", Vector2(1008, 462) + vo, 0.60)
 
 	# Glass Door Archways Connecting Rooms
-	draw_rect(Rect2(960 + vo.x, 110 + vo.y, 20, 60), Color(0.2, 0.8, 1.0, 0.8), true)
-	draw_string(ThemeDB.fallback_font, Vector2(962 + vo.x, 145 + vo.y), "🚪", HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color.WHITE)
-
-	draw_rect(Rect2(960 + vo.x, 360 + vo.y, 20, 60), Color(0.2, 0.8, 1.0, 0.8), true)
-	draw_string(ThemeDB.fallback_font, Vector2(962 + vo.x, 395 + vo.y), "🚪", HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color.WHITE)
+	# (the old flat blue door rectangles lived here; the real door is now part of
+	#  the isometric wall shell)
 
 	# Reception counter and the entry speed gates
 	# Everything stays above y=555: the CafeView is only 566px tall, so anything
@@ -1972,6 +1967,188 @@ func spawn_floating_text(pos: Vector2, text: String, color: Color = Color.WHITE)
 # square rect - the old non-square rect stretched every desk out of proportion.
 # 1.2 x tile width makes the furniture's own footprint cover roughly one tile.
 # ══════════════════════════════════════════════════════════════
+# 🧱 ISOMETRIC ROOM SHELL
+# The room used to be a flat 2D backdrop - a full-width rectangle of "wall"
+# across the top, a horizon line, and a rectangle of "floor" below it - with an
+# isometric diamond pasted into the middle. Nothing but the floor was actually
+# isometric. The shell is now built from the floor's own corners: two wall
+# planes rise from the back edges of the diamond, and everything on them
+# (skirting, rails, window, door) is drawn in wall coordinates so it shares the
+# floor's projection.
+# ══════════════════════════════════════════════════════════════
+
+const WALL_HEIGHT: float = 156.0
+
+# The four corners of the floor diamond, in world space.
+# T is the far corner, R/L the side corners, B the near corner.
+func room_corners() -> Dictionary:
+	var hw = GameState.ISO_TILE_WIDTH * 0.5
+	var hh = GameState.ISO_TILE_HEIGHT * 0.5
+	var cols = GameState.ISO_GRID_COLS - 1
+	var rows = GameState.ISO_GRID_ROWS - 1
+	return {
+		"T": GameState.iso_to_screen(Vector2i(0, 0)) + Vector2(0, -hh),
+		"R": GameState.iso_to_screen(Vector2i(cols, 0)) + Vector2(hw, 0),
+		"B": GameState.iso_to_screen(Vector2i(cols, rows)) + Vector2(0, hh),
+		"L": GameState.iso_to_screen(Vector2i(0, rows)) + Vector2(-hw, 0)
+	}
+
+# A point on a wall plane. u runs along the base from `a` to `b`, v runs up it.
+func wall_pt(a: Vector2, b: Vector2, u: float, v: float) -> Vector2:
+	return a.lerp(b, u) + Vector2(0, -WALL_HEIGHT * v)
+
+func wall_quad(a: Vector2, b: Vector2, u0: float, u1: float, v0: float, v1: float, col: Color) -> void:
+	draw_colored_polygon(PackedVector2Array([
+		wall_pt(a, b, u0, v0), wall_pt(a, b, u1, v0),
+		wall_pt(a, b, u1, v1), wall_pt(a, b, u0, v1)
+	]), col)
+
+func wall_line(a: Vector2, b: Vector2, u0: float, u1: float, v: float, col: Color, width: float = 1.5) -> void:
+	draw_line(wall_pt(a, b, u0, v), wall_pt(a, b, u1, v), col, width)
+
+# One wall plane with its panelling. `door` and `window` are u-ranges to leave
+# open; the caller fills them in.
+func draw_wall_plane(a: Vector2, b: Vector2, th: Dictionary, lit: bool) -> void:
+	var base: Color = th["wall_face"]
+	var face = base if lit else shade(base, 0.68)
+	wall_quad(a, b, 0.0, 1.0, 0.0, 1.0, face)
+
+	# vertical studs
+	var studs = 9
+	for i in range(1, studs):
+		wall_line(a, b, float(i) / studs, float(i) / studs, 0.0, shade(face, 0.72), 1.4)
+		# the highlight edge of each stud
+		draw_line(wall_pt(a, b, float(i) / studs, 0.0) + Vector2(1.6, 0),
+			wall_pt(a, b, float(i) / studs, 1.0) + Vector2(1.6, 0), shade(face, 1.22), 1.0)
+
+	# wainscot panelling on the lower third
+	wall_quad(a, b, 0.0, 1.0, 0.0, 0.34, shade(face, 0.80))
+	for pnl in range(8):
+		var pu0 = 0.03 + pnl * 0.12
+		wall_quad(a, b, pu0, pu0 + 0.085, 0.09, 0.29, shade(face, 0.88))
+	wall_line(a, b, 0.0, 1.0, 0.34, Color(th["accent"], 0.55), 2.2)
+	# skirting board
+	wall_quad(a, b, 0.0, 1.0, 0.0, 0.055, shade(face, 0.58))
+	# picture rail near the ceiling
+	wall_line(a, b, 0.0, 1.0, 0.88, shade(face, 1.3), 2.0)
+	# ceiling cove glow spilling down the wall
+	wall_quad(a, b, 0.0, 1.0, 0.92, 1.0, Color(th["accent"], 0.10))
+
+func sky_tint() -> Color:
+	if GameState.time_of_day == "DUSK":
+		return Color(0.98, 0.52, 0.22)
+	elif GameState.time_of_day == "NIGHT":
+		return Color(0.08, 0.10, 0.30)
+	return Color(0.46, 0.72, 0.95)
+
+# A window punched through a wall plane, with a frame and a sill.
+func draw_wall_window(a: Vector2, b: Vector2, u0: float, u1: float, th: Dictionary) -> void:
+	var v0 = 0.42
+	var v1 = 0.84
+	wall_quad(a, b, u0, u1, v0, v1, sky_tint())
+	# glazing bars
+	var um = (u0 + u1) * 0.5
+	var vm = (v0 + v1) * 0.5
+	wall_line(a, b, um, um, v0, Color(0.20, 0.16, 0.13, 0.9), 2.0)
+	draw_line(wall_pt(a, b, u0, vm), wall_pt(a, b, u1, vm), Color(0.20, 0.16, 0.13, 0.9), 2.0)
+	# reflection wedge on the glass
+	draw_colored_polygon(PackedVector2Array([
+		wall_pt(a, b, u0, v1), wall_pt(a, b, um, v1), wall_pt(a, b, u0, vm)
+	]), Color(1, 1, 1, 0.10))
+	# frame + sill
+	var frame = shade(th["wall_face"], 1.35)
+	draw_polyline(PackedVector2Array([
+		wall_pt(a, b, u0, v0), wall_pt(a, b, u1, v0),
+		wall_pt(a, b, u1, v1), wall_pt(a, b, u0, v1), wall_pt(a, b, u0, v0)
+	]), frame, 2.5)
+	wall_quad(a, b, u0 - 0.012, u1 + 0.012, v0 - 0.035, v0, shade(th["wall_face"], 1.15))
+
+# ── A door that actually opens ────────────────────────────────
+# The old "doors" were flat blue rectangles with a 🚪 glyph stuck on top. This
+# one is a real leaf hinged in the wall plane: at 0 it lies flat in the wall, at
+# 1 it has swung into the room along the perpendicular isometric axis, so it
+# sweeps through the floor plane exactly like a door seen from this angle.
+var door_open: float = 0.0        # 0 = shut, 1 = fully open
+var door_target: float = 0.0
+var door_chime_played: bool = false
+
+const DOOR_U0: float = 0.70       # hinge position along the NE wall
+const DOOR_W: float = 0.155       # leaf width in wall-u units
+const DOOR_V: float = 0.62        # leaf height in wall-v units
+
+func update_door(delta: float) -> void:
+	# Open while anyone is walking in or out; shut again once they are seated.
+	var wants_open = false
+	for c in GameState.active_customers:
+		var st = c.get("state", "")
+		if st == "WALKING_IN" or st == "WALKING_TO_SEAT" or st == "LEAVING":
+			wants_open = true
+			break
+	door_target = 1.0 if wants_open else 0.0
+	var speed = 2.6 if door_target > door_open else 1.7
+	door_open = move_toward(door_open, door_target, delta * speed)
+	if door_open > 0.05 and not door_chime_played:
+		door_chime_played = true
+	elif door_open < 0.02:
+		door_chime_played = false
+
+func draw_wall_door(a: Vector2, b: Vector2, th: Dictionary) -> void:
+	var u0 = DOOR_U0
+	var u1 = DOOR_U0 + DOOR_W
+	var v1 = DOOR_V
+
+	# Opening: the dark corridor beyond, and a wedge of light on the floor when
+	# the door is open.
+	wall_quad(a, b, u0, u1, 0.0, v1, Color(0.05, 0.045, 0.06))
+	if door_open > 0.02:
+		var lip0 = wall_pt(a, b, u0, 0.0)
+		var lip1 = wall_pt(a, b, u1, 0.0)
+		var into = (perp_axis(a, b)) * (58.0 * door_open)
+		draw_colored_polygon(PackedVector2Array([lip0, lip1, lip1 + into, lip0 + into]),
+			Color(1.0, 0.88, 0.60, 0.13 * door_open))
+
+	# Frame
+	var frame = shade(th["door_col"], 0.62)
+	wall_quad(a, b, u0 - 0.018, u0, 0.0, v1 + 0.03, frame)
+	wall_quad(a, b, u1, u1 + 0.018, 0.0, v1 + 0.03, frame)
+	wall_quad(a, b, u0 - 0.018, u1 + 0.018, v1, v1 + 0.03, frame)
+
+	# The leaf. Hinged at u0; its free edge swings from along-the-wall to
+	# into-the-room as `door_open` goes 0 -> 1.
+	var hinge_bottom = wall_pt(a, b, u0, 0.0)
+	var hinge_top = wall_pt(a, b, u0, v1)
+	var along = wall_pt(a, b, u1, 0.0) - hinge_bottom
+	var leaf_len = along.length()
+	var swing = (PI * 0.46) * door_open
+	var dir = along.normalized() * cos(swing) + perp_axis(a, b) * sin(swing)
+	var free_bottom = hinge_bottom + dir * leaf_len
+	var free_top = free_bottom + (hinge_top - hinge_bottom)
+
+	var leaf_col = shade(th["door_col"], 1.0 - 0.28 * door_open)
+	draw_colored_polygon(PackedVector2Array([hinge_bottom, free_bottom, free_top, hinge_top]), leaf_col)
+	draw_polyline(PackedVector2Array([hinge_bottom, free_bottom, free_top, hinge_top, hinge_bottom]),
+		shade(leaf_col, 0.55), 1.8)
+	# recessed panel + glazed light in the leaf
+	var inset_b = hinge_bottom.lerp(free_bottom, 0.16)
+	var inset_f = hinge_bottom.lerp(free_bottom, 0.84)
+	var up = (hinge_top - hinge_bottom)
+	draw_colored_polygon(PackedVector2Array([
+		inset_b + up * 0.10, inset_f + up * 0.10, inset_f + up * 0.46, inset_b + up * 0.46
+	]), shade(leaf_col, 0.82))
+	draw_colored_polygon(PackedVector2Array([
+		inset_b + up * 0.56, inset_f + up * 0.56, inset_f + up * 0.88, inset_b + up * 0.88
+	]), Color(0.55, 0.78, 0.86, 0.5))
+	# handle on the free edge
+	draw_circle(hinge_bottom.lerp(free_bottom, 0.82) + up * 0.48, 2.6, Color(0.88, 0.82, 0.52))
+
+# The floor axis perpendicular to a wall, pointing into the room.
+func perp_axis(a: Vector2, b: Vector2) -> Vector2:
+	var d = (b - a).normalized()
+	# In a 2:1 projection the two floor axes are (±w/2, h/2); the perpendicular
+	# of one is the other with its x mirrored.
+	return Vector2(-d.x, d.y).normalized()
+
+# ══════════════════════════════════════════════════════════════
 # 🧍 CHARACTER SPRITES
 # The character art is full-body, roughly 1:2 tall, sitting inside a 1024²
 # canvas with 30-60% empty padding. It was being blitted as the whole square
@@ -2019,10 +2196,12 @@ const FLOOR_THEMES: Dictionary = {
 		"wall": Color(0.15, 0.12, 0.10),
 		"wall_line": Color(0.10, 0.08, 0.06),
 		"wall_hi": Color(0.24, 0.18, 0.14),
-		"floor": Color(0.22, 0.15, 0.10, 0.38),
+		"floor": Color(0.30, 0.21, 0.14, 0.92),
 		"floor_line": Color(0.12, 0.08, 0.05),
 		"grid": Color(0.55, 0.42, 0.30),
 		"panel": Color(0.12, 0.10, 0.08, 0.45),
+		"wall_face": Color(0.40, 0.30, 0.22),
+		"door_col": Color(0.55, 0.38, 0.24),
 		"style": "wood",
 		"lounge_name": "☕ 힐링 라운지 & 커피바 (Lounge)",
 		"bar_label": "☕ 에스프레소 & 로스팅 바",
@@ -2036,10 +2215,12 @@ const FLOOR_THEMES: Dictionary = {
 		"wall": Color(0.13, 0.09, 0.13),
 		"wall_line": Color(0.08, 0.05, 0.09),
 		"wall_hi": Color(0.32, 0.22, 0.30),
-		"floor": Color(0.20, 0.10, 0.14, 0.52),
+		"floor": Color(0.26, 0.14, 0.19, 0.92),
 		"floor_line": Color(0.12, 0.06, 0.09),
 		"grid": Color(0.66, 0.50, 0.62),
 		"panel": Color(0.14, 0.09, 0.14, 0.5),
+		"wall_face": Color(0.33, 0.20, 0.30),
+		"door_col": Color(0.46, 0.30, 0.42),
 		"style": "carpet",
 		"lounge_name": "🍵 티 라운지 & 북 큐레이션 (Tea)",
 		"bar_label": "🍵 핸드드립 & 티 스테이션",
@@ -2057,6 +2238,8 @@ const FLOOR_THEMES: Dictionary = {
 		"floor_line": Color(0.16, 0.10, 0.06),
 		"grid": Color(0.60, 0.54, 0.38),
 		"panel": Color(0.09, 0.13, 0.15, 0.45),
+		"wall_face": Color(0.26, 0.34, 0.38),
+		"door_col": Color(0.38, 0.48, 0.50),
 		"style": "deck",
 		"lounge_name": "🍹 루프탑 가든 바 (Rooftop Bar)",
 		"bar_label": "🍹 콜드브루 & 에이드 바",

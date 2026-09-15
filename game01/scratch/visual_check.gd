@@ -26,6 +26,14 @@ func _ready() -> void:
 	cafe.queue_redraw()
 	await _capture("res://scratch/check_normal.png")
 
+	# door shut vs door open
+	cafe.door_open = 0.0
+	cafe.queue_redraw()
+	await _capture("res://scratch/check_door_shut.png")
+	cafe.door_open = 1.0
+	cafe.queue_redraw()
+	await _capture("res://scratch/check_door_open.png")
+
 	GameState.is_decorating_mode = true
 	cafe.hover_cell = Vector2i(2, 2)
 	cafe.queue_redraw()
