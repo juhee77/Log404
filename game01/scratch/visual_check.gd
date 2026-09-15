@@ -13,8 +13,16 @@ func _ready() -> void:
 		get_tree().quit(1)
 		return
 
-	print("CafeView size = ", cafe.get_rect().size)
 	GameState.is_decorating_mode = false
+
+	# unlock every floor so all three can be captured
+	GameState.unlocked_floors = [1, 2, 3]
+	GameState.upgrades["open_seats"]["level"] = max(2, GameState.upgrades["open_seats"]["level"])
+	for fl in [1, 2, 3]:
+		GameState.current_floor = fl
+		cafe.queue_redraw()
+		await _capture("res://scratch/check_floor%d.png" % fl)
+	GameState.current_floor = 1
 	cafe.queue_redraw()
 	await _capture("res://scratch/check_normal.png")
 

@@ -5521,6 +5521,27 @@ func buy_floor(floor_num: int) -> bool:
 	save_game()
 	return true
 
+# ── 층별 좌석 배정 ────────────────────────────────────────────
+# 지금까지는 모든 층이 같은 좌석 목록을 그려서 1·2·3층이 완전히 같은 방으로
+# 보였다. 1층은 기본 좌석을 갖고, 해금된 위층이 6석씩 나눠 갖는다.
+const SEATS_PER_EXTRA_FLOOR: int = 6
+
+func get_ground_floor_capacity() -> int:
+	return max(4, upgrades["open_seats"]["level"] * 3 + upgrades["private_booths"]["level"] * 2)
+
+func get_seat_floor(index: int) -> int:
+	var ground = get_ground_floor_capacity()
+	if index < ground:
+		return 1
+	return 2 + int((index - ground) / SEATS_PER_EXTRA_FLOOR)
+
+func get_seats_on_floor(floor_num: int) -> Array:
+	var out: Array = []
+	for i in range(get_max_capacity()):
+		if get_seat_floor(i) == floor_num:
+			out.append(i)
+	return out
+
 func get_max_capacity() -> int:
 	var open = upgrades["open_seats"]["level"] * 3
 	var booth = upgrades["private_booths"]["level"] * 2
@@ -6086,8 +6107,14 @@ func get_base_seat_cell(index: int) -> Vector2i:
 func get_seat_cell(index: int) -> Vector2i:
 	return clamp_iso_cell(screen_to_iso(get_seat_position(index)))
 
-func get_seat_index_at_cell(cell: Vector2i, ignore_index: int = -1) -> int:
-	for i in range(get_max_capacity()):
+# Occupancy is per floor: a desk on 2F must not block the same tile on 1F.
+# Connectivity and the placement search both route through here, so they become
+# floor-aware for free.
+func get_seat_index_at_cell(cell: Vector2i, ignore_index: int = -1, floor_num: int = -1) -> int:
+	var fl = floor_num
+	if fl <= 0:
+		fl = get_seat_floor(ignore_index) if ignore_index >= 0 else current_floor
+	for i in get_seats_on_floor(fl):
 		if i == ignore_index:
 			continue
 		if get_seat_cell(i) == cell:
