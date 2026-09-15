@@ -199,6 +199,19 @@ func _gui_input(event: InputEvent) -> void:
 
 			# 0. Check Clean Top Right Control Buttons Click
 			var screen_click = event.position
+			if GameState.is_decorating_mode:
+				if decorate_reset_rect().has_point(screen_click):
+					var n = GameState.reset_seat_layout()
+					floating_texts.append({
+						"text": "↺ 책상 %d개를 기본 배치로 되돌렸습니다" % n,
+						"pos": Vector2(420, 480),
+						"alpha": 1.0,
+						"color": Color(1.0, 0.7, 0.5)
+					})
+					selected_drag_seat = -1
+					is_dragging = false
+					queue_redraw()
+					return
 			var btn_x = 706.0
 			var h_btn_rect = Rect2(btn_x, 50, 160, 36)
 			if h_btn_rect.has_point(screen_click):
@@ -363,12 +376,6 @@ func _draw() -> void:
 	# 3. Draw Full 2.5D Isometric Diamond Grid Pattern & Banner across Floor
 	draw_full_isometric_floor_grid(w, h)
 	
-	if GameState.is_decorating_mode:
-		var banner_rect = Rect2(60, 20, w - 120, 36)
-		draw_rect(banner_rect, Color(0.12, 0.1, 0.08, 0.95), true)
-		draw_rect(banner_rect, Color(0.96, 0.62, 0.07), false, 2.0)
-		draw_string(ThemeDB.fallback_font, Vector2(75, 43), "🔨 책상 자리 옮기기 모드: 책상을 클릭하여 잡은 후, 타일 격자에 맞춰 원하시는 위치로 재배치하세요!", HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color(0.96, 0.62, 0.07))
-		
 	# 4. Draw Custom Placed Furniture/Decorations
 	for dec in GameState.custom_decorations:
 		var d_pos = dec["pos"]
@@ -378,6 +385,22 @@ func _draw() -> void:
 	# 5. Draw Zone Based View Content
 	# 5. Draw Multi-Room Integrated Architectural Layout
 	draw_integrated_multi_room_layout(w, h)
+
+	# 5b. Decorating HUD, drawn LAST so the room panels cannot paint over it, and
+	# along the empty bottom of the study room so it clears the room banners.
+	if GameState.is_decorating_mode:
+		var banner_rect = Rect2(40, 508, 690, 34)
+		draw_rect(banner_rect, Color(0.12, 0.1, 0.08, 0.96), true)
+		draw_rect(banner_rect, Color(0.96, 0.62, 0.07), false, 2.0)
+		draw_string(ThemeDB.fallback_font, banner_rect.position + Vector2(14, 23),
+			"🔨 책상 옮기기: 책상을 클릭해 잡은 뒤, 원하는 칸을 클릭하거나 끌어서 놓으세요",
+			HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color(0.96, 0.62, 0.07))
+
+		var reset_rect = decorate_reset_rect()
+		draw_rect(reset_rect, Color(0.32, 0.14, 0.14, 0.96), true)
+		draw_rect(reset_rect, Color(0.95, 0.45, 0.35), false, 2.0)
+		draw_string(ThemeDB.fallback_font, reset_rect.position + Vector2(16, 23), "↺ 배치 초기화",
+			HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color(1.0, 0.8, 0.75))
 		
 	# 6. Draw Floating Action Texts
 	for ft in floating_texts:
@@ -2249,17 +2272,27 @@ func _prop_display_case(base: Vector2, s: float) -> void:
 func _prop_back_shelf(base: Vector2, s: float) -> void:
 	var hw = 32.0 * s
 	var hh = 16.0 * s
+	var height = 62.0 * s
 	draw_prop_shadow(base, hw * 0.8, hh * 0.8)
-	draw_iso_prism(base, hw, hh, 62.0 * s, Color(0.25, 0.18, 0.13), Color(0.33, 0.24, 0.18))
-	# Bean sacks, syrup bottles and stacked cups on three shelves.
+	draw_iso_prism(base, hw, hh, height, Color(0.25, 0.18, 0.13), Color(0.33, 0.24, 0.18))
+
+	# three bays: bean sacks, syrup bottles, stacked cups - drawn on the face so
+	# they stay inside the cabinet at any scale.
+	var goods = [Color(0.55, 0.35, 0.20), Color(0.85, 0.85, 0.82), Color(0.35, 0.55, 0.40),
+				 Color(0.72, 0.52, 0.30), Color(0.40, 0.46, 0.66)]
 	for lvl in range(3):
-		var y = -18.0 * s - lvl * 20.0 * s
-		draw_line(base + Vector2(-hw * 0.85, y + hh * 0.45), base + Vector2(hw * 0.85, y + hh * 0.45), Color(0.18, 0.13, 0.09), 1.5 * s)
-		for it in range(3):
-			var ix = (-18 + it * 17) * s
-			var iy = y + hh * 0.45 - (it - 1) * 3.0 * s
-			var col = [Color(0.55, 0.35, 0.20), Color(0.85, 0.85, 0.82), Color(0.35, 0.55, 0.40)][(lvl + it) % 3]
-			draw_iso_prism(base + Vector2(ix, iy), 5 * s, 2.6 * s, 11 * s, col)
+		var t0 = 0.08 + lvl * 0.30
+		var t1 = t0 + 0.24
+		draw_face_quad(base, hw, hh, height, 0.08, 0.92, t0, t1, Color(0.12, 0.08, 0.06))
+		for it in range(4):
+			var u0 = 0.12 + it * 0.19
+			var u1 = u0 + 0.15
+			var gh = 0.14 + float((it + lvl) % 3) * 0.025
+			var col = goods[(lvl * 2 + it) % goods.size()]
+			draw_face_quad(base, hw, hh, height, u0, u1, t0, t0 + gh, col)
+			draw_face_quad(base, hw, hh, height, u0 + 0.03, u1 - 0.03,
+				t0 + gh * 0.55, t0 + gh * 0.72, shade(col, 1.35))
+		draw_face_quad(base, hw, hh, height, 0.08, 0.92, t0 - 0.025, t0, Color(0.36, 0.26, 0.19))
 
 func _prop_stool(base: Vector2, s: float) -> void:
 	draw_prop_shadow(base, 10 * s, 5 * s)
@@ -2280,20 +2313,42 @@ func _prop_round_table(base: Vector2, s: float) -> void:
 		draw_iso_cylinder(cp, 8.0 * s, 4.0 * s, 16.0 * s, Color(0.32, 0.26, 0.22))
 		draw_iso_prism(cp + Vector2(0, -16 * s), 9 * s, 4.5 * s, 14 * s, Color(0.24, 0.24, 0.28))
 
+# Books live ON the cabinet face. They used to be drawn as tiny free-standing
+# prisms placed with floor-space offsets, so they floated in front of the shelf,
+# spilled past its outline and turned into 2px slivers at play scale.
 func _prop_bookshelf(base: Vector2, s: float) -> void:
 	var hw = 30.0 * s
 	var hh = 15.0 * s
+	var height = 74.0 * s
 	draw_prop_shadow(base, hw * 0.85, hh * 0.85)
-	draw_iso_prism(base, hw, hh, 74.0 * s, Color(0.27, 0.19, 0.14), Color(0.35, 0.25, 0.19))
-	for lvl in range(4):
-		var y = -14.0 * s - lvl * 18.0 * s
-		draw_line(base + Vector2(-hw * 0.86, y + hh * 0.46), base + Vector2(hw * 0.86, y + hh * 0.46), Color(0.17, 0.12, 0.09), 1.4 * s)
-		for bk in range(6):
-			var bx = (-21 + bk * 8) * s
-			var by = y + hh * 0.46 - (bk - 2) * 1.6 * s
-			var bc = [Color(0.70, 0.28, 0.24), Color(0.24, 0.42, 0.62), Color(0.72, 0.60, 0.28),
-					  Color(0.32, 0.52, 0.38), Color(0.56, 0.34, 0.60), Color(0.80, 0.76, 0.68)][bk]
-			draw_iso_prism(base + Vector2(bx, by), 2.4 * s, 1.3 * s, (10 + (bk % 3) * 3) * s, bc)
+	draw_iso_prism(base, hw, hh, height, Color(0.27, 0.19, 0.14), Color(0.35, 0.25, 0.19))
+
+	var spine = [Color(0.70, 0.28, 0.24), Color(0.24, 0.42, 0.62), Color(0.72, 0.60, 0.28),
+				 Color(0.32, 0.52, 0.38), Color(0.56, 0.34, 0.60), Color(0.80, 0.76, 0.68),
+				 Color(0.42, 0.34, 0.66), Color(0.76, 0.46, 0.26)]
+	var shelves = 4
+	for k in range(shelves):
+		var t0 = 0.05 + k * 0.235
+		var t1 = t0 + 0.20
+		# recessed bay
+		draw_face_quad(base, hw, hh, height, 0.07, 0.93, t0, t1, Color(0.13, 0.09, 0.07))
+		# books standing on the shelf, alternating heights and a leaning one
+		var n = 7
+		for bk in range(n):
+			var u0 = 0.10 + bk * 0.113
+			var u1 = u0 + 0.088
+			var bh = 0.125 + float((bk * 5 + k * 3) % 4) * 0.018
+			var col = spine[(bk + k * 3) % spine.size()]
+			draw_face_quad(base, hw, hh, height, u0, u1, t0, t0 + bh, col)
+			# a lighter band reads as the title strip on the spine
+			draw_face_quad(base, hw, hh, height, u0 + 0.018, u1 - 0.018,
+				t0 + bh * 0.62, t0 + bh * 0.74, shade(col, 1.45))
+		# shelf board edge
+		draw_face_quad(base, hw, hh, height, 0.07, 0.93, t0 - 0.022, t0, Color(0.38, 0.27, 0.19))
+
+	# side stile so the carcass frames the bays
+	draw_face_quad(base, hw, hh, height, 0.0, 0.07, 0.0, 1.0, Color(0.31, 0.22, 0.16))
+	draw_face_quad(base, hw, hh, height, 0.93, 1.0, 0.0, 1.0, Color(0.24, 0.17, 0.12))
 
 func _prop_plant(base: Vector2, s: float) -> void:
 	draw_prop_shadow(base, 14 * s, 7 * s)
@@ -2649,6 +2704,9 @@ func draw_lounge_bar() -> void:
 	for prop in order:
 		var pos = lounge_to_screen(prop["cell"]) + vo - Vector2(0, prop.get("lift", 0.0))
 		draw_prop(prop["kind"], pos, LOUNGE_SCALE)
+
+func decorate_reset_rect() -> Rect2:
+	return Rect2(742, 508, 150, 34)
 
 func get_desk_sprite_size(seat_index: int) -> Vector2:
 	var is_booth = seat_index >= GameState.upgrades["open_seats"]["level"] * 3

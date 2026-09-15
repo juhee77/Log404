@@ -6211,6 +6211,17 @@ func place_seat_at_cell(index: int, cell: Vector2i) -> Dictionary:
 		"msg": msg
 	}
 
+# Puts every desk back on its default cell. Needed because a layout can end up
+# unusable - desks piled into one column with half the floor empty - and until
+# now there was no way back short of deleting the save.
+func reset_seat_layout() -> int:
+	var moved = seat_custom_offsets.size()
+	seat_custom_offsets.clear()
+	seat_custom_positions.clear()
+	save_game()
+	_play_sfx_safe("chime")
+	return moved
+
 func place_seat_at_world(index: int, world_pos: Vector2) -> Dictionary:
 	return place_seat_at_cell(index, screen_to_iso(world_pos))
 
