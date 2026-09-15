@@ -5688,7 +5688,19 @@ func generate_random_review() -> void:
 	var text = sample_reviews[randi() % sample_reviews.size()]
 	add_review(text, 5.0, "열공중인 손님")
 
+# Where the player's progress lives. The test suite builds throwaway GameState
+# instances with `.new()`, and because those still ran the normal save path they
+# used to overwrite the real save file - a full test run left the player with
+# every upgrade purchased. Only the live autoload (the instance actually inside
+# the scene tree) is allowed to write.
+var save_path: String = "user://study_cafe_tycoon_save.json"
+
+func can_persist() -> bool:
+	return is_inside_tree()
+
 func save_game() -> void:
+	if not can_persist():
+		return
 	var data = {
 		"money": money,
 		"total_earnings": total_earnings,
@@ -5696,8 +5708,14 @@ func save_game() -> void:
 		"day_count": day_count,
 		"temperature": temperature,
 		"upgrades": {},
-		"seat_cells": {}
+		"seat_cells": {},
+		"current_quest_index": current_quest_index,
+		"lifetime_visitors": lifetime_visitors,
+		"quest_progress": {}
 	}
+	# Story progress: without this a restart dropped the player back to quest 1.
+	for q in quests_data:
+		data["quest_progress"][str(q["id"])] = q["current"]
 	for key in upgrades:
 		data["upgrades"][key] = upgrades[key]["level"]
 	# Persist the isometric desk layout - previously every placement was lost on reload.
@@ -5705,14 +5723,14 @@ func save_game() -> void:
 		var cell = get_seat_cell(int(seat_idx))
 		data["seat_cells"][str(seat_idx)] = [cell.x, cell.y]
 		
-	var file = FileAccess.open("user://study_cafe_tycoon_save.json", FileAccess.WRITE)
+	var file = FileAccess.open(save_path, FileAccess.WRITE)
 	if file:
 		file.store_string(JSON.stringify(data))
 
 func load_game() -> void:
-	if not FileAccess.file_exists("user://study_cafe_tycoon_save.json"):
+	if not FileAccess.file_exists(save_path):
 		return
-	var file = FileAccess.open("user://study_cafe_tycoon_save.json", FileAccess.READ)
+	var file = FileAccess.open(save_path, FileAccess.READ)
 	if not file: return
 	
 	var json_text = file.get_as_text()
@@ -5738,6 +5756,14 @@ func load_game() -> void:
 				var idx = int(seat_key)
 				var cell = clamp_iso_cell(Vector2i(int(raw_cell[0]), int(raw_cell[1])))
 				seat_custom_offsets[idx] = iso_to_screen(cell) - get_base_seat_position(idx)
+
+		current_quest_index = data.get("current_quest_index", 1)
+		lifetime_visitors = data.get("lifetime_visitors", 0)
+		var saved_quests = data.get("quest_progress", {})
+		for q in quests_data:
+			var key = str(q["id"])
+			if saved_quests.has(key):
+				q["current"] = min(q["target"], saved_quests[key])
 
 func format_money(val: float) -> String:
 	var n = int(val)
