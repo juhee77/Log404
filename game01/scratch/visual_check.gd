@@ -26,6 +26,18 @@ func _ready() -> void:
 	cafe.queue_redraw()
 	await _capture("res://scratch/check_normal.png")
 
+	# story beat card
+	cafe._on_story_beat({
+		"kind": "act",
+		"title": "🏢 3막 — 길 건너 포커스존",
+		"body": "길 건너에 24시간 프랜차이즈 「포커스존」이 열렸다. 통유리, 대형 간판, 첫 달 반값.\n단골 자리가 하루가 다르게 비어간다. 민서가 물었다. — \"우리는 뭐가 달라요?\"",
+		"speaker": "🏢 강 팀장 — \"길 건너에 저희가 들어옵니다.\""
+	})
+	cafe.story_card_t = 2.0
+	cafe.queue_redraw()
+	await _capture("res://scratch/check_story.png")
+	cafe.story_card = {}
+
 	# door shut vs door open
 	cafe.door_open = 0.0
 	cafe.queue_redraw()

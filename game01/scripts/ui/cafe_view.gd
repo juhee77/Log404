@@ -51,6 +51,7 @@ func _ready() -> void:
 	# Controls do not clip by default, so the room's wall peak was drawing up
 	# over the floor-tab bar above this view.
 	clip_contents = true
+	GameState.story_beat.connect(_on_story_beat)
 	
 	bg_texture = load_tex_safe("res://assets/cafe_bg.png")
 	coffee_bar_texture = load_tex_safe("res://assets/coffee_bar.png")
@@ -82,6 +83,9 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	update_door(delta)
+	update_story_card(delta)
+	if not story_card.is_empty():
+		queue_redraw()
 	steam_time += delta
 	if GameState != null and GameState.has_method("update_navi_wandering"):
 		GameState.update_navi_wandering(delta)
@@ -396,7 +400,10 @@ func _draw() -> void:
 		draw_string(ThemeDB.fallback_font, reset_rect.position + Vector2(16, 23), "↺ 배치 초기화",
 			HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color(1.0, 0.8, 0.75))
 		
-	# 6. Draw Floating Action Texts
+	# 6. Story beat card, over the whole cafe
+	draw_story_card(w, h)
+
+	# 7. Draw Floating Action Texts
 	for ft in floating_texts:
 		var c = ft["color"]
 		c.a = ft["alpha"]
@@ -453,10 +460,10 @@ func draw_integrated_multi_room_layout(w: float, h: float) -> void:
 	# ── Partition walls between the three zones, with doorways ──
 	# study | lounge+front  (runs along the x = 5|6 boundary)
 	var div1 = rect_corners(6, 0, 6, GameState.FLOOR_ROWS - 1)
-	draw_partition(div1["T"] + vo, div1["L"] + vo, th2, 54.0, 0.44, 0.62)
+	draw_partition(div1["T"] + vo, div1["L"] + vo, th2, 68.0, 0.44, 0.62)
 	# lounge | front  (runs along the y = 3|4 boundary)
 	var div2 = rect_corners(6, 4, GameState.FLOOR_COLS - 1, 4)
-	draw_partition(div2["T"] + vo, div2["R"] + vo, th2, 50.0, 0.28, 0.50)
+	draw_partition(div2["T"] + vo, div2["R"] + vo, th2, 62.0, 0.28, 0.50)
 
 	# ── Zone names as flat floor decals, so nothing sits in front of furniture ──
 	for z in ZONES:
@@ -623,18 +630,7 @@ func draw_integrated_multi_room_layout(w: float, h: float) -> void:
 			draw_rect(v_bridge, border_color * Color(1,1,1,0.5), false, 1.0)
 
 		# 1. Render Each Seat with its Original 2.5D Desk Art Asset (Clean Grid Order, No Image Swapping!)
-		var drawn_tex = false
-		var tex_draw_rect = Rect2(seat_pos.x, seat_pos.y, cell_w, cell_h)
-		
-		if is_booth and desk_booth_texture != null:
-			draw_texture_rect(desk_booth_texture, tex_draw_rect, false, Color(1, 1, 1, 0.98))
-			drawn_tex = true
-		elif not is_booth and desk_vip_texture != null and i % 2 == 1:
-			draw_texture_rect(desk_vip_texture, tex_draw_rect, false, Color(1, 1, 1, 0.98))
-			drawn_tex = true
-		elif not is_booth and desk_open_texture != null:
-			draw_texture_rect(desk_open_texture, tex_draw_rect, false, Color(1, 1, 1, 0.98))
-			drawn_tex = true
+		var drawn_tex = draw_desk_art(i, is_booth, tile_center, sprite_size.y)
 
 		if not drawn_tex:
 			# High-Quality 2.5D Vector Fallback with 3D Bevel Depth
@@ -1924,6 +1920,69 @@ func spawn_floating_text(pos: Vector2, text: String, color: Color = Color.WHITE)
 # The desk art is square 1024x1024 isometric pixel art, so it is drawn into a
 # square rect - the old non-square rect stretched every desk out of proportion.
 # 1.2 x tile width makes the furniture's own footprint cover roughly one tile.
+# ── Story beat card ───────────────────────────────────────────
+# An act change used to pass in total silence - the header inside the quest
+# panel changed and nothing else. Now the beat is staged over the cafe: the
+# room dims, a card fades in with the act title, its opening lines and the
+# person who walks through the door, then it fades back out.
+var story_card: Dictionary = {}
+var story_card_t: float = 0.0
+
+func _on_story_beat(beat: Dictionary) -> void:
+	story_card = beat
+	story_card_t = 0.0
+	if SoundManager and SoundManager.has_method("play_chime_sfx"):
+		SoundManager.play_chime_sfx()
+
+func update_story_card(delta: float) -> void:
+	if story_card.is_empty():
+		return
+	story_card_t += delta
+	if story_card_t > 9.0:
+		story_card = {}
+
+func story_card_alpha() -> float:
+	if story_card.is_empty():
+		return 0.0
+	if story_card_t < 0.6:
+		return story_card_t / 0.6
+	if story_card_t > 8.0:
+		return max(0.0, (9.0 - story_card_t) / 1.0)
+	return 1.0
+
+func draw_story_card(w: float, h: float) -> void:
+	if story_card.is_empty():
+		return
+	var a = story_card_alpha()
+	if a <= 0.01:
+		return
+	var th = theme()
+
+	# dim the cafe behind the card
+	draw_rect(Rect2(0, 0, w, h), Color(0.02, 0.02, 0.03, 0.62 * a), true)
+
+	var cw = 560.0
+	var ch = 190.0
+	var card = Rect2((w - cw) * 0.5, (h - ch) * 0.5 - 20.0, cw, ch)
+	draw_rect(card, Color(0.09, 0.08, 0.07, 0.97 * a), true)
+	draw_rect(card, Color(th["accent"], 0.85 * a), false, 2.0)
+	# a warm bar down the hinge side, like light under a door
+	draw_rect(Rect2(card.position.x, card.position.y, 4, ch), Color(th["accent"], 0.9 * a), true)
+
+	draw_string(ThemeDB.fallback_font, card.position + Vector2(22, 36), story_card["title"],
+		HORIZONTAL_ALIGNMENT_LEFT, cw - 44, 17, Color(th["accent"], a))
+
+	var y = 66.0
+	for line in String(story_card["body"]).split("\n"):
+		draw_string(ThemeDB.fallback_font, card.position + Vector2(22, y), line,
+			HORIZONTAL_ALIGNMENT_LEFT, cw - 44, 12, Color(0.84, 0.82, 0.78, a))
+		y += 19.0
+
+	var speaker = String(story_card.get("speaker", ""))
+	if speaker != "":
+		draw_string(ThemeDB.fallback_font, card.position + Vector2(22, ch - 20), speaker,
+			HORIZONTAL_ALIGNMENT_LEFT, cw - 44, 12, Color(0.98, 0.78, 0.42, a))
+
 # ══════════════════════════════════════════════════════════════
 # 🗺️ FLOOR PLAN
 # One continuous isometric floor. The lounge and the front desk used to be flat
@@ -1998,7 +2057,7 @@ func draw_floor_plan(th: Dictionary) -> void:
 # doorway left open in it.
 func draw_partition(a: Vector2, b: Vector2, th: Dictionary, height: float,
 		gap0: float = -1.0, gap1: float = -1.0) -> void:
-	var col = shade(th["wall_face"], 0.86)
+	var col = shade(th["wall_face"], 1.05)
 	var segs: Array = []
 	if gap0 < 0.0:
 		segs.append([0.0, 1.0])
@@ -2205,6 +2264,17 @@ func perp_axis(a: Vector2, b: Vector2) -> Vector2:
 # measured opaque bounds of each file; the sprite is drawn from that region at
 # its true aspect and anchored at the feet.
 # ══════════════════════════════════════════════════════════════
+
+# Desk art has the same defect the characters had: pieces inside a 1024² canvas
+# blitted as the whole square into a square rect. Their real content ranges from
+# 0.79 (tall booth) to 1.37 (wide island), so the booth was squashed and the
+# island stretched. Measured opaque bounds:
+const DESK_CONTENT: Dictionary = {
+	"open":   Rect2(102, 107, 856, 841),
+	"vip":    Rect2(117, 72, 802, 878),
+	"booth":  Rect2(128, 30, 768, 967),
+	"island": Rect2(53, 222, 918, 669)
+}
 
 const CHAR_CONTENT: Dictionary = {
 	"customer_student":   Rect2(317, 65, 399, 922),
@@ -2814,6 +2884,35 @@ func _prop_patio_heater(base: Vector2, s: float) -> void:
 	]), Color(0.42, 0.44, 0.47))
 	fill_ellipse(base + Vector2(0, -80 * s), 26 * s, 12 * s, Color(1.0, 0.55, 0.22, 0.16))
 
+# An outdoor terrace table: the rooftop was showing indoor partition booths,
+# which made no sense on an open-air deck. Drawn procedurally rather than from
+# the indoor desk art.
+func draw_terrace_table(tile_center: Vector2, s: float, seat_index: int) -> void:
+	draw_prop_shadow(tile_center, 30 * s, 15 * s)
+	# slatted round table top on a cross base
+	draw_iso_cylinder(tile_center, 5.0 * s, 2.6 * s, 26.0 * s, Color(0.30, 0.24, 0.19))
+	var top = tile_center + Vector2(0, -26 * s)
+	draw_iso_cylinder(top, 26.0 * s, 13.0 * s, 4.5 * s, Color(0.52, 0.37, 0.25))
+	for sl in range(4):
+		var off = (-16 + sl * 10.5) * s
+		draw_line(top + Vector2(off, -9 * s), top + Vector2(off, 9 * s), Color(0.38, 0.27, 0.18, 0.7), 1.4 * s)
+
+	# laptop and a cold drink actually on the table
+	draw_colored_polygon(PackedVector2Array([
+		top + Vector2(-13 * s, -7 * s), top + Vector2(1 * s, -1 * s),
+		top + Vector2(1 * s, -16 * s), top + Vector2(-13 * s, -22 * s)
+	]), Color(0.72, 0.78, 0.84))
+	draw_iso_prism(top + Vector2(-6 * s, 3 * s), 9 * s, 4.5 * s, 2 * s, Color(0.26, 0.27, 0.30))
+	draw_iso_cylinder(top + Vector2(13 * s, 2 * s), 3.6 * s, 1.9 * s, 10 * s, Color(0.66, 0.84, 0.72, 0.9))
+
+	# two woven chairs, and a parasol on every other table
+	for side in [-1.0, 1.0]:
+		var cp = tile_center + Vector2(31 * s * side, 15 * s * side)
+		draw_iso_cylinder(cp, 9.0 * s, 4.5 * s, 15.0 * s, Color(0.44, 0.34, 0.24))
+		draw_iso_prism(cp + Vector2(0, -15 * s), 10 * s, 5 * s, 15 * s, Color(0.36, 0.30, 0.24))
+	if seat_index % 2 == 0:
+		draw_prop("parasol", tile_center + Vector2(0, -2 * s), s * 0.62)
+
 # ── Where the fixtures stand ──────────────────────────────────
 # Study-room props sit on cells just OUTSIDE the placeable 6x4 grid, so they
 # dress the walls without ever stealing a tile the player wants for a desk.
@@ -2934,6 +3033,42 @@ func draw_lounge_bar() -> void:
 func decorate_reset_rect() -> Rect2:
 	return Rect2(742, 508, 150, 34)
 
+# Four desk variants instead of two - desk_island_2p.png was being loaded and
+# then never drawn. The variant is stable per seat so a desk keeps its shape
+# when the player moves it.
+func desk_variant(seat_index: int, is_booth: bool) -> String:
+	if is_booth:
+		return "booth"
+	match seat_index % 3:
+		0: return "open"
+		1: return "vip"
+	return "island"
+
+func desk_texture_for(key: String) -> Texture2D:
+	match key:
+		"booth": return desk_booth_texture
+		"vip": return desk_vip_texture
+		"island": return desk_island_texture
+	return desk_open_texture
+
+# Draws a desk from its content region, at the art's own aspect, standing on the
+# centre of its isometric tile.
+func draw_desk_art(seat_index: int, is_booth: bool, tile_center: Vector2, target_h: float) -> bool:
+	# The rooftop gets terrace furniture, not indoor partition booths.
+	if GameState.current_floor == 3:
+		draw_terrace_table(tile_center, target_h / 96.0, seat_index)
+		return true
+	var key = desk_variant(seat_index, is_booth)
+	var tex = desk_texture_for(key)
+	if tex == null:
+		return false
+	var src: Rect2 = DESK_CONTENT[key]
+	var size = Vector2(target_h * (src.size.x / src.size.y), target_h)
+	var bottom = tile_center.y + GameState.ISO_TILE_HEIGHT * 0.5 + target_h * 0.06
+	draw_texture_rect_region(tex, Rect2(Vector2(tile_center.x - size.x * 0.5, bottom - size.y), size),
+		src, Color(1, 1, 1, 0.98))
+	return true
+
 func get_desk_sprite_size(seat_index: int) -> Vector2:
 	var is_booth = seat_index >= GameState.upgrades["open_seats"]["level"] * 3
 	var side = GameState.ISO_TILE_WIDTH * (1.18 if is_booth else 1.05)
@@ -2944,8 +3079,14 @@ func get_desk_sprite_size(seat_index: int) -> Vector2:
 # accounts for the transparent padding under the furniture in the source art.
 func get_desk_rect(seat_index: int) -> Rect2:
 	var tile_center = GameState.get_seat_position(seat_index)
-	var size = get_desk_sprite_size(seat_index)
-	var bottom_y = tile_center.y + GameState.ISO_TILE_HEIGHT * 0.5 + size.y * 0.09
+	if GameState.current_floor == 3:
+		var r = GameState.ISO_TILE_WIDTH * 0.62
+		return Rect2(tile_center - Vector2(r, r * 0.9), Vector2(r * 2.0, r * 1.5))
+	var is_booth = seat_index >= GameState.upgrades["open_seats"]["level"] * 3
+	var target_h = get_desk_sprite_size(seat_index).y
+	var src: Rect2 = DESK_CONTENT[desk_variant(seat_index, is_booth)]
+	var size = Vector2(target_h * (src.size.x / src.size.y), target_h)
+	var bottom_y = tile_center.y + GameState.ISO_TILE_HEIGHT * 0.5 + target_h * 0.06
 	return Rect2(Vector2(tile_center.x - size.x * 0.5, bottom_y - size.y), size)
 
 # Back-to-front painter's order for the isometric view: tiles further along the

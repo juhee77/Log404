@@ -65,6 +65,7 @@ signal beans_changed(new_amount)
 signal roaster_updated(index, data)
 signal oven_updated(index, data)
 signal quest_updated(quest_info)
+signal story_beat(beat)          # 막 전환 등 서사 장면
 signal intimacy_changed(guest_name, level, xp)
 
 # 1. Bean Economy & Roasting Machines
@@ -325,8 +326,36 @@ func get_quest_stat(stat_name: String) -> float:
 func _award_quest(q: Dictionary) -> void:
 	add_money(q["reward_money"])
 	add_manager_xp(q["reward_xp"])
+	var finished_act = q.get("act", 1)
 	current_quest_index += 1
 	_play_sfx_safe("chime")
+
+	# 막이 넘어가면 장면을 띄운다. 예전에는 퀘스트 패널을 직접 열지 않는 한
+	# 이야기가 진행된 줄도 몰랐다.
+	var nxt = get_current_quest()
+	if nxt.is_empty():
+		story_beat.emit({
+			"kind": "ending",
+			"title": "🕯️ 「등대 독서실」 완결",
+			"body": "시험이 끝난 날, 한 아이가 문을 열고 들어와 말했다.\n\"여기 불 켜져 있어서 버텼어요.\"\n등대는, 원래 그런 일을 하는 곳이다.",
+			"speaker": ""
+		})
+	elif nxt.get("act", 1) != finished_act:
+		var act = get_act_info(nxt["act"])
+		story_beat.emit({
+			"kind": "act",
+			"title": act.get("title", ""),
+			"body": act.get("intro", ""),
+			"speaker": ACT_SPEAKERS.get(nxt["act"], "")
+		})
+
+# 막마다 문을 여는 사람
+const ACT_SPEAKERS: Dictionary = {
+	2: "☕ 민서 — \"여기 로스터, 아직 쓰세요?\"",
+	3: "🏢 강 팀장 — \"길 건너에 저희가 들어옵니다.\"",
+	4: "🔑 민서 — \"2층, 열어볼까요?\"",
+	5: "🌇 수험생 손님 — \"옥상 올라가도 돼요?\""
+}
 
 # Stat quests track a running total, so they can complete without the player
 # performing any particular action. Called from _process.
