@@ -5218,10 +5218,18 @@ var upgrades: Dictionary = {
 }
 
 const CUSTOMER_TYPES = [
-	{ "type": "student", "name": "고등학생 수험생", "color": Color(0.3, 0.7, 1.0), "pay_rate": 1.0, "icon": "🎓" },
-	{ "type": "examinee", "name": "공시생", "color": Color(1.0, 0.6, 0.2), "pay_rate": 1.4, "icon": "📚" },
-	{ "type": "developer", "name": "프리랜서 개발자", "color": Color(0.2, 0.9, 0.5), "pay_rate": 1.8, "icon": "💻" },
-	{ "type": "worker", "name": "재택 직장인", "color": Color(0.8, 0.4, 0.9), "pay_rate": 1.6, "icon": "☕" }
+	{ "type": "student", "name": "고등학생 수험생", "color": Color(0.3, 0.7, 1.0), "pay_rate": 1.0, "icon": "🎓", "sprite": "student" },
+	{ "type": "examinee", "name": "공시생", "color": Color(1.0, 0.6, 0.2), "pay_rate": 1.4, "icon": "📚", "sprite": "student" },
+	{ "type": "developer", "name": "프리랜서 개발자", "color": Color(0.2, 0.9, 0.5), "pay_rate": 1.8, "icon": "💻", "sprite": "developer" },
+	{ "type": "worker", "name": "재택 직장인", "color": Color(0.8, 0.4, 0.9), "pay_rate": 1.6, "icon": "☕", "sprite": "developer" }
+]
+
+# 스토리에 이름이 나오는 단골들. 지금까지 guest_intimacy 안에 데이터로만
+# 존재하고 실제 손님으로는 한 번도 등장하지 않았다.
+const REGULARS = [
+	{ "key": "su_hyun",  "name": "수현",  "type": "student",   "tag": "📖 단골" },
+	{ "key": "min_jun",  "name": "민준",  "type": "examinee",  "tag": "📚 단골" },
+	{ "key": "hyun_woo", "name": "현우",  "type": "developer", "tag": "💻 단골" }
 ]
 
 var active_customers: Array = []
@@ -5468,13 +5476,27 @@ func spawn_customer() -> void:
 	
 	lifetime_visitors += 1
 	var template = CUSTOMER_TYPES[randi() % CUSTOMER_TYPES.size()]
+	var regular_key = ""
+	var display_name = template["name"]
+	# 평판이 높을수록 단골이 다시 올 확률이 오른다
+	var regular_chance = 0.18 + (reputation - 4.0) * 0.14
+	if randf() < clampf(regular_chance, 0.0, 0.55):
+		var reg = REGULARS[randi() % REGULARS.size()]
+		for t in CUSTOMER_TYPES:
+			if t["type"] == reg["type"]:
+				template = t
+				break
+		regular_key = reg["key"]
+		display_name = reg["name"]
 	var cid = randi()
 	var entrance_pos = iso_to_screen(ENTRANCE_CELL)
 	var seat_target = get_seat_position(free_seat)
 	
 	var customer = {
 		"id": cid,
-		"name": template["name"],
+		"name": display_name,
+		"regular_key": regular_key,
+		"variant": randi() % 4,
 		"type": template["type"],
 		"color": template["color"],
 		"pay_rate": template["pay_rate"],
@@ -5497,6 +5519,9 @@ func spawn_customer() -> void:
 		villain_appeared.emit(cid, v_type)
 
 func finish_customer(c: Dictionary) -> void:
+	var rkey = c.get("regular_key", "")
+	if rkey != "" and guest_intimacy.has(rkey):
+		add_guest_intimacy(rkey, 12)
 	var bonus_tip = c["pay_rate"] * (80.0 + upgrades["coffee_bar"]["level"] * 40.0)
 	add_money(bonus_tip)
 	daily_seat_rev += bonus_tip

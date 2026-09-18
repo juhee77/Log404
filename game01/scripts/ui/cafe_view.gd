@@ -731,15 +731,30 @@ func draw_integrated_multi_room_layout(w: float, h: float) -> void:
 		var draw_pos = raw_pos + view_offset
 		var c_type = c["type"]
 		
-		# Render high-res 2D PNG Character Sprites
+		# Sprite per type. "examinee" and "worker" used to silently fall back to
+		# the student sprite with nothing to tell them apart; each type now gets
+		# its own tint, and each customer a small stable variation so two of the
+		# same type are not identical.
+		var sprite_key = "customer_student"
 		var char_tex = student_texture
-		if c_type == "developer":
-			char_tex = developer_texture if developer_texture else student_texture
-			
+		for t in GameState.CUSTOMER_TYPES:
+			if t["type"] == c_type and t["sprite"] == "developer":
+				char_tex = developer_texture if developer_texture else student_texture
+				sprite_key = "customer_developer" if developer_texture else "customer_student"
+				break
+
 		if char_tex != null:
+			var tint = Color.WHITE.lerp(c["color"], 0.22)
+			var v = int(c.get("variant", 0))
+			tint = tint.lerp(Color(1.0, 1.0, 1.0), 0.06 * float(v))
+			tint.v = clampf(tint.v * (0.92 + 0.05 * float(v)), 0.0, 1.0)
 			draw_character_shadow(draw_pos, 34.0)
-			draw_character(char_tex, "customer_developer" if c_type == "developer" else "customer_student",
-				draw_pos, 62.0)
+			var body = draw_character(char_tex, sprite_key, draw_pos, 62.0, tint)
+			# regulars carry a name tag, so the player recognises who came back
+			if String(c.get("regular_key", "")) != "":
+				var tag = "⭐ %s" % c["name"]
+				draw_string(ThemeDB.fallback_font, Vector2(draw_pos.x - 40, body.position.y - 6), tag,
+					HORIZONTAL_ALIGNMENT_CENTER, 80, 11, Color(1.0, 0.82, 0.42))
 		else:
 			# Fallback vector character drawing
 			var body_rect = Rect2(draw_pos.x - 14, draw_pos.y - 30, 28, 30)
@@ -763,9 +778,13 @@ func draw_integrated_multi_room_layout(w: float, h: float) -> void:
 			draw_rect(bar_rect, Color(0.1, 0.1, 0.1), true)
 			draw_rect(Rect2(bar_rect.position.x, bar_rect.position.y, bar_rect.size.x * p_ratio, 5), Color(0.1, 0.8, 0.4), true)
 			
-			# Render 2.5D Weather Dynamic Reaction Speech Bubbles above head
+			# Weather chatter, but only from a few customers at a time - one
+			# bubble per occupied seat turned the room into a wall of text.
 			var w_type = GameState.current_weather_type
-			if w_type == "rainy":
+			var chatty = (int(c["id"]) % 5 == 0)
+			if not chatty:
+				pass
+			elif w_type == "rainy":
 				draw_string(ThemeDB.fallback_font, draw_pos + Vector2(-35, -65), "🌧️ 빗소리 아늑하다 ☕", HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.7, 0.85, 1.0))
 			elif w_type == "snowy":
 				draw_string(ThemeDB.fallback_font, draw_pos + Vector2(-35, -65), "❄️ 눈 오니 라떼 최고!", HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.9, 0.95, 1.0))
@@ -778,12 +797,6 @@ func draw_integrated_multi_room_layout(w: float, h: float) -> void:
 			if GameState.student_mentoring_records.has(c["id"]):
 				var m_rec = GameState.student_mentoring_records[c["id"]]
 				draw_string(ThemeDB.fallback_font, draw_pos + Vector2(-45, -82), "🎓 1:1 멘토링: %s" % m_rec["rank_title"], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(1.0, 0.8, 0.2))
-			
-			# Render active study action item asset on student desk
-			if c_type == "developer" and action_laptop_texture != null:
-				draw_texture_rect(action_laptop_texture, Rect2(draw_pos.x + 12, draw_pos.y - 20, 28, 28), false)
-			elif action_book_texture != null:
-				draw_texture_rect(action_book_texture, Rect2(draw_pos.x + 12, draw_pos.y - 20, 28, 28), false)
 			
 			var cid = c["id"]
 			if GameState.active_orders.has(cid):
@@ -2184,6 +2197,8 @@ const DOOR_W: float = 0.155       # leaf width in wall-u units
 const DOOR_V: float = 0.62        # leaf height in wall-v units
 
 func update_door(delta: float) -> void:
+	if GameState == null or GameState.active_customers == null:
+		return
 	# Open while anyone is walking in or out; shut again once they are seated.
 	var wants_open = false
 	for c in GameState.active_customers:

@@ -4,6 +4,7 @@ extends Node
 func _ready() -> void:
 	var main = load("res://scenes/main_scene.tscn").instantiate()
 	add_child(main)
+	var GameState = get_node("/root/GameState")
 	for i in range(30):
 		await get_tree().process_frame
 
@@ -23,8 +24,18 @@ func _ready() -> void:
 		cafe.queue_redraw()
 		await _capture("res://scratch/check_floor%d.png" % fl)
 	GameState.current_floor = 1
+
+	# seat some customers so the character rendering can be checked
+	GameState.reputation = 4.9
+	for i in range(6):
+		GameState.spawn_customer()
+	for c in GameState.active_customers:
+		c["state"] = "STUDYING"
+		c["pos"] = GameState.get_seat_position(c["seat_index"])
+		c["study_time"] = 3.0
 	cafe.queue_redraw()
 	await _capture("res://scratch/check_normal.png")
+	await _capture("res://scratch/check_customers.png")
 
 	# story beat card
 	cafe._on_story_beat({
