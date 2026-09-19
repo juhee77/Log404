@@ -145,7 +145,9 @@ func refresh_cards() -> void:
 		container_list.add_child(cat_lbl)
 		
 		var grid = GridContainer.new()
-		grid.columns = 2
+		# One column: at two columns each card's toggle button ran past the
+		# panel's right edge and was clipped.
+		grid.columns = 1
 		grid.add_theme_constant_override("h_separation", 12)
 		grid.add_theme_constant_override("v_separation", 10)
 		grid.size_flags_horizontal = Control.SIZE_EXPAND_FILL

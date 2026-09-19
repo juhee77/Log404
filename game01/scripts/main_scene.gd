@@ -28,6 +28,33 @@ var expansion_panel: PanelContainer
 var desk_shop_panel: PanelContainer
 var tech_systems_panel: PanelContainer
 
+# Overlay panels were positioned with PRESET_CENTER + PRESET_MODE_MINSIZE.
+# That mode measures the control's minimum size at the moment of the call - but
+# the panel is not in the tree yet and its _ready has not built any children, so
+# the minimum is zero and every panel got zero offsets: its TOP-LEFT corner
+# landed on the centre of the screen and the rest hung off the right and bottom
+# edge. Pin explicit symmetric offsets instead, clamped to the viewport.
+# Most overlays had no stylebox, so they rendered as floating text with the
+# cafe fully visible behind them.
+func style_overlay(p: Control) -> void:
+	var sb = StyleBoxFlat.new()
+	sb.bg_color = Color(0.085, 0.078, 0.07, 0.98)
+	sb.border_color = Color(0.96, 0.62, 0.07, 0.75)
+	sb.set_border_width_all(2)
+	sb.set_corner_radius_all(8)
+	sb.set_content_margin_all(6)
+	p.add_theme_stylebox_override("panel", sb)
+
+func center_overlay(p: Control, w: float, h: float) -> void:
+	var vp = get_viewport_rect().size
+	var cw = minf(w, vp.x - 60.0)
+	var ch = minf(h, vp.y - 90.0)
+	p.set_anchors_preset(Control.PRESET_CENTER)
+	p.offset_left = -cw * 0.5
+	p.offset_right = cw * 0.5
+	p.offset_top = -ch * 0.5
+	p.offset_bottom = ch * 0.5
+
 func _ready() -> void:
 	hide_all_overlays()
 	var report_overlay = get_node_or_null("DailyReportPanelOverlay")
@@ -44,9 +71,10 @@ func _ready() -> void:
 		desk_shop_panel = PanelContainer.new()
 		desk_shop_panel.set_script(ds_script)
 		desk_shop_panel.custom_minimum_size = Vector2(660, 460)
-		desk_shop_panel.set_anchors_and_offsets_preset(Control.PRESET_CENTER, Control.PRESET_MODE_MINSIZE)
+		center_overlay(desk_shop_panel, 660.0, 460.0)
 		desk_shop_panel.hide()
 		add_child(desk_shop_panel)
+		style_overlay(desk_shop_panel)
 
 	# Dynamically add Leaderboard Overlay
 	var lb_script = load("res://scripts/ui/leaderboard_panel.gd")
@@ -54,9 +82,10 @@ func _ready() -> void:
 		leaderboard_panel = PanelContainer.new()
 		leaderboard_panel.set_script(lb_script)
 		leaderboard_panel.custom_minimum_size = Vector2(660, 460)
-		leaderboard_panel.set_anchors_and_offsets_preset(Control.PRESET_CENTER, Control.PRESET_MODE_MINSIZE)
+		center_overlay(leaderboard_panel, 660.0, 460.0)
 		leaderboard_panel.hide()
 		add_child(leaderboard_panel)
+		style_overlay(leaderboard_panel)
 
 	# Dynamically add Roasting Overlay
 	var roast_script = load("res://scripts/ui/roasting_panel.gd")
@@ -64,9 +93,10 @@ func _ready() -> void:
 		roasting_panel = PanelContainer.new()
 		roasting_panel.set_script(roast_script)
 		roasting_panel.custom_minimum_size = Vector2(660, 460)
-		roasting_panel.set_anchors_and_offsets_preset(Control.PRESET_CENTER, Control.PRESET_MODE_MINSIZE)
+		center_overlay(roasting_panel, 660.0, 460.0)
 		roasting_panel.hide()
 		add_child(roasting_panel)
+		style_overlay(roasting_panel)
 
 	# Dynamically add Quest Overlay
 	var q_script = load("res://scripts/ui/quest_panel.gd")
@@ -77,13 +107,10 @@ func _ready() -> void:
 		# story panel hung off the right edge. Anchor it and give it explicit
 		# offsets around the centre instead.
 		quest_panel.custom_minimum_size = Vector2(680, 500)
-		quest_panel.set_anchors_preset(Control.PRESET_CENTER)
-		quest_panel.offset_left = -340.0
-		quest_panel.offset_top = -250.0
-		quest_panel.offset_right = 340.0
-		quest_panel.offset_bottom = 250.0
+		center_overlay(quest_panel, 680.0, 500.0)
 		quest_panel.hide()
 		add_child(quest_panel)
+		style_overlay(quest_panel)
 
 	# Dynamically add Bakery Overlay
 	var b_script = load("res://scripts/ui/bakery_panel.gd")
@@ -91,9 +118,10 @@ func _ready() -> void:
 		bakery_panel = PanelContainer.new()
 		bakery_panel.set_script(b_script)
 		bakery_panel.custom_minimum_size = Vector2(660, 460)
-		bakery_panel.set_anchors_and_offsets_preset(Control.PRESET_CENTER, Control.PRESET_MODE_MINSIZE)
+		center_overlay(bakery_panel, 660.0, 460.0)
 		bakery_panel.hide()
 		add_child(bakery_panel)
+		style_overlay(bakery_panel)
 
 	# Dynamically add Casting Overlay
 	var c_script = load("res://scripts/ui/casting_panel.gd")
@@ -101,9 +129,10 @@ func _ready() -> void:
 		casting_panel = PanelContainer.new()
 		casting_panel.set_script(c_script)
 		casting_panel.custom_minimum_size = Vector2(660, 460)
-		casting_panel.set_anchors_and_offsets_preset(Control.PRESET_CENTER, Control.PRESET_MODE_MINSIZE)
+		center_overlay(casting_panel, 660.0, 460.0)
 		casting_panel.hide()
 		add_child(casting_panel)
+		style_overlay(casting_panel)
 
 	# Dynamically add Uniform Overlay
 	var u_script = load("res://scripts/ui/uniform_panel.gd")
@@ -111,9 +140,10 @@ func _ready() -> void:
 		uniform_panel = PanelContainer.new()
 		uniform_panel.set_script(u_script)
 		uniform_panel.custom_minimum_size = Vector2(660, 460)
-		uniform_panel.set_anchors_and_offsets_preset(Control.PRESET_CENTER, Control.PRESET_MODE_MINSIZE)
+		center_overlay(uniform_panel, 660.0, 460.0)
 		uniform_panel.hide()
 		add_child(uniform_panel)
+		style_overlay(uniform_panel)
 
 	# Dynamically add Expansion Overlay
 	var e_script = load("res://scripts/ui/expansion_panel.gd")
@@ -121,9 +151,10 @@ func _ready() -> void:
 		expansion_panel = PanelContainer.new()
 		expansion_panel.set_script(e_script)
 		expansion_panel.custom_minimum_size = Vector2(660, 460)
-		expansion_panel.set_anchors_and_offsets_preset(Control.PRESET_CENTER, Control.PRESET_MODE_MINSIZE)
+		center_overlay(expansion_panel, 660.0, 460.0)
 		expansion_panel.hide()
 		add_child(expansion_panel)
+		style_overlay(expansion_panel)
 
 	# Dynamically add Tech Systems Overlay
 	var ts_script = load("res://scripts/ui/tech_systems_panel.gd")
@@ -131,9 +162,10 @@ func _ready() -> void:
 		tech_systems_panel = PanelContainer.new()
 		tech_systems_panel.set_script(ts_script)
 		tech_systems_panel.custom_minimum_size = Vector2(720, 500)
-		tech_systems_panel.set_anchors_and_offsets_preset(Control.PRESET_CENTER, Control.PRESET_MODE_MINSIZE)
+		center_overlay(tech_systems_panel, 720.0, 500.0)
 		tech_systems_panel.hide()
 		add_child(tech_systems_panel)
+		style_overlay(tech_systems_panel)
 
 	GameState.tech_systems_requested.connect(func():
 		hide_all_overlays()
