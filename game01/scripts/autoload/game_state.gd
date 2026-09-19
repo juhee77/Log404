@@ -2338,13 +2338,13 @@ func toggle_hologram_hud() -> bool:
 func calculate_holographic_tutor_metrics() -> Dictionary:
 	var hologram_fps = 60.0
 	var resolution_k = "4K Spatial"
-	var tutor_status_str = "🔮 S 입체 강의 홀로그램 (60 FPS)"
+	var tutor_status_str = "📺 강의 스트리밍 모니터 (60 FPS)"
 	
 	var is_holo_unlocked = upgrades.has("vip_lounge") and upgrades["vip_lounge"]["level"] > 0
 	if is_holo_unlocked:
 		hologram_fps = 120.0
 		resolution_k = "8K Volumetric"
-		tutor_status_str = "👑 SSS급 3D 홀로그램 AI 튜터 (120 FPS)"
+		tutor_status_str = "👑 4K 인강 전용 듀얼 모니터 (120 FPS)"
 		
 	var exam_pass_bonus = 25.0 if is_holo_unlocked else 12.0
 	
@@ -2429,13 +2429,13 @@ func toggle_shield_hud() -> bool:
 func calculate_quantum_security_shield_metrics() -> Dictionary:
 	var qkd_refresh_sec = 0.05
 	var defense_pct = 99.9
-	var shield_status_str = "🛡️ S 차세대 암호화 쉴드 (99.9%)"
+	var shield_status_str = "🛡️ 출입 보안 & CCTV (녹화 30일)"
 	
 	var is_shield_unlocked = upgrades.has("cctv_system") and upgrades["cctv_system"]["level"] > 0
 	if is_shield_unlocked:
 		qkd_refresh_sec = 0.001
 		defense_pct = 99.999
-		shield_status_str = "👑 SSS급 양자 암호 쉴드 (QKD Zero-Trust)"
+		shield_status_str = "👑 출입 보안 & CCTV 통합 관제 (2FA)"
 		
 	var vip_trust_bonus = 26.0 if is_shield_unlocked else 12.0
 	
@@ -2458,13 +2458,13 @@ func toggle_satellite_hud() -> bool:
 func calculate_satellite_relay_metrics() -> Dictionary:
 	var bandwidth_gbps = 25.0
 	var latency_ms = 12.5
-	var sat_status_str = "📡 S 드론 네트워크 리레이 (25 Gbps)"
+	var sat_status_str = "📶 기가 와이파이 증설 (2.5 Gbps)"
 	
 	var is_sat_unlocked = upgrades.has("high_speed_wifi") and upgrades["high_speed_wifi"]["level"] > 0
 	if is_sat_unlocked:
 		bandwidth_gbps = 100.0
 		latency_ms = 2.0
-		sat_status_str = "👑 SSS급 양자 저궤도 위성 리레이 (100 Gbps)"
+		sat_status_str = "👑 기가 인터넷 이중화 회선 (10 Gbps)"
 		
 	var global_empire_bonus = 27.0 if is_sat_unlocked else 13.0
 	
@@ -2487,13 +2487,13 @@ func toggle_fusion_hud() -> bool:
 func calculate_fusion_reactor_metrics() -> Dictionary:
 	var fusion_power_mw = 5.0
 	var wireless_eff_pct = 95.0
-	var fusion_status_str = "⚛️ S 초소형 SMR 발전 (5.0 MW)"
+	var fusion_status_str = "🔥 인버터 냉난방기 (COP 4.2)"
 	
 	var is_fusion_unlocked = upgrades.has("solar_panel") and upgrades["solar_panel"]["level"] > 0
 	if is_fusion_unlocked:
 		fusion_power_mw = 25.0
 		wireless_eff_pct = 99.9
-		fusion_status_str = "👑 SSS급 무제한 SMR 핵융합 발전 (Power Sovereignty)"
+		fusion_status_str = "👑 전층 개별 공조 제어 (COP 6.0)"
 		
 	var profit_margin_bonus = 28.0 if is_fusion_unlocked else 14.0
 	
@@ -2522,7 +2522,7 @@ func calculate_quantum_curriculum_metrics() -> Dictionary:
 	if is_curr_unlocked:
 		compute_pflops = 10.0
 		predict_precision_pct = 99.8
-		curriculum_status_str = "👑 SSS급 양자 AI 시험 예측기 (99.8% Precision)"
+		curriculum_status_str = "👑 학습 플래너 앱 연동 (진도율 98%)"
 		
 	var premium_seat_bonus = 30.0 if is_curr_unlocked else 15.0
 	
@@ -2609,7 +2609,7 @@ func calculate_exoskeleton_posture_metrics() -> Dictionary:
 	if is_exo_unlocked:
 		support_force_n = 45.0
 		fatigue_reduction_pct = 99.2
-		exo_status_str = "👑 SSS급 자율 능동 척추 외골격 (45N Support)"
+		exo_status_str = "👑 요추지지 인체공학 의자 전 좌석 (45N)"
 		
 	var marathon_session_bonus = 32.0 if is_exo_unlocked else 16.0
 	
@@ -2632,13 +2632,13 @@ func toggle_teleport_hud() -> bool:
 func calculate_quantum_teleportation_metrics() -> Dictionary:
 	var latency_sec = 0.5
 	var stability_pct = 98.0
-	var tp_status_str = "🌌 S 초고속 양자 리레이 배송 (0.5s)"
+	var tp_status_str = "🛎️ 모바일 주문 픽업 알림 (30초)"
 	
 	var is_tp_unlocked = upgrades.has("kiosk") and upgrades["kiosk"]["level"] > 0
 	if is_tp_unlocked:
 		latency_sec = 0.001
 		stability_pct = 99.999
-		tp_status_str = "👑 SSS급 양자 얽힘 섭스페이스 순간이동 (0.001s)"
+		tp_status_str = "👑 좌석 호출 & 테이블 서빙 (10초)"
 		
 	var instant_order_bonus = 33.0 if is_tp_unlocked else 16.0
 	
@@ -2690,13 +2690,13 @@ func toggle_treasury_hud() -> bool:
 func calculate_quantum_treasury_metrics() -> Dictionary:
 	var settle_speed_sec = 0.01
 	var security_pct = 99.5
-	var treasury_status_str = "💎 S 양자 체인 정산망 (0.01s)"
+	var treasury_status_str = "💳 통합 POS 자동 정산 (일 1회)"
 	
 	var is_treasury_unlocked = upgrades.has("kiosk") and upgrades["kiosk"]["level"] > 0
 	if is_treasury_unlocked:
 		settle_speed_sec = 0.0001
 		security_pct = 100.0
-		treasury_status_str = "👑 SSS급 zk-SNARKs 양자 탈중앙화 결제 지불망 (0.0001s)"
+		treasury_status_str = "👑 간편결제 전 수단 연동 & 실시간 정산"
 		
 	var dividend_yield_bonus = 35.0 if is_treasury_unlocked else 17.0
 	
@@ -2725,7 +2725,7 @@ func calculate_gravitational_acoustic_metrics() -> Dictionary:
 	if is_grav_unlocked:
 		cancel_pct = 99.999
 		noise_floor_db = 0.001
-		grav_status_str = "👑 SSS급 중력파 위상 상쇄 완전 무소음 정적 존 (0.001 dB)"
+		grav_status_str = "👑 액티브 노이즈 차폐 패널 전면 시공 (28 dB)"
 		
 	var focus_revenue_bonus = 36.0 if is_grav_unlocked else 18.0
 	
@@ -2777,13 +2777,13 @@ func toggle_harvesting_hud() -> bool:
 func calculate_electromagnetic_harvesting_metrics() -> Dictionary:
 	var convert_pct = 92.0
 	var gen_power_kw = 10.0
-	var harvest_status_str = "⚡ S 전자기 하베스터 (10.0 kW)"
+	var harvest_status_str = "🔌 좌석별 무선 충전 패드 (10 W)"
 	
 	var is_harvest_unlocked = upgrades.has("solar_panel") and upgrades["solar_panel"]["level"] > 0
 	if is_harvest_unlocked:
 		convert_pct = 99.99
 		gen_power_kw = 50.0
-		harvest_status_str = "👑 SSS급 전자기장 무선 운동 에너지 하베스팅 (50.0 kW)"
+		harvest_status_str = "👑 전 좌석 무선충전 패드 (15 W)"
 		
 	var power_margin_bonus = 38.0 if is_harvest_unlocked else 19.0
 	
@@ -2806,13 +2806,13 @@ func toggle_tesseract_hud() -> bool:
 func calculate_tesseract_expansion_metrics() -> Dictionary:
 	var compress_pct = 95.0
 	var capacity_mult = 2.0
-	var tesseract_status_str = "🌀 S 테서랙트 웜홀 공간 확장 (2.0x)"
+	var tesseract_status_str = "📐 접이식 파티션 가변 레이아웃 (2.0배)"
 	
 	var is_tesseract_unlocked = upgrades.has("study_desks") and upgrades["study_desks"]["level"] > 0
 	if is_tesseract_unlocked:
 		compress_pct = 99.999
 		capacity_mult = 10.0
-		tesseract_status_str = "👑 SSS급 4차원 테서랙트 웜홀 공간 왜곡 영토 확장 (10.0x)"
+		tesseract_status_str = "👑 이동식 가구 전면 도입 (3.0배)"
 		
 	var capacity_revenue_bonus = 39.0 if is_tesseract_unlocked else 19.5
 	
@@ -2835,13 +2835,13 @@ func toggle_tachyon_hud() -> bool:
 func calculate_tachyon_chrono_metrics() -> Dictionary:
 	var dilation_mult = 1.5
 	var stability_pct = 95.0
-	var tachyon_status_str = "⏳ S 크로노 가속기 (1.5x)"
+	var tachyon_status_str = "⏱️ 좌석 자동 연장 결제 (1.5배)"
 	
 	var is_tachyon_unlocked = upgrades.has("ai_tutor") and upgrades["ai_tutor"]["level"] > 0
 	if is_tachyon_unlocked:
 		dilation_mult = 3.0
 		stability_pct = 99.999
-		tachyon_status_str = "👑 SSS급 타키온 시공간 시간 왜곡 가속기 (3.0x)"
+		tachyon_status_str = "👑 정기권 & 시간제 요금 자동화 (3.0배)"
 		
 	var exam_revenue_bonus = 40.0 if is_tachyon_unlocked else 20.0
 	
@@ -2864,13 +2864,13 @@ func toggle_telepathic_hud() -> bool:
 func calculate_neural_telepathic_metrics() -> Dictionary:
 	var synapse_speed_tbs = 10.0
 	var retention_pct = 95.0
-	var telepathic_status_str = "🧠 S 텔레파시 시냅스 (10.0 TB/s)"
+	var telepathic_status_str = "🎧 집중 사운드 추천 (32개 프리셋)"
 	
 	var is_telepathic_unlocked = upgrades.has("wifi_router") and upgrades["wifi_router"]["level"] > 0
 	if is_telepathic_unlocked:
 		synapse_speed_tbs = 99.999
 		retention_pct = 99.999
-		telepathic_status_str = "👑 SSS급 텔레파시 신경 시냅스 지식 다운로드 (99.999 TB/s)"
+		telepathic_status_str = "👑 개인별 집중 사운드 자동 추천 (256개 프리셋)"
 		
 	var memory_revenue_bonus = 41.0 if is_telepathic_unlocked else 20.5
 	
@@ -2893,13 +2893,13 @@ func toggle_antimatter_hud() -> bool:
 func calculate_antimatter_energy_metrics() -> Dictionary:
 	var field_stability_pct = 96.0
 	var energy_output_mw = 20.0
-	var antimatter_status_str = "⚛️ S 반물질 발전기 (20.0 MW)"
+	var antimatter_status_str = "⚡ 심야 전력 절감 ESS (20 kWh)"
 	
 	var is_antimatter_unlocked = upgrades.has("solar_panel") and upgrades["solar_panel"]["level"] > 0
 	if is_antimatter_unlocked:
 		field_stability_pct = 99.9999
 		energy_output_mw = 100.0
-		antimatter_status_str = "👑 SSS급 양자 얽힘 반물질 초청정 에너지 (100.0 MW)"
+		antimatter_status_str = "👑 심야 충전 & 피크 방전 ESS (100 kWh)"
 		
 	var esg_margin_bonus = 42.0 if is_antimatter_unlocked else 21.0
 	
@@ -2922,13 +2922,13 @@ func toggle_supercomputer_hud() -> bool:
 func calculate_holographic_supercomputer_metrics() -> Dictionary:
 	var process_speed_pflops = 100.0
 	var accuracy_pct = 98.0
-	var supercomputer_status_str = "💻 S 홀로그램 AI (100.0 PFLOPS)"
+	var supercomputer_status_str = "📊 좌석 이용 분석 대시보드 (일간)"
 	
 	var is_supercomputer_unlocked = upgrades.has("kiosk") and upgrades["kiosk"]["level"] > 0
 	if is_supercomputer_unlocked:
 		process_speed_pflops = 1000.0
 		accuracy_pct = 99.9999
-		supercomputer_status_str = "👑 SSS급 홀로그램 다차원 슈퍼컴퓨터 AI 연산 (1,000.0 PFLOPS)"
+		supercomputer_status_str = "👑 실시간 좌석·매출 분석 대시보드 (분 단위)"
 		
 	var net_income_bonus = 43.0 if is_supercomputer_unlocked else 21.5
 	
@@ -2951,13 +2951,13 @@ func toggle_multiverse_hud() -> bool:
 func calculate_multiverse_bifurcation_metrics() -> Dictionary:
 	var timeline_branches = 50.0
 	var stability_pct = 98.5
-	var multiverse_status_str = "🌌 S 다중우주 포탈 (50 타임라인)"
+	var multiverse_status_str = "🗺️ 층별 구역 분리 설계 (3개 존)"
 	
 	var is_multiverse_unlocked = upgrades.has("study_desk") and upgrades["study_desk"]["level"] > 0
 	if is_multiverse_unlocked:
 		timeline_branches = 1000.0
 		stability_pct = 99.9999
-		multiverse_status_str = "👑 SSS급 하위 퀀텀 다중우주 차원분기 포탈 (1,000 타임라인)"
+		multiverse_status_str = "👑 용도별 존 완전 분리 (8개 존)"
 		
 	var parallel_revenue_bonus = 44.0 if is_multiverse_unlocked else 22.0
 	
@@ -2980,13 +2980,13 @@ func toggle_zero_point_hud() -> bool:
 func calculate_zero_point_energy_metrics() -> Dictionary:
 	var vacuum_density_gj = 50.0
 	var casimir_freq_ghz = 500.0
-	var zero_point_status_str = "⚡ S 제로포인트 캡시터 (50 GJ)"
+	var zero_point_status_str = "🔋 피크 부하 배터리 뱅크 (50 kWh)"
 	
 	var is_zero_point_unlocked = upgrades.has("solar_panel") and upgrades["solar_panel"]["level"] > 0
 	if is_zero_point_unlocked:
 		vacuum_density_gj = 500.0
 		casimir_freq_ghz = 1210.0
-		zero_point_status_str = "👑 SSS급 하위 공간 제로포인트 에너지 캡시터 (500 GJ | 1.21 THz)"
+		zero_point_status_str = "👑 무정전 전원 장치 전층 (500 kWh | 무중단)"
 		
 	var utility_saving_bonus = 45.0 if is_zero_point_unlocked else 22.5
 	
@@ -3009,13 +3009,13 @@ func toggle_chrono_resonance_hud() -> bool:
 func calculate_chrono_resonance_metrics() -> Dictionary:
 	var resonance_freq_thz = 10.0
 	var time_yield_bonus = 23.0
-	var chrono_res_status_str = "⌛ S급 크로노 필드 공명기 (10 THz)"
+	var chrono_res_status_str = "🕐 시간대별 요금제 (4개 구간)"
 	
 	var is_chrono_res_unlocked = upgrades.has("study_desk") and upgrades["study_desk"]["level"] > 0
 	if is_chrono_res_unlocked:
 		resonance_freq_thz = 99.999
 		time_yield_bonus = 46.0
-		chrono_res_status_str = "👑 SSS급 하이퍼 차원 크로노 필드 양자 공명 변환기 (99.999 THz | +46% 수확율)"
+		chrono_res_status_str = "👑 수요 예측 탄력 요금제 (24개 구간 | 매출 +46%)"
 		
 	return {
 		"freq_thz": resonance_freq_thz,
@@ -3035,13 +3035,13 @@ func toggle_neural_cognitive_hud() -> bool:
 func calculate_neural_cognitive_metrics() -> Dictionary:
 	var synapse_tflops = 100.0
 	var cognitive_efficiency = 95.0
-	var cog_status_str = "🧠 S급 인지 가속기 (100.0 TFLOPS)"
+	var cog_status_str = "📈 체류시간 패턴 리포트 (주간)"
 	
 	var is_cog_unlocked = upgrades.has("ai_focus") and upgrades["ai_focus"]["level"] > 0
 	if is_cog_unlocked:
 		synapse_tflops = 888.8
 		cognitive_efficiency = 99.9999
-		cog_status_str = "👑 SSS급 양자 AI 신경-시냅스 인지 가속기 (888.8 TFLOPS | 99.9999%)"
+		cog_status_str = "👑 체류시간 패턴 리포트 & 좌석 추천 (정확도 94%)"
 		
 	var exam_score_bonus = 52.0 if is_cog_unlocked else 26.0
 	
@@ -3093,13 +3093,13 @@ func toggle_acoustic_damping_hud() -> bool:
 func calculate_acoustic_damping_metrics() -> Dictionary:
 	var damping_db = -60.0
 	var phase_coherence_pct = 96.0
-	var damping_status_str = "🔇 S급 홀로그램 음향 감쇠기 (-60.0 dB)"
+	var damping_status_str = "🧱 흡음 천장재 시공 (-18 dB)"
 	
 	var is_damping_unlocked = upgrades.has("study_desk") and upgrades["study_desk"]["level"] > 0
 	if is_damping_unlocked:
 		damping_db = -95.0
 		phase_coherence_pct = 99.9999
-		damping_status_str = "👑 SSS급 양자 홀로그램 공간-음향 능동 공명 감쇠기 (-95.0 dB | 99.9999%)"
+		damping_status_str = "👑 흡음 천장 & 벽면 전면 마감 (-32 dB | NRC 0.95)"
 		
 	var focus_concentration_bonus = 50.0 if is_damping_unlocked else 25.0
 	
@@ -3122,13 +3122,13 @@ func toggle_nanite_sanitation_hud() -> bool:
 func calculate_nanite_sanitation_metrics() -> Dictionary:
 	var nanite_count_m = 50.0
 	var sterilization_pct = 97.0
-	var nanite_status_str = "🤖 S급 분자 나노봇 위생 스웜 (50M)"
+	var nanite_status_str = "🧼 자동 살균 방역 (1일 2회)"
 	
 	var is_nanite_unlocked = upgrades.has("air_purifier") and upgrades["air_purifier"]["level"] > 0
 	if is_nanite_unlocked:
 		nanite_count_m = 500.0
 		sterilization_pct = 99.9999
-		nanite_status_str = "👑 SSS급 자율 분자 나노봇 초청정 소독 스웜 (500M | 99.9999%)"
+		nanite_status_str = "👑 UV 살균 & 전문 방역 (1일 6회 | 99.9%)"
 		
 	var cleanliness_bonus = 50.0 if is_nanite_unlocked else 25.0
 	
@@ -3157,7 +3157,7 @@ func calculate_quantum_gravity_metrics() -> Dictionary:
 	if is_gravity_unlocked:
 		stability_pct = 99.9999
 		graviton_flux_mhz = 777.7
-		gravity_status_str = "👑 SSS급 자율 양자 얽힘 대기권-하위 중력장 안정화 엔진 (99.9999% | 777.7 MHz)"
+		gravity_status_str = "👑 이중창 외부 소음 차단 (-35 dB | 기밀 1등급)"
 		
 	var ergonomic_bonus = 55.0 if is_gravity_unlocked else 27.5
 	
@@ -3180,13 +3180,13 @@ func toggle_memory_crystal_hud() -> bool:
 func calculate_memory_crystal_metrics() -> Dictionary:
 	var synthesis_gbps = 150.0
 	var retention_pct = 96.0
-	var crystal_status_str = "💎 S급 신경 메모리 결정체 (150 Gbps)"
+	var crystal_status_str = "🗂️ 스터디 자료 공유 서가 (150권)"
 	
 	var is_crystal_unlocked = upgrades.has("ai_focus") and upgrades["ai_focus"]["level"] > 0
 	if is_crystal_unlocked:
 		synthesis_gbps = 999.9
 		retention_pct = 99.9999
-		crystal_status_str = "👑 SSS급 자율 바이오-시냅스 신경-메모리 결정체 지식 합성기 (999.9 Gbps | 99.9999%)"
+		crystal_status_str = "👑 전공별 자료 서가 & 대출 관리 (1,000권 | 회전율 98%)"
 		
 	var exam_mastery_bonus = 60.0 if is_crystal_unlocked else 30.0
 	
@@ -3209,13 +3209,13 @@ func toggle_superconductive_power_hud() -> bool:
 func calculate_superconductive_power_metrics() -> Dictionary:
 	var grid_efficiency_pct = 95.0
 	var critical_temp_k = 77.0
-	var power_status_str = "⚡ S급 액체질소 초전도 그리드 (77 K)"
+	var power_status_str = "🔧 노후 배선 교체 (누전 0건)"
 	
 	var is_power_unlocked = upgrades.has("coffee_machine") and upgrades["coffee_machine"]["level"] > 0
 	if is_power_unlocked:
 		grid_efficiency_pct = 99.9999
 		critical_temp_k = 298.15
-		power_status_str = "👑 SSS급 상온 초전도 제로-저항 전력 매트릭스 그리드 (298.15 K | 99.9999%)"
+		power_status_str = "👑 전층 배선 교체 & 분전반 증설 (손실 -32%)"
 		
 	var utility_cost_saving = 60.0 if is_power_unlocked else 30.0
 	
@@ -3238,13 +3238,13 @@ func toggle_biophotonic_air_hud() -> bool:
 func calculate_biophotonic_air_metrics() -> Dictionary:
 	var oxygen_purity_pct = 96.0
 	var co2_scrubbed_ppm = 400.0
-	var air_status_str = "🌿 S급 광합성 공기재생기 (400 PPM)"
+	var air_status_str = "💨 전열교환 환기 (CO₂ 900 PPM 유지)"
 	
 	var is_air_unlocked = upgrades.has("air_purifier") and upgrades["air_purifier"]["level"] > 0
 	if is_air_unlocked:
 		oxygen_purity_pct = 99.9999
 		co2_scrubbed_ppm = 850.0
-		air_status_str = "👑 SSS급 자율 바이오-광학 퀀텀 광합성 공기재생기 (99.9999% | -850 PPM)"
+		air_status_str = "👑 전열교환 환기 시스템 (CO₂ 650 PPM 유지)"
 		
 	var cognitive_alertness_bonus = 65.0 if is_air_unlocked else 32.5
 	
@@ -3267,13 +3267,13 @@ func toggle_dark_matter_gravity_hud() -> bool:
 func calculate_dark_matter_gravity_metrics() -> Dictionary:
 	var density_gcm3 = 10.0
 	var deflection_deg = 0.05
-	var dm_status_str = "🌌 S급 다크매터 중력 편향기 (10 g/cm³)"
+	var dm_status_str = "🚪 도어 클로저 설치 (쾅 소리 -70%)"
 	
 	var is_dm_unlocked = upgrades.has("study_desk") and upgrades["study_desk"]["level"] > 0
 	if is_dm_unlocked:
 		density_gcm3 = 99.9999
 		deflection_deg = 0.0012
-		dm_status_str = "👑 SSS급 자율 아원자 다크매터 제로포인트 중력편향 엔진 (99.9999 g/cm³ | 0.0012°)"
+		dm_status_str = "👑 전 출입문 자동 개폐 & 소음 저감 (-92%)"
 		
 	var levitation_bonus = 70.0 if is_dm_unlocked else 35.0
 	
@@ -3296,13 +3296,13 @@ func toggle_peptide_stimulator_hud() -> bool:
 func calculate_peptide_stimulator_metrics() -> Dictionary:
 	var peptide_ppm = 10.0
 	var speed_ms = 120.0
-	var pep_status_str = "🧬 S급 바이오 펩타이드 신경 자극기 (10 PPM)"
+	var pep_status_str = "🥤 카페인 & 당충전 메뉴 추천 (12종)"
 	
 	var is_pep_unlocked = upgrades.has("ai_focus") and upgrades["ai_focus"]["level"] > 0
 	if is_pep_unlocked:
 		peptide_ppm = 99.9999
 		speed_ms = 500.0
-		pep_status_str = "👑 SSS급 자율 바이오-다이내믹 아원자 펩타이드 신경-자극 엔진 (99.9999 PPM | 500 m/s)"
+		pep_status_str = "👑 시간대별 맞춤 메뉴 추천 (36종 | 재주문율 62%)"
 		
 	var endurance_bonus = 75.0 if is_pep_unlocked else 37.5
 	
@@ -3325,13 +3325,13 @@ func toggle_satellite_mesh_hud() -> bool:
 func calculate_satellite_mesh_metrics() -> Dictionary:
 	var bandwidth_tbps = 100.0
 	var latency_ms = 0.05
-	var sat_status_str = "🛰️ S급 궤도 위성 네트워크 (100 Tbps)"
+	var sat_status_str = "🌐 지점 통합 관리 (2개 지점 동기화)"
 	
 	var is_sat_unlocked = upgrades.has("kiosk") and upgrades["kiosk"]["level"] > 0
 	if is_sat_unlocked:
 		bandwidth_tbps = 9999.9
 		latency_ms = 0.0001
-		sat_status_str = "👑 SSS급 자율 글로벌 퀀텀-메쉬 위성 네트워크 (9999.9 Tbps | 0.0001 ms)"
+		sat_status_str = "👑 지점 통합 관리 시스템 (전 지점 실시간 동기화)"
 		
 	var royalty_bonus = 80.0 if is_sat_unlocked else 40.0
 	
@@ -3360,7 +3360,7 @@ func calculate_cryo_roaster_metrics() -> Dictionary:
 	if is_cryo_unlocked:
 		temp_celsius = -196.0
 		retention_pct = 99.9999
-		cryo_status_str = "👑 SSS급 자율 극저온 퀀텀-액체질소 영하-로스팅 합성기 (-196.0 °C | 99.9999%)"
+		cryo_status_str = "👑 저온 숙성 로스팅 설비 (-18 °C 숙성 | 균일도 99%)"
 		
 	var satisfaction_bonus = 85.0 if is_cryo_unlocked else 42.5
 	
@@ -3383,13 +3383,13 @@ func toggle_exoskeleton_corrector_hud() -> bool:
 func calculate_exoskeleton_corrector_metrics() -> Dictionary:
 	var alignment_pct = 90.0
 	var fatigue_red_pct = 85.0
-	var exo_status_str = "🦾 S급 외골격 체형교정기 (90% 정밀도)"
+	var exo_status_str = "🧘 자세교정 스트레칭 존 (1일 3회)"
 	
 	var is_exo_unlocked = upgrades.has("chair") and upgrades["chair"]["level"] > 0
 	if is_exo_unlocked:
 		alignment_pct = 99.9999
 		fatigue_red_pct = 98.5
-		exo_status_str = "👑 SSS급 자율 바이오-로보틱 생체역학 외골격 체형교정기 (99.9999% | -98.5%)"
+		exo_status_str = "👑 전담 스트레칭 프로그램 (목·허리 통증 -62%)"
 		
 	var focus_bonus = 90.0 if is_exo_unlocked else 45.0
 	
@@ -3442,13 +3442,13 @@ func toggle_aeroponic_botanical_hud() -> bool:
 func calculate_aeroponic_botanical_metrics() -> Dictionary:
 	var mist_micron = 15.0
 	var oxygen_boost_pct = 92.0
-	var aero_status_str = "🌿 S급 초음파 미세안개 영하 분사기 (15 µm)"
+	var aero_status_str = "🪴 실내 조경 자동 관수 (주 2회)"
 	
 	var is_aero_unlocked = upgrades.has("interior") and upgrades["interior"]["level"] > 0
 	if is_aero_unlocked:
 		mist_micron = 5.0
 		oxygen_boost_pct = 99.9999
-		aero_status_str = "👑 SSS급 자율 에어로포닉 수직 식물원 영양-안개 분사 엔진 (5.0 µm | 99.9999%)"
+		aero_status_str = "👑 실내 조경 자동 관수 & 식물 관리 (생존율 98%)"
 		
 	var restoration_bonus = 95.0 if is_aero_unlocked else 47.5
 	
@@ -3477,7 +3477,7 @@ func calculate_maglev_floor_metrics() -> Dictionary:
 	if is_maglev_unlocked:
 		flux_tesla = 15.0
 		stability_pct = 99.9999
-		maglev_status_str = "👑 SSS급 자율 초전도 자기장 양자 부유 바닥 매트릭스 (15.0 T | 99.9999%)"
+		maglev_status_str = "👑 무소음 바닥재 전층 시공 (발소리 -28 dB)"
 		
 	var isolation_bonus = 98.0 if is_maglev_unlocked else 49.0
 	
@@ -3500,13 +3500,13 @@ func toggle_chrono_dilation_hud() -> bool:
 func calculate_chrono_dilation_metrics() -> Dictionary:
 	var time_dilation_factor = 1.05
 	var chronon_stability_pct = 95.0
-	var chrono_status_str = "⏳ S급 크로노 시간지연 필드 (1.05x)"
+	var chrono_status_str = "📅 좌석 사전 예약 (1일 전)"
 	
 	var is_chrono_unlocked = upgrades.has("study_desk") and upgrades["study_desk"]["level"] > 0
 	if is_chrono_unlocked:
 		time_dilation_factor = 1.25
 		chronon_stability_pct = 99.9999
-		chrono_status_str = "👑 SSS급 자율 아원자 퀀텀-시간지연 크로노 필드 안정기 (1.25x | 99.9999%)"
+		chrono_status_str = "👑 좌석 예약 & 노쇼 관리 (2주 전 | 노쇼 -88%)"
 		
 	var efficiency_bonus = 100.0 if is_chrono_unlocked else 50.0
 	
@@ -3529,13 +3529,13 @@ func toggle_neural_crystallizer_hud() -> bool:
 func calculate_neural_crystallizer_metrics() -> Dictionary:
 	var speed_mbps = 500.0
 	var recall_pct = 95.0
-	var crys_status_str = "💎 S급 신경 패턴 결정체화기 (500 Mbps)"
+	var crys_status_str = "✍️ 오답노트 스캔 프린트 (월 500매)"
 	
 	var is_crys_unlocked = upgrades.has("ai_focus") and upgrades["ai_focus"]["level"] > 0
 	if is_crys_unlocked:
 		speed_mbps = 9999.9
 		recall_pct = 99.9999
-		crys_status_str = "👑 SSS급 자율 바이오-시냅스 신경-패턴 인지 기억 결정체화 엔진 (9999.9 Mbps | 99.9999%)"
+		crys_status_str = "👑 스캔·인쇄·제본 무인 서비스 (월 5,000매)"
 		
 	var mastery_bonus = 105.0 if is_crys_unlocked else 52.5
 	
@@ -3558,13 +3558,13 @@ func toggle_photonic_power_hud() -> bool:
 func calculate_photonic_power_metrics() -> Dictionary:
 	var laser_kw = 5.0
 	var efficiency_pct = 95.0
-	var photonic_status_str = "⚡ S급 포토닉 무선전력 전송기 (5.0 kW)"
+	var photonic_status_str = "💡 인체감지 LED 조명 (대기전력 -40%)"
 	
 	var is_photonic_unlocked = upgrades.has("solar_ess") and upgrades["solar_ess"]["level"] > 0
 	if is_photonic_unlocked:
 		laser_kw = 50.0
 		efficiency_pct = 99.9999
-		photonic_status_str = "👑 SSS급 자율 초전도 포토닉 레이저 무선 전력 전송 네트워크 (50.0 kW | 99.9999%)"
+		photonic_status_str = "👑 구역별 조도 자동 제어 (전력 -58%)"
 		
 	var grid_saving_bonus = 110.0 if is_photonic_unlocked else 55.0
 	
@@ -3587,13 +3587,13 @@ func toggle_dark_energy_converter_hud() -> bool:
 func calculate_dark_energy_converter_metrics() -> Dictionary:
 	var density_joule = 1.0e15
 	var expansion_pct = 95.0
-	var de_status_str = "🌌 S급 암흑에너지 차원 전환기 (1.0e15 J/m³)"
+	var de_status_str = "📉 실시간 전력 사용 모니터 (15분 단위)"
 	
 	var is_de_unlocked = upgrades.has("solar_ess") and upgrades["solar_ess"]["level"] > 0
 	if is_de_unlocked:
 		density_joule = 9.9999e18
 		expansion_pct = 99.9999
-		de_status_str = "👑 SSS급 자율 아원자 다크매터 암흑에너지 차원 전환기 (9.9999e18 J/m³ | 99.9999%)"
+		de_status_str = "👑 설비별 전력 모니터링 & 자동 절감 (요금 -34%)"
 		
 	var cosmic_energy_bonus = 115.0 if is_de_unlocked else 57.5
 	
@@ -3616,13 +3616,13 @@ func toggle_singularity_power_hud() -> bool:
 func calculate_singularity_power_metrics() -> Dictionary:
 	var mass_kg = 1.0e20
 	var hawking_gw = 50.0
-	var sing_status_str = "🌌 S급 싱귤래리티 중력우물 발전소 (50.0 GW)"
+	var sing_status_str = "🏗️ 층간 방음 보강 (경량충격음 45 dB)"
 	
 	var is_sing_unlocked = upgrades.has("solar_ess") and upgrades["solar_ess"]["level"] > 0
 	if is_sing_unlocked:
 		mass_kg = 1.989e30
 		hawking_gw = 999.9
-		sing_status_str = "👑 SSS급 자율 초전도 퀀텀 싱귤래리티 사건의지평선 중력우물 발전소 (999.9 GW | 1.989e30 kg)"
+		sing_status_str = "👑 내력벽 보강 & 층간 차음재 시공 (37 dB | 1등급)"
 		
 	var infinite_power_bonus = 120.0 if is_sing_unlocked else 60.0
 	
@@ -3645,13 +3645,13 @@ func toggle_transmutation_reactor_hud() -> bool:
 func calculate_transmutation_reactor_metrics() -> Dictionary:
 	var rate_gbps = 5.0
 	var purity_pct = 95.0
-	var trans_status_str = "⚛️ S급 신경-공명 기억-변무테이션 리액터 (5.0 Gbps)"
+	var trans_status_str = "🎯 목표 달성률 트래커 (월간 리포트)"
 	
 	var is_trans_unlocked = upgrades.has("ai_focus") and upgrades["ai_focus"]["level"] > 0
 	if is_trans_unlocked:
 		rate_gbps = 99.9999
 		purity_pct = 99.9999
-		trans_status_str = "👑 SSS급 자율 바이오-포토닉 신경-공명 기억-결정체 변무테이션 리액터 (99.9999 Gbps | 99.9999%)"
+		trans_status_str = "👑 목표 달성률 트래커 & 주간 리포트 (달성률 +41%)"
 		
 	var absorption_bonus = 125.0 if is_trans_unlocked else 62.5
 	
@@ -3674,13 +3674,13 @@ func toggle_franchise_ledger_hud() -> bool:
 func calculate_franchise_ledger_metrics() -> Dictionary:
 	var sync_latency_ms = 0.01
 	var active_nodes = 100
-	var ledger_status_str = "🌐 S급 글로벌 프랜차이즈 원장 노드 (100 노드)"
+	var ledger_status_str = "🏪 가맹 관리 원장 (1개 지점)"
 	
 	var is_ledger_unlocked = upgrades.has("kiosk") and upgrades["kiosk"]["level"] > 0
 	if is_ledger_unlocked:
 		sync_latency_ms = 0.0000001
 		active_nodes = 10000
-		ledger_status_str = "👑 SSS급 자율 글로벌 퀀텀 얽힘 프랜차이즈 가맹 원장 노드 리레이 (10000 노드 | 1e-7 ms)"
+		ledger_status_str = "👑 2호점 가맹 관리 원장 (전 지점 통합 회계)"
 		
 	var royalty_bonus = 130.0 if is_ledger_unlocked else 65.0
 	
