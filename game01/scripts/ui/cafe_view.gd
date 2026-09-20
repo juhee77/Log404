@@ -533,11 +533,11 @@ func draw_integrated_multi_room_layout(w: float, h: float) -> void:
 			HORIZONTAL_ALIGNMENT_LEFT, -1, 11, th2["accent"])
 
 	if front_style == "front":
-		draw_prop("reception", GameState.iso_to_screen(Vector2i(8, 6)) + vo, 0.78)
+		draw_prop("reception", GameState.iso_to_screen(Vector2i(8, 5)) + vo, 0.78)
 		draw_prop("speed_gate", GameState.iso_to_screen(GameState.ENTRANCE_CELL) + vo + Vector2(-14, -26), 0.8)
 	elif front_style == "vip":
-		draw_prop("sofa", GameState.iso_to_screen(Vector2i(8, 6)) + vo, 0.66)
-		draw_prop("floor_lamp", GameState.iso_to_screen(Vector2i(9, 6)) + vo, 0.66)
+		draw_prop("sofa", GameState.iso_to_screen(Vector2i(8, 5)) + vo, 0.66)
+		draw_prop("floor_lamp", GameState.iso_to_screen(Vector2i(9, 5)) + vo, 0.66)
 
 	# ----------------------------------------------------
 	# Draw Desks & Booths inside the STUDY zone

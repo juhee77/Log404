@@ -4712,7 +4712,7 @@ func is_cat_buff_active() -> bool:
 # 패널을 오른쪽으로 옮긴 뒤로 손님들이 아무것도 없는 빈 바닥으로 걸어가
 # 보이지 않는 케이크를 먹고 있었다. 렌더러가 이 상수를 함께 쓴다.
 # 평면도 위의 실제 칸을 좌표로 환산해 쓴다.
-const ENTRANCE_CELL: Vector2i = Vector2i(9, 7)     # 프런트 구역 입구
+const ENTRANCE_CELL: Vector2i = Vector2i(9, 6)     # 프런트 구역 입구
 const COUNTER_CELL: Vector2i = Vector2i(7, 2)      # 커피바 주문대 앞
 
 # Snack Bar, Bakery Stock & Locker Stock
@@ -6194,21 +6194,57 @@ func is_floor_cell(cell: Vector2i) -> bool:
 var _default_seat_cells: Array = []
 
 func _build_default_seat_cells() -> Array:
-	var pref: Array = []
-	# Cells (x+y) even are never screen-adjacent to one another, so desks placed
-	# on them keep a full tile of walking space on every side.
-	for parity in [0, 1]:
-		for y in range(STUDY_Y0, STUDY_Y1 + 1):
-			for x in range(STUDY_X0, STUDY_X1 + 1):
-				if (x + y) % 2 == 0 and x % 2 == parity:
-					pref.append(Vector2i(x, y))
-	# The in-between tiles stay placeable - they are simply handed out last.
+	# Cells with (x+y) even are never edge-adjacent to one another, so desks
+	# placed on them keep a full tile of walking space on every side.
+	#
+	# The order they are handed out in decides how a small cafe looks. Row by
+	# row filled the even columns of the top rows first and left column 5 and
+	# the bottom rows empty - every desk ended up bunched in the upper left.
+	# Instead each new desk goes to the free tile that is FURTHEST from the
+	# desks already placed, so any number of them is spread evenly across the
+	# whole room and the arrangement only gets denser as the cafe grows.
+	var spaced: Array = []
+	var rest: Array = []
 	for y in range(STUDY_Y0, STUDY_Y1 + 1):
 		for x in range(STUDY_X0, STUDY_X1 + 1):
 			var c = Vector2i(x, y)
-			if not pref.has(c):
-				pref.append(c)
-	return pref
+			if (x + y) % 2 == 0:
+				spaced.append(c)
+			else:
+				rest.append(c)
+
+	var center = (iso_to_screen(Vector2i(STUDY_X0, STUDY_Y0))
+		+ iso_to_screen(Vector2i(STUDY_X1, STUDY_Y1))) * 0.5
+	var ordered: Array = []
+	var pool: Array = spaced.duplicate()
+
+	# first desk: the one nearest the middle of the room
+	var best = 0
+	for i in range(pool.size()):
+		if iso_to_screen(pool[i]).distance_squared_to(center) < iso_to_screen(pool[best]).distance_squared_to(center):
+			best = i
+	ordered.append(pool[best])
+	pool.remove_at(best)
+
+	# then repeatedly take whichever tile is furthest from everything chosen
+	while pool.size() > 0:
+		var pick = 0
+		var pick_dist = -1.0
+		for i in range(pool.size()):
+			var p = iso_to_screen(pool[i])
+			var nearest = INF
+			for c in ordered:
+				nearest = min(nearest, p.distance_squared_to(iso_to_screen(c)))
+			if nearest > pick_dist:
+				pick_dist = nearest
+				pick = i
+		ordered.append(pool[pick])
+		pool.remove_at(pick)
+
+	# the in-between tiles stay placeable, they are simply handed out last
+	rest.sort_custom(func(a, b):
+		return iso_to_screen(a).distance_squared_to(center) < iso_to_screen(b).distance_squared_to(center))
+	return ordered + rest
 
 func get_base_seat_cell(index: int) -> Vector2i:
 	if _default_seat_cells.is_empty():
