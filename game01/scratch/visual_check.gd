@@ -27,8 +27,15 @@ func _ready() -> void:
 
 	# seat some customers so the character rendering can be checked
 	GameState.reputation = 4.9
-	for i in range(6):
+	# 네 가지 손님 타입을 한 명씩 확실히 앉혀 비교한다
+	for tname in ["student", "examinee", "developer", "worker"]:
 		GameState.spawn_customer()
+		if GameState.active_customers.is_empty(): continue
+		var cc = GameState.active_customers[-1]
+		for t in GameState.CUSTOMER_TYPES:
+			if t["type"] == tname:
+				cc["type"] = t["type"]; cc["color"] = t["color"]; cc["icon"] = t["icon"]
+				break
 	for c in GameState.active_customers:
 		c["state"] = "STUDYING"
 		c["pos"] = GameState.get_seat_position(c["seat_index"])

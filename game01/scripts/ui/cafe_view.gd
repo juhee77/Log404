@@ -749,6 +749,7 @@ func draw_integrated_multi_room_layout(w: float, h: float) -> void:
 			tint = tint.lerp(Color(1.0, 1.0, 1.0), 0.06 * float(v))
 			tint.v = clampf(tint.v * (0.92 + 0.05 * float(v)), 0.0, 1.0)
 			draw_character_shadow(draw_pos, 34.0)
+			draw_customer_accessory(c_type, draw_pos, 62.0)
 			var body = draw_character(char_tex, sprite_key, draw_pos, 62.0, tint)
 			# regulars carry a name tag, so the player recognises who came back
 			if String(c.get("regular_key", "")) != "":
@@ -1933,6 +1934,46 @@ func spawn_floating_text(pos: Vector2, text: String, color: Color = Color.WHITE)
 # The desk art is square 1024x1024 isometric pixel art, so it is drawn into a
 # square rect - the old non-square rect stretched every desk out of proportion.
 # 1.2 x tile width makes the furniture's own footprint cover roughly one tile.
+# ── What each customer carries ────────────────────────────────
+# Four customer types share two character sprites, so until now the only thing
+# telling a 공시생 from a 재택 직장인 was a faint colour tint. Each type now
+# carries something of its own, drawn beside the sprite in the same isometric
+# solids as the furniture.
+func draw_customer_accessory(c_type: String, feet: Vector2, body_h: float) -> void:
+	var s = body_h / 62.0
+	match c_type:
+		"student":
+			# 교복 백팩 - 발 옆에 세워둔 책가방
+			var b = feet + Vector2(-15 * s, -1 * s)
+			draw_prop_shadow(b, 8 * s, 4 * s)
+			draw_iso_prism(b, 7.5 * s, 3.8 * s, 15 * s, Color(0.24, 0.32, 0.55), Color(0.30, 0.40, 0.66))
+			draw_face_quad(b, 7.5 * s, 3.8 * s, 15 * s, 0.18, 0.82, 0.16, 0.52, Color(0.86, 0.72, 0.28))
+			draw_line(b + Vector2(-2 * s, -15 * s), b + Vector2(3 * s, -19 * s), Color(0.18, 0.24, 0.42), 2.0 * s)
+		"examinee":
+			# 공시생 - 쌓아둔 수험서와 텀블러
+			var st = feet + Vector2(15 * s, 1 * s)
+			draw_prop_shadow(st, 9 * s, 4.5 * s)
+			var cols = [Color(0.72, 0.30, 0.26), Color(0.82, 0.68, 0.32), Color(0.28, 0.44, 0.62)]
+			for k in range(3):
+				draw_iso_prism(st + Vector2(0, -k * 4.4 * s), 8.5 * s, 4.2 * s, 4.2 * s, cols[k])
+			draw_iso_cylinder(st + Vector2(-11 * s, -2 * s), 3.2 * s, 1.7 * s, 11 * s, Color(0.55, 0.60, 0.64))
+		"developer":
+			# 개발자 - 노트북 슬리브와 헤드폰
+			var lp = feet + Vector2(16 * s, 0)
+			draw_prop_shadow(lp, 9 * s, 4.5 * s)
+			draw_iso_prism(lp, 9 * s, 4.5 * s, 13 * s, Color(0.22, 0.24, 0.28), Color(0.32, 0.34, 0.38))
+			draw_face_quad(lp, 9 * s, 4.5 * s, 13 * s, 0.1, 0.9, 0.55, 0.72, Color(0.35, 0.72, 0.80))
+			fill_ellipse(feet + Vector2(-14 * s, -9 * s), 5 * s, 3 * s, Color(0.20, 0.22, 0.26))
+			draw_line(feet + Vector2(-17 * s, -11 * s), feet + Vector2(-11 * s, -11 * s), Color(0.55, 0.58, 0.62), 1.8 * s)
+		"worker":
+			# 재택 직장인 - 텀블러와 서류 트레이
+			var tr = feet + Vector2(-16 * s, 0)
+			draw_prop_shadow(tr, 9 * s, 4.5 * s)
+			draw_iso_prism(tr, 9 * s, 4.5 * s, 5 * s, Color(0.42, 0.34, 0.50), Color(0.52, 0.43, 0.60))
+			draw_iso_prism(tr + Vector2(0, -5 * s), 8 * s, 4 * s, 3 * s, Color(0.88, 0.86, 0.80))
+			draw_iso_cylinder(feet + Vector2(15 * s, 1 * s), 3.8 * s, 2.0 * s, 14 * s, Color(0.76, 0.42, 0.34))
+			fill_ellipse(feet + Vector2(15 * s, -14 * s), 3.8 * s, 2.0 * s, Color(0.30, 0.22, 0.20))
+
 # ── Story beat card ───────────────────────────────────────────
 # An act change used to pass in total silence - the header inside the quest
 # panel changed and nothing else. Now the beat is staged over the cafe: the
