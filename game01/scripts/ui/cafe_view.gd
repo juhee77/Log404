@@ -83,6 +83,10 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	update_door(delta)
+	if brew_flash > 0.0:
+		brew_flash = max(0.0, brew_flash - delta * 1.4)
+	if GameState.brew_active:
+		queue_redraw()
 	update_story_card(delta)
 	if not story_card.is_empty():
 		queue_redraw()
@@ -141,6 +145,12 @@ func _on_seat_cleaned(seat_index: int) -> void:
 		"alpha": 1.0,
 		"color": Color(0.9, 0.9, 0.4)
 	})
+
+func _unhandled_key_input(event: InputEvent) -> void:
+	if GameState.brew_active and event is InputEventKey and event.pressed and not event.echo:
+		if event.keycode == KEY_SPACE:
+			_brew_submit()
+			get_viewport().set_input_as_handled()
 
 func _gui_input(event: InputEvent) -> void:
 	var root = get_tree().current_scene
@@ -246,11 +256,15 @@ func _gui_input(event: InputEvent) -> void:
 				return
 
 			# 2. Check Coffee Bar Click (Updated to Room 2 position!)
-			var bar_rect = Rect2(1000, 75, 230, 100)
+			# 추출 중이면 어디를 눌러도 그 클릭이 타이밍 판정이 된다
+			if GameState.brew_active:
+				_brew_submit()
+				return
+			var bar_rect = Rect2(zone_center("lounge").x - 120, zone_center("lounge").y - 120, 240, 200)
 			if bar_rect.has_point(click_pos):
 				if GameState.active_orders.size() > 0:
 					var first_cid = GameState.active_orders.keys()[0]
-					GameState.serve_order(first_cid)
+					GameState.start_brew(first_cid)
 				return
 				
 			# Click Mascot Cat 'Navi' for Petting & Healing Buff
@@ -400,7 +414,8 @@ func _draw() -> void:
 		draw_string(ThemeDB.fallback_font, reset_rect.position + Vector2(16, 23), "↺ 배치 초기화",
 			HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color(1.0, 0.8, 0.75))
 		
-	# 6. Story beat card, over the whole cafe
+	# 6. Brewing mini-game gauge, then the story beat card over everything
+	draw_brew_game(w, h)
 	draw_story_card(w, h)
 
 	# 7. Draw Floating Action Texts
@@ -1973,6 +1988,86 @@ func draw_customer_accessory(c_type: String, feet: Vector2, body_h: float) -> vo
 			draw_iso_prism(tr + Vector2(0, -5 * s), 8 * s, 4 * s, 3 * s, Color(0.88, 0.86, 0.80))
 			draw_iso_cylinder(feet + Vector2(15 * s, 1 * s), 3.8 * s, 2.0 * s, 14 * s, Color(0.76, 0.42, 0.34))
 			fill_ellipse(feet + Vector2(15 * s, -14 * s), 3.8 * s, 2.0 * s, Color(0.30, 0.22, 0.20))
+
+# ── 핸드드립 추출 게이지 ───────────────────────────────────────
+# 커피바 위에 떠서, 좌우로 오가는 바늘을 초록 구간에 맞춰 멈추는 화면.
+var brew_flash: float = 0.0
+var brew_flash_hit: bool = false
+
+func _on_brew_step(_info: Dictionary) -> void:
+	brew_flash = 0.35
+
+func draw_brew_game(w: float, _h: float) -> void:
+	if not GameState.brew_active:
+		return
+	var info = GameState.get_brew_info()
+	var th = theme()
+
+	var bw = 420.0
+	var bh = 112.0
+	var r = Rect2((w - bw) * 0.5, 84.0, bw, bh)
+	draw_rect(r, Color(0.07, 0.06, 0.05, 0.96), true)
+	draw_rect(r, Color(th["accent"], 0.9), false, 2.0)
+
+	draw_string(ThemeDB.fallback_font, r.position + Vector2(14, 22),
+		"☕ 핸드드립 — %s  (%d/%d)" % [info["phase_name"], info["phase"] + 1, info["total"]],
+		HORIZONTAL_ALIGNMENT_LEFT, bw - 28, 14, th["accent"])
+	draw_string(ThemeDB.fallback_font, r.position + Vector2(14, 40), info["desc"],
+		HORIZONTAL_ALIGNMENT_LEFT, bw - 28, 11, Color(0.74, 0.72, 0.68))
+
+	# 게이지 트랙
+	var track = Rect2(r.position.x + 16, r.position.y + 54, bw - 32, 20)
+	draw_rect(track, Color(0.13, 0.12, 0.11), true)
+	draw_rect(track, Color(0.30, 0.27, 0.24), false, 1.0)
+
+	# 목표 구간
+	var band_w = track.size.x * float(info["band"])
+	var band_x = track.position.x + track.size.x * float(info["target"]) - band_w * 0.5
+	draw_rect(Rect2(band_x, track.position.y, band_w, track.size.y), Color(0.18, 0.78, 0.45, 0.55), true)
+	draw_rect(Rect2(band_x, track.position.y, band_w, track.size.y), Color(0.25, 0.95, 0.60), false, 1.5)
+	# 한가운데 퍼펙트 선
+	var mid_x = band_x + band_w * 0.5
+	draw_line(Vector2(mid_x, track.position.y), Vector2(mid_x, track.position.y + track.size.y),
+		Color(0.85, 1.0, 0.9, 0.7), 1.0)
+
+	# 바늘
+	var nx = track.position.x + track.size.x * float(info["pos"])
+	draw_rect(Rect2(nx - 2, track.position.y - 5, 4, track.size.y + 10), Color(1.0, 0.92, 0.55), true)
+
+	# 단계별 성공 표시
+	for k in range(int(info["total"])):
+		var dot = Vector2(r.position.x + 18 + k * 16, r.position.y + bh - 16)
+		draw_circle(dot, 5.0, Color(0.25, 0.95, 0.60) if k < int(info["hits"]) else Color(0.28, 0.26, 0.24))
+
+	draw_string(ThemeDB.fallback_font, Vector2(r.position.x + 90, r.position.y + bh - 11),
+		"클릭 또는 Space 로 멈추기", HORIZONTAL_ALIGNMENT_LEFT, bw - 100, 11, Color(0.62, 0.60, 0.57))
+
+	# 판정 플래시
+	if brew_flash > 0.0:
+		var col = Color(0.25, 0.95, 0.60, brew_flash) if brew_flash_hit else Color(0.95, 0.35, 0.30, brew_flash)
+		draw_rect(r, col, false, 4.0)
+
+func _brew_submit() -> void:
+	var step = GameState.submit_brew()
+	if not step.get("ok", false):
+		return
+	brew_flash = 0.35
+	brew_flash_hit = step["hit"]
+	floating_texts.append({
+		"text": ("✅ %s 성공!" % step["phase_name"]) if step["hit"] else ("💧 %s 빗나감" % step["phase_name"]),
+		"pos": Vector2(get_rect().size.x * 0.5, 210),
+		"alpha": 1.0,
+		"color": Color(0.25, 0.95, 0.6) if step["hit"] else Color(0.95, 0.5, 0.4)
+	})
+	if step.get("finished", false):
+		var res = step["result"]
+		floating_texts.append({
+			"text": res["msg"],
+			"pos": Vector2(get_rect().size.x * 0.5, 240),
+			"alpha": 1.0,
+			"color": Color(1.0, 0.85, 0.4)
+		})
+	queue_redraw()
 
 # ── Story beat card ───────────────────────────────────────────
 # An act change used to pass in total silence - the header inside the quest

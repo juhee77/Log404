@@ -44,6 +44,16 @@ func _ready() -> void:
 	await _capture("res://scratch/check_normal.png")
 	await _capture("res://scratch/check_customers.png")
 
+	# 핸드드립 미니게임 게이지
+	if GameState.active_customers.size() > 0:
+		var bc = GameState.active_customers[0]
+		GameState.create_order(bc["id"])
+		GameState.start_brew(bc["id"])
+		GameState.brew_pos = 0.62
+		cafe.queue_redraw()
+		await _capture("res://scratch/check_brew.png")
+		GameState.cancel_brew()
+
 	# story beat card
 	cafe._on_story_beat({
 		"kind": "act",

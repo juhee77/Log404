@@ -5284,6 +5284,7 @@ func change_zone(new_zone: String) -> void:
 
 func _process(delta: float) -> void:
 	refresh_stat_quests()
+	_update_brew(delta)
 
 	# 사물함 월 대여료
 	refresh_lockers_rented()
@@ -5544,6 +5545,154 @@ func create_order(customer_id: int) -> void:
 	var selected = o_types[randi() % o_types.size()]
 	active_orders[customer_id] = { "type": selected, "time": game_time }
 	order_created.emit(customer_id, selected)
+
+# ══════════════════════════════════════════════════════════════
+# ☕ 핸드드립 추출 미니게임
+# 주문 서빙이 그냥 클릭 한 번이었다. 커피바가 매장의 중심인데 플레이어가 할
+# 일이 없었다. 이제 주문을 받으면 3단계 추출을 타이밍으로 맞춘다.
+#   뜸들이기 → 1차 추출 → 2차 추출
+# 각 단계마다 게이지가 좌우로 오가고, 초록 구간에서 멈추면 성공이다.
+# 세 번 다 명중하면 PERFECT — 팁이 크게 붙고 평점이 오른다.
+# ══════════════════════════════════════════════════════════════
+
+signal brew_started(info)
+signal brew_step(info)
+signal brew_finished(result)
+
+const BREW_PHASES: Array = [
+	{ "name": "뜸들이기", "desc": "원두를 적셔 가스를 빼냅니다", "speed": 0.85, "band": 0.20 },
+	{ "name": "1차 추출", "desc": "중심부터 나선으로 부어 주세요", "speed": 1.25, "band": 0.15 },
+	{ "name": "2차 추출", "desc": "물줄기를 가늘게 유지합니다", "speed": 1.70, "band": 0.12 }
+]
+
+var brew_active: bool = false
+var brew_customer_id: int = -1
+var brew_phase: int = 0
+var brew_pos: float = 0.0        # 0.0 ~ 1.0 게이지 위치
+var brew_dir: float = 1.0
+var brew_target: float = 0.5     # 목표 구간 중심
+var brew_hits: int = 0
+
+func start_brew(customer_id: int) -> bool:
+	if brew_active or not active_orders.has(customer_id):
+		return false
+	brew_active = true
+	brew_customer_id = customer_id
+	brew_phase = 0
+	brew_hits = 0
+	brew_pos = 0.0
+	brew_dir = 1.0
+	brew_target = randf_range(0.25, 0.75)
+	_play_sfx_safe("click")
+	brew_started.emit(get_brew_info())
+	return true
+
+func get_brew_info() -> Dictionary:
+	var ph = BREW_PHASES[clampi(brew_phase, 0, BREW_PHASES.size() - 1)]
+	return {
+		"active": brew_active,
+		"phase": brew_phase,
+		"phase_name": ph["name"],
+		"desc": ph["desc"],
+		"pos": brew_pos,
+		"target": brew_target,
+		"band": ph["band"],
+		"hits": brew_hits,
+		"total": BREW_PHASES.size()
+	}
+
+func _update_brew(delta: float) -> void:
+	if not brew_active:
+		return
+	var ph = BREW_PHASES[brew_phase]
+	brew_pos += brew_dir * ph["speed"] * delta
+	if brew_pos >= 1.0:
+		brew_pos = 1.0
+		brew_dir = -1.0
+	elif brew_pos <= 0.0:
+		brew_pos = 0.0
+		brew_dir = 1.0
+
+# 플레이어가 멈춘 순간 판정
+func submit_brew() -> Dictionary:
+	if not brew_active:
+		return { "ok": false }
+	var ph = BREW_PHASES[brew_phase]
+	var off = abs(brew_pos - brew_target)
+	var hit = off <= ph["band"] * 0.5
+	if hit:
+		brew_hits += 1
+		_play_sfx_safe("chime")
+	else:
+		_play_sfx_safe("click")
+
+	var step = {
+		"ok": true,
+		"hit": hit,
+		"phase_name": ph["name"],
+		"offset": off,
+		"hits": brew_hits
+	}
+	brew_phase += 1
+	if brew_phase >= BREW_PHASES.size():
+		step["finished"] = true
+		step["result"] = _finish_brew()
+	else:
+		step["finished"] = false
+		brew_pos = 0.0
+		brew_dir = 1.0
+		brew_target = randf_range(0.25, 0.75)
+		brew_step.emit(get_brew_info())
+	return step
+
+func _finish_brew() -> Dictionary:
+	var cid = brew_customer_id
+	var total = BREW_PHASES.size()
+	var grade = "실패"
+	var mult = 1.0
+	var rep = 0.0
+	if brew_hits >= total:
+		grade = "PERFECT"; mult = 2.5; rep = 0.12
+	elif brew_hits == total - 1:
+		grade = "GOOD"; mult = 1.6; rep = 0.05
+	elif brew_hits > 0:
+		grade = "보통"; mult = 1.2; rep = 0.0
+	else:
+		grade = "실패"; mult = 0.8; rep = -0.04
+
+	var base = 300.0 + (upgrades["coffee_bar"]["level"] * 80.0)
+	var tip = base * mult
+	var extra = tip - base
+
+	brew_active = false
+	brew_customer_id = -1
+
+	if active_orders.has(cid):
+		active_orders.erase(cid)
+		add_money(tip)
+		daily_drink_rev += tip
+		order_served.emit(cid, tip)
+		report_quest_action("serve")
+	if rep != 0.0:
+		reputation = clampf(reputation + rep, 0.0, 5.0)
+		reputation_changed.emit(reputation)
+
+	var res = {
+		"grade": grade,
+		"hits": brew_hits,
+		"total": total,
+		"tip": tip,
+		"bonus": extra,
+		"reputation_delta": rep,
+		"msg": "☕ %s! %d/%d 단계 성공 — 팁 %s₩%s" % [grade, brew_hits, total,
+			format_money(tip), ("  ⭐%+.2f" % rep) if rep != 0.0 else ""]
+	}
+	brew_finished.emit(res)
+	return res
+
+func cancel_brew() -> void:
+	brew_active = false
+	brew_customer_id = -1
 
 func serve_order(customer_id: int) -> bool:
 	if not active_orders.has(customer_id): return false
