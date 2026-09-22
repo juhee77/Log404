@@ -1,3 +1,8 @@
 # Ignore large compiled static libraries (>100MB) from git tracking
 *.a
 *.xcframework/
+
+# 게임이 시작할 때마다 자동으로 덮어쓰는 디버그 캡처 (main_scene.gd:65)
+# 추적해 두면 실행할 때마다 워킹 트리가 더러워진다.
+live_visual_check.png
+live_visual_check.png.import
