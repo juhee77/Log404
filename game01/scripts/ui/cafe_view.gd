@@ -404,8 +404,11 @@ func _draw() -> void:
 		var banner_rect = Rect2(40, 508, 690, 34)
 		draw_rect(banner_rect, Color(0.12, 0.1, 0.08, 0.96), true)
 		draw_rect(banner_rect, Color(0.96, 0.62, 0.07), false, 2.0)
-		draw_string(ThemeDB.fallback_font, banner_rect.position + Vector2(14, 23),
-			"🔨 책상 옮기기: 책상을 클릭해 잡은 뒤, 원하는 칸을 클릭하거나 끌어서 놓으세요",
+		var hint = "🔨 책상 옮기기: 책상을 클릭해 잡은 뒤, 원하는 칸을 클릭하거나 끌어서 놓으세요"
+		var lvl = GameState.study_area_level
+		if lvl < GameState.STUDY_AREA_STAGES.size() - 1:
+			hint = "🔨 책상 옮기기  ·  개방 %d칸 (어두운 칸은 [좌석 & 시설 업그레이드]에서 확장)" % GameState.get_study_cell_count()
+		draw_string(ThemeDB.fallback_font, banner_rect.position + Vector2(14, 23), hint,
 			HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color(0.96, 0.62, 0.07))
 
 		var reset_rect = decorate_reset_rect()
@@ -435,8 +438,24 @@ func draw_full_isometric_floor_grid(_w: float, _h: float) -> void:
 	var line_alpha = 0.55 if is_active_grid else 0.22
 	var line_color = Color(theme()["accent"], line_alpha) if is_active_grid else Color(theme()["grid"], line_alpha)
 	
+	# 아직 사지 않은 칸은 "미개방"으로 어둡게 깔아, 확장이 무엇을 열어주는지
+	# 플레이어가 바로 볼 수 있게 한다.
 	for gy in range(GameState.STUDY_Y0, GameState.STUDY_Y1 + 1):
 		for gx in range(GameState.STUDY_X0, GameState.STUDY_X1 + 1):
+			var locked_cell = Vector2i(gx, gy)
+			if GameState.is_iso_cell_in_bounds(locked_cell):
+				continue
+			var lp = GameState.get_iso_diamond_polygon(locked_cell)
+			for li in range(lp.size()):
+				lp[li] += vo
+			draw_colored_polygon(lp, Color(0.05, 0.05, 0.07, 0.55))
+			var lloop = lp.duplicate()
+			lloop.append(lp[0])
+			draw_polyline(lloop, Color(0.35, 0.33, 0.30, 0.35), 1.0)
+
+	var area = GameState.get_study_rect()
+	for gy in range(area.position.y, area.position.y + area.size.y):
+		for gx in range(area.position.x, area.position.x + area.size.x):
 			var cell = Vector2i(gx, gy)
 			var diamond_poly = GameState.get_iso_diamond_polygon(cell)
 			for pt_idx in range(diamond_poly.size()):

@@ -7,12 +7,6 @@ signal closed
 var list_container: VBoxContainer
 var btn_close: Button
 
-var expansion_stages: Array = [
-	{"stage": 1, "name": "1단계 8x8 타일 기본 독서실", "req_score": 0, "cost": 0, "unlocked": true},
-	{"stage": 2, "name": "2단계 12x12 타일 중형 매장 (스낵바 구역 해금)", "req_score": 600, "cost": 50000.0, "unlocked": false},
-	{"stage": 3, "name": "3단계 16x16 타일 대형 플래그십 (프런트 & 1인실 해금)", "req_score": 2000, "cost": 200000.0, "unlocked": false}
-]
-
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	build_panel_ui()
@@ -71,7 +65,15 @@ func refresh_expansion() -> void:
 	info_lbl.add_theme_color_override("font_color", Color(0.96, 0.62, 0.07))
 	list_container.add_child(info_lbl)
 	
-	for stage in expansion_stages:
+	var area_lbl = Label.new()
+	area_lbl.text = "🏗️ 현재 개방 면적: %d칸 (%s)" % [GameState.get_study_cell_count(),
+		GameState.STUDY_AREA_STAGES[GameState.study_area_level]["name"]]
+	area_lbl.add_theme_font_size_override("font_size", 14)
+	area_lbl.add_theme_color_override("font_color", Color(0.2, 0.85, 0.55))
+	list_container.add_child(area_lbl)
+
+	for si in range(GameState.STUDY_AREA_STAGES.size()):
+		var stage = GameState.STUDY_AREA_STAGES[si]
 		var card = PanelContainer.new()
 		var card_margin = MarginContainer.new()
 		card_margin.add_theme_constant_override("margin_left", 12)
@@ -94,32 +96,39 @@ func refresh_expansion() -> void:
 		hbox.add_child(vbox)
 		
 		var name_lbl = Label.new()
-		name_lbl.text = stage["name"]
+		name_lbl.text = "%s  —  %d칸" % [stage["name"], stage["w"] * stage["h"]]
 		name_lbl.add_theme_font_size_override("font_size", 15)
 		name_lbl.add_theme_color_override("font_color", Color.WHITE)
 		vbox.add_child(name_lbl)
 		
 		var req_lbl = Label.new()
-		req_lbl.text = "필요 꾸미기 점수: 🌟 %d점 | 필요 확장 비용: %d ₩" % [stage["req_score"], int(stage["cost"])]
+		req_lbl.text = "필요 꾸미기 점수: 🌟 %d점  |  확장 비용: %s ₩" % [stage["req_score"], GameState.format_money(stage["cost"])]
 		req_lbl.add_theme_font_size_override("font_size", 12)
 		req_lbl.add_theme_color_override("font_color", Color(0.8, 0.8, 0.75))
 		vbox.add_child(req_lbl)
 		
 		var buy_btn = Button.new()
 		buy_btn.custom_minimum_size = Vector2(130, 40)
-		if stage["unlocked"]:
-			buy_btn.text = "✅ 확장 완료"
+		if si <= GameState.study_area_level:
+			buy_btn.text = "✅ 개방됨"
+			buy_btn.disabled = true
+		elif si > GameState.study_area_level + 1:
+			buy_btn.text = "🔒 이전 단계 먼저"
 			buy_btn.disabled = true
 		else:
-			buy_btn.text = "🏰 2배 영토 확장"
-			var st = stage
+			buy_btn.text = "🏗️ 면적 확장"
 			buy_btn.pressed.connect(func():
-				if GameState.decor_score >= st["req_score"]:
-					st["unlocked"] = true
-					GameState.add_money(-st["cost"])
-					GameState.report_quest_action("expand")
+				var res = GameState.expand_study_area()
+				var msg = Label.new()
+				msg.text = res["msg"]
+				msg.add_theme_font_size_override("font_size", 12)
+				msg.add_theme_color_override("font_color",
+					Color(0.2, 0.85, 0.55) if res["success"] else Color(0.95, 0.45, 0.35))
+				list_container.add_child(msg)
+				if res["success"]:
 					refresh_expansion()
 			)
-			
+
+
 		hbox.add_child(buy_btn)
 		list_container.add_child(card)

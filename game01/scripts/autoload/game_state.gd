@@ -5392,6 +5392,10 @@ func _process(delta: float) -> void:
 			if c["pos"].distance_to(target) < 6.0:
 				c["state"] = "STUDYING"
 		elif c["state"] == "STUDYING":
+			# 앉은 손님은 책상에 붙어 있어야 한다. 예전에는 착석할 때 잡은 좌표를
+			# 그대로 들고 있어서, 꾸미기 모드로 책상을 옮기면 손님만 원래 자리에
+			# 남아 허공에 앉아 있었다.
+			c["pos"] = get_seat_position(c["seat_index"])
 			c["study_time"] += delta
 			var temp_penalty = 1.0
 			if temperature < 21.0 or temperature > 27.0:
@@ -5979,6 +5983,7 @@ func save_game() -> void:
 		"temperature": temperature,
 		"upgrades": {},
 		"seat_cells": {},
+		"study_area_level": study_area_level,
 		"current_quest_index": current_quest_index,
 		"lifetime_visitors": lifetime_visitors,
 		"quest_progress": {}
@@ -6027,6 +6032,9 @@ func load_game() -> void:
 				var cell = clamp_iso_cell(Vector2i(int(raw_cell[0]), int(raw_cell[1])))
 				seat_custom_offsets[idx] = iso_to_screen(cell) - get_base_seat_position(idx)
 
+		study_area_level = int(data.get("study_area_level", 0))
+		_default_seat_cells.clear()
+		_ensure_area_fits_capacity()
 		current_quest_index = data.get("current_quest_index", 1)
 		lifetime_visitors = data.get("lifetime_visitors", 0)
 		var saved_quests = data.get("quest_progress", {})
@@ -6290,6 +6298,50 @@ const STUDY_X0: int = 0
 const STUDY_Y0: int = 2
 const STUDY_X1: int = 5
 const STUDY_Y1: int = 7
+
+# ── 매장 면적 단계 ────────────────────────────────────────────
+# 열공방 안에서 실제로 책상을 놓을 수 있는 범위. 예전에는 확장 패널의 "영토
+# 확장" 버튼이 돈만 받고 로컬 플래그만 켰을 뿐, 그 플래그를 읽는 코드가 어디에도
+# 없어서 매장이 조금도 넓어지지 않았다. 이제 이 단계가 실제 배치 가능 범위다.
+const STUDY_AREA_STAGES: Array = [
+	{ "name": "1단계 · 작은 독서실",     "w": 3, "h": 3, "req_score": 0,    "cost": 0.0 },
+	{ "name": "2단계 · 중형 열람실",     "w": 4, "h": 4, "req_score": 600,  "cost": 50000.0 },
+	{ "name": "3단계 · 대형 스터디홀",   "w": 5, "h": 5, "req_score": 2000, "cost": 200000.0 },
+	{ "name": "4단계 · 플래그십 열공방", "w": 6, "h": 6, "req_score": 5000, "cost": 600000.0 }
+]
+var study_area_level: int = 0
+
+func get_study_rect() -> Rect2i:
+	var st = STUDY_AREA_STAGES[clampi(study_area_level, 0, STUDY_AREA_STAGES.size() - 1)]
+	return Rect2i(STUDY_X0, STUDY_Y0, st["w"], st["h"])
+
+func get_study_cell_count() -> int:
+	var r = get_study_rect()
+	return r.size.x * r.size.y
+
+# 좌석 수가 개방 면적보다 많아지면 책상이 겹쳐 버리므로, 필요한 만큼 단계를 올린다.
+func _ensure_area_fits_capacity() -> void:
+	while study_area_level < STUDY_AREA_STAGES.size() - 1 \
+			and get_ground_floor_capacity() > get_study_cell_count():
+		study_area_level += 1
+		_default_seat_cells.clear()
+
+func expand_study_area() -> Dictionary:
+	var next_level = study_area_level + 1
+	if next_level >= STUDY_AREA_STAGES.size():
+		return { "success": false, "msg": "이미 최대 면적입니다." }
+	var st = STUDY_AREA_STAGES[next_level]
+	if decor_score < st["req_score"]:
+		return { "success": false, "msg": "꾸미기 점수가 부족합니다 (%d / %d)" % [decor_score, st["req_score"]] }
+	if not can_afford(st["cost"]):
+		return { "success": false, "msg": "확장 비용이 부족합니다 (%s ₩)" % format_money(st["cost"]) }
+	add_money(-st["cost"])
+	study_area_level = next_level
+	_default_seat_cells.clear()
+	report_quest_action("expand")
+	_play_sfx_safe("chime")
+	save_game()
+	return { "success": true, "msg": "🏗️ %s 개방! 책상 놓을 칸이 %d칸이 되었습니다." % [st["name"], get_study_cell_count()] }
 const ISO_GRID_COLS: int = 6
 const ISO_GRID_ROWS: int = 6
 
@@ -6327,10 +6379,14 @@ func is_point_in_iso_tile(point: Vector2, grid_pos: Vector2i, origin: Vector2 = 
 
 # 책상을 놓을 수 있는 칸인가 (열공방 구역 안인가)
 func is_iso_cell_in_bounds(cell: Vector2i) -> bool:
-	return cell.x >= STUDY_X0 and cell.x <= STUDY_X1 and cell.y >= STUDY_Y0 and cell.y <= STUDY_Y1
+	var r = get_study_rect()
+	return cell.x >= r.position.x and cell.x < r.position.x + r.size.x \
+		and cell.y >= r.position.y and cell.y < r.position.y + r.size.y
 
 func clamp_iso_cell(cell: Vector2i) -> Vector2i:
-	return Vector2i(clampi(cell.x, STUDY_X0, STUDY_X1), clampi(cell.y, STUDY_Y0, STUDY_Y1))
+	var r = get_study_rect()
+	return Vector2i(clampi(cell.x, r.position.x, r.position.x + r.size.x - 1),
+		clampi(cell.y, r.position.y, r.position.y + r.size.y - 1))
 
 func is_floor_cell(cell: Vector2i) -> bool:
 	return cell.x >= 0 and cell.x < FLOOR_COLS and cell.y >= 0 and cell.y < FLOOR_ROWS
@@ -6354,16 +6410,17 @@ func _build_default_seat_cells() -> Array:
 	# whole room and the arrangement only gets denser as the cafe grows.
 	var spaced: Array = []
 	var rest: Array = []
-	for y in range(STUDY_Y0, STUDY_Y1 + 1):
-		for x in range(STUDY_X0, STUDY_X1 + 1):
+	var area = get_study_rect()
+	for y in range(area.position.y, area.position.y + area.size.y):
+		for x in range(area.position.x, area.position.x + area.size.x):
 			var c = Vector2i(x, y)
 			if (x + y) % 2 == 0:
 				spaced.append(c)
 			else:
 				rest.append(c)
 
-	var center = (iso_to_screen(Vector2i(STUDY_X0, STUDY_Y0))
-		+ iso_to_screen(Vector2i(STUDY_X1, STUDY_Y1))) * 0.5
+	var center = (iso_to_screen(area.position)
+		+ iso_to_screen(area.position + area.size - Vector2i.ONE)) * 0.5
 	var ordered: Array = []
 	var pool: Array = spaced.duplicate()
 
