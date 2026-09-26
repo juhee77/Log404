@@ -5777,6 +5777,59 @@ func get_seats_on_floor(floor_num: int) -> Array:
 			out.append(i)
 	return out
 
+# ── 매장 설비 계기판 ──────────────────────────────────────────
+# 예전 설비 45종은 전부 HUD 토글일 뿐 게임플레이에 아무 영향이 없었고, 수치도
+# 코드에 박힌 상수였다. 여기서는 실제 게임 상태(온도·소음·공기질·재고·사물함
+# ·평판 등)를 그대로 읽어, 계기판이 실제로 매장을 설명하게 한다.
+func get_facility_readouts() -> Array:
+	var seats_used = active_customers.size()
+	var seats_total = max(get_max_capacity(), 1)
+	var occupancy = 100.0 * float(seats_used) / float(seats_total)
+	var dirty = dirty_seats.size()
+	var locker_cap = max(get_locker_capacity(), 1)
+	return [
+		{ "cat": "설비 & 환경", "icon": "🔥", "name": "인버터 냉난방",
+		  "value": "%.1f °C" % temperature,
+		  "ok": temperature >= 21.0 and temperature <= 27.0,
+		  "note": "21~27 °C 를 벗어나면 집중도가 30% 떨어집니다" },
+		{ "cat": "설비 & 환경", "icon": "🧱", "name": "흡음 마감 & 백색소음",
+		  "value": "%.0f dB" % white_noise_db,
+		  "ok": white_noise_db <= 50.0,
+		  "note": "50 dB 이하 유지 권장" },
+		{ "cat": "설비 & 환경", "icon": "💨", "name": "전열교환 환기",
+		  "value": "공기질 %.0f%%" % air_quality_score,
+		  "ok": air_quality_score >= 80.0,
+		  "note": "공기청정기 업그레이드로 회복" },
+		{ "cat": "설비 & 환경", "icon": "🧼", "name": "자동 살균 방역",
+		  "value": "청소 대기 %d석" % dirty,
+		  "ok": dirty == 0,
+		  "note": "더러운 자리는 손님이 앉지 않습니다" },
+		{ "cat": "설비 & 환경", "icon": "💡", "name": "인체감지 LED 조명",
+		  "value": "%s" % time_of_day,
+		  "ok": true,
+		  "note": "시간대에 따라 자동 조도 전환" },
+		{ "cat": "데이터 & 운영", "icon": "📊", "name": "좌석 이용 현황",
+		  "value": "%d / %d석 (%.0f%%)" % [seats_used, seats_total, occupancy],
+		  "ok": occupancy < 95.0,
+		  "note": "꽉 차면 돌아가는 손님이 생깁니다" },
+		{ "cat": "데이터 & 운영", "icon": "🏗️", "name": "개방 면적",
+		  "value": "%d칸 · %s" % [get_study_cell_count(), STUDY_AREA_STAGES[study_area_level]["name"]],
+		  "ok": true,
+		  "note": "[확장] 패널에서 넓힐 수 있습니다" },
+		{ "cat": "데이터 & 운영", "icon": "🔑", "name": "스마트 사물함",
+		  "value": "%d / %d칸 대여" % [lockers_rented, locker_cap],
+		  "ok": true,
+		  "note": "대여 1칸당 임대 수익이 발생합니다" },
+		{ "cat": "데이터 & 운영", "icon": "☕", "name": "원두 재고",
+		  "value": "%d 자루" % beans_inventory,
+		  "ok": beans_inventory > 100,
+		  "note": "[로스팅] 패널에서 보충" },
+		{ "cat": "데이터 & 운영", "icon": "🥐", "name": "베이커리 재고",
+		  "value": "🍰 %d · 🥐 %d" % [bakery_stock.get("cheesecake", 0), bakery_stock.get("croissant", 0)],
+		  "ok": bakery_stock.get("cheesecake", 0) + bakery_stock.get("croissant", 0) > 5,
+		  "note": "[베이커리] 패널에서 굽기" }
+	]
+
 func get_max_capacity() -> int:
 	var open = upgrades["open_seats"]["level"] * 3
 	var booth = upgrades["private_booths"]["level"] * 2
