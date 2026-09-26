@@ -124,7 +124,7 @@
 godot --path game01
 ```
 
-### 자동화 테스트 (152개)
+### 자동화 테스트
 
 ```bash
 godot --headless --path game01 --script scripts/tests/test_all_70_modules.gd
