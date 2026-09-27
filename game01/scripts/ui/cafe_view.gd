@@ -218,8 +218,21 @@ func _gui_input(event: InputEvent) -> void:
 			# 0. Check Clean Top Right Control Buttons Click
 			var screen_click = event.position
 			if GameState.is_decorating_mode:
+				if decorate_rotate_rect().has_point(screen_click):
+					if selected_drag_seat != -1:
+						var deg = GameState.rotate_seat(selected_drag_seat)
+						GameState.save_game()
+						floating_texts.append({
+							"text": "↻ 책상 #%d 방향 %d°" % [selected_drag_seat + 1, deg],
+							"pos": GameState.get_seat_position(selected_drag_seat) + Vector2(0, -40),
+							"alpha": 1.0,
+							"color": Color(0.5, 0.9, 1.0)
+						})
+						queue_redraw()
+					return
 				if decorate_reset_rect().has_point(screen_click):
 					var n = GameState.reset_seat_layout()
+					GameState.seat_rotations.clear()
 					floating_texts.append({
 						"text": "↺ 책상 %d개를 기본 배치로 되돌렸습니다" % n,
 						"pos": Vector2(420, 480),
@@ -401,7 +414,7 @@ func _draw() -> void:
 	# 5b. Decorating HUD, drawn LAST so the room panels cannot paint over it, and
 	# along the empty bottom of the study room so it clears the room banners.
 	if GameState.is_decorating_mode:
-		var banner_rect = Rect2(40, 508, 690, 34)
+		var banner_rect = Rect2(40, 508, 528, 34)
 		draw_rect(banner_rect, Color(0.12, 0.1, 0.08, 0.96), true)
 		draw_rect(banner_rect, Color(0.96, 0.62, 0.07), false, 2.0)
 		var hint = "🔨 책상 옮기기: 책상을 클릭해 잡은 뒤, 원하는 칸을 클릭하거나 끌어서 놓으세요"
@@ -410,6 +423,16 @@ func _draw() -> void:
 			hint = "🔨 책상 옮기기  ·  개방 %d칸 (어두운 칸은 [좌석 & 시설 업그레이드]에서 확장)" % GameState.get_study_cell_count()
 		draw_string(ThemeDB.fallback_font, banner_rect.position + Vector2(14, 23), hint,
 			HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color(0.96, 0.62, 0.07))
+
+		# 선택한 책상 방향 돌리기
+		var rot_rect = decorate_rotate_rect()
+		var rot_on = selected_drag_seat != -1
+		draw_rect(rot_rect, Color(0.16, 0.24, 0.30, 0.96) if rot_on else Color(0.13, 0.13, 0.14, 0.9), true)
+		draw_rect(rot_rect, Color(0.35, 0.80, 0.90) if rot_on else Color(0.35, 0.35, 0.38), false, 2.0)
+		draw_string(ThemeDB.fallback_font, rot_rect.position + Vector2(12, 23),
+			"↻ 방향 돌리기" if rot_on else "↻ 책상 선택 후",
+			HORIZONTAL_ALIGNMENT_LEFT, -1, 13,
+			Color(0.65, 0.92, 1.0) if rot_on else Color(0.45, 0.45, 0.48))
 
 		var reset_rect = decorate_reset_rect()
 		draw_rect(reset_rect, Color(0.32, 0.14, 0.14, 0.96), true)
@@ -2334,6 +2357,9 @@ func draw_lounge_bar() -> void:
 func decorate_reset_rect() -> Rect2:
 	return Rect2(742, 508, 150, 34)
 
+func decorate_rotate_rect() -> Rect2:
+	return Rect2(576, 508, 158, 34)
+
 # Four desk variants instead of two - desk_island_2p.png was being loaded and
 # then never drawn. The variant is stable per seat so a desk keeps its shape
 # when the player moves it.
@@ -2384,7 +2410,7 @@ func draw_desk_art(seat_index: int, is_booth: bool, tile_center: Vector2, target
 # 덕분에 새 매장도 책상들이 서로 다른 쪽을 보고 선다.
 func is_desk_mirrored(seat_index: int) -> bool:
 	if GameState.seat_rotations.has(seat_index):
-		return int(GameState.seat_rotations[seat_index]) % 360 >= 180
+		return int(int(GameState.seat_rotations[seat_index]) / 90) % 2 == 1
 	var c = GameState.get_seat_cell(seat_index)
 	return (c.x + c.y * 2 + seat_index) % 2 == 1
 

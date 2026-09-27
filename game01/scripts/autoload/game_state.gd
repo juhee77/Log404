@@ -3983,6 +3983,8 @@ func snap_to_grid(pos: Vector2, _grid_size: float = 40.0) -> Vector2:
 func set_seat_custom_offset_snapped(index: int, raw_offset: Vector2) -> Dictionary:
 	return place_seat_at_world(index, get_base_seat_position(index) + raw_offset)
 
+# 책상 방향 돌리기. 아이소메트릭에서는 90도마다 좌우 반전이 번갈아 나타나므로
+# 한 번 누를 때마다 화면에서 확실히 바뀐다.
 func rotate_seat(index: int) -> int:
 	var current_rot = seat_rotations.get(index, 0)
 	var new_rot = (current_rot + 90) % 360
@@ -4137,6 +4139,7 @@ func save_game() -> void:
 		"upgrades": {},
 		"seat_cells": {},
 		"study_area_level": study_area_level,
+		"seat_rotations": {},
 		"current_quest_index": current_quest_index,
 		"lifetime_visitors": lifetime_visitors,
 		"quest_progress": {}
@@ -4146,6 +4149,8 @@ func save_game() -> void:
 		data["quest_progress"][str(q["id"])] = q["current"]
 	for key in upgrades:
 		data["upgrades"][key] = upgrades[key]["level"]
+	for rot_idx in seat_rotations:
+		data["seat_rotations"][str(rot_idx)] = seat_rotations[rot_idx]
 	# Persist the isometric desk layout - previously every placement was lost on reload.
 	for seat_idx in seat_custom_offsets:
 		var cell = get_seat_cell(int(seat_idx))
@@ -4185,6 +4190,10 @@ func load_game() -> void:
 				var cell = clamp_iso_cell(Vector2i(int(raw_cell[0]), int(raw_cell[1])))
 				seat_custom_offsets[idx] = iso_to_screen(cell) - get_base_seat_position(idx)
 
+		seat_rotations.clear()
+		var saved_rot = data.get("seat_rotations", {})
+		for rk in saved_rot:
+			seat_rotations[int(rk)] = int(saved_rot[rk])
 		study_area_level = int(data.get("study_area_level", 0))
 		_default_seat_cells.clear()
 		_ensure_area_fits_capacity()
