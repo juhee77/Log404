@@ -16,6 +16,7 @@ var student_texture: Texture2D
 var developer_texture: Texture2D
 
 var selected_drag_seat: int = -1
+var prop_placing: bool = false   # 🪴 소품 놓기 모드
 var is_dragging: bool = false
 var drag_start_mouse_pos: Vector2 = Vector2.ZERO
 var drag_grab_offset: Vector2 = Vector2.ZERO
@@ -186,6 +187,27 @@ func _gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 		var click_pos = event.position - view_offset
 		if event.pressed:
+			# 소품 놓기 모드: 개방된 바닥 칸을 클릭하면 화분을 놓는다
+			if GameState.is_decorating_mode and prop_placing:
+				var pcell = GameState.screen_to_iso(click_pos)
+				if GameState.is_iso_cell_in_bounds(pcell) and GameState.get_seat_index_at_cell(pcell) == -1:
+					var center = GameState.iso_to_screen(pcell)
+					var placed = GameState.add_decoration(center, "plant")
+					floating_texts.append({
+						"text": "🪴 소품 배치! (-150₩)" if placed else "💸 잔액이 부족합니다",
+						"pos": center + Vector2(0, -40),
+						"alpha": 1.0,
+						"color": Color(0.4, 0.95, 0.6) if placed else Color(0.95, 0.5, 0.4)
+					})
+				else:
+					floating_texts.append({
+						"text": "책상이 없는 개방된 칸에만 놓을 수 있습니다",
+						"pos": click_pos + Vector2(0, -30),
+						"alpha": 1.0, "color": Color(0.9, 0.7, 0.4)
+					})
+				queue_redraw()
+				return
+
 			# HIGHEST PRIORITY: If a seat is ALREADY selected to be moved, move to ANY clicked tile (Blue or Brown floor!)
 			if selected_drag_seat != -1 and not is_dragging:
 				var other_seat = pick_seat_at(click_pos)
@@ -218,6 +240,22 @@ func _gui_input(event: InputEvent) -> void:
 			# 0. Check Clean Top Right Control Buttons Click
 			var screen_click = event.position
 			if GameState.is_decorating_mode:
+				if decorate_prop_rect().has_point(screen_click):
+					prop_placing = not prop_placing
+					selected_drag_seat = -1
+					queue_redraw()
+					return
+				if decorate_partition_rect().has_point(screen_click):
+					if selected_drag_seat != -1:
+						var ok = GameState.install_partition(selected_drag_seat)
+						floating_texts.append({
+							"text": "🔇 칸막이 설치 완료! (-300₩)" if ok else "💸 잔액이 부족합니다",
+							"pos": GameState.get_seat_position(selected_drag_seat) + Vector2(0, -40),
+							"alpha": 1.0,
+							"color": Color(0.85, 0.6, 1.0) if ok else Color(0.95, 0.5, 0.4)
+						})
+						queue_redraw()
+					return
 				if decorate_rotate_rect().has_point(screen_click):
 					if selected_drag_seat != -1:
 						var deg = GameState.rotate_seat(selected_drag_seat)
@@ -402,11 +440,10 @@ func _draw() -> void:
 	draw_full_isometric_floor_grid(w, h)
 	
 	# 4. Draw Custom Placed Furniture/Decorations
+	# 플레이어가 놓은 소품. 예전에는 초록 원 위에 🪴 글자를 얹은 평면 표시였다.
 	for dec in GameState.custom_decorations:
-		var d_pos = dec["pos"]
-		draw_circle(d_pos, 16.0, Color(0.1, 0.8, 0.4, 0.3))
-		draw_string(ThemeDB.fallback_font, d_pos + Vector2(-10, 6), "🪴", HORIZONTAL_ALIGNMENT_LEFT, -1, 16, Color.WHITE)
-		
+		draw_prop("plant", dec["pos"] + view_offset, 0.62)
+
 	# 5. Draw Zone Based View Content
 	# 5. Draw Multi-Room Integrated Architectural Layout
 	draw_integrated_multi_room_layout(w, h)
@@ -414,15 +451,32 @@ func _draw() -> void:
 	# 5b. Decorating HUD, drawn LAST so the room panels cannot paint over it, and
 	# along the empty bottom of the study room so it clears the room banners.
 	if GameState.is_decorating_mode:
-		var banner_rect = Rect2(40, 508, 528, 34)
+		var banner_rect = Rect2(40, 508, 300, 34)
 		draw_rect(banner_rect, Color(0.12, 0.1, 0.08, 0.96), true)
 		draw_rect(banner_rect, Color(0.96, 0.62, 0.07), false, 2.0)
-		var hint = "🔨 책상 옮기기: 책상을 클릭해 잡은 뒤, 원하는 칸을 클릭하거나 끌어서 놓으세요"
-		var lvl = GameState.study_area_level
-		if lvl < GameState.STUDY_AREA_STAGES.size() - 1:
-			hint = "🔨 책상 옮기기  ·  개방 %d칸 (어두운 칸은 [좌석 & 시설 업그레이드]에서 확장)" % GameState.get_study_cell_count()
+		# 배너 폭이 300px 이라 길면 버튼 아래로 잘린다
+		var hint = "🔨 책상을 잡고 원하는 칸에 놓으세요"
+		if GameState.study_area_level < GameState.STUDY_AREA_STAGES.size() - 1:
+			hint = "🔨 책상 이동  ·  개방 %d칸" % GameState.get_study_cell_count()
 		draw_string(ThemeDB.fallback_font, banner_rect.position + Vector2(14, 23), hint,
 			HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color(0.96, 0.62, 0.07))
+
+		# 소품 놓기 모드
+		var prop_rect = decorate_prop_rect()
+		draw_rect(prop_rect, Color(0.16, 0.28, 0.18, 0.96) if prop_placing else Color(0.13, 0.15, 0.13, 0.92), true)
+		draw_rect(prop_rect, Color(0.35, 0.90, 0.55) if prop_placing else Color(0.30, 0.45, 0.34), false, 2.0)
+		draw_string(ThemeDB.fallback_font, prop_rect.position + Vector2(10, 23),
+			"🪴 놓는 중" if prop_placing else "🪴 소품 놓기",
+			HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color(0.6, 0.95, 0.7))
+
+		# 선택한 책상에 칸막이
+		var part_rect = decorate_partition_rect()
+		var part_on = selected_drag_seat != -1
+		draw_rect(part_rect, Color(0.24, 0.18, 0.30, 0.96) if part_on else Color(0.13, 0.13, 0.14, 0.9), true)
+		draw_rect(part_rect, Color(0.78, 0.50, 0.92) if part_on else Color(0.35, 0.35, 0.38), false, 2.0)
+		draw_string(ThemeDB.fallback_font, part_rect.position + Vector2(10, 23), "🔇 칸막이 300₩",
+			HORIZONTAL_ALIGNMENT_LEFT, -1, 12,
+			Color(0.88, 0.70, 1.0) if part_on else Color(0.45, 0.45, 0.48))
 
 		# 선택한 책상 방향 돌리기
 		var rot_rect = decorate_rotate_rect()
@@ -2355,10 +2409,19 @@ func draw_lounge_bar() -> void:
 		draw_prop(prop["kind"], pos, LOUNGE_SCALE)
 
 func decorate_reset_rect() -> Rect2:
-	return Rect2(742, 508, 150, 34)
+	return Rect2(742, 508, 130, 34)
 
 func decorate_rotate_rect() -> Rect2:
-	return Rect2(576, 508, 158, 34)
+	return Rect2(604, 508, 130, 34)
+
+# 소품 놓기 / 칸막이 설치. 두 기능 모두 GameState 에 함수는 있었지만 UI 가 없어
+# 호출될 방법이 없었고, 그 탓에 이를 요구하는 스토리 퀘스트(8·9·23번)를 깰 수
+# 없었다.
+func decorate_prop_rect() -> Rect2:
+	return Rect2(348, 508, 118, 34)
+
+func decorate_partition_rect() -> Rect2:
+	return Rect2(474, 508, 122, 34)
 
 # Four desk variants instead of two - desk_island_2p.png was being loaded and
 # then never drawn. The variant is stable per seat so a desk keeps its shape
