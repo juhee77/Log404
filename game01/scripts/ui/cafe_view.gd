@@ -576,7 +576,7 @@ func draw_integrated_multi_room_layout(w: float, h: float) -> void:
 	# ----------------------------------------------------
 	# Draw Desks & Booths inside the STUDY zone
 	# ----------------------------------------------------
-	draw_floor_rug(Vector2i(1, 3), Vector2i(4, 6), Color(0.26, 0.18, 0.13, 0.40))
+	draw_floor_rug(Vector2i(1, 2), Vector2i(4, 6), Color(0.26, 0.18, 0.13, 0.40))
 	draw_room1_props(true)
 
 	# Painter's algorithm over the isometric diagonal (back tiles first)
@@ -1290,13 +1290,13 @@ func draw_story_card(w: float, h: float) -> void:
 # ══════════════════════════════════════════════════════════════
 
 const ZONES: Array = [
-	{"id": "study",  "x0": 0, "y0": 2, "x1": 5, "y1": 7,
+	{"id": "study",  "x0": 0, "y0": 1, "x1": 5, "y1": 7,
 	 "name": "📖 메인 집중 열공 방", "tint": Color(0.36, 0.25, 0.16)},
 	{"id": "lounge", "x0": 6, "y0": 0, "x1": 9, "y1": 3,
 	 "name": "☕ 힐링 라운지 & 커피바", "tint": Color(0.22, 0.27, 0.22)},
 	{"id": "front",  "x0": 6, "y0": 4, "x1": 9, "y1": 7,
 	 "name": "🔑 프런트 & 스마트 사물함", "tint": Color(0.25, 0.21, 0.32)},
-	{"id": "hall",   "x0": 0, "y0": 0, "x1": 5, "y1": 1,
+	{"id": "hall",   "x0": 0, "y0": 0, "x1": 5, "y1": 0,
 	 "name": "", "tint": Color(0.17, 0.15, 0.13)}
 ]
 
@@ -2219,20 +2219,20 @@ func draw_terrace_table(tile_center: Vector2, s: float, seat_index: int) -> void
 # dress the walls without ever stealing a tile the player wants for a desk.
 const FLOOR_PROPS: Dictionary = {
 	2: [
-		{"kind": "bookshelf",  "cell": Vector2i(0, 1)},
-		{"kind": "floor_lamp", "cell": Vector2i(1, 1)},
-		{"kind": "bookshelf",  "cell": Vector2i(2, 1)},
-		{"kind": "floor_lamp", "cell": Vector2i(4, 1)},
+		{"kind": "bookshelf",  "cell": Vector2i(0, 0)},
+		{"kind": "floor_lamp", "cell": Vector2i(1, 0)},
+		{"kind": "bookshelf",  "cell": Vector2i(2, 0)},
+		{"kind": "floor_lamp", "cell": Vector2i(4, 0)},
 		{"kind": "sofa",       "cell": Vector2i(0, 8)},
 		{"kind": "floor_lamp", "cell": Vector2i(2, 8)},
 		{"kind": "plant",      "cell": Vector2i(4, 8)},
 		{"kind": "bin",        "cell": Vector2i(5, 8)},
 	],
 	3: [
-		{"kind": "planter",      "cell": Vector2i(0, 1)},
-		{"kind": "planter",      "cell": Vector2i(1, 1)},
-		{"kind": "patio_heater", "cell": Vector2i(2, 1)},
-		{"kind": "parasol",      "cell": Vector2i(4, 1)},
+		{"kind": "planter",      "cell": Vector2i(0, 0)},
+		{"kind": "planter",      "cell": Vector2i(1, 0)},
+		{"kind": "patio_heater", "cell": Vector2i(2, 0)},
+		{"kind": "parasol",      "cell": Vector2i(4, 0)},
 		{"kind": "planter",      "cell": Vector2i(0, 8)},
 		{"kind": "parasol",      "cell": Vector2i(2, 8)},
 		{"kind": "planter",      "cell": Vector2i(4, 8)},
@@ -2241,11 +2241,11 @@ const FLOOR_PROPS: Dictionary = {
 }
 
 const ROOM1_PROPS: Array = [
-	{"kind": "bookshelf",  "cell": Vector2i(0, 1)},
-	{"kind": "bookshelf",  "cell": Vector2i(1, 1)},
-	{"kind": "printer",    "cell": Vector2i(2, 1)},
-	{"kind": "water",      "cell": Vector2i(3, 1)},
-	{"kind": "plant",      "cell": Vector2i(4, 1)},
+	{"kind": "bookshelf",  "cell": Vector2i(0, 0)},
+	{"kind": "bookshelf",  "cell": Vector2i(1, 0)},
+	{"kind": "printer",    "cell": Vector2i(2, 0)},
+	{"kind": "water",      "cell": Vector2i(3, 0)},
+	{"kind": "plant",      "cell": Vector2i(4, 0)},
 	{"kind": "sofa",       "cell": Vector2i(0, 8)},
 	{"kind": "floor_lamp", "cell": Vector2i(2, 8)},
 	{"kind": "plant",      "cell": Vector2i(4, 8)},
@@ -2269,8 +2269,8 @@ const LOUNGE_PROPS: Array = [
 	{"kind": "counter",      "cell": Vector2i(1, 0)},
 	{"kind": "counter_end",  "cell": Vector2i(2, 0)},
 	{"kind": "display_case", "cell": Vector2i(2, 0), "lift": 20.0},
-	{"kind": "stool",        "cell": Vector2i(0, 1)},
-	{"kind": "stool",        "cell": Vector2i(1, 1)},
+	{"kind": "stool",        "cell": Vector2i(0, 0)},
+	{"kind": "stool",        "cell": Vector2i(1, 0)},
 ]
 
 func lounge_to_screen(cell: Vector2i) -> Vector2:
@@ -2366,9 +2366,27 @@ func draw_desk_art(seat_index: int, is_booth: bool, tile_center: Vector2, target
 	var src: Rect2 = DESK_CONTENT[key]
 	var size = Vector2(target_h * (src.size.x / src.size.y), target_h)
 	var bottom = tile_center.y + GameState.ISO_TILE_HEIGHT * 0.5 + target_h * 0.06
-	draw_texture_rect_region(tex, Rect2(Vector2(tile_center.x - size.x * 0.5, bottom - size.y), size),
-		src, Color(1, 1, 1, 0.98))
+	var dest = Rect2(Vector2(tile_center.x - size.x * 0.5, bottom - size.y), size)
+
+	# 책상 방향. seat_rotations / rotate_seat() 는 예전부터 있었지만 그리기에
+	# 전혀 반영되지 않아 모든 책상이 같은 쪽을 보고 있었다 - 종류가 3~4가지나
+	# 되는데도 매장이 단조로워 보이던 큰 이유다. 아이소메트릭에서는 좌우 반전이
+	# 곧 "반대 축을 향해 놓기"다.
+	if is_desk_mirrored(seat_index):
+		draw_set_transform(Vector2(dest.position.x * 2.0 + dest.size.x, 0.0), 0.0, Vector2(-1.0, 1.0))
+		draw_texture_rect_region(tex, dest, src, Color(1, 1, 1, 0.98))
+		draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+	else:
+		draw_texture_rect_region(tex, dest, src, Color(1, 1, 1, 0.98))
 	return true
+
+# 회전값이 지정돼 있으면 그것을, 없으면 칸 좌표에서 안정적으로 방향을 정한다.
+# 덕분에 새 매장도 책상들이 서로 다른 쪽을 보고 선다.
+func is_desk_mirrored(seat_index: int) -> bool:
+	if GameState.seat_rotations.has(seat_index):
+		return int(GameState.seat_rotations[seat_index]) % 360 >= 180
+	var c = GameState.get_seat_cell(seat_index)
+	return (c.x + c.y * 2 + seat_index) % 2 == 1
 
 func get_desk_sprite_size(seat_index: int) -> Vector2:
 	var is_booth = seat_index >= GameState.upgrades["open_seats"]["level"] * 3

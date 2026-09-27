@@ -4448,7 +4448,7 @@ const FLOOR_ROWS: int = 8
 
 # 그중 책상을 놓을 수 있는 열공방 구역. 배치 격자는 예전과 같은 6x6 이다.
 const STUDY_X0: int = 0
-const STUDY_Y0: int = 2
+const STUDY_Y0: int = 1
 const STUDY_X1: int = 5
 const STUDY_Y1: int = 7
 
@@ -4460,7 +4460,8 @@ const STUDY_AREA_STAGES: Array = [
 	{ "name": "1단계 · 작은 독서실",     "w": 3, "h": 3, "req_score": 0,    "cost": 0.0 },
 	{ "name": "2단계 · 중형 열람실",     "w": 4, "h": 4, "req_score": 600,  "cost": 50000.0 },
 	{ "name": "3단계 · 대형 스터디홀",   "w": 5, "h": 5, "req_score": 2000, "cost": 200000.0 },
-	{ "name": "4단계 · 플래그십 열공방", "w": 6, "h": 6, "req_score": 5000, "cost": 600000.0 }
+	{ "name": "4단계 · 플래그십 열공방", "w": 6, "h": 6, "req_score": 5000, "cost": 600000.0 },
+	{ "name": "5단계 · 전층 통합 열람관", "w": 6, "h": 7, "req_score": 9000, "cost": 1500000.0 }
 ]
 var study_area_level: int = 0
 
