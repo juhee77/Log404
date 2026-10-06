@@ -6,3 +6,7 @@
 # 추적해 두면 실행할 때마다 워킹 트리가 더러워진다.
 live_visual_check.png
 live_visual_check.png.import
+
+# export 산출물 (세 플랫폼 합쳐 200MB 이상). 빌드는 아래 명령으로 다시 만든다.
+#   godot --headless --path game01 --export-release "Windows Desktop"
+dist/
