@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주희의 컬렉션 아카이브 (Sprint 1 Clean UI)</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700;800&display=swap');
+        body {
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #f8fafc;
+        }
+        .cover-ratio {
+            aspect-ratio: 2 / 3;
+        }
+    </style>
+</head>
+<body class="text-slate-800 antialiased min-h-screen flex flex-col">
+
+    <!-- Top Modern Clean Header (test.html 스타일 배너) -->
+    <header class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white py-6 px-4 shadow-sm border-b border-slate-800">
+        <div class="max-w-5xl mx-auto flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div>
+                <div class="flex items-center gap-2">
+                    <span class="bg-indigo-500/30 border border-indigo-400/40 text-indigo-300 text-xs px-2.5 py-0.5 rounded-full font-semibold">Sprint 1 Clean UI</span>
+                    <span class="text-xs text-slate-400">LocalStorage 동기화됨</span>
+                </div>
+                <h1 class="text-2xl sm:text-3xl font-extrabold mt-1.5 flex items-center gap-2">
+                    <span>📚 주희의 만화 & 가챠 아카이브</span>
+                </h1>
+                <p class="text-slate-300 text-xs sm:text-sm mt-1">소장 중인 단행본 권별 기록과 가챠 피규어를 한눈에 모아보는 깔끔한 보관함</p>
+            </div>
+            <!-- Quick Add Action -->
+            <div class="flex items-center gap-2 w-full sm:w-auto">
+                <button onclick="openModal('add-item-modal')" class="flex-1 sm:flex-none bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-4 py-2.5 rounded-xl shadow transition flex items-center justify-center gap-2 text-xs sm:text-sm cursor-pointer">
+                    <i class="fa-solid fa-plus"></i> 새 소장품 추가
+                </button>
+                <button onclick="openModal('camera-modal')" class="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-bold px-3.5 py-2.5 rounded-xl shadow transition flex items-center justify-center gap-1.5 text-xs sm:text-sm cursor-pointer" title="카메라 촬영">
+                    <i class="fa-solid fa-camera"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-5xl mx-auto px-4 py-6 flex-1 w-full space-y-6">
+
+        <!-- 1. Stats Counter Cards -->
+        <section class="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
+            <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs flex items-center justify-between">
+                <div>
+                    <div class="text-xs text-slate-500 font-medium">총 소장 작품</div>
+                    <div class="text-xl font-extrabold text-slate-900 mt-0.5" id="stat-total-items">0종</div>
+                </div>
+                <div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-lg">
+                    <i class="fa-solid fa-book-bookmark"></i>
+                </div>
+            </div>
+            <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs flex items-center justify-between">
+                <div>
+                    <div class="text-xs text-slate-500 font-medium">만화 단행본 권수</div>
+                    <div class="text-xl font-extrabold text-slate-900 mt-0.5" id="stat-total-volumes">0권</div>
+                </div>
+                <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-lg">
+                    <i class="fa-solid fa-layer-group"></i>
+                </div>
+            </div>
+            <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs flex items-center justify-between">
+                <div>
+                    <div class="text-xs text-slate-500 font-medium">초판 특전 보유</div>
+                    <div class="text-xl font-extrabold text-amber-600 mt-0.5" id="stat-first-editions">0권</div>
+                </div>
+                <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-lg">
+                    <i class="fa-solid fa-crown"></i>
+                </div>
+            </div>
+            <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs flex items-center justify-between">
+                <div>
+                    <div class="text-xs text-slate-500 font-medium">가챠 & 굿즈</div>
+                    <div class="text-xl font-extrabold text-rose-600 mt-0.5" id="stat-total-gacha">0개</div>
+                </div>
+                <div class="w-10 h-10 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center text-lg">
+                    <i class="fa-solid fa-gem"></i>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. Search & Category Tabs (Clean & Intuitive) -->
+        <section class="bg-white rounded-2xl p-4 border border-slate-200/80 shadow-xs space-y-3">
+            <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+                <!-- Filter Tabs -->
+                <div class="flex items-center gap-1.5 p-1 bg-slate-100 rounded-xl text-xs font-bold shrink-0">
+                    <button onclick="setFilter('all')" id="tab-all" class="px-3.5 py-2 rounded-lg bg-white text-indigo-700 shadow-xs transition">
+                        전체 보기
+                    </button>
+                    <button onclick="setFilter('manga')" id="tab-manga" class="px-3.5 py-2 rounded-lg text-slate-600 hover:text-slate-900 transition">
+                        📖 만화책만
+                    </button>
+                    <button onclick="setFilter('gacha')" id="tab-gacha" class="px-3.5 py-2 rounded-lg text-slate-600 hover:text-slate-900 transition">
+                        🔮 가챠·피규어만
+                    </button>
+                </div>
+
+                <!-- Live Search Bar -->
+                <div class="relative flex-1 max-w-md">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                    <input type="text" id="search-input" oninput="handleSearch(event)" placeholder="작품명 또는 작가명 검색..."
+                        class="w-full pl-9 pr-4 py-2 bg-slate-50 focus:bg-white rounded-xl border border-slate-200 text-xs sm:text-sm focus:border-indigo-500 focus:outline-none transition">
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. Clean Card Grid (가독성 100% 보장 카드) -->
+        <section>
+            <div class="flex items-center justify-between mb-3 px-1">
+                <h2 class="text-sm font-bold text-slate-800 flex items-center gap-1.5">
+                    <span>소장 목록</span>
+                    <span class="text-xs text-slate-400 font-medium" id="item-count-label">(0개)</span>
+                </h2>
+                <div class="text-xs text-slate-500 font-medium">카드를 클릭하면 권별 상세 메모를 열 수 있어요</div>
+            </div>
+
+            <!-- Grid Container -->
+            <div id="collection-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                <!-- Populated by JavaScript -->
+            </div>
+            
+            <!-- Empty State -->
+            <div id="empty-state" class="hidden bg-white rounded-2xl p-12 text-center border border-dashed border-slate-300">
+                <i class="fa-solid fa-box-open text-4xl text-slate-300 mb-3"></i>
+                <div class="text-sm font-bold text-slate-700">검색된 소장품이 없습니다</div>
+                <div class="text-xs text-slate-500 mt-1">새 작품을 등록하거나 다른 검색어를 입력해 보세요.</div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 py-4 px-4 text-center text-xs text-slate-400">
+        주희의 만화 & 가챠 아카이브 · Sprint 1 Agile Squad Prototype
+    </footer>
+
+    <!-- MODAL 1: Detail & Volume Diary Modal (깔끔한 화이트 모달) -->
+    <div id="detail-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-2xl rounded-3xl shadow-xl border border-slate-200 overflow-hidden flex flex-col max-h-[90vh]">
+            <!-- Modal Header -->
+            <div class="bg-slate-900 text-white px-6 py-4 flex items-center justify-between shrink-0">
+                <div class="flex items-center gap-2.5">
+                    <span id="modal-category-badge" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-indigo-500/40 text-indigo-200">만화책</span>
+                    <h3 id="modal-title" class="text-base font-bold">작품명</h3>
+                </div>
+                <button onclick="closeModal('detail-modal')" class="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center cursor-pointer transition">
+                    <i class="fa-solid fa-xmark text-sm"></i>
+                </button>
+            </div>
+
+            <!-- Modal Content (Scrollable) -->
+            <div class="p-6 overflow-y-auto space-y-6 flex-1 text-sm">
+                <!-- Info Summary -->
+                <div class="flex gap-4">
+                    <img id="modal-cover-img" src="" alt="표지" class="w-24 cover-ratio object-cover rounded-xl border border-slate-200 shadow-xs shrink-0 bg-slate-100">
+                    <div class="flex-1 flex flex-col justify-between py-0.5">
+                        <div>
+                            <div class="text-xs text-slate-500" id="modal-author">작가 정보</div>
+                            <div class="text-sm font-semibold text-slate-800 mt-1" id="modal-tag">상태 태그</div>
+                            <p class="text-xs text-slate-600 mt-2 line-clamp-3 leading-relaxed" id="modal-memo"></p>
+                        </div>
+                        <div class="flex gap-2 mt-3">
+                            <button onclick="triggerAddVolume()" id="modal-add-vol-btn" class="px-3 py-1.5 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold text-xs cursor-pointer transition">
+                                + 다음 권 추가
+                            </button>
+                            <button onclick="deleteCurrentItem()" class="px-3 py-1.5 rounded-lg text-rose-600 hover:bg-rose-50 text-xs font-semibold cursor-pointer transition">
+                                소장품 삭제
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Volume List (If manga) -->
+                <div id="modal-volumes-section" class="space-y-3">
+                    <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wider flex items-center gap-1.5">
+                        <i class="fa-solid fa-list-ol text-indigo-600"></i>
+                        <span>권별 소장 및 독서 기록</span>
+                    </h4>
+                    <div id="modal-volumes-list" class="space-y-2">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 2: Add New Item Modal -->
+    <div id="add-item-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-md rounded-3xl shadow-xl border border-slate-200 overflow-hidden flex flex-col">
+            <div class="bg-slate-900 text-white px-6 py-4 flex items-center justify-between">
+                <h3 class="text-sm font-bold">새 소장품 등록</h3>
+                <button onclick="closeModal('add-item-modal')" class="text-slate-400 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <form onsubmit="handleAddItemSubmit(event)" class="p-6 space-y-4 text-xs">
+                <div>
+                    <label class="font-bold text-slate-700 block mb-1">카테고리</label>
+                    <div class="grid grid-cols-2 gap-2">
+                        <label class="flex items-center gap-2 p-2 rounded-xl border border-slate-200 cursor-pointer hover:bg-slate-50">
+                            <input type="radio" name="category" value="manga" checked class="text-indigo-600">
+                            <span class="font-bold">📖 만화 단행본</span>
+                        </label>
+                        <label class="flex items-center gap-2 p-2 rounded-xl border border-slate-200 cursor-pointer hover:bg-slate-50">
+                            <input type="radio" name="category" value="gacha" class="text-indigo-600">
+                            <span class="font-bold">🔮 가챠·피규어</span>
+                        </label>
+                    </div>
+                </div>
+                <div>
+                    <label class="font-bold text-slate-700 block mb-1">작품/상품 제목</label>
+                    <input type="text" id="new-title" required placeholder="예: 체인소 맨, 치이카와 피규어" class="w-full px-3 py-2 rounded-xl border border-slate-200 focus:border-indigo-500 focus:outline-none">
+                </div>
+                <div>
+                    <label class="font-bold text-slate-700 block mb-1">작가 / 시리즈명</label>
+                    <input type="text" id="new-author" placeholder="예: 후지모토 타츠키, 반다이" class="w-full px-3 py-2 rounded-xl border border-slate-200 focus:border-indigo-500 focus:outline-none">
+                </div>
+                <div>
+                    <label class="font-bold text-slate-700 block mb-1">표지 이미지 URL (또는 비워두기)</label>
+                    <input type="url" id="new-cover" placeholder="https://..." class="w-full px-3 py-2 rounded-xl border border-slate-200 focus:border-indigo-500 focus:outline-none">
+                </div>
+                <div class="flex justify-end gap-2 pt-2">
+                    <button type="button" onclick="closeModal('add-item-modal')" class="px-4 py-2 rounded-xl text-slate-600 hover:bg-slate-100 font-bold">취소</button>
+                    <button type="submit" class="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold cursor-pointer">등록하기</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL 3: Camera Studio Modal -->
+    <div id="camera-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-md rounded-3xl shadow-xl border border-slate-200 overflow-hidden flex flex-col">
+            <div class="bg-slate-900 text-white px-5 py-3.5 flex items-center justify-between">
+                <span class="text-xs font-bold flex items-center gap-1.5"><i class="fa-solid fa-camera text-indigo-400"></i> 카메라 실물 촬영</span>
+                <button onclick="closeModal('camera-modal')" class="text-slate-400 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="p-5 space-y-3.5 text-xs text-center">
+                <div class="relative w-full h-56 bg-slate-900 rounded-2xl overflow-hidden flex items-center justify-center border border-slate-800">
+                    <video id="camera-feed" autoplay playsinline muted class="w-full h-full object-cover hidden"></video>
+                    <div id="camera-fallback" class="p-6 text-slate-400">
+                        <i class="fa-solid fa-video-slash text-2xl mb-2"></i>
+                        <p class="text-xs">카메라 접근을 허용하거나 아래 사진 파일 업로드를 이용하세요.</p>
+                    </div>
+                </div>
+                <div class="flex gap-2">
+                    <label class="flex-1 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-center cursor-pointer">
+                        <i class="fa-solid fa-upload mr-1"></i> 앨범에서 사진 선택
+                        <input type="file" accept="image/*" class="hidden" onchange="handlePhotoUpload(event)">
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const STORAGE_KEY = 'LOG404_AGILE_SHELF_STATE_V1';
+
+        const DEFAULT_ITEMS = [
+            {
+                id: 'm1',
+                category: 'manga',
+                title: '슬램덩크 신장재편판',
+                authorOrSeries: '이노우에 다케히코',
+                coverUrl: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=400&q=80',
+                statusTag: '전권완결 소장',
+                memo: '학창시절부터 소중히 모아온 인생 만화. 컬러 복원판.',
+                volumes: [
+                    { vol: 1, status: 'first', rating: 5, quote: '농구 좋아하세요?' },
+                    { vol: 2, status: 'owned', rating: 5, quote: '리바운드를 제압하는 자가 시합을 제압한다' },
+                    { vol: 3, status: 'first', rating: 5, quote: '포기하면 그 순간이 바로 시합 종료예요' }
+                ]
+            },
+            {
+                id: 'm2',
+                category: 'manga',
+                title: '장송의 프리렌',
+                authorOrSeries: '야마다 카네히토',
+                coverUrl: 'https://images.unsplash.com/photo-1512820790803-83ca734da794?w=400&q=80',
+                statusTag: '연재중',
+                memo: '용사 사후의 시간을 잔잔하게 그리는 판타지 명작.',
+                volumes: [
+                    { vol: 1, status: 'first', rating: 5, quote: '힘멜이라면 그렇게 했을 거야' },
+                    { vol: 2, status: 'owned', rating: 4, quote: '' }
+                ]
+            },
+            {
+                id: 'g1',
+                category: 'gacha',
+                title: '치이카와 캡슐 토이 피규어',
+                authorOrSeries: '반다이 캡슐 컬렉션',
+                coverUrl: 'https://images.unsplash.com/photo-1563089145-599997674d42?w=400&q=80',
+                statusTag: '시크릿 획득',
+                memo: '단 한 번 만에 뽑은 행운의 치이카와 미니 피규어!',
+                volumes: []
+            }
+        ];
+
+        let appState = {
+            filter: 'all',
+            searchQuery: '',
+            selectedId: null,
+            items: []
+        };
+
+        function loadAppState() {
+            try {
+                const raw = localStorage.getItem(STORAGE_KEY);
+                if (raw) {
+                    appState.items = JSON.parse(raw);
+                    return;
+                }
+            } catch (e) {}
+            appState.items = JSON.parse(JSON.stringify(DEFAULT_ITEMS));
+        }
+
+        function saveAppState() {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(appState.items));
+            } catch (e) {}
+            updateStats();
+            renderCollection();
+        }
+
+        function updateStats() {
+            const total = appState.items.length;
+            const mangas = appState.items.filter(i => i.category === 'manga');
+            const gachas = appState.items.filter(i => i.category === 'gacha');
+            let vols = 0;
+            let firsts = 0;
+            mangas.forEach(m => {
+                if (m.volumes) {
+                    vols += m.volumes.length;
+                    firsts += m.volumes.filter(v => v.status === 'first').length;
+                }
+            });
+
+            document.getElementById('stat-total-items').textContent = total + '종';
+            document.getElementById('stat-total-volumes').textContent = vols + '권';
+            document.getElementById('stat-first-editions').textContent = firsts + '권';
+            document.getElementById('stat-total-gacha').textContent = gachas.length + '개';
+        }
+
+        function setFilter(category) {
+            appState.filter = category;
+            ['all', 'manga', 'gacha'].forEach(cat => {
+                const btn = document.getElementById(`tab-${cat}`);
+                if (cat === category) {
+                    btn.className = 'px-3.5 py-2 rounded-lg bg-white text-indigo-700 shadow-xs transition';
+                } else {
+                    btn.className = 'px-3.5 py-2 rounded-lg text-slate-600 hover:text-slate-900 transition';
+                }
+            });
+            renderCollection();
+        }
+
+        function handleSearch(e) {
+            appState.searchQuery = e.target.value;
+            renderCollection();
+        }
+
+        function renderCollection() {
+            const container = document.getElementById('collection-grid');
+            const empty = document.getElementById('empty-state');
+            const countLabel = document.getElementById('item-count-label');
+            container.innerHTML = '';
+
+            const filtered = appState.items.filter(item => {
+                const matchesCat = appState.filter === 'all' || item.category === appState.filter;
+                const q = appState.searchQuery.trim().toLowerCase();
+                const matchesQ = !q || item.title.toLowerCase().includes(q) || item.authorOrSeries.toLowerCase().includes(q);
+                return matchesCat && matchesQ;
+            });
+
+            countLabel.textContent = `(${filtered.length}개)`;
+
+            if (filtered.length === 0) {
+                empty.classList.remove('hidden');
+                return;
+            }
+            empty.classList.add('hidden');
+
+            filtered.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'bg-white rounded-2xl border border-slate-200/80 shadow-xs hover:shadow-md transition overflow-hidden cursor-pointer flex flex-col group';
+                
+                const volCount = item.volumes ? item.volumes.length : 0;
+                const volBadge = item.category === 'manga' ? `<span class="bg-slate-900/75 backdrop-blur-xs text-white text-[10px] font-bold px-2 py-0.5 rounded-full absolute bottom-2 right-2">${volCount}권 소장</span>` : '';
+
+                card.innerHTML = `
+                    <div class="relative w-full cover-ratio bg-slate-100 overflow-hidden">
+                        <img src="${item.coverUrl || 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=400&q=80'}" alt="${item.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+                        <span class="absolute top-2 left-2 text-[10px] font-bold px-2 py-0.5 rounded-md ${item.category === 'manga' ? 'bg-indigo-600 text-white' : 'bg-rose-600 text-white'}">
+                            ${item.category === 'manga' ? '만화' : '가챠'}
+                        </span>
+                        ${volBadge}
+                    </div>
+                    <div class="p-3 flex-1 flex flex-col justify-between">
+                        <div>
+                            <div class="text-[11px] text-slate-500 font-medium truncate">${item.authorOrSeries || '시리즈'}</div>
+                            <div class="text-xs font-bold text-slate-900 line-clamp-1 mt-0.5">${item.title}</div>
+                        </div>
+                        <div class="mt-2.5 pt-2 border-t border-slate-100 flex items-center justify-between text-[11px]">
+                            <span class="text-indigo-600 font-semibold truncate">${item.statusTag || '보유중'}</span>
+                            <span class="text-slate-400 group-hover:text-slate-700 transition"><i class="fa-solid fa-chevron-right text-[10px]"></i></span>
+                        </div>
+                    </div>
+                `;
+                card.onclick = () => openItemDetail(item.id);
+                container.appendChild(card);
+            });
+        }
+
+        function openItemDetail(id) {
+            const item = appState.items.find(i => i.id === id);
+            if (!item) return;
+            appState.selectedId = id;
+
+            document.getElementById('modal-title').textContent = item.title;
+            document.getElementById('modal-author').textContent = `${item.category === 'manga' ? '작가' : '시리즈'}: ${item.authorOrSeries || '미상'}`;
+            document.getElementById('modal-tag').textContent = item.statusTag || '';
+            document.getElementById('modal-memo').textContent = item.memo || '남겨진 메모가 없습니다.';
+            document.getElementById('modal-cover-img').src = item.coverUrl || 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=400&q=80';
+            
+            const badge = document.getElementById('modal-category-badge');
+            badge.textContent = item.category === 'manga' ? '만화책' : '가챠·피규어';
+
+            const volSection = document.getElementById('modal-volumes-section');
+            const addVolBtn = document.getElementById('modal-add-vol-btn');
+
+            if (item.category === 'manga') {
+                volSection.classList.remove('hidden');
+                addVolBtn.classList.remove('hidden');
+                renderVolumesList(item);
+            } else {
+                volSection.classList.add('hidden');
+                addVolBtn.classList.add('hidden');
+            }
+
+            openModal('detail-modal');
+        }
+
+        function renderVolumesList(item) {
+            const list = document.getElementById('modal-volumes-list');
+            list.innerHTML = '';
+            const vols = item.volumes || [];
+
+            if (vols.length === 0) {
+                list.innerHTML = `<div class="text-xs text-slate-400 py-2">등록된 권별 기록이 없습니다. '+ 다음 권 추가'를 눌러보세요.</div>`;
+                return;
+            }
+
+            vols.forEach((v, idx) => {
+                const el = document.createElement('div');
+                el.className = 'p-3 bg-slate-50 rounded-xl border border-slate-200/80 flex items-center justify-between text-xs';
+                const tagColor = v.status === 'first' ? 'bg-amber-100 text-amber-800' : 'bg-slate-200 text-slate-700';
+                const tagText = v.status === 'first' ? '👑 초판특전' : '✅ 소장완료';
+                
+                el.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <span class="font-extrabold text-sm text-slate-800 w-8">${v.vol}권</span>
+                        <span class="text-[10px] font-bold px-2 py-0.5 rounded-full ${tagColor}">${tagText}</span>
+                        <span class="text-slate-600 truncate max-w-[220px]">${v.quote ? `"${v.quote}"` : '기록 없음'}</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="text-amber-500 font-bold">${'★'.repeat(v.rating || 5)}</span>
+                    </div>
+                `;
+                list.appendChild(el);
+            });
+        }
+
+        function triggerAddVolume() {
+            const item = appState.items.find(i => i.id === appState.selectedId);
+            if (!item || item.category !== 'manga') return;
+            if (!item.volumes) item.volumes = [];
+            const nextVol = item.volumes.length + 1;
+            item.volumes.push({
+                vol: nextVol,
+                status: 'owned',
+                rating: 5,
+                quote: ''
+            });
+            saveAppState();
+            renderVolumesList(item);
+        }
+
+        function deleteCurrentItem() {
+            if (!confirm('이 소장품을 삭제하시겠습니까?')) return;
+            appState.items = appState.items.filter(i => i.id !== appState.selectedId);
+            saveAppState();
+            closeModal('detail-modal');
+        }
+
+        function handleAddItemSubmit(e) {
+            e.preventDefault();
+            const cat = document.querySelector('input[name="category"]:checked').value;
+            const title = document.getElementById('new-title').value.trim();
+            const author = document.getElementById('new-author').value.trim();
+            const cover = document.getElementById('new-cover').value.trim();
+
+            const newItem = {
+                id: 'item_' + Date.now(),
+                category: cat,
+                title,
+                authorOrSeries: author,
+                coverUrl: cover || (cat === 'manga' ? 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=400&q=80' : 'https://images.unsplash.com/photo-1563089145-599997674d42?w=400&q=80'),
+                statusTag: '신규 등록',
+                memo: '',
+                volumes: cat === 'manga' ? [{ vol: 1, status: 'owned', rating: 5 }] : []
+            };
+
+            appState.items.unshift(newItem);
+            saveAppState();
+            closeModal('add-item-modal');
+            e.target.reset();
+        }
+
+        function openModal(id) {
+            document.getElementById(id).classList.remove('hidden');
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.add('hidden');
+        }
+
+        function handlePhotoUpload(e) {
+            const file = e.target.files && e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                const dataUrl = event.target.result;
+                const newItem = {
+                    id: 'cam_' + Date.now(),
+                    category: 'gacha',
+                    title: '카메라 촬영 소장품',
+                    authorOrSeries: '실물 촬영',
+                    coverUrl: dataUrl,
+                    statusTag: '촬영 등록',
+                    memo: '카메라로 직접 촬영하여 등록한 소장품입니다.',
+                    volumes: []
+                };
+                appState.items.unshift(newItem);
+                saveAppState();
+                closeModal('camera-modal');
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // Init
+        window.addEventListener('DOMContentLoaded', () => {
+            loadAppState();
+            updateStats();
+            renderCollection();
+        });
+    </script>
+</body>
+</html>
