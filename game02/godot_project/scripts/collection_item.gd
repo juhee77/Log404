@@ -25,3 +25,15 @@ func add_volume(p_vol: int, p_status: String = "owned", p_rating: int = 5, p_quo
 		"rating": p_rating,
 		"quote": p_quote
 	})
+
+func to_dict() -> Dictionary:
+	return {
+		"id": id,
+		"category": category,
+		"title": title,
+		"author_or_series": author_or_series,
+		"status_tag": status_tag,
+		"memo": memo,
+		"cover_path": cover_path,
+		"volumes": volumes
+	}

@@ -4,7 +4,7 @@ Godot 4.6.2 모바일 기반의 깔끔하고 직관적인 **단행본 권별 소
 
 ---
 
-## 📸 실제 구동 스크린샷 (Godot 4.6 렌더링 - Sprint 4 반영)
+## 📸 실제 구동 스크린샷 (Godot 4.6 렌더링 - Sprint 5)
 
 ![Pocket Archive Godot Main Screen](godot_project/screenshots/godot_app_screen.png)
 
@@ -12,15 +12,20 @@ Godot 4.6.2 모바일 기반의 깔끔하고 직관적인 **단행본 권별 소
 
 ## 🚀 애자일 스프린트 현황
 
-### [Sprint 4] 다꾸 스티커 뱃지 시스템 & 웹 표지 로더 유틸리티
-- **다꾸러 VOC 반영**:
-  - *"카드 표지 우측 상단에 `전권완결`, `초판소장`, `시크릿 획득` 같은 귀여운 다꾸 뱃지가 노란색 스티커처럼 붙어 있으면 소장 만족감이 훨씬 커질 것 같아요!"*
+### [Sprint 5] 로컬 JSON 영구 세이브/로드 및 데이터 영속화
+- **다꾸러 & 수집러 VOC 반영**:
+  - *"내가 열심히 등록한 만화책 권수랑 별점, 가챠 기록들이 앱을 껐다 켜도 안전하게 남아있어야 해요. 파일로 백업할 수 있으면 더 좋아요!"*
 - **개발 내역**:
-  - `card_item.tscn`에 우측 상단 `StickerBadge` 스타일박스 추가 (골드 옐로 스티커 룩)
-  - `web_cover_loader.gd`: 향후 웹 URL 및 로컬 이미지 텍스처 로딩을 위한 ImageTexture 팩토리 유틸리티 구현
+  - `collection_item.gd`에 `to_dict()` 직렬화 메서드 구현
+  - `archive_state.gd`에 `save_to_file()` 및 `load_from_file()` 자동 영구 저장/복원 파이프라인 탑재 (`user://archive_data.json`)
+  - 신규 등록 및 삭제 시 자동으로 로컬 파일에 즉시 동기화
 - **테스트 검증**:
-  - `test_main_integration.gd` 100% PASS 확인
-  - Metal 렌더러를 통해 실제 스크린샷 갱신 완료
+  - `tests/test_persistence.gd` 신규 작성 및 100% PASS 확인
+  - `tests/test_main_integration.gd` 100% PASS 확인
+
+### [Sprint 4] 다꾸 스티커 뱃지 시스템 & 웹 표지 로더 유틸리티
+- `card_item.tscn`에 우측 상단 `StickerBadge` 스타일박스 추가 (골드 옐로 스티커 룩)
+- `web_cover_loader.gd`: 향후 웹 URL 및 로컬 이미지 텍스처 로딩을 위한 ImageTexture 팩토리 유틸리티 구현
 
 ---
 
@@ -38,22 +43,22 @@ Godot 4.6.2 모바일 기반의 깔끔하고 직관적인 **단행본 권별 소
    - 1권~N권 소장 여부(`초판특전` / `소장완료`), 별점(★), 명대사 기록 및 `+ 다음 권 추가`
 5. **새 소장품 간편 등록 모달 (`AddModal`)**:
    - 제목, 작가/시리즈명, 카테고리를 입력하고 바로 등록
+6. **로컬 JSON 데이터 자동 영구 저장**:
+   - `user://archive_data.json`에 실시간 자동 동기화되어 앱 종료 후에도 데이터 영구 보존
 
 ---
 
 ## 🧪 자동화 테스트 검증 (Headless CI)
 
-Godot Engine CLI를 통해 UI와 도메인 모델에 대한 통합 테스트를 수행합니다:
-
 ```bash
+godot --headless --path godot_project -s tests/test_persistence.gd
 godot --headless --path godot_project -s tests/test_main_integration.gd
 ```
 
 ```text
---- Running Main Scene Headless Load & Integration Test ---
-✓ Initial 3 cards populated in GridContainer
-✓ Filter to Manga verified (2 cards)
-✓ Search filter verified (1 card)
-✓ Add item flow verified
---- ALL GODOT INTEGRATION TESTS PASSED (100%) ---
+--- Running Godot JSON Persistence Tests ---
+✓ Test 1: Save to JSON succeeded
+✓ Test 2: Load from JSON verified with exact data match
+✓ Test 3: Cleaned up test artifacts
+--- ALL PERSISTENCE TESTS PASSED (100%) ---
 ```

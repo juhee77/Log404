@@ -14,3 +14,4 @@ static func create_placeholder_texture(color: Color, width: int = 120, height: i
 	var img = Image.create(width, height, false, Image.FORMAT_RGBA8)
 	img.fill(color)
 	return ImageTexture.create_from_image(img)
+
