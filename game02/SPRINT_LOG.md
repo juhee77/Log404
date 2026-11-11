@@ -5,6 +5,20 @@
 
 ---
 
+## 🚀 [Sprint 15] 모달 내 표지 스크랩 마스킹 테이프(`ModalWashiTape`) · 책등 제본선(`ModalSpineStrip`) · 마지막 권 삭제(`remove_last_volume`)
+- **시각**: 2026-11-12 07:10 KST
+- **1. 다꾸러 3인 VOC (수집러 A · 가챠러 B · 미니멀러 C)**
+  - **만년필 다꾸러 A**: *"펼친 독서노트 모달(`detail_modal.tscn`) 좌측의 표지(`CoverRect`)에도 실제 스크랩북처럼 상단 마스킹 테이프(`ModalWashiTape`)와 좌측 책등 제본선(`ModalSpineStrip`) 디테일을 넣어 주세요!"*
+  - **가챠 수집러 B**: *"모달에서 실수로 권을 더 추가했을 때 바로 지울 수 있는 `- 권 삭제`(`remove_last_volume`) 버튼을 `+ 다음 권 추가` 옆에 배치해 주세요!"*
+- **2. 기획 & UI/UX & Godot 4.6 개발 내역**
+  - **모달 표지 다꾸 디테일(`ModalWashiTape` & `ModalSpineStrip`)**: `detail_modal.tscn` 표지 상단에 반투명 마스킹 테이프와 좌측 책등 음영 스트립 추가
+  - **마지막 권 삭제(`RemoveVolBtn` / `remove_last_volume`)**: `detail_modal.gd`에 마지막 권 제거 및 통계·JSON 즉시 동기화 구현
+- **3. TDD & QA 검증**
+  - `tests/test_main_integration.gd`에 `remove_last_volume()` 검증 추가 → 3개 헤드리스 테스트 스위트 전수 100% PASS
+  - Metal 렌더러 최신 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 캡처 및 GitHub 푸시 완료
+
+---
+
 ## 🚀 [Sprint 14] 메인 서재 카드 평균 별점(`★5.0`) 배지 · 단행본 띠지 원터치 변경(`🏷️띠지`) · 독서 일기장 요약 리포트(`export_diary_summary`)
 - **시각**: 2026-11-12 06:11 KST
 - **1. 다꾸러 3인 VOC (수집러 A · 가챠러 B · 미니멀러 C)**

@@ -114,6 +114,28 @@ custom_minimum_size = Vector2(84, 120)
 layout_mode = 2
 color = Color(0.72, 0.14, 0.18, 1)
 
+[node name="ModalSpineStrip" type="ColorRect" parent="Panel/VBox/BodyMargin/Body/TopInfo/CoverRect"]
+custom_minimum_size = Vector2(7, 0)
+layout_mode = 1
+anchors_preset = 9
+anchor_bottom = 1.0
+offset_right = 7.0
+grow_vertical = 2
+color = Color(0, 0, 0, 0.24)
+
+[node name="ModalWashiTape" type="ColorRect" parent="Panel/VBox/BodyMargin/Body/TopInfo/CoverRect"]
+custom_minimum_size = Vector2(36, 8)
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -18.0
+offset_top = -4.0
+offset_right = 18.0
+offset_bottom = 4.0
+grow_horizontal = 2
+color = Color(0.94, 0.82, 0.56, 0.85)
+
 [node name="CoverIcon" type="Label" parent="Panel/VBox/BodyMargin/Body/TopInfo/CoverRect"]
 layout_mode = 1
 anchors_preset = 8
@@ -165,7 +187,12 @@ theme_override_constants/separation = 8
 [node name="AddVolBtn" type="Button" parent="Panel/VBox/BodyMargin/Body/TopInfo/MetaVBox/BtnRow"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 10
-text = "🖋️ + 다음 권 일기 추가"
+text = "🖋️ + 다음 권 추가"
+
+[node name="RemoveVolBtn" type="Button" parent="Panel/VBox/BodyMargin/Body/TopInfo/MetaVBox/BtnRow"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 10
+text = "- 권 삭제"
 
 [node name="DeleteBtn" type="Button" parent="Panel/VBox/BodyMargin/Body/TopInfo/MetaVBox/BtnRow"]
 layout_mode = 2
@@ -250,6 +277,7 @@ theme_override_constants/separation = 5
 
 [connection signal="pressed" from="Panel/VBox/Header/HBox/CloseBtn" to="." method="_on_close_btn_pressed"]
 [connection signal="pressed" from="Panel/VBox/BodyMargin/Body/TopInfo/MetaVBox/BtnRow/AddVolBtn" to="." method="_on_add_vol_btn_pressed"]
+[connection signal="pressed" from="Panel/VBox/BodyMargin/Body/TopInfo/MetaVBox/BtnRow/RemoveVolBtn" to="." method="remove_last_volume"]
 [connection signal="pressed" from="Panel/VBox/BodyMargin/Body/TopInfo/MetaVBox/BtnRow/DeleteBtn" to="." method="_on_delete_btn_pressed"]
 [connection signal="pressed" from="Panel/VBox/BodyMargin/Body/StampRow/StampComplete" to="." method="_on_stamp_complete_pressed"]
 [connection signal="pressed" from="Panel/VBox/BodyMargin/Body/StampRow/StampFirst" to="." method="_on_stamp_first_pressed"]

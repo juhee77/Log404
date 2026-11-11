@@ -116,6 +116,15 @@ func _init() -> void:
 	assert(sample_card.author_label.text.contains("★"), "Card author_label should display star rating badge")
 	print("✓ Card Star Rating Badge & Diary Summary Exporter verified")
 
+	# Test Sprint 15: Remove Last Volume in DetailModal & Modal Cover Washi Tape
+	main_inst.detail_modal.open(slam_item)
+	var before_vols = slam_item.volumes.size()
+	main_inst.detail_modal._on_add_vol_btn_pressed()
+	assert(slam_item.volumes.size() == before_vols + 1, "AddVolBtn should add 1 volume")
+	main_inst.detail_modal.remove_last_volume()
+	assert(slam_item.volumes.size() == before_vols, "remove_last_volume should remove the last added volume")
+	print("✓ Remove Last Volume & Modal Washi Tape verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

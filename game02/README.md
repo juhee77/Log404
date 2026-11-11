@@ -5,7 +5,7 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 
 ---
 
-## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 14)
+## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 15)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
@@ -14,6 +14,10 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 ---
 
 ## 🚀 최신 스프린트 업데이트 요약 ([전체 회의록 보기](SPRINT_LOG.md))
+
+### [Sprint 15] 모달 내 표지 스크랩 마스킹 테이프(`ModalWashiTape`) · 책등 제본선(`ModalSpineStrip`) · 마지막 권 삭제(`remove_last_volume`)
+- **모달 표지 다꾸 디테일**: 펼친 독서노트 모달 좌측 표지에 반투명 마스킹 테이프(`ModalWashiTape`)와 좌측 책등 제본선(`ModalSpineStrip`) 적용
+- **마지막 권 삭제(`- 권 삭제` / `remove_last_volume`)**: 실수로 추가한 권 기록을 원터치로 되돌리고 통계·JSON에 즉시 반영
 
 ### [Sprint 13 ~ 14] 상단 통계 북마크 원터치 필터 · 카드 평균 별점(`★5.0`) · 단행본 띠지 원터치 변경(`🏷️띠지`) · 요약 리포트(`export_diary_summary`)
 - **인터랙티브 통계 북마크**: 상단 `서재 작품`, `단행본 기록`, `초판 스탬프`, `가챠 스크랩` 카드를 클릭하면 해당 조건(초판 보유작 등)으로 서재를 즉시 필터링

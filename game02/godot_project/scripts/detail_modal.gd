@@ -85,6 +85,10 @@ func _style_diary_controls() -> void:
 	add_vol_btn.add_theme_stylebox_override("normal", cream_btn)
 	add_vol_btn.add_theme_color_override("font_color", Color(0.22, 0.16, 0.13))
 
+	var rem_btn: Button = $Panel/VBox/BodyMargin/Body/TopInfo/MetaVBox/BtnRow/RemoveVolBtn
+	rem_btn.add_theme_stylebox_override("normal", cream_btn)
+	rem_btn.add_theme_color_override("font_color", Color(0.52, 0.36, 0.28))
+
 	var del_btn: Button = $Panel/VBox/BodyMargin/Body/TopInfo/MetaVBox/BtnRow/DeleteBtn
 	del_btn.add_theme_stylebox_override("normal", cream_btn)
 	del_btn.add_theme_color_override("font_color", Color(0.78, 0.25, 0.20))
@@ -302,6 +306,12 @@ func _on_add_vol_btn_pressed() -> void:
 		current_item.add_volume(next_num, "first", 5, str(next_num) + "권 읽고 밑줄 친 오늘의 문장")
 		_render_volumes()
 		volume_added.emit(current_item)
+
+func remove_last_volume() -> void:
+	if current_item != null and current_item.volumes.size() > 0:
+		current_item.volumes.pop_back()
+		_render_volumes()
+		diary_updated.emit(current_item)
 
 func _on_delete_btn_pressed() -> void:
 	if current_item != null:
