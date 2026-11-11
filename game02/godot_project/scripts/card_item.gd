@@ -7,6 +7,7 @@ signal clicked(item)
 @onready var cover_icon: Label = $VBox/CoverContainer/CoverIcon
 @onready var cat_badge: Label = $VBox/CoverContainer/CatBadge
 @onready var vol_badge: Label = $VBox/CoverContainer/VolBadge
+@onready var sticker_badge: Label = $VBox/CoverContainer/StickerBadge
 @onready var title_label: Label = $VBox/InfoContainer/TitleLabel
 @onready var author_label: Label = $VBox/InfoContainer/AuthorLabel
 @onready var status_label: Label = $VBox/InfoContainer/StatusLabel
@@ -23,10 +24,17 @@ func setup(item) -> void:
 	author_label.text = item.author_or_series if item.author_or_series != "" else "시리즈 미상"
 	status_label.text = item.status_tag
 	
+	# 다꾸 스티커 뱃지 표시 (초판, 인생작, 완결 등)
+	if item.status_tag != "":
+		sticker_badge.visible = true
+		sticker_badge.text = item.status_tag
+	else:
+		sticker_badge.visible = false
+	
 	if item.category == 0: # MANGA
 		cat_badge.text = "만화"
 		cat_badge.modulate = Color(0.39, 0.4, 0.95) # Indigo
-		cover_rect.color = Color(0.2, 0.25, 0.35)
+		cover_rect.color = Color(0.18, 0.22, 0.32)
 		cover_icon.text = "📖"
 		var vols = item.volumes.size()
 		vol_badge.visible = true
@@ -34,6 +42,6 @@ func setup(item) -> void:
 	else: # GACHA
 		cat_badge.text = "가챠"
 		cat_badge.modulate = Color(0.95, 0.3, 0.5) # Rose
-		cover_rect.color = Color(0.35, 0.2, 0.3)
+		cover_rect.color = Color(0.32, 0.18, 0.28)
 		cover_icon.text = "🔮"
 		vol_badge.visible = false

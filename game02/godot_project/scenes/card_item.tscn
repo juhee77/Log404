@@ -12,6 +12,13 @@ shadow_color = Color(0, 0, 0, 0.06)
 shadow_size = 4
 shadow_offset = Vector2(0, 2)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sticker"]
+bg_color = Color(0.95, 0.75, 0.15, 0.9)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
 [node name="CardItem" type="PanelContainer"]
 custom_minimum_size = Vector2(130, 210)
 offset_right = 130.0
@@ -62,6 +69,22 @@ offset_right = 36.0
 offset_bottom = 24.0
 theme_override_font_sizes/font_size = 10
 text = "만화"
+horizontal_alignment = 1
+
+[node name="StickerBadge" type="Label" parent="VBox/CoverContainer"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -64.0
+offset_top = 6.0
+offset_right = -6.0
+offset_bottom = 22.0
+grow_horizontal = 0
+theme_override_colors/font_color = Color(0.1, 0.1, 0.1, 1)
+theme_override_font_sizes/font_size = 9
+theme_override_styles/normal = SubResource("StyleBoxFlat_sticker")
+text = "전권완결"
 horizontal_alignment = 1
 
 [node name="VolBadge" type="Label" parent="VBox/CoverContainer"]

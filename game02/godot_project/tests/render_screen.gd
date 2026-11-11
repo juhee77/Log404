@@ -18,3 +18,4 @@ func _init() -> void:
 			img.save_png("res://screenshots/godot_app_screen.png")
 			print("✓ Saved to res://screenshots/godot_app_screen.png")
 	quit(0)
+

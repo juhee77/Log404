@@ -168,3 +168,4 @@ layout_mode = 1
 [connection signal="pressed" from="VBox/FilterBar/HBox/TabManga" to="." method="_on_tab_manga_pressed"]
 [connection signal="pressed" from="VBox/FilterBar/HBox/TabGacha" to="." method="_on_tab_gacha_pressed"]
 [connection signal="text_changed" from="VBox/FilterBar/HBox/SearchInput" to="." method="_on_search_text_changed"]
+

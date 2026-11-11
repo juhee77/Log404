@@ -160,3 +160,4 @@ theme_override_constants/separation = 6
 [connection signal="pressed" from="Panel/VBox/Header/HBox/CloseBtn" to="." method="_on_close_btn_pressed"]
 [connection signal="pressed" from="Panel/VBox/Body/TopInfo/MetaVBox/BtnRow/AddVolBtn" to="." method="_on_add_vol_btn_pressed"]
 [connection signal="pressed" from="Panel/VBox/Body/TopInfo/MetaVBox/BtnRow/DeleteBtn" to="." method="_on_delete_btn_pressed"]
+

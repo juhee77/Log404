@@ -17,3 +17,4 @@ func _init() -> void:
 	else:
 		print("Failed to save screenshot: ", err)
 	quit(0)
+

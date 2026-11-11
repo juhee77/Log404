@@ -33,3 +33,4 @@ func _on_submit_btn_pressed() -> void:
 	var a = author_input.text.strip_edges()
 	item_submitted.emit(t, cat, a)
 	close()
+

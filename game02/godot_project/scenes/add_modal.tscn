@@ -122,3 +122,4 @@ text = "등록하기"
 
 [connection signal="pressed" from="Panel/VBox/Header/HBox/CloseBtn" to="." method="_on_close_btn_pressed"]
 [connection signal="pressed" from="Panel/VBox/Body/SubmitBtn" to="." method="_on_submit_btn_pressed"]
+
