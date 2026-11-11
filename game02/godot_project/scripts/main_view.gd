@@ -139,6 +139,10 @@ func _render_spine_shelf() -> void:
 		spine.custom_minimum_size = Vector2(w, 20)
 		spine.color = Color.from_string(it.cover_color, Color(0.65, 0.25, 0.20))
 		spine.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+		var ribbon = ColorRect.new()
+		ribbon.color = Color(0.96, 0.85, 0.55, 0.9)
+		ribbon.size = Vector2(w, 3)
+		spine.add_child(ribbon)
 		var capture_item = it
 		spine.gui_input.connect(func(ev: InputEvent):
 			if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_LEFT:
@@ -223,6 +227,12 @@ func _on_sort_btn_pressed() -> void:
 func _show_toast(msg: String) -> void:
 	if status_toast != null:
 		status_toast.text = msg
+
+func copy_summary_to_clipboard() -> String:
+	var summary = archive_state.export_diary_summary()
+	DisplayServer.clipboard_set(summary)
+	_show_toast("📋 내 서재 일기장 요약 리포트가 클립보드에 복사되었습니다!")
+	return summary
 
 func _on_card_clicked(item) -> void:
 	detail_modal.open(item)

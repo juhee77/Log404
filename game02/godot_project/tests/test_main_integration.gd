@@ -134,6 +134,15 @@ func _init() -> void:
 	assert(main_inst.detail_modal.visible == true, "Clicking today's quote banner should open the corresponding item's diary modal")
 	print("✓ Cover Icon Emoji Cycler & Today's Quote Direct Jump verified")
 
+	# Test Sprint 17: In-Modal Cover Color Cycler & Clipboard Summary Copy
+	main_inst.detail_modal.open(slam_item)
+	var old_col = slam_item.cover_color
+	main_inst.detail_modal.cycle_cover_color()
+	assert(slam_item.cover_color != "" and slam_item.cover_color != old_col, "cycle_cover_color should cycle book cover color")
+	var copied = main_inst.copy_summary_to_clipboard()
+	assert(copied.contains("슬램덩크") and main_inst.status_toast.text.contains("📋"), "copy_summary_to_clipboard should update toast and return summary")
+	print("✓ In-Modal Cover Color Cycler & Clipboard Summary Copy verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

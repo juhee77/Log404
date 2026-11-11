@@ -24,8 +24,10 @@ var current_item = null
 var editing_vol_index: int = -1
 var obi_cursor: int = 0
 var icon_cursor: int = 0
+var color_cursor: int = 0
 
 const ICON_PRESETS = ["📖", "📕", "✨", "🎀", "🏆", "🔮", "🌸", "🏀", "🪄", "🐱", "🏐", "🌙"]
+const COLOR_PRESETS = ["#b91c1c", "#1d4ed8", "#c2410c", "#be185d", "#15803d", "#6d28d9", "#0f766e"]
 
 const OBI_PRESETS = [
 	"★ 초판 한정 홀로그램 책갈피 동봉",
@@ -156,6 +158,16 @@ func cycle_cover_icon() -> void:
 		icon_cursor = (icon_cursor + 1) % ICON_PRESETS.size()
 	current_item.icon_emoji = ICON_PRESETS[icon_cursor]
 	cover_icon.text = current_item.icon_emoji
+	diary_updated.emit(current_item)
+
+func cycle_cover_color() -> void:
+	if current_item == null:
+		return
+	color_cursor = (color_cursor + 1) % COLOR_PRESETS.size()
+	if COLOR_PRESETS[color_cursor] == current_item.cover_color:
+		color_cursor = (color_cursor + 1) % COLOR_PRESETS.size()
+	current_item.cover_color = COLOR_PRESETS[color_cursor]
+	cover_rect.color = Color.from_string(current_item.cover_color, Color(0.65, 0.25, 0.2))
 	diary_updated.emit(current_item)
 
 func _on_stamp_complete_pressed() -> void:

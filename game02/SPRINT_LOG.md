@@ -5,6 +5,22 @@
 
 ---
 
+## 🚀 [Sprint 17] 모달 내 북커버 색상 순환(`cycle_cover_color`) · 미니 책등 금박 책갈피 팁(`Spine Ribbon`) · 서재 요약 클립보드 복사(`copy_summary_to_clipboard`)
+- **시각**: 2026-11-12 07:45 KST
+- **1. 다꾸러 3인 VOC (수집러 A · 가챠러 B · 미니멀러 C)**
+  - **만년필 다꾸러 A**: *"펼친 독서노트 모달(`detail_modal.gd`) 안에서도 북커버 색상(`cover_color`)을 7종 컬러 팔레트로 즉시 바꿀 수 있게 해주세요!"*
+  - **가챠 수집러 B**: *"상단 미니 책등 진열대(`SpineShelfRow`)의 각 책등 상단에 작은 금박 책갈피 리본 팁(`ribbon`) 디테일을 추가해 주세요!"*
+  - **미니멀 수집러 C**: *"서재 요약 리포트를 시스템 클립보드에 바로 복사하는 `copy_summary_to_clipboard()` 기능을 추가해 주세요!"*
+- **2. 기획 & UI/UX & Godot 4.6 개발 내역**
+  - **모달 내 북커버 컬러 순환(`cycle_cover_color`)**: `detail_modal.gd`에 7종 북커버 컬러 프리셋(`COLOR_PRESETS`) 및 색상 순환·저장 로직 구현
+  - **미니 책등 금박 책갈피 팁**: `_render_spine_shelf()`의 각 책등 상단에 골드 크림 책갈피 헤더 바(`Color(0.96, 0.85, 0.55)`) 추가
+  - **클립보드 요약 복사(`copy_summary_to_clipboard`)**: `DisplayServer.clipboard_set()` 연동 및 완료 토스트 알림 구현
+- **3. TDD & QA 검증**
+  - `tests/test_main_integration.gd`에 `cycle_cover_color()` 및 `copy_summary_to_clipboard()` 검증 추가 → 전수 100% PASS
+  - Metal 렌더러 최신 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 캡처 및 GitHub 푸시 완료
+
+---
+
 ## 🚀 [Sprint 16] 오늘의 밑줄 문장 터치 바로가기(`open_current_quote_item`) & 모달 표지 다꾸 스티커 이모지 변경(`cycle_cover_icon`)
 - **시각**: 2026-11-12 07:27 KST
 - **1. 다꾸러 3인 VOC (수집러 A · 가챠러 B · 미니멀러 C)**

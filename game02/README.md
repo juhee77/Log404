@@ -5,7 +5,7 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 
 ---
 
-## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 16)
+## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 17)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
@@ -14,6 +14,11 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 ---
 
 ## 🚀 최신 스프린트 업데이트 요약 ([전체 회의록 보기](SPRINT_LOG.md))
+
+### [Sprint 17] 모달 내 북커버 색상 순환(`cycle_cover_color`) · 미니 책등 금박 책갈피 팁 · 서재 요약 클립보드 복사(`copy_summary_to_clipboard`)
+- **모달 내 북커버 컬러 순환(`cycle_cover_color`)**: 펼친 독서 일기장 모달에서 7종 북커버 색상을 즉시 변경·저장
+- **미니 책등 금박 책갈피 팁**: 상단 미니 책등 진열대(`SpineShelfRow`) 상단에 골드 책갈피 리본 디테일 적용
+- **클립보드 요약 리포트 복사(`copy_summary_to_clipboard`)**: 전체 독서 일기장 요약 리포트를 시스템 클립보드에 즉시 복사
 
 ### [Sprint 16] 오늘의 밑줄 문장 터치 바로가기(`open_current_quote_item`) & 모달 표지 다꾸 스티커 이모지 변경(`cycle_cover_icon`)
 - **오늘의 밑줄 문장 터치 바로가기**: 상단 배너의 오늘의 밑줄 문장을 클릭하면 해당 명대사가 수록된 작품의 독서 일기장이 즉시 펼쳐짐
