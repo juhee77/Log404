@@ -22,6 +22,14 @@ signal diary_updated(item)
 
 var current_item = null
 var editing_vol_index: int = -1
+var obi_cursor: int = 0
+
+const OBI_PRESETS = [
+	"★ 초판 한정 홀로그램 책갈피 동봉",
+	"★ 전권 완결 애장판 박스세트",
+	"★ 아크릴 케이스 방진 전시중",
+	"★ 주희의 다꾸 서재 인생 명작"
+]
 
 func _ready() -> void:
 	visible = false
@@ -116,6 +124,16 @@ func apply_stamp(stamp_name: String) -> void:
 	if current_item == null:
 		return
 	current_item.status_tag = stamp_name
+	tag_label.text = "💮 스탬프: " + current_item.status_tag + "  |  " + current_item.obi_text
+	diary_updated.emit(current_item)
+
+func cycle_obi_preset() -> void:
+	if current_item == null:
+		return
+	obi_cursor = (obi_cursor + 1) % OBI_PRESETS.size()
+	if OBI_PRESETS[obi_cursor] == current_item.obi_text:
+		obi_cursor = (obi_cursor + 1) % OBI_PRESETS.size()
+	current_item.obi_text = OBI_PRESETS[obi_cursor]
 	tag_label.text = "💮 스탬프: " + current_item.status_tag + "  |  " + current_item.obi_text
 	diary_updated.emit(current_item)
 

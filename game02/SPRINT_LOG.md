@@ -5,6 +5,29 @@
 
 ---
 
+## 🚀 [Sprint 14] 메인 서재 카드 평균 별점(`★5.0`) 배지 · 단행본 띠지 원터치 변경(`🏷️띠지`) · 독서 일기장 요약 리포트(`export_diary_summary`)
+- **시각**: 2026-11-12 06:11 KST
+- **1. 다꾸러 3인 VOC (수집러 A · 가챠러 B · 미니멀러 C)**
+  - **만년필 다꾸러 A**: *"메인 서재 카드(`card_item.gd`)의 작가명 옆에 해당 작품의 평균 별점(`★5.0`)이 함께 찍혀 있으면 일기장을 펼치기 전에도 내 애정도를 한눈에 볼 수 있어요!"*
+  - **가챠 수집러 B**: *"펼친 독서노트 모달(`detail_modal.tscn`)의 스탬프 줄 우측에 `🏷️띠지` 버튼을 넣어 원터치로 단행본 띠지 문구를 바꿀 수 있게 해주세요!"*
+  - **미니멀 수집러 C**: *"내 서재 기록을 텍스트로 공유·백업할 수 있는 `export_diary_summary()` 요약 리포트 생성 기능을 추가해 주세요!"*
+- **2. 기획 & UI/UX & Godot 4.6 개발 내역**
+  - **카드 평균 별점 표시(`card_item.gd`)**: 권별 별점 평균을 계산해 작가명 우측에 `· ★5.0` 형태로 표시
+  - **모달 내 `🏷️띠지` 버튼(`ObiCycleBtn`)**: `detail_modal.tscn` 스탬프 바에 `🏷️띠지` 버튼을 배치하고 `cycle_obi_preset()` 시그널 연결
+  - **독서 일기장 요약 리포트(`export_diary_summary`)**: `archive_state.gd`에서 전체 소장 종수·권수·초판 수 및 작품별 스탬프/띠지 목록을 마크다운 리스트로 반환
+- **3. TDD & QA 검증**
+  - `tests/test_main_integration.gd`에 `export_diary_summary()` 및 카드 `★` 별점 표시 검증 추가 → 전수 100% PASS
+  - Metal 렌더러 최신 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 캡처 및 GitHub 푸시 완료
+
+---
+
+## 🚀 [Sprint 13] 상단 통계 북마크 원터치 필터(`_on_stat_firsts_clicked`) & 단행본 띠지 프리셋 순환(`cycle_obi_preset`)
+- **시각**: 2026-11-12 05:20 KST
+- **1. 다꾸러 3인 VOC**: 상단 4개 통계 박스(`서재 작품`, `단행본 기록`, `초판 스탬프`, `가챠 스크랩`)를 클릭하면 즉시 해당 조건(특히 `초판 스탬프 보유작`)으로 필터링되는 인터랙티브 북마크 기능 요청.
+- **2. 개발 및 QA 검증**: `main_view.gd`에 `filter_firsts_only` 및 4개 통계 카드 클릭 핸들러, `detail_modal.gd`에 `OBI_PRESETS` 순환 로직 구현 및 헤드리스 통합 테스트 100% 통과.
+
+---
+
 ## 🚀 [Sprint 12] 권별 밑줄 대사 개별 편집(`update_volume_quote`) & 가챠·굿즈 스크랩북 체크리스트(`Gacha Checklist`) 탑재
 - **시각**: 2026-11-12 03:30 KST
 - **1. 다꾸러 3인 VOC (수집러 A · 가챠러 B · 미니멀러 C)**

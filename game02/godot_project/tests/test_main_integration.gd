@@ -100,6 +100,22 @@ func _init() -> void:
 	assert(main_inst.detail_modal.vol_section.visible == true, "Gacha diary should also display scrapbook checklist section")
 	print("✓ Per-Volume Quote Edit & Gacha Scrapbook Checklist verified")
 
+	# Test Sprint 13: Interactive Stat Bookmark Filter & Obi Band Cycler
+	main_inst.detail_modal.open(slam_item)
+	var old_obi = slam_item.obi_text
+	main_inst.detail_modal.cycle_obi_preset()
+	assert(slam_item.obi_text != "" and slam_item.obi_text != old_obi, "cycle_obi_preset should cycle the book's obi band text")
+	main_inst._on_stat_firsts_clicked()
+	assert(main_inst.card_grid.get_child_count() >= 4, "StatFirsts bookmark filter should filter items with first editions")
+	print("✓ Interactive Stat Bookmark Filter & Obi Band Cycler verified")
+
+	# Test Sprint 14: Card Star Rating Badge & Diary Summary Exporter
+	var summary_text = main_inst.archive_state.export_diary_summary()
+	assert(summary_text.contains("주희의 다꾸 서재") and summary_text.contains("슬램덩크"), "export_diary_summary should generate formatted reading diary summary")
+	var sample_card = main_inst.card_grid.get_child(0)
+	assert(sample_card.author_label.text.contains("★"), "Card author_label should display star rating badge")
+	print("✓ Card Star Rating Badge & Diary Summary Exporter verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

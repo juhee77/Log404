@@ -25,7 +25,14 @@ func _gui_input(event: InputEvent) -> void:
 func setup(item) -> void:
 	current_item = item
 	title_label.text = item.title
-	author_label.text = item.author_or_series if item.author_or_series != "" else "작가 미상"
+	var base_author = item.author_or_series if item.author_or_series != "" else "작가 미상"
+	var avg_r = 5.0
+	if item.volumes.size() > 0:
+		var sum_r = 0.0
+		for v in item.volumes:
+			sum_r += float(v.get("rating", 5))
+		avg_r = sum_r / float(item.volumes.size())
+	author_label.text = base_author + " · ★" + String.num(avg_r, 1)
 	
 	# 다꾸 도장 스탬프 (💮 전권완결, 초판특전 등)
 	if item.status_tag != "":

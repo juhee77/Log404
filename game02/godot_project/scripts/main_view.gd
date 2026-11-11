@@ -29,6 +29,7 @@ var web_preset_cursor: int = 0
 var theme_cursor: int = 0
 var quote_cursor: int = 0
 var sort_by_volumes: bool = false
+var filter_firsts_only: bool = false
 
 const ROOM_THEMES = [
 	{"name": "만년필 미색 노트 (Warm Ivory)", "bg": Color(0.98, 0.965, 0.94, 1)},
@@ -45,6 +46,15 @@ func _ready() -> void:
 	detail_modal.volume_added.connect(_on_volume_added)
 	detail_modal.diary_updated.connect(_on_diary_updated)
 	add_modal.item_submitted.connect(_on_item_submitted)
+
+	var stat_items_panel: Control = $VBox/TopBar/TopMargin/StatsVBox/StatRow/StatItems
+	var stat_vols_panel: Control = $VBox/TopBar/TopMargin/StatsVBox/StatRow/StatVols
+	var stat_firsts_panel: Control = $VBox/TopBar/TopMargin/StatsVBox/StatRow/StatFirsts
+	var stat_gacha_panel: Control = $VBox/TopBar/TopMargin/StatsVBox/StatRow/StatGacha
+	stat_items_panel.gui_input.connect(func(ev): if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_LEFT: _on_tab_all_pressed())
+	stat_vols_panel.gui_input.connect(func(ev): if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_LEFT: _on_tab_manga_pressed())
+	stat_firsts_panel.gui_input.connect(func(ev): if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_LEFT: _on_stat_firsts_clicked())
+	stat_gacha_panel.gui_input.connect(func(ev): if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_LEFT: _on_tab_gacha_pressed())
 	
 	_apply_journal_button_theme()
 	_update_stats()
@@ -167,6 +177,15 @@ func _render_cards() -> void:
 	
 	var q = search_input.text
 	var filtered = archive_state.get_filtered_items(archive_state.current_filter, q).duplicate()
+	if filter_firsts_only:
+		filtered = filtered.filter(func(it):
+			if it.status_tag == "초판특전":
+				return true
+			for v in it.volumes:
+				if v.get("status", "") == "first":
+					return true
+			return false
+		)
 	if sort_by_volumes:
 		filtered.sort_custom(func(a, b): return a.volumes.size() > b.volumes.size())
 	
@@ -175,6 +194,12 @@ func _render_cards() -> void:
 		card_grid.add_child(card)
 		card.setup(it)
 		card.clicked.connect(_on_card_clicked)
+
+func _on_stat_firsts_clicked() -> void:
+	filter_firsts_only = true
+	archive_state.current_filter = -1
+	_render_cards()
+	_show_toast("🔖 초판 스탬프 보유 작품만 필터링되었습니다.")
 
 func _on_sort_btn_pressed() -> void:
 	sort_by_volumes = not sort_by_volumes
@@ -191,16 +216,19 @@ func _on_card_clicked(item) -> void:
 	detail_modal.open(item)
 
 func _on_tab_all_pressed() -> void:
+	filter_firsts_only = false
 	archive_state.current_filter = -1
 	_highlight_tabs(tab_all)
 	_render_cards()
 
 func _on_tab_manga_pressed() -> void:
+	filter_firsts_only = false
 	archive_state.current_filter = 0
 	_highlight_tabs(tab_manga)
 	_render_cards()
 
 func _on_tab_gacha_pressed() -> void:
+	filter_firsts_only = false
 	archive_state.current_filter = 1
 	_highlight_tabs(tab_gacha)
 	_render_cards()

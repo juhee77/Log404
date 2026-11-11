@@ -137,6 +137,13 @@ func get_first_editions_count() -> int:
 				count += 1
 	return count
 
+func export_diary_summary() -> String:
+	var lines: Array = []
+	lines.append("📔 주희의 다꾸 서재 & 소장 일기장 요약 (" + str(items.size()) + "종 / " + str(get_total_volumes()) + "권 / 초판 " + str(get_first_editions_count()) + "권)")
+	for it in items:
+		lines.append("- [" + it.status_tag + "] " + it.title + " (" + it.author_or_series + ") " + it.obi_text)
+	return "\n".join(lines)
+
 func save_to_file(custom_path: String = "") -> bool:
 	var target_path = custom_path if custom_path != "" else SAVE_FILE_PATH
 	var file = FileAccess.open(target_path, FileAccess.WRITE)
