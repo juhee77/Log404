@@ -1,13 +1,13 @@
-# 📚 Pocket Archive (Game02) — 주희의 만화책 & 가챠 보물창고
+# 📔 주희의 다꾸 서재 & 소장 일기장 — Pocket Archive (Game02)
 
-Godot 4.6.2 모바일 기반의 깔끔하고 직관적인 **단행본 권별 소장 및 가챠 피규어 아카이브 앱**입니다.
-14인 가상 애자일 스쿼드(다꾸러 3인, 기획자 2인, 디자이너 2인, 개발자 4인, QA 2인, CEO 1인)가 **20분 주기 스프린트**로 지속 개선하며 [SPRINT_LOG.md](SPRINT_LOG.md)에 전 과정을 기록합니다.
+Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디북스 레퍼런스) & 만년필 다꾸 독서노트(굿노트 · 몰스킨 레퍼런스)** 감성 아카이브 앱입니다.
+14인 가상 애자일 스쿼드(다꾸러 3인, 기획자 2인, UX/UI 디자이너 2인, 개발자 4인, QA 2인, CEO 1인)가 **20분 주기 스프린트**로 UI 목업(`index.html`)과 실제 Godot 앱(`godot_project`)을 동시에 고도화하며 [SPRINT_LOG.md](SPRINT_LOG.md)에 전 과정을 기록합니다.
 
 ---
 
-## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 6)
+## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 7)
 
-| 📚 메인 6종 컬렉션 진열장 (`main.tscn`) | 📖 권별 다이어리 상세 모달 (`detail_modal.tscn`) |
+| 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
 | ![Pocket Archive Main Screen](godot_project/screenshots/godot_app_screen.png) | ![Pocket Archive Detail Modal](godot_project/screenshots/godot_modal_screen.png) |
 
@@ -15,17 +15,17 @@ Godot 4.6.2 모바일 기반의 깔끔하고 직관적인 **단행본 권별 소
 
 ## 🚀 최신 스프린트 업데이트 요약 ([전체 회의록 보기](SPRINT_LOG.md))
 
+### [Sprint 7] E-Book 서재(Apple Books/리디북스) & 만년필 다꾸 일기장(굿노트/몰스킨) 전면 리디자인
+- **레퍼런스 벤치마킹 & UI 팀 전면 개편 (`index.html` 목업 & Godot 4.6 동기화)**:
+  - 차가운 대시보드 느낌을 완전히 걷어내고 **따뜻한 만년필 미색 종이(`#FAF6F0`, `#F3ECE1`) + 에스프레소 잉크(`#2C221E`)** 톤앤매너 적용
+  - **마스킹 테이프(`MaskingTape`) + 인장 스탬프(`💮전권완결`, `💮초판특전`) + 원목 책장 선반(`WoodLedge`) + 밑줄 친 오늘의 명대사(`QuotePanel`)** 카드 디자인 구현
+  - 펼친 몰스킨 독서노트 스타일의 상세 모달(`detail_modal.tscn`) 리디자인 및 권수 소수점(`1.0권` → `1권`) 포맷 버그 수정
+
 ### [Sprint 6] 작품별 컬러 표지·띠지(Obi) 디자인, 여백(Margin) 개편 & 하단 4탭 액션바 통합
-- **다꾸러 VOC 반영**:
-  - 상단 통계 카드에 명확한 한글 라벨(`총 소장 작품`, `단행본 권수`, `초판 특전`, `가챠·피규어`) 부여 및 빈 여백 제거
-  - 단행본마다 고유 표지 컬러(`#e11d48` 슬램덩크, `#0284c7` 프리렌, `#ea580c` 하이큐, `#f43f5e` 카드캡터 체리), 좌측 책등 바인딩 라인, 하단 **단행본 띠지(Obi Band)** 적용
-  - 하단 4버튼 네비게이션 바(`🌐 웹표지 스크랩`, `📸 카메라 촬영`, `🎨 나만의책 공방`, `🌸 테마 변경`) 탑재
+- 단행본 고유 표지 컬러, 좌측 책등 바인딩 라인, 하단 단행본 띠지(Obi Band), 4버튼 액션바 탑재
 
 ### [Sprint 5] 로컬 JSON 영구 세이브/로드 (`user://archive_data_v2.json`)
 - 앱 재시작 시에도 모든 권별 기록·별점·신규 소장품을 100% 보존하는 자동 직렬화 엔진 및 `test_persistence.gd` 검증 완료
-
-### [Sprint 4] 다꾸 스티커 뱃지(`StickerBadge`) & 웹 표지 로더(`WebCoverLoader`)
-- 우측 상단 골드 옐로 스티커 뱃지(`전권완결`, `초판특전`, `시크릿`, `인생최애`, `SSR한정`) 적용
 
 ---
 

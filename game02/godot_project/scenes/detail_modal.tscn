@@ -3,21 +3,28 @@
 [ext_resource type="Script" path="res://scripts/detail_modal.gd" id="1_detail"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bg"]
-bg_color = Color(0, 0, 0, 0.55)
+bg_color = Color(0.14, 0.1, 0.08, 0.62)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
-bg_color = Color(1, 1, 1, 1)
-corner_radius_top_left = 16
-corner_radius_top_right = 16
-corner_radius_bottom_right = 16
-corner_radius_bottom_left = 16
-shadow_color = Color(0, 0, 0, 0.15)
-shadow_size = 12
+bg_color = Color(1, 0.992, 0.973, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.82, 0.73, 0.61, 1)
+corner_radius_top_left = 18
+corner_radius_top_right = 18
+corner_radius_bottom_right = 18
+corner_radius_bottom_left = 18
+shadow_color = Color(0.15, 0.1, 0.06, 0.25)
+shadow_size = 16
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_header"]
-bg_color = Color(0.1, 0.12, 0.18, 1)
-corner_radius_top_left = 16
-corner_radius_top_right = 16
+bg_color = Color(0.94, 0.90, 0.83, 1)
+border_width_bottom = 2
+border_color = Color(0.82, 0.73, 0.61, 1)
+corner_radius_top_left = 15
+corner_radius_top_right = 15
 
 [node name="DetailModal" type="Control"]
 layout_mode = 3
@@ -38,17 +45,17 @@ grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_bg")
 
 [node name="Panel" type="PanelContainer" parent="."]
-custom_minimum_size = Vector2(380, 480)
+custom_minimum_size = Vector2(406, 540)
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -190.0
-offset_top = -240.0
-offset_right = 190.0
-offset_bottom = 240.0
+offset_left = -203.0
+offset_top = -270.0
+offset_right = 203.0
+offset_bottom = 270.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
@@ -68,96 +75,124 @@ theme_override_constants/separation = 8
 
 [node name="CatBadge" type="Label" parent="Panel/VBox/Header/HBox"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 10
-text = "만화책"
+theme_override_colors/font_color = Color(0.78, 0.35, 0.2, 1)
+theme_override_font_sizes/font_size = 11
+text = " [이북·단행본 일기] "
 
 [node name="TitleLabel" type="Label" parent="Panel/VBox/Header/HBox"]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.17, 0.13, 0.11, 1)
 theme_override_font_sizes/font_size = 14
-text = "작품명"
+text = "📔 작품명"
 text_overrun_behavior = 3
 
 [node name="CloseBtn" type="Button" parent="Panel/VBox/Header/HBox"]
-custom_minimum_size = Vector2(32, 32)
+custom_minimum_size = Vector2(34, 32)
 layout_mode = 2
 text = "✕"
 
-[node name="Body" type="VBoxContainer" parent="Panel/VBox"]
+[node name="BodyMargin" type="MarginContainer" parent="Panel/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/margin_left = 14
+theme_override_constants/margin_top = 14
+theme_override_constants/margin_right = 14
+theme_override_constants/margin_bottom = 14
+
+[node name="Body" type="VBoxContainer" parent="Panel/VBox/BodyMargin"]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/separation = 12
 
-[node name="TopInfo" type="HBoxContainer" parent="Panel/VBox/Body"]
+[node name="TopInfo" type="HBoxContainer" parent="Panel/VBox/BodyMargin/Body"]
 layout_mode = 2
 theme_override_constants/separation = 12
 
-[node name="CoverRect" type="ColorRect" parent="Panel/VBox/Body/TopInfo"]
-custom_minimum_size = Vector2(80, 110)
+[node name="CoverRect" type="ColorRect" parent="Panel/VBox/BodyMargin/Body/TopInfo"]
+custom_minimum_size = Vector2(88, 126)
 layout_mode = 2
-color = Color(0.2, 0.25, 0.35, 1)
+color = Color(0.72, 0.14, 0.18, 1)
 
-[node name="MetaVBox" type="VBoxContainer" parent="Panel/VBox/Body/TopInfo"]
+[node name="CoverIcon" type="Label" parent="Panel/VBox/BodyMargin/Body/TopInfo/CoverRect"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 32
+text = "🏀"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="MetaVBox" type="VBoxContainer" parent="Panel/VBox/BodyMargin/Body/TopInfo"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_constants/separation = 4
+theme_override_constants/separation = 5
 
-[node name="AuthorLabel" type="Label" parent="Panel/VBox/Body/TopInfo/MetaVBox"]
+[node name="AuthorLabel" type="Label" parent="Panel/VBox/BodyMargin/Body/TopInfo/MetaVBox"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.4, 0.4, 0.4, 1)
+theme_override_colors/font_color = Color(0.48, 0.4, 0.34, 1)
 theme_override_font_sizes/font_size = 11
 text = "작가 정보"
 
-[node name="TagLabel" type="Label" parent="Panel/VBox/Body/TopInfo/MetaVBox"]
+[node name="TagLabel" type="Label" parent="Panel/VBox/BodyMargin/Body/TopInfo/MetaVBox"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.3, 0.35, 0.8, 1)
-theme_override_font_sizes/font_size = 11
-text = "상태: 전권완결"
+theme_override_colors/font_color = Color(0.78, 0.35, 0.2, 1)
+theme_override_font_sizes/font_size = 10
+text = "💮 스탬프: 전권완결"
+text_overrun_behavior = 3
 
-[node name="MemoLabel" type="Label" parent="Panel/VBox/Body/TopInfo/MetaVBox"]
+[node name="MemoLabel" type="Label" parent="Panel/VBox/BodyMargin/Body/TopInfo/MetaVBox"]
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_colors/font_color = Color(0.2, 0.2, 0.2, 1)
+theme_override_colors/font_color = Color(0.22, 0.17, 0.14, 1)
 theme_override_font_sizes/font_size = 11
-text = "메모 내용"
+text = "🖋️ 메모 내용"
 autowrap_mode = 3
 
-[node name="BtnRow" type="HBoxContainer" parent="Panel/VBox/Body/TopInfo/MetaVBox"]
+[node name="BtnRow" type="HBoxContainer" parent="Panel/VBox/BodyMargin/Body/TopInfo/MetaVBox"]
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="AddVolBtn" type="Button" parent="Panel/VBox/Body/TopInfo/MetaVBox/BtnRow"]
+[node name="AddVolBtn" type="Button" parent="Panel/VBox/BodyMargin/Body/TopInfo/MetaVBox/BtnRow"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 11
-text = "+ 다음 권 추가"
+text = "🖋️ + 다음 권 일기 추가"
 
-[node name="DeleteBtn" type="Button" parent="Panel/VBox/Body/TopInfo/MetaVBox/BtnRow"]
+[node name="DeleteBtn" type="Button" parent="Panel/VBox/BodyMargin/Body/TopInfo/MetaVBox/BtnRow"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.9, 0.2, 0.2, 1)
+theme_override_colors/font_color = Color(0.85, 0.25, 0.2, 1)
 theme_override_font_sizes/font_size = 11
-text = "소장품 삭제"
+text = "일기 삭제"
 
-[node name="VolSection" type="VBoxContainer" parent="Panel/VBox/Body"]
+[node name="VolSection" type="VBoxContainer" parent="Panel/VBox/BodyMargin/Body"]
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_constants/separation = 6
+theme_override_constants/separation = 8
 
-[node name="VolHeader" type="Label" parent="Panel/VBox/Body/VolSection"]
+[node name="VolHeader" type="Label" parent="Panel/VBox/BodyMargin/Body/VolSection"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.1, 0.1, 0.1, 1)
+theme_override_colors/font_color = Color(0.22, 0.17, 0.14, 1)
 theme_override_font_sizes/font_size = 12
-text = "권별 소장 및 독서 기록"
+text = "📌 권별 밑줄 문장 & 초판 스탬프 노트"
 
-[node name="Scroll" type="ScrollContainer" parent="Panel/VBox/Body/VolSection"]
+[node name="Scroll" type="ScrollContainer" parent="Panel/VBox/BodyMargin/Body/VolSection"]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="VolList" type="VBoxContainer" parent="Panel/VBox/Body/VolSection/Scroll"]
+[node name="VolList" type="VBoxContainer" parent="Panel/VBox/BodyMargin/Body/VolSection/Scroll"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 6
 
 [connection signal="pressed" from="Panel/VBox/Header/HBox/CloseBtn" to="." method="_on_close_btn_pressed"]
-[connection signal="pressed" from="Panel/VBox/Body/TopInfo/MetaVBox/BtnRow/AddVolBtn" to="." method="_on_add_vol_btn_pressed"]
-[connection signal="pressed" from="Panel/VBox/Body/TopInfo/MetaVBox/BtnRow/DeleteBtn" to="." method="_on_delete_btn_pressed"]
-
+[connection signal="pressed" from="Panel/VBox/BodyMargin/Body/TopInfo/MetaVBox/BtnRow/AddVolBtn" to="." method="_on_add_vol_btn_pressed"]
+[connection signal="pressed" from="Panel/VBox/BodyMargin/Body/TopInfo/MetaVBox/BtnRow/DeleteBtn" to="." method="_on_delete_btn_pressed"]

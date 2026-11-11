@@ -39,8 +39,59 @@ func _ready() -> void:
 	detail_modal.volume_added.connect(_on_volume_added)
 	add_modal.item_submitted.connect(_on_item_submitted)
 	
+	_apply_journal_button_theme()
 	_update_stats()
 	_render_cards()
+
+func _apply_journal_button_theme() -> void:
+	var cream_btn = StyleBoxFlat.new()
+	cream_btn.bg_color = Color(0.95, 0.91, 0.84, 1)
+	cream_btn.border_width_left = 1
+	cream_btn.border_width_top = 1
+	cream_btn.border_width_right = 1
+	cream_btn.border_width_bottom = 1
+	cream_btn.border_color = Color(0.80, 0.72, 0.62, 1)
+	cream_btn.corner_radius_top_left = 8
+	cream_btn.corner_radius_top_right = 8
+	cream_btn.corner_radius_bottom_left = 8
+	cream_btn.corner_radius_bottom_right = 8
+
+	var ink_btn = StyleBoxFlat.new()
+	ink_btn.bg_color = Color(0.22, 0.16, 0.13, 1)
+	ink_btn.corner_radius_top_left = 8
+	ink_btn.corner_radius_top_right = 8
+	ink_btn.corner_radius_bottom_left = 8
+	ink_btn.corner_radius_bottom_right = 8
+
+	var add_btn = $VBox/TopBar/TopMargin/StatsVBox/TitleRow/AddBtn
+	add_btn.add_theme_stylebox_override("normal", ink_btn)
+	add_btn.add_theme_color_override("font_color", Color(0.98, 0.96, 0.92))
+
+	for b in [tab_all, tab_manga, tab_gacha]:
+		b.add_theme_stylebox_override("normal", cream_btn)
+		b.add_theme_color_override("font_color", Color(0.22, 0.16, 0.13))
+
+	var nav_row = $VBox/BottomBar/Margin/VBox/NavRow
+	for nb in nav_row.get_children():
+		if nb is Button:
+			nb.add_theme_stylebox_override("normal", cream_btn)
+			nb.add_theme_color_override("font_color", Color(0.22, 0.16, 0.13))
+
+	var search_sb = StyleBoxFlat.new()
+	search_sb.bg_color = Color(0.97, 0.95, 0.91, 1)
+	search_sb.border_width_left = 1
+	search_sb.border_width_top = 1
+	search_sb.border_width_right = 1
+	search_sb.border_width_bottom = 1
+	search_sb.border_color = Color(0.84, 0.77, 0.68, 1)
+	search_sb.corner_radius_top_left = 8
+	search_sb.corner_radius_top_right = 8
+	search_sb.corner_radius_bottom_left = 8
+	search_sb.corner_radius_bottom_right = 8
+	search_sb.content_margin_left = 8
+	search_input.add_theme_stylebox_override("normal", search_sb)
+	search_input.add_theme_color_override("font_color", Color(0.22, 0.16, 0.13))
+	search_input.add_theme_color_override("font_placeholder_color", Color(0.55, 0.48, 0.42))
 
 func _update_stats() -> void:
 	stat_items.text = str(archive_state.items.size()) + "종"

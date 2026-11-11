@@ -3,17 +3,17 @@ extends PanelContainer
 
 signal clicked(item)
 
-@onready var cover_rect: ColorRect = $VBox/CoverContainer/CoverRect
-@onready var spine_strip: ColorRect = $VBox/CoverContainer/SpineStrip
-@onready var cover_icon: Label = $VBox/CoverContainer/CoverIcon
-@onready var cat_badge: Label = $VBox/CoverContainer/CatBadge
-@onready var vol_badge: Label = $VBox/CoverContainer/VolBadge
-@onready var sticker_badge: Label = $VBox/CoverContainer/StickerBadge
-@onready var obi_panel: PanelContainer = $VBox/CoverContainer/ObiPanel
-@onready var obi_label: Label = $VBox/CoverContainer/ObiPanel/ObiLabel
-@onready var title_label: Label = $VBox/InfoMargin/InfoContainer/TitleLabel
-@onready var author_label: Label = $VBox/InfoMargin/InfoContainer/AuthorLabel
-@onready var status_label: Label = $VBox/InfoMargin/InfoContainer/StatusLabel
+@onready var cover_rect: ColorRect = $VBox/CardMargin/InnerVBox/CoverContainer/CoverRect
+@onready var spine_strip: ColorRect = $VBox/CardMargin/InnerVBox/CoverContainer/SpineStrip
+@onready var cover_icon: Label = $VBox/CardMargin/InnerVBox/CoverContainer/CoverIcon
+@onready var cat_badge: Label = $VBox/CardMargin/InnerVBox/CoverContainer/CatBadge
+@onready var vol_badge: Label = $VBox/CardMargin/InnerVBox/CoverContainer/VolBadge
+@onready var sticker_badge: Label = $VBox/CardMargin/InnerVBox/CoverContainer/StickerBadge
+@onready var obi_panel: PanelContainer = $VBox/CardMargin/InnerVBox/CoverContainer/ObiPanel
+@onready var obi_label: Label = $VBox/CardMargin/InnerVBox/CoverContainer/ObiPanel/ObiLabel
+@onready var title_label: Label = $VBox/CardMargin/InnerVBox/InfoContainer/TitleLabel
+@onready var author_label: Label = $VBox/CardMargin/InnerVBox/InfoContainer/AuthorLabel
+@onready var status_label: Label = $VBox/CardMargin/InnerVBox/InfoContainer/QuotePanel/StatusLabel
 
 var current_item = null
 
@@ -24,19 +24,19 @@ func _gui_input(event: InputEvent) -> void:
 func setup(item) -> void:
 	current_item = item
 	title_label.text = item.title
-	author_label.text = item.author_or_series if item.author_or_series != "" else "시리즈 미상"
+	author_label.text = item.author_or_series if item.author_or_series != "" else "작가 미상"
 	
-	# 스티커 뱃지
+	# 다꾸 도장 스탬프 (💮 전권완결, 초판특전 등)
 	if item.status_tag != "":
 		sticker_badge.visible = true
-		sticker_badge.text = " " + item.status_tag + " "
+		sticker_badge.text = " 💮" + item.status_tag + " "
 	else:
 		sticker_badge.visible = false
 
-	# 표지 배경색 & 아이콘
-	var base_col = Color.from_string(item.cover_color, Color(0.25, 0.3, 0.55))
+	# 이북 표지 컬러 & 책등 접힘선
+	var base_col = Color.from_string(item.cover_color, Color(0.65, 0.25, 0.2))
 	cover_rect.color = base_col
-	spine_strip.color = base_col.darkened(0.28)
+	spine_strip.color = base_col.darkened(0.32)
 	cover_icon.text = item.icon_emoji if item.icon_emoji != "" else ("📖" if item.category == 0 else "🔮")
 
 	# 하단 띠지 (Obi Band)
@@ -46,13 +46,20 @@ func setup(item) -> void:
 	else:
 		obi_panel.visible = false
 
+	# 일기장 밑줄 문장 (첫 권 명대사 또는 메모)
+	var first_quote = ""
+	if item.volumes.size() > 0:
+		first_quote = item.volumes[0].get("quote", "")
+	if first_quote == "":
+		first_quote = item.memo if item.memo != "" else "나만의 소장 기록 일기"
+
 	if item.category == 0: # MANGA
-		cat_badge.text = " 만화 "
+		cat_badge.text = " E-BOOK "
 		var vols = item.volumes.size()
 		vol_badge.visible = true
-		vol_badge.text = str(vols) + "권 소장 "
-		status_label.text = "📖 단행본 " + str(vols) + "권 기록중"
+		vol_badge.text = str(vols) + "권 "
+		status_label.text = "🖋️ \"" + first_quote + "\""
 	else: # GACHA
-		cat_badge.text = " 가챠 "
+		cat_badge.text = " DIARY "
 		vol_badge.visible = false
-		status_label.text = "🔮 아크릴 쇼케이스"
+		status_label.text = "🖋️ " + first_quote

@@ -5,36 +5,38 @@
 [ext_resource type="PackedScene" path="res://scenes/add_modal.tscn" id="3_add"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_topbar"]
-bg_color = Color(0.08, 0.1, 0.17, 1)
+bg_color = Color(0.953, 0.925, 0.878, 1)
+border_width_bottom = 2
+border_color = Color(0.855, 0.804, 0.725, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_stat"]
-bg_color = Color(0.14, 0.17, 0.26, 1)
+bg_color = Color(1, 0.992, 0.973, 1)
 border_width_left = 1
 border_width_top = 1
 border_width_right = 1
 border_width_bottom = 1
-border_color = Color(0.24, 0.28, 0.4, 1)
+border_color = Color(0.86, 0.81, 0.73, 1)
 corner_radius_top_left = 10
 corner_radius_top_right = 10
 corner_radius_bottom_right = 10
 corner_radius_bottom_left = 10
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_filter"]
-bg_color = Color(1, 1, 1, 1)
+bg_color = Color(1, 0.992, 0.973, 1)
 border_width_left = 1
 border_width_top = 1
 border_width_right = 1
 border_width_bottom = 1
-border_color = Color(0.88, 0.9, 0.94, 1)
-corner_radius_top_left = 12
-corner_radius_top_right = 12
-corner_radius_bottom_right = 12
-corner_radius_bottom_left = 12
+border_color = Color(0.85, 0.8, 0.72, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bottom"]
-bg_color = Color(1, 1, 1, 1)
-border_width_top = 1
-border_color = Color(0.85, 0.88, 0.92, 1)
+bg_color = Color(0.953, 0.925, 0.878, 1)
+border_width_top = 2
+border_color = Color(0.855, 0.804, 0.725, 1)
 
 [node name="MainView" type="Control"]
 layout_mode = 3
@@ -52,7 +54,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.95, 0.96, 0.98, 1)
+color = Color(0.98, 0.965, 0.94, 1)
 
 [node name="VBox" type="VBoxContainer" parent="."]
 layout_mode = 1
@@ -76,7 +78,7 @@ theme_override_constants/margin_bottom = 12
 
 [node name="StatsVBox" type="VBoxContainer" parent="VBox/TopBar/TopMargin"]
 layout_mode = 2
-theme_override_constants/separation = 10
+theme_override_constants/separation = 8
 
 [node name="TitleRow" type="HBoxContainer" parent="VBox/TopBar/TopMargin/StatsVBox"]
 layout_mode = 2
@@ -86,30 +88,30 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 2
 
-[node name="AppTitle" type="Label" parent="VBox/TopBar/TopMargin/StatsVBox/TitleRow/TitleCol"]
-layout_mode = 2
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_font_sizes/font_size = 16
-text = "📚 주희의 만화 & 가챠 보물창고"
-
 [node name="SubTitle" type="Label" parent="VBox/TopBar/TopMargin/StatsVBox/TitleRow/TitleCol"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.68, 0.74, 0.88, 1)
-theme_override_font_sizes/font_size = 10
-text = "Godot 4.6 Mobile APK · 로컬 JSON 자동 저장"
+theme_override_colors/font_color = Color(0.55, 0.46, 0.39, 1)
+theme_override_font_sizes/font_size = 9
+text = "📔 2026. 11. 11 · MY E-BOOK & COLLECTION DIARY"
+
+[node name="AppTitle" type="Label" parent="VBox/TopBar/TopMargin/StatsVBox/TitleRow/TitleCol"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.17, 0.13, 0.11, 1)
+theme_override_font_sizes/font_size = 16
+text = "주희의 다꾸 서재 & 소장 일기장"
 
 [node name="AddBtn" type="Button" parent="VBox/TopBar/TopMargin/StatsVBox/TitleRow"]
 custom_minimum_size = Vector2(96, 32)
 layout_mode = 2
 theme_override_font_sizes/font_size = 11
-text = "+ 소장품 추가"
+text = "🖋️ + 일기 쓰기"
 
 [node name="StatRow" type="HBoxContainer" parent="VBox/TopBar/TopMargin/StatsVBox"]
 layout_mode = 2
 theme_override_constants/separation = 8
 
 [node name="StatItems" type="PanelContainer" parent="VBox/TopBar/TopMargin/StatsVBox/StatRow"]
-custom_minimum_size = Vector2(0, 44)
+custom_minimum_size = Vector2(0, 42)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_styles/panel = SubResource("StyleBoxFlat_stat")
@@ -121,20 +123,20 @@ alignment = 1
 
 [node name="Lbl" type="Label" parent="VBox/TopBar/TopMargin/StatsVBox/StatRow/StatItems/Box"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.65, 0.7, 0.82, 1)
+theme_override_colors/font_color = Color(0.52, 0.44, 0.38, 1)
 theme_override_font_sizes/font_size = 9
-text = "총 소장 작품"
+text = "서재 작품"
 horizontal_alignment = 1
 
 [node name="Val" type="Label" parent="VBox/TopBar/TopMargin/StatsVBox/StatRow/StatItems/Box"]
 layout_mode = 2
-theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_color = Color(0.17, 0.13, 0.11, 1)
 theme_override_font_sizes/font_size = 13
 text = "6종"
 horizontal_alignment = 1
 
 [node name="StatVols" type="PanelContainer" parent="VBox/TopBar/TopMargin/StatsVBox/StatRow"]
-custom_minimum_size = Vector2(0, 44)
+custom_minimum_size = Vector2(0, 42)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_styles/panel = SubResource("StyleBoxFlat_stat")
@@ -146,20 +148,20 @@ alignment = 1
 
 [node name="Lbl" type="Label" parent="VBox/TopBar/TopMargin/StatsVBox/StatRow/StatVols/Box"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.65, 0.7, 0.82, 1)
+theme_override_colors/font_color = Color(0.52, 0.44, 0.38, 1)
 theme_override_font_sizes/font_size = 9
-text = "단행본 권수"
+text = "단행본 기록"
 horizontal_alignment = 1
 
 [node name="Val" type="Label" parent="VBox/TopBar/TopMargin/StatsVBox/StatRow/StatVols/Box"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.4, 0.9, 0.65, 1)
+theme_override_colors/font_color = Color(0.78, 0.35, 0.2, 1)
 theme_override_font_sizes/font_size = 13
 text = "10권"
 horizontal_alignment = 1
 
 [node name="StatFirsts" type="PanelContainer" parent="VBox/TopBar/TopMargin/StatsVBox/StatRow"]
-custom_minimum_size = Vector2(0, 44)
+custom_minimum_size = Vector2(0, 42)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_styles/panel = SubResource("StyleBoxFlat_stat")
@@ -171,20 +173,20 @@ alignment = 1
 
 [node name="Lbl" type="Label" parent="VBox/TopBar/TopMargin/StatsVBox/StatRow/StatFirsts/Box"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.65, 0.7, 0.82, 1)
+theme_override_colors/font_color = Color(0.52, 0.44, 0.38, 1)
 theme_override_font_sizes/font_size = 9
-text = "초판 특전"
+text = "초판 스탬프"
 horizontal_alignment = 1
 
 [node name="Val" type="Label" parent="VBox/TopBar/TopMargin/StatsVBox/StatRow/StatFirsts/Box"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.98, 0.78, 0.2, 1)
+theme_override_colors/font_color = Color(0.29, 0.42, 0.36, 1)
 theme_override_font_sizes/font_size = 13
 text = "7권"
 horizontal_alignment = 1
 
 [node name="StatGacha" type="PanelContainer" parent="VBox/TopBar/TopMargin/StatsVBox/StatRow"]
-custom_minimum_size = Vector2(0, 44)
+custom_minimum_size = Vector2(0, 42)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_styles/panel = SubResource("StyleBoxFlat_stat")
@@ -196,14 +198,14 @@ alignment = 1
 
 [node name="Lbl" type="Label" parent="VBox/TopBar/TopMargin/StatsVBox/StatRow/StatGacha/Box"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.65, 0.7, 0.82, 1)
+theme_override_colors/font_color = Color(0.52, 0.44, 0.38, 1)
 theme_override_font_sizes/font_size = 9
-text = "가챠·피규어"
+text = "가챠 스크랩"
 horizontal_alignment = 1
 
 [node name="Val" type="Label" parent="VBox/TopBar/TopMargin/StatsVBox/StatRow/StatGacha/Box"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.98, 0.45, 0.68, 1)
+theme_override_colors/font_color = Color(0.65, 0.25, 0.45, 1)
 theme_override_font_sizes/font_size = 13
 text = "2개"
 horizontal_alignment = 1
@@ -224,23 +226,23 @@ theme_override_constants/separation = 6
 [node name="TabAll" type="Button" parent="VBox/FilterMargin/FilterBar/HBox"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 11
-text = "전체"
+text = "📚 전체일기"
 
 [node name="TabManga" type="Button" parent="VBox/FilterMargin/FilterBar/HBox"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 11
-text = "📖 만화"
+text = "📖 이북·단행본"
 
 [node name="TabGacha" type="Button" parent="VBox/FilterMargin/FilterBar/HBox"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 11
-text = "🔮 가챠"
+text = "🔮 가챠노트"
 
 [node name="SearchInput" type="LineEdit" parent="VBox/FilterMargin/FilterBar/HBox"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 11
-placeholder_text = "작품명/작가 검색..."
+placeholder_text = "일기장 속 작품·대사 검색..."
 
 [node name="GridMargin" type="MarginContainer" parent="VBox"]
 layout_mode = 2
@@ -277,9 +279,9 @@ theme_override_constants/separation = 4
 
 [node name="ToastLabel" type="Label" parent="VBox/BottomBar/Margin/VBox"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.35, 0.38, 0.5, 1)
+theme_override_colors/font_color = Color(0.42, 0.34, 0.28, 1)
 theme_override_font_sizes/font_size = 10
-text = "💡 카드를 터치하면 권별 다이어리가 열립니다 · 하단 버튼으로 표지 스크랩/카메라 촬영 가능"
+text = "🖋️ 카드를 누르면 만년필 독서 일기장이 펼쳐집니다 · 리디북스 & 굿노트 다꾸 에디션"
 horizontal_alignment = 1
 text_overrun_behavior = 3
 
@@ -299,21 +301,21 @@ custom_minimum_size = Vector2(0, 34)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 11
-text = "📸 카메라 촬영"
+text = "📸 폴라로이드 촬영"
 
 [node name="DiyBtn" type="Button" parent="VBox/BottomBar/Margin/VBox/NavRow"]
 custom_minimum_size = Vector2(0, 34)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 11
-text = "🎨 나만의책 공방"
+text = "🖋️ 새 일기 쓰기"
 
 [node name="ThemeBtn" type="Button" parent="VBox/BottomBar/Margin/VBox/NavRow"]
 custom_minimum_size = Vector2(0, 34)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 11
-text = "🌸 테마 변경"
+text = "📔 속지 테마"
 
 [node name="DetailModal" parent="." instance=ExtResource("2_detail")]
 visible = false
