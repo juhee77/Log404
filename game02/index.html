@@ -159,6 +159,22 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Sprint 9: Mini E-Book Spine Shelf & Today's Underlined Quote Cycler -->
+            <div class="mt-4 pt-3 border-t border-dashed border-[#e2d6c5] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div class="flex items-center gap-3">
+                    <span class="text-[11px] font-bold text-[#786b63] shrink-0">📚 내 책등 선반:</span>
+                    <div id="mini-spine-shelf" class="flex items-end gap-1 h-7 px-2 py-0.5 bg-[#f3ece1] rounded-lg border border-[#dfd3c3]"></div>
+                </div>
+                <div class="flex items-center justify-between sm:justify-end gap-2 flex-1">
+                    <span id="today-quote-banner" class="serif-font text-xs text-[#5c4938] italic truncate">
+                        🖋️ 오늘의 밑줄: "농구... 좋아하세요?" — 슬램덩크 신장재편판
+                    </span>
+                    <button onclick="cycleTodayQuote()" class="px-2.5 py-1 rounded-lg bg-[#f3ece1] hover:bg-[#e5dac9] border border-[#d6c7b2] text-[#2c221e] text-[11px] font-bold shrink-0 cursor-pointer">
+                        ↻ 다른 문장
+                    </button>
+                </div>
+            </div>
         </section>
 
         <!-- 2. Notebook Index Tabs & Search -->
@@ -409,6 +425,33 @@
                 rowWrap.appendChild(ledge);
                 container.appendChild(rowWrap);
             }
+
+            // Render Mini E-Book Spine Shelf
+            const spineShelf = document.getElementById('mini-spine-shelf');
+            if (spineShelf) {
+                spineShelf.innerHTML = ITEMS.map(it => {
+                    const w = Math.min(14, Math.max(8, 6 + (it.volumes ? it.volumes.length : 1) * 2));
+                    return `<div onclick="openJournalModal('${it.id}')" title="${it.title}" style="width:${w}px;background:${it.color}" class="h-5 rounded-t-xs cursor-pointer hover:opacity-80 shadow-2xs"></div>`;
+                }).join('');
+            }
+        }
+
+        let quoteIdx = 0;
+        function cycleTodayQuote() {
+            const allQuotes = [];
+            ITEMS.forEach(it => {
+                if (it.volumes && it.volumes.length) {
+                    it.volumes.forEach(v => {
+                        if (v.quote) allQuotes.push(`🖋️ 오늘의 밑줄: "${v.quote}" — ${it.title}`);
+                    });
+                } else if (it.memo) {
+                    allQuotes.push(`🖋️ 오늘의 밑줄: "${it.memo}" — ${it.title}`);
+                }
+            });
+            if (!allQuotes.length) return;
+            quoteIdx = (quoteIdx + 1) % allQuotes.length;
+            const el = document.getElementById('today-quote-banner');
+            if (el) el.textContent = allQuotes[quoteIdx];
         }
 
         function openJournalModal(id) {

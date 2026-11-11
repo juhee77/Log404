@@ -9,6 +9,9 @@ const ArchiveStateClass = preload("res://scripts/archive_state.gd")
 @onready var stat_vols: Label = $VBox/TopBar/TopMargin/StatsVBox/StatRow/StatVols/Box/Val
 @onready var stat_firsts: Label = $VBox/TopBar/TopMargin/StatsVBox/StatRow/StatFirsts/Box/Val
 @onready var stat_gacha: Label = $VBox/TopBar/TopMargin/StatsVBox/StatRow/StatGacha/Box/Val
+@onready var spine_shelf_row: HBoxContainer = $VBox/TopBar/TopMargin/StatsVBox/SpineBanner/HBox/SpineShelfRow
+@onready var today_quote_label: Label = $VBox/TopBar/TopMargin/StatsVBox/SpineBanner/HBox/TodayQuoteLabel
+@onready var next_quote_btn: Button = $VBox/TopBar/TopMargin/StatsVBox/SpineBanner/HBox/NextQuoteBtn
 
 @onready var tab_all: Button = $VBox/FilterMargin/FilterBar/HBox/TabAll
 @onready var tab_manga: Button = $VBox/FilterMargin/FilterBar/HBox/TabManga
@@ -23,6 +26,7 @@ const ArchiveStateClass = preload("res://scripts/archive_state.gd")
 var archive_state = null
 var web_preset_cursor: int = 0
 var theme_cursor: int = 0
+var quote_cursor: int = 0
 
 const ROOM_THEMES = [
 	{"name": "만년필 미색 노트 (Warm Ivory)", "bg": Color(0.98, 0.965, 0.94, 1)},
@@ -68,6 +72,9 @@ func _apply_journal_button_theme() -> void:
 	add_btn.add_theme_stylebox_override("normal", ink_btn)
 	add_btn.add_theme_color_override("font_color", Color(0.98, 0.96, 0.92))
 
+	next_quote_btn.add_theme_stylebox_override("normal", cream_btn)
+	next_quote_btn.add_theme_color_override("font_color", Color(0.32, 0.24, 0.18))
+
 	for b in [tab_all, tab_manga, tab_gacha]:
 		b.add_theme_stylebox_override("normal", cream_btn)
 		b.add_theme_color_override("font_color", Color(0.22, 0.16, 0.13))
@@ -103,6 +110,47 @@ func _update_stats() -> void:
 		if it.category == 1: # GACHA
 			g_count += 1
 	stat_gacha.text = str(g_count) + "개"
+	_render_spine_shelf()
+	_refresh_today_quote()
+
+func _render_spine_shelf() -> void:
+	if spine_shelf_row == null:
+		return
+	for child in spine_shelf_row.get_children():
+		spine_shelf_row.remove_child(child)
+		child.queue_free()
+	for it in archive_state.items:
+		var spine = ColorRect.new()
+		var w = clamp(6 + it.volumes.size() * 2, 7, 13)
+		spine.custom_minimum_size = Vector2(w, 20)
+		spine.color = Color.from_string(it.cover_color, Color(0.65, 0.25, 0.20))
+		spine_shelf_row.add_child(spine)
+
+func _collect_all_quotes() -> Array:
+	var quotes: Array = []
+	for it in archive_state.items:
+		if it.volumes.size() > 0:
+			for v in it.volumes:
+				var q = str(v.get("quote", "")).strip_edges()
+				if q != "":
+					quotes.append("🖋️ 오늘의 밑줄: \"" + q + "\" — " + it.title)
+		elif it.memo != "":
+			quotes.append("🖋️ 오늘의 밑줄: \"" + it.memo + "\" — " + it.title)
+	if quotes.is_empty():
+		quotes.append("🖋️ 오늘의 밑줄: \"나만의 첫 독서 일기를 시작해보세요.\"")
+	return quotes
+
+func _refresh_today_quote() -> void:
+	if today_quote_label == null:
+		return
+	var quotes = _collect_all_quotes()
+	quote_cursor = quote_cursor % quotes.size()
+	today_quote_label.text = quotes[quote_cursor]
+
+func _on_next_quote_btn_pressed() -> void:
+	var quotes = _collect_all_quotes()
+	quote_cursor = (quote_cursor + 1) % quotes.size()
+	today_quote_label.text = quotes[quote_cursor]
 
 func _render_cards() -> void:
 	for child in card_grid.get_children():
@@ -177,13 +225,17 @@ func _on_theme_btn_pressed() -> void:
 	bg_rect.color = t["bg"]
 	_show_toast("🎨 진열장 배경 테마 변경: " + t["name"])
 
-func _on_item_submitted(p_title: String, p_cat: int, p_author: String) -> void:
-	var col = "#6366f1" if p_cat == 0 else "#ec4899"
+func _on_item_submitted(p_title: String, p_cat: int, p_author: String, p_color: String = "#b91c1c", p_quote: String = "") -> void:
 	var ic = "📕" if p_cat == 0 else "🔮"
-	archive_state.add_item(p_title, p_cat, p_author, col, ic, "★ 커스텀 신규 등록", "신규소장")
+	var added = archive_state.add_item(p_title, p_cat, p_author, p_color, ic, "★ 직접 쓴 다꾸 일기장", "나만의책")
+	if p_quote != "":
+		added.memo = p_quote
+		if added.volumes.size() > 0:
+			added.volumes[0]["quote"] = p_quote
+		archive_state.save_to_file()
 	_update_stats()
 	_render_cards()
-	_show_toast("✨ 새 소장품이 책장에 추가되었습니다: " + p_title)
+	_show_toast("✨ 새 일기장이 서재에 꽂혔습니다: " + p_title)
 
 func _on_item_deleted(item) -> void:
 	archive_state.remove_item(item.id)

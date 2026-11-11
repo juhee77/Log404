@@ -57,6 +57,21 @@ func _init() -> void:
 	assert(first_item.memo == "포기하면 그 순간이 바로 시합 종료예요.", "Quote editor should update item memo")
 	print("✓ In-Diary Rubber Stamp Picker & Fountain-Pen Quote Editor verified")
 
+	# Test Sprint 9: E-Book Spine Shelf Banner & Today's Quote Cycler & Custom AddModal
+	assert(main_inst.spine_shelf_row.get_child_count() == 8, "Spine shelf should render 8 miniature book spines for current items")
+	var prev_quote = main_inst.today_quote_label.text
+	main_inst._on_next_quote_btn_pressed()
+	assert(main_inst.today_quote_label.text != "" and main_inst.today_quote_label.text != prev_quote, "Next quote button should cycle today's underlined quote")
+	main_inst.add_modal.open()
+	main_inst.add_modal.select_color("#15803d")
+	main_inst.add_modal.title_input.text = "약사의 혼잣말"
+	main_inst.add_modal.author_input.text = "휴우가 나츠"
+	main_inst.add_modal.quote_input.text = "이건 독입니다."
+	main_inst.add_modal._on_submit_btn_pressed()
+	assert(main_inst.archive_state.items.size() == 9, "Submitting custom diary in AddModal should add item #9")
+	assert(main_inst.archive_state.items[0].cover_color == "#15803d", "Newly added diary should use selected cover color")
+	print("✓ E-Book Spine Shelf Banner, Quote Cycler & Custom AddModal verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

@@ -210,6 +210,35 @@ theme_override_font_sizes/font_size = 13
 text = "2개"
 horizontal_alignment = 1
 
+[node name="SpineBanner" type="PanelContainer" parent="VBox/TopBar/TopMargin/StatsVBox"]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_stat")
+
+[node name="HBox" type="HBoxContainer" parent="VBox/TopBar/TopMargin/StatsVBox/SpineBanner"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="SpineShelfRow" type="HBoxContainer" parent="VBox/TopBar/TopMargin/StatsVBox/SpineBanner/HBox"]
+custom_minimum_size = Vector2(72, 24)
+layout_mode = 2
+theme_override_constants/separation = 2
+alignment = 1
+
+[node name="TodayQuoteLabel" type="Label" parent="VBox/TopBar/TopMargin/StatsVBox/SpineBanner/HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.28, 0.21, 0.17, 1)
+theme_override_font_sizes/font_size = 10
+text = "🖋️ 오늘의 밑줄: \"농구... 좋아하세요?\" — 슬램덩크"
+text_overrun_behavior = 3
+
+[node name="NextQuoteBtn" type="Button" parent="VBox/TopBar/TopMargin/StatsVBox/SpineBanner/HBox"]
+custom_minimum_size = Vector2(54, 24)
+layout_mode = 2
+theme_override_font_sizes/font_size = 9
+text = "↻ 문장"
+
 [node name="FilterMargin" type="MarginContainer" parent="VBox"]
 layout_mode = 2
 theme_override_constants/margin_left = 12
@@ -326,6 +355,7 @@ visible = false
 layout_mode = 1
 
 [connection signal="pressed" from="VBox/TopBar/TopMargin/StatsVBox/TitleRow/AddBtn" to="." method="_on_add_btn_pressed"]
+[connection signal="pressed" from="VBox/TopBar/TopMargin/StatsVBox/SpineBanner/HBox/NextQuoteBtn" to="." method="_on_next_quote_btn_pressed"]
 [connection signal="pressed" from="VBox/FilterMargin/FilterBar/HBox/TabAll" to="." method="_on_tab_all_pressed"]
 [connection signal="pressed" from="VBox/FilterMargin/FilterBar/HBox/TabManga" to="." method="_on_tab_manga_pressed"]
 [connection signal="pressed" from="VBox/FilterMargin/FilterBar/HBox/TabGacha" to="." method="_on_tab_gacha_pressed"]

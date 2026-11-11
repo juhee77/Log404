@@ -5,6 +5,21 @@
 
 ---
 
+## 🚀 [Sprint 9] 미니 책등 진열대(`SpineShelf`) & 오늘의 만년필 밑줄 배너(`TodayQuote`) + 새 일기 쓰기 모달(`AddModal`) 전면 개편
+- **시각**: 2026-11-12 02:35 KST
+- **1. 다꾸러 3인 VOC (수집러 A · 가챠러 B · 미니멀러 C)**
+  - **북적북적·이북 유저 A**: *"내 서재에 꽂힌 책들의 책등(Spine)이 권수 두께에 비례해 알록달록하게 나란히 꽂혀 있는 '미니 책등 진열대'와 '오늘의 밑줄 문장' 배너가 상단에 있으면 이북 서재 + 독서노트 감성이 훨씬 깊어질 것 같아요!"*
+  - **다꾸러 B**: *"`+ 일기 쓰기` 버튼을 눌렀을 때 나오는 `AddModal`도 만년필 일기장 톤앤매너로 바꾸고, 표지 북커버 색상 6종(`크림슨`, `코발트`, `테라코타`, `로즈`, `포레스트`, `바이올렛`)과 첫 밑줄 명대사를 직접 적을 수 있게 해주세요!"*
+- **2. 기획 & UI/UX & Godot 4.6 개발 내역**
+  - **미니 책등 진열대(`SpineShelfRow`)**: 보유 작품들의 고유 컬러와 소장 권수 두께를 반영한 미니 책등 바를 상단 배너 좌측에 동적 렌더링 (`main.tscn`, `main_view.gd`, `index.html`)
+  - **오늘의 밑줄 문장 순환기(`TodayQuoteLabel` & `NextQuoteBtn`)**: 내 일기장에 기록된 모든 명대사·감상평을 `"↻ 문장"` 버튼으로 순환 감상 가능
+  - **새 독서·다꾸 일기장 모달(`add_modal.tscn` & `add_modal.gd`)**: 6종 북커버 컬러 스와치 선택기(`select_color`) 및 첫 페이지 밑줄 명대사 입력창(`QuoteInput`) 탑재
+- **3. TDD & QA 검증**
+  - `tests/test_main_integration.gd`에 `spine_shelf_row`, `_on_next_quote_btn_pressed()`, `add_modal.select_color("#15803d")` 통합 검증 추가 → 3개 테스트 스위트 100% PASS
+  - Metal 렌더러 최신 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 캡처 및 GitHub 푸시 완료
+
+---
+
 ## 🚀 [Sprint 8] 일기장 내 고무 인장 스탬프 피커(`💮인장`) & 만년필 밑줄 문장 편집기(`🖋️밑줄 저장`) 탑재
 - **시각**: 2026-11-12 00:31 KST
 - **1. 다꾸러 3인 VOC (수집러 A · 가챠러 B · 미니멀러 C)**

@@ -3,21 +3,28 @@
 [ext_resource type="Script" path="res://scripts/add_modal.gd" id="1_add"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bg"]
-bg_color = Color(0, 0, 0, 0.55)
+bg_color = Color(0.14, 0.1, 0.08, 0.65)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
-bg_color = Color(1, 1, 1, 1)
-corner_radius_top_left = 16
-corner_radius_top_right = 16
-corner_radius_bottom_right = 16
-corner_radius_bottom_left = 16
-shadow_color = Color(0, 0, 0, 0.15)
-shadow_size = 12
+bg_color = Color(1, 0.992, 0.973, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.82, 0.73, 0.61, 1)
+corner_radius_top_left = 18
+corner_radius_top_right = 18
+corner_radius_bottom_right = 18
+corner_radius_bottom_left = 18
+shadow_color = Color(0.15, 0.1, 0.06, 0.25)
+shadow_size = 16
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_header"]
-bg_color = Color(0.1, 0.12, 0.18, 1)
-corner_radius_top_left = 16
-corner_radius_top_right = 16
+bg_color = Color(0.94, 0.9, 0.83, 1)
+border_width_bottom = 2
+border_color = Color(0.82, 0.73, 0.61, 1)
+corner_radius_top_left = 15
+corner_radius_top_right = 15
 
 [node name="AddModal" type="Control"]
 layout_mode = 3
@@ -38,17 +45,17 @@ grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_bg")
 
 [node name="Panel" type="PanelContainer" parent="."]
-custom_minimum_size = Vector2(340, 290)
+custom_minimum_size = Vector2(380, 410)
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -170.0
-offset_top = -145.0
-offset_right = 170.0
-offset_bottom = 145.0
+offset_left = -190.0
+offset_top = -205.0
+offset_right = 190.0
+offset_bottom = 205.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
@@ -58,7 +65,7 @@ layout_mode = 2
 theme_override_constants/separation = 0
 
 [node name="Header" type="PanelContainer" parent="Panel/VBox"]
-custom_minimum_size = Vector2(0, 44)
+custom_minimum_size = Vector2(0, 46)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_header")
 
@@ -69,57 +76,86 @@ theme_override_constants/separation = 8
 [node name="TitleLabel" type="Label" parent="Panel/VBox/Header/HBox"]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.17, 0.13, 0.11, 1)
 theme_override_font_sizes/font_size = 13
-text = "새 소장품 등록"
+text = " 🖋️ 새 독서 · 다꾸 일기장 쓰기"
 
 [node name="CloseBtn" type="Button" parent="Panel/VBox/Header/HBox"]
-custom_minimum_size = Vector2(32, 32)
+custom_minimum_size = Vector2(32, 30)
 layout_mode = 2
 text = "✕"
 
-[node name="Body" type="VBoxContainer" parent="Panel/VBox"]
+[node name="BodyMargin" type="MarginContainer" parent="Panel/VBox"]
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_constants/separation = 10
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 14
 
-[node name="CatLabel" type="Label" parent="Panel/VBox/Body"]
+[node name="Body" type="VBoxContainer" parent="Panel/VBox/BodyMargin"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.3, 0.3, 0.3, 1)
+size_flags_vertical = 3
+theme_override_constants/separation = 8
+
+[node name="CatLabel" type="Label" parent="Panel/VBox/BodyMargin/Body"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.42, 0.34, 0.28, 1)
 theme_override_font_sizes/font_size = 11
-text = "카테고리"
+text = "📔 일기장 분류"
 
-[node name="CatOption" type="OptionButton" parent="Panel/VBox/Body"]
+[node name="CatOption" type="OptionButton" parent="Panel/VBox/BodyMargin/Body"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 12
-
-[node name="TitleInputLabel" type="Label" parent="Panel/VBox/Body"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.3, 0.3, 0.3, 1)
 theme_override_font_sizes/font_size = 11
-text = "작품/상품 제목 *"
 
-[node name="TitleInput" type="LineEdit" parent="Panel/VBox/Body"]
+[node name="TitleInputLabel" type="Label" parent="Panel/VBox/BodyMargin/Body"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 12
-placeholder_text = "예: 체인소 맨, 치이카와 피규어"
-
-[node name="AuthorInputLabel" type="Label" parent="Panel/VBox/Body"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.3, 0.3, 0.3, 1)
+theme_override_colors/font_color = Color(0.42, 0.34, 0.28, 1)
 theme_override_font_sizes/font_size = 11
-text = "작가 / 시리즈명"
+text = "📖 작품 / 다꾸 제목 *"
 
-[node name="AuthorInput" type="LineEdit" parent="Panel/VBox/Body"]
+[node name="TitleInput" type="LineEdit" parent="Panel/VBox/BodyMargin/Body"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 12
-placeholder_text = "예: 후지모토 타츠키, 반다이"
+theme_override_font_sizes/font_size = 11
+placeholder_text = "예: 약사의 혼잣말, 치이카와 캡슐토이"
 
-[node name="SubmitBtn" type="Button" parent="Panel/VBox/Body"]
+[node name="AuthorInputLabel" type="Label" parent="Panel/VBox/BodyMargin/Body"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.42, 0.34, 0.28, 1)
+theme_override_font_sizes/font_size = 11
+text = "✒️ 작가 / 브랜드명"
+
+[node name="AuthorInput" type="LineEdit" parent="Panel/VBox/BodyMargin/Body"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 11
+placeholder_text = "예: 휴우가 나츠, 반다이 가샤폰"
+
+[node name="QuoteInputLabel" type="Label" parent="Panel/VBox/BodyMargin/Body"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.42, 0.34, 0.28, 1)
+theme_override_font_sizes/font_size = 11
+text = "🖋️ 첫 페이지 밑줄 명대사 · 감상평"
+
+[node name="QuoteInput" type="LineEdit" parent="Panel/VBox/BodyMargin/Body"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 11
+placeholder_text = "오늘 가장 기억에 남는 문장을 적어보세요..."
+
+[node name="ColorLabel" type="Label" parent="Panel/VBox/BodyMargin/Body"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.42, 0.34, 0.28, 1)
+theme_override_font_sizes/font_size = 11
+text = "🎨 표지 북커버 컬러"
+
+[node name="ColorRow" type="HBoxContainer" parent="Panel/VBox/BodyMargin/Body"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="SubmitBtn" type="Button" parent="Panel/VBox/BodyMargin/Body"]
 custom_minimum_size = Vector2(0, 36)
 layout_mode = 2
 theme_override_font_sizes/font_size = 12
-text = "등록하기"
+text = "💮 내 서재 일기장에 꽂기"
 
 [connection signal="pressed" from="Panel/VBox/Header/HBox/CloseBtn" to="." method="_on_close_btn_pressed"]
-[connection signal="pressed" from="Panel/VBox/Body/SubmitBtn" to="." method="_on_submit_btn_pressed"]
-
+[connection signal="pressed" from="Panel/VBox/BodyMargin/Body/SubmitBtn" to="." method="_on_submit_btn_pressed"]
