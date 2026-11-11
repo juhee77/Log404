@@ -21,6 +21,7 @@ signal diary_updated(item)
 @onready var stamp_row: HBoxContainer = $Panel/VBox/BodyMargin/Body/StampRow
 
 var current_item = null
+var editing_vol_index: int = -1
 
 func _ready() -> void:
 	visible = false
@@ -86,6 +87,7 @@ func _style_diary_controls() -> void:
 
 func open(item) -> void:
 	current_item = item
+	editing_vol_index = -1
 	title_label.text = "📔 " + item.title
 	author_label.text = "작가 · " + (item.author_or_series if item.author_or_series != "" else "미상")
 	tag_label.text = "💮 스탬프: " + item.status_tag + "  |  " + item.obi_text
@@ -95,15 +97,15 @@ func open(item) -> void:
 	cover_rect.color = Color.from_string(item.cover_color, Color(0.65, 0.25, 0.2))
 	cover_icon.text = item.icon_emoji if item.icon_emoji != "" else "📖"
 
+	vol_section.visible = true
+	add_vol_btn.visible = true
 	if item.category == 0: # MANGA
 		cat_badge.text = " [이북·단행본 일기] "
-		vol_section.visible = true
-		add_vol_btn.visible = true
-		_render_volumes()
+		add_vol_btn.text = "🖋️ + 다음 권 일기 추가"
 	else:
 		cat_badge.text = " [가챠·굿즈 스크랩] "
-		vol_section.visible = false
-		add_vol_btn.visible = false
+		add_vol_btn.text = "🔮 + 파츠·보증서 기록 추가"
+	_render_volumes()
 	
 	visible = true
 
@@ -129,14 +131,25 @@ func _on_stamp_fav_pressed() -> void:
 func _on_stamp_wish_pressed() -> void:
 	apply_stamp("위시리스트")
 
+func update_volume_quote(vol_idx: int, new_quote: String) -> void:
+	if current_item == null or vol_idx < 0 or vol_idx >= current_item.volumes.size():
+		return
+	current_item.volumes[vol_idx]["quote"] = new_quote.strip_edges()
+	_render_volumes()
+	diary_updated.emit(current_item)
+
 func _on_save_quote_btn_pressed() -> void:
 	if current_item == null:
 		return
 	var trimmed = quote_input.text.strip_edges()
 	if trimmed != "":
-		current_item.memo = trimmed
-		memo_label.text = "🖋️ \"" + current_item.memo + "\""
-		diary_updated.emit(current_item)
+		if editing_vol_index >= 0 and editing_vol_index < current_item.volumes.size():
+			update_volume_quote(editing_vol_index, trimmed)
+			editing_vol_index = -1
+		else:
+			current_item.memo = trimmed
+			memo_label.text = "🖋️ \"" + current_item.memo + "\""
+			diary_updated.emit(current_item)
 
 func toggle_volume_status(vol_idx: int) -> void:
 	if current_item == null or vol_idx < 0 or vol_idx >= current_item.volumes.size():
@@ -159,7 +172,23 @@ func _render_volumes() -> void:
 	for child in vol_list.get_children():
 		child.queue_free()
 	
-	if current_item == null or current_item.volumes.is_empty():
+	if current_item == null:
+		return
+
+	if current_item.volumes.is_empty():
+		if current_item.category == 1:
+			vol_header.text = "🔮 가챠 · 굿즈 소장 파츠 & 전시 체크리스트"
+			var gacha_notes = [
+				"🔖 캡슐 미니북(보증서) 스크랩북 보관 완료",
+				"✨ 아크릴 케이스 방진 전시 완료"
+			]
+			for gn in gacha_notes:
+				var glbl = Label.new()
+				glbl.text = gn
+				glbl.add_theme_font_size_override("font_size", 11)
+				glbl.add_theme_color_override("font_color", Color(0.32, 0.25, 0.20))
+				vol_list.add_child(glbl)
+			return
 		vol_header.text = "📌 권별 밑줄 문장 & 초판 스탬프 노트 (0권)"
 		var empty_lbl = Label.new()
 		empty_lbl.text = "아직 기록된 권별 일기가 없습니다."

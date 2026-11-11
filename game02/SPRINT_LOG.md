@@ -5,6 +5,20 @@
 
 ---
 
+## 🚀 [Sprint 12] 권별 밑줄 대사 개별 편집(`update_volume_quote`) & 가챠·굿즈 스크랩북 체크리스트(`Gacha Checklist`) 탑재
+- **시각**: 2026-11-12 03:30 KST
+- **1. 다꾸러 3인 VOC (수집러 A · 가챠러 B · 미니멀러 C)**
+  - **만년필 다꾸러 A**: *"전체 감상평뿐만 아니라 특정 권(`1권`, `2권`, `3권`...)의 밑줄 명대사도 수정·저장(`update_volume_quote`)할 수 있게 해주세요!"*
+  - **가챠 수집러 B**: *"가챠·굿즈 카드(`category == 1`)를 열었을 때 하단 영역이 숨겨지지 않고, `🔮 가챠·굿즈 소장 파츠 & 전시 체크리스트 (캡슐 미니북 보증서 보관 완료 / 아크릴 케이스 방진 전시 완료)`와 파츠 추가 버튼이 보이도록 채워주세요!"*
+- **2. 기획 & UI/UX & Godot 4.6 개발 내역**
+  - **권별 밑줄 문장 개별 수정(`update_volume_quote`)**: `detail_modal.gd`에 `editing_vol_index` 및 `update_volume_quote(vol_idx, new_quote)`를 구현하여 권별 명대사를 직접 편집·저장 가능
+  - **가챠·굿즈 스크랩북 체크리스트**: 가챠 아이템 오픈 시에도 하단 노트 섹션을 활성화하고 캡슐 미니북·아크릴 전시 체크리스트 및 `🔮 + 파츠·보증서 기록 추가` 버튼 제공
+- **3. TDD & QA 검증**
+  - `tests/test_main_integration.gd`에 `update_volume_quote(0, "왼손은 거들 뿐!")` 및 가챠 모달 체크리스트 표시 검증 추가 → 3개 헤드리스 테스트 스위트 전수 100% PASS
+  - Metal 렌더러 최신 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 캡처 및 GitHub 푸시 완료
+
+---
+
 ## 🚀 [Sprint 11] 카드별 맞춤 파스텔 와시 테이프(`MaskingTape`) · 명대사 전문(Full-Text) 검색 · 권별 별점 원터치 변경(`cycle_volume_rating`)
 - **시각**: 2026-11-12 03:09 KST
 - **1. 다꾸러 3인 VOC (수집러 A · 가챠러 B · 미니멀러 C)**

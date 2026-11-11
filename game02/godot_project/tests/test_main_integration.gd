@@ -92,6 +92,14 @@ func _init() -> void:
 	assert(before_rating != after_rating, "cycle_volume_rating should cycle volume star rating")
 	print("✓ Full-Text Quote Search & Volume Star Rating Cycler verified")
 
+	# Test Sprint 12: Per-Volume Quote Edit & Gacha Scrapbook Checklist in DetailModal
+	main_inst.detail_modal.update_volume_quote(0, "왼손은 거들 뿐!")
+	assert(slam_item.volumes[0].get("quote", "") == "왼손은 거들 뿐!", "update_volume_quote should update specific volume quote")
+	var gacha_item = main_inst.archive_state.get_item_by_id("g1")
+	main_inst.detail_modal.open(gacha_item)
+	assert(main_inst.detail_modal.vol_section.visible == true, "Gacha diary should also display scrapbook checklist section")
+	print("✓ Per-Volume Quote Edit & Gacha Scrapbook Checklist verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()
