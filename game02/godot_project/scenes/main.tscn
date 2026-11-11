@@ -5,14 +5,36 @@
 [ext_resource type="PackedScene" path="res://scenes/add_modal.tscn" id="3_add"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_topbar"]
-bg_color = Color(0.08, 0.1, 0.15, 1)
+bg_color = Color(0.08, 0.1, 0.17, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_stat"]
-bg_color = Color(0.14, 0.17, 0.24, 1)
-corner_radius_top_left = 8
-corner_radius_top_right = 8
-corner_radius_bottom_right = 8
-corner_radius_bottom_left = 8
+bg_color = Color(0.14, 0.17, 0.26, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.24, 0.28, 0.4, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_filter"]
+bg_color = Color(1, 1, 1, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.88, 0.9, 0.94, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bottom"]
+bg_color = Color(1, 1, 1, 1)
+border_width_top = 1
+border_color = Color(0.85, 0.88, 0.92, 1)
 
 [node name="MainView" type="Control"]
 layout_mode = 3
@@ -30,7 +52,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.96, 0.97, 0.98, 1)
+color = Color(0.95, 0.96, 0.98, 1)
 
 [node name="VBox" type="VBoxContainer" parent="."]
 layout_mode = 1
@@ -42,118 +64,256 @@ grow_vertical = 2
 theme_override_constants/separation = 8
 
 [node name="TopBar" type="PanelContainer" parent="VBox"]
-custom_minimum_size = Vector2(0, 110)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_topbar")
 
-[node name="StatsVBox" type="VBoxContainer" parent="VBox/TopBar"]
+[node name="TopMargin" type="MarginContainer" parent="VBox/TopBar"]
 layout_mode = 2
-theme_override_constants/separation = 8
+theme_override_constants/margin_left = 14
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 14
+theme_override_constants/margin_bottom = 12
 
-[node name="TitleRow" type="HBoxContainer" parent="VBox/TopBar/StatsVBox"]
+[node name="StatsVBox" type="VBoxContainer" parent="VBox/TopBar/TopMargin"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="TitleRow" type="HBoxContainer" parent="VBox/TopBar/TopMargin/StatsVBox"]
 layout_mode = 2
 
-[node name="AppTitle" type="Label" parent="VBox/TopBar/StatsVBox/TitleRow"]
+[node name="TitleCol" type="VBoxContainer" parent="VBox/TopBar/TopMargin/StatsVBox/TitleRow"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 15
-text = "📚 주희의 컬렉션 아카이브"
+theme_override_constants/separation = 2
 
-[node name="AddBtn" type="Button" parent="VBox/TopBar/StatsVBox/TitleRow"]
-custom_minimum_size = Vector2(80, 28)
+[node name="AppTitle" type="Label" parent="VBox/TopBar/TopMargin/StatsVBox/TitleRow/TitleCol"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 16
+text = "📚 주희의 만화 & 가챠 보물창고"
+
+[node name="SubTitle" type="Label" parent="VBox/TopBar/TopMargin/StatsVBox/TitleRow/TitleCol"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.68, 0.74, 0.88, 1)
+theme_override_font_sizes/font_size = 10
+text = "Godot 4.6 Mobile APK · 로컬 JSON 자동 저장"
+
+[node name="AddBtn" type="Button" parent="VBox/TopBar/TopMargin/StatsVBox/TitleRow"]
+custom_minimum_size = Vector2(96, 32)
 layout_mode = 2
 theme_override_font_sizes/font_size = 11
 text = "+ 소장품 추가"
 
-[node name="StatRow" type="HBoxContainer" parent="VBox/TopBar/StatsVBox"]
+[node name="StatRow" type="HBoxContainer" parent="VBox/TopBar/TopMargin/StatsVBox"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="StatItems" type="PanelContainer" parent="VBox/TopBar/TopMargin/StatsVBox/StatRow"]
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_stat")
+
+[node name="Box" type="VBoxContainer" parent="VBox/TopBar/TopMargin/StatsVBox/StatRow/StatItems"]
+layout_mode = 2
+theme_override_constants/separation = 1
+alignment = 1
+
+[node name="Lbl" type="Label" parent="VBox/TopBar/TopMargin/StatsVBox/StatRow/StatItems/Box"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.65, 0.7, 0.82, 1)
+theme_override_font_sizes/font_size = 9
+text = "총 소장 작품"
+horizontal_alignment = 1
+
+[node name="Val" type="Label" parent="VBox/TopBar/TopMargin/StatsVBox/StatRow/StatItems/Box"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 13
+text = "6종"
+horizontal_alignment = 1
+
+[node name="StatVols" type="PanelContainer" parent="VBox/TopBar/TopMargin/StatsVBox/StatRow"]
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_stat")
+
+[node name="Box" type="VBoxContainer" parent="VBox/TopBar/TopMargin/StatsVBox/StatRow/StatVols"]
+layout_mode = 2
+theme_override_constants/separation = 1
+alignment = 1
+
+[node name="Lbl" type="Label" parent="VBox/TopBar/TopMargin/StatsVBox/StatRow/StatVols/Box"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.65, 0.7, 0.82, 1)
+theme_override_font_sizes/font_size = 9
+text = "단행본 권수"
+horizontal_alignment = 1
+
+[node name="Val" type="Label" parent="VBox/TopBar/TopMargin/StatsVBox/StatRow/StatVols/Box"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.4, 0.9, 0.65, 1)
+theme_override_font_sizes/font_size = 13
+text = "10권"
+horizontal_alignment = 1
+
+[node name="StatFirsts" type="PanelContainer" parent="VBox/TopBar/TopMargin/StatsVBox/StatRow"]
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_stat")
+
+[node name="Box" type="VBoxContainer" parent="VBox/TopBar/TopMargin/StatsVBox/StatRow/StatFirsts"]
+layout_mode = 2
+theme_override_constants/separation = 1
+alignment = 1
+
+[node name="Lbl" type="Label" parent="VBox/TopBar/TopMargin/StatsVBox/StatRow/StatFirsts/Box"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.65, 0.7, 0.82, 1)
+theme_override_font_sizes/font_size = 9
+text = "초판 특전"
+horizontal_alignment = 1
+
+[node name="Val" type="Label" parent="VBox/TopBar/TopMargin/StatsVBox/StatRow/StatFirsts/Box"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.98, 0.78, 0.2, 1)
+theme_override_font_sizes/font_size = 13
+text = "7권"
+horizontal_alignment = 1
+
+[node name="StatGacha" type="PanelContainer" parent="VBox/TopBar/TopMargin/StatsVBox/StatRow"]
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_stat")
+
+[node name="Box" type="VBoxContainer" parent="VBox/TopBar/TopMargin/StatsVBox/StatRow/StatGacha"]
+layout_mode = 2
+theme_override_constants/separation = 1
+alignment = 1
+
+[node name="Lbl" type="Label" parent="VBox/TopBar/TopMargin/StatsVBox/StatRow/StatGacha/Box"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.65, 0.7, 0.82, 1)
+theme_override_font_sizes/font_size = 9
+text = "가챠·피규어"
+horizontal_alignment = 1
+
+[node name="Val" type="Label" parent="VBox/TopBar/TopMargin/StatsVBox/StatRow/StatGacha/Box"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.98, 0.45, 0.68, 1)
+theme_override_font_sizes/font_size = 13
+text = "2개"
+horizontal_alignment = 1
+
+[node name="FilterMargin" type="MarginContainer" parent="VBox"]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_right = 12
+
+[node name="FilterBar" type="PanelContainer" parent="VBox/FilterMargin"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_filter")
+
+[node name="HBox" type="HBoxContainer" parent="VBox/FilterMargin/FilterBar"]
 layout_mode = 2
 theme_override_constants/separation = 6
 
-[node name="StatItems" type="PanelContainer" parent="VBox/TopBar/StatsVBox/StatRow"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_styles/panel = SubResource("StyleBoxFlat_stat")
-
-[node name="Val" type="Label" parent="VBox/TopBar/StatsVBox/StatRow/StatItems"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 11
-text = "0종"
-horizontal_alignment = 1
-
-[node name="StatVols" type="PanelContainer" parent="VBox/TopBar/StatsVBox/StatRow"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_styles/panel = SubResource("StyleBoxFlat_stat")
-
-[node name="Val" type="Label" parent="VBox/TopBar/StatsVBox/StatRow/StatVols"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 11
-text = "0권"
-horizontal_alignment = 1
-
-[node name="StatFirsts" type="PanelContainer" parent="VBox/TopBar/StatsVBox/StatRow"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_styles/panel = SubResource("StyleBoxFlat_stat")
-
-[node name="Val" type="Label" parent="VBox/TopBar/StatsVBox/StatRow/StatFirsts"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.95, 0.7, 0.2, 1)
-theme_override_font_sizes/font_size = 11
-text = "0권"
-horizontal_alignment = 1
-
-[node name="StatGacha" type="PanelContainer" parent="VBox/TopBar/StatsVBox/StatRow"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_styles/panel = SubResource("StyleBoxFlat_stat")
-
-[node name="Val" type="Label" parent="VBox/TopBar/StatsVBox/StatRow/StatGacha"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.95, 0.4, 0.6, 1)
-theme_override_font_sizes/font_size = 11
-text = "0개"
-horizontal_alignment = 1
-
-[node name="FilterBar" type="PanelContainer" parent="VBox"]
-layout_mode = 2
-
-[node name="HBox" type="HBoxContainer" parent="VBox/FilterBar"]
-layout_mode = 2
-theme_override_constants/separation = 6
-
-[node name="TabAll" type="Button" parent="VBox/FilterBar/HBox"]
+[node name="TabAll" type="Button" parent="VBox/FilterMargin/FilterBar/HBox"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 11
 text = "전체"
 
-[node name="TabManga" type="Button" parent="VBox/FilterBar/HBox"]
+[node name="TabManga" type="Button" parent="VBox/FilterMargin/FilterBar/HBox"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 11
 text = "📖 만화"
 
-[node name="TabGacha" type="Button" parent="VBox/FilterBar/HBox"]
+[node name="TabGacha" type="Button" parent="VBox/FilterMargin/FilterBar/HBox"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 11
 text = "🔮 가챠"
 
-[node name="SearchInput" type="LineEdit" parent="VBox/FilterBar/HBox"]
+[node name="SearchInput" type="LineEdit" parent="VBox/FilterMargin/FilterBar/HBox"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 11
 placeholder_text = "작품명/작가 검색..."
 
-[node name="Scroll" type="ScrollContainer" parent="VBox"]
+[node name="GridMargin" type="MarginContainer" parent="VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_right = 12
+
+[node name="Scroll" type="ScrollContainer" parent="VBox/GridMargin"]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="CardGrid" type="GridContainer" parent="VBox/Scroll"]
+[node name="CardGrid" type="GridContainer" parent="VBox/GridMargin/Scroll"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/h_separation = 10
 theme_override_constants/v_separation = 12
 columns = 3
+
+[node name="BottomBar" type="PanelContainer" parent="VBox"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_bottom")
+
+[node name="Margin" type="MarginContainer" parent="VBox/BottomBar"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 8
+
+[node name="VBox" type="VBoxContainer" parent="VBox/BottomBar/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="ToastLabel" type="Label" parent="VBox/BottomBar/Margin/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.35, 0.38, 0.5, 1)
+theme_override_font_sizes/font_size = 10
+text = "💡 카드를 터치하면 권별 다이어리가 열립니다 · 하단 버튼으로 표지 스크랩/카메라 촬영 가능"
+horizontal_alignment = 1
+text_overrun_behavior = 3
+
+[node name="NavRow" type="HBoxContainer" parent="VBox/BottomBar/Margin/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="WebBtn" type="Button" parent="VBox/BottomBar/Margin/VBox/NavRow"]
+custom_minimum_size = Vector2(0, 34)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 11
+text = "🌐 웹표지 스크랩"
+
+[node name="CamBtn" type="Button" parent="VBox/BottomBar/Margin/VBox/NavRow"]
+custom_minimum_size = Vector2(0, 34)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 11
+text = "📸 카메라 촬영"
+
+[node name="DiyBtn" type="Button" parent="VBox/BottomBar/Margin/VBox/NavRow"]
+custom_minimum_size = Vector2(0, 34)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 11
+text = "🎨 나만의책 공방"
+
+[node name="ThemeBtn" type="Button" parent="VBox/BottomBar/Margin/VBox/NavRow"]
+custom_minimum_size = Vector2(0, 34)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 11
+text = "🌸 테마 변경"
 
 [node name="DetailModal" parent="." instance=ExtResource("2_detail")]
 visible = false
@@ -163,9 +323,12 @@ layout_mode = 1
 visible = false
 layout_mode = 1
 
-[connection signal="pressed" from="VBox/TopBar/StatsVBox/TitleRow/AddBtn" to="." method="_on_add_btn_pressed"]
-[connection signal="pressed" from="VBox/FilterBar/HBox/TabAll" to="." method="_on_tab_all_pressed"]
-[connection signal="pressed" from="VBox/FilterBar/HBox/TabManga" to="." method="_on_tab_manga_pressed"]
-[connection signal="pressed" from="VBox/FilterBar/HBox/TabGacha" to="." method="_on_tab_gacha_pressed"]
-[connection signal="text_changed" from="VBox/FilterBar/HBox/SearchInput" to="." method="_on_search_text_changed"]
-
+[connection signal="pressed" from="VBox/TopBar/TopMargin/StatsVBox/TitleRow/AddBtn" to="." method="_on_add_btn_pressed"]
+[connection signal="pressed" from="VBox/FilterMargin/FilterBar/HBox/TabAll" to="." method="_on_tab_all_pressed"]
+[connection signal="pressed" from="VBox/FilterMargin/FilterBar/HBox/TabManga" to="." method="_on_tab_manga_pressed"]
+[connection signal="pressed" from="VBox/FilterMargin/FilterBar/HBox/TabGacha" to="." method="_on_tab_gacha_pressed"]
+[connection signal="text_changed" from="VBox/FilterMargin/FilterBar/HBox/SearchInput" to="." method="_on_search_text_changed"]
+[connection signal="pressed" from="VBox/BottomBar/Margin/VBox/NavRow/WebBtn" to="." method="_on_web_scrape_btn_pressed"]
+[connection signal="pressed" from="VBox/BottomBar/Margin/VBox/NavRow/CamBtn" to="." method="_on_camera_snap_btn_pressed"]
+[connection signal="pressed" from="VBox/BottomBar/Margin/VBox/NavRow/DiyBtn" to="." method="_on_add_btn_pressed"]
+[connection signal="pressed" from="VBox/BottomBar/Margin/VBox/NavRow/ThemeBtn" to="." method="_on_theme_btn_pressed"]

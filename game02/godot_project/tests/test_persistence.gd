@@ -29,3 +29,4 @@ func _init() -> void:
 
 	print("--- ALL PERSISTENCE TESTS PASSED (100%) ---")
 	quit(0)
+
