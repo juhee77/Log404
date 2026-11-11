@@ -146,6 +146,15 @@ func toggle_volume_status(vol_idx: int) -> void:
 	_render_volumes()
 	diary_updated.emit(current_item)
 
+func cycle_volume_rating(vol_idx: int) -> void:
+	if current_item == null or vol_idx < 0 or vol_idx >= current_item.volumes.size():
+		return
+	var cur_r = int(current_item.volumes[vol_idx].get("rating", 5))
+	var next_r = 3 if cur_r >= 5 else (cur_r + 1)
+	current_item.volumes[vol_idx]["rating"] = next_r
+	_render_volumes()
+	diary_updated.emit(current_item)
+
 func _render_volumes() -> void:
 	for child in vol_list.get_children():
 		child.queue_free()
@@ -221,16 +230,18 @@ func _render_volumes() -> void:
 		quote_lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		quote_lbl.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 		
-		var star_lbl = Label.new()
+		var star_btn = Button.new()
 		var r = int(v.get("rating", 5))
-		star_lbl.text = "★".repeat(r)
-		star_lbl.add_theme_font_size_override("font_size", 11)
-		star_lbl.add_theme_color_override("font_color", Color(0.78, 0.35, 0.2))
+		star_btn.text = "★".repeat(r)
+		star_btn.flat = true
+		star_btn.add_theme_font_size_override("font_size", 11)
+		star_btn.add_theme_color_override("font_color", Color(0.78, 0.35, 0.2))
+		star_btn.pressed.connect(func(): cycle_volume_rating(capture_idx))
 		
 		hbox.add_child(vol_lbl)
 		hbox.add_child(status_btn)
 		hbox.add_child(quote_lbl)
-		hbox.add_child(star_lbl)
+		hbox.add_child(star_btn)
 		margin.add_child(hbox)
 		panel.add_child(margin)
 		vol_list.add_child(panel)

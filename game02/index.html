@@ -484,10 +484,18 @@
                         <button onclick="toggleVolStatus(${idx})" class="px-1.5 py-0.5 rounded border ${isFirst ? 'bg-[#fff8f5] border-[#c85a32]/50 text-[#c85a32]' : 'bg-[#eef5f0] border-[#4a6b5d]/50 text-[#4a6b5d]'} text-[10px] font-bold shrink-0 cursor-pointer">${isFirst ? '🔖 초판특전' : '✓ 소장완료'}</button>
                         <span class="serif-font text-[#5c4938] truncate">${v.quote ? `"${v.quote}"` : '메모 없음'}</span>
                     </div>
-                    <span class="text-[#c85a32] font-bold shrink-0 ml-2">${'★'.repeat(v.rating || 5)}</span>
+                    <button onclick="cycleVolRating(${idx})" class="text-[#c85a32] font-bold shrink-0 ml-2 cursor-pointer hover:opacity-80" title="클릭하여 별점 변경">${'★'.repeat(v.rating || 5)}</button>
                 `;
                 list.appendChild(row);
             });
+        }
+
+        function cycleVolRating(idx) {
+            const item = ITEMS.find(x => x.id === activeId);
+            if (!item || !item.volumes || !item.volumes[idx]) return;
+            const cur = item.volumes[idx].rating || 5;
+            item.volumes[idx].rating = cur >= 5 ? 3 : cur + 1;
+            renderDiaryVolumes(item);
         }
 
         function toggleVolStatus(idx) {

@@ -77,7 +77,12 @@ func get_filtered_items(filter_cat: int = -1, query: String = "") -> Array:
 	var q = query.strip_edges().to_lower()
 	for it in items:
 		var cat_match = (filter_cat == -1 or it.category == filter_cat)
-		var query_match = (q.is_empty() or it.title.to_lower().contains(q) or it.author_or_series.to_lower().contains(q))
+		var query_match = q.is_empty() or it.title.to_lower().contains(q) or it.author_or_series.to_lower().contains(q) or it.memo.to_lower().contains(q) or it.status_tag.to_lower().contains(q)
+		if not query_match and it.volumes.size() > 0:
+			for v in it.volumes:
+				if str(v.get("quote", "")).to_lower().contains(q):
+					query_match = true
+					break
 		if cat_match and query_match:
 			result.append(it)
 	return result

@@ -83,6 +83,15 @@ func _init() -> void:
 	assert(main_inst.sort_by_volumes == true, "Sort button should toggle sort_by_volumes mode")
 	print("✓ Volume First-Edition Stamp Toggle & Sort Mode verified")
 
+	# Test Sprint 11: Full-Text Quote/Stamp Search & Volume Star Rating Cycler
+	var quote_matches = main_inst.archive_state.get_filtered_items(-1, "농구")
+	assert(quote_matches.size() == 1 and quote_matches[0].id == "m1", "Search should match underlined quotes inside volumes")
+	var before_rating = int(slam_item.volumes[0].get("rating", 5))
+	main_inst.detail_modal.cycle_volume_rating(0)
+	var after_rating = int(slam_item.volumes[0].get("rating", 5))
+	assert(before_rating != after_rating, "cycle_volume_rating should cycle volume star rating")
+	print("✓ Full-Text Quote Search & Volume Star Rating Cycler verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

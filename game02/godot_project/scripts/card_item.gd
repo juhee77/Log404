@@ -3,6 +3,7 @@ extends PanelContainer
 
 signal clicked(item)
 
+@onready var masking_tape: ColorRect = $VBox/TopTapeRow/MaskingTape
 @onready var cover_rect: ColorRect = $VBox/CardMargin/InnerVBox/CoverContainer/CoverRect
 @onready var spine_strip: ColorRect = $VBox/CardMargin/InnerVBox/CoverContainer/SpineStrip
 @onready var cover_icon: Label = $VBox/CardMargin/InnerVBox/CoverContainer/CoverIcon
@@ -33,10 +34,14 @@ func setup(item) -> void:
 	else:
 		sticker_badge.visible = false
 
-	# 이북 표지 컬러 & 책등 접힘선
+	# 이북 표지 컬러 & 책등 접힘선 & 파스텔 와시 테이프
 	var base_col = Color.from_string(item.cover_color, Color(0.65, 0.25, 0.2))
 	cover_rect.color = base_col
 	spine_strip.color = base_col.darkened(0.32)
+	if masking_tape != null:
+		var washi = base_col.lightened(0.62)
+		washi.a = 0.85
+		masking_tape.color = washi
 	cover_icon.text = item.icon_emoji if item.icon_emoji != "" else ("📖" if item.category == 0 else "🔮")
 
 	# 하단 띠지 (Obi Band)

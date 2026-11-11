@@ -5,6 +5,22 @@
 
 ---
 
+## 🚀 [Sprint 11] 카드별 맞춤 파스텔 와시 테이프(`MaskingTape`) · 명대사 전문(Full-Text) 검색 · 권별 별점 원터치 변경(`cycle_volume_rating`)
+- **시각**: 2026-11-12 03:09 KST
+- **1. 다꾸러 3인 VOC (수집러 A · 가챠러 B · 미니멀러 C)**
+  - **만년필 다꾸러 A**: *"일기장 모달에서 권별 별점(`★★★★★`)도 터치 한 번으로 바꿀 수 있으면 좋겠어요!"*
+  - **가챠 수집러 B**: *"카드 상단의 마스킹 테이프(`MaskingTape`) 색상이 작품 표지 컬러에 맞춘 파스텔 와시 테이프 톤으로 각각 다르게 붙어 있으면 훨씬 다꾸 다이어리 같을 거예요!"*
+  - **미니멀 수집러 C**: *"상단 검색창에서 작품명뿐만 아니라 내가 밑줄 친 명대사(`농구`, `봉인해제`)나 스탬프(`인생최애`, `초판특전`)로도 검색되게 해주세요!"*
+- **2. 기획 & UI/UX & Godot 4.6 개발 내역**
+  - **작품별 파스텔 와시 테이프(`card_item.gd`)**: 각 카드의 `cover_color`에서 파생된 부드러운 파스텔 톤(`lightened(0.62)`)을 `MaskingTape`에 적용
+  - **명대사·스탬프 전문 검색(`archive_state.gd`)**: `get_filtered_items()`가 제목·작가뿐 아니라 `memo`, `status_tag`, 각 권의 `quote`까지 통합 검색하도록 확장
+  - **권별 별점 원터치 순환(`cycle_volume_rating`)**: `detail_modal.gd` 및 `index.html`에서 별점 버튼을 누르면 `★★★` ~ `★★★★★` 별점이 즉시 순환 및 저장됨
+- **3. TDD & QA 검증**
+  - `tests/test_main_integration.gd`에 명대사 검색(`"농구"`) 및 `cycle_volume_rating(0)` 검증 추가 → 3개 헤드리스 테스트 스위트 전수 100% PASS
+  - Metal 렌더러 최신 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 캡처 및 GitHub 푸시 완료
+
+---
+
 ## 🚀 [Sprint 10] 권별 초판·소장 스탬프 원터치 토글(`toggle_volume_status`) & 책등 터치 바로가기 + 다독순 정렬(`SortBtn`)
 - **시각**: 2026-11-12 03:01 KST
 - **1. 다꾸러 3인 VOC (수집러 A · 가챠러 B · 미니멀러 C)**
