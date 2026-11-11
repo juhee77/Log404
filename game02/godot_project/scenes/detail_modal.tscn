@@ -1,0 +1,162 @@
+[gd_scene format=3 uid="uid://b5m8x9p3v7k1c"]
+
+[ext_resource type="Script" path="res://scripts/detail_modal.gd" id="1_detail"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bg"]
+bg_color = Color(0, 0, 0, 0.55)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
+bg_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+shadow_color = Color(0, 0, 0, 0.15)
+shadow_size = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_header"]
+bg_color = Color(0.1, 0.12, 0.18, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+
+[node name="DetailModal" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_detail")
+
+[node name="Dimmer" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_bg")
+
+[node name="Panel" type="PanelContainer" parent="."]
+custom_minimum_size = Vector2(380, 480)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -190.0
+offset_top = -240.0
+offset_right = 190.0
+offset_bottom = 240.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+
+[node name="VBox" type="VBoxContainer" parent="Panel"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Header" type="PanelContainer" parent="Panel/VBox"]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_header")
+
+[node name="HBox" type="HBoxContainer" parent="Panel/VBox/Header"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="CatBadge" type="Label" parent="Panel/VBox/Header/HBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 10
+text = "만화책"
+
+[node name="TitleLabel" type="Label" parent="Panel/VBox/Header/HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 14
+text = "작품명"
+text_overrun_behavior = 3
+
+[node name="CloseBtn" type="Button" parent="Panel/VBox/Header/HBox"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+text = "✕"
+
+[node name="Body" type="VBoxContainer" parent="Panel/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 12
+
+[node name="TopInfo" type="HBoxContainer" parent="Panel/VBox/Body"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="CoverRect" type="ColorRect" parent="Panel/VBox/Body/TopInfo"]
+custom_minimum_size = Vector2(80, 110)
+layout_mode = 2
+color = Color(0.2, 0.25, 0.35, 1)
+
+[node name="MetaVBox" type="VBoxContainer" parent="Panel/VBox/Body/TopInfo"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 4
+
+[node name="AuthorLabel" type="Label" parent="Panel/VBox/Body/TopInfo/MetaVBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.4, 0.4, 0.4, 1)
+theme_override_font_sizes/font_size = 11
+text = "작가 정보"
+
+[node name="TagLabel" type="Label" parent="Panel/VBox/Body/TopInfo/MetaVBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.3, 0.35, 0.8, 1)
+theme_override_font_sizes/font_size = 11
+text = "상태: 전권완결"
+
+[node name="MemoLabel" type="Label" parent="Panel/VBox/Body/TopInfo/MetaVBox"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(0.2, 0.2, 0.2, 1)
+theme_override_font_sizes/font_size = 11
+text = "메모 내용"
+autowrap_mode = 3
+
+[node name="BtnRow" type="HBoxContainer" parent="Panel/VBox/Body/TopInfo/MetaVBox"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="AddVolBtn" type="Button" parent="Panel/VBox/Body/TopInfo/MetaVBox/BtnRow"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 11
+text = "+ 다음 권 추가"
+
+[node name="DeleteBtn" type="Button" parent="Panel/VBox/Body/TopInfo/MetaVBox/BtnRow"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.2, 0.2, 1)
+theme_override_font_sizes/font_size = 11
+text = "소장품 삭제"
+
+[node name="VolSection" type="VBoxContainer" parent="Panel/VBox/Body"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 6
+
+[node name="VolHeader" type="Label" parent="Panel/VBox/Body/VolSection"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.1, 0.1, 0.1, 1)
+theme_override_font_sizes/font_size = 12
+text = "권별 소장 및 독서 기록"
+
+[node name="Scroll" type="ScrollContainer" parent="Panel/VBox/Body/VolSection"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="VolList" type="VBoxContainer" parent="Panel/VBox/Body/VolSection/Scroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 6
+
+[connection signal="pressed" from="Panel/VBox/Header/HBox/CloseBtn" to="." method="_on_close_btn_pressed"]
+[connection signal="pressed" from="Panel/VBox/Body/TopInfo/MetaVBox/BtnRow/AddVolBtn" to="." method="_on_add_vol_btn_pressed"]
+[connection signal="pressed" from="Panel/VBox/Body/TopInfo/MetaVBox/BtnRow/DeleteBtn" to="." method="_on_delete_btn_pressed"]

@@ -42,3 +42,4 @@ describe('Web Cover Scraper & URL Validator', () => {
     expect(validateImageUrl('')).toBe(false);
   });
 });
+

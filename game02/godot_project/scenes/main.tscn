@@ -1,0 +1,170 @@
+[gd_scene format=3 uid="uid://d1x8q4m7y2v9p"]
+
+[ext_resource type="Script" path="res://scripts/main_view.gd" id="1_main"]
+[ext_resource type="PackedScene" path="res://scenes/detail_modal.tscn" id="2_detail"]
+[ext_resource type="PackedScene" path="res://scenes/add_modal.tscn" id="3_add"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_topbar"]
+bg_color = Color(0.08, 0.1, 0.15, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_stat"]
+bg_color = Color(0.14, 0.17, 0.24, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[node name="MainView" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_main")
+
+[node name="Bg" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.96, 0.97, 0.98, 1)
+
+[node name="VBox" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 8
+
+[node name="TopBar" type="PanelContainer" parent="VBox"]
+custom_minimum_size = Vector2(0, 110)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_topbar")
+
+[node name="StatsVBox" type="VBoxContainer" parent="VBox/TopBar"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="TitleRow" type="HBoxContainer" parent="VBox/TopBar/StatsVBox"]
+layout_mode = 2
+
+[node name="AppTitle" type="Label" parent="VBox/TopBar/StatsVBox/TitleRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 15
+text = "📚 주희의 컬렉션 아카이브"
+
+[node name="AddBtn" type="Button" parent="VBox/TopBar/StatsVBox/TitleRow"]
+custom_minimum_size = Vector2(80, 28)
+layout_mode = 2
+theme_override_font_sizes/font_size = 11
+text = "+ 소장품 추가"
+
+[node name="StatRow" type="HBoxContainer" parent="VBox/TopBar/StatsVBox"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="StatItems" type="PanelContainer" parent="VBox/TopBar/StatsVBox/StatRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_stat")
+
+[node name="Val" type="Label" parent="VBox/TopBar/StatsVBox/StatRow/StatItems"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 11
+text = "0종"
+horizontal_alignment = 1
+
+[node name="StatVols" type="PanelContainer" parent="VBox/TopBar/StatsVBox/StatRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_stat")
+
+[node name="Val" type="Label" parent="VBox/TopBar/StatsVBox/StatRow/StatVols"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 11
+text = "0권"
+horizontal_alignment = 1
+
+[node name="StatFirsts" type="PanelContainer" parent="VBox/TopBar/StatsVBox/StatRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_stat")
+
+[node name="Val" type="Label" parent="VBox/TopBar/StatsVBox/StatRow/StatFirsts"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.7, 0.2, 1)
+theme_override_font_sizes/font_size = 11
+text = "0권"
+horizontal_alignment = 1
+
+[node name="StatGacha" type="PanelContainer" parent="VBox/TopBar/StatsVBox/StatRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_stat")
+
+[node name="Val" type="Label" parent="VBox/TopBar/StatsVBox/StatRow/StatGacha"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.4, 0.6, 1)
+theme_override_font_sizes/font_size = 11
+text = "0개"
+horizontal_alignment = 1
+
+[node name="FilterBar" type="PanelContainer" parent="VBox"]
+layout_mode = 2
+
+[node name="HBox" type="HBoxContainer" parent="VBox/FilterBar"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="TabAll" type="Button" parent="VBox/FilterBar/HBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 11
+text = "전체"
+
+[node name="TabManga" type="Button" parent="VBox/FilterBar/HBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 11
+text = "📖 만화"
+
+[node name="TabGacha" type="Button" parent="VBox/FilterBar/HBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 11
+text = "🔮 가챠"
+
+[node name="SearchInput" type="LineEdit" parent="VBox/FilterBar/HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 11
+placeholder_text = "작품명/작가 검색..."
+
+[node name="Scroll" type="ScrollContainer" parent="VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="CardGrid" type="GridContainer" parent="VBox/Scroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/h_separation = 10
+theme_override_constants/v_separation = 12
+columns = 3
+
+[node name="DetailModal" parent="." instance=ExtResource("2_detail")]
+visible = false
+layout_mode = 1
+
+[node name="AddModal" parent="." instance=ExtResource("3_add")]
+visible = false
+layout_mode = 1
+
+[connection signal="pressed" from="VBox/TopBar/StatsVBox/TitleRow/AddBtn" to="." method="_on_add_btn_pressed"]
+[connection signal="pressed" from="VBox/FilterBar/HBox/TabAll" to="." method="_on_tab_all_pressed"]
+[connection signal="pressed" from="VBox/FilterBar/HBox/TabManga" to="." method="_on_tab_manga_pressed"]
+[connection signal="pressed" from="VBox/FilterBar/HBox/TabGacha" to="." method="_on_tab_gacha_pressed"]
+[connection signal="text_changed" from="VBox/FilterBar/HBox/SearchInput" to="." method="_on_search_text_changed"]

@@ -42,3 +42,4 @@ export const validateImageUrl = (url: string): boolean => {
     return false;
   }
 };
+
