@@ -72,6 +72,17 @@ func _init() -> void:
 	assert(main_inst.archive_state.items[0].cover_color == "#15803d", "Newly added diary should use selected cover color")
 	print("✓ E-Book Spine Shelf Banner, Quote Cycler & Custom AddModal verified")
 
+	# Test Sprint 10: Interactive Volume First-Edition Stamp Toggle & Spine Click & Sort Toggle
+	var slam_item = main_inst.archive_state.get_item_by_id("m1")
+	main_inst.detail_modal.open(slam_item)
+	var before_status = slam_item.volumes[1].get("status", "owned")
+	main_inst.detail_modal.toggle_volume_status(1)
+	var after_status = slam_item.volumes[1].get("status", "owned")
+	assert(before_status != after_status, "toggle_volume_status should toggle between 'first' and 'owned'")
+	main_inst._on_sort_btn_pressed()
+	assert(main_inst.sort_by_volumes == true, "Sort button should toggle sort_by_volumes mode")
+	print("✓ Volume First-Edition Stamp Toggle & Sort Mode verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

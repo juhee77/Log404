@@ -66,6 +66,12 @@ func reset_to_rich_defaults() -> void:
 	if items.size() > 0:
 		selected_item = items[0]
 
+func get_item_by_id(item_id: String):
+	for it in items:
+		if it.id == item_id:
+			return it
+	return null
+
 func get_filtered_items(filter_cat: int = -1, query: String = "") -> Array:
 	var result: Array = []
 	var q = query.strip_edges().to_lower()

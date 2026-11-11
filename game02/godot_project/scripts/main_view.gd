@@ -17,6 +17,7 @@ const ArchiveStateClass = preload("res://scripts/archive_state.gd")
 @onready var tab_manga: Button = $VBox/FilterMargin/FilterBar/HBox/TabManga
 @onready var tab_gacha: Button = $VBox/FilterMargin/FilterBar/HBox/TabGacha
 @onready var search_input: LineEdit = $VBox/FilterMargin/FilterBar/HBox/SearchInput
+@onready var sort_btn: Button = $VBox/FilterMargin/FilterBar/HBox/SortBtn
 
 @onready var card_grid: GridContainer = $VBox/GridMargin/Scroll/CardGrid
 @onready var status_toast: Label = $VBox/BottomBar/Margin/VBox/ToastLabel
@@ -27,6 +28,7 @@ var archive_state = null
 var web_preset_cursor: int = 0
 var theme_cursor: int = 0
 var quote_cursor: int = 0
+var sort_by_volumes: bool = false
 
 const ROOM_THEMES = [
 	{"name": "만년필 미색 노트 (Warm Ivory)", "bg": Color(0.98, 0.965, 0.94, 1)},
@@ -75,7 +77,7 @@ func _apply_journal_button_theme() -> void:
 	next_quote_btn.add_theme_stylebox_override("normal", cream_btn)
 	next_quote_btn.add_theme_color_override("font_color", Color(0.32, 0.24, 0.18))
 
-	for b in [tab_all, tab_manga, tab_gacha]:
+	for b in [tab_all, tab_manga, tab_gacha, sort_btn]:
 		b.add_theme_stylebox_override("normal", cream_btn)
 		b.add_theme_color_override("font_color", Color(0.22, 0.16, 0.13))
 
@@ -124,6 +126,12 @@ func _render_spine_shelf() -> void:
 		var w = clamp(6 + it.volumes.size() * 2, 7, 13)
 		spine.custom_minimum_size = Vector2(w, 20)
 		spine.color = Color.from_string(it.cover_color, Color(0.65, 0.25, 0.20))
+		spine.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+		var capture_item = it
+		spine.gui_input.connect(func(ev: InputEvent):
+			if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_LEFT:
+				detail_modal.open(capture_item)
+		)
 		spine_shelf_row.add_child(spine)
 
 func _collect_all_quotes() -> Array:
@@ -158,13 +166,22 @@ func _render_cards() -> void:
 		child.queue_free()
 	
 	var q = search_input.text
-	var filtered = archive_state.get_filtered_items(archive_state.current_filter, q)
+	var filtered = archive_state.get_filtered_items(archive_state.current_filter, q).duplicate()
+	if sort_by_volumes:
+		filtered.sort_custom(func(a, b): return a.volumes.size() > b.volumes.size())
 	
 	for it in filtered:
 		var card = CardItemScene.instantiate()
 		card_grid.add_child(card)
 		card.setup(it)
 		card.clicked.connect(_on_card_clicked)
+
+func _on_sort_btn_pressed() -> void:
+	sort_by_volumes = not sort_by_volumes
+	if sort_btn != null:
+		sort_btn.text = "↕ 다독순" if sort_by_volumes else "↕ 기본순"
+	_render_cards()
+	_show_toast("📚 정렬 기준 변경: " + ("권수 많은 순(다독순)" if sort_by_volumes else "기본 등록순"))
 
 func _show_toast(msg: String) -> void:
 	if status_toast != null:

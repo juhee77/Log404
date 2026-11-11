@@ -271,7 +271,12 @@ text = "🔮 가챠노트"
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 11
-placeholder_text = "일기장 속 작품·대사 검색..."
+placeholder_text = "작품·대사 검색..."
+
+[node name="SortBtn" type="Button" parent="VBox/FilterMargin/FilterBar/HBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 10
+text = "↕ 기본순"
 
 [node name="GridMargin" type="MarginContainer" parent="VBox"]
 layout_mode = 2
@@ -360,6 +365,7 @@ layout_mode = 1
 [connection signal="pressed" from="VBox/FilterMargin/FilterBar/HBox/TabManga" to="." method="_on_tab_manga_pressed"]
 [connection signal="pressed" from="VBox/FilterMargin/FilterBar/HBox/TabGacha" to="." method="_on_tab_gacha_pressed"]
 [connection signal="text_changed" from="VBox/FilterMargin/FilterBar/HBox/SearchInput" to="." method="_on_search_text_changed"]
+[connection signal="pressed" from="VBox/FilterMargin/FilterBar/HBox/SortBtn" to="." method="_on_sort_btn_pressed"]
 [connection signal="pressed" from="VBox/BottomBar/Margin/VBox/NavRow/WebBtn" to="." method="_on_web_scrape_btn_pressed"]
 [connection signal="pressed" from="VBox/BottomBar/Margin/VBox/NavRow/CamBtn" to="." method="_on_camera_snap_btn_pressed"]
 [connection signal="pressed" from="VBox/BottomBar/Margin/VBox/NavRow/DiyBtn" to="." method="_on_add_btn_pressed"]

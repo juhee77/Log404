@@ -138,6 +138,14 @@ func _on_save_quote_btn_pressed() -> void:
 		memo_label.text = "🖋️ \"" + current_item.memo + "\""
 		diary_updated.emit(current_item)
 
+func toggle_volume_status(vol_idx: int) -> void:
+	if current_item == null or vol_idx < 0 or vol_idx >= current_item.volumes.size():
+		return
+	var cur = str(current_item.volumes[vol_idx].get("status", "owned"))
+	current_item.volumes[vol_idx]["status"] = "owned" if cur == "first" else "first"
+	_render_volumes()
+	diary_updated.emit(current_item)
+
 func _render_volumes() -> void:
 	for child in vol_list.get_children():
 		child.queue_free()
@@ -157,7 +165,8 @@ func _render_volumes() -> void:
 			first_cnt += 1
 	vol_header.text = "📌 권별 밑줄 노트 (소장 " + str(current_item.volumes.size()) + "권 · 초판 " + str(first_cnt) + "권)"
 
-	for v in current_item.volumes:
+	for idx in range(current_item.volumes.size()):
+		var v = current_item.volumes[idx]
 		var panel = PanelContainer.new()
 		var sb = StyleBoxFlat.new()
 		sb.bg_color = Color(0.97, 0.945, 0.90, 1)
@@ -182,13 +191,27 @@ func _render_volumes() -> void:
 		vol_lbl.text = str(int(v.get("vol", 1))) + "권"
 		vol_lbl.add_theme_font_size_override("font_size", 12)
 		vol_lbl.add_theme_color_override("font_color", Color(0.17, 0.13, 0.11))
-		vol_lbl.custom_minimum_size = Vector2(32, 0)
+		vol_lbl.custom_minimum_size = Vector2(28, 0)
 		
-		var status_lbl = Label.new()
+		var status_btn = Button.new()
 		var is_first = v.get("status", "") == "first"
-		status_lbl.text = "🔖초판특전" if is_first else "✓소장완료"
-		status_lbl.add_theme_font_size_override("font_size", 10)
-		status_lbl.add_theme_color_override("font_color", Color(0.78, 0.35, 0.2) if is_first else Color(0.29, 0.45, 0.36))
+		status_btn.text = "🔖초판특전" if is_first else "✓소장완료"
+		status_btn.add_theme_font_size_override("font_size", 9)
+		var btn_sb = StyleBoxFlat.new()
+		btn_sb.bg_color = Color(0.99, 0.96, 0.94, 1) if is_first else Color(0.93, 0.96, 0.94, 1)
+		btn_sb.border_width_left = 1
+		btn_sb.border_width_top = 1
+		btn_sb.border_width_right = 1
+		btn_sb.border_width_bottom = 1
+		btn_sb.border_color = Color(0.78, 0.35, 0.2, 0.5) if is_first else Color(0.29, 0.45, 0.36, 0.5)
+		btn_sb.corner_radius_top_left = 4
+		btn_sb.corner_radius_top_right = 4
+		btn_sb.corner_radius_bottom_left = 4
+		btn_sb.corner_radius_bottom_right = 4
+		status_btn.add_theme_stylebox_override("normal", btn_sb)
+		status_btn.add_theme_color_override("font_color", Color(0.78, 0.35, 0.2) if is_first else Color(0.29, 0.45, 0.36))
+		var capture_idx = idx
+		status_btn.pressed.connect(func(): toggle_volume_status(capture_idx))
 		
 		var quote_lbl = Label.new()
 		var q = v.get("quote", "")
@@ -205,7 +228,7 @@ func _render_volumes() -> void:
 		star_lbl.add_theme_color_override("font_color", Color(0.78, 0.35, 0.2))
 		
 		hbox.add_child(vol_lbl)
-		hbox.add_child(status_lbl)
+		hbox.add_child(status_btn)
 		hbox.add_child(quote_lbl)
 		hbox.add_child(star_lbl)
 		margin.add_child(hbox)

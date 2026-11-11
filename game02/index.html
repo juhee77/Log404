@@ -474,19 +474,28 @@
         function renderDiaryVolumes(item) {
             const list = document.getElementById('diary-volumes-list');
             list.innerHTML = '';
-            (item.volumes || []).forEach(v => {
+            (item.volumes || []).forEach((v, idx) => {
                 const row = document.createElement('div');
                 row.className = 'p-2.5 rounded-xl bg-[#faf6f0] border border-[#e5dac9] flex items-center justify-between text-xs';
+                const isFirst = v.status === 'first';
                 row.innerHTML = `
                     <div class="flex items-center gap-2.5 min-w-0">
                         <span class="serif-font font-bold text-[#2c221e] shrink-0">${v.vol}권</span>
-                        <span class="px-1.5 py-0.5 rounded bg-[#f3e3d3] text-[#c85a32] text-[10px] font-bold shrink-0">${v.status === 'first' ? '🔖 초판특전' : '✓ 소장'}</span>
+                        <button onclick="toggleVolStatus(${idx})" class="px-1.5 py-0.5 rounded border ${isFirst ? 'bg-[#fff8f5] border-[#c85a32]/50 text-[#c85a32]' : 'bg-[#eef5f0] border-[#4a6b5d]/50 text-[#4a6b5d]'} text-[10px] font-bold shrink-0 cursor-pointer">${isFirst ? '🔖 초판특전' : '✓ 소장완료'}</button>
                         <span class="serif-font text-[#5c4938] truncate">${v.quote ? `"${v.quote}"` : '메모 없음'}</span>
                     </div>
                     <span class="text-[#c85a32] font-bold shrink-0 ml-2">${'★'.repeat(v.rating || 5)}</span>
                 `;
                 list.appendChild(row);
             });
+        }
+
+        function toggleVolStatus(idx) {
+            const item = ITEMS.find(x => x.id === activeId);
+            if (!item || !item.volumes || !item.volumes[idx]) return;
+            item.volumes[idx].status = item.volumes[idx].status === 'first' ? 'owned' : 'first';
+            renderDiaryVolumes(item);
+            renderShelf();
         }
 
         function addVolumeInDiary() {
