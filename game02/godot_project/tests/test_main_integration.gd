@@ -47,6 +47,16 @@ func _init() -> void:
 	main_inst._on_theme_btn_pressed()
 	print("✓ Web Scrape, Camera Snap, and Theme Toggle flows verified")
 
+	# Test Sprint 8: In-Diary Stamp Picker & Fountain-Pen Quote Editor
+	var first_item = main_inst.archive_state.items[0]
+	main_inst.detail_modal.open(first_item)
+	main_inst.detail_modal.apply_stamp("인생최애")
+	assert(first_item.status_tag == "인생최애", "Stamp picker should update item status_tag")
+	main_inst.detail_modal.quote_input.text = "포기하면 그 순간이 바로 시합 종료예요."
+	main_inst.detail_modal._on_save_quote_btn_pressed()
+	assert(first_item.memo == "포기하면 그 순간이 바로 시합 종료예요.", "Quote editor should update item memo")
+	print("✓ In-Diary Rubber Stamp Picker & Fountain-Pen Quote Editor verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

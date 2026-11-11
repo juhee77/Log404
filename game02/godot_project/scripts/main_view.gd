@@ -25,10 +25,10 @@ var web_preset_cursor: int = 0
 var theme_cursor: int = 0
 
 const ROOM_THEMES = [
-	{"name": "클린 화이트", "bg": Color(0.95, 0.96, 0.98, 1)},
-	{"name": "따뜻한 원목", "bg": Color(0.97, 0.94, 0.90, 1)},
-	{"name": "파스텔 핑크", "bg": Color(0.99, 0.94, 0.96, 1)},
-	{"name": "라벤더 드림", "bg": Color(0.95, 0.94, 0.99, 1)}
+	{"name": "만년필 미색 노트 (Warm Ivory)", "bg": Color(0.98, 0.965, 0.94, 1)},
+	{"name": "빈티지 크라프트 다꾸지 (Kraft)", "bg": Color(0.94, 0.89, 0.82, 1)},
+	{"name": "리디 이북 세피아 리더 (Sepia)", "bg": Color(0.96, 0.92, 0.84, 1)},
+	{"name": "보타니컬 세이지 일기장 (Sage)", "bg": Color(0.93, 0.96, 0.93, 1)}
 ]
 
 func _ready() -> void:
@@ -37,6 +37,7 @@ func _ready() -> void:
 	
 	detail_modal.item_deleted.connect(_on_item_deleted)
 	detail_modal.volume_added.connect(_on_volume_added)
+	detail_modal.diary_updated.connect(_on_diary_updated)
 	add_modal.item_submitted.connect(_on_item_submitted)
 	
 	_apply_journal_button_theme()
@@ -195,3 +196,9 @@ func _on_volume_added(_item) -> void:
 	_update_stats()
 	_render_cards()
 	_show_toast("📖 다음 권이 추가되고 로컬 JSON에 저장되었습니다.")
+
+func _on_diary_updated(item) -> void:
+	archive_state.save_to_file()
+	_update_stats()
+	_render_cards()
+	_show_toast("💮 일기장 스탬프·밑줄 문장이 저장되었습니다: " + item.title)

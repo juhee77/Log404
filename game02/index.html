@@ -240,6 +240,22 @@
                         </p>
                     </div>
 
+                    <!-- Sprint 8: Interactive Rubber Stamp Selector & Fountain-Pen Quote Editor -->
+                    <div class="mt-3 p-2.5 rounded-xl bg-[#faf5ed] border border-[#e6dccd] space-y-2">
+                        <div class="flex items-center gap-1.5 flex-wrap">
+                            <span class="text-[11px] font-bold text-[#786b63] mr-1">💮 인장 찍기:</span>
+                            <button onclick="applyDiaryStamp('전권완결')" class="px-2 py-0.5 rounded border border-[#c85a32]/50 bg-[#fff8f5] text-[#c85a32] text-[10px] font-bold hover:bg-[#c85a32] hover:text-white cursor-pointer">💮전권완결</button>
+                            <button onclick="applyDiaryStamp('초판특전')" class="px-2 py-0.5 rounded border border-[#c85a32]/50 bg-[#fff8f5] text-[#c85a32] text-[10px] font-bold hover:bg-[#c85a32] hover:text-white cursor-pointer">🔖초판특전</button>
+                            <button onclick="applyDiaryStamp('인생최애')" class="px-2 py-0.5 rounded border border-[#c85a32]/50 bg-[#fff8f5] text-[#c85a32] text-[10px] font-bold hover:bg-[#c85a32] hover:text-white cursor-pointer">♥인생최애</button>
+                            <button onclick="applyDiaryStamp('위시리스트')" class="px-2 py-0.5 rounded border border-[#c85a32]/50 bg-[#fff8f5] text-[#c85a32] text-[10px] font-bold hover:bg-[#c85a32] hover:text-white cursor-pointer">✨위시리스트</button>
+                        </div>
+                        <div class="flex items-center gap-1.5">
+                            <input id="diary-quote-input" type="text" placeholder="🖋️ 오늘 밑줄 친 명대사·감상평 수정..."
+                                class="flex-1 px-2.5 py-1 rounded-lg bg-[#fffdf9] border border-[#d8cbb8] text-xs text-[#2c221e] focus:outline-none focus:border-[#c85a32]">
+                            <button onclick="saveDiaryQuote()" class="px-2.5 py-1 rounded-lg bg-[#2c221e] text-[#faf6f0] text-[11px] font-bold hover:bg-[#43352f] cursor-pointer">🖋️ 밑줄 저장</button>
+                        </div>
+                    </div>
+
                     <!-- Volume-by-Volume Entries -->
                     <div class="mt-5">
                         <div class="flex items-center justify-between mb-2">
@@ -436,6 +452,23 @@
             const nextVol = (item.volumes ? item.volumes.length : 0) + 1;
             item.volumes.push({ vol: nextVol, status: 'first', rating: 5, quote: `${nextVol}권 읽고 기록한 나만의 한 줄 일기` });
             renderDiaryVolumes(item);
+            renderShelf();
+        }
+
+        function applyDiaryStamp(stampName) {
+            const item = ITEMS.find(x => x.id === activeId);
+            if (!item) return;
+            item.stamp = stampName;
+            document.getElementById('diary-stamp').innerText = '💮 ' + item.stamp;
+            renderShelf();
+        }
+
+        function saveDiaryQuote() {
+            const item = ITEMS.find(x => x.id === activeId);
+            const inp = document.getElementById('diary-quote-input');
+            if (!item || !inp || !inp.value.trim()) return;
+            item.memo = inp.value.trim();
+            document.getElementById('diary-memo').innerText = item.memo;
             renderShelf();
         }
 

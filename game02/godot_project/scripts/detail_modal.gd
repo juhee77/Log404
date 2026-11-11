@@ -3,6 +3,7 @@ extends Control
 
 signal item_deleted(item)
 signal volume_added(item)
+signal diary_updated(item)
 
 @onready var title_label: Label = $Panel/VBox/Header/HBox/TitleLabel
 @onready var cat_badge: Label = $Panel/VBox/Header/HBox/CatBadge
@@ -12,13 +13,76 @@ signal volume_added(item)
 @onready var tag_label: Label = $Panel/VBox/BodyMargin/Body/TopInfo/MetaVBox/TagLabel
 @onready var memo_label: Label = $Panel/VBox/BodyMargin/Body/TopInfo/MetaVBox/MemoLabel
 @onready var vol_section: VBoxContainer = $Panel/VBox/BodyMargin/Body/VolSection
+@onready var vol_header: Label = $Panel/VBox/BodyMargin/Body/VolSection/VolHeader
 @onready var vol_list: VBoxContainer = $Panel/VBox/BodyMargin/Body/VolSection/Scroll/VolList
 @onready var add_vol_btn: Button = $Panel/VBox/BodyMargin/Body/TopInfo/MetaVBox/BtnRow/AddVolBtn
+@onready var quote_input: LineEdit = $Panel/VBox/BodyMargin/Body/QuoteEditRow/QuoteInput
+@onready var save_quote_btn: Button = $Panel/VBox/BodyMargin/Body/QuoteEditRow/SaveQuoteBtn
+@onready var stamp_row: HBoxContainer = $Panel/VBox/BodyMargin/Body/StampRow
 
 var current_item = null
 
 func _ready() -> void:
 	visible = false
+	_style_diary_controls()
+
+func _style_diary_controls() -> void:
+	var stamp_sb = StyleBoxFlat.new()
+	stamp_sb.bg_color = Color(0.99, 0.96, 0.94, 1)
+	stamp_sb.border_width_left = 1
+	stamp_sb.border_width_top = 1
+	stamp_sb.border_width_right = 1
+	stamp_sb.border_width_bottom = 1
+	stamp_sb.border_color = Color(0.78, 0.35, 0.20, 0.65)
+	stamp_sb.corner_radius_top_left = 6
+	stamp_sb.corner_radius_top_right = 6
+	stamp_sb.corner_radius_bottom_left = 6
+	stamp_sb.corner_radius_bottom_right = 6
+
+	for child in stamp_row.get_children():
+		if child is Button:
+			child.add_theme_stylebox_override("normal", stamp_sb)
+			child.add_theme_color_override("font_color", Color(0.78, 0.35, 0.20))
+
+	var input_sb = StyleBoxFlat.new()
+	input_sb.bg_color = Color(0.98, 0.96, 0.92, 1)
+	input_sb.border_width_bottom = 2
+	input_sb.border_color = Color(0.78, 0.68, 0.56, 1)
+	input_sb.content_margin_left = 8
+	quote_input.add_theme_stylebox_override("normal", input_sb)
+	quote_input.add_theme_color_override("font_color", Color(0.18, 0.14, 0.11))
+	quote_input.add_theme_color_override("font_placeholder_color", Color(0.55, 0.48, 0.42))
+
+	var save_sb = StyleBoxFlat.new()
+	save_sb.bg_color = Color(0.22, 0.16, 0.13, 1)
+	save_sb.corner_radius_top_left = 6
+	save_sb.corner_radius_top_right = 6
+	save_sb.corner_radius_bottom_left = 6
+	save_sb.corner_radius_bottom_right = 6
+	save_quote_btn.add_theme_stylebox_override("normal", save_sb)
+	save_quote_btn.add_theme_color_override("font_color", Color(0.98, 0.96, 0.92))
+
+	var cream_btn = StyleBoxFlat.new()
+	cream_btn.bg_color = Color(0.95, 0.91, 0.84, 1)
+	cream_btn.border_width_left = 1
+	cream_btn.border_width_top = 1
+	cream_btn.border_width_right = 1
+	cream_btn.border_width_bottom = 1
+	cream_btn.border_color = Color(0.80, 0.72, 0.62, 1)
+	cream_btn.corner_radius_top_left = 6
+	cream_btn.corner_radius_top_right = 6
+	cream_btn.corner_radius_bottom_left = 6
+	cream_btn.corner_radius_bottom_right = 6
+	add_vol_btn.add_theme_stylebox_override("normal", cream_btn)
+	add_vol_btn.add_theme_color_override("font_color", Color(0.22, 0.16, 0.13))
+
+	var del_btn: Button = $Panel/VBox/BodyMargin/Body/TopInfo/MetaVBox/BtnRow/DeleteBtn
+	del_btn.add_theme_stylebox_override("normal", cream_btn)
+	del_btn.add_theme_color_override("font_color", Color(0.78, 0.25, 0.20))
+
+	var close_btn: Button = $Panel/VBox/Header/HBox/CloseBtn
+	close_btn.add_theme_stylebox_override("normal", cream_btn)
+	close_btn.add_theme_color_override("font_color", Color(0.32, 0.25, 0.20))
 
 func open(item) -> void:
 	current_item = item
@@ -26,6 +90,7 @@ func open(item) -> void:
 	author_label.text = "작가 · " + (item.author_or_series if item.author_or_series != "" else "미상")
 	tag_label.text = "💮 스탬프: " + item.status_tag + "  |  " + item.obi_text
 	memo_label.text = "🖋️ \"" + (item.memo if item.memo != "" else "오늘 읽은 페이지의 감동을 일기장에 기록합니다.") + "\""
+	quote_input.text = item.memo
 	
 	cover_rect.color = Color.from_string(item.cover_color, Color(0.65, 0.25, 0.2))
 	cover_icon.text = item.icon_emoji if item.icon_emoji != "" else "📖"
@@ -45,17 +110,52 @@ func open(item) -> void:
 func close() -> void:
 	visible = false
 
+func apply_stamp(stamp_name: String) -> void:
+	if current_item == null:
+		return
+	current_item.status_tag = stamp_name
+	tag_label.text = "💮 스탬프: " + current_item.status_tag + "  |  " + current_item.obi_text
+	diary_updated.emit(current_item)
+
+func _on_stamp_complete_pressed() -> void:
+	apply_stamp("전권완결")
+
+func _on_stamp_first_pressed() -> void:
+	apply_stamp("초판특전")
+
+func _on_stamp_fav_pressed() -> void:
+	apply_stamp("인생최애")
+
+func _on_stamp_wish_pressed() -> void:
+	apply_stamp("위시리스트")
+
+func _on_save_quote_btn_pressed() -> void:
+	if current_item == null:
+		return
+	var trimmed = quote_input.text.strip_edges()
+	if trimmed != "":
+		current_item.memo = trimmed
+		memo_label.text = "🖋️ \"" + current_item.memo + "\""
+		diary_updated.emit(current_item)
+
 func _render_volumes() -> void:
 	for child in vol_list.get_children():
 		child.queue_free()
 	
 	if current_item == null or current_item.volumes.is_empty():
+		vol_header.text = "📌 권별 밑줄 문장 & 초판 스탬프 노트 (0권)"
 		var empty_lbl = Label.new()
 		empty_lbl.text = "아직 기록된 권별 일기가 없습니다."
 		empty_lbl.add_theme_font_size_override("font_size", 11)
 		empty_lbl.add_theme_color_override("font_color", Color(0.5, 0.44, 0.38))
 		vol_list.add_child(empty_lbl)
 		return
+
+	var first_cnt = 0
+	for v in current_item.volumes:
+		if v.get("status", "") == "first":
+			first_cnt += 1
+	vol_header.text = "📌 권별 밑줄 노트 (소장 " + str(current_item.volumes.size()) + "권 · 초판 " + str(first_cnt) + "권)"
 
 	for v in current_item.volumes:
 		var panel = PanelContainer.new()
@@ -99,7 +199,7 @@ func _render_volumes() -> void:
 		quote_lbl.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 		
 		var star_lbl = Label.new()
-		var r = v.get("rating", 5)
+		var r = int(v.get("rating", 5))
 		star_lbl.text = "★".repeat(r)
 		star_lbl.add_theme_font_size_override("font_size", 11)
 		star_lbl.add_theme_color_override("font_color", Color(0.78, 0.35, 0.2))
