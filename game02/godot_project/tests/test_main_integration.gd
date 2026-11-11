@@ -125,6 +125,15 @@ func _init() -> void:
 	assert(slam_item.volumes.size() == before_vols, "remove_last_volume should remove the last added volume")
 	print("✓ Remove Last Volume & Modal Washi Tape verified")
 
+	# Test Sprint 16: Cover Icon Emoji Cycler & Today's Quote Direct Jump
+	var old_icon = slam_item.icon_emoji
+	main_inst.detail_modal.cycle_cover_icon()
+	assert(slam_item.icon_emoji != "" and slam_item.icon_emoji != old_icon, "cycle_cover_icon should cycle item icon_emoji")
+	main_inst.detail_modal.close()
+	main_inst.open_current_quote_item()
+	assert(main_inst.detail_modal.visible == true, "Clicking today's quote banner should open the corresponding item's diary modal")
+	print("✓ Cover Icon Emoji Cycler & Today's Quote Direct Jump verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

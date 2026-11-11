@@ -5,7 +5,7 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 
 ---
 
-## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 15)
+## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 16)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
@@ -14,6 +14,10 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 ---
 
 ## 🚀 최신 스프린트 업데이트 요약 ([전체 회의록 보기](SPRINT_LOG.md))
+
+### [Sprint 16] 오늘의 밑줄 문장 터치 바로가기(`open_current_quote_item`) & 모달 표지 다꾸 스티커 이모지 변경(`cycle_cover_icon`)
+- **오늘의 밑줄 문장 터치 바로가기**: 상단 배너의 오늘의 밑줄 문장을 클릭하면 해당 명대사가 수록된 작품의 독서 일기장이 즉시 펼쳐짐
+- **모달 표지 다꾸 이모지 변경(`cycle_cover_icon`)**: 펼친 독서 일기장 좌측 표지를 클릭해 12종 다꾸 스티커 이모지(`📖`, `📕`, `✨`, `🎀`, `🏆`, `🔮` 등)를 원터치 변경
 
 ### [Sprint 15] 모달 내 표지 스크랩 마스킹 테이프(`ModalWashiTape`) · 책등 제본선(`ModalSpineStrip`) · 마지막 권 삭제(`remove_last_volume`)
 - **모달 표지 다꾸 디테일**: 펼친 독서노트 모달 좌측 표지에 반투명 마스킹 테이프(`ModalWashiTape`)와 좌측 책등 제본선(`ModalSpineStrip`) 적용

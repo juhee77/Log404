@@ -55,6 +55,8 @@ func _ready() -> void:
 	stat_vols_panel.gui_input.connect(func(ev): if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_LEFT: _on_tab_manga_pressed())
 	stat_firsts_panel.gui_input.connect(func(ev): if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_LEFT: _on_stat_firsts_clicked())
 	stat_gacha_panel.gui_input.connect(func(ev): if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_LEFT: _on_tab_gacha_pressed())
+	today_quote_label.mouse_filter = Control.MOUSE_FILTER_STOP
+	today_quote_label.gui_input.connect(func(ev): if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_LEFT: open_current_quote_item())
 	
 	_apply_journal_button_theme()
 	_update_stats()
@@ -151,11 +153,12 @@ func _collect_all_quotes() -> Array:
 			for v in it.volumes:
 				var q = str(v.get("quote", "")).strip_edges()
 				if q != "":
-					quotes.append("🖋️ 오늘의 밑줄: \"" + q + "\" — " + it.title)
+					quotes.append({"text": "🖋️ 오늘의 밑줄: \"" + q + "\" — " + it.title, "item": it})
 		elif it.memo != "":
-			quotes.append("🖋️ 오늘의 밑줄: \"" + it.memo + "\" — " + it.title)
+			quotes.append({"text": "🖋️ 오늘의 밑줄: \"" + it.memo + "\" — " + it.title, "item": it})
 	if quotes.is_empty():
-		quotes.append("🖋️ 오늘의 밑줄: \"나만의 첫 독서 일기를 시작해보세요.\"")
+		var fallback = archive_state.items[0] if archive_state.items.size() > 0 else null
+		quotes.append({"text": "🖋️ 오늘의 밑줄: \"나만의 첫 독서 일기를 시작해보세요.\"", "item": fallback})
 	return quotes
 
 func _refresh_today_quote() -> void:
@@ -163,12 +166,21 @@ func _refresh_today_quote() -> void:
 		return
 	var quotes = _collect_all_quotes()
 	quote_cursor = quote_cursor % quotes.size()
-	today_quote_label.text = quotes[quote_cursor]
+	today_quote_label.text = quotes[quote_cursor]["text"]
 
 func _on_next_quote_btn_pressed() -> void:
 	var quotes = _collect_all_quotes()
 	quote_cursor = (quote_cursor + 1) % quotes.size()
-	today_quote_label.text = quotes[quote_cursor]
+	today_quote_label.text = quotes[quote_cursor]["text"]
+
+func open_current_quote_item() -> void:
+	var quotes = _collect_all_quotes()
+	if quotes.is_empty():
+		return
+	quote_cursor = quote_cursor % quotes.size()
+	var target_item = quotes[quote_cursor].get("item", null)
+	if target_item != null:
+		detail_modal.open(target_item)
 
 func _render_cards() -> void:
 	for child in card_grid.get_children():

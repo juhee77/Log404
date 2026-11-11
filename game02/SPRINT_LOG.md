@@ -5,6 +5,20 @@
 
 ---
 
+## 🚀 [Sprint 16] 오늘의 밑줄 문장 터치 바로가기(`open_current_quote_item`) & 모달 표지 다꾸 스티커 이모지 변경(`cycle_cover_icon`)
+- **시각**: 2026-11-12 07:27 KST
+- **1. 다꾸러 3인 VOC (수집러 A · 가챠러 B · 미니멀러 C)**
+  - **만년필 다꾸러 A**: *"상단 오늘의 밑줄 문장 배너(`TodayQuoteLabel`)를 터치하면 바로 그 문장이 적힌 작품의 독서노트 모달이 열리면 리디북스 하이라이트 노트처럼 정말 편리할 것 같아요!"*
+  - **가챠 수집러 B**: *"펼친 독서노트 모달(`detail_modal.gd`)에서 좌측 표지(`CoverRect`)를 클릭하면 표지 중앙의 다꾸 스티커 이모지(`📖`, `📕`, `✨`, `🎀`, `🏆`, `🔮` 등 12종)를 원터치로 바꿀 수 있게 해주세요!"*
+- **2. 기획 & UI/UX & Godot 4.6 개발 내역**
+  - **오늘의 밑줄 문장 바로가기(`open_current_quote_item`)**: `_collect_all_quotes()`가 문장과 원본 아이템 참조를 함께 반환하도록 고도화하고, `today_quote_label` 클릭 시 즉시 해당 작품 일기장 모달 오픈
+  - **표지 다꾸 이모지 변경(`cycle_cover_icon`)**: `detail_modal.gd`에 12종 다꾸 이모지 프리셋(`ICON_PRESETS`) 및 표지 클릭 시 이모지 순환·저장 로직 구현
+- **3. TDD & QA 검증**
+  - `tests/test_main_integration.gd`에 `cycle_cover_icon()` 및 `open_current_quote_item()` 검증 추가 → 전수 100% PASS
+  - Metal 렌더러 최신 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 캡처 및 GitHub 푸시 완료
+
+---
+
 ## 🚀 [Sprint 15] 모달 내 표지 스크랩 마스킹 테이프(`ModalWashiTape`) · 책등 제본선(`ModalSpineStrip`) · 마지막 권 삭제(`remove_last_volume`)
 - **시각**: 2026-11-12 07:10 KST
 - **1. 다꾸러 3인 VOC (수집러 A · 가챠러 B · 미니멀러 C)**

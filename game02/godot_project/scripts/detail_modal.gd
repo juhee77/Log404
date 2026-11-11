@@ -23,6 +23,9 @@ signal diary_updated(item)
 var current_item = null
 var editing_vol_index: int = -1
 var obi_cursor: int = 0
+var icon_cursor: int = 0
+
+const ICON_PRESETS = ["📖", "📕", "✨", "🎀", "🏆", "🔮", "🌸", "🏀", "🪄", "🐱", "🏐", "🌙"]
 
 const OBI_PRESETS = [
 	"★ 초판 한정 홀로그램 책갈피 동봉",
@@ -34,6 +37,10 @@ const OBI_PRESETS = [
 func _ready() -> void:
 	visible = false
 	_style_diary_controls()
+	cover_rect.gui_input.connect(func(ev):
+		if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_LEFT:
+			cycle_cover_icon()
+	)
 
 func _style_diary_controls() -> void:
 	var stamp_sb = StyleBoxFlat.new()
@@ -139,6 +146,16 @@ func cycle_obi_preset() -> void:
 		obi_cursor = (obi_cursor + 1) % OBI_PRESETS.size()
 	current_item.obi_text = OBI_PRESETS[obi_cursor]
 	tag_label.text = "💮 스탬프: " + current_item.status_tag + "  |  " + current_item.obi_text
+	diary_updated.emit(current_item)
+
+func cycle_cover_icon() -> void:
+	if current_item == null:
+		return
+	icon_cursor = (icon_cursor + 1) % ICON_PRESETS.size()
+	if ICON_PRESETS[icon_cursor] == current_item.icon_emoji:
+		icon_cursor = (icon_cursor + 1) % ICON_PRESETS.size()
+	current_item.icon_emoji = ICON_PRESETS[icon_cursor]
+	cover_icon.text = current_item.icon_emoji
 	diary_updated.emit(current_item)
 
 func _on_stamp_complete_pressed() -> void:
