@@ -15,6 +15,7 @@ var obi_text: String = ""
 var template_name: String = "COMICS"
 var memo_ink_color: String = "#2c221e"
 var highlight_enabled: bool = false
+var updated_at: int = 0
 var volumes: Array = []
 
 func _init(
@@ -33,6 +34,9 @@ func _init(
 	author_or_series = p_author
 	status_tag = p_tag
 	cover_color = p_color
+	icon_emoji = p_icon
+	obi_text = p_obi
+	updated_at = int(Time.get_unix_time_from_system())
 	icon_emoji = p_icon
 	obi_text = p_obi
 
@@ -72,5 +76,6 @@ func to_dict() -> Dictionary:
 		"template_name": template_name,
 		"memo_ink_color": memo_ink_color,
 		"highlight_enabled": highlight_enabled,
+		"updated_at": updated_at,
 		"volumes": volumes
 	}

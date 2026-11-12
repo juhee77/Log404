@@ -32,7 +32,10 @@ var archive_state = null
 var web_preset_cursor: int = 0
 var theme_cursor: int = 0
 var quote_cursor: int = 0
-var sort_by_volumes: bool = false
+var sort_mode: int = 0
+var sort_by_volumes: bool:
+	get: return sort_mode == 1
+	set(val): sort_mode = 1 if val else 0
 var filter_firsts_only: bool = false
 var filter_completed_only: bool = false
 var filter_favorites_only: bool = false
@@ -176,6 +179,8 @@ func _render_spine_shelf() -> void:
 		ribbon.size = Vector2(w, 3)
 		spine.add_child(ribbon)
 		var capture_item = it
+		spine.tooltip_text = it.title + " (" + str(it.volumes.size()) + "권 소장)"
+		spine.mouse_entered.connect(func(): _show_toast("📚 책등 엿보기: " + capture_item.title + " (" + str(capture_item.volumes.size()) + "권)"))
 		spine.gui_input.connect(func(ev: InputEvent):
 			if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_LEFT:
 				detail_modal.open(capture_item)
@@ -242,8 +247,10 @@ func _render_cards() -> void:
 		filtered = filtered.filter(func(it):
 			return it.status_tag == "인생최애" or it.get_average_rating() >= 5.0
 		)
-	if sort_by_volumes:
+	if sort_mode == 1:
 		filtered.sort_custom(func(a, b): return a.volumes.size() > b.volumes.size())
+	elif sort_mode == 2:
+		filtered.sort_custom(func(a, b): return a.updated_at > b.updated_at)
 	
 	for it in filtered:
 		var card = CardItemScene.instantiate()
@@ -258,11 +265,15 @@ func _on_stat_firsts_clicked() -> void:
 	_show_toast("🔖 초판 스탬프 보유 작품만 필터링되었습니다.")
 
 func _on_sort_btn_pressed() -> void:
-	sort_by_volumes = not sort_by_volumes
+	sort_mode = (sort_mode + 1) % 3
 	if sort_btn != null:
-		sort_btn.text = "↕ 다독순" if sort_by_volumes else "↕ 기본순"
+		match sort_mode:
+			0: sort_btn.text = "↕ 기본순"
+			1: sort_btn.text = "↕ 다독순"
+			2: sort_btn.text = "↕ 최신순"
 	_render_cards()
-	_show_toast("📚 정렬 기준 변경: " + ("권수 많은 순(다독순)" if sort_by_volumes else "기본 등록순"))
+	var mode_name = "기본 등록순" if sort_mode == 0 else ("권수 많은 순(다독순)" if sort_mode == 1 else "최근 기록순(최신순)")
+	_show_toast("📚 정렬 기준 변경: " + mode_name)
 
 func _show_toast(msg: String) -> void:
 	if status_toast != null:
@@ -387,13 +398,17 @@ func _on_item_deleted(item) -> void:
 	_render_cards()
 	_show_toast("🗑️ 소장품이 삭제되었습니다.")
 
-func _on_volume_added(_item) -> void:
+func _on_volume_added(item) -> void:
+	if item != null:
+		item.updated_at = int(Time.get_unix_time_from_system())
 	archive_state.save_to_file()
 	_update_stats()
 	_render_cards()
 	_show_toast("📖 다음 권이 추가되고 로컬 JSON에 저장되었습니다.")
 
 func _on_diary_updated(item) -> void:
+	if item != null:
+		item.updated_at = int(Time.get_unix_time_from_system())
 	archive_state.save_to_file()
 	_update_stats()
 	_render_cards()

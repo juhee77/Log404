@@ -18,14 +18,15 @@ Godot 4+ 기반의 감성 게임 및 인터랙티브 아카이브 애플리케�
 > **Godot 4.6.2 모바일 기반 E-Book 리더기 서재(Apple Books · 리디북스) & 만년필 다꾸 독서노트(굿노트 · 몰스킨) 감성 아카이브 앱**  
 > 14인 가상 애자일 스쿼드가 20분 주기 자동 스프린트로 지속 개선 중입니다.
 
-### 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 22)
+### 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 23)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
 | ![Pocket Archive Main Screen](game02/godot_project/screenshots/godot_app_screen.png) | ![Pocket Archive Detail Modal](game02/godot_project/screenshots/godot_modal_screen.png) |
 
 ### ✨ 주요 핵심 기능
-- **E-Book 서재 & 미니 책등 선반(`SpineShelfRow`)**: 소장 권수 두께와 표지 컬러를 반영한 미니 책등 선반 및 금박 책갈피 팁
+- **E-Book 서재 & 미니 책등 선반(`SpineShelfRow`)**: 소장 권수 두께와 표지 컬러를 반영한 미니 책등 선반, 책등 호버 툴팁 미리보기 및 금박 책갈피 팁
+- **3단 정렬 사이클러(`SortBtn`)**: `↕ 기본순` ↔ `↕ 다독순` ↔ `↕ 최신순` 3단 순환으로 최근 기록한 작품 우선 정렬
 - **서재 전체 완독률 실시간 게이지 & 오늘의 밑줄 배너**: 소장 도서 전체의 독서율(`서재 완독률 81%`) 동적 표시 및 명대사 다이렉트 점프
 - **독서 진행률 프로그레스 바(`ReadingProgressBar`)**: 리디북스 감성의 미색 종이 & 테라코타 오렌지 완독률(%) 트래커
 - **나만의 다꾸 독서 일기장(`DetailModal`)**: 펼친 몰스킨 2페이지 뷰, 밑줄 형광펜 하이라이터(`🖍️ 형광펜`), 4종 만년필 잉크 팔레트(`☕에스프레소`, `🍷버건디`, `🍂세피아`, `🌲포레스트`), 권별 읽은 날짜 스탬프(`📅 11.12`), 인장 도장(`💮전권완결`, `🔖초판특전`, `♥인생최애`, `✨위시`), 권별 명대사 밑줄 편집, 별점 변경
@@ -88,7 +89,7 @@ Log404/
 └── game02/                           # [Game02] 주희의 다꾸 서재 & 소장 일기장
     ├── index.html                    # 웹 인터랙티브 다꾸 서재 목업 (Tailwind + FontAwesome)
     ├── README.md                     # Game02 전용 상세 설명서
-    ├── SPRINT_LOG.md                 # 14인 애자일 스쿼드 누적 스프린트 회의록 (Sprint 1~22)
+    ├── SPRINT_LOG.md                 # 14인 애자일 스쿼드 누적 스프린트 회의록 (Sprint 1~23)
     └── godot_project/                # Godot 4.6.2 네이티브 모바일 프로젝트
         ├── scenes/                   # main.tscn, card_item.tscn, detail_modal.tscn 등
         ├── scripts/                  # main_view.gd, card_item.gd, archive_state.gd 등

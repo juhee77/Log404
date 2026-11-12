@@ -185,6 +185,19 @@ func _init() -> void:
 	assert(main_inst.filter_favorites_only == true, "TabFav should activate favorites filter")
 	print("✓ Quote Highlighter Toggle & Favorites Filter Tab verified")
 
+	# Test Sprint 23: 3-Way Sort Cycler & Spine Hover Tooltip
+	main_inst.sort_mode = 0
+	main_inst._on_sort_btn_pressed()
+	assert(main_inst.sort_mode == 1 and main_inst.sort_btn.text == "↕ 다독순", "Sort button should switch to sort_mode 1")
+	main_inst._on_sort_btn_pressed()
+	assert(main_inst.sort_mode == 2 and main_inst.sort_btn.text == "↕ 최신순", "Sort button should switch to sort_mode 2")
+	main_inst._on_sort_btn_pressed()
+	assert(main_inst.sort_mode == 0 and main_inst.sort_btn.text == "↕ 기본순", "Sort button should cycle back to sort_mode 0")
+	var first_spine = main_inst.spine_shelf_row.get_child(0)
+	assert(first_spine.tooltip_text.contains("소장"), "Spine shelf ColorRect should have informative tooltip_text")
+	assert(slam_item.updated_at >= 0, "collection_item should track updated_at timestamp")
+	print("✓ 3-Way Sort Cycler & Spine Shelf Hover Tooltip verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

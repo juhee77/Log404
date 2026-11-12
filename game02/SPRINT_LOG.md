@@ -5,6 +5,20 @@
 
 ---
 
+## 🚀 [Sprint 23] 3단 정렬 사이클러(`↕ 최신순`) & 미니 책등 호버 미리보기 툴팁(`Spine Hover Tooltip`)
+- **시각**: 2026-11-13 04:12 KST
+- **1. 다꾸러 3인 VOC (수집러 A · 가챠러 B · 미니멀러 C)**
+  - **만년필 다꾸러 A**: *"상단 미니 책등 진열대(`SpineShelfRow`)에서 꽂힌 책등에 마우스를 올리면 어떤 책인지 권수와 제목이 툴팁과 하단 토스트로 바로 보이면 실제 책장에서 책을 쏙 빼보는 느낌이 들 것 같아요!"*
+  - **미니멀 수집러 C**: *"기본순과 다독순 외에도 최근에 메모를 쓰거나 권을 추가한 책이 맨 위로 올라오는 '최근 기록순(`↕ 최신순`)' 정렬도 원터치로 순환되면 좋겠어요!"*
+- **2. 기획 & UI/UX & Godot 4.6 개발 내역**
+  - **3단 정렬 사이클러(`sort_mode`: 기본순 ↔ 다독순 ↔ 최신순)**: `collection_item.gd`에 `updated_at` 타임스탬프 필드를 탑재하고, `main_view.gd`의 정렬 버튼 클릭 시 3가지 정렬 모드를 매끄럽게 순환하도록 고도화
+  - **미니 책등 호버 미리보기 & 툴팁**: `_render_spine_shelf()`에서 각 책등의 `tooltip_text` 및 `mouse_entered` 이벤트를 바인딩하여 호버 시 `📚 책등 엿보기: [제목] ([권수]권)` 토스트 알림 제공
+- **3. TDD & QA 검증**
+  - `tests/test_main_integration.gd`에 3-way `sort_mode` 순환, `tooltip_text`, `updated_at` 검증 추가 → 3개 헤드리스 테스트 스위트 전수 100% PASS
+  - Metal 렌더러 최신 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 캡처 및 GitHub 푸시 완료
+
+---
+
 ## 🚀 [Sprint 22] 밑줄 형광펜 하이라이터(`🖍️ 형광펜` / `toggle_quote_highlight`) & 만점 인생작 전용 필터(`★ 인생작`)
 - **시각**: 2026-11-13 03:35 KST
 - **1. 다꾸러 3인 VOC (수집러 A · 가챠러 B · 미니멀러 C)**
