@@ -214,7 +214,8 @@ func open(item) -> void:
 	author_label.text = "작가 · " + (item.author_or_series if item.author_or_series != "" else "미상")
 	var sticker = current_item.get("deco_sticker") if current_item.get("deco_sticker") != null else "✨"
 	var r_tier = current_item.get("rarity_tier") if current_item.get("rarity_tier") != null else "🌟노말"
-	tag_label.text = "💮 스탬프: " + current_item.status_tag + " " + sticker + " [" + r_tier + "] | " + current_item.obi_text
+	var loc = current_item.get("storage_location") if current_item.get("storage_location") != null else "🗄️ 1층 장식장"
+	tag_label.text = "💮 " + current_item.status_tag + " " + sticker + " [" + r_tier + " · " + loc + "] | " + current_item.obi_text
 	memo_label.text = sticker + " 🖋️ \"" + (item.memo if item.memo != "" else "오늘 읽은 페이지의 감동을 일기장에 기록합니다.") + "\""
 	quote_input.text = item.memo
 	var deco_btn: Button = get_node_or_null("Panel/VBox/BodyMargin/Body/StampRow/DecoStickerBtn")
@@ -223,6 +224,10 @@ func open(item) -> void:
 	var r_btn: Button = get_node_or_null("Panel/VBox/BodyMargin/Body/StampRow/RarityBtn")
 	if r_btn != null:
 		r_btn.text = r_tier
+	var loc_btn: Button = get_node_or_null("Panel/VBox/BodyMargin/Body/StampRow/StorageBtn")
+	if loc_btn != null:
+		loc_btn.text = loc
+	_apply_paper_style()
 	_apply_ink_style()
 	_apply_washi_style()
 	
@@ -275,6 +280,39 @@ func cycle_deco_sticker() -> String:
 	tag_label.text = "💮 스탬프: " + current_item.status_tag + " " + s + "  |  " + current_item.obi_text
 	memo_label.text = s + " 🖋️ \"" + (current_item.memo if current_item.memo != "" else "오늘 읽은 페이지의 감동을 일기장에 기록합니다.") + "\""
 	_apply_ink_style()
+	diary_updated.emit(current_item)
+	return s
+
+func cycle_paper_pattern() -> String:
+	if current_item == null:
+		return "ruled"
+	var p = current_item.cycle_paper_pattern() if current_item.has_method("cycle_paper_pattern") else "ruled"
+	_apply_paper_style()
+	diary_updated.emit(current_item)
+	return p
+
+func _apply_paper_style() -> void:
+	if current_item == null:
+		return
+	var p = current_item.get("paper_pattern") if current_item.get("paper_pattern") != null else "ruled"
+	var p_btn: Button = get_node_or_null("Panel/VBox/BodyMargin/Body/StampRow/PaperBtn")
+	if p_btn != null:
+		match p:
+			"grid": p_btn.text = "📜모눈"
+			"blank": p_btn.text = "📋무지"
+			"vintage": p_btn.text = "🍂양장"
+			_: p_btn.text = "📄줄노트"
+
+func cycle_storage_location() -> String:
+	if current_item == null:
+		return "🗄️ 1층 장식장"
+	var s = current_item.cycle_storage_location() if current_item.has_method("cycle_storage_location") else "🗄️ 1층 장식장"
+	var s_btn: Button = get_node_or_null("Panel/VBox/BodyMargin/Body/StampRow/StorageBtn")
+	if s_btn != null:
+		s_btn.text = s
+	var sticker = current_item.get("deco_sticker") if current_item.get("deco_sticker") != null else "✨"
+	var r_tier = current_item.get("rarity_tier") if current_item.get("rarity_tier") != null else "🌟노말"
+	tag_label.text = "💮 " + current_item.status_tag + " " + sticker + " [" + r_tier + " · " + s + "] | " + current_item.obi_text
 	diary_updated.emit(current_item)
 	return s
 

@@ -242,6 +242,13 @@ func _init() -> void:
 	main_inst.filter_by_smart_tag("#전체")
 	print("✓ Collector Rarity Tier Cycler & Smart Tag Quick Filter verified")
 
+	# Test Sprint 29: Diary Paper Pattern Cycler & Collector Storage Location Tracker
+	var new_paper = main_inst.detail_modal.cycle_paper_pattern()
+	assert(new_paper in ["ruled", "grid", "blank", "vintage"], "cycle_paper_pattern should cycle among paper presets")
+	var new_loc = main_inst.detail_modal.cycle_storage_location()
+	assert(new_loc in ["🗄️ 1층 장식장", "📦 아크릴함", "📚 책상 선반", "🎒 외출 파우치"], "cycle_storage_location should cycle among storage presets")
+	print("✓ Diary Paper Pattern Cycler & Collector Storage Location Tracker verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

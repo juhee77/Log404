@@ -197,6 +197,8 @@ func load_from_file(custom_path: String = "") -> bool:
 			it.washi_tape_color = d.get("washi_tape_color", "#f4d394")
 			it.deco_sticker = d.get("deco_sticker", "✨")
 			it.rarity_tier = d.get("rarity_tier", "🌟노말")
+			it.paper_pattern = d.get("paper_pattern", "ruled")
+			it.storage_location = d.get("storage_location", "🗄️ 1층 장식장")
 			it.updated_at = int(d.get("updated_at", 0))
 			it.volumes = d.get("volumes", [])
 			items.append(it)

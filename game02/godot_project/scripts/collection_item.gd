@@ -19,6 +19,8 @@ var pen_nib_size: int = 11
 var washi_tape_color: String = "#f4d394"
 var deco_sticker: String = "✨"
 var rarity_tier: String = "🌟노말"
+var paper_pattern: String = "ruled"
+var storage_location: String = "🗄️ 1층 장식장"
 var updated_at: int = 0
 var volumes: Array = []
 
@@ -106,6 +108,26 @@ func cycle_rarity_tier() -> String:
 	updated_at = int(Time.get_unix_time_from_system())
 	return rarity_tier
 
+func cycle_paper_pattern() -> String:
+	const PRESETS = ["ruled", "grid", "blank", "vintage"]
+	var idx = PRESETS.find(paper_pattern)
+	if idx == -1:
+		paper_pattern = PRESETS[0]
+	else:
+		paper_pattern = PRESETS[(idx + 1) % PRESETS.size()]
+	updated_at = int(Time.get_unix_time_from_system())
+	return paper_pattern
+
+func cycle_storage_location() -> String:
+	const PRESETS = ["🗄️ 1층 장식장", "📦 아크릴함", "📚 책상 선반", "🎒 외출 파우치"]
+	var idx = PRESETS.find(storage_location)
+	if idx == -1:
+		storage_location = PRESETS[0]
+	else:
+		storage_location = PRESETS[(idx + 1) % PRESETS.size()]
+	updated_at = int(Time.get_unix_time_from_system())
+	return storage_location
+
 func to_dict() -> Dictionary:
 	return {
 		"id": id,
@@ -125,6 +147,8 @@ func to_dict() -> Dictionary:
 		"washi_tape_color": washi_tape_color,
 		"deco_sticker": deco_sticker,
 		"rarity_tier": rarity_tier,
+		"paper_pattern": paper_pattern,
+		"storage_location": storage_location,
 		"updated_at": updated_at,
 		"volumes": volumes
 	}

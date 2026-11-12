@@ -263,6 +263,18 @@ size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 10
 text = "💎레어"
 
+[node name="PaperBtn" type="Button" parent="Panel/VBox/BodyMargin/Body/StampRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 10
+text = "📄줄노트"
+
+[node name="StorageBtn" type="Button" parent="Panel/VBox/BodyMargin/Body/StampRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 10
+text = "🗄️보관"
+
 [node name="QuoteEditRow" type="HBoxContainer" parent="Panel/VBox/BodyMargin/Body"]
 layout_mode = 2
 theme_override_constants/separation = 6
@@ -355,6 +367,8 @@ theme_override_constants/separation = 5
 [connection signal="pressed" from="Panel/VBox/BodyMargin/Body/StampRow/TapeCycleBtn" to="." method="cycle_washi_tape"]
 [connection signal="pressed" from="Panel/VBox/BodyMargin/Body/StampRow/DecoStickerBtn" to="." method="cycle_deco_sticker"]
 [connection signal="pressed" from="Panel/VBox/BodyMargin/Body/StampRow/RarityBtn" to="." method="cycle_rarity_tier"]
+[connection signal="pressed" from="Panel/VBox/BodyMargin/Body/StampRow/PaperBtn" to="." method="cycle_paper_pattern"]
+[connection signal="pressed" from="Panel/VBox/BodyMargin/Body/StampRow/StorageBtn" to="." method="cycle_storage_location"]
 [connection signal="pressed" from="Panel/VBox/BodyMargin/Body/QuoteEditRow/SaveQuoteBtn" to="." method="_on_save_quote_btn_pressed"]
 [connection signal="pressed" from="Panel/VBox/BodyMargin/Body/QuoteEditRow/HighlightBtn" to="." method="toggle_quote_highlight"]
 [connection signal="pressed" from="Panel/VBox/BodyMargin/Body/InkRow/InkEspresso" to="." method="_on_ink_espresso_pressed"]

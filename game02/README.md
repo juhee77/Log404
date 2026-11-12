@@ -5,7 +5,7 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 
 ---
 
-## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 28)
+## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 29)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
@@ -14,6 +14,11 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 ---
 
 ## 🚀 최신 스프린트 업데이트 요약 ([전체 회의록 보기](SPRINT_LOG.md))
+
+### [Sprint 29] 일기장 종이 내지 패턴(`📜 종이질감` / `cycle_paper_pattern`) & 실물 보관 위치 트래커(`🗄️ 보관위치` / `cycle_storage_location`)
+- **일기장 종이 패턴 순환(`cycle_paper_pattern`)**: `📄줄노트`, `📜모눈`, `📋무지`, `🍂양장` 4종 종이 스타일을 원터치 순환하여 아날로그 몰스킨 감성 극대화
+- **실물 소장품 보관 위치 트래커(`cycle_storage_location`)**: `🗄️ 1층 장식장`, `📦 아크릴함`, `📚 책상 선반`, `🎒 외출 파우치` 등 실물 굿즈 위치 관리
+- **웹 목업 동기화**: `game02/index.html`에 종이 질감 순환 및 보관 위치 트래커 완벽 연동
 
 ### [Sprint 28] 소장품 레어도 등급 순환(`💎 레어도` / `cycle_rarity_tier`) & 스마트 퀵 태그 필터(`filter_by_smart_tag`)
 - **소장품 레어도 등급 순환(`cycle_rarity_tier`)**: 모달 내 `💎레어` 버튼으로 4종 등급(`🌟노말`, `💎레어`, `👑슈퍼레어`, `🔮시크릿`)을 원터치 순환 및 메인 가챠 카드 배지에 실시간 반영

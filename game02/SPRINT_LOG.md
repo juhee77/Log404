@@ -5,6 +5,22 @@
 
 ---
 
+## 🚀 [Sprint 29] 일기장 종이 내지 패턴(`📜 종이질감` / `cycle_paper_pattern`) & 실물 보관 위치 트래커(`🗄️ 보관위치` / `cycle_storage_location`)
+- **시각**: 2026-11-13 07:47 KST
+- **1. 다꾸러 3인 VOC (수집러 A · 가챠러 B · 미니멀러 C)**
+  - **만년필 다꾸러 A**: *"일기장을 펼쳤을 때 종이 내지 스타일(📄 줄노트, 📜 모눈, 📋 무지, 🍂 양장)을 원터치로 변경할 수 있는 `📜 종이질감` 순환 버튼이 있으면 필기 쾌감이 극대화될 것 같아요!"*
+  - **가챠 수집러 B**: *"실물 가챠나 아크릴 굿즈를 어디에 뒀는지 잊지 않도록, '보관 위치'(🗄️ 1층 장식장, 📦 아크릴함, 📚 책상 선반, 🎒 외출 파우치)를 등록하고 순환 선택하는 `🗄️ 보관위치` 트래커가 있으면 실물 소장품 정리에 큰 도움이 됩니다!"*
+  - **미니멀 수집러 C**: *"상세 일기장 상단 메타 정보에 스탬프, 데코 스티커, 레어도, 보관 위치까지 한눈에 조화롭게 보이도록 다꾸 레이아웃을 고도화해 주세요!"*
+- **2. 기획 & UI/UX & Godot 4.6 개발 내역**
+  - **일기장 종이 패턴 순환(`PaperBtn` / `cycle_paper_pattern`)**: `collection_item.gd`에 `paper_pattern` 필드 추가 및 `archive_state.gd` JSON 연동. 4종 종이 스타일(`📄줄노트`, `📜모눈`, `📋무지`, `🍂양장`)을 원터치 순환 및 영구 보존
+  - **실물 소장품 보관 장소 트래커(`StorageBtn` / `cycle_storage_location`)**: `collection_item.gd`에 `storage_location` 필드 추가 및 `archive_state.gd` 연동. 4종 보관 프리셋(`🗄️ 1층 장식장`, `📦 아크릴함`, `📚 책상 선반`, `🎒 외출 파우치`)을 순환 선택
+  - **HTML 인터랙티브 목업 동기화**: `game02/index.html`에 `cyclePaperPattern()` 및 `cycleStorageLocation()` 완벽 동기화
+- **3. TDD & QA 검증**
+  - `tests/test_main_integration.gd`에 Sprint 29 종이 패턴 및 보관 위치 트래커 검증 추가 → 3개 헤드리스 테스트 스위트 전수 100% PASS
+  - Metal 렌더러 최신 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 캡처 및 GitHub 푸시 완료
+
+---
+
 ## 🚀 [Sprint 28] 소장품 레어도 등급 순환(`💎 레어도` / `cycle_rarity_tier`) & 스마트 퀵 태그 필터(`filter_by_smart_tag`)
 - **시각**: 2026-11-13 07:27 KST
 - **1. 다꾸러 3인 VOC (수집러 A · 가챠러 B · 미니멀러 C)**
