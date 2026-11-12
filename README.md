@@ -1,11 +1,52 @@
-# ☕ 스터디 카페 타이쿤 (Study Cafe Tycoon)
+# 🎮 Log404 Studio — Multi-Project Workspace
 
-> **Godot 4 기반 2.5D 아소메트릭 방치형/경영 심뮬레이션 멀티플랫폼 타이쿤 게임**  
-> 개발: Log404 Studio | 엔진: Godot Engine v4.6+ (GDScript)
+Godot 4+ 기반의 감성 게임 및 인터랙티브 아카이브 애플리케이션 프로젝트 모음입니다.
 
 ---
 
-## 📸 2.5D 비주얼 스크린샷 (Visual Showcase)
+## 🗂️ 프로젝트 라인업 (Projects)
+
+| 프로젝트 | 장르 & 플랫폼 | 설명 | 주요 기술 및 문서 |
+| :--- | :--- | :--- | :--- |
+| **[Game02] 주희의 다꾸 서재 & 소장 일기장** | 📔 E-Book 서재 & 만년필 다꾸 독서노트 (Mobile) | 리디북스·Apple Books 감성 서재 + 굿노트·몰스킨 다이어리 | [Game02 상세 문서](game02/README.md) · [스프린트 회의록](game02/SPRINT_LOG.md) |
+| **[Game01] 스터디 카페 타이쿤** | ☕ 2.5D 이소메트릭 경영 시뮬레이션 (PC/iOS) | 수험생과 카공족을 유치하는 프리미엄 스터디 카페 타이쿤 | [Game01 상세 보기](#-game01-스터디-카페-타이쿤-study-cafe-tycoon) |
+
+---
+
+## 📔 [Game02] 주희의 다꾸 서재 & 소장 일기장 (Pocket Archive)
+
+> **Godot 4.6.2 모바일 기반 E-Book 리더기 서재(Apple Books · 리디북스) & 만년필 다꾸 독서노트(굿노트 · 몰스킨) 감성 아카이브 앱**  
+> 14인 가상 애자일 스쿼드가 20분 주기 자동 스프린트로 지속 개선 중입니다.
+
+### 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 19)
+
+| 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
+| :---: | :---: |
+| ![Pocket Archive Main Screen](game02/godot_project/screenshots/godot_app_screen.png) | ![Pocket Archive Detail Modal](game02/godot_project/screenshots/godot_modal_screen.png) |
+
+### ✨ 주요 핵심 기능
+- **E-Book 서재 & 미니 책등 선반(`SpineShelfRow`)**: 소장 권수 두께와 표지 컬러를 반영한 미니 책등 선반 및 금박 책갈피 팁
+- **오늘의 밑줄 문장 순환기 & 다이렉트 점프**: 일기장 속 명대사들을 상단에서 감상하고 클릭 시 해당 일기장으로 즉시 이동
+- **독서 진행률 프로그레스 바(`ReadingProgressBar`)**: 리디북스 감성의 미색 종이 & 테라코타 오렌지 완독률(%) 트래커
+- **나만의 다꾸 독서 일기장(`DetailModal`)**: 펼친 몰스킨 2페이지 뷰, 인장 도장(`💮전권완결`, `🔖초판특전`, `♥인생최애`, `✨위시`), 권별 명대사 밑줄 편집, 별점 변경
+- **랜덤 추천 뽑기 & 완독작 필터**: 오늘 읽을 책을 무작위로 뽑아주는 `🎲 추천` 및 완독작 100% 모아보기 탭
+- **100% 로컬 영구 저장 & 웹 목업**: `user://archive_data_v2.json` 영구 보존 및 브라우저 인터랙티브 목업(`game02/index.html`)
+
+### 🧪 Game02 헤드리스 자동화 테스트 실행 (100% PASS)
+```bash
+godot --headless --path game02/godot_project -s tests/test_archive.gd
+godot --headless --path game02/godot_project -s tests/test_persistence.gd
+godot --headless --path game02/godot_project -s tests/test_main_integration.gd
+```
+
+---
+
+## ☕ [Game01] 스터디 카페 타이쿤 (Study Cafe Tycoon)
+
+> **Godot 4 기반 2.5D 이소메트릭 방치형/경영 시뮬레이션 멀티플랫폼 타이쿤 게임**  
+> 개발: Log404 Studio | 엔진: Godot Engine v4.6+ (GDScript)
+
+### 📸 2.5D 비주얼 스크린샷 (Visual Showcase)
 
 | 1층 메인 집중 열공 방 (Focus Room) | 2층 귀족 노블 부스 존 (Noble Booth) |
 | :---: | :---: |
@@ -15,94 +56,42 @@
 | :---: | :---: |
 | ![3F Rooftop Terrace Zone](game01/screenshot_3f.png) | ![Decorating Mode Grid](game01/screenshot_decorating.png) |
 
----
+### 🔥 Game01 핵심 시스템
+- **다중 구역 통합 건축 구조**: 메인 집중 열공 방, 힐링 라운지 & 커피 바, 프런트 & 스마트 사물함
+- **실시간 2.5D 날씨 & 조명 쉐이더**: 4종 날씨 사이클(☀️ 맑음, 🌧️ 빗소리, ❄️ 눈, ☁️ 구름) 및 학생 감성 말풍선 인터랙션
+- **인터랙티브 2.5D 마그네틱 그리드 배치**: 110px x 75px 그리드 자석 스냅 및 90도 회전 배치 지원
+- **42개 첨단 기술 서브시스템**: 퀀텀 반물질 에너지, 텔레파시 시냅스 다운로드, 3D 홀로그램 AI 튜터, 퀀텀 블록체인 정산
 
-## 📖 프로젝트 개요
-
-**스터디 카페 타이쿤**은 수험생과 카공족을 유치하여 나만의 프리미엄 스터디 카페 콤플렉스를 경영하는 **2.5D 아기자기한 이소메트릭 힐링 경영 심뮬레이션**입니다.
-
-실제 사진이나 렌더링 이미지 대신 **통일감 있는 2.5D 벡터 그래픽 아키텍처**와 **수제 픽셀/스프라이트 자산 시스템**을 채택하여, 화면의 왜곡이나 부자연스러움 없이 깔끔하고 감성적인 스터디 카페 분위기를 제공합니다.
-
----
-
-## 🔥 핵심 시스템 & 주요 모듈
-
-### 🏢 1. 다중 구역 통합 건축 구조 (Multi-Room Layout)
-- **📖 메인 집중 열공 방 (Main Focus Study Room)**: 1인 독서실, 오픈 카페석, 요추지지 메쉬 의자, 방음 커튼, LED 조명 후광 연동
-- **☕ 힐링 라운지 & 커피 바 (Lounge & Roasting Bar)**: 직영 로스팅 머신, 프리미엄 케이크 베이커리, 싱글 오리진 핸드드립 바
-- **🔑 프런트 & 스마트 사물함 (Front & Locker Zone)**: 키오스크 입출입, 비밀번호 사물함, ANC 노이즈 캔슬링 헤드폰 대여 도크
-
-### 🌧️ 2. 실시간 2.5D 날씨 & 조명 쉐이더 연출 (Atmospheric Weather & Circadian Lighting)
-- **4종 날씨 사이클**: ☀️ 맑음, 🌧️ 빗소리 레이니 데이, ❄️ 눈 내리는 날, ☁️ 구름 많은 운치 있는 날
-- **감성 말풍선 인터랙션**: 공부 중인 학생 머리 위에 `🌧️ 빗소리 아늑하다 ☕`, `❄️ 눈 오니 라떼 최고!` 등 감성 멘트 실시간 렌더링
-- **매출 & 몰입 보너스**: 날씨별 음료 갈증도 및 학업 집중도 수치(+10% ~ +30%) 동적 가산
-
-### 🧲 3. 인터랙티브 2.5D 책상 마그네틱 그리드 배치 (Magnetic Grid Placement)
-- **자석 스냅 기술**: 책상 드래그 이동 시 2.5D 시안(Cyan) 타일 가이드라인 자동 활성화
-- **정밀 스냅 & 회전**: 110px x 75px 그리드 단위 정밀 마그네틱 흡착 및 90도 회전 배치 지원
-
-### ⚛️ 4. 42개 첨단 기술 서브시스템 (Tech Operations Center)
-- **에너지 & 파워**: 퀀텀 반물질 초청정 에너지, SMR 핵융합, 호킹 복사 싱귤래리티 중력우물 발전소 등
-- **시공간 & 물리학**: 텔레파시 시냅스 다운로드, 타키온 크로노 시간가속, 자율 초전도 자기장 양자 부유 바닥 매트릭스 등
-- **AI & 뇌파 바이오**: 3D 홀로그램 AI 튜터, 바이오-다이내믹 펩타이드 신경자극기, 기억-결정체 변무테이션 리액터 등
-- **경영 & 글로벌 네트워크**: 퀀텀 블록체인 정산, 글로벌 위성 메쉬 네트워크, 글로벌 퀀텀 얽힘 프랜차이즈 가맹 원장 리레이 등
-
----
-
-## 📁 프로젝트 폴더 구조
-
-```text
-Log404/
-├── game01/                           # Godot 4 게임 메인 프로젝트
-│   ├── assets/                       # 게임 스프라이트 및 UI 자산
-│   ├── build/ios/                    # iOS 네이티브 임베디드 배포 패키지 (data.pck)
-│   ├── docs/                         # 모듈별 기능 사양서 (MEETING_MODULE_1~53.md)
-│   ├── scenes/                       # 메인 씬 및 UI 패키지 TSCN 파일
-│   │   ├── main_scene.tscn           # 2.5D 메인 타이쿤 통합 씬
-│   │   └── ui/                       # 팝업 패키지 (DeskShop, Roasting, Quest 등)
-│   ├── scripts/
-│   │   ├── autoload/
-│   │   │   ├── game_state.gd         # 핵심 게임 상태 및 경영 시뮬레이션 엔진
-│   │   │   └── sound_manager.gd      # SFX 및 BGM 사운드 제어기
-│   │   ├── ui/
-│   │   │   └── cafe_view.gd          # 2.5D 아소메트릭 절차적 뷰 렌더링 엔진
-│   │   └── tests/
-│   │       └── test_all_70_modules.gd # 82개 모듈 통합 자동 검증 스크립트 (100% PASS)
-│   └── project.godot                 # Godot 4 프로젝트 설정 파일
-└── README.md                         # 전체 프로젝트 설명 문서
-```
-
----
-
-## 🛠️ 실행 및 테스트 방법
-
-### 1. Godot 4 로컬 실행
+### 🛠️ Game01 실행 및 테스트 방법
 ```bash
-# 메인 2.5D 스터디 카페 타이쿤 실행
+# Godot 4 로컬 실행
 godot --path game01
-```
 
-### 2. 82개 모듈 자동 검증 스위트 (Headless Mode)
-```bash
-# 82개 경영, 유틸리티, 2.5D 날씨 및 마그네틱 배치 모듈 100% 통과 여부 자동 검증
+# 82개 모듈 자동 검증 스위트 (Headless Mode - 100% PASS)
 godot --headless --path game01 --script scripts/tests/test_all_70_modules.gd
 ```
 
-### 3. iOS 네이티브 데이터 패키지 빌드
-```bash
-# iOS 임베디드 패키지 동기화 생성
-godot --headless --path game01 --export-pack "iOS" build/ios/data.pck
-cp game01/build/ios/data.pck game01/build/ios/StudyCafeTycoon.pck
+---
+
+## 📁 전체 프로젝트 폴더 구조
+
+```text
+Log404/
+├── README.md                         # 전체 프로젝트 메인 안내 문서
+├── game01/                           # [Game01] 2.5D 스터디 카페 타이쿤
+│   ├── assets/                       # 게임 스프라이트 및 UI 자산
+│   ├── build/ios/                    # iOS 네이티브 임베디드 배포 패키지 (data.pck)
+│   ├── docs/                         # 모듈별 기능 사양서 (MEETING_MODULE_1~53.md)
+│   ├── scenes/                       # 메인 씬 및 UI 팝업 TSCN
+│   ├── scripts/                      # 게임 로직, Autoload 및 테스트 스크립트
+│   └── project.godot                 # Godot 4 프로젝트 설정 파일
+└── game02/                           # [Game02] 주희의 다꾸 서재 & 소장 일기장
+    ├── index.html                    # 웹 인터랙티브 다꾸 서재 목업 (Tailwind + FontAwesome)
+    ├── README.md                     # Game02 전용 상세 설명서
+    ├── SPRINT_LOG.md                 # 14인 애자일 스쿼드 누적 스프린트 회의록 (Sprint 1~19)
+    └── godot_project/                # Godot 4.6.2 네이티브 모바일 프로젝트
+        ├── scenes/                   # main.tscn, card_item.tscn, detail_modal.tscn 등
+        ├── scripts/                  # main_view.gd, card_item.gd, archive_state.gd 등
+        ├── screenshots/              # Metal 렌더링 최신 구동 스크린샷 2종
+        └── tests/                    # 헤드리스 TDD 테스트 스위트 및 스크린샷 렌더러
 ```
-
----
-
-## 🎨 자산 관리 지침 (Asset Management Guidelines)
-
-1. **실사/AI 인물 사진 사용 금지**: 실사 배경은 2.5D 아소메트릭 게임 시점과 이질감을 발생시키므로 배제하고, 통일된 **2.5D 벡터 및 픽셀 자산**을 사용합니다.
-2. **절차적 렌더링 자산 (Procedural 2.5D Graphics)**: `cafe_view.gd`에서 절차적으로 벽면, 요추 의자, 스탠드 조명 후광, 창문 날씨 효과를 그려 자산 누락 시에도 100% 안정적인 뷰를 보장합니다.
-3. **스마트 해상도 스케일링**: 모든 팝업 패널은 `Vector2(660, 460)` 규격으로 중앙 정렬되어 어떠한 디바이스 해상도에서도 화면 잘림 없이 렌더링됩니다.
-
----
-
-© 2026 **Log404 Studio**. All Rights Reserved.
