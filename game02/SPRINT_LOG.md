@@ -5,6 +5,20 @@
 
 ---
 
+## 🚀 [Sprint 21] 만년필 잉크 컬러 선택기(`INK_PRESETS` / `set_fountain_pen_ink`) & 감성 서재 룸 테마 연동
+- **시각**: 2026-11-13 02:05 KST
+- **1. 다꾸러 3인 VOC (수집러 A · 가챠러 B · 미니멀러 C)**
+  - **만년필 다꾸러 A**: *"다꾸 일기장의 백미는 만년필 잉크 색깔(에스프레소, 버건디, 세피아, 포레스트 그린)을 기분에 따라 바꿔 적는 것입니다! 밑줄 문장 기록 시 잉크 컬러를 직접 골라 저장할 수 있게 해주세요!"*
+  - **미니멀 수집러 C**: *"서재 배경 테마(`ROOM_THEMES`)와 만년필 잉크 컬러가 자연스럽게 어우러지도록 로컬 JSON 저장 및 모달 UI 색상에 즉시 반영되게 해주세요!"*
+- **2. 기획 & UI/UX & Godot 4.6 개발 내역**
+  - **만년필 잉크 컬러 선택기(`InkRow` / `set_fountain_pen_ink`)**: `detail_modal.tscn`에 4종 빈티지 만년필 잉크 스와치 버튼(`☕에스프레소`, `🍷버건디`, `🍂세피아`, `🌲포레스트`)을 추가하고, 클릭 시 `memo_ink_color` 갱신 및 `_apply_ink_style()`로 밑줄 텍스트 색상 실시간 연동
+  - **영구 보존 및 데이터 구조 확장**: `collection_item.gd` 및 `archive_state.gd`의 JSON 직렬화/역직렬화에 `memo_ink_color` 포함
+- **3. TDD & QA 검증**
+  - `tests/test_main_integration.gd`에 `set_fountain_pen_ink("#7f1d1d")` 및 테마 순환 검증 추가 → 3개 헤드리스 테스트 스위트 전수 100% PASS
+  - Metal 렌더러 최신 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 캡처 및 GitHub 푸시 완료
+
+---
+
 ## 🚀 [Sprint 20] 권별 독서 날짜 타임스탬프(`📅 11.12` / `stamp_volume_date`) & 서재 전체 완독률 실시간 게이지(`81%`)
 - **시각**: 2026-11-12 23:05 KST
 - **1. 다꾸러 3인 VOC (수집러 A · 가챠러 B · 미니멀러 C)**

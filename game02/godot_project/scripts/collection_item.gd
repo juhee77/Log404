@@ -13,6 +13,7 @@ var cover_color: String = "#4f46e5"
 var icon_emoji: String = "📖"
 var obi_text: String = ""
 var template_name: String = "COMICS"
+var memo_ink_color: String = "#2c221e"
 var volumes: Array = []
 
 func _init(
@@ -60,5 +61,6 @@ func to_dict() -> Dictionary:
 		"icon_emoji": icon_emoji,
 		"obi_text": obi_text,
 		"template_name": template_name,
+		"memo_ink_color": memo_ink_color,
 		"volumes": volumes
 	}

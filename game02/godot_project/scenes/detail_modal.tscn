@@ -255,6 +255,40 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 10
 text = "🖋️ 밑줄 저장"
 
+[node name="InkRow" type="HBoxContainer" parent="Panel/VBox/BodyMargin/Body"]
+layout_mode = 2
+theme_override_constants/separation = 5
+
+[node name="InkLbl" type="Label" parent="Panel/VBox/BodyMargin/Body/InkRow"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.45, 0.37, 0.3, 1)
+theme_override_font_sizes/font_size = 10
+text = "🖋️ 잉크:"
+
+[node name="InkEspresso" type="Button" parent="Panel/VBox/BodyMargin/Body/InkRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 10
+text = "☕에스프레소"
+
+[node name="InkBurgundy" type="Button" parent="Panel/VBox/BodyMargin/Body/InkRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 10
+text = "🍷버건디"
+
+[node name="InkSepia" type="Button" parent="Panel/VBox/BodyMargin/Body/InkRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 10
+text = "🍂세피아"
+
+[node name="InkForest" type="Button" parent="Panel/VBox/BodyMargin/Body/InkRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 10
+text = "🌲포레스트"
+
 [node name="VolSection" type="VBoxContainer" parent="Panel/VBox/BodyMargin/Body"]
 layout_mode = 2
 size_flags_vertical = 3
@@ -285,3 +319,7 @@ theme_override_constants/separation = 5
 [connection signal="pressed" from="Panel/VBox/BodyMargin/Body/StampRow/StampWish" to="." method="_on_stamp_wish_pressed"]
 [connection signal="pressed" from="Panel/VBox/BodyMargin/Body/StampRow/ObiCycleBtn" to="." method="cycle_obi_preset"]
 [connection signal="pressed" from="Panel/VBox/BodyMargin/Body/QuoteEditRow/SaveQuoteBtn" to="." method="_on_save_quote_btn_pressed"]
+[connection signal="pressed" from="Panel/VBox/BodyMargin/Body/InkRow/InkEspresso" to="." method="_on_ink_espresso_pressed"]
+[connection signal="pressed" from="Panel/VBox/BodyMargin/Body/InkRow/InkBurgundy" to="." method="_on_ink_burgundy_pressed"]
+[connection signal="pressed" from="Panel/VBox/BodyMargin/Body/InkRow/InkSepia" to="." method="_on_ink_sepia_pressed"]
+[connection signal="pressed" from="Panel/VBox/BodyMargin/Body/InkRow/InkForest" to="." method="_on_ink_forest_pressed"]

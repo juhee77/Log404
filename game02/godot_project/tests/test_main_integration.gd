@@ -166,6 +166,13 @@ func _init() -> void:
 	assert(overall_progress > 0.0 and overall_progress <= 100.0, "get_overall_reading_progress should calculate library-wide progress")
 	print("✓ Reading Date Stamp & Library Overall Progress verified")
 
+	# Test Sprint 21: Fountain-Pen Ink Color Selector in DetailModal
+	main_inst.detail_modal.set_fountain_pen_ink("#7f1d1d")
+	assert(slam_item.get("memo_ink_color") == "#7f1d1d", "set_fountain_pen_ink should update item memo_ink_color")
+	main_inst._on_theme_btn_pressed()
+	assert(main_inst.theme_cursor >= 0, "Theme button should cycle unified room themes")
+	print("✓ Fountain-Pen Ink Color Selector & Unified Room Themes verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

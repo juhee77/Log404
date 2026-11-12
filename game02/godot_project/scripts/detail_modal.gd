@@ -28,6 +28,12 @@ var color_cursor: int = 0
 
 const ICON_PRESETS = ["📖", "📕", "✨", "🎀", "🏆", "🔮", "🌸", "🏀", "🪄", "🐱", "🏐", "🌙"]
 const COLOR_PRESETS = ["#b91c1c", "#1d4ed8", "#c2410c", "#be185d", "#15803d", "#6d28d9", "#0f766e"]
+const INK_PRESETS = [
+	{"name": "에스프레소", "hex": "#2c221e"},
+	{"name": "버건디", "hex": "#7f1d1d"},
+	{"name": "세피아", "hex": "#78350f"},
+	{"name": "포레스트", "hex": "#14532d"}
+]
 
 const OBI_PRESETS = [
 	"★ 초판 한정 홀로그램 책갈피 동봉",
@@ -106,6 +112,29 @@ func _style_diary_controls() -> void:
 	close_btn.add_theme_stylebox_override("normal", cream_btn)
 	close_btn.add_theme_color_override("font_color", Color(0.32, 0.25, 0.20))
 
+	var ink_row: HBoxContainer = get_node_or_null("Panel/VBox/BodyMargin/Body/InkRow")
+	if ink_row != null:
+		for btn in ink_row.get_children():
+			if btn is Button:
+				btn.add_theme_stylebox_override("normal", cream_btn)
+				btn.add_theme_color_override("font_color", Color(0.28, 0.22, 0.18))
+
+func set_fountain_pen_ink(ink_hex: String) -> void:
+	if current_item == null:
+		return
+	current_item.memo_ink_color = ink_hex
+	_apply_ink_style()
+	diary_updated.emit(current_item)
+
+func _apply_ink_style() -> void:
+	if current_item == null:
+		return
+	var ink = Color.from_string(current_item.memo_ink_color, Color(0.18, 0.14, 0.11))
+	if memo_label != null:
+		memo_label.add_theme_color_override("font_color", ink)
+	if quote_input != null:
+		quote_input.add_theme_color_override("font_color", ink)
+
 func open(item) -> void:
 	current_item = item
 	editing_vol_index = -1
@@ -114,6 +143,7 @@ func open(item) -> void:
 	tag_label.text = "💮 스탬프: " + item.status_tag + "  |  " + item.obi_text
 	memo_label.text = "🖋️ \"" + (item.memo if item.memo != "" else "오늘 읽은 페이지의 감동을 일기장에 기록합니다.") + "\""
 	quote_input.text = item.memo
+	_apply_ink_style()
 	
 	cover_rect.color = Color.from_string(item.cover_color, Color(0.65, 0.25, 0.2))
 	cover_icon.text = item.icon_emoji if item.icon_emoji != "" else "📖"
@@ -354,6 +384,18 @@ func _render_volumes() -> void:
 
 func _on_close_btn_pressed() -> void:
 	close()
+
+func _on_ink_espresso_pressed() -> void:
+	set_fountain_pen_ink("#2c221e")
+
+func _on_ink_burgundy_pressed() -> void:
+	set_fountain_pen_ink("#7f1d1d")
+
+func _on_ink_sepia_pressed() -> void:
+	set_fountain_pen_ink("#78350f")
+
+func _on_ink_forest_pressed() -> void:
+	set_fountain_pen_ink("#14532d")
 
 func _on_add_vol_btn_pressed() -> void:
 	if current_item != null:
