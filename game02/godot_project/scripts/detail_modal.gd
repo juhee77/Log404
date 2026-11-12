@@ -212,9 +212,13 @@ func open(item) -> void:
 	editing_vol_index = -1
 	title_label.text = "📔 " + item.title
 	author_label.text = "작가 · " + (item.author_or_series if item.author_or_series != "" else "미상")
-	tag_label.text = "💮 스탬프: " + item.status_tag + "  |  " + item.obi_text
-	memo_label.text = "🖋️ \"" + (item.memo if item.memo != "" else "오늘 읽은 페이지의 감동을 일기장에 기록합니다.") + "\""
+	var sticker = current_item.get("deco_sticker") if current_item.get("deco_sticker") != null else "✨"
+	tag_label.text = "💮 스탬프: " + current_item.status_tag + " " + sticker + "  |  " + current_item.obi_text
+	memo_label.text = sticker + " 🖋️ \"" + (item.memo if item.memo != "" else "오늘 읽은 페이지의 감동을 일기장에 기록합니다.") + "\""
 	quote_input.text = item.memo
+	var deco_btn: Button = get_node_or_null("Panel/VBox/BodyMargin/Body/StampRow/DecoStickerBtn")
+	if deco_btn != null:
+		deco_btn.text = sticker + "스티커"
 	_apply_ink_style()
 	_apply_washi_style()
 	
@@ -240,8 +244,22 @@ func apply_stamp(stamp_name: String) -> void:
 	if current_item == null:
 		return
 	current_item.status_tag = stamp_name
-	tag_label.text = "💮 스탬프: " + current_item.status_tag + "  |  " + current_item.obi_text
+	var sticker = current_item.get("deco_sticker") if current_item.get("deco_sticker") != null else "✨"
+	tag_label.text = "💮 스탬프: " + current_item.status_tag + " " + sticker + "  |  " + current_item.obi_text
 	diary_updated.emit(current_item)
+
+func cycle_deco_sticker() -> String:
+	if current_item == null:
+		return "✨"
+	var s = current_item.cycle_deco_sticker() if current_item.has_method("cycle_deco_sticker") else "✨"
+	var deco_btn: Button = get_node_or_null("Panel/VBox/BodyMargin/Body/StampRow/DecoStickerBtn")
+	if deco_btn != null:
+		deco_btn.text = s + "스티커"
+	tag_label.text = "💮 스탬프: " + current_item.status_tag + " " + s + "  |  " + current_item.obi_text
+	memo_label.text = s + " 🖋️ \"" + (current_item.memo if current_item.memo != "" else "오늘 읽은 페이지의 감동을 일기장에 기록합니다.") + "\""
+	_apply_ink_style()
+	diary_updated.emit(current_item)
+	return s
 
 func cycle_obi_preset() -> void:
 	if current_item == null:

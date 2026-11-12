@@ -17,6 +17,7 @@ var memo_ink_color: String = "#2c221e"
 var highlight_enabled: bool = false
 var pen_nib_size: int = 11
 var washi_tape_color: String = "#f4d394"
+var deco_sticker: String = "✨"
 var updated_at: int = 0
 var volumes: Array = []
 
@@ -69,6 +70,31 @@ func get_average_rating() -> float:
 		sum_r += float(v.get("rating", 5))
 	return sum_r / float(volumes.size())
 
+func quick_advance_volume() -> int:
+	var next_vol = volumes.size() + 1
+	var d = Time.get_date_dict_from_system()
+	var date_str = "%04d.%02d.%02d" % [d.year, d.month, d.day]
+	volumes.append({
+		"vol": next_vol,
+		"status": "owned",
+		"rating": 5,
+		"quote": "%d권 독서 완료" % next_vol,
+		"date": date_str,
+		"bookmarked": false
+	})
+	updated_at = int(Time.get_unix_time_from_system())
+	return next_vol
+
+func cycle_deco_sticker() -> String:
+	const PRESETS = ["✨", "🌸", "☕", "🌙", "🍀", "🎧"]
+	var idx = PRESETS.find(deco_sticker)
+	if idx == -1:
+		deco_sticker = PRESETS[0]
+	else:
+		deco_sticker = PRESETS[(idx + 1) % PRESETS.size()]
+	updated_at = int(Time.get_unix_time_from_system())
+	return deco_sticker
+
 func to_dict() -> Dictionary:
 	return {
 		"id": id,
@@ -86,6 +112,7 @@ func to_dict() -> Dictionary:
 		"highlight_enabled": highlight_enabled,
 		"pen_nib_size": pen_nib_size,
 		"washi_tape_color": washi_tape_color,
+		"deco_sticker": deco_sticker,
 		"updated_at": updated_at,
 		"volumes": volumes
 	}

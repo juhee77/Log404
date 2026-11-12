@@ -221,6 +221,15 @@ func _init() -> void:
 	assert(info_text.contains("소장:") and info_text.contains("완독률:"), "show_library_infographic should output library stats briefing")
 	print("✓ Washi Tape Cycler & Library Infographic Briefing verified")
 
+	# Test Sprint 27: Deco Sticker Pack Cycler & Quick Volume Advance
+	var new_sticker = main_inst.detail_modal.cycle_deco_sticker()
+	assert(new_sticker in ["✨", "🌸", "☕", "🌙", "🍀", "🎧"], "cycle_deco_sticker should cycle among sticker presets")
+	var prev_vols = slam_item.volumes.size()
+	var advanced_vol = slam_item.quick_advance_volume()
+	assert(advanced_vol == prev_vols + 1, "quick_advance_volume should increment volume count")
+	assert(slam_item.volumes.size() == prev_vols + 1, "quick_advance_volume should append new volume to item")
+	print("✓ Deco Sticker Pack Cycler & Quick Volume Advance verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

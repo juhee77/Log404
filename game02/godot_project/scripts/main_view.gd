@@ -257,6 +257,14 @@ func _render_cards() -> void:
 		card_grid.add_child(card)
 		card.setup(it)
 		card.clicked.connect(_on_card_clicked)
+		if card.has_signal("quick_advanced"):
+			card.quick_advanced.connect(_on_card_quick_advanced)
+
+func _on_card_quick_advanced(it) -> void:
+	archive_state.save_to_file()
+	_update_stats()
+	_render_spine_shelf()
+	_show_toast("📖 " + it.title + " " + str(it.volumes.size()) + "권 완독 기록 완료!")
 
 func _on_stat_firsts_clicked() -> void:
 	filter_firsts_only = true

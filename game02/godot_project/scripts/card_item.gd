@@ -2,6 +2,7 @@ class_name CardItem
 extends PanelContainer
 
 signal clicked(item)
+signal quick_advanced(item)
 
 @onready var masking_tape: ColorRect = $VBox/TopTapeRow/MaskingTape
 @onready var cover_rect: ColorRect = $VBox/CardMargin/InnerVBox/CoverContainer/CoverRect
@@ -23,6 +24,12 @@ var current_item = null
 func _gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 		clicked.emit(current_item)
+
+func quick_advance() -> void:
+	if current_item != null:
+		current_item.quick_advance_volume()
+		setup(current_item)
+		quick_advanced.emit(current_item)
 
 func get_reading_progress() -> float:
 	if current_item == null:
@@ -58,12 +65,14 @@ func setup(item) -> void:
 		else:
 			progress_label.text = str(int(prog)) + "%"
 	
-	# 다꾸 도장 스탬프 (💮 전권완결, 초판특전 등)
+	# 다꾸 도장 스탬프 (💮 전권완결, 초판특전 등) & 감성 데코 스티커
+	var sticker = item.get("deco_sticker") if item.get("deco_sticker") != null else "✨"
 	if item.status_tag != "":
 		sticker_badge.visible = true
-		sticker_badge.text = " 💮" + item.status_tag + " "
+		sticker_badge.text = " 💮" + item.status_tag + " " + sticker + " "
 	else:
-		sticker_badge.visible = false
+		sticker_badge.visible = true
+		sticker_badge.text = " " + sticker + " "
 
 	# 이북 표지 컬러 & 책등 접힘선 & 파스텔 와시 테이프
 	var base_col = Color.from_string(item.cover_color, Color(0.65, 0.25, 0.2))

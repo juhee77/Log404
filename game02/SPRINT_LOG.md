@@ -5,6 +5,22 @@
 
 ---
 
+## 🚀 [Sprint 27] 일기장 다꾸 데코 스티커 팩(`✨ 스티커` / `cycle_deco_sticker`) & 1초 퀵 진도 추가(`quick_advance_volume`)
+- **시각**: 2026-11-13 07:07 KST
+- **1. 다꾸러 3인 VOC (수집러 A · 가챠러 B · 미니멀러 C)**
+  - **만년필 다꾸러 A**: *"독서 일기장 모달에서 감상이나 문장을 기록할 때 감성적인 다꾸 스티커 팩(`✨`, `🌸`, `☕`, `🌙`, `🍀`, `🎧`)을 골라 붙일 수 있는 `✨ 스티커` 순환 버튼이 있으면 좋겠어요!"*
+  - **미니멀 수집러 C**: *"단행본을 읽고 바로 다음 권으로 진도를 나갈 수 있도록, 메인 서재 카드의 진행률이나 빠른 진도 액션(`quick_advance_volume()`)으로 1초 만에 권수 추가 및 완독 통계 업데이트가 되면 좋겠어요!"*
+  - **가챠 수집러 B**: *"서재 카드 표지의 도장 배지 옆에도 선택된 다꾸 스티커(`💮전권완결 ✨`)가 아기자기하게 함께 표시되어 소장품마다 개성을 나타낼 수 있으면 좋겠어요!"*
+- **2. 기획 & UI/UX & Godot 4.6 개발 내역**
+  - **다꾸 데코 스티커 팩 순환(`DecoStickerBtn` / `cycle_deco_sticker`)**: `collection_item.gd`에 `deco_sticker` 필드 추가 및 `archive_state.gd` JSON 연동. 모달 `StampRow`에 `DecoStickerBtn`을 배치하여 6종 데코 스티커(`✨`, `🌸`, `☕`, `🌙`, `🍀`, `🎧`)를 원터치로 변경하고 일기장 상단 및 메인 카드 배지에 실시간 반영
+  - **1초 퀵 진도 추가(`quick_advance_volume` / `quick_advanced` 시그널)**: `collection_item.gd`에 `quick_advance_volume()` 함수를 구현하고, `card_item.gd`에서 빠른 진도 갱신 시 `quick_advanced` 시그널을 방출하여 서재 통계와 책등 진열대를 자동 갱신
+  - **HTML 인터랙티브 목업 동기화**: `game02/index.html`에 `cycleDecoSticker()` 및 스티커 팩 순환 버튼 탑재 완료
+- **3. TDD & QA 검증**
+  - `tests/test_main_integration.gd`에 Sprint 27 데코 스티커 순환 및 퀵 진도 업 검증 추가 → 3개 헤드리스 테스트 스위트 전수 100% PASS
+  - Metal 렌더러 최신 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 캡처 및 GitHub 푸시 완료
+
+---
+
 ## 🚀 [Sprint 26] 마스킹 테이프 색상 순환(`🎨 마테` / `cycle_washi_tape`) & 서재 인포그래픽 통계 브리핑(`show_library_infographic`)
 - **시각**: 2026-11-13 07:00 KST
 - **1. 다꾸러 3인 VOC (수집러 A · 가챠러 B · 미니멀러 C)**

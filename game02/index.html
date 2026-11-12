@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -41,16 +42,17 @@
             box-shadow:
                 -3px 0 0 #d6cfc7,
                 -5px 6px 14px rgba(44, 34, 30, 0.18),
-                inset 4px 0 8px rgba(255,255,255,0.35),
-                inset 10px 0 2px rgba(0,0,0,0.12);
+                inset 4px 0 8px rgba(255, 255, 255, 0.35),
+                inset 10px 0 2px rgba(0, 0, 0, 0.12);
             transition: transform 0.22s ease, box-shadow 0.22s ease;
         }
+
         .ebook-cover:hover {
             transform: translateY(-6px) rotate(-1deg);
             box-shadow:
                 -4px 0 0 #d6cfc7,
                 -8px 12px 20px rgba(44, 34, 30, 0.24),
-                inset 4px 0 8px rgba(255,255,255,0.4);
+                inset 4px 0 8px rgba(255, 255, 255, 0.4);
         }
 
         /* Masking Tape (다꾸 마스킹 테이프) */
@@ -58,10 +60,10 @@
             width: 58px;
             height: 16px;
             background: rgba(244, 211, 148, 0.72);
-            border-left: 2px dashed rgba(255,255,255,0.7);
-            border-right: 2px dashed rgba(255,255,255,0.7);
+            border-left: 2px dashed rgba(255, 255, 255, 0.7);
+            border-right: 2px dashed rgba(255, 255, 255, 0.7);
             transform: rotate(-3deg);
-            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
         }
 
         /* Red Rubber Stamp (다꾸 완독/소장 도장) */
@@ -77,12 +79,10 @@
         /* Ruled Journal Notebook Lines */
         .journal-lined-paper {
             background-color: #fffdf9;
-            background-image: repeating-linear-gradient(
-                transparent,
-                transparent 29px,
-                #ece3d5 29px,
-                #ece3d5 30px
-            );
+            background-image: repeating-linear-gradient(transparent,
+                    transparent 29px,
+                    #ece3d5 29px,
+                    #ece3d5 30px);
             line-height: 30px;
         }
 
@@ -95,6 +95,7 @@
         }
     </style>
 </head>
+
 <body class="min-h-screen flex flex-col">
 
     <!-- Journal Top Notebook Binder Header -->
@@ -114,13 +115,16 @@
 
             <!-- Journal Index Bookmark Buttons -->
             <div class="flex items-center gap-2 self-end sm:self-center">
-                <button onclick="openWebScraperModal()" class="px-3.5 py-2 rounded-xl bg-[#fffdf9] hover:bg-[#f7f0e6] text-[#5c4938] border border-[#d8cbb8] font-bold text-xs shadow-2xs cursor-pointer transition flex items-center gap-1.5">
+                <button onclick="openWebScraperModal()"
+                    class="px-3.5 py-2 rounded-xl bg-[#fffdf9] hover:bg-[#f7f0e6] text-[#5c4938] border border-[#d8cbb8] font-bold text-xs shadow-2xs cursor-pointer transition flex items-center gap-1.5">
                     <i class="fa-solid fa-magnifying-glass text-[#c85a32]"></i> 웹 표지 찾기
                 </button>
-                <button onclick="openCameraModal()" class="px-3.5 py-2 rounded-xl bg-[#fffdf9] hover:bg-[#f7f0e6] text-[#5c4938] border border-[#d8cbb8] font-bold text-xs shadow-2xs cursor-pointer transition flex items-center gap-1.5">
+                <button onclick="openCameraModal()"
+                    class="px-3.5 py-2 rounded-xl bg-[#fffdf9] hover:bg-[#f7f0e6] text-[#5c4938] border border-[#d8cbb8] font-bold text-xs shadow-2xs cursor-pointer transition flex items-center gap-1.5">
                     <i class="fa-solid fa-camera text-[#4a6b5d]"></i> 표지/가챠 찍기
                 </button>
-                <button onclick="openNewDiaryModal()" class="px-4 py-2 rounded-xl bg-[#2c221e] hover:bg-[#43352f] text-[#faf6f0] font-bold text-xs shadow-xs cursor-pointer transition flex items-center gap-1.5">
+                <button onclick="openNewDiaryModal()"
+                    class="px-4 py-2 rounded-xl bg-[#2c221e] hover:bg-[#43352f] text-[#faf6f0] font-bold text-xs shadow-xs cursor-pointer transition flex items-center gap-1.5">
                     <i class="fa-solid fa-feather-pointed"></i> + 새 일기 쓰기
                 </button>
             </div>
@@ -161,19 +165,26 @@
             </div>
 
             <!-- Sprint 9: Mini E-Book Spine Shelf & Today's Underlined Quote Cycler -->
-            <div class="mt-4 pt-3 border-t border-dashed border-[#e2d6c5] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div
+                class="mt-4 pt-3 border-t border-dashed border-[#e2d6c5] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div class="flex items-center gap-3">
                     <span class="text-[11px] font-bold text-[#786b63] shrink-0">📚 내 책등 선반:</span>
-                    <div id="mini-spine-shelf" class="flex items-end gap-1 h-7 px-2 py-0.5 bg-[#f3ece1] rounded-lg border border-[#dfd3c3]"></div>
+                    <div id="mini-spine-shelf"
+                        class="flex items-end gap-1 h-7 px-2 py-0.5 bg-[#f3ece1] rounded-lg border border-[#dfd3c3]">
+                    </div>
                 </div>
                 <div class="flex items-center justify-between sm:justify-end gap-2 flex-1">
-                    <span id="today-quote-banner" class="serif-font text-xs text-[#5c4938] italic truncate cursor-pointer hover:underline" onclick="openCurrentQuoteItem()">
+                    <span id="today-quote-banner"
+                        class="serif-font text-xs text-[#5c4938] italic truncate cursor-pointer hover:underline"
+                        onclick="openCurrentQuoteItem()">
                         🖋️ 오늘의 밑줄: "농구... 좋아하세요?" — 슬램덩크 신장재편판
                     </span>
-                    <button onclick="cycleTodayQuote()" class="px-2.5 py-1 rounded-lg bg-[#f3ece1] hover:bg-[#e5dac9] border border-[#d6c7b2] text-[#2c221e] text-[11px] font-bold shrink-0 cursor-pointer">
+                    <button onclick="cycleTodayQuote()"
+                        class="px-2.5 py-1 rounded-lg bg-[#f3ece1] hover:bg-[#e5dac9] border border-[#d6c7b2] text-[#2c221e] text-[11px] font-bold shrink-0 cursor-pointer">
                         ↻ 다른 문장
                     </button>
-                    <button onclick="pickRandomItem()" class="px-2.5 py-1 rounded-lg bg-[#c85a32] hover:bg-[#b04b25] text-white text-[11px] font-bold shrink-0 cursor-pointer">
+                    <button onclick="pickRandomItem()"
+                        class="px-2.5 py-1 rounded-lg bg-[#c85a32] hover:bg-[#b04b25] text-white text-[11px] font-bold shrink-0 cursor-pointer">
                         🎲 추천
                     </button>
                 </div>
@@ -184,26 +195,32 @@
         <section class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
             <!-- Physical Diary Index Tabs -->
             <div class="flex items-center gap-1.5 flex-wrap">
-                <button onclick="switchCategory('all')" id="tab-all" class="px-3.5 py-2 rounded-t-xl border-t-2 border-x border-[#d8cbb8] bg-[#fffdf9] text-[#2c221e] font-bold text-xs shadow-2xs cursor-pointer">
+                <button onclick="switchCategory('all')" id="tab-all"
+                    class="px-3.5 py-2 rounded-t-xl border-t-2 border-x border-[#d8cbb8] bg-[#fffdf9] text-[#2c221e] font-bold text-xs shadow-2xs cursor-pointer">
                     📚 전체 서재
                 </button>
-                <button onclick="switchCategory('manga')" id="tab-manga" class="px-3.5 py-2 rounded-t-xl border border-transparent bg-[#efe7da] text-[#786b63] hover:text-[#2c221e] font-bold text-xs cursor-pointer">
+                <button onclick="switchCategory('manga')" id="tab-manga"
+                    class="px-3.5 py-2 rounded-t-xl border border-transparent bg-[#efe7da] text-[#786b63] hover:text-[#2c221e] font-bold text-xs cursor-pointer">
                     📖 이북·단행본 일기
                 </button>
-                <button onclick="switchCategory('gacha')" id="tab-gacha" class="px-3.5 py-2 rounded-t-xl border border-transparent bg-[#efe7da] text-[#786b63] hover:text-[#2c221e] font-bold text-xs cursor-pointer">
+                <button onclick="switchCategory('gacha')" id="tab-gacha"
+                    class="px-3.5 py-2 rounded-t-xl border border-transparent bg-[#efe7da] text-[#786b63] hover:text-[#2c221e] font-bold text-xs cursor-pointer">
                     🔮 가챠·굿즈
                 </button>
-                <button onclick="switchCategory('complete')" id="tab-complete" class="px-3.5 py-2 rounded-t-xl border border-transparent bg-[#efe7da] text-[#786b63] hover:text-[#2c221e] font-bold text-xs cursor-pointer">
+                <button onclick="switchCategory('complete')" id="tab-complete"
+                    class="px-3.5 py-2 rounded-t-xl border border-transparent bg-[#efe7da] text-[#786b63] hover:text-[#2c221e] font-bold text-xs cursor-pointer">
                     💮 완독작
                 </button>
-                <button onclick="switchCategory('fav')" id="tab-fav" class="px-3.5 py-2 rounded-t-xl border border-transparent bg-[#efe7da] text-[#786b63] hover:text-[#2c221e] font-bold text-xs cursor-pointer">
+                <button onclick="switchCategory('fav')" id="tab-fav"
+                    class="px-3.5 py-2 rounded-t-xl border border-transparent bg-[#efe7da] text-[#786b63] hover:text-[#2c221e] font-bold text-xs cursor-pointer">
                     ★ 인생작
                 </button>
             </div>
 
             <!-- Fountain-pen Search Input -->
             <div class="relative w-full sm:w-64">
-                <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-[#9c8c7c] text-xs"></i>
+                <i
+                    class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-[#9c8c7c] text-xs"></i>
                 <input type="text" id="search-box" oninput="renderShelf()" placeholder="일기장 속 작품·문장 검색..."
                     class="w-full pl-8 pr-3 py-1.5 rounded-xl bg-[#fffdf9] border border-[#d8cbb8] text-xs focus:outline-none focus:border-[#c85a32]">
             </div>
@@ -217,24 +234,30 @@
     </main>
 
     <!-- MODAL: 📖 Open Two-Page Reading Diary (펼친 일기장 뷰) -->
-    <div id="journal-modal" class="fixed inset-0 bg-[#1e1612]/65 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-[#fffdf9] w-full max-w-3xl rounded-3xl border-4 border-[#d8c3a5] shadow-2xl overflow-hidden flex flex-col md:flex-row max-h-[90vh]">
+    <div id="journal-modal"
+        class="fixed inset-0 bg-[#1e1612]/65 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
+        <div
+            class="bg-[#fffdf9] w-full max-w-3xl rounded-3xl border-4 border-[#d8c3a5] shadow-2xl overflow-hidden flex flex-col md:flex-row max-h-[90vh]">
 
             <!-- Left Page: E-Book Cover & Stamp Card -->
-            <div class="w-full md:w-5/12 bg-[#f5efe6] p-6 border-b md:border-b-0 md:border-r-2 border-dashed border-[#d8cbb8] flex flex-col justify-between relative">
+            <div
+                class="w-full md:w-5/12 bg-[#f5efe6] p-6 border-b md:border-b-0 md:border-r-2 border-dashed border-[#d8cbb8] flex flex-col justify-between relative">
                 <div class="masking-tape absolute top-2 left-1/2 -translate-x-1/2"></div>
                 <div class="flex flex-col items-center text-center mt-2">
-                    <div id="diary-cover-box" class="w-36 ebook-cover flex flex-col justify-between p-3 text-white shadow-lg">
+                    <div id="diary-cover-box"
+                        class="w-36 ebook-cover flex flex-col justify-between p-3 text-white shadow-lg">
                         <div class="text-[9px] font-bold opacity-80 text-left" id="diary-cover-cat">MANGA ARCHIVE</div>
                         <div class="text-4xl my-auto" id="diary-cover-icon">🏀</div>
-                        <div class="bg-[#fff8e7] text-[#2c221e] text-[9px] font-bold py-1 px-1.5 rounded-xs shadow-2xs" id="diary-cover-obi">
+                        <div class="bg-[#fff8e7] text-[#2c221e] text-[9px] font-bold py-1 px-1.5 rounded-xs shadow-2xs"
+                            id="diary-cover-obi">
                             ★ 전20권 완결 박스세트
                         </div>
                     </div>
                     <h2 class="serif-font text-lg font-bold text-[#2c221e] mt-4" id="diary-title">슬램덩크 신장재편판</h2>
                     <p class="text-xs text-[#786b63] mt-0.5" id="diary-author">이노우에 다케히코</p>
                     <div class="mt-2">
-                        <span class="rubber-stamp text-xs px-2.5 py-0.5 rounded inline-block" id="diary-stamp">💮 전권완결 소장</span>
+                        <span class="rubber-stamp text-xs px-2.5 py-0.5 rounded inline-block" id="diary-stamp">💮 전권완결
+                            소장</span>
                     </div>
                 </div>
 
@@ -257,6 +280,7 @@
                         <span class="serif-font text-sm font-bold text-[#2c221e]">🖋️ 나만의 독서 노트 & 권별 밑줄</span>
                         <div class="flex items-center gap-1.5">
                             <button id="tape-cycle-btn" onclick="cycleWashiTape()" class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">🎨 마테 옐로우</button>
+                            <button id="deco-sticker-btn" onclick="cycleDecoSticker()" class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">✨ 스티커</button>
                             <button onclick="copyBookQuoteCard()" class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">💌 감상 카드 공유</button>
                             <button onclick="closeJournalModal()" class="w-7 h-7 rounded-full bg-[#efe7da] hover:bg-[#e2d6c5] text-[#5c4938] text-xs font-bold cursor-pointer">✕</button>
                         </div>
@@ -273,24 +297,35 @@
                     <div class="mt-3 p-2.5 rounded-xl bg-[#faf5ed] border border-[#e6dccd] space-y-2">
                         <div class="flex items-center gap-1.5 flex-wrap">
                             <span class="text-[11px] font-bold text-[#786b63] mr-1">💮 인장 찍기:</span>
-                            <button onclick="applyDiaryStamp('전권완결')" class="px-2 py-0.5 rounded border border-[#c85a32]/50 bg-[#fff8f5] text-[#c85a32] text-[10px] font-bold hover:bg-[#c85a32] hover:text-white cursor-pointer">💮전권완결</button>
-                            <button onclick="applyDiaryStamp('초판특전')" class="px-2 py-0.5 rounded border border-[#c85a32]/50 bg-[#fff8f5] text-[#c85a32] text-[10px] font-bold hover:bg-[#c85a32] hover:text-white cursor-pointer">🔖초판특전</button>
-                            <button onclick="applyDiaryStamp('인생최애')" class="px-2 py-0.5 rounded border border-[#c85a32]/50 bg-[#fff8f5] text-[#c85a32] text-[10px] font-bold hover:bg-[#c85a32] hover:text-white cursor-pointer">♥인생최애</button>
-                            <button onclick="applyDiaryStamp('위시리스트')" class="px-2 py-0.5 rounded border border-[#c85a32]/50 bg-[#fff8f5] text-[#c85a32] text-[10px] font-bold hover:bg-[#c85a32] hover:text-white cursor-pointer">✨위시리스트</button>
+                            <button onclick="applyDiaryStamp('전권완결')"
+                                class="px-2 py-0.5 rounded border border-[#c85a32]/50 bg-[#fff8f5] text-[#c85a32] text-[10px] font-bold hover:bg-[#c85a32] hover:text-white cursor-pointer">💮전권완결</button>
+                            <button onclick="applyDiaryStamp('초판특전')"
+                                class="px-2 py-0.5 rounded border border-[#c85a32]/50 bg-[#fff8f5] text-[#c85a32] text-[10px] font-bold hover:bg-[#c85a32] hover:text-white cursor-pointer">🔖초판특전</button>
+                            <button onclick="applyDiaryStamp('인생최애')"
+                                class="px-2 py-0.5 rounded border border-[#c85a32]/50 bg-[#fff8f5] text-[#c85a32] text-[10px] font-bold hover:bg-[#c85a32] hover:text-white cursor-pointer">♥인생최애</button>
+                            <button onclick="applyDiaryStamp('위시리스트')"
+                                class="px-2 py-0.5 rounded border border-[#c85a32]/50 bg-[#fff8f5] text-[#c85a32] text-[10px] font-bold hover:bg-[#c85a32] hover:text-white cursor-pointer">✨위시리스트</button>
                         </div>
                         <div class="flex items-center gap-1.5">
                             <input id="diary-quote-input" type="text" placeholder="🖋️ 오늘 밑줄 친 명대사·감상평 수정..."
                                 class="flex-1 px-2.5 py-1 rounded-lg bg-[#fffdf9] border border-[#d8cbb8] text-xs text-[#2c221e] focus:outline-none focus:border-[#c85a32]">
-                            <button onclick="saveDiaryQuote()" class="px-2.5 py-1 rounded-lg bg-[#2c221e] text-[#faf6f0] text-[11px] font-bold hover:bg-[#43352f] cursor-pointer">🖋️ 밑줄 저장</button>
-                            <button onclick="toggleDiaryHighlighter()" id="btn-highlighter" class="px-2.5 py-1 rounded-lg bg-[#fef08a] border border-[#eab308] text-[#854d0e] text-[11px] font-bold hover:bg-[#fde047] cursor-pointer">🖍️ 형광펜</button>
+                            <button onclick="saveDiaryQuote()"
+                                class="px-2.5 py-1 rounded-lg bg-[#2c221e] text-[#faf6f0] text-[11px] font-bold hover:bg-[#43352f] cursor-pointer">🖋️
+                                밑줄 저장</button>
+                            <button onclick="toggleDiaryHighlighter()" id="btn-highlighter"
+                                class="px-2.5 py-1 rounded-lg bg-[#fef08a] border border-[#eab308] text-[#854d0e] text-[11px] font-bold hover:bg-[#fde047] cursor-pointer">🖍️
+                                형광펜</button>
                         </div>
                         <div class="flex items-center gap-1.5 text-[10px] text-[#786b63] pt-1">
                             <span class="font-bold">🖋️ 잉크:</span>
-                            <button onclick="setDiaryInk('#2c221e')" class="px-2 py-0.5 rounded bg-[#f3ece1] border border-[#d6c7b2] text-[#2c221e] font-semibold cursor-pointer">☕에스프레소</button>
-                            <button onclick="setDiaryInk('#7f1d1d')" class="px-2 py-0.5 rounded bg-[#f3ece1] border border-[#d6c7b2] text-[#7f1d1d] font-semibold cursor-pointer">🍷버건디</button>
-                            <button onclick="setDiaryInk('#78350f')" class="px-2 py-0.5 rounded bg-[#f3ece1] border border-[#d6c7b2] text-[#78350f] font-semibold cursor-pointer">🍂세피아</button>
-                            <button onclick="setDiaryInk('#14532d')" class="px-2 py-0.5 rounded bg-[#f3ece1] border border-[#d6c7b2] text-[#14532d] font-semibold cursor-pointer">🌲포레스트</button>
-                            <button onclick="cycleDiaryNib()" id="btn-nib" class="px-2 py-0.5 rounded bg-[#f3ece1] border border-[#d6c7b2] text-[#2c221e] font-semibold cursor-pointer">✒️펜촉(12px)</button>
+                            <button onclick="setDiaryInk('#2c221e')"
+                                class="px-2 py-0.5 rounded bg-[#f3ece1] border border-[#d6c7b2] text-[#2c221e] font-semibold cursor-pointer">☕에스프레소</button>
+                            <button onclick="setDiaryInk('#7f1d1d')"
+                                class="px-2 py-0.5 rounded bg-[#f3ece1] border border-[#d6c7b2] text-[#7f1d1d] font-semibold cursor-pointer">🍷버건디</button>
+                            <button onclick="setDiaryInk('#78350f')"
+                                class="px-2 py-0.5 rounded bg-[#f3ece1] border border-[#d6c7b2] text-[#78350f] font-semibold cursor-pointer">🍂세피아</button>
+                            <button onclick="setDiaryInk('#14532d')"
+                                class="px-2 py-0.5 rounded bg-[#f3ece1] border border-[#d6c7b2] text-[#14532d] font-semibold cursor-pointer">🌲포레스트</button>
                         </div>
                     </div>
 
@@ -298,7 +333,8 @@
                     <div class="mt-5">
                         <div class="flex items-center justify-between mb-2">
                             <span class="text-xs font-bold text-[#5c4938]">📌 권별 소장 스탬프 & 좋아하는 대사</span>
-                            <button onclick="addVolumeInDiary()" class="px-2.5 py-1 rounded-lg bg-[#c85a32] hover:bg-[#b04b25] text-white text-[11px] font-bold cursor-pointer">
+                            <button onclick="addVolumeInDiary()"
+                                class="px-2.5 py-1 rounded-lg bg-[#c85a32] hover:bg-[#b04b25] text-white text-[11px] font-bold cursor-pointer">
                                 + 다음 권 기록 추가
                             </button>
                         </div>
@@ -306,9 +342,11 @@
                     </div>
                 </div>
 
-                <div class="mt-6 pt-3 border-t border-[#e2d6c5] flex justify-between items-center text-xs text-[#8c7a6b]">
+                <div
+                    class="mt-6 pt-3 border-t border-[#e2d6c5] flex justify-between items-center text-xs text-[#8c7a6b]">
                     <span>Page 1 of 1 · 주희의 다꾸 일기장</span>
-                    <button onclick="deleteSelectedDiary()" class="text-rose-600 hover:underline font-semibold cursor-pointer">이 일기 삭제</button>
+                    <button onclick="deleteSelectedDiary()"
+                        class="text-rose-600 hover:underline font-semibold cursor-pointer">이 일기 삭제</button>
                 </div>
             </div>
         </div>
@@ -422,26 +460,6 @@
             }
         }
 
-        function cycleDiaryNib() {
-            const item = ITEMS.find(x => x.id === activeId);
-            if (!item) return;
-            const cur = item.nib || 12;
-            item.nib = cur === 10 ? 12 : (cur === 12 ? 14 : 10);
-            const memoEl = document.getElementById('diary-memo');
-            const btn = document.getElementById('btn-nib');
-            memoEl.style.fontSize = item.nib + 'px';
-            btn.textContent = `✒️펜촉(${item.nib}px)`;
-        }
-
-        function copyBookQuoteCard() {
-            const item = ITEMS.find(x => x.id === activeId);
-            if (!item) return;
-            const text = `[📔 주희의 다꾸 서재 — 독서 감상 카드]\n📖 작품: ${item.title} (${item.author})\n💮 스탬프: ${item.stamp}\n🖋️ "${item.memo}"\n🏷️ 띠지: ${item.obi}`;
-            navigator.clipboard.writeText(text).then(() => {
-                alert('💌 독서 감상 카드가 클립보드에 복사되었습니다!\nSNS나 다이어리에 공유해보세요.');
-            });
-        }
-
         function switchCategory(cat) {
             currentCat = cat;
             ['all', 'manga', 'gacha', 'complete', 'fav'].forEach(c => {
@@ -464,7 +482,7 @@
                 else if (currentCat === 'gacha') cMatch = it.category === 'gacha';
                 else if (currentCat === 'complete') cMatch = it.stamp === '전권완결' || (it.volumes && it.volumes.length >= 2);
                 else if (currentCat === 'fav') cMatch = it.stamp === '인생최애' || (it.volumes && it.volumes.every(v => v.rating === 5));
-                
+
                 const qMatch = !q || it.title.toLowerCase().includes(q) || it.author.toLowerCase().includes(q) || it.memo.toLowerCase().includes(q);
                 return cMatch && qMatch;
             });
@@ -501,7 +519,7 @@
                                 </div>
                             </div>
                             <div class="flex-1 min-w-0">
-                                <span class="rubber-stamp text-[10px] px-1.5 py-0.5 rounded inline-block mb-1.5">💮 ${item.stamp}</span>
+                                <span class="rubber-stamp text-[10px] px-1.5 py-0.5 rounded inline-block mb-1.5">💮 ${item.stamp} ${item.deco_sticker || '✨'}</span>
                                 <h3 class="serif-font text-sm font-bold text-[#2c221e] truncate">${item.title}</h3>
                                 <p class="text-[11px] text-[#786b63] truncate">${item.author}</p>
                                 <p class="serif-font text-[11px] text-[#5c4938] italic line-clamp-2 mt-2 bg-[#fffdf9] p-1.5 rounded border border-[#ece3d5]">
@@ -564,7 +582,25 @@
 
             renderDiaryVolumes(item);
             applyJournalWashiTape(item.washi_tape_color || '#f4d394');
+            const sticker = item.deco_sticker || '✨';
+            const decoBtn = document.getElementById('deco-sticker-btn');
+            if (decoBtn) decoBtn.textContent = `${sticker} 스티커`;
+            document.getElementById('diary-stamp').textContent = `💮 ${item.stamp} ${sticker}`;
             document.getElementById('journal-modal').classList.remove('hidden');
+        }
+
+        const DECO_STICKERS = ["✨", "🌸", "☕", "🌙", "🍀", "🎧"];
+        function cycleDecoSticker() {
+            const item = ITEMS.find(x => x.id === activeId);
+            if (!item) return;
+            const cur = item.deco_sticker || '✨';
+            const idx = DECO_STICKERS.indexOf(cur);
+            item.deco_sticker = DECO_STICKERS[(idx + 1) % DECO_STICKERS.length];
+            const btn = document.getElementById('deco-sticker-btn');
+            if (btn) btn.textContent = `${item.deco_sticker} 스티커`;
+            const stampEl = document.getElementById('diary-stamp');
+            if (stampEl) stampEl.textContent = `💮 ${item.stamp} ${item.deco_sticker}`;
+            renderShelf();
         }
 
         const WASHI_PALETTE = [
@@ -714,4 +750,5 @@
         window.addEventListener('DOMContentLoaded', renderShelf);
     </script>
 </body>
+
 </html>
