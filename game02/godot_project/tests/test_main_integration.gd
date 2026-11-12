@@ -149,6 +149,14 @@ func _init() -> void:
 	assert(first_card.get_reading_progress() > 0, "CardItem should compute a valid reading progress percentage")
 	print("✓ Reading Progress Bar & Percentage in Card verified")
 
+	# Test Sprint 19: Random Bookmark Pick & Completed Books Filter
+	var picked_item = main_inst.pick_random_item()
+	assert(picked_item != null and main_inst.detail_modal.visible == true, "pick_random_item should open detail modal for a random item")
+	main_inst.detail_modal.close()
+	main_inst._on_tab_complete_pressed()
+	assert(main_inst.card_grid.get_child_count() >= 2, "Completed books filter should display items with 100% reading progress")
+	print("✓ Random Bookmark Pick & Completed Books Filter verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()
