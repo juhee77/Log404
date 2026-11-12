@@ -90,8 +90,9 @@ func setup(item) -> void:
 	if item.category == 0: # MANGA
 		cat_badge.text = " E-BOOK "
 		var vols = item.volumes.size()
+		var bm_cnt = item.get_bookmarked_volumes_count() if item.has_method("get_bookmarked_volumes_count") else 0
 		vol_badge.visible = true
-		vol_badge.text = str(vols) + "권 "
+		vol_badge.text = str(vols) + "권 " + ("🔖" if bm_cnt > 0 else "")
 		status_label.text = "🖋️ \"" + first_quote + "\""
 	else: # GACHA
 		cat_badge.text = " DIARY "

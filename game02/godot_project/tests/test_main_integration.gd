@@ -198,6 +198,15 @@ func _init() -> void:
 	assert(slam_item.updated_at >= 0, "collection_item should track updated_at timestamp")
 	print("✓ 3-Way Sort Cycler & Spine Shelf Hover Tooltip verified")
 
+	# Test Sprint 24: Per-Volume Bookmark Ribbon & Card Cover Badge
+	main_inst.detail_modal.open(slam_item)
+	main_inst.detail_modal.toggle_volume_bookmark(0)
+	assert(slam_item.volumes[0].get("bookmarked", false) == true, "toggle_volume_bookmark should set volume bookmark to true")
+	assert(slam_item.get_bookmarked_volumes_count() >= 1, "get_bookmarked_volumes_count should count bookmarked volumes")
+	main_inst.detail_modal.toggle_volume_bookmark(0)
+	assert(slam_item.volumes[0].get("bookmarked", false) == false, "toggle_volume_bookmark should toggle volume bookmark back to false")
+	print("✓ Per-Volume Bookmark Ribbon & Card Cover Badge verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

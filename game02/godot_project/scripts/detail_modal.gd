@@ -383,6 +383,15 @@ func _render_volumes() -> void:
 		date_btn.add_theme_color_override("font_color", Color(0.48, 0.38, 0.3))
 		date_btn.pressed.connect(func(): stamp_volume_date(capture_idx))
 
+		var bm_btn = Button.new()
+		var is_bm = bool(v.get("bookmarked", false))
+		bm_btn.text = "🔖" if is_bm else "🏷️"
+		bm_btn.flat = true
+		bm_btn.add_theme_font_size_override("font_size", 10)
+		bm_btn.add_theme_color_override("font_color", Color(0.85, 0.55, 0.15) if is_bm else Color(0.65, 0.58, 0.50))
+		bm_btn.tooltip_text = "이 권을 북마크에 추가/해제합니다"
+		bm_btn.pressed.connect(func(): toggle_volume_bookmark(capture_idx))
+
 		var quote_lbl = Label.new()
 		var q = v.get("quote", "")
 		quote_lbl.text = "🖋️ \"" + q + "\"" if q != "" else "🖋️ 읽고 남긴 한 줄 일기"
@@ -402,11 +411,20 @@ func _render_volumes() -> void:
 		hbox.add_child(vol_lbl)
 		hbox.add_child(status_btn)
 		hbox.add_child(date_btn)
+		hbox.add_child(bm_btn)
 		hbox.add_child(quote_lbl)
 		hbox.add_child(star_btn)
 		margin.add_child(hbox)
 		panel.add_child(margin)
 		vol_list.add_child(panel)
+
+func toggle_volume_bookmark(vol_idx: int) -> void:
+	if current_item == null or vol_idx < 0 or vol_idx >= current_item.volumes.size():
+		return
+	var cur = bool(current_item.volumes[vol_idx].get("bookmarked", false))
+	current_item.volumes[vol_idx]["bookmarked"] = not cur
+	_render_volumes()
+	diary_updated.emit(current_item)
 
 func _on_close_btn_pressed() -> void:
 	close()

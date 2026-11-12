@@ -5,6 +5,22 @@
 
 ---
 
+## 🚀 [Sprint 24] 권별 골드 북마크 리본(`🔖 북마크` / `toggle_volume_bookmark`) & 서재 카드 북마크 배지 연동
+- **시각**: 2026-11-13 05:01 KST
+- **1. 다꾸러 3인 VOC (수집러 A · 가챠러 B · 미니멀러 C)**
+  - **만년필 다꾸러 A**: *"독서 일기장 모달에서 특정 권의 대사가 감명 깊을 때 권별로 북마크 리본 스티커(`🔖 북마크`)를 꽂아둘 수 있으면 좋겠어요!"*
+  - **미니멀 수집러 C**: *"일기장을 펼치지 않고도 메인 서재 카드 표지에서 북마크가 꽂힌 작품인지 골드 리본 배지(`🔖`)로 바로 보이면 좋겠습니다!"*
+  - **가챠 수집러 B**: *"웹 인터랙티브 목업(`game02/index.html`)에서도 권별 리스트에 `🔖/🏷️` 북마크 토글 버튼이 작동하도록 동기화해 주세요!"*
+- **2. 기획 & UI/UX & Godot 4.6 개발 내역**
+  - **권별 북마크 토글(`toggle_volume_bookmark` / `bm_btn`)**: `detail_modal.gd`의 권별 행에 `🔖/🏷️` 플랫 토글 버튼을 추가하여 원터치로 북마크 상태를 변경하고 `archive_data_v2.json`에 영구 보존
+  - **서재 카드 북마크 리본 배지 연동**: `collection_item.gd`에 `get_bookmarked_volumes_count()`를 추가하고, `card_item.gd`에서 북마크된 권수가 있을 경우 권수 배지에 골드 리본(`🔖`)을 함께 표시
+  - **HTML 인터랙티브 목업 동기화**: `game02/index.html`의 권별 목록에 북마크 토글 인터랙션(`toggleVolBookmark`) 추가
+- **3. TDD & QA 검증**
+  - `tests/test_main_integration.gd`에 `toggle_volume_bookmark()` 및 `get_bookmarked_volumes_count()` 검증 추가 → 3개 헤드리스 테스트 스위트 전수 100% PASS
+  - Metal 렌더러 최신 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 캡처 및 GitHub 푸시 완료
+
+---
+
 ## 🚀 [Sprint 23] 3단 정렬 사이클러(`↕ 최신순`) & 미니 책등 호버 미리보기 툴팁(`Spine Hover Tooltip`)
 - **시각**: 2026-11-13 04:12 KST
 - **1. 다꾸러 3인 VOC (수집러 A · 가챠러 B · 미니멀러 C)**

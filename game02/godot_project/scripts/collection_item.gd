@@ -37,10 +37,8 @@ func _init(
 	icon_emoji = p_icon
 	obi_text = p_obi
 	updated_at = int(Time.get_unix_time_from_system())
-	icon_emoji = p_icon
-	obi_text = p_obi
 
-func add_volume(p_vol: int, p_status: String = "owned", p_rating: int = 5, p_quote: String = "", p_date: String = "") -> void:
+func add_volume(p_vol: int, p_status: String = "owned", p_rating: int = 5, p_quote: String = "", p_date: String = "", p_bookmarked: bool = false) -> void:
 	var date_str = p_date
 	if date_str == "":
 		var d = Time.get_date_dict_from_system()
@@ -50,8 +48,16 @@ func add_volume(p_vol: int, p_status: String = "owned", p_rating: int = 5, p_quo
 		"status": p_status,
 		"rating": p_rating,
 		"quote": p_quote,
-		"date": date_str
+		"date": date_str,
+		"bookmarked": p_bookmarked
 	})
+
+func get_bookmarked_volumes_count() -> int:
+	var count = 0
+	for v in volumes:
+		if v.get("bookmarked", false):
+			count += 1
+	return count
 
 func get_average_rating() -> float:
 	if volumes.is_empty():
