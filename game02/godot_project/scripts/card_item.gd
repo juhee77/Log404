@@ -14,6 +14,8 @@ signal clicked(item)
 @onready var obi_label: Label = $VBox/CardMargin/InnerVBox/CoverContainer/ObiPanel/ObiLabel
 @onready var title_label: Label = $VBox/CardMargin/InnerVBox/InfoContainer/TitleLabel
 @onready var author_label: Label = $VBox/CardMargin/InnerVBox/InfoContainer/AuthorLabel
+@onready var progress_bar: ProgressBar = %ProgressBar
+@onready var progress_label: Label = $VBox/CardMargin/InnerVBox/InfoContainer/ProgressRow/ProgressLabel
 @onready var status_label: Label = $VBox/CardMargin/InnerVBox/InfoContainer/QuotePanel/StatusLabel
 
 var current_item = null
@@ -21,6 +23,16 @@ var current_item = null
 func _gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 		clicked.emit(current_item)
+
+func get_reading_progress() -> float:
+	if current_item == null:
+		return 0.0
+	if current_item.status_tag == "전권완결" or current_item.status_tag == "완독":
+		return 100.0
+	if current_item.volumes.size() == 0:
+		return 30.0
+	var vols = current_item.volumes.size()
+	return clampf(float(vols) * 25.0, 20.0, 100.0)
 
 func setup(item) -> void:
 	current_item = item
@@ -33,6 +45,16 @@ func setup(item) -> void:
 			sum_r += float(v.get("rating", 5))
 		avg_r = sum_r / float(item.volumes.size())
 	author_label.text = base_author + " · ★" + String.num(avg_r, 1)
+
+	# 독서 진행률 (E-Book 리더기 & 굿노트 독서트래커 감성)
+	var prog = get_reading_progress()
+	if progress_bar != null:
+		progress_bar.value = prog
+	if progress_label != null:
+		if prog >= 100.0:
+			progress_label.text = "완독 100%"
+		else:
+			progress_label.text = str(int(prog)) + "%"
 	
 	# 다꾸 도장 스탬프 (💮 전권완결, 초판특전 등)
 	if item.status_tag != "":

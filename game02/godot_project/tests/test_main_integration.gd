@@ -143,6 +143,12 @@ func _init() -> void:
 	assert(copied.contains("슬램덩크") and main_inst.status_toast.text.contains("📋"), "copy_summary_to_clipboard should update toast and return summary")
 	print("✓ In-Modal Cover Color Cycler & Clipboard Summary Copy verified")
 
+	# Test Sprint 18: Reading Progress Bar & Percentage in Card
+	var first_card = main_inst.card_grid.get_child(0)
+	assert(first_card.has_node("%ProgressBar") or first_card.progress_bar != null, "CardItem should have a reading progress bar")
+	assert(first_card.get_reading_progress() > 0, "CardItem should compute a valid reading progress percentage")
+	print("✓ Reading Progress Bar & Percentage in Card verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

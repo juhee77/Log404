@@ -42,6 +42,20 @@ border_width_top = 1
 border_width_bottom = 1
 border_color = Color(0.82, 0.68, 0.45, 1)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_progress_bg"]
+bg_color = Color(0.92, 0.88, 0.82, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_progress_fill"]
+bg_color = Color(0.78, 0.35, 0.2, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_quote"]
 bg_color = Color(0.965, 0.94, 0.895, 1)
 border_width_left = 2
@@ -205,6 +219,27 @@ theme_override_colors/font_color = Color(0.5, 0.43, 0.38, 1)
 theme_override_font_sizes/font_size = 9
 text = "이노우에 다케히코"
 text_overrun_behavior = 3
+
+[node name="ProgressRow" type="HBoxContainer" parent="VBox/CardMargin/InnerVBox/InfoContainer"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="ProgressBar" type="ProgressBar" parent="VBox/CardMargin/InnerVBox/InfoContainer/ProgressRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 5)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_override_styles/background = SubResource("StyleBoxFlat_progress_bg")
+theme_override_styles/fill = SubResource("StyleBoxFlat_progress_fill")
+value = 60.0
+show_percentage = false
+
+[node name="ProgressLabel" type="Label" parent="VBox/CardMargin/InnerVBox/InfoContainer/ProgressRow"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.55, 0.42, 0.32, 1)
+theme_override_font_sizes/font_size = 8
+text = "60%"
 
 [node name="QuotePanel" type="PanelContainer" parent="VBox/CardMargin/InnerVBox/InfoContainer"]
 layout_mode = 2

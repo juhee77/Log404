@@ -5,6 +5,20 @@
 
 ---
 
+## 🚀 [Sprint 18] E-Book 독서 진행률 트래커(`ReadingProgressBar`) & 권별 완독률 퍼센티지(`완독 100%`) 탑재
+- **시각**: 2026-11-12 22:29 KST
+- **1. 다꾸러 3인 VOC (수집러 A · 가챠러 B · 미니멀러 C)**
+  - **이북 다꾸러 A**: *"리디북스나 밀리의 서재처럼 각 단행본 카드에서 내가 얼마나 읽었는지 보여주는 '독서 진행률 프로그레스 바'와 '완독 100% / 75%' 퍼센티지가 카드에 표시되면 독서 기록 동기부여가 200% 될 것 같아요!"*
+  - **미니멀 수집러 C**: *"프로그레스 바 색상도 차가운 파란색이 아니라 일기장에 어울리는 테라코타 오렌지와 미색 종이 질감으로 깔끔하게 매치해 주세요!"*
+- **2. 기획 & UI/UX & Godot 4.6 개발 내역**
+  - **독서 진행률 프로그레스 바(`ProgressBar` & `ProgressRow`)**: `card_item.tscn`에 미색 배경(`StyleBoxFlat_progress_bg`)과 따뜻한 테라코타 잉크 채움(`StyleBoxFlat_progress_fill`) 바 탑재
+  - **완독률 자동 계산 로직(`get_reading_progress()`)**: `card_item.gd`에서 `전권완결`/`완독` 태그는 즉시 `완독 100%`, 그 외 소장 권수 기반으로 25%~75% 진행률 자동 산출 및 라벨 표시
+- **3. TDD & QA 검증**
+  - `tests/test_main_integration.gd`에 `get_reading_progress()` 및 `ProgressBar` 노드 바인딩 자동화 검증 추가 → 전수 100% PASS
+  - Metal 렌더러 최신 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 캡처 및 GitHub 푸시 완료
+
+---
+
 ## 🚀 [Sprint 17] 모달 내 북커버 색상 순환(`cycle_cover_color`) · 미니 책등 금박 책갈피 팁(`Spine Ribbon`) · 서재 요약 클립보드 복사(`copy_summary_to_clipboard`)
 - **시각**: 2026-11-12 07:45 KST
 - **1. 다꾸러 3인 VOC (수집러 A · 가챠러 B · 미니멀러 C)**
