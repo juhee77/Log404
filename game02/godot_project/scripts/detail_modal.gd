@@ -213,12 +213,16 @@ func open(item) -> void:
 	title_label.text = "📔 " + item.title
 	author_label.text = "작가 · " + (item.author_or_series if item.author_or_series != "" else "미상")
 	var sticker = current_item.get("deco_sticker") if current_item.get("deco_sticker") != null else "✨"
-	tag_label.text = "💮 스탬프: " + current_item.status_tag + " " + sticker + "  |  " + current_item.obi_text
+	var r_tier = current_item.get("rarity_tier") if current_item.get("rarity_tier") != null else "🌟노말"
+	tag_label.text = "💮 스탬프: " + current_item.status_tag + " " + sticker + " [" + r_tier + "] | " + current_item.obi_text
 	memo_label.text = sticker + " 🖋️ \"" + (item.memo if item.memo != "" else "오늘 읽은 페이지의 감동을 일기장에 기록합니다.") + "\""
 	quote_input.text = item.memo
 	var deco_btn: Button = get_node_or_null("Panel/VBox/BodyMargin/Body/StampRow/DecoStickerBtn")
 	if deco_btn != null:
 		deco_btn.text = sticker + "스티커"
+	var r_btn: Button = get_node_or_null("Panel/VBox/BodyMargin/Body/StampRow/RarityBtn")
+	if r_btn != null:
+		r_btn.text = r_tier
 	_apply_ink_style()
 	_apply_washi_style()
 	
@@ -245,8 +249,21 @@ func apply_stamp(stamp_name: String) -> void:
 		return
 	current_item.status_tag = stamp_name
 	var sticker = current_item.get("deco_sticker") if current_item.get("deco_sticker") != null else "✨"
-	tag_label.text = "💮 스탬프: " + current_item.status_tag + " " + sticker + "  |  " + current_item.obi_text
+	var r_tier = current_item.get("rarity_tier") if current_item.get("rarity_tier") != null else "🌟노말"
+	tag_label.text = "💮 스탬프: " + current_item.status_tag + " " + sticker + " [" + r_tier + "] | " + current_item.obi_text
 	diary_updated.emit(current_item)
+
+func cycle_rarity_tier() -> String:
+	if current_item == null:
+		return "🌟노말"
+	var r = current_item.cycle_rarity_tier() if current_item.has_method("cycle_rarity_tier") else "🌟노말"
+	var r_btn: Button = get_node_or_null("Panel/VBox/BodyMargin/Body/StampRow/RarityBtn")
+	if r_btn != null:
+		r_btn.text = r
+	var sticker = current_item.get("deco_sticker") if current_item.get("deco_sticker") != null else "✨"
+	tag_label.text = "💮 스탬프: " + current_item.status_tag + " " + sticker + " [" + r + "] | " + current_item.obi_text
+	diary_updated.emit(current_item)
+	return r
 
 func cycle_deco_sticker() -> String:
 	if current_item == null:

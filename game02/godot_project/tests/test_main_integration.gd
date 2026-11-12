@@ -230,6 +230,18 @@ func _init() -> void:
 	assert(slam_item.volumes.size() == prev_vols + 1, "quick_advance_volume should append new volume to item")
 	print("✓ Deco Sticker Pack Cycler & Quick Volume Advance verified")
 
+	# Test Sprint 28: Collector Rarity Tier Cycler & Smart Tag Quick Filter
+	var new_rarity = main_inst.detail_modal.cycle_rarity_tier()
+	assert(new_rarity in ["🌟노말", "💎레어", "👑슈퍼레어", "🔮시크릿"], "cycle_rarity_tier should cycle among rarity presets")
+	var count_all = main_inst.filter_by_smart_tag("#전체")
+	assert(count_all >= 6, "filter_by_smart_tag(#전체) should show all items")
+	var count_manga = main_inst.filter_by_smart_tag("#만화")
+	assert(count_manga >= 4, "filter_by_smart_tag(#만화) should filter to manga items")
+	var count_gacha = main_inst.filter_by_smart_tag("#가챠")
+	assert(count_gacha >= 2, "filter_by_smart_tag(#가챠) should filter to gacha items")
+	main_inst.filter_by_smart_tag("#전체")
+	print("✓ Collector Rarity Tier Cycler & Smart Tag Quick Filter verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

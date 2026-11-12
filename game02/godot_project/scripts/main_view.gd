@@ -272,6 +272,30 @@ func _on_stat_firsts_clicked() -> void:
 	_render_cards()
 	_show_toast("🔖 초판 스탬프 보유 작품만 필터링되었습니다.")
 
+func filter_by_smart_tag(tag: String) -> int:
+	filter_firsts_only = false
+	filter_completed_only = false
+	filter_favorites_only = false
+	search_input.text = ""
+	match tag:
+		"#전체":
+			archive_state.current_filter = -1
+		"#만화":
+			archive_state.current_filter = 0
+		"#가챠":
+			archive_state.current_filter = 1
+		"#완독":
+			filter_completed_only = true
+		"#초판":
+			filter_firsts_only = true
+		"#인생작":
+			filter_favorites_only = true
+		_:
+			search_input.text = tag
+	_render_cards()
+	_show_toast("🏷️ 스마트 태그: " + tag)
+	return card_grid.get_child_count()
+
 func _on_sort_btn_pressed() -> void:
 	sort_mode = (sort_mode + 1) % 3
 	if sort_btn != null:

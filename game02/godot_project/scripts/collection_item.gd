@@ -18,6 +18,7 @@ var highlight_enabled: bool = false
 var pen_nib_size: int = 11
 var washi_tape_color: String = "#f4d394"
 var deco_sticker: String = "✨"
+var rarity_tier: String = "🌟노말"
 var updated_at: int = 0
 var volumes: Array = []
 
@@ -95,6 +96,16 @@ func cycle_deco_sticker() -> String:
 	updated_at = int(Time.get_unix_time_from_system())
 	return deco_sticker
 
+func cycle_rarity_tier() -> String:
+	const PRESETS = ["🌟노말", "💎레어", "👑슈퍼레어", "🔮시크릿"]
+	var idx = PRESETS.find(rarity_tier)
+	if idx == -1:
+		rarity_tier = PRESETS[0]
+	else:
+		rarity_tier = PRESETS[(idx + 1) % PRESETS.size()]
+	updated_at = int(Time.get_unix_time_from_system())
+	return rarity_tier
+
 func to_dict() -> Dictionary:
 	return {
 		"id": id,
@@ -113,6 +124,7 @@ func to_dict() -> Dictionary:
 		"pen_nib_size": pen_nib_size,
 		"washi_tape_color": washi_tape_color,
 		"deco_sticker": deco_sticker,
+		"rarity_tier": rarity_tier,
 		"updated_at": updated_at,
 		"volumes": volumes
 	}

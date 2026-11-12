@@ -281,6 +281,7 @@
                         <div class="flex items-center gap-1.5">
                             <button id="tape-cycle-btn" onclick="cycleWashiTape()" class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">🎨 마테 옐로우</button>
                             <button id="deco-sticker-btn" onclick="cycleDecoSticker()" class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">✨ 스티커</button>
+                            <button id="rarity-cycle-btn" onclick="cycleRarityTier()" class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">💎 레어</button>
                             <button onclick="copyBookQuoteCard()" class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">💌 감상 카드 공유</button>
                             <button onclick="closeJournalModal()" class="w-7 h-7 rounded-full bg-[#efe7da] hover:bg-[#e2d6c5] text-[#5c4938] text-xs font-bold cursor-pointer">✕</button>
                         </div>
@@ -512,7 +513,7 @@
                         <div class="masking-tape absolute -top-2 left-1/2 -translate-x-1/2"></div>
                         <div class="flex gap-3.5 items-end">
                             <div class="w-24 ebook-cover shrink-0 flex flex-col justify-between p-2.5 text-white" style="background:${item.color}">
-                                <span class="text-[8px] font-bold opacity-80">${item.category === 'manga' ? 'E-BOOK' : 'GACHA'}</span>
+                                <span class="text-[8px] font-bold opacity-80">${item.category === 'manga' ? 'E-BOOK' : (item.rarity_tier || '🔮가챠')}</span>
                                 <span class="text-3xl text-center my-auto">${item.icon}</span>
                                 <div class="bg-[#fff8e7] text-[#2c221e] text-[8px] font-bold px-1 py-0.5 rounded-xs truncate text-center">
                                     ${item.obi}
@@ -583,10 +584,27 @@
             renderDiaryVolumes(item);
             applyJournalWashiTape(item.washi_tape_color || '#f4d394');
             const sticker = item.deco_sticker || '✨';
+            const rTier = item.rarity_tier || '🌟 노말';
             const decoBtn = document.getElementById('deco-sticker-btn');
             if (decoBtn) decoBtn.textContent = `${sticker} 스티커`;
-            document.getElementById('diary-stamp').textContent = `💮 ${item.stamp} ${sticker}`;
+            const rBtn = document.getElementById('rarity-cycle-btn');
+            if (rBtn) rBtn.textContent = rTier;
+            document.getElementById('diary-stamp').textContent = `💮 ${item.stamp} ${sticker} [${rTier}]`;
             document.getElementById('journal-modal').classList.remove('hidden');
+        }
+
+        const RARITY_PRESETS = ["🌟 노말", "💎 레어", "👑 슈퍼레어", "🔮 시크릿"];
+        function cycleRarityTier() {
+            const item = ITEMS.find(x => x.id === activeId);
+            if (!item) return;
+            const cur = item.rarity_tier || '🌟 노말';
+            const idx = RARITY_PRESETS.indexOf(cur);
+            item.rarity_tier = RARITY_PRESETS[(idx + 1) % RARITY_PRESETS.length];
+            const btn = document.getElementById('rarity-cycle-btn');
+            if (btn) btn.textContent = item.rarity_tier;
+            const stampEl = document.getElementById('diary-stamp');
+            if (stampEl) stampEl.textContent = `💮 ${item.stamp} ${item.deco_sticker || '✨'} [${item.rarity_tier}]`;
+            renderShelf();
         }
 
         const DECO_STICKERS = ["✨", "🌸", "☕", "🌙", "🍀", "🎧"];
@@ -599,7 +617,7 @@
             const btn = document.getElementById('deco-sticker-btn');
             if (btn) btn.textContent = `${item.deco_sticker} 스티커`;
             const stampEl = document.getElementById('diary-stamp');
-            if (stampEl) stampEl.textContent = `💮 ${item.stamp} ${item.deco_sticker}`;
+            if (stampEl) stampEl.textContent = `💮 ${item.stamp} ${item.deco_sticker} [${item.rarity_tier || '🌟 노말'}]`;
             renderShelf();
         }
 

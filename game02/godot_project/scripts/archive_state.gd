@@ -196,6 +196,7 @@ func load_from_file(custom_path: String = "") -> bool:
 			it.pen_nib_size = int(d.get("pen_nib_size", 11))
 			it.washi_tape_color = d.get("washi_tape_color", "#f4d394")
 			it.deco_sticker = d.get("deco_sticker", "✨")
+			it.rarity_tier = d.get("rarity_tier", "🌟노말")
 			it.updated_at = int(d.get("updated_at", 0))
 			it.volumes = d.get("volumes", [])
 			items.append(it)

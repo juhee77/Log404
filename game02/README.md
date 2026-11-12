@@ -5,7 +5,7 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 
 ---
 
-## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 27)
+## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 28)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
@@ -14,6 +14,11 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 ---
 
 ## 🚀 최신 스프린트 업데이트 요약 ([전체 회의록 보기](SPRINT_LOG.md))
+
+### [Sprint 28] 소장품 레어도 등급 순환(`💎 레어도` / `cycle_rarity_tier`) & 스마트 퀵 태그 필터(`filter_by_smart_tag`)
+- **소장품 레어도 등급 순환(`cycle_rarity_tier`)**: 모달 내 `💎레어` 버튼으로 4종 등급(`🌟노말`, `💎레어`, `👑슈퍼레어`, `🔮시크릿`)을 원터치 순환 및 메인 가챠 카드 배지에 실시간 반영
+- **스마트 퀵 태그 필터링(`filter_by_smart_tag`)**: `#완독`, `#초판`, `#인생작`, `#가챠`, `#만화` 등 핵심 카테고리/속성을 1초 만에 스마트 필터링
+- **웹 목업 동기화**: `game02/index.html`에 `cycleRarityTier()` 및 가챠 카드 레어도 배지 완벽 연동
 
 ### [Sprint 27] 일기장 다꾸 데코 스티커 팩(`✨ 스티커` / `cycle_deco_sticker`) & 1초 퀵 진도 추가(`quick_advance_volume`)
 - **다꾸 데코 스티커 팩(`DecoStickerBtn` / `cycle_deco_sticker`)**: 일기장 모달에서 6종 데코 스티커(`✨`, `🌸`, `☕`, `🌙`, `🍀`, `🎧`)를 원터치로 변경하고 일기장 상단 및 메인 카드 배지에 실시간 반영
