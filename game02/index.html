@@ -256,6 +256,7 @@
                     <div class="flex items-center justify-between pb-3 border-b border-[#e2d6c5]">
                         <span class="serif-font text-sm font-bold text-[#2c221e]">🖋️ 나만의 독서 노트 & 권별 밑줄</span>
                         <div class="flex items-center gap-1.5">
+                            <button id="tape-cycle-btn" onclick="cycleWashiTape()" class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">🎨 마테 옐로우</button>
                             <button onclick="copyBookQuoteCard()" class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">💌 감상 카드 공유</button>
                             <button onclick="closeJournalModal()" class="w-7 h-7 rounded-full bg-[#efe7da] hover:bg-[#e2d6c5] text-[#5c4938] text-xs font-bold cursor-pointer">✕</button>
                         </div>
@@ -562,7 +563,36 @@
             document.getElementById('diary-memo').textContent = item.memo;
 
             renderDiaryVolumes(item);
+            applyJournalWashiTape(item.washi_tape_color || '#f4d394');
             document.getElementById('journal-modal').classList.remove('hidden');
+        }
+
+        const WASHI_PALETTE = [
+            { color: '#f4d394', name: '버터옐로우' },
+            { color: '#e8a598', name: '피치핑크' },
+            { color: '#a8c3a0', name: '세이지그린' },
+            { color: '#a5c4d4', name: '스카이블루' },
+            { color: '#d4a5d4', name: '라벤더' }
+        ];
+
+        function applyJournalWashiTape(hex) {
+            const tape = document.querySelector('#journal-modal .masking-tape');
+            if (tape) tape.style.background = hex;
+            const btn = document.getElementById('tape-cycle-btn');
+            if (btn) {
+                const found = WASHI_PALETTE.find(p => p.color.toLowerCase() === hex.toLowerCase()) || WASHI_PALETTE[0];
+                btn.textContent = `🎨 마테 ${found.name}`;
+            }
+        }
+
+        function cycleWashiTape() {
+            const item = ITEMS.find(x => x.id === activeId);
+            if (!item) return;
+            const curHex = (item.washi_tape_color || '#f4d394').toLowerCase();
+            const idx = WASHI_PALETTE.findIndex(p => p.color.toLowerCase() === curHex);
+            const nextIdx = (idx + 1) % WASHI_PALETTE.length;
+            item.washi_tape_color = WASHI_PALETTE[nextIdx].color;
+            applyJournalWashiTape(item.washi_tape_color);
         }
 
         function renderDiaryVolumes(item) {

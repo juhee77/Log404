@@ -245,6 +245,12 @@ size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 10
 text = "🏷️띠지"
 
+[node name="TapeCycleBtn" type="Button" parent="Panel/VBox/BodyMargin/Body/StampRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 10
+text = "🎗️테이프"
+
 [node name="QuoteEditRow" type="HBoxContainer" parent="Panel/VBox/BodyMargin/Body"]
 layout_mode = 2
 theme_override_constants/separation = 6
@@ -334,6 +340,7 @@ theme_override_constants/separation = 5
 [connection signal="pressed" from="Panel/VBox/BodyMargin/Body/StampRow/StampFav" to="." method="_on_stamp_fav_pressed"]
 [connection signal="pressed" from="Panel/VBox/BodyMargin/Body/StampRow/StampWish" to="." method="_on_stamp_wish_pressed"]
 [connection signal="pressed" from="Panel/VBox/BodyMargin/Body/StampRow/ObiCycleBtn" to="." method="cycle_obi_preset"]
+[connection signal="pressed" from="Panel/VBox/BodyMargin/Body/StampRow/TapeCycleBtn" to="." method="cycle_washi_tape"]
 [connection signal="pressed" from="Panel/VBox/BodyMargin/Body/QuoteEditRow/SaveQuoteBtn" to="." method="_on_save_quote_btn_pressed"]
 [connection signal="pressed" from="Panel/VBox/BodyMargin/Body/QuoteEditRow/HighlightBtn" to="." method="toggle_quote_highlight"]
 [connection signal="pressed" from="Panel/VBox/BodyMargin/Body/InkRow/InkEspresso" to="." method="_on_ink_espresso_pressed"]

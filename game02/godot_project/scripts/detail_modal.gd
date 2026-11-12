@@ -25,9 +25,11 @@ var editing_vol_index: int = -1
 var obi_cursor: int = 0
 var icon_cursor: int = 0
 var color_cursor: int = 0
+var washi_cursor: int = 0
 
 const ICON_PRESETS = ["📖", "📕", "✨", "🎀", "🏆", "🔮", "🌸", "🏀", "🪄", "🐱", "🏐", "🌙"]
 const COLOR_PRESETS = ["#b91c1c", "#1d4ed8", "#c2410c", "#be185d", "#15803d", "#6d28d9", "#0f766e"]
+const WASHI_PRESETS = ["#f4d394", "#fbcfe8", "#bbf7d0", "#bae6fd", "#e7d5c4"]
 const INK_PRESETS = [
 	{"name": "에스프레소", "hex": "#2c221e"},
 	{"name": "버건디", "hex": "#7f1d1d"},
@@ -49,6 +51,14 @@ func _ready() -> void:
 		if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_LEFT:
 			cycle_cover_icon()
 	)
+	var washi_node: ColorRect = get_node_or_null("Panel/VBox/BodyMargin/Body/TopInfo/CoverRect/ModalWashiTape")
+	if washi_node != null:
+		washi_node.mouse_filter = Control.MOUSE_FILTER_STOP
+		washi_node.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+		washi_node.gui_input.connect(func(ev):
+			if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_LEFT:
+				cycle_washi_tape()
+		)
 
 func _style_diary_controls() -> void:
 	var stamp_sb = StyleBoxFlat.new()
@@ -206,6 +216,7 @@ func open(item) -> void:
 	memo_label.text = "🖋️ \"" + (item.memo if item.memo != "" else "오늘 읽은 페이지의 감동을 일기장에 기록합니다.") + "\""
 	quote_input.text = item.memo
 	_apply_ink_style()
+	_apply_washi_style()
 	
 	cover_rect.color = Color.from_string(item.cover_color, Color(0.65, 0.25, 0.2))
 	cover_icon.text = item.icon_emoji if item.icon_emoji != "" else "📖"
@@ -261,6 +272,26 @@ func cycle_cover_color() -> void:
 	current_item.cover_color = COLOR_PRESETS[color_cursor]
 	cover_rect.color = Color.from_string(current_item.cover_color, Color(0.65, 0.25, 0.2))
 	diary_updated.emit(current_item)
+
+func cycle_washi_tape() -> String:
+	if current_item == null:
+		return "#f4d394"
+	washi_cursor = (washi_cursor + 1) % WASHI_PRESETS.size()
+	if WASHI_PRESETS[washi_cursor] == current_item.get("washi_tape_color"):
+		washi_cursor = (washi_cursor + 1) % WASHI_PRESETS.size()
+	current_item.washi_tape_color = WASHI_PRESETS[washi_cursor]
+	_apply_washi_style()
+	diary_updated.emit(current_item)
+	return current_item.washi_tape_color
+
+func _apply_washi_style() -> void:
+	if current_item == null:
+		return
+	var washi_node: ColorRect = get_node_or_null("Panel/VBox/BodyMargin/Body/TopInfo/CoverRect/ModalWashiTape")
+	if washi_node != null:
+		var c = Color.from_string(current_item.get("washi_tape_color"), Color(0.94, 0.82, 0.56, 0.85))
+		c.a = 0.88
+		washi_node.color = c
 
 func _on_stamp_complete_pressed() -> void:
 	apply_stamp("전권완결")

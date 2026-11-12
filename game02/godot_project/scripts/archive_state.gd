@@ -194,6 +194,7 @@ func load_from_file(custom_path: String = "") -> bool:
 			it.memo_ink_color = d.get("memo_ink_color", "#2c221e")
 			it.highlight_enabled = d.get("highlight_enabled", false)
 			it.pen_nib_size = int(d.get("pen_nib_size", 11))
+			it.washi_tape_color = d.get("washi_tape_color", "#f4d394")
 			it.updated_at = int(d.get("updated_at", 0))
 			it.volumes = d.get("volumes", [])
 			items.append(it)

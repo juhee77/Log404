@@ -214,6 +214,13 @@ func _init() -> void:
 	assert(quote_card.contains("독서 감상 카드") and quote_card.contains("슬램덩크"), "copy_book_quote_card should format quote card for clipboard")
 	print("✓ Pen Nib Size Cycler & Book Quote Card Share verified")
 
+	# Test Sprint 26: Washi Tape Pattern Cycler & Library Infographic Briefing
+	var new_washi = main_inst.detail_modal.cycle_washi_tape()
+	assert(new_washi in main_inst.detail_modal.WASHI_PRESETS, "cycle_washi_tape should cycle washi colors")
+	var info_text = main_inst.show_library_infographic()
+	assert(info_text.contains("소장:") and info_text.contains("완독률:"), "show_library_infographic should output library stats briefing")
+	print("✓ Washi Tape Cycler & Library Infographic Briefing verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

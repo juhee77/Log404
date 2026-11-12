@@ -5,7 +5,7 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 
 ---
 
-## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 25)
+## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 26)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
@@ -14,6 +14,11 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 ---
 
 ## 🚀 최신 스프린트 업데이트 요약 ([전체 회의록 보기](SPRINT_LOG.md))
+
+### [Sprint 26] 마스킹 테이프 색상 순환(`🎨 마테` / `cycle_washi_tape`) & 서재 인포그래픽 통계 브리핑(`show_library_infographic`)
+- **다꾸 마스킹 테이프 색상 순환(`TapeCycleBtn` / `cycle_washi_tape`)**: 일기장 모달 상단 마스킹 테이프를 5종 파스텔 팔레트(`버터옐로우`, `피치핑크`, `세이지그린`, `스카이블루`, `라벤더`)로 원터치 변경하고 상태를 영구 보존
+- **서재 통계 인포그래픽 브리핑(`show_library_infographic`)**: 서재 전체의 소장 총 권수, 완독 권수, 북마크 권수, 평균 평점을 정갈한 요약 브리핑 카드로 출력
+- **웹 목업 동기화**: `game02/index.html`에 `applyJournalWashiTape` 및 `cycleWashiTape()` 완벽 동기화
 
 ### [Sprint 25] 만년필 펜촉 두께 순환(`✒️ 펜촉` / `cycle_pen_nib_size`) & 독서 감상 카드 공유(`copy_book_quote_card`)
 - **만년필 펜촉 두께 순환(`cycle_pen_nib_size`)**: 일기장 모달에서 10px(세필), 12px(중필), 14px(태필) 폰트 크기를 순환 선택하여 캘리그래피 손글씨 감성 구현

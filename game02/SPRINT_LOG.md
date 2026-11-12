@@ -5,6 +5,22 @@
 
 ---
 
+## 🚀 [Sprint 26] 마스킹 테이프 색상 순환(`🎨 마테` / `cycle_washi_tape`) & 서재 인포그래픽 통계 브리핑(`show_library_infographic`)
+- **시각**: 2026-11-13 07:00 KST
+- **1. 다꾸러 3인 VOC (수집러 A · 가챠러 B · 미니멀러 C)**
+  - **만년필 다꾸러 A**: *"일기장 상단의 마스킹 테이프 색상도 책의 분위기에 맞춰 버터옐로우, 피치핑크, 세이지그린, 스카이블루, 라벤더로 원터치 변경할 수 있는 `🎨 마테` 순환 버튼이 있으면 좋겠어요!"*
+  - **미니멀 수집러 C**: *"상단 서재 통계 바(보관 권수, 완독률 등)를 클릭하거나 호출할 때 전체 서재의 통계 브리핑(소장 권수, 완독 권수, 북마크 수, 평균 별점)을 정갈한 인포그래픽 텍스트로 조회할 수 있으면 좋겠어요!"*
+  - **가챠 수집러 B**: *"웹 인터랙티브 목업(`game02/index.html`)에서도 마스킹 테이프 5종 파스텔 팔레트 순환 인터랙션이 그대로 동작하도록 동기화해 주세요!"*
+- **2. 기획 & UI/UX & Godot 4.6 개발 내역**
+  - **다꾸 마스킹 테이프 색상 순환(`TapeCycleBtn` / `cycle_washi_tape`)**: `collection_item.gd`에 `washi_tape_color` 필드 추가 및 `archive_state.gd` JSON 저장/불러오기 연동. 모달 상단 마스킹 테이프 색상을 5종 파스텔 팔레트(`버터옐로우`, `피치핑크`, `세이지그린`, `스카이블루`, `라벤더`)로 원터치 순환 적용 (`_apply_washi_style()`)
+  - **서재 통계 인포그래픽 브리핑(`show_library_infographic()`)**: `main_view.gd`에서 서재의 소장 총 권수, 완독률, 북마크 권수, 컬렉션 평점을 종합 브리핑하는 인포그래픽 브리핑 기능 탑재
+  - **HTML 인터랙티브 목업 동기화**: `game02/index.html`에 `applyJournalWashiTape` 및 `cycleWashiTape()` 추가하여 Godot과 100% 동일한 비주얼/인터랙션 경험 제공
+- **3. TDD & QA 검증**
+  - `tests/test_main_integration.gd`에 `cycle_washi_tape()` 및 `show_library_infographic()` 검증 추가 → 3개 헤드리스 테스트 스위트 전수 100% PASS
+  - Metal 렌더러 최신 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 캡처 및 GitHub 푸시 완료
+
+---
+
 ## 🚀 [Sprint 25] 만년필 펜촉 두께 순환(`✒️ 펜촉` / `cycle_pen_nib_size`) & 독서 감상 카드 공유(`copy_book_quote_card`)
 - **시각**: 2026-11-13 05:06 KST
 - **1. 다꾸러 3인 VOC (수집러 A · 가챠러 B · 미니멀러 C)**

@@ -285,6 +285,25 @@ func copy_summary_to_clipboard() -> String:
 	_show_toast("📋 내 서재 일기장 요약 리포트가 클립보드에 복사되었습니다!")
 	return summary
 
+func show_library_infographic() -> String:
+	var total_bms = 0
+	var sum_quotes = 0
+	for it in archive_state.items:
+		total_bms += it.get_bookmarked_volumes_count() if it.has_method("get_bookmarked_volumes_count") else 0
+		for v in it.volumes:
+			if v.get("quote", "") != "":
+				sum_quotes += 1
+	var prog = int(get_overall_reading_progress())
+	var text = "📊 소장: %d종 (%d권) · 완독률: %d%% · 북마크: %d권 · 밑줄: %d개" % [
+		archive_state.items.size(),
+		archive_state.get_total_volumes(),
+		prog,
+		total_bms,
+		sum_quotes
+	]
+	_show_toast(text)
+	return text
+
 func _on_card_clicked(item) -> void:
 	detail_modal.open(item)
 
