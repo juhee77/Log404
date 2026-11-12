@@ -104,6 +104,11 @@ func _style_diary_controls() -> void:
 	rem_btn.add_theme_stylebox_override("normal", cream_btn)
 	rem_btn.add_theme_color_override("font_color", Color(0.52, 0.36, 0.28))
 
+	var share_btn: Button = get_node_or_null("Panel/VBox/BodyMargin/Body/TopInfo/MetaVBox/BtnRow/ShareCardBtn")
+	if share_btn != null:
+		share_btn.add_theme_stylebox_override("normal", cream_btn)
+		share_btn.add_theme_color_override("font_color", Color(0.28, 0.45, 0.38))
+
 	var del_btn: Button = $Panel/VBox/BodyMargin/Body/TopInfo/MetaVBox/BtnRow/DeleteBtn
 	del_btn.add_theme_stylebox_override("normal", cream_btn)
 	del_btn.add_theme_color_override("font_color", Color(0.78, 0.25, 0.20))
@@ -138,12 +143,43 @@ func toggle_quote_highlight() -> void:
 	_apply_ink_style()
 	diary_updated.emit(current_item)
 
+func cycle_pen_nib_size() -> int:
+	if current_item == null:
+		return 11
+	var cur = int(current_item.get("pen_nib_size")) if current_item.get("pen_nib_size") != null else 11
+	if cur == 10:
+		current_item.pen_nib_size = 12
+	elif cur == 12:
+		current_item.pen_nib_size = 14
+	else:
+		current_item.pen_nib_size = 10
+	_apply_ink_style()
+	diary_updated.emit(current_item)
+	return current_item.pen_nib_size
+
+func copy_book_quote_card() -> String:
+	if current_item == null:
+		return ""
+	var lines: Array = []
+	lines.append("[📔 주희의 다꾸 서재 — 독서 감상 카드]")
+	lines.append("📖 작품: " + current_item.title + " (" + current_item.author_or_series + ")")
+	var avg_str = String.num(current_item.get_average_rating(), 1) if current_item.has_method("get_average_rating") else "5.0"
+	lines.append("💮 스탬프: " + current_item.status_tag + " | 평점: ★" + avg_str)
+	lines.append("🖋️ \"" + current_item.memo + "\"")
+	if current_item.obi_text != "":
+		lines.append("🏷️ 띠지: " + current_item.obi_text)
+	var card_text = "\n".join(lines)
+	DisplayServer.clipboard_set(card_text)
+	return card_text
+
 func _apply_ink_style() -> void:
 	if current_item == null:
 		return
 	var ink = Color.from_string(current_item.memo_ink_color, Color(0.18, 0.14, 0.11))
 	if memo_label != null:
 		memo_label.add_theme_color_override("font_color", ink)
+		var nib = current_item.get("pen_nib_size") if current_item.get("pen_nib_size") != null else 11
+		memo_label.add_theme_font_size_override("font_size", int(nib))
 		if current_item.highlight_enabled:
 			var hl_sb = StyleBoxFlat.new()
 			hl_sb.bg_color = Color(1.0, 0.94, 0.70, 0.75) # Warm pastel highlighter yellow

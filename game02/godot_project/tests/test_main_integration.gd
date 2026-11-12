@@ -207,6 +207,13 @@ func _init() -> void:
 	assert(slam_item.volumes[0].get("bookmarked", false) == false, "toggle_volume_bookmark should toggle volume bookmark back to false")
 	print("✓ Per-Volume Bookmark Ribbon & Card Cover Badge verified")
 
+	# Test Sprint 25: Pen Nib Size Cycler & Book Quote Card Share
+	var new_nib = main_inst.detail_modal.cycle_pen_nib_size()
+	assert(new_nib in [10, 12, 14], "cycle_pen_nib_size should cycle nib font size among 10, 12, 14")
+	var quote_card = main_inst.detail_modal.copy_book_quote_card()
+	assert(quote_card.contains("독서 감상 카드") and quote_card.contains("슬램덩크"), "copy_book_quote_card should format quote card for clipboard")
+	print("✓ Pen Nib Size Cycler & Book Quote Card Share verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

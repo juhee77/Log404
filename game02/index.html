@@ -255,7 +255,10 @@
                 <div>
                     <div class="flex items-center justify-between pb-3 border-b border-[#e2d6c5]">
                         <span class="serif-font text-sm font-bold text-[#2c221e]">🖋️ 나만의 독서 노트 & 권별 밑줄</span>
-                        <button onclick="closeJournalModal()" class="w-7 h-7 rounded-full bg-[#efe7da] hover:bg-[#e2d6c5] text-[#5c4938] text-xs font-bold cursor-pointer">✕</button>
+                        <div class="flex items-center gap-1.5">
+                            <button onclick="copyBookQuoteCard()" class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">💌 감상 카드 공유</button>
+                            <button onclick="closeJournalModal()" class="w-7 h-7 rounded-full bg-[#efe7da] hover:bg-[#e2d6c5] text-[#5c4938] text-xs font-bold cursor-pointer">✕</button>
+                        </div>
                     </div>
 
                     <!-- Overall Diary Thought -->
@@ -286,6 +289,7 @@
                             <button onclick="setDiaryInk('#7f1d1d')" class="px-2 py-0.5 rounded bg-[#f3ece1] border border-[#d6c7b2] text-[#7f1d1d] font-semibold cursor-pointer">🍷버건디</button>
                             <button onclick="setDiaryInk('#78350f')" class="px-2 py-0.5 rounded bg-[#f3ece1] border border-[#d6c7b2] text-[#78350f] font-semibold cursor-pointer">🍂세피아</button>
                             <button onclick="setDiaryInk('#14532d')" class="px-2 py-0.5 rounded bg-[#f3ece1] border border-[#d6c7b2] text-[#14532d] font-semibold cursor-pointer">🌲포레스트</button>
+                            <button onclick="cycleDiaryNib()" id="btn-nib" class="px-2 py-0.5 rounded bg-[#f3ece1] border border-[#d6c7b2] text-[#2c221e] font-semibold cursor-pointer">✒️펜촉(12px)</button>
                         </div>
                     </div>
 
@@ -415,6 +419,26 @@
                 memoEl.style.padding = '0';
                 btn.classList.remove('ring-2', 'ring-amber-500');
             }
+        }
+
+        function cycleDiaryNib() {
+            const item = ITEMS.find(x => x.id === activeId);
+            if (!item) return;
+            const cur = item.nib || 12;
+            item.nib = cur === 10 ? 12 : (cur === 12 ? 14 : 10);
+            const memoEl = document.getElementById('diary-memo');
+            const btn = document.getElementById('btn-nib');
+            memoEl.style.fontSize = item.nib + 'px';
+            btn.textContent = `✒️펜촉(${item.nib}px)`;
+        }
+
+        function copyBookQuoteCard() {
+            const item = ITEMS.find(x => x.id === activeId);
+            if (!item) return;
+            const text = `[📔 주희의 다꾸 서재 — 독서 감상 카드]\n📖 작품: ${item.title} (${item.author})\n💮 스탬프: ${item.stamp}\n🖋️ "${item.memo}"\n🏷️ 띠지: ${item.obi}`;
+            navigator.clipboard.writeText(text).then(() => {
+                alert('💌 독서 감상 카드가 클립보드에 복사되었습니다!\nSNS나 다이어리에 공유해보세요.');
+            });
         }
 
         function switchCategory(cat) {

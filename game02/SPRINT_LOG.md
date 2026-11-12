@@ -5,6 +5,23 @@
 
 ---
 
+## 🚀 [Sprint 25] 만년필 펜촉 두께 순환(`✒️ 펜촉` / `cycle_pen_nib_size`) & 독서 감상 카드 공유(`copy_book_quote_card`)
+- **시각**: 2026-11-13 05:06 KST
+- **1. 다꾸러 3인 VOC (수집러 A · 가챠러 B · 미니멀러 C)**
+  - **만년필 다꾸러 A**: *"일기장 밑줄 문장의 폰트 크기를 세필(Fine 10px), 중필(Medium 12px), 태필(Broad 14px)로 직접 조절하는 펜촉 두께 버튼(`✒️펜촉`)이 있으면 캘리그래피 감성이 극대화될 것 같아요!"*
+  - **미니멀 수집러 C**: *"책 1권의 감상평과 스탬프, 평점을 인스타나 SNS에 예쁘게 복사할 수 있는 '💌 감상 카드 공유' 버튼을 모달에 달아주세요!"*
+  - **가챠 수집러 B**: *"메인 서재 카드에서도 가챠·굿즈 아이템은 진행률 바 대신 `🔮가챠` 굿즈 배지가 표시되어 수집 앨범 느낌이 살았으면 좋겠어요!"*
+- **2. 기획 & UI/UX & Godot 4.6 개발 내역**
+  - **만년필 펜촉 두께 순환(`NibBtn` / `cycle_pen_nib_size`)**: `collection_item.gd`에 `pen_nib_size`(10, 12, 14) 필드를 탑재하고, `detail_modal.gd`에서 원터치 순환 시 밑줄 라벨 글자 크기 동적 반영 및 영구 보존
+  - **독서 감상 카드 클립보드 복사(`ShareCardBtn` / `copy_book_quote_card`)**: 펼친 독서노트 상단에 `💌 공유` 버튼을 배치해 한 줄 감상 카드를 시스템 클립보드에 원터치 복사 지원
+  - **가챠 전용 카드 라벨링**: `card_item.gd`에서 `category == 1`일 때 `🔮가챠` 배지와 `진열완료 / 보관중` 맞춤 텍스트 제공
+  - **HTML 인터랙티브 목업 동기화**: `game02/index.html`에 펜촉 크기 순환(`cycleDiaryNib`) 및 감상 카드 복사(`copyBookQuoteCard`) 탑재
+- **3. TDD & QA 검증**
+  - `tests/test_main_integration.gd`에 `cycle_pen_nib_size()` 및 `copy_book_quote_card()` 검증 추가 → 3개 헤드리스 테스트 스위트 전수 100% PASS
+  - Metal 렌더러 최신 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 캡처 및 GitHub 푸시 완료
+
+---
+
 ## 🚀 [Sprint 24] 권별 골드 북마크 리본(`🔖 북마크` / `toggle_volume_bookmark`) & 서재 카드 북마크 배지 연동
 - **시각**: 2026-11-13 05:01 KST
 - **1. 다꾸러 3인 VOC (수집러 A · 가챠러 B · 미니멀러 C)**

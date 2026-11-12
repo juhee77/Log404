@@ -194,6 +194,11 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 10
 text = "- 권 삭제"
 
+[node name="ShareCardBtn" type="Button" parent="Panel/VBox/BodyMargin/Body/TopInfo/MetaVBox/BtnRow"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 10
+text = "💌 공유"
+
 [node name="DeleteBtn" type="Button" parent="Panel/VBox/BodyMargin/Body/TopInfo/MetaVBox/BtnRow"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.85, 0.25, 0.2, 1)
@@ -294,6 +299,11 @@ size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 10
 text = "🌲포레스트"
 
+[node name="NibBtn" type="Button" parent="Panel/VBox/BodyMargin/Body/InkRow"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 10
+text = "✒️펜촉"
+
 [node name="VolSection" type="VBoxContainer" parent="Panel/VBox/BodyMargin/Body"]
 layout_mode = 2
 size_flags_vertical = 3
@@ -317,6 +327,7 @@ theme_override_constants/separation = 5
 [connection signal="pressed" from="Panel/VBox/Header/HBox/CloseBtn" to="." method="_on_close_btn_pressed"]
 [connection signal="pressed" from="Panel/VBox/BodyMargin/Body/TopInfo/MetaVBox/BtnRow/AddVolBtn" to="." method="_on_add_vol_btn_pressed"]
 [connection signal="pressed" from="Panel/VBox/BodyMargin/Body/TopInfo/MetaVBox/BtnRow/RemoveVolBtn" to="." method="remove_last_volume"]
+[connection signal="pressed" from="Panel/VBox/BodyMargin/Body/TopInfo/MetaVBox/BtnRow/ShareCardBtn" to="." method="copy_book_quote_card"]
 [connection signal="pressed" from="Panel/VBox/BodyMargin/Body/TopInfo/MetaVBox/BtnRow/DeleteBtn" to="." method="_on_delete_btn_pressed"]
 [connection signal="pressed" from="Panel/VBox/BodyMargin/Body/StampRow/StampComplete" to="." method="_on_stamp_complete_pressed"]
 [connection signal="pressed" from="Panel/VBox/BodyMargin/Body/StampRow/StampFirst" to="." method="_on_stamp_first_pressed"]
@@ -329,3 +340,4 @@ theme_override_constants/separation = 5
 [connection signal="pressed" from="Panel/VBox/BodyMargin/Body/InkRow/InkBurgundy" to="." method="_on_ink_burgundy_pressed"]
 [connection signal="pressed" from="Panel/VBox/BodyMargin/Body/InkRow/InkSepia" to="." method="_on_ink_sepia_pressed"]
 [connection signal="pressed" from="Panel/VBox/BodyMargin/Body/InkRow/InkForest" to="." method="_on_ink_forest_pressed"]
+[connection signal="pressed" from="Panel/VBox/BodyMargin/Body/InkRow/NibBtn" to="." method="cycle_pen_nib_size"]

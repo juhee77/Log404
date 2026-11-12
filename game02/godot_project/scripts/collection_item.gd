@@ -15,6 +15,7 @@ var obi_text: String = ""
 var template_name: String = "COMICS"
 var memo_ink_color: String = "#2c221e"
 var highlight_enabled: bool = false
+var pen_nib_size: int = 11
 var updated_at: int = 0
 var volumes: Array = []
 
@@ -82,6 +83,7 @@ func to_dict() -> Dictionary:
 		"template_name": template_name,
 		"memo_ink_color": memo_ink_color,
 		"highlight_enabled": highlight_enabled,
+		"pen_nib_size": pen_nib_size,
 		"updated_at": updated_at,
 		"volumes": volumes
 	}

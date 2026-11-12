@@ -51,7 +51,9 @@ func setup(item) -> void:
 	if progress_bar != null:
 		progress_bar.value = prog
 	if progress_label != null:
-		if prog >= 100.0:
+		if item.category == 1:
+			progress_label.text = "진열완료 100%" if prog >= 100.0 else "굿즈 보관중"
+		elif prog >= 100.0:
 			progress_label.text = "완독 100%"
 		else:
 			progress_label.text = str(int(prog)) + "%"
@@ -96,5 +98,6 @@ func setup(item) -> void:
 		status_label.text = "🖋️ \"" + first_quote + "\""
 	else: # GACHA
 		cat_badge.text = " DIARY "
-		vol_badge.visible = false
+		vol_badge.visible = true
+		vol_badge.text = "🔮가챠"
 		status_label.text = "🖋️ " + first_quote
