@@ -219,6 +219,14 @@ func cycle_volume_rating(vol_idx: int) -> void:
 	_render_volumes()
 	diary_updated.emit(current_item)
 
+func stamp_volume_date(vol_idx: int) -> void:
+	if current_item == null or vol_idx < 0 or vol_idx >= current_item.volumes.size():
+		return
+	var d = Time.get_date_dict_from_system()
+	current_item.volumes[vol_idx]["date"] = "%04d.%02d.%02d" % [d.year, d.month, d.day]
+	_render_volumes()
+	diary_updated.emit(current_item)
+
 func _render_volumes() -> void:
 	for child in vol_list.get_children():
 		child.queue_free()
@@ -302,6 +310,23 @@ func _render_volumes() -> void:
 		var capture_idx = idx
 		status_btn.pressed.connect(func(): toggle_volume_status(capture_idx))
 		
+		var date_btn = Button.new()
+		var d_val = str(v.get("date", "2026.11.12"))
+		var short_d = d_val.substr(5) if d_val.length() >= 10 else d_val
+		date_btn.text = "📅 " + short_d
+		date_btn.add_theme_font_size_override("font_size", 9)
+		var date_sb = StyleBoxFlat.new()
+		date_sb.bg_color = Color(0.95, 0.92, 0.86, 0.8)
+		date_sb.border_width_bottom = 1
+		date_sb.border_color = Color(0.8, 0.72, 0.62, 0.8)
+		date_sb.corner_radius_top_left = 4
+		date_sb.corner_radius_top_right = 4
+		date_sb.corner_radius_bottom_left = 4
+		date_sb.corner_radius_bottom_right = 4
+		date_btn.add_theme_stylebox_override("normal", date_sb)
+		date_btn.add_theme_color_override("font_color", Color(0.48, 0.38, 0.3))
+		date_btn.pressed.connect(func(): stamp_volume_date(capture_idx))
+
 		var quote_lbl = Label.new()
 		var q = v.get("quote", "")
 		quote_lbl.text = "🖋️ \"" + q + "\"" if q != "" else "🖋️ 읽고 남긴 한 줄 일기"
@@ -320,6 +345,7 @@ func _render_volumes() -> void:
 		
 		hbox.add_child(vol_lbl)
 		hbox.add_child(status_btn)
+		hbox.add_child(date_btn)
 		hbox.add_child(quote_lbl)
 		hbox.add_child(star_btn)
 		margin.add_child(hbox)

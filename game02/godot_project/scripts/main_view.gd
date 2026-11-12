@@ -5,6 +5,7 @@ const CardItemScene = preload("res://scenes/card_item.tscn")
 const ArchiveStateClass = preload("res://scripts/archive_state.gd")
 
 @onready var bg_rect: ColorRect = $Bg
+@onready var sub_title: Label = $VBox/TopBar/TopMargin/StatsVBox/TitleRow/TitleCol/SubTitle
 @onready var stat_items: Label = $VBox/TopBar/TopMargin/StatsVBox/StatRow/StatItems/Box/Val
 @onready var stat_vols: Label = $VBox/TopBar/TopMargin/StatsVBox/StatRow/StatVols/Box/Val
 @onready var stat_firsts: Label = $VBox/TopBar/TopMargin/StatsVBox/StatRow/StatFirsts/Box/Val
@@ -122,6 +123,23 @@ func _apply_journal_button_theme() -> void:
 	search_input.add_theme_color_override("font_color", Color(0.22, 0.16, 0.13))
 	search_input.add_theme_color_override("font_placeholder_color", Color(0.55, 0.48, 0.42))
 
+func get_overall_reading_progress() -> float:
+	if archive_state == null or archive_state.items.is_empty():
+		return 0.0
+	var sum_prog = 0.0
+	var manga_cnt = 0
+	for it in archive_state.items:
+		if it.category == 0:
+			manga_cnt += 1
+			if it.status_tag == "전권완결" or it.status_tag == "완독":
+				sum_prog += 100.0
+			else:
+				var p = clampf(float(it.volumes.size()) * 25.0, 20.0, 100.0)
+				sum_prog += p
+	if manga_cnt == 0:
+		return 50.0
+	return sum_prog / float(manga_cnt)
+
 func _update_stats() -> void:
 	stat_items.text = str(archive_state.items.size()) + "종"
 	stat_vols.text = str(archive_state.get_total_volumes()) + "권"
@@ -131,6 +149,11 @@ func _update_stats() -> void:
 		if it.category == 1: # GACHA
 			g_count += 1
 	stat_gacha.text = str(g_count) + "개"
+	
+	var prog = get_overall_reading_progress()
+	if sub_title != null:
+		sub_title.text = "📔 2026. 11. 12 · 서재 완독률 " + str(int(prog)) + "% · MY ARCHIVE"
+	
 	_render_spine_shelf()
 	_refresh_today_quote()
 

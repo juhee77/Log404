@@ -34,12 +34,17 @@ func _init(
 	icon_emoji = p_icon
 	obi_text = p_obi
 
-func add_volume(p_vol: int, p_status: String = "owned", p_rating: int = 5, p_quote: String = "") -> void:
+func add_volume(p_vol: int, p_status: String = "owned", p_rating: int = 5, p_quote: String = "", p_date: String = "") -> void:
+	var date_str = p_date
+	if date_str == "":
+		var d = Time.get_date_dict_from_system()
+		date_str = "%04d.%02d.%02d" % [d.year, d.month, d.day]
 	volumes.append({
 		"vol": p_vol,
 		"status": p_status,
 		"rating": p_rating,
-		"quote": p_quote
+		"quote": p_quote,
+		"date": date_str
 	})
 
 func to_dict() -> Dictionary:

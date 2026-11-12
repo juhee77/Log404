@@ -157,6 +157,15 @@ func _init() -> void:
 	assert(main_inst.card_grid.get_child_count() >= 2, "Completed books filter should display items with 100% reading progress")
 	print("✓ Random Bookmark Pick & Completed Books Filter verified")
 
+	# Test Sprint 20: Reading Date Stamp & Volume Timestamp Stamping
+	main_inst.detail_modal.open(slam_item)
+	main_inst.detail_modal.stamp_volume_date(0)
+	var v0 = slam_item.volumes[0]
+	assert(v0.has("date") and v0["date"] != "", "stamp_volume_date should add formatted date stamp to volume")
+	var overall_progress = main_inst.get_overall_reading_progress()
+	assert(overall_progress > 0.0 and overall_progress <= 100.0, "get_overall_reading_progress should calculate library-wide progress")
+	print("✓ Reading Date Stamp & Library Overall Progress verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

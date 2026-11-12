@@ -5,6 +5,20 @@
 
 ---
 
+## 🚀 [Sprint 20] 권별 독서 날짜 타임스탬프(`📅 11.12` / `stamp_volume_date`) & 서재 전체 완독률 실시간 게이지(`81%`)
+- **시각**: 2026-11-12 23:05 KST
+- **1. 다꾸러 3인 VOC (수집러 A · 가챠러 B · 미니멀러 C)**
+  - **만년필 다꾸러 A**: *"권별 일기에서 명대사뿐만 아니라 내가 이 권을 언제 읽었는지 날짜 스탬프(`📅 11.12`)를 원터치로 찍을 수 있으면 실제 손때 묻은 독서 일기장 느낌이 물씬 날 것 같아요!"*
+  - **미니멀 수집러 C**: *"상단 서재 헤더에 내 전체 서재의 평균 독서 완독률(예: `서재 완독률 81%`)이 실시간으로 계산되어 보이면 좋겠어요!"*
+- **2. 기획 & UI/UX & Godot 4.6 개발 내역**
+  - **권별 날짜 스탬프(`stamp_volume_date` / `date_btn`)**: `collection_item.gd`의 권별 딕셔너리에 `date` 필드를 표준 탑재하고, `detail_modal.gd`에서 `📅 11.12` 미니 스탬프 버튼을 클릭 시 오늘 날짜로 즉시 스탬프 저장
+  - **서재 전체 완독률 실시간 계산(`get_overall_reading_progress`)**: `main_view.gd`에서 소장 도서 전체의 완독 상태를 종합 계산하여 상단 헤더(`서재 완독률 81%`)에 동적 노출
+- **3. TDD & QA 검증**
+  - `tests/test_main_integration.gd`에 `stamp_volume_date(0)` 및 `get_overall_reading_progress()` 검증 추가 → 전수 100% PASS
+  - Metal 렌더러 최신 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 캡처 및 GitHub 푸시 완료
+
+---
+
 ## 🚀 [Sprint 19] 랜덤 추천 작품 뽑기(`🎲 추천` / `pick_random_item`) & 완독작 전용 필터 탭(`💮 완독작`) 탑재
 - **시각**: 2026-11-12 22:45 KST
 - **1. 다꾸러 3인 VOC (수집러 A · 가챠러 B · 미니멀러 C)**
