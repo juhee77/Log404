@@ -192,6 +192,7 @@ func load_from_file(custom_path: String = "") -> bool:
 			it.cover_path = d.get("cover_path", "")
 			it.template_name = d.get("template_name", "COMICS")
 			it.memo_ink_color = d.get("memo_ink_color", "#2c221e")
+			it.highlight_enabled = d.get("highlight_enabled", false)
 			it.volumes = d.get("volumes", [])
 			items.append(it)
 	

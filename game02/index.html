@@ -167,11 +167,14 @@
                     <div id="mini-spine-shelf" class="flex items-end gap-1 h-7 px-2 py-0.5 bg-[#f3ece1] rounded-lg border border-[#dfd3c3]"></div>
                 </div>
                 <div class="flex items-center justify-between sm:justify-end gap-2 flex-1">
-                    <span id="today-quote-banner" class="serif-font text-xs text-[#5c4938] italic truncate">
+                    <span id="today-quote-banner" class="serif-font text-xs text-[#5c4938] italic truncate cursor-pointer hover:underline" onclick="openCurrentQuoteItem()">
                         🖋️ 오늘의 밑줄: "농구... 좋아하세요?" — 슬램덩크 신장재편판
                     </span>
                     <button onclick="cycleTodayQuote()" class="px-2.5 py-1 rounded-lg bg-[#f3ece1] hover:bg-[#e5dac9] border border-[#d6c7b2] text-[#2c221e] text-[11px] font-bold shrink-0 cursor-pointer">
                         ↻ 다른 문장
+                    </button>
+                    <button onclick="pickRandomItem()" class="px-2.5 py-1 rounded-lg bg-[#c85a32] hover:bg-[#b04b25] text-white text-[11px] font-bold shrink-0 cursor-pointer">
+                        🎲 추천
                     </button>
                 </div>
             </div>
@@ -180,15 +183,21 @@
         <!-- 2. Notebook Index Tabs & Search -->
         <section class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
             <!-- Physical Diary Index Tabs -->
-            <div class="flex items-center gap-1.5">
-                <button onclick="switchCategory('all')" id="tab-all" class="px-4 py-2 rounded-t-xl border-t-2 border-x border-[#d8cbb8] bg-[#fffdf9] text-[#2c221e] font-bold text-xs shadow-2xs cursor-pointer">
+            <div class="flex items-center gap-1.5 flex-wrap">
+                <button onclick="switchCategory('all')" id="tab-all" class="px-3.5 py-2 rounded-t-xl border-t-2 border-x border-[#d8cbb8] bg-[#fffdf9] text-[#2c221e] font-bold text-xs shadow-2xs cursor-pointer">
                     📚 전체 서재
                 </button>
-                <button onclick="switchCategory('manga')" id="tab-manga" class="px-4 py-2 rounded-t-xl border border-transparent bg-[#efe7da] text-[#786b63] hover:text-[#2c221e] font-bold text-xs cursor-pointer">
+                <button onclick="switchCategory('manga')" id="tab-manga" class="px-3.5 py-2 rounded-t-xl border border-transparent bg-[#efe7da] text-[#786b63] hover:text-[#2c221e] font-bold text-xs cursor-pointer">
                     📖 이북·단행본 일기
                 </button>
-                <button onclick="switchCategory('gacha')" id="tab-gacha" class="px-4 py-2 rounded-t-xl border border-transparent bg-[#efe7da] text-[#786b63] hover:text-[#2c221e] font-bold text-xs cursor-pointer">
-                    🔮 가챠·굿즈 스크랩북
+                <button onclick="switchCategory('gacha')" id="tab-gacha" class="px-3.5 py-2 rounded-t-xl border border-transparent bg-[#efe7da] text-[#786b63] hover:text-[#2c221e] font-bold text-xs cursor-pointer">
+                    🔮 가챠·굿즈
+                </button>
+                <button onclick="switchCategory('complete')" id="tab-complete" class="px-3.5 py-2 rounded-t-xl border border-transparent bg-[#efe7da] text-[#786b63] hover:text-[#2c221e] font-bold text-xs cursor-pointer">
+                    💮 완독작
+                </button>
+                <button onclick="switchCategory('fav')" id="tab-fav" class="px-3.5 py-2 rounded-t-xl border border-transparent bg-[#efe7da] text-[#786b63] hover:text-[#2c221e] font-bold text-xs cursor-pointer">
+                    ★ 인생작
                 </button>
             </div>
 
@@ -269,6 +278,14 @@
                             <input id="diary-quote-input" type="text" placeholder="🖋️ 오늘 밑줄 친 명대사·감상평 수정..."
                                 class="flex-1 px-2.5 py-1 rounded-lg bg-[#fffdf9] border border-[#d8cbb8] text-xs text-[#2c221e] focus:outline-none focus:border-[#c85a32]">
                             <button onclick="saveDiaryQuote()" class="px-2.5 py-1 rounded-lg bg-[#2c221e] text-[#faf6f0] text-[11px] font-bold hover:bg-[#43352f] cursor-pointer">🖋️ 밑줄 저장</button>
+                            <button onclick="toggleDiaryHighlighter()" id="btn-highlighter" class="px-2.5 py-1 rounded-lg bg-[#fef08a] border border-[#eab308] text-[#854d0e] text-[11px] font-bold hover:bg-[#fde047] cursor-pointer">🖍️ 형광펜</button>
+                        </div>
+                        <div class="flex items-center gap-1.5 text-[10px] text-[#786b63] pt-1">
+                            <span class="font-bold">🖋️ 잉크:</span>
+                            <button onclick="setDiaryInk('#2c221e')" class="px-2 py-0.5 rounded bg-[#f3ece1] border border-[#d6c7b2] text-[#2c221e] font-semibold cursor-pointer">☕에스프레소</button>
+                            <button onclick="setDiaryInk('#7f1d1d')" class="px-2 py-0.5 rounded bg-[#f3ece1] border border-[#d6c7b2] text-[#7f1d1d] font-semibold cursor-pointer">🍷버건디</button>
+                            <button onclick="setDiaryInk('#78350f')" class="px-2 py-0.5 rounded bg-[#f3ece1] border border-[#d6c7b2] text-[#78350f] font-semibold cursor-pointer">🍂세피아</button>
+                            <button onclick="setDiaryInk('#14532d')" class="px-2 py-0.5 rounded bg-[#f3ece1] border border-[#d6c7b2] text-[#14532d] font-semibold cursor-pointer">🌲포레스트</button>
                         </div>
                     </div>
 
@@ -352,15 +369,63 @@
 
         let currentCat = 'all';
         let activeId = 'm1';
+        let currentQuoteIdx = 0;
+
+        function pickRandomItem() {
+            const rIdx = Math.floor(Math.random() * ITEMS.length);
+            openJournalModal(ITEMS[rIdx].id);
+        }
+
+        function openCurrentQuoteItem() {
+            const quotes = [];
+            ITEMS.forEach(it => {
+                if (it.volumes) {
+                    it.volumes.forEach(v => {
+                        if (v.quote) quotes.push({ item: it, text: `🖋️ 오늘의 밑줄: "${v.quote}" — ${it.title}` });
+                    });
+                }
+            });
+            if (quotes.length > 0) {
+                const target = quotes[currentQuoteIdx % quotes.length].item;
+                openJournalModal(target.id);
+            }
+        }
+
+        function setDiaryInk(colorHex) {
+            const item = ITEMS.find(x => x.id === activeId);
+            if (!item) return;
+            item.ink = colorHex;
+            document.getElementById('diary-memo').style.color = colorHex;
+            document.getElementById('diary-quote-input').style.color = colorHex;
+        }
+
+        function toggleDiaryHighlighter() {
+            const item = ITEMS.find(x => x.id === activeId);
+            if (!item) return;
+            item.highlight = !item.highlight;
+            const memoEl = document.getElementById('diary-memo');
+            const btn = document.getElementById('btn-highlighter');
+            if (item.highlight) {
+                memoEl.style.backgroundColor = 'rgba(254, 240, 138, 0.75)';
+                memoEl.style.padding = '4px 8px';
+                memoEl.style.borderRadius = '4px';
+                btn.classList.add('ring-2', 'ring-amber-500');
+            } else {
+                memoEl.style.backgroundColor = 'transparent';
+                memoEl.style.padding = '0';
+                btn.classList.remove('ring-2', 'ring-amber-500');
+            }
+        }
 
         function switchCategory(cat) {
             currentCat = cat;
-            ['all', 'manga', 'gacha'].forEach(c => {
+            ['all', 'manga', 'gacha', 'complete', 'fav'].forEach(c => {
                 const btn = document.getElementById('tab-' + c);
+                if (!btn) return;
                 if (c === cat) {
-                    btn.className = 'px-4 py-2 rounded-t-xl border-t-2 border-x border-[#d8cbb8] bg-[#fffdf9] text-[#2c221e] font-bold text-xs shadow-2xs cursor-pointer';
+                    btn.className = 'px-3.5 py-2 rounded-t-xl border-t-2 border-x border-[#d8cbb8] bg-[#fffdf9] text-[#2c221e] font-bold text-xs shadow-2xs cursor-pointer';
                 } else {
-                    btn.className = 'px-4 py-2 rounded-t-xl border border-transparent bg-[#efe7da] text-[#786b63] hover:text-[#2c221e] font-bold text-xs cursor-pointer';
+                    btn.className = 'px-3.5 py-2 rounded-t-xl border border-transparent bg-[#efe7da] text-[#786b63] hover:text-[#2c221e] font-bold text-xs cursor-pointer';
                 }
             });
             renderShelf();
@@ -369,7 +434,12 @@
         function renderShelf() {
             const q = document.getElementById('search-box').value.trim().toLowerCase();
             const filtered = ITEMS.filter(it => {
-                const cMatch = currentCat === 'all' || it.category === currentCat;
+                let cMatch = true;
+                if (currentCat === 'manga') cMatch = it.category === 'manga';
+                else if (currentCat === 'gacha') cMatch = it.category === 'gacha';
+                else if (currentCat === 'complete') cMatch = it.stamp === '전권완결' || (it.volumes && it.volumes.length >= 2);
+                else if (currentCat === 'fav') cMatch = it.stamp === '인생최애' || (it.volumes && it.volumes.every(v => v.rating === 5));
+                
                 const qMatch = !q || it.title.toLowerCase().includes(q) || it.author.toLowerCase().includes(q) || it.memo.toLowerCase().includes(q);
                 return cMatch && qMatch;
             });

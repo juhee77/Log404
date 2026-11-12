@@ -112,6 +112,11 @@ func _style_diary_controls() -> void:
 	close_btn.add_theme_stylebox_override("normal", cream_btn)
 	close_btn.add_theme_color_override("font_color", Color(0.32, 0.25, 0.20))
 
+	var hl_btn: Button = get_node_or_null("Panel/VBox/BodyMargin/Body/QuoteEditRow/HighlightBtn")
+	if hl_btn != null:
+		hl_btn.add_theme_stylebox_override("normal", cream_btn)
+		hl_btn.add_theme_color_override("font_color", Color(0.55, 0.38, 0.12))
+
 	var ink_row: HBoxContainer = get_node_or_null("Panel/VBox/BodyMargin/Body/InkRow")
 	if ink_row != null:
 		for btn in ink_row.get_children():
@@ -126,12 +131,33 @@ func set_fountain_pen_ink(ink_hex: String) -> void:
 	_apply_ink_style()
 	diary_updated.emit(current_item)
 
+func toggle_quote_highlight() -> void:
+	if current_item == null:
+		return
+	current_item.highlight_enabled = !current_item.highlight_enabled
+	_apply_ink_style()
+	diary_updated.emit(current_item)
+
 func _apply_ink_style() -> void:
 	if current_item == null:
 		return
 	var ink = Color.from_string(current_item.memo_ink_color, Color(0.18, 0.14, 0.11))
 	if memo_label != null:
 		memo_label.add_theme_color_override("font_color", ink)
+		if current_item.highlight_enabled:
+			var hl_sb = StyleBoxFlat.new()
+			hl_sb.bg_color = Color(1.0, 0.94, 0.70, 0.75) # Warm pastel highlighter yellow
+			hl_sb.corner_radius_top_left = 4
+			hl_sb.corner_radius_top_right = 4
+			hl_sb.corner_radius_bottom_left = 4
+			hl_sb.corner_radius_bottom_right = 4
+			hl_sb.content_margin_left = 6
+			hl_sb.content_margin_right = 6
+			hl_sb.content_margin_top = 2
+			hl_sb.content_margin_bottom = 2
+			memo_label.add_theme_stylebox_override("normal", hl_sb)
+		else:
+			memo_label.remove_theme_stylebox_override("normal")
 	if quote_input != null:
 		quote_input.add_theme_color_override("font_color", ink)
 

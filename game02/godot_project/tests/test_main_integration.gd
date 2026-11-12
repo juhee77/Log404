@@ -173,6 +173,18 @@ func _init() -> void:
 	assert(main_inst.theme_cursor >= 0, "Theme button should cycle unified room themes")
 	print("✓ Fountain-Pen Ink Color Selector & Unified Room Themes verified")
 
+	# Test Sprint 22: Highlighter Toggle & Favorites Filter Tab
+	main_inst.detail_modal.toggle_quote_highlight()
+	assert(slam_item.highlight_enabled == true, "toggle_quote_highlight should toggle highlight_enabled to true")
+	main_inst.detail_modal.toggle_quote_highlight()
+	assert(slam_item.highlight_enabled == false, "toggle_quote_highlight should toggle highlight_enabled back to false")
+	assert(slam_item.get_average_rating() > 0.0, "get_average_rating should calculate correct average rating")
+	var cherry_item = main_inst.archive_state.get_item_by_id("m4")
+	assert(cherry_item.get_average_rating() == 5.0, "cherry_item should have 5.0 average rating")
+	main_inst._on_tab_fav_pressed()
+	assert(main_inst.filter_favorites_only == true, "TabFav should activate favorites filter")
+	print("✓ Quote Highlighter Toggle & Favorites Filter Tab verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

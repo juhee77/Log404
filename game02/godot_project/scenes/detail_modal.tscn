@@ -255,6 +255,11 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 10
 text = "🖋️ 밑줄 저장"
 
+[node name="HighlightBtn" type="Button" parent="Panel/VBox/BodyMargin/Body/QuoteEditRow"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 10
+text = "🖍️ 형광펜"
+
 [node name="InkRow" type="HBoxContainer" parent="Panel/VBox/BodyMargin/Body"]
 layout_mode = 2
 theme_override_constants/separation = 5
@@ -319,6 +324,7 @@ theme_override_constants/separation = 5
 [connection signal="pressed" from="Panel/VBox/BodyMargin/Body/StampRow/StampWish" to="." method="_on_stamp_wish_pressed"]
 [connection signal="pressed" from="Panel/VBox/BodyMargin/Body/StampRow/ObiCycleBtn" to="." method="cycle_obi_preset"]
 [connection signal="pressed" from="Panel/VBox/BodyMargin/Body/QuoteEditRow/SaveQuoteBtn" to="." method="_on_save_quote_btn_pressed"]
+[connection signal="pressed" from="Panel/VBox/BodyMargin/Body/QuoteEditRow/HighlightBtn" to="." method="toggle_quote_highlight"]
 [connection signal="pressed" from="Panel/VBox/BodyMargin/Body/InkRow/InkEspresso" to="." method="_on_ink_espresso_pressed"]
 [connection signal="pressed" from="Panel/VBox/BodyMargin/Body/InkRow/InkBurgundy" to="." method="_on_ink_burgundy_pressed"]
 [connection signal="pressed" from="Panel/VBox/BodyMargin/Body/InkRow/InkSepia" to="." method="_on_ink_sepia_pressed"]

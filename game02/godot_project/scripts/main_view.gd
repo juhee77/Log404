@@ -18,6 +18,7 @@ const ArchiveStateClass = preload("res://scripts/archive_state.gd")
 @onready var tab_manga: Button = $VBox/FilterMargin/FilterBar/HBox/TabManga
 @onready var tab_gacha: Button = $VBox/FilterMargin/FilterBar/HBox/TabGacha
 @onready var tab_complete: Button = $VBox/FilterMargin/FilterBar/HBox/TabComplete
+@onready var tab_fav: Button = $VBox/FilterMargin/FilterBar/HBox/TabFav
 @onready var search_input: LineEdit = $VBox/FilterMargin/FilterBar/HBox/SearchInput
 @onready var sort_btn: Button = $VBox/FilterMargin/FilterBar/HBox/SortBtn
 @onready var random_pick_btn: Button = $VBox/TopBar/TopMargin/StatsVBox/SpineBanner/HBox/RandomPickBtn
@@ -34,6 +35,7 @@ var quote_cursor: int = 0
 var sort_by_volumes: bool = false
 var filter_firsts_only: bool = false
 var filter_completed_only: bool = false
+var filter_favorites_only: bool = false
 
 const ROOM_THEMES = [
 	{"name": "만년필 미색 노트 (Warm Ivory)", "bg": Color(0.98, 0.965, 0.94, 1)},
@@ -96,7 +98,7 @@ func _apply_journal_button_theme() -> void:
 		random_pick_btn.add_theme_stylebox_override("normal", cream_btn)
 		random_pick_btn.add_theme_color_override("font_color", Color(0.32, 0.24, 0.18))
 
-	for b in [tab_all, tab_manga, tab_gacha, tab_complete, sort_btn]:
+	for b in [tab_all, tab_manga, tab_gacha, tab_complete, tab_fav, sort_btn]:
 		if b != null:
 			b.add_theme_stylebox_override("normal", cream_btn)
 			b.add_theme_color_override("font_color", Color(0.22, 0.16, 0.13))
@@ -236,6 +238,10 @@ func _render_cards() -> void:
 		filtered = filtered.filter(func(it):
 			return it.status_tag == "전권완결" or it.status_tag == "완독" or it.volumes.size() >= 2
 		)
+	if filter_favorites_only:
+		filtered = filtered.filter(func(it):
+			return it.status_tag == "인생최애" or it.get_average_rating() >= 5.0
+		)
 	if sort_by_volumes:
 		filtered.sort_custom(func(a, b): return a.volumes.size() > b.volumes.size())
 	
@@ -274,6 +280,7 @@ func _on_card_clicked(item) -> void:
 func _on_tab_all_pressed() -> void:
 	filter_firsts_only = false
 	filter_completed_only = false
+	filter_favorites_only = false
 	archive_state.current_filter = -1
 	_highlight_tabs(tab_all)
 	_render_cards()
@@ -281,6 +288,7 @@ func _on_tab_all_pressed() -> void:
 func _on_tab_manga_pressed() -> void:
 	filter_firsts_only = false
 	filter_completed_only = false
+	filter_favorites_only = false
 	archive_state.current_filter = 0
 	_highlight_tabs(tab_manga)
 	_render_cards()
@@ -288,6 +296,7 @@ func _on_tab_manga_pressed() -> void:
 func _on_tab_gacha_pressed() -> void:
 	filter_firsts_only = false
 	filter_completed_only = false
+	filter_favorites_only = false
 	archive_state.current_filter = 1
 	_highlight_tabs(tab_gacha)
 	_render_cards()
@@ -295,13 +304,23 @@ func _on_tab_gacha_pressed() -> void:
 func _on_tab_complete_pressed() -> void:
 	filter_firsts_only = false
 	filter_completed_only = true
+	filter_favorites_only = false
 	archive_state.current_filter = 0
 	_highlight_tabs(tab_complete)
 	_render_cards()
 	_show_toast("💮 완독한 작품만 모아봅니다.")
 
+func _on_tab_fav_pressed() -> void:
+	filter_firsts_only = false
+	filter_completed_only = false
+	filter_favorites_only = true
+	archive_state.current_filter = -1
+	_highlight_tabs(tab_fav)
+	_render_cards()
+	_show_toast("★ 내 인생 최애 만점(5.0) 작품만 모아봅니다.")
+
 func _highlight_tabs(active_btn: Button) -> void:
-	for btn in [tab_all, tab_manga, tab_gacha, tab_complete]:
+	for btn in [tab_all, tab_manga, tab_gacha, tab_complete, tab_fav]:
 		if btn != null:
 			btn.modulate = Color(1, 1, 1, 0.65) if btn != active_btn else Color(1, 1, 1, 1)
 

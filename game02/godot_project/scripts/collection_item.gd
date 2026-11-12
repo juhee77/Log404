@@ -14,6 +14,7 @@ var icon_emoji: String = "📖"
 var obi_text: String = ""
 var template_name: String = "COMICS"
 var memo_ink_color: String = "#2c221e"
+var highlight_enabled: bool = false
 var volumes: Array = []
 
 func _init(
@@ -48,6 +49,14 @@ func add_volume(p_vol: int, p_status: String = "owned", p_rating: int = 5, p_quo
 		"date": date_str
 	})
 
+func get_average_rating() -> float:
+	if volumes.is_empty():
+		return 5.0
+	var sum_r = 0.0
+	for v in volumes:
+		sum_r += float(v.get("rating", 5))
+	return sum_r / float(volumes.size())
+
 func to_dict() -> Dictionary:
 	return {
 		"id": id,
@@ -62,5 +71,6 @@ func to_dict() -> Dictionary:
 		"obi_text": obi_text,
 		"template_name": template_name,
 		"memo_ink_color": memo_ink_color,
+		"highlight_enabled": highlight_enabled,
 		"volumes": volumes
 	}

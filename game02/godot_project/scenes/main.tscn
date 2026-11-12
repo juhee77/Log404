@@ -278,6 +278,11 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 11
 text = "💮 완독작"
 
+[node name="TabFav" type="Button" parent="VBox/FilterMargin/FilterBar/HBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 11
+text = "★ 인생작"
+
 [node name="SearchInput" type="LineEdit" parent="VBox/FilterMargin/FilterBar/HBox"]
 layout_mode = 2
 size_flags_horizontal = 3
@@ -377,6 +382,7 @@ layout_mode = 1
 [connection signal="pressed" from="VBox/FilterMargin/FilterBar/HBox/TabManga" to="." method="_on_tab_manga_pressed"]
 [connection signal="pressed" from="VBox/FilterMargin/FilterBar/HBox/TabGacha" to="." method="_on_tab_gacha_pressed"]
 [connection signal="pressed" from="VBox/FilterMargin/FilterBar/HBox/TabComplete" to="." method="_on_tab_complete_pressed"]
+[connection signal="pressed" from="VBox/FilterMargin/FilterBar/HBox/TabFav" to="." method="_on_tab_fav_pressed"]
 [connection signal="text_changed" from="VBox/FilterMargin/FilterBar/HBox/SearchInput" to="." method="_on_search_text_changed"]
 [connection signal="pressed" from="VBox/FilterMargin/FilterBar/HBox/SortBtn" to="." method="_on_sort_btn_pressed"]
 [connection signal="pressed" from="VBox/BottomBar/Margin/VBox/NavRow/WebBtn" to="." method="_on_web_scrape_btn_pressed"]
