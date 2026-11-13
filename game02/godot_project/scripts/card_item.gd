@@ -34,6 +34,8 @@ func quick_advance() -> void:
 func get_reading_progress() -> float:
 	if current_item == null:
 		return 0.0
+	if current_item.has_method("get_completion_percentage"):
+		return current_item.get_completion_percentage()
 	if current_item.status_tag == "전권완결" or current_item.status_tag == "완독":
 		return 100.0
 	if current_item.volumes.size() == 0:

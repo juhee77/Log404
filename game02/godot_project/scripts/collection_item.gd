@@ -22,6 +22,8 @@ var rarity_tier: String = "🌟노말"
 var paper_pattern: String = "ruled"
 var storage_location: String = "🗄️ 1층 장식장"
 var acquisition_source: String = "🏪 오프라인 서점"
+var reading_mood: String = "🥰 힐링"
+var target_volumes: int = 0
 var updated_at: int = 0
 var volumes: Array = []
 
@@ -139,6 +141,25 @@ func cycle_acquisition_source() -> String:
 	updated_at = int(Time.get_unix_time_from_system())
 	return acquisition_source
 
+func cycle_reading_mood() -> String:
+	const PRESETS = ["🥰 힐링", "🔥 열혈", "😭 감동", "🤯 반전", "🤣 유쾌"]
+	var idx = PRESETS.find(reading_mood)
+	if idx == -1:
+		reading_mood = PRESETS[0]
+	else:
+		reading_mood = PRESETS[(idx + 1) % PRESETS.size()]
+	updated_at = int(Time.get_unix_time_from_system())
+	return reading_mood
+
+func get_completion_percentage() -> float:
+	if target_volumes > 0:
+		return clampf(float(volumes.size()) / float(target_volumes) * 100.0, 5.0, 100.0)
+	if status_tag == "전권완결" or status_tag == "완독":
+		return 100.0
+	if volumes.size() == 0:
+		return 30.0
+	return clampf(float(volumes.size()) * 25.0, 20.0, 100.0)
+
 func to_dict() -> Dictionary:
 	return {
 		"id": id,
@@ -161,6 +182,8 @@ func to_dict() -> Dictionary:
 		"paper_pattern": paper_pattern,
 		"storage_location": storage_location,
 		"acquisition_source": acquisition_source,
+		"reading_mood": reading_mood,
+		"target_volumes": target_volumes,
 		"updated_at": updated_at,
 		"volumes": volumes
 	}

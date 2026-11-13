@@ -5,6 +5,22 @@
 
 ---
 
+## 🚀 [Sprint 31] 독서 감상 무드 태그(`🥰 힐링` / `cycle_reading_mood`) & 목표 권수 정밀 완독률 트래커(`target_volumes`)
+- **시각**: 2026-11-14 06:00 KST
+- **1. 다꾸러 3인 VOC (수집러 A · 가챠러 B · 미니멀러 C)**
+  - **만년필 다꾸러 A**: *"책을 읽을 때 '감정 기분 태그(Mood Sticker)'(`🥰 힐링`, `🔥 열혈`, `😭 감동`, `🤯 반전`, `🤣 유쾌`)를 일기장 모달에서 고르면 독서 일기가 훨씬 생생해질 것 같아요!"*
+  - **가챠 수집러 B**: *"소장품의 목표 완결 권수(`target_volumes`)를 설정해 두면 완결까지 얼마나 모았는지 정밀하게 파악할 수 있어서 수집 동기부여가 확실해집니다!"*
+  - **미니멀 수집러 C**: *"메인 카드의 진행률 바가 목표 권수를 기반으로 정확한 퍼센티지(`get_completion_percentage()`)를 계산해 주면 훨씬 신뢰감 있는 트래커가 됩니다!"*
+- **2. 기획 & UI/UX & Godot 4.6 개발 내역**
+  - **독서 감상 무드 태그 순환(`MoodBtn` / `cycle_reading_mood`)**: `collection_item.gd`에 `reading_mood` 필드 추가 및 `archive_state.gd` JSON 연동. 모달 `StampRow`에 `MoodBtn` 배치하여 5종 무드 프리셋(`🥰 힐링`, `🔥 열혈`, `😭 감동`, `🤯 반전`, `🤣 유쾌`) 원터치 순환
+  - **목표 권수 기반 정밀 완독률(`target_volumes` / `get_completion_percentage`)**: `collection_item.gd`에 `target_volumes`와 정밀 퍼센티지 계산 메서드를 구현하고 `card_item.gd` 진행률 바에 실시간 연동
+  - **HTML 인터랙티브 목업 동기화**: `game02/index.html`에 `cycleReadingMood()` 버튼 및 일기장 메타 라벨 동기화 완료
+- **3. TDD & QA 검증**
+  - `tests/test_main_integration.gd`에 Sprint 31 무드 태그 및 목표 권수 완독률 검증 추가 → 3개 헤드리스 테스트 스위트 전수 100% PASS
+  - Metal 렌더러 최신 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 캡처 및 GitHub 푸시 완료
+
+---
+
 ## 🚀 [Sprint 30] 독서 몰입 앰비언트 백색소음(`🎧 앰비언트` / `cycle_ambient_sound`) & 소장품 입수처 트래커(`🏷️ 입수처` / `cycle_acquisition_source`)
 - **시각**: 2026-11-14 00:23 KST
 - **1. 다꾸러 3인 VOC (수집러 A · 가챠러 B · 미니멀러 C)**

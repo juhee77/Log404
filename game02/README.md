@@ -5,7 +5,7 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 
 ---
 
-## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 30)
+## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 31)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
@@ -14,6 +14,11 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 ---
 
 ## 🚀 최신 스프린트 업데이트 요약 ([전체 회의록 보기](SPRINT_LOG.md))
+
+### [Sprint 31] 독서 감상 무드 태그(`🥰 힐링` / `cycle_reading_mood`) & 목표 권수 정밀 완독률 트래커(`target_volumes`)
+- **독서 감상 무드 태그(`cycle_reading_mood`)**: `🥰 힐링`, `🔥 열혈`, `😭 감동`, `🤯 반전`, `🤣 유쾌` 5종 무드 스티커 원터치 순환
+- **목표 권수 기반 정밀 완독률(`get_completion_percentage`)**: 소장 목표 권수 대비 정확한 완독 퍼센티지 계산 및 카드 진행률 바 연동
+- **웹 목업 동기화**: `game02/index.html`에 `cycleReadingMood()` 버튼 완벽 연동
 
 ### [Sprint 30] 독서 몰입 앰비언트 백색소음(`🎧 앰비언트` / `cycle_ambient_sound`) & 소장품 입수처 트래커(`🏷️ 입수처` / `cycle_acquisition_source`)
 - **독서 몰입 앰비언트 백색소음(`cycle_ambient_sound`)**: 메인 상단에서 6종 백색소음(`🔕무음`, `🌧️빗소리`, `☕북카페`, `📖책장넘김`, `🔥모닥불`, `🦗밤귀뚜라미`)을 원터치 순환 및 재생

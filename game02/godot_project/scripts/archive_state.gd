@@ -200,6 +200,8 @@ func load_from_file(custom_path: String = "") -> bool:
 			it.paper_pattern = d.get("paper_pattern", "ruled")
 			it.storage_location = d.get("storage_location", "🗄️ 1층 장식장")
 			it.acquisition_source = d.get("acquisition_source", "🏪 오프라인 서점")
+			it.reading_mood = d.get("reading_mood", "🥰 힐링")
+			it.target_volumes = int(d.get("target_volumes", 0))
 			it.updated_at = int(d.get("updated_at", 0))
 			it.volumes = d.get("volumes", [])
 			items.append(it)

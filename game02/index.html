@@ -289,6 +289,7 @@
                             <button id="paper-cycle-btn" onclick="cyclePaperPattern()" class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">📄 줄노트</button>
                             <button id="storage-cycle-btn" onclick="cycleStorageLocation()" class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">🗄️ 장식장</button>
                             <button id="source-cycle-btn" onclick="cycleAcquisitionSource()" class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">🏪 서점</button>
+                            <button id="mood-cycle-btn" onclick="cycleReadingMood()" class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">🥰 힐링</button>
                             <button onclick="copyBookQuoteCard()" class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">💌 감상 카드 공유</button>
                             <button onclick="closeJournalModal()" class="w-7 h-7 rounded-full bg-[#efe7da] hover:bg-[#e2d6c5] text-[#5c4938] text-xs font-bold cursor-pointer">✕</button>
                         </div>
@@ -592,7 +593,6 @@
             applyJournalWashiTape(item.washi_tape_color || '#f4d394');
             const sticker = item.deco_sticker || '✨';
             const rTier = item.rarity_tier || '🌟 노말';
-            const loc = item.storage_location || '🗄️ 1층 장식장';
             const decoBtn = document.getElementById('deco-sticker-btn');
             if (decoBtn) decoBtn.textContent = `${sticker} 스티커`;
             const rBtn = document.getElementById('rarity-cycle-btn');
@@ -606,39 +606,23 @@
             if (storageBtn) storageBtn.textContent = loc;
             const srcBtn = document.getElementById('source-cycle-btn');
             if (srcBtn) srcBtn.textContent = item.acquisition_source || '🏪 오프라인 서점';
-            document.getElementById('diary-stamp').textContent = `💮 ${item.stamp} ${sticker} [${rTier} · ${loc} · ${item.acquisition_source || '🏪 오프라인 서점'}]`;
+            const moodBtn = document.getElementById('mood-cycle-btn');
+            if (moodBtn) moodBtn.textContent = item.reading_mood || '🥰 힐링';
+            document.getElementById('diary-stamp').textContent = `💮 ${item.stamp} ${sticker} [${item.reading_mood || '🥰 힐링'} · ${rTier} · ${loc}]`;
             document.getElementById('journal-modal').classList.remove('hidden');
         }
 
-        const PAPER_PRESETS = [
-            { id: 'ruled', name: '📄 줄노트' },
-            { id: 'grid', name: '📜 모눈' },
-            { id: 'blank', name: '📋 무지' },
-            { id: 'vintage', name: '🍂 양장' }
-        ];
-
-        function cyclePaperPattern() {
+        const MOOD_PRESETS = ["🥰 힐링", "🔥 열혈", "😭 감동", "🤯 반전", "🤣 유쾌"];
+        function cycleReadingMood() {
             const item = ITEMS.find(x => x.id === activeId);
             if (!item) return;
-            const cur = item.paper_pattern || 'ruled';
-            const idx = PAPER_PRESETS.findIndex(p => p.id === cur);
-            const next = PAPER_PRESETS[(idx + 1) % PAPER_PRESETS.length];
-            item.paper_pattern = next.id;
-            const btn = document.getElementById('paper-cycle-btn');
-            if (btn) btn.textContent = next.name;
-        }
-
-        const STORAGE_PRESETS = ["🗄️ 1층 장식장", "📦 아크릴함", "📚 책상 선반", "🎒 외출 파우치"];
-        function cycleStorageLocation() {
-            const item = ITEMS.find(x => x.id === activeId);
-            if (!item) return;
-            const cur = item.storage_location || '🗄️ 1층 장식장';
-            const idx = STORAGE_PRESETS.indexOf(cur);
-            item.storage_location = STORAGE_PRESETS[(idx + 1) % STORAGE_PRESETS.length];
-            const btn = document.getElementById('storage-cycle-btn');
-            if (btn) btn.textContent = item.storage_location;
+            const cur = item.reading_mood || '🥰 힐링';
+            const idx = MOOD_PRESETS.indexOf(cur);
+            item.reading_mood = MOOD_PRESETS[(idx + 1) % MOOD_PRESETS.length];
+            const btn = document.getElementById('mood-cycle-btn');
+            if (btn) btn.textContent = item.reading_mood;
             const stampEl = document.getElementById('diary-stamp');
-            if (stampEl) stampEl.textContent = `💮 ${item.stamp} ${item.deco_sticker || '✨'} [${item.rarity_tier || '🌟 노말'} · ${item.storage_location}]`;
+            if (stampEl) stampEl.textContent = `💮 ${item.stamp} ${item.deco_sticker || '✨'} [${item.reading_mood} · ${item.rarity_tier || '🌟 노말'} · ${item.storage_location || '🗄️ 장식장'}]`;
         }
 
         const SOURCE_PRESETS = ["🏪 오프라인 서점", "🇯🇵 직구/해외", "🎁 선물", "🎪 팝업/행사", "📦 온라인 서점"];
@@ -673,7 +657,7 @@
             const btn = document.getElementById('rarity-cycle-btn');
             if (btn) btn.textContent = item.rarity_tier;
             const stampEl = document.getElementById('diary-stamp');
-            if (stampEl) stampEl.textContent = `💮 ${item.stamp} ${item.deco_sticker || '✨'} [${item.rarity_tier} · ${item.storage_location || '🗄️ 1층 장식장'}]`;
+            if (stampEl) stampEl.textContent = `💮 ${item.stamp} ${item.deco_sticker || '✨'} [${item.rarity_tier}]`;
             renderShelf();
         }
 

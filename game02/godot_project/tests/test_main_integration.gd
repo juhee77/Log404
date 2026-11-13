@@ -256,6 +256,14 @@ func _init() -> void:
 	assert(new_snd in main_inst.AMBIENT_SOUND_PRESETS, "cycle_ambient_sound should cycle ambient sound presets")
 	print("✓ Reading Ambient Sound Player & Item Acquisition Source Tracker verified")
 
+	# Test Sprint 31: Reading Mood Tag Cycler & Target Volume Progress Tracker
+	var new_mood = main_inst.detail_modal.cycle_reading_mood()
+	assert(new_mood in ["🥰 힐링", "🔥 열혈", "😭 감동", "🤯 반전", "🤣 유쾌"], "cycle_reading_mood should cycle among mood presets")
+	slam_item.target_volumes = 20
+	var pct = slam_item.get_completion_percentage()
+	assert(pct > 0.0 and pct <= 100.0, "get_completion_percentage should compute valid percentage against target_volumes")
+	print("✓ Reading Mood Tag Cycler & Target Volume Progress Tracker verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()
