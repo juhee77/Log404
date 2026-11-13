@@ -204,6 +204,7 @@ func load_from_file(custom_path: String = "") -> bool:
 			it.target_volumes = int(d.get("target_volumes", 0))
 			it.reread_count = int(d.get("reread_count", 1))
 			it.estimated_value = int(d.get("estimated_value", 0))
+			it.duplicate_count = int(d.get("duplicate_count", 1))
 			it.updated_at = int(d.get("updated_at", 0))
 			it.volumes = d.get("volumes", [])
 			items.append(it)

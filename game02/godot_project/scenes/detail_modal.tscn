@@ -205,9 +205,10 @@ theme_override_colors/font_color = Color(0.85, 0.25, 0.2, 1)
 theme_override_font_sizes/font_size = 10
 text = "일기 삭제"
 
-[node name="StampRow" type="HBoxContainer" parent="Panel/VBox/BodyMargin/Body"]
+[node name="StampRow" type="HFlowContainer" parent="Panel/VBox/BodyMargin/Body"]
 layout_mode = 2
-theme_override_constants/separation = 5
+theme_override_constants/h_separation = 5
+theme_override_constants/v_separation = 4
 
 [node name="StampLbl" type="Label" parent="Panel/VBox/BodyMargin/Body/StampRow"]
 layout_mode = 2
@@ -292,6 +293,12 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 10
 text = "🔁1회독"
+
+[node name="DuplicateBtn" type="Button" parent="Panel/VBox/BodyMargin/Body/StampRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 10
+text = "👯×1"
 
 [node name="QuoteEditRow" type="HBoxContainer" parent="Panel/VBox/BodyMargin/Body"]
 layout_mode = 2
@@ -390,6 +397,7 @@ theme_override_constants/separation = 5
 [connection signal="pressed" from="Panel/VBox/BodyMargin/Body/StampRow/SourceBtn" to="." method="cycle_acquisition_source"]
 [connection signal="pressed" from="Panel/VBox/BodyMargin/Body/StampRow/MoodBtn" to="." method="cycle_reading_mood"]
 [connection signal="pressed" from="Panel/VBox/BodyMargin/Body/StampRow/RereadBtn" to="." method="increment_reread_count"]
+[connection signal="pressed" from="Panel/VBox/BodyMargin/Body/StampRow/DuplicateBtn" to="." method="increment_duplicate_count"]
 [connection signal="pressed" from="Panel/VBox/BodyMargin/Body/QuoteEditRow/SaveQuoteBtn" to="." method="_on_save_quote_btn_pressed"]
 [connection signal="pressed" from="Panel/VBox/BodyMargin/Body/QuoteEditRow/HighlightBtn" to="." method="toggle_quote_highlight"]
 [connection signal="pressed" from="Panel/VBox/BodyMargin/Body/InkRow/InkEspresso" to="." method="_on_ink_espresso_pressed"]

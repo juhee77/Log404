@@ -18,7 +18,7 @@ signal diary_updated(item)
 @onready var add_vol_btn: Button = $Panel/VBox/BodyMargin/Body/TopInfo/MetaVBox/BtnRow/AddVolBtn
 @onready var quote_input: LineEdit = $Panel/VBox/BodyMargin/Body/QuoteEditRow/QuoteInput
 @onready var save_quote_btn: Button = $Panel/VBox/BodyMargin/Body/QuoteEditRow/SaveQuoteBtn
-@onready var stamp_row: HBoxContainer = $Panel/VBox/BodyMargin/Body/StampRow
+@onready var stamp_row: HFlowContainer = $Panel/VBox/BodyMargin/Body/StampRow
 
 var current_item = null
 var editing_vol_index: int = -1
@@ -239,6 +239,10 @@ func open(item) -> void:
 	if reread_btn != null:
 		var rc = current_item.get("reread_count") if current_item.get("reread_count") != null else 1
 		reread_btn.text = "🔁" + str(rc) + "회독"
+	var dup_btn: Button = get_node_or_null("Panel/VBox/BodyMargin/Body/StampRow/DuplicateBtn")
+	if dup_btn != null:
+		var dc = current_item.get("duplicate_count") if current_item.get("duplicate_count") != null else 1
+		dup_btn.text = "👯×" + str(dc)
 	_apply_paper_style()
 	_apply_ink_style()
 	_apply_washi_style()
@@ -366,6 +370,16 @@ func increment_reread_count() -> int:
 		reread_btn.text = "🔁" + str(rc) + "회독"
 	diary_updated.emit(current_item)
 	return rc
+
+func increment_duplicate_count() -> int:
+	if current_item == null:
+		return 1
+	var dc = current_item.increment_duplicate_count() if current_item.has_method("increment_duplicate_count") else 1
+	var dup_btn: Button = get_node_or_null("Panel/VBox/BodyMargin/Body/StampRow/DuplicateBtn")
+	if dup_btn != null:
+		dup_btn.text = "👯×" + str(dc)
+	diary_updated.emit(current_item)
+	return dc
 
 func cycle_obi_preset() -> void:
 	if current_item == null:

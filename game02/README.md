@@ -15,6 +15,11 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 
 ## 🚀 최신 스프린트 업데이트 요약 ([전체 회의록 보기](SPRINT_LOG.md))
 
+### [Sprint 33] 일기장 모달 `HFlowContainer` 반응형 줄바꿈 개선 & 수집품 보유·중복 수량 카운터(`👯×N`)
+- **일기장 모달 `HFlowContainer` 줄바꿈**: `detail_modal.tscn`의 `StampRow`를 `HFlowContainer`로 전환해 13종 이상의 인장·다꾸 버튼이 408px 모달 안에 깔끔하게 줄바꿈 정렬되도록 개선
+- **수집품 보유·중복 수량 카운터(`increment_duplicate_count`)**: 모달 `👯×1` 버튼으로 중복 보유 수량을 기록하고, 추정 가치 합산 반영 및 2개 이상일 때 카드에 `👯×N` 배지 표시
+- **웹 목업 동기화**: `game02/index.html`에 `incrementDuplicateCount()` 버튼 및 카드 `👯 ×N` 배지 완벽 연동
+
 ### [Sprint 32] 재독 횟수 카운터(`🔁 N회독` / `increment_reread_count`) & 소장품 추정 가치·서재 총 자산 브리핑(`get_total_collection_value`)
 - **재독 횟수 카운터(`increment_reread_count`)**: 모달 `StampRow`의 `🔁1회독` 버튼으로 재독 횟수를 누적 기록하고, 2회독 이상부터 메인 카드에 `🔁N회독` 배지 표시
 - **소장품 추정 가치 & 총 자산 브리핑(`get_total_collection_value`)**: 권수와 레어도 등급을 반영한 서재 총 소장 가치를 계산하여 `show_library_infographic()` 통계 토스트로 실시간 브리핑

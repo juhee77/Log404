@@ -273,6 +273,15 @@ func _init() -> void:
 	assert("총 가치: ₩" in info_str, "show_library_infographic should include total collection value")
 	print("✓ Reread Counter & Collection Asset Value Briefing verified")
 
+	# Test Sprint 33: Duplicate Count Tracker & HFlowContainer Modal Layout
+	var prev_val = slam_item.get_item_value()
+	var new_dc = main_inst.detail_modal.increment_duplicate_count()
+	assert(new_dc >= 2, "increment_duplicate_count should increment duplicate_count")
+	assert(slam_item.get_item_value() == prev_val * new_dc, "get_item_value should scale with duplicate_count")
+	var stamp_row = main_inst.detail_modal.get_node_or_null("Panel/VBox/BodyMargin/Body/StampRow")
+	assert(stamp_row is HFlowContainer, "StampRow should use HFlowContainer to prevent horizontal modal overflow")
+	print("✓ Duplicate Count Tracker & HFlowContainer Modal Layout verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

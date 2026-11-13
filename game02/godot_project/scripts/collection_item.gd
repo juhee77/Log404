@@ -26,6 +26,7 @@ var reading_mood: String = "🥰 힐링"
 var target_volumes: int = 0
 var reread_count: int = 1
 var estimated_value: int = 0
+var duplicate_count: int = 1
 var updated_at: int = 0
 var volumes: Array = []
 
@@ -167,12 +168,18 @@ func increment_reread_count() -> int:
 	updated_at = int(Time.get_unix_time_from_system())
 	return reread_count
 
+func increment_duplicate_count() -> int:
+	duplicate_count += 1
+	updated_at = int(Time.get_unix_time_from_system())
+	return duplicate_count
+
 func get_item_value() -> int:
+	var qty = maxi(1, duplicate_count)
 	if estimated_value > 0:
-		return estimated_value
+		return estimated_value * qty
 	if category == 0:
-		return maxi(1, volumes.size()) * 7000
-	return 5000
+		return maxi(1, volumes.size()) * 7000 * qty
+	return 5000 * qty
 
 func to_dict() -> Dictionary:
 	return {
@@ -200,6 +207,7 @@ func to_dict() -> Dictionary:
 		"target_volumes": target_volumes,
 		"reread_count": reread_count,
 		"estimated_value": estimated_value,
+		"duplicate_count": duplicate_count,
 		"updated_at": updated_at,
 		"volumes": volumes
 	}

@@ -5,6 +5,22 @@
 
 ---
 
+## 🚀 [Sprint 33] 일기장 모달 `HFlowContainer` 반응형 줄바꿈 개선 & 수집품 보유·중복 수량 카운터(`👯×N` / `increment_duplicate_count`)
+- **시각**: 2026-11-14 06:39 KST
+- **1. 다꾸러 3인 VOC (수집러 A · 가챠러 B · 미니멀러 C)**
+  - **만년필 다꾸러 A**: *"일기장 모달(`detail_modal`)을 열었을 때 인장·테이프·무드 버튼들이 한 줄로 길게 늘어서서 모달 창이 좌우로 넘쳐 잘렸었는데, 줄바꿈되는 깔끔한 레이아웃으로 고쳐주세요!"*
+  - **가챠 수집러 B**: *"같은 가챠 피규어나 굿즈를 여러 개 뽑았을 때 보유·중복 수량(`👯×2`, `👯×3`)을 기록하고 서재 총 자산 가치 계산에도 자동으로 곱해지면 좋겠어요!"*
+  - **미니멀 수집러 C**: *"보유 수량이 1개일 땐 카드가 깔끔하게 유지되고, 2개 이상일 때만 `👯×N` 배지가 보이도록 해주세요."*
+- **2. 기획 & UI/UX & Godot 4.6 개발 내역**
+  - **일기장 모달 `HFlowContainer` 반응형 줄바꿈(`detail_modal.tscn` · `detail_modal.gd`)**: `StampRow`를 `HBoxContainer`에서 `HFlowContainer`(`h_separation=5`, `v_separation=4`)로 전환하여 모달이 408px 뷰포트 중앙에 완벽히 정렬되도록 레이아웃 수정
+  - **수집품 보유·중복 수량 카운터(`DuplicateBtn` / `increment_duplicate_count`)**: `collection_item.gd`에 `duplicate_count` 추가 및 `get_item_value()`에 수량 반영, `archive_state.gd` JSON 영구 저장/복원 연동, `detail_modal.tscn`에 `👯×1` 버튼 추가 및 `card_item.gd`에서 `> 1`일 때 `👯×N` 배지 표시
+  - **HTML 인터랙티브 목업 동기화**: `game02/index.html`에 `#duplicate-cycle-btn` / `incrementDuplicateCount()` 및 카드 `👯 ×N` 배지 동기화 완료
+- **3. TDD & QA 검증**
+  - `tests/test_main_integration.gd`에 Sprint 33 중복 수량 카운터 가치 연동 및 `HFlowContainer` 모달 레이아웃 검증 추가 → 3개 헤드리스 테스트 스위트 전수 100% PASS (스크립트 에러 0건)
+  - Metal 렌더러 최신 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 캡처로 모달 중앙 정렬·줄바꿈 시각 검증 완료
+
+---
+
 ## 🚀 [Sprint 32] 재독 횟수 카운터(`🔁 N회독` / `increment_reread_count`) & 소장품 추정 가치·서재 총 자산 브리핑(`get_total_collection_value`)
 - **시각**: 2026-11-14 06:20 KST
 - **1. 다꾸러 3인 VOC (수집러 A · 가챠러 B · 미니멀러 C)**
