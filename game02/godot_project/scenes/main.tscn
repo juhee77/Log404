@@ -106,6 +106,12 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 11
 text = "🖋️ + 일기 쓰기"
 
+[node name="AmbientBtn" type="Button" parent="VBox/TopBar/TopMargin/StatsVBox/TitleRow"]
+custom_minimum_size = Vector2(72, 32)
+layout_mode = 2
+theme_override_font_sizes/font_size = 11
+text = "🔕 무음"
+
 [node name="StatRow" type="HBoxContainer" parent="VBox/TopBar/TopMargin/StatsVBox"]
 layout_mode = 2
 theme_override_constants/separation = 8
@@ -376,6 +382,7 @@ visible = false
 layout_mode = 1
 
 [connection signal="pressed" from="VBox/TopBar/TopMargin/StatsVBox/TitleRow/AddBtn" to="." method="_on_add_btn_pressed"]
+[connection signal="pressed" from="VBox/TopBar/TopMargin/StatsVBox/TitleRow/AmbientBtn" to="." method="cycle_ambient_sound"]
 [connection signal="pressed" from="VBox/TopBar/TopMargin/StatsVBox/SpineBanner/HBox/NextQuoteBtn" to="." method="_on_next_quote_btn_pressed"]
 [connection signal="pressed" from="VBox/TopBar/TopMargin/StatsVBox/SpineBanner/HBox/RandomPickBtn" to="." method="_on_random_pick_btn_pressed"]
 [connection signal="pressed" from="VBox/FilterMargin/FilterBar/HBox/TabAll" to="." method="_on_tab_all_pressed"]

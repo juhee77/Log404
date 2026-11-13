@@ -215,7 +215,8 @@ func open(item) -> void:
 	var sticker = current_item.get("deco_sticker") if current_item.get("deco_sticker") != null else "✨"
 	var r_tier = current_item.get("rarity_tier") if current_item.get("rarity_tier") != null else "🌟노말"
 	var loc = current_item.get("storage_location") if current_item.get("storage_location") != null else "🗄️ 1층 장식장"
-	tag_label.text = "💮 " + current_item.status_tag + " " + sticker + " [" + r_tier + " · " + loc + "] | " + current_item.obi_text
+	var src = current_item.get("acquisition_source") if current_item.get("acquisition_source") != null else "🏪 오프라인 서점"
+	tag_label.text = "💮 " + current_item.status_tag + " " + sticker + " [" + r_tier + " · " + loc + " · " + src + "] | " + current_item.obi_text
 	memo_label.text = sticker + " 🖋️ \"" + (item.memo if item.memo != "" else "오늘 읽은 페이지의 감동을 일기장에 기록합니다.") + "\""
 	quote_input.text = item.memo
 	var deco_btn: Button = get_node_or_null("Panel/VBox/BodyMargin/Body/StampRow/DecoStickerBtn")
@@ -227,6 +228,9 @@ func open(item) -> void:
 	var loc_btn: Button = get_node_or_null("Panel/VBox/BodyMargin/Body/StampRow/StorageBtn")
 	if loc_btn != null:
 		loc_btn.text = loc
+	var src_btn: Button = get_node_or_null("Panel/VBox/BodyMargin/Body/StampRow/SourceBtn")
+	if src_btn != null:
+		src_btn.text = src
 	_apply_paper_style()
 	_apply_ink_style()
 	_apply_washi_style()
@@ -312,9 +316,24 @@ func cycle_storage_location() -> String:
 		s_btn.text = s
 	var sticker = current_item.get("deco_sticker") if current_item.get("deco_sticker") != null else "✨"
 	var r_tier = current_item.get("rarity_tier") if current_item.get("rarity_tier") != null else "🌟노말"
-	tag_label.text = "💮 " + current_item.status_tag + " " + sticker + " [" + r_tier + " · " + s + "] | " + current_item.obi_text
+	var src = current_item.get("acquisition_source") if current_item.get("acquisition_source") != null else "🏪 오프라인 서점"
+	tag_label.text = "💮 " + current_item.status_tag + " " + sticker + " [" + r_tier + " · " + s + " · " + src + "] | " + current_item.obi_text
 	diary_updated.emit(current_item)
 	return s
+
+func cycle_acquisition_source() -> String:
+	if current_item == null:
+		return "🏪 오프라인 서점"
+	var src = current_item.cycle_acquisition_source() if current_item.has_method("cycle_acquisition_source") else "🏪 오프라인 서점"
+	var src_btn: Button = get_node_or_null("Panel/VBox/BodyMargin/Body/StampRow/SourceBtn")
+	if src_btn != null:
+		src_btn.text = src
+	var sticker = current_item.get("deco_sticker") if current_item.get("deco_sticker") != null else "✨"
+	var r_tier = current_item.get("rarity_tier") if current_item.get("rarity_tier") != null else "🌟노말"
+	var loc = current_item.get("storage_location") if current_item.get("storage_location") != null else "🗄️ 1층 장식장"
+	tag_label.text = "💮 " + current_item.status_tag + " " + sticker + " [" + r_tier + " · " + loc + " · " + src + "] | " + current_item.obi_text
+	diary_updated.emit(current_item)
+	return src
 
 func cycle_obi_preset() -> void:
 	if current_item == null:

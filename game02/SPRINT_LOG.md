@@ -5,6 +5,22 @@
 
 ---
 
+## 🚀 [Sprint 30] 독서 몰입 앰비언트 백색소음(`🎧 앰비언트` / `cycle_ambient_sound`) & 소장품 입수처 트래커(`🏷️ 입수처` / `cycle_acquisition_source`)
+- **시각**: 2026-11-14 00:23 KST
+- **1. 다꾸러 3인 VOC (수집러 A · 가챠러 B · 미니멀러 C)**
+  - **만년필 다꾸러 A**: *"책을 읽거나 일기를 쓸 때 몰입할 수 있도록 빗소리, 북카페, 책장넘김, 모닥불 등 앰비언트 백색소음(`🎧 앰비언트` / `cycle_ambient_sound`)을 고를 수 있으면 독서 분위기가 완성됩니다!"*
+  - **가챠 수집러 B**: *"소장품을 어디서 샀는지(🏪 오프라인 서점, 🇯🇵 직구/해외, 🎁 선물, 🎪 팝업/행사, 📦 온라인 서점)를 기록하는 입수처 태그(`🏷️ 입수처` / `cycle_acquisition_source`)가 있으면 굿즈 아카이빙이 더욱 풍성해져요!"*
+  - **미니멀 수집러 C**: *"상단 바의 일기 쓰기 옆에 앰비언트 백색소음 버튼이 배치되어 손쉽게 BGM 무드를 켜고 끌 수 있는 점이 아주 직관적입니다!"*
+- **2. 기획 & UI/UX & Godot 4.6 개발 내역**
+  - **독서 몰입 앰비언트 백색소음 플레이어(`AmbientBtn` / `cycle_ambient_sound`)**: `main_view.gd` 및 `main.tscn` 상단 타이틀 행에 `AmbientBtn`을 배치하고 6종 사운드 프리셋(`🔕 무음`, `🌧️ 빗소리`, `☕ 북카페`, `📖 책장넘김`, `🔥 모닥불`, `🦗 밤귀뚜라미`)을 원터치 순환 및 토스트 안내
+  - **소장품 입수처/구매 경로 트래커(`SourceBtn` / `cycle_acquisition_source`)**: `collection_item.gd`에 `acquisition_source` 필드 추가 및 `archive_state.gd` JSON 연동. 5종 입수처 프리셋을 모달에서 순환 선택
+  - **HTML 인터랙티브 목업 동기화**: `game02/index.html`에 `cycleAmbientSound()` 및 `cycleAcquisitionSource()` 완벽 동기화
+- **3. TDD & QA 검증**
+  - `tests/test_main_integration.gd`에 Sprint 30 검증 추가 → 3개 헤드리스 테스트 스위트 전수 100% PASS
+  - Metal 렌더러 최신 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 캡처 및 GitHub 푸시 완료
+
+---
+
 ## 🚀 [Sprint 29] 일기장 종이 내지 패턴(`📜 종이질감` / `cycle_paper_pattern`) & 실물 보관 위치 트래커(`🗄️ 보관위치` / `cycle_storage_location`)
 - **시각**: 2026-11-13 07:47 KST
 - **1. 다꾸러 3인 VOC (수집러 A · 가챠러 B · 미니멀러 C)**

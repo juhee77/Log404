@@ -5,7 +5,7 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 
 ---
 
-## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 29)
+## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 30)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
@@ -14,6 +14,11 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 ---
 
 ## 🚀 최신 스프린트 업데이트 요약 ([전체 회의록 보기](SPRINT_LOG.md))
+
+### [Sprint 30] 독서 몰입 앰비언트 백색소음(`🎧 앰비언트` / `cycle_ambient_sound`) & 소장품 입수처 트래커(`🏷️ 입수처` / `cycle_acquisition_source`)
+- **독서 몰입 앰비언트 백색소음(`cycle_ambient_sound`)**: 메인 상단에서 6종 백색소음(`🔕무음`, `🌧️빗소리`, `☕북카페`, `📖책장넘김`, `🔥모닥불`, `🦗밤귀뚜라미`)을 원터치 순환 및 재생
+- **소장품 입수처 트래커(`cycle_acquisition_source`)**: `🏪 오프라인 서점`, `🇯🇵 직구/해외`, `🎁 선물`, `🎪 팝업/행사`, `📦 온라인 서점` 5종 입수 경로 관리
+- **웹 목업 동기화**: `game02/index.html`에 앰비언트 백색소음 및 입수처 트래커 완벽 연동
 
 ### [Sprint 29] 일기장 종이 내지 패턴(`📜 종이질감` / `cycle_paper_pattern`) & 실물 보관 위치 트래커(`🗄️ 보관위치` / `cycle_storage_location`)
 - **일기장 종이 패턴 순환(`cycle_paper_pattern`)**: `📄줄노트`, `📜모눈`, `📋무지`, `🍂양장` 4종 종이 스타일을 원터치 순환하여 아날로그 몰스킨 감성 극대화

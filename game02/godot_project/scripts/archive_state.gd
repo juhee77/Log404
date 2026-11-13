@@ -199,6 +199,7 @@ func load_from_file(custom_path: String = "") -> bool:
 			it.rarity_tier = d.get("rarity_tier", "🌟노말")
 			it.paper_pattern = d.get("paper_pattern", "ruled")
 			it.storage_location = d.get("storage_location", "🗄️ 1층 장식장")
+			it.acquisition_source = d.get("acquisition_source", "🏪 오프라인 서점")
 			it.updated_at = int(d.get("updated_at", 0))
 			it.volumes = d.get("volumes", [])
 			items.append(it)

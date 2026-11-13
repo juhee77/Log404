@@ -108,6 +108,5 @@ func setup(item) -> void:
 	else: # GACHA
 		cat_badge.text = " DIARY "
 		vol_badge.visible = true
-		var r_tier = item.get("rarity_tier") if item.get("rarity_tier") != null else "🔮가챠"
-		vol_badge.text = r_tier
+		vol_badge.text = "🔮가챠"
 		status_label.text = "🖋️ " + first_quote

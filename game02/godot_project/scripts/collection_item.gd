@@ -21,6 +21,7 @@ var deco_sticker: String = "✨"
 var rarity_tier: String = "🌟노말"
 var paper_pattern: String = "ruled"
 var storage_location: String = "🗄️ 1층 장식장"
+var acquisition_source: String = "🏪 오프라인 서점"
 var updated_at: int = 0
 var volumes: Array = []
 
@@ -128,6 +129,16 @@ func cycle_storage_location() -> String:
 	updated_at = int(Time.get_unix_time_from_system())
 	return storage_location
 
+func cycle_acquisition_source() -> String:
+	const PRESETS = ["🏪 오프라인 서점", "🇯🇵 직구/해외", "🎁 선물", "🎪 팝업/행사", "📦 온라인 서점"]
+	var idx = PRESETS.find(acquisition_source)
+	if idx == -1:
+		acquisition_source = PRESETS[0]
+	else:
+		acquisition_source = PRESETS[(idx + 1) % PRESETS.size()]
+	updated_at = int(Time.get_unix_time_from_system())
+	return acquisition_source
+
 func to_dict() -> Dictionary:
 	return {
 		"id": id,
@@ -149,6 +160,7 @@ func to_dict() -> Dictionary:
 		"rarity_tier": rarity_tier,
 		"paper_pattern": paper_pattern,
 		"storage_location": storage_location,
+		"acquisition_source": acquisition_source,
 		"updated_at": updated_at,
 		"volumes": volumes
 	}

@@ -40,6 +40,25 @@ var filter_firsts_only: bool = false
 var filter_completed_only: bool = false
 var filter_favorites_only: bool = false
 
+var ambient_sound_index: int = 0
+const AMBIENT_SOUND_PRESETS = [
+	"🔕 무음",
+	"🌧️ 빗소리",
+	"☕ 북카페",
+	"📖 책장넘김",
+	"🔥 모닥불",
+	"🦗 밤귀뚜라미"
+]
+
+func cycle_ambient_sound() -> String:
+	ambient_sound_index = (ambient_sound_index + 1) % AMBIENT_SOUND_PRESETS.size()
+	var snd = AMBIENT_SOUND_PRESETS[ambient_sound_index]
+	var ambient_btn: Button = get_node_or_null("VBox/TopBar/TopMargin/StatsVBox/TitleRow/AmbientBtn")
+	if ambient_btn != null:
+		ambient_btn.text = snd
+	_show_toast("🎧 앰비언트: " + snd + " 재생")
+	return snd
+
 const ROOM_THEMES = [
 	{"name": "만년필 미색 노트 (Warm Ivory)", "bg": Color(0.98, 0.965, 0.94, 1)},
 	{"name": "빈티지 크라프트 다꾸지 (Kraft)", "bg": Color(0.94, 0.89, 0.82, 1)},

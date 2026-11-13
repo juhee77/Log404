@@ -187,6 +187,10 @@
                         class="px-2.5 py-1 rounded-lg bg-[#c85a32] hover:bg-[#b04b25] text-white text-[11px] font-bold shrink-0 cursor-pointer">
                         🎲 추천
                     </button>
+                    <button id="ambient-sound-btn" onclick="cycleAmbientSound()"
+                        class="px-2.5 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] border border-[#d6c7b2] text-[#2c221e] text-[11px] font-bold shrink-0 cursor-pointer">
+                        🔕 무음
+                    </button>
                 </div>
             </div>
         </section>
@@ -284,6 +288,7 @@
                             <button id="rarity-cycle-btn" onclick="cycleRarityTier()" class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">💎 레어</button>
                             <button id="paper-cycle-btn" onclick="cyclePaperPattern()" class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">📄 줄노트</button>
                             <button id="storage-cycle-btn" onclick="cycleStorageLocation()" class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">🗄️ 장식장</button>
+                            <button id="source-cycle-btn" onclick="cycleAcquisitionSource()" class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">🏪 서점</button>
                             <button onclick="copyBookQuoteCard()" class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">💌 감상 카드 공유</button>
                             <button onclick="closeJournalModal()" class="w-7 h-7 rounded-full bg-[#efe7da] hover:bg-[#e2d6c5] text-[#5c4938] text-xs font-bold cursor-pointer">✕</button>
                         </div>
@@ -599,7 +604,9 @@
             }
             const storageBtn = document.getElementById('storage-cycle-btn');
             if (storageBtn) storageBtn.textContent = loc;
-            document.getElementById('diary-stamp').textContent = `💮 ${item.stamp} ${sticker} [${rTier} · ${loc}]`;
+            const srcBtn = document.getElementById('source-cycle-btn');
+            if (srcBtn) srcBtn.textContent = item.acquisition_source || '🏪 오프라인 서점';
+            document.getElementById('diary-stamp').textContent = `💮 ${item.stamp} ${sticker} [${rTier} · ${loc} · ${item.acquisition_source || '🏪 오프라인 서점'}]`;
             document.getElementById('journal-modal').classList.remove('hidden');
         }
 
@@ -632,6 +639,28 @@
             if (btn) btn.textContent = item.storage_location;
             const stampEl = document.getElementById('diary-stamp');
             if (stampEl) stampEl.textContent = `💮 ${item.stamp} ${item.deco_sticker || '✨'} [${item.rarity_tier || '🌟 노말'} · ${item.storage_location}]`;
+        }
+
+        const SOURCE_PRESETS = ["🏪 오프라인 서점", "🇯🇵 직구/해외", "🎁 선물", "🎪 팝업/행사", "📦 온라인 서점"];
+        function cycleAcquisitionSource() {
+            const item = ITEMS.find(x => x.id === activeId);
+            if (!item) return;
+            const cur = item.acquisition_source || '🏪 오프라인 서점';
+            const idx = SOURCE_PRESETS.indexOf(cur);
+            item.acquisition_source = SOURCE_PRESETS[(idx + 1) % SOURCE_PRESETS.length];
+            const btn = document.getElementById('source-cycle-btn');
+            if (btn) btn.textContent = item.acquisition_source;
+            const stampEl = document.getElementById('diary-stamp');
+            if (stampEl) stampEl.textContent = `💮 ${item.stamp} ${item.deco_sticker || '✨'} [${item.rarity_tier || '🌟 노말'} · ${item.storage_location || '🗄️ 장식장'} · ${item.acquisition_source}]`;
+        }
+
+        const AMBIENT_PRESETS = ["🔕 무음", "🌧️ 빗소리", "☕ 북카페", "📖 책장넘김", "🔥 모닥불", "🦗 밤귀뚜라미"];
+        let ambientIdx = 0;
+        function cycleAmbientSound() {
+            ambientIdx = (ambientIdx + 1) % AMBIENT_PRESETS.length;
+            const snd = AMBIENT_PRESETS[ambientIdx];
+            const btn = document.getElementById('ambient-sound-btn');
+            if (btn) btn.textContent = snd;
         }
 
         const RARITY_PRESETS = ["🌟 노말", "💎 레어", "👑 슈퍼레어", "🔮 시크릿"];

@@ -249,6 +249,13 @@ func _init() -> void:
 	assert(new_loc in ["🗄️ 1층 장식장", "📦 아크릴함", "📚 책상 선반", "🎒 외출 파우치"], "cycle_storage_location should cycle among storage presets")
 	print("✓ Diary Paper Pattern Cycler & Collector Storage Location Tracker verified")
 
+	# Test Sprint 30: Reading Ambient Sound Player & Item Acquisition Source Tracker
+	var new_src = main_inst.detail_modal.cycle_acquisition_source()
+	assert(new_src in ["🏪 오프라인 서점", "🇯🇵 직구/해외", "🎁 선물", "🎪 팝업/행사", "📦 온라인 서점"], "cycle_acquisition_source should cycle among source presets")
+	var new_snd = main_inst.cycle_ambient_sound()
+	assert(new_snd in main_inst.AMBIENT_SOUND_PRESETS, "cycle_ambient_sound should cycle ambient sound presets")
+	print("✓ Reading Ambient Sound Player & Item Acquisition Source Tracker verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()
