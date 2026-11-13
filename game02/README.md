@@ -15,6 +15,11 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 
 ## 🚀 최신 스프린트 업데이트 요약 ([전체 회의록 보기](SPRINT_LOG.md))
 
+### [Sprint 32] 재독 횟수 카운터(`🔁 N회독` / `increment_reread_count`) & 소장품 추정 가치·서재 총 자산 브리핑(`get_total_collection_value`)
+- **재독 횟수 카운터(`increment_reread_count`)**: 모달 `StampRow`의 `🔁1회독` 버튼으로 재독 횟수를 누적 기록하고, 2회독 이상부터 메인 카드에 `🔁N회독` 배지 표시
+- **소장품 추정 가치 & 총 자산 브리핑(`get_total_collection_value`)**: 권수와 레어도 등급을 반영한 서재 총 소장 가치를 계산하여 `show_library_infographic()` 통계 토스트로 실시간 브리핑
+- **웹 목업 동기화**: `game02/index.html`에 `incrementRereadCount()` 버튼 및 카드 `🔁 N회독` 배지 완벽 연동
+
 ### [Sprint 31] 독서 감상 무드 태그(`🥰 힐링` / `cycle_reading_mood`) & 목표 권수 정밀 완독률 트래커(`target_volumes`)
 - **독서 감상 무드 태그(`cycle_reading_mood`)**: `🥰 힐링`, `🔥 열혈`, `😭 감동`, `🤯 반전`, `🤣 유쾌` 5종 무드 스티커 원터치 순환
 - **목표 권수 기반 정밀 완독률(`get_completion_percentage`)**: 소장 목표 권수 대비 정확한 완독 퍼센티지 계산 및 카드 진행률 바 연동

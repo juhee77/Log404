@@ -290,6 +290,7 @@
                             <button id="storage-cycle-btn" onclick="cycleStorageLocation()" class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">🗄️ 장식장</button>
                             <button id="source-cycle-btn" onclick="cycleAcquisitionSource()" class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">🏪 서점</button>
                             <button id="mood-cycle-btn" onclick="cycleReadingMood()" class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">🥰 힐링</button>
+                            <button id="reread-cycle-btn" onclick="incrementRereadCount()" class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">🔁 1회독</button>
                             <button onclick="copyBookQuoteCard()" class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">💌 감상 카드 공유</button>
                             <button onclick="closeJournalModal()" class="w-7 h-7 rounded-full bg-[#efe7da] hover:bg-[#e2d6c5] text-[#5c4938] text-xs font-bold cursor-pointer">✕</button>
                         </div>
@@ -530,7 +531,7 @@
                             <div class="flex-1 min-w-0">
                                 <span class="rubber-stamp text-[10px] px-1.5 py-0.5 rounded inline-block mb-1.5">💮 ${item.stamp} ${item.deco_sticker || '✨'}</span>
                                 <h3 class="serif-font text-sm font-bold text-[#2c221e] truncate">${item.title}</h3>
-                                <p class="text-[11px] text-[#786b63] truncate">${item.author}</p>
+                                <p class="text-[11px] text-[#786b63] truncate">${item.author}${(item.reread_count || 1) > 1 ? ` · 🔁 ${item.reread_count}회독` : ''}</p>
                                 <p class="serif-font text-[11px] text-[#5c4938] italic line-clamp-2 mt-2 bg-[#fffdf9] p-1.5 rounded border border-[#ece3d5]">
                                     ${quotePreview}
                                 </p>
@@ -608,6 +609,8 @@
             if (srcBtn) srcBtn.textContent = item.acquisition_source || '🏪 오프라인 서점';
             const moodBtn = document.getElementById('mood-cycle-btn');
             if (moodBtn) moodBtn.textContent = item.reading_mood || '🥰 힐링';
+            const rereadBtn = document.getElementById('reread-cycle-btn');
+            if (rereadBtn) rereadBtn.textContent = `🔁 ${item.reread_count || 1}회독`;
             document.getElementById('diary-stamp').textContent = `💮 ${item.stamp} ${sticker} [${item.reading_mood || '🥰 힐링'} · ${rTier} · ${loc}]`;
             document.getElementById('journal-modal').classList.remove('hidden');
         }
@@ -623,6 +626,15 @@
             if (btn) btn.textContent = item.reading_mood;
             const stampEl = document.getElementById('diary-stamp');
             if (stampEl) stampEl.textContent = `💮 ${item.stamp} ${item.deco_sticker || '✨'} [${item.reading_mood} · ${item.rarity_tier || '🌟 노말'} · ${item.storage_location || '🗄️ 장식장'}]`;
+        }
+
+        function incrementRereadCount() {
+            const item = ITEMS.find(x => x.id === activeId);
+            if (!item) return;
+            item.reread_count = (item.reread_count || 1) + 1;
+            const btn = document.getElementById('reread-cycle-btn');
+            if (btn) btn.textContent = `🔁 ${item.reread_count}회독`;
+            renderShelf();
         }
 
         const SOURCE_PRESETS = ["🏪 오프라인 서점", "🇯🇵 직구/해외", "🎁 선물", "🎪 팝업/행사", "📦 온라인 서점"];

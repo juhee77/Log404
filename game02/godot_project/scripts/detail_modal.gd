@@ -235,6 +235,10 @@ func open(item) -> void:
 	var mood_btn: Button = get_node_or_null("Panel/VBox/BodyMargin/Body/StampRow/MoodBtn")
 	if mood_btn != null:
 		mood_btn.text = mood
+	var reread_btn: Button = get_node_or_null("Panel/VBox/BodyMargin/Body/StampRow/RereadBtn")
+	if reread_btn != null:
+		var rc = current_item.get("reread_count") if current_item.get("reread_count") != null else 1
+		reread_btn.text = "🔁" + str(rc) + "회독"
 	_apply_paper_style()
 	_apply_ink_style()
 	_apply_washi_style()
@@ -352,6 +356,16 @@ func cycle_reading_mood() -> String:
 	tag_label.text = "💮 " + current_item.status_tag + " " + sticker + " [" + m + " · " + r_tier + " · " + loc + "] | " + current_item.obi_text
 	diary_updated.emit(current_item)
 	return m
+
+func increment_reread_count() -> int:
+	if current_item == null:
+		return 1
+	var rc = current_item.increment_reread_count() if current_item.has_method("increment_reread_count") else 1
+	var reread_btn: Button = get_node_or_null("Panel/VBox/BodyMargin/Body/StampRow/RereadBtn")
+	if reread_btn != null:
+		reread_btn.text = "🔁" + str(rc) + "회독"
+	diary_updated.emit(current_item)
+	return rc
 
 func cycle_obi_preset() -> void:
 	if current_item == null:

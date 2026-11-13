@@ -264,6 +264,15 @@ func _init() -> void:
 	assert(pct > 0.0 and pct <= 100.0, "get_completion_percentage should compute valid percentage against target_volumes")
 	print("✓ Reading Mood Tag Cycler & Target Volume Progress Tracker verified")
 
+	# Test Sprint 32: Reread Counter & Collection Asset Value Briefing
+	var new_rc = main_inst.detail_modal.increment_reread_count()
+	assert(new_rc >= 2, "increment_reread_count should increment reread_count")
+	var total_val = main_inst.archive_state.get_total_collection_value()
+	assert(total_val > 0, "get_total_collection_value should compute positive collection value")
+	var info_str = main_inst.show_library_infographic()
+	assert("총 가치: ₩" in info_str, "show_library_infographic should include total collection value")
+	print("✓ Reread Counter & Collection Asset Value Briefing verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

@@ -287,6 +287,12 @@ size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 10
 text = "🥰힐링"
 
+[node name="RereadBtn" type="Button" parent="Panel/VBox/BodyMargin/Body/StampRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 10
+text = "🔁1회독"
+
 [node name="QuoteEditRow" type="HBoxContainer" parent="Panel/VBox/BodyMargin/Body"]
 layout_mode = 2
 theme_override_constants/separation = 6
@@ -383,6 +389,7 @@ theme_override_constants/separation = 5
 [connection signal="pressed" from="Panel/VBox/BodyMargin/Body/StampRow/StorageBtn" to="." method="cycle_storage_location"]
 [connection signal="pressed" from="Panel/VBox/BodyMargin/Body/StampRow/SourceBtn" to="." method="cycle_acquisition_source"]
 [connection signal="pressed" from="Panel/VBox/BodyMargin/Body/StampRow/MoodBtn" to="." method="cycle_reading_mood"]
+[connection signal="pressed" from="Panel/VBox/BodyMargin/Body/StampRow/RereadBtn" to="." method="increment_reread_count"]
 [connection signal="pressed" from="Panel/VBox/BodyMargin/Body/QuoteEditRow/SaveQuoteBtn" to="." method="_on_save_quote_btn_pressed"]
 [connection signal="pressed" from="Panel/VBox/BodyMargin/Body/QuoteEditRow/HighlightBtn" to="." method="toggle_quote_highlight"]
 [connection signal="pressed" from="Panel/VBox/BodyMargin/Body/InkRow/InkEspresso" to="." method="_on_ink_espresso_pressed"]

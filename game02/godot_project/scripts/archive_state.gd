@@ -202,8 +202,16 @@ func load_from_file(custom_path: String = "") -> bool:
 			it.acquisition_source = d.get("acquisition_source", "🏪 오프라인 서점")
 			it.reading_mood = d.get("reading_mood", "🥰 힐링")
 			it.target_volumes = int(d.get("target_volumes", 0))
+			it.reread_count = int(d.get("reread_count", 1))
+			it.estimated_value = int(d.get("estimated_value", 0))
 			it.updated_at = int(d.get("updated_at", 0))
 			it.volumes = d.get("volumes", [])
 			items.append(it)
 	
 	return items.size() > 0
+
+func get_total_collection_value() -> int:
+	var total = 0
+	for it in items:
+		total += it.get_item_value()
+	return total

@@ -24,6 +24,8 @@ var storage_location: String = "🗄️ 1층 장식장"
 var acquisition_source: String = "🏪 오프라인 서점"
 var reading_mood: String = "🥰 힐링"
 var target_volumes: int = 0
+var reread_count: int = 1
+var estimated_value: int = 0
 var updated_at: int = 0
 var volumes: Array = []
 
@@ -160,6 +162,18 @@ func get_completion_percentage() -> float:
 		return 30.0
 	return clampf(float(volumes.size()) * 25.0, 20.0, 100.0)
 
+func increment_reread_count() -> int:
+	reread_count += 1
+	updated_at = int(Time.get_unix_time_from_system())
+	return reread_count
+
+func get_item_value() -> int:
+	if estimated_value > 0:
+		return estimated_value
+	if category == 0:
+		return maxi(1, volumes.size()) * 7000
+	return 5000
+
 func to_dict() -> Dictionary:
 	return {
 		"id": id,
@@ -184,6 +198,8 @@ func to_dict() -> Dictionary:
 		"acquisition_source": acquisition_source,
 		"reading_mood": reading_mood,
 		"target_volumes": target_volumes,
+		"reread_count": reread_count,
+		"estimated_value": estimated_value,
 		"updated_at": updated_at,
 		"volumes": volumes
 	}

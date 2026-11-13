@@ -5,6 +5,22 @@
 
 ---
 
+## 🚀 [Sprint 32] 재독 횟수 카운터(`🔁 N회독` / `increment_reread_count`) & 소장품 추정 가치·서재 총 자산 브리핑(`get_total_collection_value`)
+- **시각**: 2026-11-14 06:20 KST
+- **1. 다꾸러 3인 VOC (수집러 A · 가챠러 B · 미니멀러 C)**
+  - **만년필 다꾸러 A**: *"인생작을 몇 번이나 다시 읽었는지 일기장에 `🔁 2회독`, `🔁 3회독`처럼 기록하고 카드에서도 한눈에 보면 뿌듯할 것 같아요!"*
+  - **가챠 수집러 B**: *"모은 만화책과 가챠 피규어들의 추정 소장 가치를 합산해서 내 서재의 총 자산이 얼마인지 통계 브리핑에서 확인하고 싶어요!"*
+  - **미니멀 수집러 C**: *"재독 횟수가 1회독일 땐 깔끔하게 숨기고, 2회독 이상부터만 카드에 `🔁 N회독` 배지가 노출되면 미니멀한 레이아웃이 유지됩니다."*
+- **2. 기획 & UI/UX & Godot 4.6 개발 내역**
+  - **재독 횟수 카운터(`RereadBtn` / `increment_reread_count`)**: `collection_item.gd`에 `reread_count` 및 `increment_reread_count()` 추가, `archive_state.gd` JSON 영구 저장/복원 연동, `detail_modal.tscn`에 `RereadBtn`(`🔁1회독`) 추가 및 `card_item.gd`에서 `> 1`일 때 `🔁N회독` 배지 자동 표시
+  - **소장품 추정 가치 & 서재 총 자산 브리핑(`get_item_value` / `get_total_collection_value`)**: 권수 및 레어도(`🌟노말`, `💎레어`, `👑한정판`, `✨시크릿`) 기반 추정 가치 산출 및 `main_view.gd` `show_library_infographic()`에 `총 가치: ₩...` 실시간 브리핑 연동
+  - **HTML 인터랙티브 목업 동기화**: `game02/index.html`에 `#reread-cycle-btn` / `incrementRereadCount()` 및 카드 `🔁 N회독` 배지 동기화 완료
+- **3. TDD & QA 검증**
+  - `tests/test_main_integration.gd`에 Sprint 32 재독 카운터 및 서재 총 자산 브리핑 검증 추가 → 3개 헤드리스 테스트 스위트 전수 100% PASS
+  - Metal 렌더러 최신 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 캡처 및 GitHub 푸시 완료
+
+---
+
 ## 🚀 [Sprint 31] 독서 감상 무드 태그(`🥰 힐링` / `cycle_reading_mood`) & 목표 권수 정밀 완독률 트래커(`target_volumes`)
 - **시각**: 2026-11-14 06:00 KST
 - **1. 다꾸러 3인 VOC (수집러 A · 가챠러 B · 미니멀러 C)**

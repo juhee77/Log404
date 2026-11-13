@@ -345,12 +345,14 @@ func show_library_infographic() -> String:
 			if v.get("quote", "") != "":
 				sum_quotes += 1
 	var prog = int(get_overall_reading_progress())
-	var text = "📊 소장: %d종 (%d권) · 완독률: %d%% · 북마크: %d권 · 밑줄: %d개" % [
+	var total_val = archive_state.get_total_collection_value() if archive_state.has_method("get_total_collection_value") else 0
+	var text = "📊 소장: %d종 (%d권) · 완독률: %d%% · 북마크: %d권 · 밑줄: %d개 · 총 가치: ₩%d" % [
 		archive_state.items.size(),
 		archive_state.get_total_volumes(),
 		prog,
 		total_bms,
-		sum_quotes
+		sum_quotes,
+		total_val
 	]
 	_show_toast(text)
 	return text

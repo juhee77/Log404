@@ -54,6 +54,8 @@ func setup(item) -> void:
 			sum_r += float(v.get("rating", 5))
 		avg_r = sum_r / float(item.volumes.size())
 	author_label.text = base_author + " · ★" + String.num(avg_r, 1)
+	if item.reread_count > 1:
+		author_label.text += " · 🔁" + str(item.reread_count) + "회독"
 
 	# 독서 진행률 (E-Book 리더기 & 굿노트 독서트래커 감성)
 	var prog = get_reading_progress()
