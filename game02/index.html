@@ -292,6 +292,7 @@
                             <button id="mood-cycle-btn" onclick="cycleReadingMood()" class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">🥰 힐링</button>
                             <button id="reread-cycle-btn" onclick="incrementRereadCount()" class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">🔁 1회독</button>
                             <button id="duplicate-cycle-btn" onclick="incrementDuplicateCount()" class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">👯 ×1</button>
+                            <button id="signature-cycle-btn" onclick="cycleDiarySignature()" class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">✍️ 주희의 서재</button>
                             <button onclick="copyBookQuoteCard()" class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">💌 감상 카드 공유</button>
                             <button onclick="closeJournalModal()" class="w-7 h-7 rounded-full bg-[#efe7da] hover:bg-[#e2d6c5] text-[#5c4938] text-xs font-bold cursor-pointer">✕</button>
                         </div>
@@ -614,6 +615,8 @@
             if (rereadBtn) rereadBtn.textContent = `🔁 ${item.reread_count || 1}회독`;
             const dupBtn = document.getElementById('duplicate-cycle-btn');
             if (dupBtn) dupBtn.textContent = `👯 ×${item.duplicate_count || 1}`;
+            const sigBtn = document.getElementById('signature-cycle-btn');
+            if (sigBtn) sigBtn.textContent = item.diary_signature || '✍️ 주희의 서재';
             document.getElementById('diary-stamp').textContent = `💮 ${item.stamp} ${sticker} [${item.reading_mood || '🥰 힐링'} · ${rTier} · ${loc}]`;
             document.getElementById('journal-modal').classList.remove('hidden');
         }
@@ -647,6 +650,17 @@
             const btn = document.getElementById('duplicate-cycle-btn');
             if (btn) btn.textContent = `👯 ×${item.duplicate_count}`;
             renderShelf();
+        }
+
+        const SIGNATURE_PRESETS = ["✍️ 주희의 서재", "🌙 밤독서 기록", "☕ 카페 다꾸", "🎁 소장 기념"];
+        function cycleDiarySignature() {
+            const item = ITEMS.find(x => x.id === activeId);
+            if (!item) return;
+            const cur = item.diary_signature || "✍️ 주희의 서재";
+            const idx = SIGNATURE_PRESETS.indexOf(cur);
+            item.diary_signature = SIGNATURE_PRESETS[(idx + 1) % SIGNATURE_PRESETS.length];
+            const btn = document.getElementById('signature-cycle-btn');
+            if (btn) btn.textContent = item.diary_signature;
         }
 
         const SOURCE_PRESETS = ["🏪 오프라인 서점", "🇯🇵 직구/해외", "🎁 선물", "🎪 팝업/행사", "📦 온라인 서점"];

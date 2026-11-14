@@ -15,6 +15,11 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 
 ## 🚀 최신 스프린트 업데이트 요약 ([전체 회의록 보기](SPRINT_LOG.md))
 
+### [Sprint 34] `InkRow` `HFlowContainer` 줄바꿈 개선 · 일기장 서명 스탬프(`✍️ 주희의 서재`) · 서재 총 재독 브리핑(`get_total_rereads`)
+- **`InkRow` `HFlowContainer` 줄바꿈**: `detail_modal.tscn`의 `InkRow`를 `HFlowContainer`로 전환해 `✒️펜촉` 버튼 우측 클리핑을 해소하고 모달 내부에 깔끔히 정렬
+- **일기장 서명 스탬프(`cycle_diary_signature`)**: `✍️ 주희의 서재`, `🌙 밤독서 기록`, `☕ 카페 다꾸`, `🎁 소장 기념` 4종 서명 스탬프 원터치 순환
+- **서재 총 재독 브리핑(`get_total_rereads`)**: `show_library_infographic()` 통계 토스트에 `총 재독: N회` 실시간 합산 표시 및 `game02/index.html` 동기화
+
 ### [Sprint 33] 일기장 모달 `HFlowContainer` 반응형 줄바꿈 개선 & 수집품 보유·중복 수량 카운터(`👯×N`)
 - **일기장 모달 `HFlowContainer` 줄바꿈**: `detail_modal.tscn`의 `StampRow`를 `HFlowContainer`로 전환해 13종 이상의 인장·다꾸 버튼이 408px 모달 안에 깔끔하게 줄바꿈 정렬되도록 개선
 - **수집품 보유·중복 수량 카운터(`increment_duplicate_count`)**: 모달 `👯×1` 버튼으로 중복 보유 수량을 기록하고, 추정 가치 합산 반영 및 2개 이상일 때 카드에 `👯×N` 배지 표시

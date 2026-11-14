@@ -132,7 +132,7 @@ func _style_diary_controls() -> void:
 		hl_btn.add_theme_stylebox_override("normal", cream_btn)
 		hl_btn.add_theme_color_override("font_color", Color(0.55, 0.38, 0.12))
 
-	var ink_row: HBoxContainer = get_node_or_null("Panel/VBox/BodyMargin/Body/InkRow")
+	var ink_row: HFlowContainer = get_node_or_null("Panel/VBox/BodyMargin/Body/InkRow")
 	if ink_row != null:
 		for btn in ink_row.get_children():
 			if btn is Button:
@@ -243,6 +243,10 @@ func open(item) -> void:
 	if dup_btn != null:
 		var dc = current_item.get("duplicate_count") if current_item.get("duplicate_count") != null else 1
 		dup_btn.text = "👯×" + str(dc)
+	var sig_btn: Button = get_node_or_null("Panel/VBox/BodyMargin/Body/InkRow/SignatureBtn")
+	if sig_btn != null:
+		var sig = current_item.get("diary_signature") if current_item.get("diary_signature") != null else "✍️ 주희의 서재"
+		sig_btn.text = sig
 	_apply_paper_style()
 	_apply_ink_style()
 	_apply_washi_style()
@@ -380,6 +384,16 @@ func increment_duplicate_count() -> int:
 		dup_btn.text = "👯×" + str(dc)
 	diary_updated.emit(current_item)
 	return dc
+
+func cycle_diary_signature() -> String:
+	if current_item == null:
+		return "✍️ 주희의 서재"
+	var sig = current_item.cycle_diary_signature() if current_item.has_method("cycle_diary_signature") else "✍️ 주희의 서재"
+	var sig_btn: Button = get_node_or_null("Panel/VBox/BodyMargin/Body/InkRow/SignatureBtn")
+	if sig_btn != null:
+		sig_btn.text = sig
+	diary_updated.emit(current_item)
+	return sig
 
 func cycle_obi_preset() -> void:
 	if current_item == null:

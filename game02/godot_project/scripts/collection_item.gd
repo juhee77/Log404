@@ -27,6 +27,7 @@ var target_volumes: int = 0
 var reread_count: int = 1
 var estimated_value: int = 0
 var duplicate_count: int = 1
+var diary_signature: String = "✍️ 주희의 서재"
 var updated_at: int = 0
 var volumes: Array = []
 
@@ -173,6 +174,16 @@ func increment_duplicate_count() -> int:
 	updated_at = int(Time.get_unix_time_from_system())
 	return duplicate_count
 
+func cycle_diary_signature() -> String:
+	const PRESETS = ["✍️ 주희의 서재", "🌙 밤독서 기록", "☕ 카페 다꾸", "🎁 소장 기념"]
+	var idx = PRESETS.find(diary_signature)
+	if idx == -1:
+		diary_signature = PRESETS[0]
+	else:
+		diary_signature = PRESETS[(idx + 1) % PRESETS.size()]
+	updated_at = int(Time.get_unix_time_from_system())
+	return diary_signature
+
 func get_item_value() -> int:
 	var qty = maxi(1, duplicate_count)
 	if estimated_value > 0:
@@ -208,6 +219,7 @@ func to_dict() -> Dictionary:
 		"reread_count": reread_count,
 		"estimated_value": estimated_value,
 		"duplicate_count": duplicate_count,
+		"diary_signature": diary_signature,
 		"updated_at": updated_at,
 		"volumes": volumes
 	}

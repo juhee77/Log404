@@ -282,6 +282,17 @@ func _init() -> void:
 	assert(stamp_row is HFlowContainer, "StampRow should use HFlowContainer to prevent horizontal modal overflow")
 	print("✓ Duplicate Count Tracker & HFlowContainer Modal Layout verified")
 
+	# Test Sprint 34: InkRow HFlowContainer Wrap, Diary Signature Stamp & Total Rereads Briefing
+	var ink_row = main_inst.detail_modal.get_node_or_null("Panel/VBox/BodyMargin/Body/InkRow")
+	assert(ink_row is HFlowContainer, "InkRow should use HFlowContainer to prevent NibBtn horizontal clipping")
+	var new_sig = main_inst.detail_modal.cycle_diary_signature()
+	assert(new_sig in ["✍️ 주희의 서재", "🌙 밤독서 기록", "☕ 카페 다꾸", "🎁 소장 기념"], "cycle_diary_signature should cycle signature presets")
+	var total_rr = main_inst.archive_state.get_total_rereads()
+	assert(total_rr >= main_inst.archive_state.items.size(), "get_total_rereads should sum reread_count across all items")
+	var info_str2 = main_inst.show_library_infographic()
+	assert("총 재독:" in info_str2, "show_library_infographic should include total rereads count")
+	print("✓ InkRow HFlowContainer Wrap, Diary Signature Stamp & Total Rereads Briefing verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

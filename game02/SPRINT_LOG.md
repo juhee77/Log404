@@ -5,6 +5,23 @@
 
 ---
 
+## 🚀 [Sprint 34] `InkRow` `HFlowContainer` 반응형 줄바꿈 개선 · 일기장 서명 스탬프(`✍️ 주희의 서재`) · 서재 총 재독 횟수 브리핑(`get_total_rereads`)
+- **시각**: 2026-11-14 15:24 KST
+- **1. 다꾸러 3인 VOC (수집러 A · 가챠러 B · 미니멀러 C)**
+  - **만년필 다꾸러 A**: *"일기장 모달의 잉크 팔레트(`InkRow`)에서도 오른쪽 끝의 `✒️펜촉` 버튼이 살짝 잘리는데 `StampRow`처럼 `HFlowContainer`로 줄바꿈되게 해주세요! 그리고 내 일기장만의 서명 스탬프(`✍️ 주희의 서재`, `🌙 밤독서 기록` 등)를 남길 수 있으면 좋겠어요."*
+  - **가챠 수집러 B**: *"서재 인포그래픽 통계 브리핑에 총 소장 가치와 함께 서재 전체 누적 재독 횟수(`총 재독: N회`)도 한눈에 보이면 수집·감상 기록이 더 풍부해집니다."*
+  - **미니멀 수집러 C**: *"서명 스탬프도 복잡한 입력창 대신 원터치 순환 버튼으로 깔끔하게 고를 수 있게 유지해 주세요."*
+- **2. 기획 & UI/UX & Godot 4.6 개발 내역**
+  - **`InkRow` `HFlowContainer` 반응형 줄바꿈(`detail_modal.tscn` · `detail_modal.gd`)**: `InkRow`를 `HBoxContainer`에서 `HFlowContainer`(`h_separation=5`, `v_separation=4`)로 전환해 `✒️펜촉` 버튼 우측 클리핑을 완전 해소
+  - **일기장 서명 스탬프(`SignatureBtn` / `cycle_diary_signature`)**: `collection_item.gd`에 `diary_signature` 추가 및 `archive_state.gd` JSON 영구 저장/복원 연동, `InkRow`에 `✍️ 주희의 서재` 원터치 순환 버튼(`✍️ 주희의 서재`, `🌙 밤독서 기록`, `☕ 카페 다꾸`, `🎁 소장 기념`) 배치
+  - **서재 총 재독 횟수 브리핑(`get_total_rereads`)**: `archive_state.gd`에 `get_total_rereads()` 추가 및 `main_view.gd` `show_library_infographic()`에 `총 재독: %d회` 실시간 브리핑 연동
+  - **HTML 인터랙티브 목업 동기화**: `game02/index.html`에 `#signature-cycle-btn` / `cycleDiarySignature()` 동기화 완료
+- **3. TDD & QA 검증**
+  - `tests/test_main_integration.gd`에 Sprint 34 `InkRow HFlowContainer`, 서명 스탬프 순환 및 총 재독 브리핑 검증 추가 → 3개 헤드리스 테스트 스위트 전수 100% PASS (스크립트 에러 0건)
+  - Metal 렌더러 최신 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 캡처 완료
+
+---
+
 ## 🚀 [Sprint 33] 일기장 모달 `HFlowContainer` 반응형 줄바꿈 개선 & 수집품 보유·중복 수량 카운터(`👯×N` / `increment_duplicate_count`)
 - **시각**: 2026-11-14 06:39 KST
 - **1. 다꾸러 3인 VOC (수집러 A · 가챠러 B · 미니멀러 C)**

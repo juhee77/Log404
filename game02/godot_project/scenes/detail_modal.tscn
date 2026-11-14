@@ -320,9 +320,10 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 10
 text = "🖍️ 형광펜"
 
-[node name="InkRow" type="HBoxContainer" parent="Panel/VBox/BodyMargin/Body"]
+[node name="InkRow" type="HFlowContainer" parent="Panel/VBox/BodyMargin/Body"]
 layout_mode = 2
-theme_override_constants/separation = 5
+theme_override_constants/h_separation = 5
+theme_override_constants/v_separation = 4
 
 [node name="InkLbl" type="Label" parent="Panel/VBox/BodyMargin/Body/InkRow"]
 layout_mode = 2
@@ -358,6 +359,11 @@ text = "🌲포레스트"
 layout_mode = 2
 theme_override_font_sizes/font_size = 10
 text = "✒️펜촉"
+
+[node name="SignatureBtn" type="Button" parent="Panel/VBox/BodyMargin/Body/InkRow"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 10
+text = "✍️ 주희의 서재"
 
 [node name="VolSection" type="VBoxContainer" parent="Panel/VBox/BodyMargin/Body"]
 layout_mode = 2
@@ -405,3 +411,4 @@ theme_override_constants/separation = 5
 [connection signal="pressed" from="Panel/VBox/BodyMargin/Body/InkRow/InkSepia" to="." method="_on_ink_sepia_pressed"]
 [connection signal="pressed" from="Panel/VBox/BodyMargin/Body/InkRow/InkForest" to="." method="_on_ink_forest_pressed"]
 [connection signal="pressed" from="Panel/VBox/BodyMargin/Body/InkRow/NibBtn" to="." method="cycle_pen_nib_size"]
+[connection signal="pressed" from="Panel/VBox/BodyMargin/Body/InkRow/SignatureBtn" to="." method="cycle_diary_signature"]

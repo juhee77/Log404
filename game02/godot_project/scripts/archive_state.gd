@@ -205,6 +205,7 @@ func load_from_file(custom_path: String = "") -> bool:
 			it.reread_count = int(d.get("reread_count", 1))
 			it.estimated_value = int(d.get("estimated_value", 0))
 			it.duplicate_count = int(d.get("duplicate_count", 1))
+			it.diary_signature = d.get("diary_signature", "✍️ 주희의 서재")
 			it.updated_at = int(d.get("updated_at", 0))
 			it.volumes = d.get("volumes", [])
 			items.append(it)
@@ -215,4 +216,10 @@ func get_total_collection_value() -> int:
 	var total = 0
 	for it in items:
 		total += it.get_item_value()
+	return total
+
+func get_total_rereads() -> int:
+	var total = 0
+	for it in items:
+		total += maxi(1, it.reread_count)
 	return total
