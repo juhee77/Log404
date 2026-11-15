@@ -30,6 +30,7 @@ var duplicate_count: int = 1
 var diary_signature: String = "✍️ 주희의 서재"
 var possession_state: String = "📦 소장중"
 var purchase_date: String = ""
+var custom_tag: String = "#소장각"
 var updated_at: int = 0
 var volumes: Array = []
 
@@ -202,6 +203,16 @@ func stamp_purchase_date() -> String:
 	updated_at = int(Time.get_unix_time_from_system())
 	return purchase_date
 
+func cycle_custom_tag() -> String:
+	const PRESETS = ["#소장각", "#인생만화", "#힐링타임", "#전시필수", "#한정특전"]
+	var idx = PRESETS.find(custom_tag)
+	if idx == -1:
+		custom_tag = PRESETS[0]
+	else:
+		custom_tag = PRESETS[(idx + 1) % PRESETS.size()]
+	updated_at = int(Time.get_unix_time_from_system())
+	return custom_tag
+
 func get_item_value() -> int:
 	var qty = maxi(1, duplicate_count)
 	if estimated_value > 0:
@@ -240,6 +251,7 @@ func to_dict() -> Dictionary:
 		"diary_signature": diary_signature,
 		"possession_state": possession_state,
 		"purchase_date": purchase_date,
+		"custom_tag": custom_tag,
 		"updated_at": updated_at,
 		"volumes": volumes
 	}

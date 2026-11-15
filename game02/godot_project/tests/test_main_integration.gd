@@ -306,6 +306,13 @@ func _init() -> void:
 	assert("자산 ₩" in main_inst.sub_title.text, "main_view sub_title should display live collection asset value")
 	print("✓ Purchase Date Stamp & Header Live Asset Value Summary verified")
 
+	# Test Sprint 37: KRW Comma Formatter, Live Today Header Date & Custom Keyword Tag Cycler
+	assert(main_inst.archive_state.format_krw(80000) == "₩80,000", "format_krw should format thousands with commas")
+	assert("," in main_inst.sub_title.text, "main_view sub_title should display comma-formatted KRW asset value")
+	var new_tag = main_inst.detail_modal.cycle_custom_tag()
+	assert(new_tag in ["#소장각", "#인생만화", "#힐링타임", "#전시필수", "#한정특전"], "cycle_custom_tag should cycle keyword tags")
+	print("✓ KRW Comma Formatter, Live Today Header Date & Custom Keyword Tag Cycler verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

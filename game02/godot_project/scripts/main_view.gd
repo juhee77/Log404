@@ -176,8 +176,11 @@ func _update_stats() -> void:
 	
 	var prog = get_overall_reading_progress()
 	var total_val = archive_state.get_total_collection_value() if archive_state.has_method("get_total_collection_value") else 0
+	var val_str = archive_state.format_krw(total_val)
+	var dt = Time.get_date_dict_from_system()
+	var date_str = "%04d. %02d. %02d" % [int(dt.get("year", 2026)), int(dt.get("month", 11)), int(dt.get("day", 15))]
 	if sub_title != null:
-		sub_title.text = "📔 2026. 11. 12 · 서재 완독률 " + str(int(prog)) + "% · 자산 ₩" + str(total_val)
+		sub_title.text = "📔 " + date_str + " · 서재 완독률 " + str(int(prog)) + "% · 자산 " + val_str
 	
 	_render_spine_shelf()
 	_refresh_today_quote()
@@ -348,14 +351,15 @@ func show_library_infographic() -> String:
 	var prog = int(get_overall_reading_progress())
 	var total_val = archive_state.get_total_collection_value() if archive_state.has_method("get_total_collection_value") else 0
 	var total_rereads = archive_state.get_total_rereads() if archive_state.has_method("get_total_rereads") else archive_state.items.size()
-	var text = "📊 소장: %d종 (%d권) · 완독률: %d%% · 북마크: %d권 · 밑줄: %d개 · 총 재독: %d회 · 총 가치: ₩%d" % [
+	var val_str = archive_state.format_krw(total_val)
+	var text = "📊 소장: %d종 (%d권) · 완독률: %d%% · 북마크: %d권 · 밑줄: %d개 · 총 재독: %d회 · 총 가치: %s" % [
 		archive_state.items.size(),
 		archive_state.get_total_volumes(),
 		prog,
 		total_bms,
 		sum_quotes,
 		total_rereads,
-		total_val
+		val_str
 	]
 	_show_toast(text)
 	return text

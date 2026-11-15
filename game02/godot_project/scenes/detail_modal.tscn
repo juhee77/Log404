@@ -376,6 +376,11 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 10
 text = "📅 기념일"
 
+[node name="CustomTagBtn" type="Button" parent="Panel/VBox/BodyMargin/Body/InkRow"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 10
+text = "#소장각"
+
 [node name="VolSection" type="VBoxContainer" parent="Panel/VBox/BodyMargin/Body"]
 layout_mode = 2
 size_flags_vertical = 3
@@ -425,3 +430,4 @@ theme_override_constants/separation = 5
 [connection signal="pressed" from="Panel/VBox/BodyMargin/Body/InkRow/NibBtn" to="." method="cycle_pen_nib_size"]
 [connection signal="pressed" from="Panel/VBox/BodyMargin/Body/InkRow/SignatureBtn" to="." method="cycle_diary_signature"]
 [connection signal="pressed" from="Panel/VBox/BodyMargin/Body/InkRow/DateStampBtn" to="." method="stamp_purchase_date"]
+[connection signal="pressed" from="Panel/VBox/BodyMargin/Body/InkRow/CustomTagBtn" to="." method="cycle_custom_tag"]

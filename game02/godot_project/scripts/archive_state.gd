@@ -208,6 +208,7 @@ func load_from_file(custom_path: String = "") -> bool:
 			it.diary_signature = d.get("diary_signature", "✍️ 주희의 서재")
 			it.possession_state = d.get("possession_state", "📦 소장중")
 			it.purchase_date = d.get("purchase_date", "")
+			it.custom_tag = d.get("custom_tag", "#소장각")
 			it.updated_at = int(d.get("updated_at", 0))
 			it.volumes = d.get("volumes", [])
 			items.append(it)
@@ -225,3 +226,14 @@ func get_total_rereads() -> int:
 	for it in items:
 		total += maxi(1, it.reread_count)
 	return total
+
+static func format_krw(amount: int) -> String:
+	var s = str(abs(amount))
+	var out = ""
+	var cnt = 0
+	for i in range(s.length() - 1, -1, -1):
+		if cnt > 0 and cnt % 3 == 0:
+			out = "," + out
+		out = s[i] + out
+		cnt += 1
+	return ("-" if amount < 0 else "") + "₩" + out

@@ -255,6 +255,10 @@ func open(item) -> void:
 	if date_btn != null:
 		var pd = current_item.get("purchase_date") if (current_item.get("purchase_date") != null and current_item.get("purchase_date") != "") else "📅 기념일"
 		date_btn.text = pd
+	var tag_btn: Button = get_node_or_null("Panel/VBox/BodyMargin/Body/InkRow/CustomTagBtn")
+	if tag_btn != null:
+		var ct = current_item.get("custom_tag") if (current_item.get("custom_tag") != null and current_item.get("custom_tag") != "") else "#소장각"
+		tag_btn.text = ct
 	_apply_paper_style()
 	_apply_ink_style()
 	_apply_washi_style()
@@ -422,6 +426,16 @@ func stamp_purchase_date() -> String:
 		date_btn.text = pd
 	diary_updated.emit(current_item)
 	return pd
+
+func cycle_custom_tag() -> String:
+	if current_item == null:
+		return "#소장각"
+	var ct = current_item.cycle_custom_tag() if current_item.has_method("cycle_custom_tag") else "#소장각"
+	var tag_btn: Button = get_node_or_null("Panel/VBox/BodyMargin/Body/InkRow/CustomTagBtn")
+	if tag_btn != null:
+		tag_btn.text = ct
+	diary_updated.emit(current_item)
+	return ct
 
 func cycle_obi_preset() -> void:
 	if current_item == null:

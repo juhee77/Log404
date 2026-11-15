@@ -295,6 +295,7 @@
                             <button id="signature-cycle-btn" onclick="cycleDiarySignature()" class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">✍️ 주희의 서재</button>
                             <button id="possession-cycle-btn" onclick="cyclePossessionState()" class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">📦 소장중</button>
                             <button id="date-stamp-btn" onclick="stampPurchaseDate()" class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">📅 기념일</button>
+                            <button id="tag-cycle-btn" onclick="cycleCustomTag()" class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">#소장각</button>
                             <button onclick="copyBookQuoteCard()" class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">💌 감상 카드 공유</button>
                             <button onclick="closeJournalModal()" class="w-7 h-7 rounded-full bg-[#efe7da] hover:bg-[#e2d6c5] text-[#5c4938] text-xs font-bold cursor-pointer">✕</button>
                         </div>
@@ -623,6 +624,8 @@
             if (posBtn) posBtn.textContent = item.possession_state || '📦 소장중';
             const dateBtn = document.getElementById('date-stamp-btn');
             if (dateBtn) dateBtn.textContent = item.purchase_date || '📅 기념일';
+            const tagBtn = document.getElementById('tag-cycle-btn');
+            if (tagBtn) tagBtn.textContent = item.custom_tag || '#소장각';
             document.getElementById('diary-stamp').textContent = `💮 ${item.stamp} ${sticker} [${item.reading_mood || '🥰 힐링'} · ${rTier} · ${loc}]`;
             document.getElementById('journal-modal').classList.remove('hidden');
         }
@@ -690,6 +693,17 @@
             item.purchase_date = `📅 ${mm}.${dd}`;
             const btn = document.getElementById('date-stamp-btn');
             if (btn) btn.textContent = item.purchase_date;
+        }
+
+        const CUSTOM_TAG_PRESETS = ["#소장각", "#인생만화", "#힐링타임", "#전시필수", "#한정특전"];
+        function cycleCustomTag() {
+            const item = ITEMS.find(x => x.id === activeId);
+            if (!item) return;
+            const cur = item.custom_tag || "#소장각";
+            const idx = CUSTOM_TAG_PRESETS.indexOf(cur);
+            item.custom_tag = CUSTOM_TAG_PRESETS[(idx + 1) % CUSTOM_TAG_PRESETS.length];
+            const btn = document.getElementById('tag-cycle-btn');
+            if (btn) btn.textContent = item.custom_tag;
         }
 
         const SOURCE_PRESETS = ["🏪 오프라인 서점", "🇯🇵 직구/해외", "🎁 선물", "🎪 팝업/행사", "📦 온라인 서점"];

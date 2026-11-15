@@ -5,6 +5,22 @@
 
 ---
 
+## 🚀 [Sprint 37] 원화 천 단위 콤마 포맷터(`format_krw` · `₩80,000`) · 실시간 오늘 날짜 헤더 · 커스텀 키워드 태그(`#소장각` / `cycle_custom_tag`)
+- **시각**: 2026-11-15 18:38 KST
+- **1. 다꾸러 3인 VOC (수집러 A · 가챠러 B · 미니멀러 C)**
+  - **만년필 다꾸러 A**: *"상단 헤더의 `자산 ₩80000`과 통계 브리핑 금액이 `₩80,000`처럼 천 단위 쉼표(콤마)로 표시되면 훨씬 읽기 편하고 정돈된 느낌일 것 같아요!"*
+  - **가챠 수집러 B**: *"소장품마다 `#소장각`, `#인생만화`, `#힐링타임`, `#전시필수`, `#한정특전` 같은 키워드 해시태그를 일기장 모달에서 원터치로 달아둘 수 있으면 좋겠어요."*
+  - **미니멀 수집러 C**: *"메인 상단의 날짜도 고정 텍스트 대신 오늘 날짜(`YYYY. MM. DD`)로 자동 갱신되면 진짜 매일 쓰는 나만의 일기장 같아집니다."*
+- **2. 기획 & UI/UX & Godot 4.6 개발 내역**
+  - **원화 천 단위 콤마 포맷터(`format_krw`) & 실시간 오늘 날짜 헤더**: `archive_state.gd`에 `format_krw(amount)` 추가 및 `main_view.gd`의 `_update_stats()` / `show_library_infographic()`에 천 단위 콤마 금액(`₩80,000`)과 시스템 오늘 날짜(`YYYY. MM. DD`) 연동
+  - **커스텀 키워드 태그 순환(`CustomTagBtn` / `cycle_custom_tag`)**: `collection_item.gd`에 `custom_tag` 추가 및 `archive_state.gd` JSON 영구 저장/복원 연동, `detail_modal.tscn` `InkRow`에 `#소장각` 원터치 순환 버튼 배치
+  - **HTML 인터랙티브 목업 동기화**: `game02/index.html`에 `#tag-cycle-btn` / `cycleCustomTag()` 동기화 완료
+- **3. TDD & QA 검증**
+  - `tests/test_main_integration.gd`에 Sprint 37 `format_krw` 콤마 포맷, 헤더 실시간 자산 및 커스텀 태그 검증 추가 → 3개 헤드리스 테스트 스위트 전수 100% PASS (스크립트 에러 0건)
+  - Metal 렌더러 최신 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 캡처 완료
+
+---
+
 ## 🚀 [Sprint 36] 소장·구매 기념일 스탬프(`📅 기념일` / `stamp_purchase_date`) · 배송 상태 카드 배지 · 헤더 실시간 총 자산 요약
 - **시각**: 2026-11-15 18:36 KST
 - **1. 다꾸러 3인 VOC (수집러 A · 가챠러 B · 미니멀러 C)**
