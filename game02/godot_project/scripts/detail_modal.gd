@@ -694,7 +694,9 @@ func _render_volumes() -> void:
 			first_cnt += 1
 	var tgt_v = max(int(current_item.target_volumes), current_item.volumes.size())
 	var pct_v = int(round(float(current_item.volumes.size()) / float(tgt_v) * 100.0))
-	vol_header.text = "📌 권별 밑줄 노트 (소장 " + str(current_item.volumes.size()) + "/" + str(tgt_v) + "권 · " + str(pct_v) + "% · 초판 " + str(first_cnt) + "권)"
+	var bm_cnt = current_item.get_bookmarked_volumes_count() if current_item.has_method("get_bookmarked_volumes_count") else 0
+	var bm_part = (" · 🔖" + str(bm_cnt)) if bm_cnt > 0 else ""
+	vol_header.text = "📌 권별 밑줄 노트 (소장 " + str(current_item.volumes.size()) + "/" + str(tgt_v) + "권 · " + str(pct_v) + "% · 초판 " + str(first_cnt) + "권" + bm_part + ")"
 
 	for idx in range(current_item.volumes.size()):
 		var v = current_item.volumes[idx]

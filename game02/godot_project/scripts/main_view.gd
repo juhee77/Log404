@@ -182,6 +182,24 @@ func _update_stats() -> void:
 	var date_str = "%04d. %02d. %02d" % [int(dt.get("year", 2026)), int(dt.get("month", 11)), int(dt.get("day", 15))]
 	if sub_title != null:
 		sub_title.text = "📔 " + date_str + " · 완독 " + str(int(prog)) + "% · ★" + String.num(avg_lib, 1) + " · 자산 " + val_str
+
+	var first_cnt = archive_state.get_first_editions_count()
+	var tot_vols = max(1, archive_state.get_total_volumes())
+	var first_pct = int(round(float(first_cnt) / float(tot_vols) * 100.0))
+	var gacha_val = 0
+	for it in archive_state.items:
+		if it.category == 1:
+			gacha_val += it.get_item_value()
+	var stat_tips = [
+		[stat_items, "클릭 시 전체 서재 보기 · 평균 ★%s · 총 자산 %s" % [String.num(avg_lib, 1), val_str]],
+		[stat_vols, "클릭 시 이북·단행본 필터 · 서재 완독률 %d%%" % int(prog)],
+		[stat_firsts, "클릭 시 초판본 현황 · 전체 단행본 중 %d%% 초판" % first_pct],
+		[stat_gacha, "클릭 시 가챠·굿즈 필터 · 굿즈 자산 %s" % archive_state.format_krw(gacha_val)],
+	]
+	for pair in stat_tips:
+		var card_node = pair[0].get_parent().get_parent() if pair[0] != null and pair[0].get_parent() != null else null
+		if card_node is Control:
+			card_node.tooltip_text = pair[1]
 	
 	_render_spine_shelf()
 	_refresh_today_quote()

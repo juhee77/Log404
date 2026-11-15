@@ -440,6 +440,15 @@ func _init() -> void:
 	assert("스프린트51 실시간 밑줄 동기화" in main_inst.today_quote_label.text, "_on_diary_updated should refresh today_quote_label")
 	print("✓ Card Rich Tooltip & Today Quote Live Refresh on Diary Update verified")
 
+	# Test Sprint 52: Modal Bookmark Count Header & Stat Card Tooltips
+	main_inst._update_stats()
+	var stat_books_card = main_inst.stat_items.get_parent().get_parent()
+	assert("총 자산" in stat_books_card.tooltip_text, "StatBooks card tooltip_text should show total asset value")
+	main_inst.detail_modal.open(main_inst.archive_state.items[0])
+	main_inst.detail_modal.toggle_volume_bookmark(0)
+	assert("🔖" in main_inst.detail_modal.vol_header.text, "Modal vol_header should show bookmarked volume count when > 0")
+	print("✓ Modal Bookmark Count Header & Stat Card Tooltips verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

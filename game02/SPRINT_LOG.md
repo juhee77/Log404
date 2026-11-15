@@ -5,6 +5,21 @@
 
 ---
 
+## 🚀 [Sprint 52] 모달 권별 북마크 개수(`🔖 N`) 헤더 표시 & 상단 4대 통계 카드 리치 툴팁(`tooltip_text`) 연동
+- **날짜/시각**: 2026-11-16 06:57 (자동 스프린트)
+- **참여 스쿼드**: 14인 애자일 스쿼드 전원 (다꾸러 3인, PO/기획 2인, UX/UI 2인, 개발 4인, QA 2인, CEO 1인)
+- **핵심 VOC 및 기획 확정**:
+  1. **다꾸러 VOC #1 ("모달 내 권별 밑줄 노트 헤더에서도 북마크 꽂아둔 권수(`🔖1`)를 바로 보고 싶어요!")**: `detail_modal.gd`의 `_render_volumes()`에서 `get_bookmarked_volumes_count()`를 계산해 북마크가 1권 이상일 때 `📌 권별 밑줄 노트 (소장 3/3권 · 100% · 초판 2권 · 🔖1)`으로 표시.
+  2. **다꾸러 VOC #2 ("상단 4대 통계 카드(서재 작품·단행본·초판·가챠)에 마우스를 올리면 세부 KPI가 툴팁으로 보이면 좋겠어요")**: `main_view.gd`의 `_update_stats()`에서 4개 통계 카드에 `평균 ★ / 총 자산`, `서재 완독률`, `초판 비율(%)`, `가챠 굿즈 자산` 툴팁을 동적으로 설정.
+  3. **웹 목업 동기화**: `game02/index.html`의 상단 통계 카드 DOM `title` 툴팁 동기화.
+- **구현 및 검증 내역**:
+  - `detail_modal.gd`: `vol_header.text`에 북마크 권수(`🔖 N`) 실시간 병기.
+  - `main_view.gd`: `_update_stats()` 내 4대 통계 카드 리치 툴팁(`tooltip_text`) 연동.
+  - `game02/index.html`: 상단 통계 카드 `title` 툴팁 동기화.
+  - `tests/test_main_integration.gd`: Sprint 52 통합 테스트(`Modal Bookmark Count Header & Stat Card Tooltips verified`) 추가 후 3대 헤드리스 테스트 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 캡처 완료.
+
+---
+
 ## 🚀 [Sprint 51] 서재 카드 리치 툴팁(`tooltip_text`) 추가 & 일기장 수정 시 '오늘의 밑줄' 배너 실시간 동기화
 - **날짜/시각**: 2026-11-16 03:54 (자동 스프린트)
 - **참여 스쿼드**: 14인 애자일 스쿼드 전원 (다꾸러 3인, PO/기획 2인, UX/UI 2인, 개발 4인, QA 2인, CEO 1인)
