@@ -296,6 +296,7 @@
                             <button id="possession-cycle-btn" onclick="cyclePossessionState()" class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">📦 소장중</button>
                             <button id="date-stamp-btn" onclick="stampPurchaseDate()" class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">📅 기념일</button>
                             <button id="tag-cycle-btn" onclick="cycleCustomTag()" class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">#소장각</button>
+                            <button id="value-boost-btn" onclick="boostEstimatedValue()" class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">💎 +5천원</button>
                             <button onclick="copyBookQuoteCard()" class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">💌 감상 카드 공유</button>
                             <button onclick="closeJournalModal()" class="w-7 h-7 rounded-full bg-[#efe7da] hover:bg-[#e2d6c5] text-[#5c4938] text-xs font-bold cursor-pointer">✕</button>
                         </div>
@@ -704,6 +705,15 @@
             item.custom_tag = CUSTOM_TAG_PRESETS[(idx + 1) % CUSTOM_TAG_PRESETS.length];
             const btn = document.getElementById('tag-cycle-btn');
             if (btn) btn.textContent = item.custom_tag;
+        }
+
+        function boostEstimatedValue() {
+            const item = ITEMS.find(x => x.id === activeId);
+            if (!item) return;
+            const base = item.estimated_value || (item.category === 'manga' ? Math.max(1, (item.volumes || []).length) * 7000 : 5000);
+            item.estimated_value = base + 5000;
+            const btn = document.getElementById('value-boost-btn');
+            if (btn) btn.textContent = `💎 ₩${item.estimated_value.toLocaleString()}`;
         }
 
         const SOURCE_PRESETS = ["🏪 오프라인 서점", "🇯🇵 직구/해외", "🎁 선물", "🎪 팝업/행사", "📦 온라인 서점"];

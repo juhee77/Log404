@@ -449,6 +449,22 @@ func cycle_custom_tag() -> String:
 	diary_updated.emit(current_item)
 	return ct
 
+func boost_estimated_value() -> int:
+	if current_item == null:
+		return 0
+	var new_val = current_item.boost_estimated_value(5000) if current_item.has_method("boost_estimated_value") else 5000
+	var s_val = str(new_val)
+	var formatted_val = ""
+	var cnt_v = 0
+	for i in range(s_val.length() - 1, -1, -1):
+		if cnt_v > 0 and cnt_v % 3 == 0:
+			formatted_val = "," + formatted_val
+		formatted_val = s_val[i] + formatted_val
+		cnt_v += 1
+	author_label.text = "작가 · " + (current_item.author_or_series if current_item.author_or_series != "" else "미상") + " · 💎 ₩" + formatted_val
+	diary_updated.emit(current_item)
+	return new_val
+
 func cycle_obi_preset() -> void:
 	if current_item == null:
 		return

@@ -321,6 +321,13 @@ func _init() -> void:
 	assert(new_tag in shared_card and "✍️" in shared_card or "🌙" in shared_card or "☕" in shared_card or "🎁" in shared_card, "copy_book_quote_card should include custom_tag and diary_signature")
 	print("✓ Tag/Location Search, Modal Value Display & Share Card Signature verified")
 
+	# Test Sprint 39: TagLabel Autowrap & One-Tap Estimated Value Boost
+	assert(main_inst.detail_modal.tag_label.autowrap_mode == TextServer.AUTOWRAP_WORD_SMART, "tag_label should use AUTOWRAP_WORD_SMART to avoid ellipsis truncation")
+	var before_val = slam_item.get_item_value()
+	var after_val = main_inst.detail_modal.boost_estimated_value()
+	assert(after_val > before_val, "boost_estimated_value should increase item estimated value")
+	print("✓ TagLabel Autowrap & One-Tap Estimated Value Boost verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

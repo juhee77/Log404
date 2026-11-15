@@ -221,6 +221,15 @@ func get_item_value() -> int:
 		return maxi(1, volumes.size()) * 7000 * qty
 	return 5000 * qty
 
+func boost_estimated_value(step: int = 5000) -> int:
+	if estimated_value <= 0:
+		var base_unit = maxi(1, volumes.size()) * 7000 if category == 0 else 5000
+		estimated_value = base_unit + step
+	else:
+		estimated_value += step
+	updated_at = int(Time.get_unix_time_from_system())
+	return get_item_value()
+
 func to_dict() -> Dictionary:
 	return {
 		"id": id,

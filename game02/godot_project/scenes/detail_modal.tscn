@@ -170,7 +170,7 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.78, 0.35, 0.2, 1)
 theme_override_font_sizes/font_size = 10
 text = "💮 스탬프: 전권완결"
-text_overrun_behavior = 3
+autowrap_mode = 3
 
 [node name="MemoLabel" type="Label" parent="Panel/VBox/BodyMargin/Body/TopInfo/MetaVBox"]
 layout_mode = 2
@@ -381,6 +381,11 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 10
 text = "#소장각"
 
+[node name="ValueBtn" type="Button" parent="Panel/VBox/BodyMargin/Body/InkRow"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 10
+text = "💎 +5천원"
+
 [node name="VolSection" type="VBoxContainer" parent="Panel/VBox/BodyMargin/Body"]
 layout_mode = 2
 size_flags_vertical = 3
@@ -431,3 +436,4 @@ theme_override_constants/separation = 5
 [connection signal="pressed" from="Panel/VBox/BodyMargin/Body/InkRow/SignatureBtn" to="." method="cycle_diary_signature"]
 [connection signal="pressed" from="Panel/VBox/BodyMargin/Body/InkRow/DateStampBtn" to="." method="stamp_purchase_date"]
 [connection signal="pressed" from="Panel/VBox/BodyMargin/Body/InkRow/CustomTagBtn" to="." method="cycle_custom_tag"]
+[connection signal="pressed" from="Panel/VBox/BodyMargin/Body/InkRow/ValueBtn" to="." method="boost_estimated_value"]

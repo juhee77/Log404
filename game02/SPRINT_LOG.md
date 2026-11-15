@@ -5,6 +5,22 @@
 
 ---
 
+## 🚀 [Sprint 39] 모달 태그·띠지 줄바꿈 개선(`autowrap_mode = 3`) & 소장품 추정 가치 +₩5,000 원터치 조정(`💎 +5천원`)
+- **시각**: 2026-11-15 19:18 KST
+- **1. 다꾸러 3인 VOC (수집러 A · 가챠러 B · 미니멀러 C)**
+  - **만년필 다꾸러 A**: *"일기장 모달 상단의 빨간 태그·띠지 문구(`TagLabel`)가 한 줄 말줄임(`...`)으로 잘리는데, 자연스럽게 줄바꿈되어 띠지 문구까지 끝까지 다 읽히면 좋겠어요!"*
+  - **가챠 수집러 B**: *"한정판이나 프리미엄 시세가 붙은 소장품의 추정 가치를 모달 안에서 `💎 +5천원` 원터치로 바로 올려서 서재 자산에 반영할 수 있으면 좋겠습니다."*
+  - **미니멀 수집러 C**: *"가치를 조정하자마자 모달 상단의 `💎 ₩...`과 메인 헤더의 `자산 ₩...`이 동시에 실시간 갱신되면 직관적입니다."*
+- **2. 기획 & UI/UX & Godot 4.6 개발 내역**
+  - **모달 태그·띠지 줄바꿈 개선(`detail_modal.tscn`)**: `TagLabel`의 `text_overrun_behavior = 3`을 `autowrap_mode = 3`(`AUTOWRAP_WORD_SMART`)으로 전환해 띠지 문구 잘림 현상 해소
+  - **소장품 추정 가치 +₩5,000 원터치 조정(`ValueBtn` / `boost_estimated_value`)**: `collection_item.gd`에 `boost_estimated_value(5000)` 추가, `detail_modal.tscn` `InkRow`에 `💎 +5천원` 버튼 배치 및 `detail_modal.gd`에서 모달·헤더 총 자산 실시간 동기화
+  - **HTML 인터랙티브 목업 동기화**: `game02/index.html`에 `#value-boost-btn` / `boostEstimatedValue()` 동기화 완료
+- **3. TDD & QA 검증**
+  - `tests/test_main_integration.gd`에 Sprint 39 `TagLabel autowrap_mode` 및 추정 가치 실시간 업 검증 추가 → 3개 헤드리스 테스트 스위트 전수 100% PASS (스크립트 에러 0건)
+  - Metal 렌더러 최신 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 캡처 완료
+
+---
+
 ## 🚀 [Sprint 38] 커스텀 태그·보관위치·입수처 통합 검색 · 모달 추정 가치 표시 · 감상 카드 서명·태그 공유
 - **시각**: 2026-11-15 18:58 KST
 - **1. 다꾸러 3인 VOC (수집러 A · 가챠러 B · 미니멀러 C)**
