@@ -299,6 +299,7 @@
                             <button id="value-boost-btn" onclick="boostEstimatedValue()" class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">💎 +5천원</button>
                             <button id="favchar-cycle-btn" onclick="cycleFavoriteCharacter()" class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">🌟 최애 캐릭터</button>
                             <button id="condition-cycle-btn" onclick="cycleConditionGrade()" class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">✨ S급(최상)</button>
+                            <button id="finish-cycle-btn" onclick="cycleCoverFinish()" class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">📜 무광 매트</button>
                             <button onclick="copyBookQuoteCard()" class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">💌 감상 카드 공유</button>
                             <button onclick="closeJournalModal()" class="w-7 h-7 rounded-full bg-[#efe7da] hover:bg-[#e2d6c5] text-[#5c4938] text-xs font-bold cursor-pointer">✕</button>
                         </div>
@@ -501,7 +502,7 @@
                 else if (currentCat === 'complete') cMatch = it.stamp === '전권완결' || (it.volumes && it.volumes.length >= 2);
                 else if (currentCat === 'fav') cMatch = it.stamp === '인생최애' || (it.volumes && it.volumes.every(v => v.rating === 5));
 
-                const qMatch = !q || it.title.toLowerCase().includes(q) || it.author.toLowerCase().includes(q) || it.memo.toLowerCase().includes(q) || (it.custom_tag || '').toLowerCase().includes(q) || (it.storage_location || '').toLowerCase().includes(q) || (it.acquisition_source || '').toLowerCase().includes(q) || (it.favorite_character || '').toLowerCase().includes(q);
+                const qMatch = !q || it.title.toLowerCase().includes(q) || it.author.toLowerCase().includes(q) || it.memo.toLowerCase().includes(q) || (it.custom_tag || '').toLowerCase().includes(q) || (it.storage_location || '').toLowerCase().includes(q) || (it.acquisition_source || '').toLowerCase().includes(q) || (it.favorite_character || '').toLowerCase().includes(q) || (it.condition_grade || '').toLowerCase().includes(q) || (it.cover_finish || '').toLowerCase().includes(q);
                 return cMatch && qMatch;
             });
 
@@ -633,6 +634,8 @@
             if (fcBtn) fcBtn.textContent = item.favorite_character || '🌟 최애 캐릭터';
             const condBtn = document.getElementById('condition-cycle-btn');
             if (condBtn) condBtn.textContent = item.condition_grade || '✨ S급(최상)';
+            const finBtn = document.getElementById('finish-cycle-btn');
+            if (finBtn) finBtn.textContent = item.cover_finish || '📜 무광 매트';
             document.getElementById('diary-stamp').textContent = `💮 ${item.stamp} ${sticker} [${item.reading_mood || '🥰 힐링'} · ${rTier} · ${loc}]`;
             document.getElementById('journal-modal').classList.remove('hidden');
         }
@@ -742,6 +745,17 @@
             item.condition_grade = CONDITION_PRESETS[(idx + 1) % CONDITION_PRESETS.length];
             const btn = document.getElementById('condition-cycle-btn');
             if (btn) btn.textContent = item.condition_grade;
+        }
+
+        const FINISH_PRESETS = ["📜 무광 매트", "✨ 유광 코팅", "🌟 홀로그램", "🧶 패브릭 양장"];
+        function cycleCoverFinish() {
+            const item = ITEMS.find(x => x.id === activeId);
+            if (!item) return;
+            const cur = item.cover_finish || "📜 무광 매트";
+            const idx = FINISH_PRESETS.indexOf(cur);
+            item.cover_finish = FINISH_PRESETS[(idx + 1) % FINISH_PRESETS.length];
+            const btn = document.getElementById('finish-cycle-btn');
+            if (btn) btn.textContent = item.cover_finish;
         }
 
         const SOURCE_PRESETS = ["🏪 오프라인 서점", "🇯🇵 직구/해외", "🎁 선물", "🎪 팝업/행사", "📦 온라인 서점"];

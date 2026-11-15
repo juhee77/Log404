@@ -5,6 +5,22 @@
 
 ---
 
+## 🚀 [Sprint 42] 표지·책등 마감 질감 프리셋(`📜 무광 매트` / `cycle_cover_finish`) · 컨디션·마감 통합 검색 · 백업 요약 총 자산 연동
+- **시각**: 2026-11-15 22:00 KST
+- **1. 다꾸러 3인 VOC (수집러 A · 가챠러 B · 미니멀러 C)**
+  - **만년필 다꾸러 A**: *"소장품의 표지·책등 질감(`📜 무광 매트`, `✨ 유광 코팅`, `🌟 홀로그램`, `🧶 패브릭 양장`)을 일기장 모달에서 원터치로 기록해 두면 애장판·한정판 감성이 더 살아날 것 같아요!"*
+  - **가챠 수집러 B**: *"컨디션 등급(`S급`, `미개봉`)이나 표지 마감(`홀로그램`, `유광`) 키워드로도 메인 검색창에서 바로 필터링되면 수집 관리가 한결 편해집니다."*
+  - **미니멀 수집러 C**: *"서재 요약 내보내기(`export_diary_summary`)를 눌렀을 때도 총 추정 가치(`총 자산 ₩...`)와 컨디션 등급이 함께 정리되어 나오면 백업용으로 완벽해요."*
+- **2. 기획 & UI/UX & Godot 4.6 개발 내역**
+  - **표지·책등 마감 질감 프리셋(`FinishBtn` / `cycle_cover_finish`)**: `collection_item.gd`에 `cover_finish` 및 4종 프리셋(`📜 무광 매트`, `✨ 유광 코팅`, `🌟 홀로그램`, `🧶 패브릭 양장`) 추가, `archive_state.gd` JSON 영구 저장/복원 연동 및 `detail_modal.tscn` `InkRow`에 배치
+  - **컨디션·마감 통합 검색 & 백업 요약 총 자산 연동(`archive_state.gd`)**: `get_filtered_items()` 검색 쿼리에 `condition_grade`, `cover_finish` 매칭 추가 및 `export_diary_summary()`에 `총 자산 ₩...`과 항목별 컨디션 등급 포함
+  - **HTML 인터랙티브 목업 동기화**: `game02/index.html`에 `#finish-cycle-btn` / `cycleCoverFinish()` 및 컨디션·마감 검색 매칭 동기화 완료
+- **3. TDD & QA 검증**
+  - `tests/test_main_integration.gd`에 Sprint 42 표지 마감 프리셋, 통합 검색 및 백업 요약 총 자산 검증 추가 → 3개 헤드리스 테스트 스위트 전수 100% PASS (스크립트 에러 0건)
+  - Metal 렌더러 최신 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 캡처 완료
+
+---
+
 ## 🚀 [Sprint 41] 소장품 보존 상태·컨디션 등급(`✨ S급(최상)` / `cycle_condition_grade`) & 최애 캐릭터 통합 검색·공유 연동
 - **시각**: 2026-11-15 21:47 KST
 - **1. 다꾸러 3인 VOC (수집러 A · 가챠러 B · 미니멀러 C)**

@@ -342,6 +342,15 @@ func _init() -> void:
 	assert(fc_hits.size() >= 1, "get_filtered_items should match favorite_character")
 	print("✓ Condition Grade Cycler & Favorite Character Search Integration verified")
 
+	# Test Sprint 42: Cover Finish Preset, Condition Search & Summary Asset Value
+	var new_fin = main_inst.detail_modal.cycle_cover_finish()
+	assert(new_fin in ["📜 무광 매트", "✨ 유광 코팅", "🌟 홀로그램", "🧶 패브릭 양장"], "cycle_cover_finish should cycle cover finish presets")
+	var fin_hits = main_inst.archive_state.get_filtered_items(-1, new_fin)
+	assert(fin_hits.size() >= 1, "get_filtered_items should match cover_finish")
+	var summary_text2 = main_inst.archive_state.export_diary_summary()
+	assert("총 자산 ₩" in summary_text2, "export_diary_summary should include formatted total collection value")
+	print("✓ Cover Finish Preset, Condition Search & Summary Asset Value verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

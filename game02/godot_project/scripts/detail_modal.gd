@@ -281,6 +281,10 @@ func open(item) -> void:
 	if cond_btn != null:
 		var cg = current_item.get("condition_grade") if (current_item.get("condition_grade") != null and current_item.get("condition_grade") != "") else "✨ S급(최상)"
 		cond_btn.text = cg
+	var fin_btn: Button = get_node_or_null("Panel/VBox/BodyMargin/Body/InkRow/FinishBtn")
+	if fin_btn != null:
+		var cf = current_item.get("cover_finish") if (current_item.get("cover_finish") != null and current_item.get("cover_finish") != "") else "📜 무광 매트"
+		fin_btn.text = cf
 	_apply_paper_style()
 	_apply_ink_style()
 	_apply_washi_style()
@@ -494,6 +498,16 @@ func cycle_condition_grade() -> String:
 		cond_btn.text = cg
 	diary_updated.emit(current_item)
 	return cg
+
+func cycle_cover_finish() -> String:
+	if current_item == null:
+		return "📜 무광 매트"
+	var cf = current_item.cycle_cover_finish() if current_item.has_method("cycle_cover_finish") else "📜 무광 매트"
+	var fin_btn: Button = get_node_or_null("Panel/VBox/BodyMargin/Body/InkRow/FinishBtn")
+	if fin_btn != null:
+		fin_btn.text = cf
+	diary_updated.emit(current_item)
+	return cf
 
 func cycle_obi_preset() -> void:
 	if current_item == null:

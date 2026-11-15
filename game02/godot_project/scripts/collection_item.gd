@@ -33,6 +33,7 @@ var purchase_date: String = ""
 var custom_tag: String = "#소장각"
 var favorite_character: String = "🌟 최애 캐릭터"
 var condition_grade: String = "✨ S급(최상)"
+var cover_finish: String = "📜 무광 매트"
 var updated_at: int = 0
 var volumes: Array = []
 
@@ -235,6 +236,16 @@ func cycle_condition_grade() -> String:
 	updated_at = int(Time.get_unix_time_from_system())
 	return condition_grade
 
+func cycle_cover_finish() -> String:
+	const PRESETS = ["📜 무광 매트", "✨ 유광 코팅", "🌟 홀로그램", "🧶 패브릭 양장"]
+	var idx = PRESETS.find(cover_finish)
+	if idx == -1:
+		cover_finish = PRESETS[0]
+	else:
+		cover_finish = PRESETS[(idx + 1) % PRESETS.size()]
+	updated_at = int(Time.get_unix_time_from_system())
+	return cover_finish
+
 func get_item_value() -> int:
 	var qty = maxi(1, duplicate_count)
 	if estimated_value > 0:
@@ -285,6 +296,7 @@ func to_dict() -> Dictionary:
 		"custom_tag": custom_tag,
 		"favorite_character": favorite_character,
 		"condition_grade": condition_grade,
+		"cover_finish": cover_finish,
 		"updated_at": updated_at,
 		"volumes": volumes
 	}

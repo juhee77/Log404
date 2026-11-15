@@ -77,7 +77,7 @@ func get_filtered_items(filter_cat: int = -1, query: String = "") -> Array:
 	var q = query.strip_edges().to_lower()
 	for it in items:
 		var cat_match = (filter_cat == -1 or it.category == filter_cat)
-		var query_match = q.is_empty() or it.title.to_lower().contains(q) or it.author_or_series.to_lower().contains(q) or it.memo.to_lower().contains(q) or it.status_tag.to_lower().contains(q) or it.custom_tag.to_lower().contains(q) or it.storage_location.to_lower().contains(q) or it.acquisition_source.to_lower().contains(q) or it.favorite_character.to_lower().contains(q)
+		var query_match = q.is_empty() or it.title.to_lower().contains(q) or it.author_or_series.to_lower().contains(q) or it.memo.to_lower().contains(q) or it.status_tag.to_lower().contains(q) or it.custom_tag.to_lower().contains(q) or it.storage_location.to_lower().contains(q) or it.acquisition_source.to_lower().contains(q) or it.favorite_character.to_lower().contains(q) or it.condition_grade.to_lower().contains(q) or it.cover_finish.to_lower().contains(q)
 		if not query_match and it.volumes.size() > 0:
 			for v in it.volumes:
 				if str(v.get("quote", "")).to_lower().contains(q):
@@ -139,9 +139,9 @@ func get_first_editions_count() -> int:
 
 func export_diary_summary() -> String:
 	var lines: Array = []
-	lines.append("📔 주희의 다꾸 서재 & 소장 일기장 요약 (" + str(items.size()) + "종 / " + str(get_total_volumes()) + "권 / 초판 " + str(get_first_editions_count()) + "권)")
+	lines.append("📔 주희의 다꾸 서재 & 소장 일기장 요약 (" + str(items.size()) + "종 / " + str(get_total_volumes()) + "권 / 초판 " + str(get_first_editions_count()) + "권 / 총 자산 " + format_krw(get_total_collection_value()) + ")")
 	for it in items:
-		lines.append("- [" + it.status_tag + "] " + it.title + " (" + it.author_or_series + ") " + it.obi_text)
+		lines.append("- [" + it.status_tag + " · " + it.condition_grade + "] " + it.title + " (" + it.author_or_series + ") " + it.obi_text)
 	return "\n".join(lines)
 
 func save_to_file(custom_path: String = "") -> bool:
@@ -211,6 +211,7 @@ func load_from_file(custom_path: String = "") -> bool:
 			it.custom_tag = d.get("custom_tag", "#소장각")
 			it.favorite_character = d.get("favorite_character", "🌟 최애 캐릭터")
 			it.condition_grade = d.get("condition_grade", "✨ S급(최상)")
+			it.cover_finish = d.get("cover_finish", "📜 무광 매트")
 			it.updated_at = int(d.get("updated_at", 0))
 			it.volumes = d.get("volumes", [])
 			items.append(it)
