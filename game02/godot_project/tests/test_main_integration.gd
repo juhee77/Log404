@@ -313,6 +313,14 @@ func _init() -> void:
 	assert(new_tag in ["#소장각", "#인생만화", "#힐링타임", "#전시필수", "#한정특전"], "cycle_custom_tag should cycle keyword tags")
 	print("✓ KRW Comma Formatter, Live Today Header Date & Custom Keyword Tag Cycler verified")
 
+	# Test Sprint 38: Tag/Location Search, Modal Value Display & Share Card Signature
+	var tag_hits = main_inst.archive_state.get_filtered_items(-1, new_tag)
+	assert(tag_hits.size() >= 1, "get_filtered_items should match custom_tag")
+	assert("💎 ₩" in main_inst.detail_modal.author_label.text, "detail_modal author_label should display formatted item value")
+	var shared_card = main_inst.detail_modal.copy_book_quote_card()
+	assert(new_tag in shared_card and "✍️" in shared_card or "🌙" in shared_card or "☕" in shared_card or "🎁" in shared_card, "copy_book_quote_card should include custom_tag and diary_signature")
+	print("✓ Tag/Location Search, Modal Value Display & Share Card Signature verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

@@ -498,7 +498,7 @@
                 else if (currentCat === 'complete') cMatch = it.stamp === '전권완결' || (it.volumes && it.volumes.length >= 2);
                 else if (currentCat === 'fav') cMatch = it.stamp === '인생최애' || (it.volumes && it.volumes.every(v => v.rating === 5));
 
-                const qMatch = !q || it.title.toLowerCase().includes(q) || it.author.toLowerCase().includes(q) || it.memo.toLowerCase().includes(q);
+                const qMatch = !q || it.title.toLowerCase().includes(q) || it.author.toLowerCase().includes(q) || it.memo.toLowerCase().includes(q) || (it.custom_tag || '').toLowerCase().includes(q) || (it.storage_location || '').toLowerCase().includes(q) || (it.acquisition_source || '').toLowerCase().includes(q);
                 return cMatch && qMatch;
             });
 

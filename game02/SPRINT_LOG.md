@@ -5,6 +5,22 @@
 
 ---
 
+## 🚀 [Sprint 38] 커스텀 태그·보관위치·입수처 통합 검색 · 모달 추정 가치 표시 · 감상 카드 서명·태그 공유
+- **시각**: 2026-11-15 18:58 KST
+- **1. 다꾸러 3인 VOC (수집러 A · 가챠러 B · 미니멀러 C)**
+  - **만년필 다꾸러 A**: *"일기장 모달에서 고른 커스텀 태그(`#소장각`, `#인생만화`)나 보관위치(`🗄️ 1층 장식장`)로도 메인 검색창에서 바로 필터링되면 좋겠어요!"*
+  - **가챠 수집러 B**: *"모달을 열었을 때 작가명 옆에 이 소장품의 추정 가치(`💎 ₩21,000`)가 바로 표시되면 훨씬 직관적입니다."*
+  - **미니멀 수집러 C**: *"감상 카드 공유(`💌 공유`)를 눌렀을 때 커스텀 태그와 내 서명(`✍️ 주희의 서재`)이 함께 복사되면 노트에 바로 붙여넣기 좋습니다."*
+- **2. 기획 & UI/UX & Godot 4.6 개발 내역**
+  - **커스텀 태그·보관위치·입수처 통합 검색(`archive_state.gd`)**: `get_filtered_items()` 검색 쿼리가 `custom_tag`, `storage_location`, `acquisition_source`까지 매칭하도록 확장
+  - **모달 추정 가치 표시 & 감상 카드 서명·태그 공유(`detail_modal.gd`)**: `open(item)`에서 `author_label`에 콤마 포맷 추정 가치(`💎 ₩21,000`)를 노출하고, `copy_book_quote_card()`에 `custom_tag · diary_signature` 라인 추가
+  - **HTML 인터랙티브 목업 동기화**: `game02/index.html` 검색 필터에 `custom_tag`, `storage_location`, `acquisition_source` 매칭 동기화 완료
+- **3. TDD & QA 검증**
+  - `tests/test_main_integration.gd`에 Sprint 38 태그 통합 검색, 모달 가치 표시 및 공유 카드 서명 검증 추가 → 3개 헤드리스 테스트 스위트 전수 100% PASS (스크립트 에러 0건)
+  - Metal 렌더러 최신 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 캡처 완료
+
+---
+
 ## 🚀 [Sprint 37] 원화 천 단위 콤마 포맷터(`format_krw` · `₩80,000`) · 실시간 오늘 날짜 헤더 · 커스텀 키워드 태그(`#소장각` / `cycle_custom_tag`)
 - **시각**: 2026-11-15 18:38 KST
 - **1. 다꾸러 3인 VOC (수집러 A · 가챠러 B · 미니멀러 C)**

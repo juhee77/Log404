@@ -178,6 +178,9 @@ func copy_book_quote_card() -> String:
 	lines.append("🖋️ \"" + current_item.memo + "\"")
 	if current_item.obi_text != "":
 		lines.append("🏷️ 띠지: " + current_item.obi_text)
+	var ct = current_item.get("custom_tag") if current_item.get("custom_tag") != null else "#소장각"
+	var sig = current_item.get("diary_signature") if current_item.get("diary_signature") != null else "✍️ 주희의 서재"
+	lines.append(ct + " · " + sig)
 	var card_text = "\n".join(lines)
 	DisplayServer.clipboard_set(card_text)
 	return card_text
@@ -211,7 +214,16 @@ func open(item) -> void:
 	current_item = item
 	editing_vol_index = -1
 	title_label.text = "📔 " + item.title
-	author_label.text = "작가 · " + (item.author_or_series if item.author_or_series != "" else "미상")
+	var val_amt = item.get_item_value() if item.has_method("get_item_value") else 5000
+	var s_val = str(val_amt)
+	var formatted_val = ""
+	var cnt_v = 0
+	for i in range(s_val.length() - 1, -1, -1):
+		if cnt_v > 0 and cnt_v % 3 == 0:
+			formatted_val = "," + formatted_val
+		formatted_val = s_val[i] + formatted_val
+		cnt_v += 1
+	author_label.text = "작가 · " + (item.author_or_series if item.author_or_series != "" else "미상") + " · 💎 ₩" + formatted_val
 	var sticker = current_item.get("deco_sticker") if current_item.get("deco_sticker") != null else "✨"
 	var r_tier = current_item.get("rarity_tier") if current_item.get("rarity_tier") != null else "🌟노말"
 	var loc = current_item.get("storage_location") if current_item.get("storage_location") != null else "🗄️ 1층 장식장"
