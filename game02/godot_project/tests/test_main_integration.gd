@@ -396,6 +396,16 @@ func _init() -> void:
 	assert("🛋️" in summary_s47 or "☕" in summary_s47 or "🪑" in summary_s47 or "🚃" in summary_s47, "export_diary_summary should include reading_spot")
 	print("✓ Modal Author Rating Display & Summary Weather/Spot/Value Export verified")
 
+	# Test Sprint 48: Live Author Rating/Value Sync on Vol & Duplicate Changes + Library Avg Rating
+	main_inst.detail_modal.cycle_volume_rating(0)
+	assert(not ("★5.0" in main_inst.detail_modal.author_label.text), "cycle_volume_rating should immediately update modal author_label average rating")
+	main_inst.detail_modal.increment_duplicate_count()
+	assert("₩42,000" in main_inst.detail_modal.author_label.text, "increment_duplicate_count should immediately double modal author_label value")
+	var lib_avg = main_inst.archive_state.get_average_library_rating()
+	assert(lib_avg > 0.0 and lib_avg <= 5.0, "get_average_library_rating should return valid average rating")
+	assert("평균 ★" in main_inst.archive_state.export_diary_summary(), "export_diary_summary should include average library rating")
+	print("✓ Live Author Rating/Value Sync on Vol & Duplicate Changes + Library Avg Rating verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

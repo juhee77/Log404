@@ -283,27 +283,35 @@
                     <div class="flex items-center justify-between pb-3 border-b border-[#e2d6c5]">
                         <span class="serif-font text-sm font-bold text-[#2c221e]">🖋️ 나만의 독서 노트 & 권별 밑줄</span>
                         <div class="flex items-center gap-1.5">
-                            <button id="tape-cycle-btn" onclick="cycleWashiTape()" class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">🎨 마테 옐로우</button>
-                            <button id="deco-sticker-btn" onclick="cycleDecoSticker()" class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">✨ 스티커</button>
-                            <button id="rarity-cycle-btn" onclick="cycleRarityTier()" class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">💎 레어</button>
-                            <button id="paper-cycle-btn" onclick="cyclePaperPattern()" class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">📄 줄노트</button>
-                            <button id="storage-cycle-btn" onclick="cycleStorageLocation()" class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">🗄️ 장식장</button>
-                            <button id="source-cycle-btn" onclick="cycleAcquisitionSource()" class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">🏪 서점</button>
-                            <button id="mood-cycle-btn" onclick="cycleReadingMood()" class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">🥰 힐링</button>
-                            <button id="reread-cycle-btn" onclick="incrementRereadCount()" class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">🔁 1회독</button>
-                            <button id="duplicate-cycle-btn" onclick="incrementDuplicateCount()" class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">👯 ×1</button>
-                            <button id="signature-cycle-btn" onclick="cycleDiarySignature()" class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">✍️ 주희의 서재</button>
-                            <button id="possession-cycle-btn" onclick="cyclePossessionState()" class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">📦 소장중</button>
-                            <button id="date-stamp-btn" onclick="stampPurchaseDate()" class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">📅 기념일</button>
-                            <button id="tag-cycle-btn" onclick="cycleCustomTag()" class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">#소장각</button>
-                            <button id="value-boost-btn" onclick="boostEstimatedValue()" class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">💎 +5천원</button>
-                            <button id="favchar-cycle-btn" onclick="cycleFavoriteCharacter()" class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">🌟 최애 캐릭터</button>
-                            <button id="condition-cycle-btn" onclick="cycleConditionGrade()" class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">✨ S급(최상)</button>
-                            <button id="finish-cycle-btn" onclick="cycleCoverFinish()" class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">📜 무광 매트</button>
-                            <button id="weather-cycle-btn" onclick="cycleReadingWeather()" class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">☀️ 맑은 오후</button>
-                            <button id="spot-cycle-btn" onclick="cycleReadingSpot()" class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">🛋️ 이불 속</button>
-                            <button onclick="copyBookQuoteCard()" class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">💌 감상 카드 공유</button>
-                            <button onclick="closeJournalModal()" class="w-7 h-7 rounded-full bg-[#efe7da] hover:bg-[#e2d6c5] text-[#5c4938] text-xs font-bold cursor-pointer">✕</button>
+                            <button id="tape-cycle-btn" onclick="cycleWashiTape()"
+                                class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">🎨
+                                마테 옐로우</button>
+                            <button id="deco-sticker-btn" onclick="cycleDecoSticker()"
+                                class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">✨
+                                스티커</button>
+                            <button id="rarity-cycle-btn" onclick="cycleRarityTier()"
+                                class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">💎
+                                레어</button>
+                            <button id="paper-cycle-btn" onclick="cyclePaperPattern()"
+                                class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">📄
+                                줄노트</button>
+                            <button id="storage-cycle-btn" onclick="cycleStorageLocation()"
+                                class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">🗄️
+                                장식장</button>
+                            <button id="source-cycle-btn" onclick="cycleAcquisitionSource()"
+                                class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">🏪
+                                서점</button>
+                            <button id="mood-cycle-btn" onclick="cycleReadingMood()"
+                                class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">🥰
+                                힐링</button>
+                            <button id="reread-cycle-btn" onclick="incrementRereadCount()"
+                                class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">🔁
+                                1회독</button>
+                            <button onclick="copyBookQuoteCard()"
+                                class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">💌
+                                감상 카드 공유</button>
+                            <button onclick="closeJournalModal()"
+                                class="w-7 h-7 rounded-full bg-[#efe7da] hover:bg-[#e2d6c5] text-[#5c4938] text-xs font-bold cursor-pointer">✕</button>
                         </div>
                     </div>
 
@@ -504,7 +512,7 @@
                 else if (currentCat === 'complete') cMatch = it.stamp === '전권완결' || (it.volumes && it.volumes.length >= 2);
                 else if (currentCat === 'fav') cMatch = it.stamp === '인생최애' || (it.volumes && it.volumes.every(v => v.rating === 5));
 
-                const qMatch = !q || it.title.toLowerCase().includes(q) || it.author.toLowerCase().includes(q) || it.memo.toLowerCase().includes(q) || (it.custom_tag || '').toLowerCase().includes(q) || (it.storage_location || '').toLowerCase().includes(q) || (it.acquisition_source || '').toLowerCase().includes(q) || (it.favorite_character || '').toLowerCase().includes(q) || (it.condition_grade || '').toLowerCase().includes(q) || (it.cover_finish || '').toLowerCase().includes(q) || (it.reading_weather || '').toLowerCase().includes(q) || (it.reading_spot || '').toLowerCase().includes(q);
+                const qMatch = !q || it.title.toLowerCase().includes(q) || it.author.toLowerCase().includes(q) || it.memo.toLowerCase().includes(q);
                 return cMatch && qMatch;
             });
 
@@ -542,7 +550,7 @@
                             <div class="flex-1 min-w-0">
                                 <span class="rubber-stamp text-[10px] px-1.5 py-0.5 rounded inline-block mb-1.5">💮 ${item.stamp} ${item.deco_sticker || '✨'}</span>
                                 <h3 class="serif-font text-sm font-bold text-[#2c221e] truncate">${item.title}</h3>
-                                <p class="text-[11px] text-[#786b63] truncate">${item.author}${(item.reread_count || 1) > 1 ? ` · 🔁 ${item.reread_count}회독` : ''}${(item.duplicate_count || 1) > 1 ? ` · 👯 ×${item.duplicate_count}` : ''}${(item.possession_state && item.possession_state !== '📦 소장중') ? ` · ${item.possession_state}` : ''}</p>
+                                <p class="text-[11px] text-[#786b63] truncate">${item.author}${(item.reread_count || 1) > 1 ? ` · 🔁 ${item.reread_count}회독` : ''}</p>
                                 <p class="serif-font text-[11px] text-[#5c4938] italic line-clamp-2 mt-2 bg-[#fffdf9] p-1.5 rounded border border-[#ece3d5]">
                                     ${quotePreview}
                                 </p>
@@ -597,7 +605,7 @@
             document.getElementById('diary-cover-icon').textContent = item.icon;
             document.getElementById('diary-cover-obi').textContent = item.obi;
             document.getElementById('diary-title').textContent = item.title;
-            document.getElementById('diary-author').textContent = `작가 · ${item.author} · ★5.0 · 💎 ₩${(item.estimated_value || 5000).toLocaleString()}`;
+            refreshDiaryAuthor(item);
             document.getElementById('diary-stamp').textContent = '💮 ' + item.stamp;
             document.getElementById('diary-memo').textContent = item.memo;
 
@@ -622,41 +630,8 @@
             if (moodBtn) moodBtn.textContent = item.reading_mood || '🥰 힐링';
             const rereadBtn = document.getElementById('reread-cycle-btn');
             if (rereadBtn) rereadBtn.textContent = `🔁 ${item.reread_count || 1}회독`;
-            const dupBtn = document.getElementById('duplicate-cycle-btn');
-            if (dupBtn) dupBtn.textContent = `👯 ×${item.duplicate_count || 1}`;
-            const sigBtn = document.getElementById('signature-cycle-btn');
-            if (sigBtn) sigBtn.textContent = item.diary_signature || '✍️ 주희의 서재';
-            const posBtn = document.getElementById('possession-cycle-btn');
-            if (posBtn) posBtn.textContent = item.possession_state || '📦 소장중';
-            const dateBtn = document.getElementById('date-stamp-btn');
-            if (dateBtn) dateBtn.textContent = item.purchase_date || '📅 기념일';
-            const tagBtn = document.getElementById('tag-cycle-btn');
-            if (tagBtn) tagBtn.textContent = item.custom_tag || '#소장각';
-            const fcBtn = document.getElementById('favchar-cycle-btn');
-            if (fcBtn) fcBtn.textContent = item.favorite_character || '🌟 최애 캐릭터';
-            const condBtn = document.getElementById('condition-cycle-btn');
-            if (condBtn) condBtn.textContent = item.condition_grade || '✨ S급(최상)';
-            const finBtn = document.getElementById('finish-cycle-btn');
-            if (finBtn) finBtn.textContent = item.cover_finish || '📜 무광 매트';
-            const wBtn = document.getElementById('weather-cycle-btn');
-            if (wBtn) wBtn.textContent = item.reading_weather || '☀️ 맑은 오후';
-            const spBtn = document.getElementById('spot-cycle-btn');
-            if (spBtn) spBtn.textContent = item.reading_spot || '🛋️ 이불 속';
-            refreshDiaryStamp(item);
+            document.getElementById('diary-stamp').textContent = `💮 ${item.stamp} ${sticker} [${item.reading_mood || '🥰 힐링'} · ${rTier} · ${loc}]`;
             document.getElementById('journal-modal').classList.remove('hidden');
-        }
-
-        function refreshDiaryStamp(item) {
-            if (!item) return;
-            const stampEl = document.getElementById('diary-stamp');
-            if (!stampEl) return;
-            const sticker = item.deco_sticker || '✨';
-            const rTier = item.rarity_tier || '🌟 노말';
-            const loc = item.storage_location || '🗄️ 장식장';
-            const mood = item.reading_mood || '🥰 힐링';
-            const rw = item.reading_weather || '☀️ 맑은 오후';
-            const rs = item.reading_spot || '🛋️ 이불 속';
-            stampEl.textContent = `💮 ${item.stamp} ${sticker} [${mood} · ${rTier} · ${loc} · ${rw} · ${rs}]`;
         }
 
         const MOOD_PRESETS = ["🥰 힐링", "🔥 열혈", "😭 감동", "🤯 반전", "🤣 유쾌"];
@@ -668,7 +643,8 @@
             item.reading_mood = MOOD_PRESETS[(idx + 1) % MOOD_PRESETS.length];
             const btn = document.getElementById('mood-cycle-btn');
             if (btn) btn.textContent = item.reading_mood;
-            refreshDiaryStamp(item);
+            const stampEl = document.getElementById('diary-stamp');
+            if (stampEl) stampEl.textContent = `💮 ${item.stamp} ${item.deco_sticker || '✨'} [${item.reading_mood} · ${item.rarity_tier || '🌟 노말'} · ${item.storage_location || '🗄️ 장식장'}]`;
         }
 
         function incrementRereadCount() {
@@ -680,126 +656,6 @@
             renderShelf();
         }
 
-        function incrementDuplicateCount() {
-            const item = ITEMS.find(x => x.id === activeId);
-            if (!item) return;
-            item.duplicate_count = (item.duplicate_count || 1) + 1;
-            const btn = document.getElementById('duplicate-cycle-btn');
-            if (btn) btn.textContent = `👯 ×${item.duplicate_count}`;
-            renderShelf();
-        }
-
-        const SIGNATURE_PRESETS = ["✍️ 주희의 서재", "🌙 밤독서 기록", "☕ 카페 다꾸", "🎁 소장 기념"];
-        function cycleDiarySignature() {
-            const item = ITEMS.find(x => x.id === activeId);
-            if (!item) return;
-            const cur = item.diary_signature || "✍️ 주희의 서재";
-            const idx = SIGNATURE_PRESETS.indexOf(cur);
-            item.diary_signature = SIGNATURE_PRESETS[(idx + 1) % SIGNATURE_PRESETS.length];
-            const btn = document.getElementById('signature-cycle-btn');
-            if (btn) btn.textContent = item.diary_signature;
-        }
-
-        const POSSESSION_PRESETS = ["📦 소장중", "🛒 예약중", "🚚 배송중", "✨ 전시중"];
-        function cyclePossessionState() {
-            const item = ITEMS.find(x => x.id === activeId);
-            if (!item) return;
-            const cur = item.possession_state || "📦 소장중";
-            const idx = POSSESSION_PRESETS.indexOf(cur);
-            item.possession_state = POSSESSION_PRESETS[(idx + 1) % POSSESSION_PRESETS.length];
-            const btn = document.getElementById('possession-cycle-btn');
-            if (btn) btn.textContent = item.possession_state;
-            renderShelf();
-        }
-
-        function stampPurchaseDate() {
-            const item = ITEMS.find(x => x.id === activeId);
-            if (!item) return;
-            const now = new Date();
-            const mm = String(now.getMonth() + 1).padStart(2, '0');
-            const dd = String(now.getDate()).padStart(2, '0');
-            item.purchase_date = `📅 ${mm}.${dd}`;
-            const btn = document.getElementById('date-stamp-btn');
-            if (btn) btn.textContent = item.purchase_date;
-        }
-
-        const CUSTOM_TAG_PRESETS = ["#소장각", "#인생만화", "#힐링타임", "#전시필수", "#한정특전"];
-        function cycleCustomTag() {
-            const item = ITEMS.find(x => x.id === activeId);
-            if (!item) return;
-            const cur = item.custom_tag || "#소장각";
-            const idx = CUSTOM_TAG_PRESETS.indexOf(cur);
-            item.custom_tag = CUSTOM_TAG_PRESETS[(idx + 1) % CUSTOM_TAG_PRESETS.length];
-            const btn = document.getElementById('tag-cycle-btn');
-            if (btn) btn.textContent = item.custom_tag;
-        }
-
-        function boostEstimatedValue() {
-            const item = ITEMS.find(x => x.id === activeId);
-            if (!item) return;
-            const base = item.estimated_value || (item.category === 'manga' ? Math.max(1, (item.volumes || []).length) * 7000 : 5000);
-            item.estimated_value = base + 5000;
-            const btn = document.getElementById('value-boost-btn');
-            if (btn) btn.textContent = `💎 ₩${item.estimated_value.toLocaleString()}`;
-        }
-
-        const FAV_CHAR_PRESETS = ["🌟 최애 캐릭터", "🏀 강백호", "🧙‍♀️ 프리렌", "🐾 치이카와", "🏐 히나타", "🌸 체리"];
-        function cycleFavoriteCharacter() {
-            const item = ITEMS.find(x => x.id === activeId);
-            if (!item) return;
-            const cur = item.favorite_character || "🌟 최애 캐릭터";
-            const idx = FAV_CHAR_PRESETS.indexOf(cur);
-            item.favorite_character = FAV_CHAR_PRESETS[(idx + 1) % FAV_CHAR_PRESETS.length];
-            const btn = document.getElementById('favchar-cycle-btn');
-            if (btn) btn.textContent = item.favorite_character;
-        }
-
-        const CONDITION_PRESETS = ["✨ S급(최상)", "📖 A급(양호)", "🏷️ B급(사용감)", "📦 미개봉(새상품)"];
-        function cycleConditionGrade() {
-            const item = ITEMS.find(x => x.id === activeId);
-            if (!item) return;
-            const cur = item.condition_grade || "✨ S급(최상)";
-            const idx = CONDITION_PRESETS.indexOf(cur);
-            item.condition_grade = CONDITION_PRESETS[(idx + 1) % CONDITION_PRESETS.length];
-            const btn = document.getElementById('condition-cycle-btn');
-            if (btn) btn.textContent = item.condition_grade;
-        }
-
-        const FINISH_PRESETS = ["📜 무광 매트", "✨ 유광 코팅", "🌟 홀로그램", "🧶 패브릭 양장"];
-        function cycleCoverFinish() {
-            const item = ITEMS.find(x => x.id === activeId);
-            if (!item) return;
-            const cur = item.cover_finish || "📜 무광 매트";
-            const idx = FINISH_PRESETS.indexOf(cur);
-            item.cover_finish = FINISH_PRESETS[(idx + 1) % FINISH_PRESETS.length];
-            const btn = document.getElementById('finish-cycle-btn');
-            if (btn) btn.textContent = item.cover_finish;
-        }
-
-        const WEATHER_PRESETS = ["☀️ 맑은 오후", "🌧️ 비 오는 밤", "❄️ 눈 내리는 창가", "🌙 새벽 감성"];
-        function cycleReadingWeather() {
-            const item = ITEMS.find(x => x.id === activeId);
-            if (!item) return;
-            const cur = item.reading_weather || "☀️ 맑은 오후";
-            const idx = WEATHER_PRESETS.indexOf(cur);
-            item.reading_weather = WEATHER_PRESETS[(idx + 1) % WEATHER_PRESETS.length];
-            const btn = document.getElementById('weather-cycle-btn');
-            if (btn) btn.textContent = item.reading_weather;
-            refreshDiaryStamp(item);
-        }
-
-        const SPOT_PRESETS = ["🛋️ 이불 속", "☕ 북카페", "🪑 내 방 책상", "🚃 출퇴근길"];
-        function cycleReadingSpot() {
-            const item = ITEMS.find(x => x.id === activeId);
-            if (!item) return;
-            const cur = item.reading_spot || "🛋️ 이불 속";
-            const idx = SPOT_PRESETS.indexOf(cur);
-            item.reading_spot = SPOT_PRESETS[(idx + 1) % SPOT_PRESETS.length];
-            const btn = document.getElementById('spot-cycle-btn');
-            if (btn) btn.textContent = item.reading_spot;
-            refreshDiaryStamp(item);
-        }
-
         const SOURCE_PRESETS = ["🏪 오프라인 서점", "🇯🇵 직구/해외", "🎁 선물", "🎪 팝업/행사", "📦 온라인 서점"];
         function cycleAcquisitionSource() {
             const item = ITEMS.find(x => x.id === activeId);
@@ -809,7 +665,8 @@
             item.acquisition_source = SOURCE_PRESETS[(idx + 1) % SOURCE_PRESETS.length];
             const btn = document.getElementById('source-cycle-btn');
             if (btn) btn.textContent = item.acquisition_source;
-            refreshDiaryStamp(item);
+            const stampEl = document.getElementById('diary-stamp');
+            if (stampEl) stampEl.textContent = `💮 ${item.stamp} ${item.deco_sticker || '✨'} [${item.rarity_tier || '🌟 노말'} · ${item.storage_location || '🗄️ 장식장'} · ${item.acquisition_source}]`;
         }
 
         const AMBIENT_PRESETS = ["🔕 무음", "🌧️ 빗소리", "☕ 북카페", "📖 책장넘김", "🔥 모닥불", "🦗 밤귀뚜라미"];
@@ -830,7 +687,8 @@
             item.rarity_tier = RARITY_PRESETS[(idx + 1) % RARITY_PRESETS.length];
             const btn = document.getElementById('rarity-cycle-btn');
             if (btn) btn.textContent = item.rarity_tier;
-            refreshDiaryStamp(item);
+            const stampEl = document.getElementById('diary-stamp');
+            if (stampEl) stampEl.textContent = `💮 ${item.stamp} ${item.deco_sticker || '✨'} [${item.rarity_tier}]`;
             renderShelf();
         }
 
@@ -843,7 +701,8 @@
             item.deco_sticker = DECO_STICKERS[(idx + 1) % DECO_STICKERS.length];
             const btn = document.getElementById('deco-sticker-btn');
             if (btn) btn.textContent = `${item.deco_sticker} 스티커`;
-            refreshDiaryStamp(item);
+            const stampEl = document.getElementById('diary-stamp');
+            if (stampEl) stampEl.textContent = `💮 ${item.stamp} ${item.deco_sticker} [${item.rarity_tier || '🌟 노말'}]`;
             renderShelf();
         }
 
@@ -901,7 +760,15 @@
             if (!item || !item.volumes || !item.volumes[idx]) return;
             item.volumes[idx].bookmarked = !item.volumes[idx].bookmarked;
             renderDiaryVolumes(item);
+            refreshDiaryAuthor(item);
             renderShelf();
+        }
+
+        function refreshDiaryAuthor(item) {
+            if (!item) return;
+            const vols = item.volumes || [];
+            const avg = vols.length ? (vols.reduce((s, v) => s + (v.rating || 5), 0) / vols.length).toFixed(1) : '5.0';
+            document.getElementById('diary-author').textContent = `작가 · ${item.author} · ★${avg} · 💎 ₩${(item.estimated_value || 5000).toLocaleString()}`;
         }
 
         function cycleVolRating(idx) {
@@ -910,6 +777,7 @@
             const cur = item.volumes[idx].rating || 5;
             item.volumes[idx].rating = cur >= 5 ? 3 : cur + 1;
             renderDiaryVolumes(item);
+            refreshDiaryAuthor(item);
         }
 
         function toggleVolStatus(idx) {
@@ -917,6 +785,7 @@
             if (!item || !item.volumes || !item.volumes[idx]) return;
             item.volumes[idx].status = item.volumes[idx].status === 'first' ? 'owned' : 'first';
             renderDiaryVolumes(item);
+            refreshDiaryAuthor(item);
             renderShelf();
         }
 
@@ -926,6 +795,7 @@
             const nextVol = (item.volumes ? item.volumes.length : 0) + 1;
             item.volumes.push({ vol: nextVol, status: 'first', rating: 5, quote: `${nextVol}권 읽고 기록한 나만의 한 줄 일기` });
             renderDiaryVolumes(item);
+            refreshDiaryAuthor(item);
             renderShelf();
         }
 

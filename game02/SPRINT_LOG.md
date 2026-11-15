@@ -5,6 +5,21 @@
 
 ---
 
+## 🚀 [Sprint 48] 권별 별점·권수·복수소장 변경 시 모달 상단 실시간 동기화 & 서재 전체 평균 별점(`get_average_library_rating`) 백업 연동
+- **날짜/시각**: 2026-11-15 23:59 (자동 스프린트)
+- **참여 스쿼드**: 14인 애자일 스쿼드 전원 (다꾸러 3인, PO/기획 2인, UX/UI 2인, 개발 4인, QA 2인, CEO 1인)
+- **핵심 VOC 및 기획 확정**:
+  1. **다꾸러 VOC #1 ("모달 안에서 권별 별점이나 권수(`+ 다음 권 추가`/`- 권 삭제`), 복수 소장(`👯×2`)을 바꿀 때마다 상단 평균 별점(`★`)과 소장 가치(`💎 ₩`)가 즉시 반영되어야 해요!")**: `detail_modal.gd`의 `cycle_volume_rating()`, `_on_add_vol_btn_pressed()`, `remove_last_volume()`, `increment_duplicate_count()`에서 `_refresh_author_label()`을 호출해 실시간 갱신되도록 개선.
+  2. **다꾸러 VOC #2 ("내 서재 전체 작품의 평균 별점도 백업 요약 헤더에서 한눈에 보고 싶어요")**: `archive_state.gd`에 `get_average_library_rating() -> float`를 신설하고 `export_diary_summary()` 상단 요약 헤더(`평균 ★5.0`)에 연동.
+  3. **웹 목업 동기화**: `game02/index.html`에 `refreshDiaryAuthor(item)` 헬퍼를 추가해 모달 오픈, 권별 별점 순환, 권 추가 시 `#diary-author`가 실시간 평균 별점과 가치를 반영하도록 동기화.
+- **구현 및 검증 내역**:
+  - `detail_modal.gd`: `cycle_volume_rating()`, `_on_add_vol_btn_pressed()`, `remove_last_volume()`, `increment_duplicate_count()`에 `_refresh_author_label()` 실시간 호출 연결.
+  - `archive_state.gd`: `get_average_library_rating()` 신설 및 `export_diary_summary()` 헤더 연동.
+  - `game02/index.html`: `refreshDiaryAuthor(item)` 추출 및 권별 별점/추가 동기화.
+  - `tests/test_main_integration.gd`: Sprint 48 통합 테스트(`Live Author Rating/Value Sync on Vol & Duplicate Changes + Library Avg Rating verified`) 추가 후 3대 헤드리스 테스트 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 캡처 완료.
+
+---
+
 ## 🚀 [Sprint 47] 모달 상단 작가·평점·가치 통합 헬퍼(`_refresh_author_label`) & 서재 백업 요약 내 날씨·장소·가치 통합
 - **날짜/시각**: 2026-11-15 23:54 (자동 스프린트)
 - **참여 스쿼드**: 14인 애자일 스쿼드 전원 (다꾸러 3인, PO/기획 2인, UX/UI 2인, 개발 4인, QA 2인, CEO 1인)

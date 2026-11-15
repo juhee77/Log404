@@ -137,9 +137,17 @@ func get_first_editions_count() -> int:
 				count += 1
 	return count
 
+func get_average_library_rating() -> float:
+	if items.is_empty():
+		return 5.0
+	var total = 0.0
+	for it in items:
+		total += it.get_average_rating()
+	return total / float(items.size())
+
 func export_diary_summary() -> String:
 	var lines: Array = []
-	lines.append("📔 주희의 다꾸 서재 & 소장 일기장 요약 (" + str(items.size()) + "종 / " + str(get_total_volumes()) + "권 / 초판 " + str(get_first_editions_count()) + "권 / 총 자산 " + format_krw(get_total_collection_value()) + ")")
+	lines.append("📔 주희의 다꾸 서재 & 소장 일기장 요약 (" + str(items.size()) + "종 / " + str(get_total_volumes()) + "권 / 초판 " + str(get_first_editions_count()) + "권 / 평균 ★" + String.num(get_average_library_rating(), 1) + " / 총 자산 " + format_krw(get_total_collection_value()) + ")")
 	for it in items:
 		lines.append("- [" + it.status_tag + " · " + it.condition_grade + " · " + format_krw(it.get_item_value()) + "] " + it.title + " (" + it.author_or_series + ") · " + it.reading_weather + " · " + it.reading_spot + " " + it.obi_text)
 	return "\n".join(lines)

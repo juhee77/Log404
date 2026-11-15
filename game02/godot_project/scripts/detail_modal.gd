@@ -420,6 +420,7 @@ func increment_duplicate_count() -> int:
 	var dup_btn: Button = get_node_or_null("Panel/VBox/BodyMargin/Body/StampRow/DuplicateBtn")
 	if dup_btn != null:
 		dup_btn.text = "👯×" + str(dc)
+	_refresh_author_label()
 	diary_updated.emit(current_item)
 	return dc
 
@@ -661,6 +662,7 @@ func cycle_volume_rating(vol_idx: int) -> void:
 	var next_r = 3 if cur_r >= 5 else (cur_r + 1)
 	current_item.volumes[vol_idx]["rating"] = next_r
 	_render_volumes()
+	_refresh_author_label()
 	diary_updated.emit(current_item)
 
 func stamp_volume_date(vol_idx: int) -> void:
@@ -834,12 +836,14 @@ func _on_add_vol_btn_pressed() -> void:
 		var next_num = current_item.volumes.size() + 1
 		current_item.add_volume(next_num, "first", 5, str(next_num) + "권 읽고 밑줄 친 오늘의 문장")
 		_render_volumes()
+		_refresh_author_label()
 		volume_added.emit(current_item)
 
 func remove_last_volume() -> void:
 	if current_item != null and current_item.volumes.size() > 0:
 		current_item.volumes.pop_back()
 		_render_volumes()
+		_refresh_author_label()
 		diary_updated.emit(current_item)
 
 func _on_delete_btn_pressed() -> void:

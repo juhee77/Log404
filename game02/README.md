@@ -15,6 +15,10 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 
 ## 🚀 최신 스프린트 업데이트 요약 ([전체 회의록 보기](SPRINT_LOG.md))
 
+### [Sprint 48] 권별 별점·권수·복수소장 변경 시 모달 상단 실시간 동기화 & 서재 전체 평균 별점(`get_average_library_rating`) 연동
+- **모달 상단 별점·가치 실시간 동기화 (`detail_modal.gd`)**: 권별 별점(`cycle_volume_rating`), 권 추가/삭제, 복수 소장(`increment_duplicate_count`) 시 모달 상단 `AuthorLabel`의 평균 별점(`★`)과 소장 가치(`💎 ₩`)가 즉시 갱신됩니다.
+- **서재 전체 평균 별점 백업 연동 (`archive_state.gd`)**: `get_average_library_rating()`을 추가해 `export_diary_summary()` 상단 헤더에 서재 전체 평균 별점(`평균 ★5.0`)을 함께 기록합니다.
+
 ### [Sprint 47] 모달 상단 작가·평점·가치 통합(`_refresh_author_label`) & 서재 백업 요약 내 날씨·장소·가치 통합
 - **모달 상단 작가·별점·소장 가치 통합 (`_refresh_author_label`)**: 일기장 모달 상단과 감상 카드 공유 텍스트에 평균 별점(`★5.0`)과 포맷된 소장 가치(`💎 ₩21,000`)를 함께 표시합니다.
 - **서재 백업 요약 고도화 (`export_diary_summary`)**: 텍스트 백업 요약의 각 작품 항목에 작품별 소장 가치(`₩`), 독서 날씨(`☀️ 맑은 오후`), 독서 장소(`🛋️ 이불 속`)가 모두 기록됩니다.
