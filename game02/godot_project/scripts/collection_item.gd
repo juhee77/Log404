@@ -34,6 +34,7 @@ var custom_tag: String = "#소장각"
 var favorite_character: String = "🌟 최애 캐릭터"
 var condition_grade: String = "✨ S급(최상)"
 var cover_finish: String = "📜 무광 매트"
+var reading_weather: String = "☀️ 맑은 오후"
 var updated_at: int = 0
 var volumes: Array = []
 
@@ -246,6 +247,16 @@ func cycle_cover_finish() -> String:
 	updated_at = int(Time.get_unix_time_from_system())
 	return cover_finish
 
+func cycle_reading_weather() -> String:
+	const PRESETS = ["☀️ 맑은 오후", "🌧️ 비 오는 밤", "❄️ 눈 내리는 창가", "🌙 새벽 감성"]
+	var idx = PRESETS.find(reading_weather)
+	if idx == -1:
+		reading_weather = PRESETS[0]
+	else:
+		reading_weather = PRESETS[(idx + 1) % PRESETS.size()]
+	updated_at = int(Time.get_unix_time_from_system())
+	return reading_weather
+
 func get_item_value() -> int:
 	var qty = maxi(1, duplicate_count)
 	if estimated_value > 0:
@@ -297,6 +308,7 @@ func to_dict() -> Dictionary:
 		"favorite_character": favorite_character,
 		"condition_grade": condition_grade,
 		"cover_finish": cover_finish,
+		"reading_weather": reading_weather,
 		"updated_at": updated_at,
 		"volumes": volumes
 	}

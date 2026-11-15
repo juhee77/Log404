@@ -300,6 +300,7 @@
                             <button id="favchar-cycle-btn" onclick="cycleFavoriteCharacter()" class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">🌟 최애 캐릭터</button>
                             <button id="condition-cycle-btn" onclick="cycleConditionGrade()" class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">✨ S급(최상)</button>
                             <button id="finish-cycle-btn" onclick="cycleCoverFinish()" class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">📜 무광 매트</button>
+                            <button id="weather-cycle-btn" onclick="cycleReadingWeather()" class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">☀️ 맑은 오후</button>
                             <button onclick="copyBookQuoteCard()" class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">💌 감상 카드 공유</button>
                             <button onclick="closeJournalModal()" class="w-7 h-7 rounded-full bg-[#efe7da] hover:bg-[#e2d6c5] text-[#5c4938] text-xs font-bold cursor-pointer">✕</button>
                         </div>
@@ -636,6 +637,8 @@
             if (condBtn) condBtn.textContent = item.condition_grade || '✨ S급(최상)';
             const finBtn = document.getElementById('finish-cycle-btn');
             if (finBtn) finBtn.textContent = item.cover_finish || '📜 무광 매트';
+            const wBtn = document.getElementById('weather-cycle-btn');
+            if (wBtn) wBtn.textContent = item.reading_weather || '☀️ 맑은 오후';
             document.getElementById('diary-stamp').textContent = `💮 ${item.stamp} ${sticker} [${item.reading_mood || '🥰 힐링'} · ${rTier} · ${loc}]`;
             document.getElementById('journal-modal').classList.remove('hidden');
         }
@@ -756,6 +759,17 @@
             item.cover_finish = FINISH_PRESETS[(idx + 1) % FINISH_PRESETS.length];
             const btn = document.getElementById('finish-cycle-btn');
             if (btn) btn.textContent = item.cover_finish;
+        }
+
+        const WEATHER_PRESETS = ["☀️ 맑은 오후", "🌧️ 비 오는 밤", "❄️ 눈 내리는 창가", "🌙 새벽 감성"];
+        function cycleReadingWeather() {
+            const item = ITEMS.find(x => x.id === activeId);
+            if (!item) return;
+            const cur = item.reading_weather || "☀️ 맑은 오후";
+            const idx = WEATHER_PRESETS.indexOf(cur);
+            item.reading_weather = WEATHER_PRESETS[(idx + 1) % WEATHER_PRESETS.length];
+            const btn = document.getElementById('weather-cycle-btn');
+            if (btn) btn.textContent = item.reading_weather;
         }
 
         const SOURCE_PRESETS = ["🏪 오프라인 서점", "🇯🇵 직구/해외", "🎁 선물", "🎪 팝업/행사", "📦 온라인 서점"];

@@ -182,7 +182,9 @@ func copy_book_quote_card() -> String:
 	var sig = current_item.get("diary_signature") if current_item.get("diary_signature") != null else "✍️ 주희의 서재"
 	var cg = current_item.get("condition_grade") if current_item.get("condition_grade") != null else "✨ S급(최상)"
 	var fc = current_item.get("favorite_character") if current_item.get("favorite_character") != null else "🌟 최애 캐릭터"
-	lines.append(ct + " · " + cg + " · " + fc + " · " + sig)
+	var cf = current_item.get("cover_finish") if current_item.get("cover_finish") != null else "📜 무광 매트"
+	var rw = current_item.get("reading_weather") if current_item.get("reading_weather") != null else "☀️ 맑은 오후"
+	lines.append(ct + " · " + cg + " · " + cf + " · " + rw + " · " + fc + " · " + sig)
 	var card_text = "\n".join(lines)
 	DisplayServer.clipboard_set(card_text)
 	return card_text
@@ -285,6 +287,10 @@ func open(item) -> void:
 	if fin_btn != null:
 		var cf = current_item.get("cover_finish") if (current_item.get("cover_finish") != null and current_item.get("cover_finish") != "") else "📜 무광 매트"
 		fin_btn.text = cf
+	var w_btn: Button = get_node_or_null("Panel/VBox/BodyMargin/Body/InkRow/WeatherBtn")
+	if w_btn != null:
+		var rw = current_item.get("reading_weather") if (current_item.get("reading_weather") != null and current_item.get("reading_weather") != "") else "☀️ 맑은 오후"
+		w_btn.text = rw
 	_apply_paper_style()
 	_apply_ink_style()
 	_apply_washi_style()
@@ -506,8 +512,33 @@ func cycle_cover_finish() -> String:
 	var fin_btn: Button = get_node_or_null("Panel/VBox/BodyMargin/Body/InkRow/FinishBtn")
 	if fin_btn != null:
 		fin_btn.text = cf
+	_apply_cover_finish_style()
 	diary_updated.emit(current_item)
 	return cf
+
+func _apply_cover_finish_style() -> void:
+	if current_item == null or cover_rect == null:
+		return
+	var base_c = Color.from_string(current_item.cover_color, Color(0.65, 0.25, 0.2))
+	var cf = current_item.get("cover_finish") if current_item.get("cover_finish") != null else "📜 무광 매트"
+	if cf == "🌟 홀로그램":
+		cover_rect.color = base_c.lightened(0.12)
+	elif cf == "✨ 유광 코팅":
+		cover_rect.color = base_c.lightened(0.06)
+	elif cf == "🧶 패브릭 양장":
+		cover_rect.color = base_c.darkened(0.08)
+	else:
+		cover_rect.color = base_c
+
+func cycle_reading_weather() -> String:
+	if current_item == null:
+		return "☀️ 맑은 오후"
+	var rw = current_item.cycle_reading_weather() if current_item.has_method("cycle_reading_weather") else "☀️ 맑은 오후"
+	var w_btn: Button = get_node_or_null("Panel/VBox/BodyMargin/Body/InkRow/WeatherBtn")
+	if w_btn != null:
+		w_btn.text = rw
+	diary_updated.emit(current_item)
+	return rw
 
 func cycle_obi_preset() -> void:
 	if current_item == null:

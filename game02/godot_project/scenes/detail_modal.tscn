@@ -401,6 +401,11 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 10
 text = "📜 무광 매트"
 
+[node name="WeatherBtn" type="Button" parent="Panel/VBox/BodyMargin/Body/InkRow"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 10
+text = "☀️ 맑은 오후"
+
 [node name="VolSection" type="VBoxContainer" parent="Panel/VBox/BodyMargin/Body"]
 layout_mode = 2
 size_flags_vertical = 3
@@ -455,3 +460,4 @@ theme_override_constants/separation = 5
 [connection signal="pressed" from="Panel/VBox/BodyMargin/Body/InkRow/FavCharBtn" to="." method="cycle_favorite_character"]
 [connection signal="pressed" from="Panel/VBox/BodyMargin/Body/InkRow/ConditionBtn" to="." method="cycle_condition_grade"]
 [connection signal="pressed" from="Panel/VBox/BodyMargin/Body/InkRow/FinishBtn" to="." method="cycle_cover_finish"]
+[connection signal="pressed" from="Panel/VBox/BodyMargin/Body/InkRow/WeatherBtn" to="." method="cycle_reading_weather"]

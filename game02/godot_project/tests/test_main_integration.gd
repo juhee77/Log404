@@ -351,6 +351,13 @@ func _init() -> void:
 	assert("총 자산 ₩" in summary_text2, "export_diary_summary should include formatted total collection value")
 	print("✓ Cover Finish Preset, Condition Search & Summary Asset Value verified")
 
+	# Test Sprint 43: Reading Weather Stamp & Cover Finish Sheen Visuals
+	var new_rw = main_inst.detail_modal.cycle_reading_weather()
+	assert(new_rw in ["☀️ 맑은 오후", "🌧️ 비 오는 밤", "❄️ 눈 내리는 창가", "🌙 새벽 감성"], "cycle_reading_weather should cycle weather presets")
+	var card_out = main_inst.detail_modal.copy_book_quote_card()
+	assert(new_rw in card_out, "copy_book_quote_card should include reading_weather stamp")
+	print("✓ Reading Weather Stamp & Cover Finish Sheen Visuals verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

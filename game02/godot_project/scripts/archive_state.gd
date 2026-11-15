@@ -212,6 +212,7 @@ func load_from_file(custom_path: String = "") -> bool:
 			it.favorite_character = d.get("favorite_character", "🌟 최애 캐릭터")
 			it.condition_grade = d.get("condition_grade", "✨ S급(최상)")
 			it.cover_finish = d.get("cover_finish", "📜 무광 매트")
+			it.reading_weather = d.get("reading_weather", "☀️ 맑은 오후")
 			it.updated_at = int(d.get("updated_at", 0))
 			it.volumes = d.get("volumes", [])
 			items.append(it)
