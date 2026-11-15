@@ -358,6 +358,13 @@ func _init() -> void:
 	assert(new_rw in card_out, "copy_book_quote_card should include reading_weather stamp")
 	print("✓ Reading Weather Stamp & Cover Finish Sheen Visuals verified")
 
+	# Test Sprint 44: Reading Spot Stamp & Weather/Spot Search Integration
+	var new_rs = main_inst.detail_modal.cycle_reading_spot()
+	assert(new_rs in ["🛋️ 이불 속", "☕ 북카페", "🪑 내 방 책상", "🚃 출퇴근길"], "cycle_reading_spot should cycle spot presets")
+	var spot_hits = main_inst.archive_state.get_filtered_items(-1, new_rs)
+	assert(spot_hits.size() >= 1, "get_filtered_items should match reading_spot")
+	print("✓ Reading Spot Stamp & Weather/Spot Search Integration verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

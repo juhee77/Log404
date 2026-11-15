@@ -5,6 +5,21 @@
 
 ---
 
+## 🚀 [Sprint 44] 독서 장소 스팟 스탬프(`🛋️ 이불 속` / `cycle_reading_spot`), 날씨·장소 통합 검색 & 모달 재오픈 시 표지 질감 광택 유지
+- **날짜/시각**: 2026-11-15 22:39 (자동 스프린트)
+- **참여 스쿼드**: 14인 애자일 스쿼드 전원 (다꾸러 3인, PO/기획 2인, UX/UI 2인, 개발 4인, QA 2인, CEO 1인)
+- **핵심 VOC 및 기획 확정**:
+  1. **다꾸러 VOC #1 ("이 책을 어디서 읽었는지 장소도 스탬프로 남기고 싶어요!")**: 만화책이나 소설을 읽을 때 날씨(`☀️ 맑은 오후`)와 함께 **독서 장소 스팟(`🛋️ 이불 속`, `☕ 북카페`, `🪑 내 방 책상`, `🚃 출퇴근길`)**을 원터치로 순환 기록하고 JSON 영속성까지 보존하도록 `SpotBtn` 및 `reading_spot` 필드를 추가.
+  2. **다꾸러 VOC #2 ("날씨나 장소 스탬프로도 내 서재를 바로 검색하고 싶어요")**: `ArchiveState.get_filtered_items()` 검색 쿼리가 `reading_weather`와 `reading_spot`까지 함께 매칭하도록 확장하여 `"북카페"`, `"비 오는 밤"` 같은 감성 키워드 검색을 지원.
+  3. **UX/UI 개선 ("모달을 닫았다가 다시 열어도 표지 마감 질감 광택이 그대로 유지되어야 해요")**: `detail_modal.gd`의 `open(item)` 시점에 `_apply_cover_finish_style()`을 명시적으로 호출해 모달 재오픈 시에도 표지 질감(`✨ 유광 라미네이팅`, `📜 매트 질감`, `🌟 홀로그램 코팅`, `🧶 패브릭 린넨`) 광택이 즉시 복원되도록 개선.
+- **구현 및 검증 내역**:
+  - `collection_item.gd`, `archive_state.gd`: `reading_spot` 필드(`"🛋️ 이불 속"` 기본값), `cycle_reading_spot()`, `to_dict()`/`load_from_file()` JSON 직렬화 및 날씨·장소 통합 검색 필터 구현.
+  - `detail_modal.tscn`, `detail_modal.gd`: `InkRow`(`HFlowContainer`) 내 `SpotBtn` 배치, `cycle_reading_spot()` 시그널 연결 및 `open()` 시 `_apply_cover_finish_style()` 호출 적용.
+  - `game02/index.html`: `#spot-cycle-btn` / `cycleReadingSpot()` 및 `reading_weather`·`reading_spot` 검색 매칭 동기화.
+  - `tests/test_main_integration.gd`: Sprint 44 통합 테스트(`Reading Spot Stamp & Weather/Spot Search Integration verified`) 추가 후 3대 헤드리스 테스트(`test_archive`, `test_persistence`, `test_main_integration`) 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 캡처 완료.
+
+---
+
 ## 🚀 [Sprint 43] 감성 독서 날씨 스탬프(`☀️ 맑은 오후` / `cycle_reading_weather`) & 표지 마감 질감 실시간 2.5D 광택 반영
 - **시각**: 2026-11-15 22:19 KST
 - **1. 다꾸러 3인 VOC (수집러 A · 가챠러 B · 미니멀러 C)**

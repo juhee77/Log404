@@ -35,6 +35,7 @@ var favorite_character: String = "🌟 최애 캐릭터"
 var condition_grade: String = "✨ S급(최상)"
 var cover_finish: String = "📜 무광 매트"
 var reading_weather: String = "☀️ 맑은 오후"
+var reading_spot: String = "🛋️ 이불 속"
 var updated_at: int = 0
 var volumes: Array = []
 
@@ -257,6 +258,16 @@ func cycle_reading_weather() -> String:
 	updated_at = int(Time.get_unix_time_from_system())
 	return reading_weather
 
+func cycle_reading_spot() -> String:
+	const PRESETS = ["🛋️ 이불 속", "☕ 북카페", "🪑 내 방 책상", "🚃 출퇴근길"]
+	var idx = PRESETS.find(reading_spot)
+	if idx == -1:
+		reading_spot = PRESETS[0]
+	else:
+		reading_spot = PRESETS[(idx + 1) % PRESETS.size()]
+	updated_at = int(Time.get_unix_time_from_system())
+	return reading_spot
+
 func get_item_value() -> int:
 	var qty = maxi(1, duplicate_count)
 	if estimated_value > 0:
@@ -309,6 +320,7 @@ func to_dict() -> Dictionary:
 		"condition_grade": condition_grade,
 		"cover_finish": cover_finish,
 		"reading_weather": reading_weather,
+		"reading_spot": reading_spot,
 		"updated_at": updated_at,
 		"volumes": volumes
 	}

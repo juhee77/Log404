@@ -77,7 +77,7 @@ func get_filtered_items(filter_cat: int = -1, query: String = "") -> Array:
 	var q = query.strip_edges().to_lower()
 	for it in items:
 		var cat_match = (filter_cat == -1 or it.category == filter_cat)
-		var query_match = q.is_empty() or it.title.to_lower().contains(q) or it.author_or_series.to_lower().contains(q) or it.memo.to_lower().contains(q) or it.status_tag.to_lower().contains(q) or it.custom_tag.to_lower().contains(q) or it.storage_location.to_lower().contains(q) or it.acquisition_source.to_lower().contains(q) or it.favorite_character.to_lower().contains(q) or it.condition_grade.to_lower().contains(q) or it.cover_finish.to_lower().contains(q)
+		var query_match = q.is_empty() or it.title.to_lower().contains(q) or it.author_or_series.to_lower().contains(q) or it.memo.to_lower().contains(q) or it.status_tag.to_lower().contains(q) or it.custom_tag.to_lower().contains(q) or it.storage_location.to_lower().contains(q) or it.acquisition_source.to_lower().contains(q) or it.favorite_character.to_lower().contains(q) or it.condition_grade.to_lower().contains(q) or it.cover_finish.to_lower().contains(q) or it.reading_weather.to_lower().contains(q) or it.reading_spot.to_lower().contains(q)
 		if not query_match and it.volumes.size() > 0:
 			for v in it.volumes:
 				if str(v.get("quote", "")).to_lower().contains(q):
@@ -213,6 +213,7 @@ func load_from_file(custom_path: String = "") -> bool:
 			it.condition_grade = d.get("condition_grade", "✨ S급(최상)")
 			it.cover_finish = d.get("cover_finish", "📜 무광 매트")
 			it.reading_weather = d.get("reading_weather", "☀️ 맑은 오후")
+			it.reading_spot = d.get("reading_spot", "🛋️ 이불 속")
 			it.updated_at = int(d.get("updated_at", 0))
 			it.volumes = d.get("volumes", [])
 			items.append(it)

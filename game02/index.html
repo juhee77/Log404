@@ -301,6 +301,7 @@
                             <button id="condition-cycle-btn" onclick="cycleConditionGrade()" class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">✨ S급(최상)</button>
                             <button id="finish-cycle-btn" onclick="cycleCoverFinish()" class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">📜 무광 매트</button>
                             <button id="weather-cycle-btn" onclick="cycleReadingWeather()" class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">☀️ 맑은 오후</button>
+                            <button id="spot-cycle-btn" onclick="cycleReadingSpot()" class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">🛋️ 이불 속</button>
                             <button onclick="copyBookQuoteCard()" class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">💌 감상 카드 공유</button>
                             <button onclick="closeJournalModal()" class="w-7 h-7 rounded-full bg-[#efe7da] hover:bg-[#e2d6c5] text-[#5c4938] text-xs font-bold cursor-pointer">✕</button>
                         </div>
@@ -503,7 +504,7 @@
                 else if (currentCat === 'complete') cMatch = it.stamp === '전권완결' || (it.volumes && it.volumes.length >= 2);
                 else if (currentCat === 'fav') cMatch = it.stamp === '인생최애' || (it.volumes && it.volumes.every(v => v.rating === 5));
 
-                const qMatch = !q || it.title.toLowerCase().includes(q) || it.author.toLowerCase().includes(q) || it.memo.toLowerCase().includes(q) || (it.custom_tag || '').toLowerCase().includes(q) || (it.storage_location || '').toLowerCase().includes(q) || (it.acquisition_source || '').toLowerCase().includes(q) || (it.favorite_character || '').toLowerCase().includes(q) || (it.condition_grade || '').toLowerCase().includes(q) || (it.cover_finish || '').toLowerCase().includes(q);
+                const qMatch = !q || it.title.toLowerCase().includes(q) || it.author.toLowerCase().includes(q) || it.memo.toLowerCase().includes(q) || (it.custom_tag || '').toLowerCase().includes(q) || (it.storage_location || '').toLowerCase().includes(q) || (it.acquisition_source || '').toLowerCase().includes(q) || (it.favorite_character || '').toLowerCase().includes(q) || (it.condition_grade || '').toLowerCase().includes(q) || (it.cover_finish || '').toLowerCase().includes(q) || (it.reading_weather || '').toLowerCase().includes(q) || (it.reading_spot || '').toLowerCase().includes(q);
                 return cMatch && qMatch;
             });
 
@@ -639,6 +640,8 @@
             if (finBtn) finBtn.textContent = item.cover_finish || '📜 무광 매트';
             const wBtn = document.getElementById('weather-cycle-btn');
             if (wBtn) wBtn.textContent = item.reading_weather || '☀️ 맑은 오후';
+            const spBtn = document.getElementById('spot-cycle-btn');
+            if (spBtn) spBtn.textContent = item.reading_spot || '🛋️ 이불 속';
             document.getElementById('diary-stamp').textContent = `💮 ${item.stamp} ${sticker} [${item.reading_mood || '🥰 힐링'} · ${rTier} · ${loc}]`;
             document.getElementById('journal-modal').classList.remove('hidden');
         }
@@ -770,6 +773,17 @@
             item.reading_weather = WEATHER_PRESETS[(idx + 1) % WEATHER_PRESETS.length];
             const btn = document.getElementById('weather-cycle-btn');
             if (btn) btn.textContent = item.reading_weather;
+        }
+
+        const SPOT_PRESETS = ["🛋️ 이불 속", "☕ 북카페", "🪑 내 방 책상", "🚃 출퇴근길"];
+        function cycleReadingSpot() {
+            const item = ITEMS.find(x => x.id === activeId);
+            if (!item) return;
+            const cur = item.reading_spot || "🛋️ 이불 속";
+            const idx = SPOT_PRESETS.indexOf(cur);
+            item.reading_spot = SPOT_PRESETS[(idx + 1) % SPOT_PRESETS.length];
+            const btn = document.getElementById('spot-cycle-btn');
+            if (btn) btn.textContent = item.reading_spot;
         }
 
         const SOURCE_PRESETS = ["🏪 오프라인 서점", "🇯🇵 직구/해외", "🎁 선물", "🎪 팝업/행사", "📦 온라인 서점"];

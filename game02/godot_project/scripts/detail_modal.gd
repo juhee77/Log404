@@ -291,11 +291,16 @@ func open(item) -> void:
 	if w_btn != null:
 		var rw = current_item.get("reading_weather") if (current_item.get("reading_weather") != null and current_item.get("reading_weather") != "") else "☀️ 맑은 오후"
 		w_btn.text = rw
+	var sp_btn: Button = get_node_or_null("Panel/VBox/BodyMargin/Body/InkRow/SpotBtn")
+	if sp_btn != null:
+		var rs = current_item.get("reading_spot") if (current_item.get("reading_spot") != null and current_item.get("reading_spot") != "") else "🛋️ 이불 속"
+		sp_btn.text = rs
 	_apply_paper_style()
 	_apply_ink_style()
 	_apply_washi_style()
 	
 	cover_rect.color = Color.from_string(item.cover_color, Color(0.65, 0.25, 0.2))
+	_apply_cover_finish_style()
 	cover_icon.text = item.icon_emoji if item.icon_emoji != "" else "📖"
 
 	vol_section.visible = true
@@ -539,6 +544,16 @@ func cycle_reading_weather() -> String:
 		w_btn.text = rw
 	diary_updated.emit(current_item)
 	return rw
+
+func cycle_reading_spot() -> String:
+	if current_item == null:
+		return "🛋️ 이불 속"
+	var rs = current_item.cycle_reading_spot() if current_item.has_method("cycle_reading_spot") else "🛋️ 이불 속"
+	var sp_btn: Button = get_node_or_null("Panel/VBox/BodyMargin/Body/InkRow/SpotBtn")
+	if sp_btn != null:
+		sp_btn.text = rs
+	diary_updated.emit(current_item)
+	return rs
 
 func cycle_obi_preset() -> void:
 	if current_item == null:
