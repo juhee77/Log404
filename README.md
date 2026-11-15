@@ -18,7 +18,7 @@ Godot 4+ 기반의 감성 게임 및 인터랙티브 아카이브 애플리케�
 > **Godot 4.6.2 모바일 기반 E-Book 리더기 서재(Apple Books · 리디북스) & 만년필 다꾸 독서노트(굿노트 · 몰스킨) 감성 아카이브 앱**  
 > 14인 가상 애자일 스쿼드가 20분 주기 자동 스프린트로 지속 개선 중입니다.
 
-### 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 40)
+### 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 41)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
@@ -90,7 +90,7 @@ Log404/
 └── game02/                           # [Game02] 주희의 다꾸 서재 & 소장 일기장
     ├── index.html                    # 웹 인터랙티브 다꾸 서재 목업 (Tailwind + FontAwesome)
     ├── README.md                     # Game02 전용 상세 설명서
-    ├── SPRINT_LOG.md                 # 14인 애자일 스쿼드 누적 스프린트 회의록 (Sprint 1~40)
+    ├── SPRINT_LOG.md                 # 14인 애자일 스쿼드 누적 스프린트 회의록 (Sprint 1~41)
     └── godot_project/                # Godot 4.6.2 네이티브 모바일 프로젝트
         ├── scenes/                   # main.tscn, card_item.tscn, detail_modal.tscn 등
         ├── scripts/                  # main_view.gd, card_item.gd, archive_state.gd 등

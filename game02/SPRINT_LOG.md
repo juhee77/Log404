@@ -5,6 +5,22 @@
 
 ---
 
+## 🚀 [Sprint 41] 소장품 보존 상태·컨디션 등급(`✨ S급(최상)` / `cycle_condition_grade`) & 최애 캐릭터 통합 검색·공유 연동
+- **시각**: 2026-11-15 21:47 KST
+- **1. 다꾸러 3인 VOC (수집러 A · 가챠러 B · 미니멀러 C)**
+  - **만년필 다꾸러 A**: *"일기장 모달에서 고른 '최애 캐릭터'(`🏀 강백호`, `🧙‍♀️ 프리렌` 등)도 메인 검색창에서 검색할 수 있고 감상 카드 공유에도 함께 들어가면 좋겠어요!"*
+  - **가챠 수집러 B**: *"소장품의 보존 상태 등급(`✨ S급(최상)`, `📖 A급(양호)`, `🏷️ B급(사용감)`, `📦 미개봉(새상품)`)을 모달에서 원터치로 기록해 두고 싶습니다."*
+  - **미니멀 수집러 C**: *"컨디션 등급도 모달 `InkRow`의 원터치 순환 버튼과 JSON 영구 저장으로 깔끔하게 관리할 수 있게 해주세요."*
+- **2. 기획 & UI/UX & Godot 4.6 개발 내역**
+  - **보존 상태·컨디션 등급 순환(`ConditionBtn` / `cycle_condition_grade`)**: `collection_item.gd`에 `condition_grade` 및 4종 프리셋(`✨ S급(최상)`, `📖 A급(양호)`, `🏷️ B급(사용감)`, `📦 미개봉(새상품)`) 추가, `archive_state.gd` JSON 영구 저장/복원 연동 및 `detail_modal.tscn` `InkRow`에 배치
+  - **최애 캐릭터 통합 검색 & 감상 카드 공유 연동**: `archive_state.gd` `get_filtered_items()` 검색 쿼리에 `favorite_character` 매칭 추가 및 `copy_book_quote_card()`에 `condition_grade`, `favorite_character` 반영
+  - **HTML 인터랙티브 목업 동기화**: `game02/index.html`에 `#condition-cycle-btn` / `cycleConditionGrade()` 및 최애 캐릭터 검색 매칭 동기화 완료
+- **3. TDD & QA 검증**
+  - `tests/test_main_integration.gd`에 Sprint 41 컨디션 등급 순환 및 최애 캐릭터 통합 검색 검증 추가 → 3개 헤드리스 테스트 스위트 전수 100% PASS (스크립트 에러 0건)
+  - Metal 렌더러 최신 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 캡처 완료
+
+---
+
 ## 🚀 [Sprint 40] 4단 정렬 사이클러(`↕ 가치순` 추가) & 최애 캐릭터 스탬프(`🌟 최애 캐릭터` / `cycle_favorite_character`)
 - **시각**: 2026-11-15 20:09 KST
 - **1. 다꾸러 3인 VOC (수집러 A · 가챠러 B · 미니멀러 C)**

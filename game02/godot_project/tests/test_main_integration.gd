@@ -335,6 +335,13 @@ func _init() -> void:
 	assert(new_fc in ["🌟 최애 캐릭터", "🏀 강백호", "🧙‍♀️ 프리렌", "🐾 치이카와", "🏐 히나타", "🌸 체리"], "cycle_favorite_character should cycle character presets")
 	print("✓ 4-Way Sort Cycler (Value Sort) & Favorite Character Stamp verified")
 
+	# Test Sprint 41: Condition Grade Cycler & Favorite Character Search Integration
+	var new_cg = main_inst.detail_modal.cycle_condition_grade()
+	assert(new_cg in ["✨ S급(최상)", "📖 A급(양호)", "🏷️ B급(사용감)", "📦 미개봉(새상품)"], "cycle_condition_grade should cycle condition grades")
+	var fc_hits = main_inst.archive_state.get_filtered_items(-1, new_fc)
+	assert(fc_hits.size() >= 1, "get_filtered_items should match favorite_character")
+	print("✓ Condition Grade Cycler & Favorite Character Search Integration verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

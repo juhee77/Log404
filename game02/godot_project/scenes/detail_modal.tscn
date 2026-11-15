@@ -391,6 +391,11 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 10
 text = "🌟 최애 캐릭터"
 
+[node name="ConditionBtn" type="Button" parent="Panel/VBox/BodyMargin/Body/InkRow"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 10
+text = "✨ S급(최상)"
+
 [node name="VolSection" type="VBoxContainer" parent="Panel/VBox/BodyMargin/Body"]
 layout_mode = 2
 size_flags_vertical = 3
@@ -443,3 +448,4 @@ theme_override_constants/separation = 5
 [connection signal="pressed" from="Panel/VBox/BodyMargin/Body/InkRow/CustomTagBtn" to="." method="cycle_custom_tag"]
 [connection signal="pressed" from="Panel/VBox/BodyMargin/Body/InkRow/ValueBtn" to="." method="boost_estimated_value"]
 [connection signal="pressed" from="Panel/VBox/BodyMargin/Body/InkRow/FavCharBtn" to="." method="cycle_favorite_character"]
+[connection signal="pressed" from="Panel/VBox/BodyMargin/Body/InkRow/ConditionBtn" to="." method="cycle_condition_grade"]

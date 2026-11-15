@@ -180,7 +180,9 @@ func copy_book_quote_card() -> String:
 		lines.append("🏷️ 띠지: " + current_item.obi_text)
 	var ct = current_item.get("custom_tag") if current_item.get("custom_tag") != null else "#소장각"
 	var sig = current_item.get("diary_signature") if current_item.get("diary_signature") != null else "✍️ 주희의 서재"
-	lines.append(ct + " · " + sig)
+	var cg = current_item.get("condition_grade") if current_item.get("condition_grade") != null else "✨ S급(최상)"
+	var fc = current_item.get("favorite_character") if current_item.get("favorite_character") != null else "🌟 최애 캐릭터"
+	lines.append(ct + " · " + cg + " · " + fc + " · " + sig)
 	var card_text = "\n".join(lines)
 	DisplayServer.clipboard_set(card_text)
 	return card_text
@@ -275,6 +277,10 @@ func open(item) -> void:
 	if fc_btn != null:
 		var fc = current_item.get("favorite_character") if (current_item.get("favorite_character") != null and current_item.get("favorite_character") != "") else "🌟 최애 캐릭터"
 		fc_btn.text = fc
+	var cond_btn: Button = get_node_or_null("Panel/VBox/BodyMargin/Body/InkRow/ConditionBtn")
+	if cond_btn != null:
+		var cg = current_item.get("condition_grade") if (current_item.get("condition_grade") != null and current_item.get("condition_grade") != "") else "✨ S급(최상)"
+		cond_btn.text = cg
 	_apply_paper_style()
 	_apply_ink_style()
 	_apply_washi_style()
@@ -478,6 +484,16 @@ func cycle_favorite_character() -> String:
 		fc_btn.text = fc
 	diary_updated.emit(current_item)
 	return fc
+
+func cycle_condition_grade() -> String:
+	if current_item == null:
+		return "✨ S급(최상)"
+	var cg = current_item.cycle_condition_grade() if current_item.has_method("cycle_condition_grade") else "✨ S급(최상)"
+	var cond_btn: Button = get_node_or_null("Panel/VBox/BodyMargin/Body/InkRow/ConditionBtn")
+	if cond_btn != null:
+		cond_btn.text = cg
+	diary_updated.emit(current_item)
+	return cg
 
 func cycle_obi_preset() -> void:
 	if current_item == null:

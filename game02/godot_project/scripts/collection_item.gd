@@ -32,6 +32,7 @@ var possession_state: String = "📦 소장중"
 var purchase_date: String = ""
 var custom_tag: String = "#소장각"
 var favorite_character: String = "🌟 최애 캐릭터"
+var condition_grade: String = "✨ S급(최상)"
 var updated_at: int = 0
 var volumes: Array = []
 
@@ -224,6 +225,16 @@ func cycle_favorite_character() -> String:
 	updated_at = int(Time.get_unix_time_from_system())
 	return favorite_character
 
+func cycle_condition_grade() -> String:
+	const PRESETS = ["✨ S급(최상)", "📖 A급(양호)", "🏷️ B급(사용감)", "📦 미개봉(새상품)"]
+	var idx = PRESETS.find(condition_grade)
+	if idx == -1:
+		condition_grade = PRESETS[0]
+	else:
+		condition_grade = PRESETS[(idx + 1) % PRESETS.size()]
+	updated_at = int(Time.get_unix_time_from_system())
+	return condition_grade
+
 func get_item_value() -> int:
 	var qty = maxi(1, duplicate_count)
 	if estimated_value > 0:
@@ -273,6 +284,7 @@ func to_dict() -> Dictionary:
 		"purchase_date": purchase_date,
 		"custom_tag": custom_tag,
 		"favorite_character": favorite_character,
+		"condition_grade": condition_grade,
 		"updated_at": updated_at,
 		"volumes": volumes
 	}
