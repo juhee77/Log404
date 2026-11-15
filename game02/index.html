@@ -293,6 +293,7 @@
                             <button id="reread-cycle-btn" onclick="incrementRereadCount()" class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">🔁 1회독</button>
                             <button id="duplicate-cycle-btn" onclick="incrementDuplicateCount()" class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">👯 ×1</button>
                             <button id="signature-cycle-btn" onclick="cycleDiarySignature()" class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">✍️ 주희의 서재</button>
+                            <button id="possession-cycle-btn" onclick="cyclePossessionState()" class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">📦 소장중</button>
                             <button onclick="copyBookQuoteCard()" class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">💌 감상 카드 공유</button>
                             <button onclick="closeJournalModal()" class="w-7 h-7 rounded-full bg-[#efe7da] hover:bg-[#e2d6c5] text-[#5c4938] text-xs font-bold cursor-pointer">✕</button>
                         </div>
@@ -617,6 +618,8 @@
             if (dupBtn) dupBtn.textContent = `👯 ×${item.duplicate_count || 1}`;
             const sigBtn = document.getElementById('signature-cycle-btn');
             if (sigBtn) sigBtn.textContent = item.diary_signature || '✍️ 주희의 서재';
+            const posBtn = document.getElementById('possession-cycle-btn');
+            if (posBtn) posBtn.textContent = item.possession_state || '📦 소장중';
             document.getElementById('diary-stamp').textContent = `💮 ${item.stamp} ${sticker} [${item.reading_mood || '🥰 힐링'} · ${rTier} · ${loc}]`;
             document.getElementById('journal-modal').classList.remove('hidden');
         }
@@ -661,6 +664,17 @@
             item.diary_signature = SIGNATURE_PRESETS[(idx + 1) % SIGNATURE_PRESETS.length];
             const btn = document.getElementById('signature-cycle-btn');
             if (btn) btn.textContent = item.diary_signature;
+        }
+
+        const POSSESSION_PRESETS = ["📦 소장중", "🛒 예약중", "🚚 배송중", "✨ 전시중"];
+        function cyclePossessionState() {
+            const item = ITEMS.find(x => x.id === activeId);
+            if (!item) return;
+            const cur = item.possession_state || "📦 소장중";
+            const idx = POSSESSION_PRESETS.indexOf(cur);
+            item.possession_state = POSSESSION_PRESETS[(idx + 1) % POSSESSION_PRESETS.length];
+            const btn = document.getElementById('possession-cycle-btn');
+            if (btn) btn.textContent = item.possession_state;
         }
 
         const SOURCE_PRESETS = ["🏪 오프라인 서점", "🇯🇵 직구/해외", "🎁 선물", "🎪 팝업/행사", "📦 온라인 서점"];

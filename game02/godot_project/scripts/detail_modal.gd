@@ -247,6 +247,10 @@ func open(item) -> void:
 	if sig_btn != null:
 		var sig = current_item.get("diary_signature") if current_item.get("diary_signature") != null else "✍️ 주희의 서재"
 		sig_btn.text = sig
+	var pos_btn: Button = get_node_or_null("Panel/VBox/BodyMargin/Body/StampRow/PossessionBtn")
+	if pos_btn != null:
+		var ps = current_item.get("possession_state") if current_item.get("possession_state") != null else "📦 소장중"
+		pos_btn.text = ps
 	_apply_paper_style()
 	_apply_ink_style()
 	_apply_washi_style()
@@ -394,6 +398,16 @@ func cycle_diary_signature() -> String:
 		sig_btn.text = sig
 	diary_updated.emit(current_item)
 	return sig
+
+func cycle_possession_state() -> String:
+	if current_item == null:
+		return "📦 소장중"
+	var ps = current_item.cycle_possession_state() if current_item.has_method("cycle_possession_state") else "📦 소장중"
+	var pos_btn: Button = get_node_or_null("Panel/VBox/BodyMargin/Body/StampRow/PossessionBtn")
+	if pos_btn != null:
+		pos_btn.text = ps
+	diary_updated.emit(current_item)
+	return ps
 
 func cycle_obi_preset() -> void:
 	if current_item == null:

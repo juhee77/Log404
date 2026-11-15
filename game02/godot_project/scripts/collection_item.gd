@@ -28,6 +28,7 @@ var reread_count: int = 1
 var estimated_value: int = 0
 var duplicate_count: int = 1
 var diary_signature: String = "✍️ 주희의 서재"
+var possession_state: String = "📦 소장중"
 var updated_at: int = 0
 var volumes: Array = []
 
@@ -184,6 +185,16 @@ func cycle_diary_signature() -> String:
 	updated_at = int(Time.get_unix_time_from_system())
 	return diary_signature
 
+func cycle_possession_state() -> String:
+	const PRESETS = ["📦 소장중", "🛒 예약중", "🚚 배송중", "✨ 전시중"]
+	var idx = PRESETS.find(possession_state)
+	if idx == -1:
+		possession_state = PRESETS[0]
+	else:
+		possession_state = PRESETS[(idx + 1) % PRESETS.size()]
+	updated_at = int(Time.get_unix_time_from_system())
+	return possession_state
+
 func get_item_value() -> int:
 	var qty = maxi(1, duplicate_count)
 	if estimated_value > 0:
@@ -220,6 +231,7 @@ func to_dict() -> Dictionary:
 		"estimated_value": estimated_value,
 		"duplicate_count": duplicate_count,
 		"diary_signature": diary_signature,
+		"possession_state": possession_state,
 		"updated_at": updated_at,
 		"volumes": volumes
 	}

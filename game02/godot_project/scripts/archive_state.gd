@@ -206,6 +206,7 @@ func load_from_file(custom_path: String = "") -> bool:
 			it.estimated_value = int(d.get("estimated_value", 0))
 			it.duplicate_count = int(d.get("duplicate_count", 1))
 			it.diary_signature = d.get("diary_signature", "✍️ 주희의 서재")
+			it.possession_state = d.get("possession_state", "📦 소장중")
 			it.updated_at = int(d.get("updated_at", 0))
 			it.volumes = d.get("volumes", [])
 			items.append(it)

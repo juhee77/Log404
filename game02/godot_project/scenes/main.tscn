@@ -260,9 +260,10 @@ theme_override_constants/margin_right = 12
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_filter")
 
-[node name="HBox" type="HBoxContainer" parent="VBox/FilterMargin/FilterBar"]
+[node name="HBox" type="HFlowContainer" parent="VBox/FilterMargin/FilterBar"]
 layout_mode = 2
-theme_override_constants/separation = 6
+theme_override_constants/h_separation = 5
+theme_override_constants/v_separation = 4
 
 [node name="TabAll" type="Button" parent="VBox/FilterMargin/FilterBar/HBox"]
 layout_mode = 2
@@ -290,6 +291,7 @@ theme_override_font_sizes/font_size = 11
 text = "★ 인생작"
 
 [node name="SearchInput" type="LineEdit" parent="VBox/FilterMargin/FilterBar/HBox"]
+custom_minimum_size = Vector2(140, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 11

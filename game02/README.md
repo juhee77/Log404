@@ -15,6 +15,11 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 
 ## 🚀 최신 스프린트 업데이트 요약 ([전체 회의록 보기](SPRINT_LOG.md))
 
+### [Sprint 35] 메인 `FilterBar` `HFlowContainer` 줄바꿈 개선 & 소장품 배송·보유 상태 트래커(`📦 소장중` / `cycle_possession_state`)
+- **메인 `FilterBar` `HFlowContainer` 줄바꿈**: `main.tscn`의 `FilterBar/HBox`를 `HFlowContainer`로 전환해 `↕ 기본순` 버튼 우측 클리핑을 해소하고 필터·검색·정렬 UI를 깔끔히 정렬
+- **소장품 배송·보유 상태 트래커(`cycle_possession_state`)**: `📦 소장중`, `🛒 예약중`, `🚚 배송중`, `✨ 전시중` 4종 배송·전시 상태를 모달에서 원터치 순환
+- **웹 목업 동기화**: `game02/index.html`에 `cyclePossessionState()` 버튼 완벽 연동
+
 ### [Sprint 34] `InkRow` `HFlowContainer` 줄바꿈 개선 · 일기장 서명 스탬프(`✍️ 주희의 서재`) · 서재 총 재독 브리핑(`get_total_rereads`)
 - **`InkRow` `HFlowContainer` 줄바꿈**: `detail_modal.tscn`의 `InkRow`를 `HFlowContainer`로 전환해 `✒️펜촉` 버튼 우측 클리핑을 해소하고 모달 내부에 깔끔히 정렬
 - **일기장 서명 스탬프(`cycle_diary_signature`)**: `✍️ 주희의 서재`, `🌙 밤독서 기록`, `☕ 카페 다꾸`, `🎁 소장 기념` 4종 서명 스탬프 원터치 순환

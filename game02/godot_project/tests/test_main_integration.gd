@@ -293,6 +293,13 @@ func _init() -> void:
 	assert("총 재독:" in info_str2, "show_library_infographic should include total rereads count")
 	print("✓ InkRow HFlowContainer Wrap, Diary Signature Stamp & Total Rereads Briefing verified")
 
+	# Test Sprint 35: FilterBar HFlowContainer Wrap & Possession State Tracker
+	var filter_hbox = main_inst.get_node_or_null("VBox/FilterMargin/FilterBar/HBox")
+	assert(filter_hbox is HFlowContainer, "FilterBar/HBox should use HFlowContainer to prevent SortBtn clipping")
+	var new_pos = main_inst.detail_modal.cycle_possession_state()
+	assert(new_pos in ["📦 소장중", "🛒 예약중", "🚚 배송중", "✨ 전시중"], "cycle_possession_state should cycle possession presets")
+	print("✓ FilterBar HFlowContainer Wrap & Possession State Tracker verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

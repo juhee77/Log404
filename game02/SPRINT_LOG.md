@@ -5,6 +5,22 @@
 
 ---
 
+## 🚀 [Sprint 35] 메인 `FilterBar` `HFlowContainer` 반응형 줄바꿈 개선 & 소장품 배송·보유 상태 트래커(`📦 소장중` / `cycle_possession_state`)
+- **시각**: 2026-11-15 11:08 KST
+- **1. 다꾸러 3인 VOC (수집러 A · 가챠러 B · 미니멀러 C)**
+  - **만년필 다꾸러 A**: *"메인 화면 상단의 필터 바(`FilterBar`) 오른쪽 끝 `↕ 기본순` 버튼이 화면 끝에서 살짝 잘려 보였는데, `HFlowContainer`로 깔끔하게 줄바꿈되게 고쳐주세요!"*
+  - **가챠 수집러 B**: *"직구나 예약 구매한 가챠·만화책이 현재 '소장중/예약중/배송중/전시중' 중 어떤 상태인지 모달에서 원터치로 기록할 수 있으면 배송 관리가 편할 것 같아요!"*
+  - **미니멀 수집러 C**: *"필터 탭과 검색창, 정렬 버튼이 두 줄로 깔끔하게 정돈되면 540px 모바일 화면에서도 여백과 시인성이 훨씬 좋아집니다."*
+- **2. 기획 & UI/UX & Godot 4.6 개발 내역**
+  - **메인 `FilterBar` `HFlowContainer` 반응형 줄바꿈(`main.tscn`)**: `FilterBar/HBox`를 `HBoxContainer`에서 `HFlowContainer`(`h_separation=5`, `v_separation=4`)로 전환하고 `SearchInput` 최소 너비(`140px`)를 확보해 `↕ 기본순` 우측 클리핑 완전 해소
+  - **소장품 배송·보유 상태 트래커(`PossessionBtn` / `cycle_possession_state`)**: `collection_item.gd`에 `possession_state` 추가 및 `archive_state.gd` JSON 영구 저장/복원 연동, `detail_modal.tscn` `StampRow`에 `📦 소장중` 원터치 순환 버튼(`📦 소장중`, `🛒 예약중`, `🚚 배송중`, `✨ 전시중`) 배치
+  - **HTML 인터랙티브 목업 동기화**: `game02/index.html`에 `#possession-cycle-btn` / `cyclePossessionState()` 동기화 완료
+- **3. TDD & QA 검증**
+  - `tests/test_main_integration.gd`에 Sprint 35 `FilterBar HFlowContainer` 및 배송·보유 상태 순환 검증 추가 → 3개 헤드리스 테스트 스위트 전수 100% PASS (스크립트 에러 0건)
+  - Metal 렌더러 최신 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 캡처 완료
+
+---
+
 ## 🚀 [Sprint 34] `InkRow` `HFlowContainer` 반응형 줄바꿈 개선 · 일기장 서명 스탬프(`✍️ 주희의 서재`) · 서재 총 재독 횟수 브리핑(`get_total_rereads`)
 - **시각**: 2026-11-14 15:24 KST
 - **1. 다꾸러 3인 VOC (수집러 A · 가챠러 B · 미니멀러 C)**
