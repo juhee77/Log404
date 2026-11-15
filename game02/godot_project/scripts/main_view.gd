@@ -177,10 +177,11 @@ func _update_stats() -> void:
 	var prog = get_overall_reading_progress()
 	var total_val = archive_state.get_total_collection_value() if archive_state.has_method("get_total_collection_value") else 0
 	var val_str = archive_state.format_krw(total_val)
+	var avg_lib = archive_state.get_average_library_rating() if archive_state.has_method("get_average_library_rating") else 5.0
 	var dt = Time.get_date_dict_from_system()
 	var date_str = "%04d. %02d. %02d" % [int(dt.get("year", 2026)), int(dt.get("month", 11)), int(dt.get("day", 15))]
 	if sub_title != null:
-		sub_title.text = "📔 " + date_str + " · 서재 완독률 " + str(int(prog)) + "% · 자산 " + val_str
+		sub_title.text = "📔 " + date_str + " · 완독 " + str(int(prog)) + "% · ★" + String.num(avg_lib, 1) + " · 자산 " + val_str
 	
 	_render_spine_shelf()
 	_refresh_today_quote()
@@ -355,10 +356,12 @@ func show_library_infographic() -> String:
 	var total_val = archive_state.get_total_collection_value() if archive_state.has_method("get_total_collection_value") else 0
 	var total_rereads = archive_state.get_total_rereads() if archive_state.has_method("get_total_rereads") else archive_state.items.size()
 	var val_str = archive_state.format_krw(total_val)
-	var text = "📊 소장: %d종 (%d권) · 완독률: %d%% · 북마크: %d권 · 밑줄: %d개 · 총 재독: %d회 · 총 가치: %s" % [
+	var avg_lib = archive_state.get_average_library_rating() if archive_state.has_method("get_average_library_rating") else 5.0
+	var text = "📊 소장: %d종 (%d권) · 완독률: %d%% · 평균 ★%s · 북마크: %d권 · 밑줄: %d개 · 총 재독: %d회 · 총 가치: %s" % [
 		archive_state.items.size(),
 		archive_state.get_total_volumes(),
 		prog,
+		String.num(avg_lib, 1),
 		total_bms,
 		sum_quotes,
 		total_rereads,

@@ -406,6 +406,15 @@ func _init() -> void:
 	assert("평균 ★" in main_inst.archive_state.export_diary_summary(), "export_diary_summary should include average library rating")
 	print("✓ Live Author Rating/Value Sync on Vol & Duplicate Changes + Library Avg Rating verified")
 
+	# Test Sprint 49: Header Avg Rating KPI & Modal Vol Progress Header + KRW Helper
+	main_inst.archive_state.reset_to_rich_defaults()
+	main_inst._update_stats()
+	assert("★" in main_inst.sub_title.text, "Header sub_title should include average library rating")
+	assert("평균 ★" in main_inst.show_library_infographic(), "show_library_infographic should include average library rating")
+	main_inst.detail_modal.open(main_inst.archive_state.items[0])
+	assert("/" in main_inst.detail_modal.vol_header.text and "%" in main_inst.detail_modal.vol_header.text, "Modal vol_header should show owned/target volume ratio and percentage")
+	print("✓ Header Avg Rating KPI & Modal Vol Progress Header + KRW Helper verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

@@ -15,6 +15,10 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 
 ## 🚀 최신 스프린트 업데이트 요약 ([전체 회의록 보기](SPRINT_LOG.md))
 
+### [Sprint 49] 상단 KPI 평균 별점(`★5.0`) 병기, 모달 권별 목표 달성률(`3/3권 · 100%`) & `format_krw` 헬퍼 통일
+- **상단 KPI & 인포그래픽 브리핑 고도화 (`main_view.gd`)**: 메인 헤더(`📔 2026. 11. 16 · 완독 81% · ★5.0 · 자산 ₩80,000`)와 서재 인포그래픽 브리핑에 전체 서재 평균 별점(`★5.0`)을 함께 표시합니다.
+- **모달 권별 목표 달성률 & 정적 헬퍼 통일 (`detail_modal.gd`, `card_item.gd`)**: 권별 밑줄 노트 헤더에 `소장 3/3권 · 100% · 초판 2권` 진행률을 표시하고 `ArchiveState.format_krw()` 정적 헬퍼로 금액 포맷을 통일했습니다.
+
 ### [Sprint 48] 권별 별점·권수·복수소장 변경 시 모달 상단 실시간 동기화 & 서재 전체 평균 별점(`get_average_library_rating`) 연동
 - **모달 상단 별점·가치 실시간 동기화 (`detail_modal.gd`)**: 권별 별점(`cycle_volume_rating`), 권 추가/삭제, 복수 소장(`increment_duplicate_count`) 시 모달 상단 `AuthorLabel`의 평균 별점(`★`)과 소장 가치(`💎 ₩`)가 즉시 갱신됩니다.
 - **서재 전체 평균 별점 백업 연동 (`archive_state.gd`)**: `get_average_library_rating()`을 추가해 `export_diary_summary()` 상단 헤더에 서재 전체 평균 별점(`평균 ★5.0`)을 함께 기록합니다.

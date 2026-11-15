@@ -43,6 +43,8 @@ func get_reading_progress() -> float:
 	var vols = current_item.volumes.size()
 	return clampf(float(vols) * 25.0, 20.0, 100.0)
 
+const ArchiveStateClass = preload("res://scripts/archive_state.gd")
+
 func setup(item) -> void:
 	current_item = item
 	title_label.text = item.title
@@ -55,17 +57,7 @@ func setup(item) -> void:
 		avg_r = sum_r / float(item.volumes.size())
 	author_label.text = base_author + " · ★" + String.num(avg_r, 1)
 	var est_val = item.get_item_value() if item.has_method("get_item_value") else int(item.estimated_value)
-	var val_suffix = ""
-	if est_val > 0:
-		var s_val = str(est_val)
-		var fmt_val = ""
-		var cnt = 0
-		for i in range(s_val.length() - 1, -1, -1):
-			if cnt > 0 and cnt % 3 == 0:
-				fmt_val = "," + fmt_val
-			fmt_val = s_val[i] + fmt_val
-			cnt += 1
-		val_suffix = " · ₩" + fmt_val
+	var val_suffix = (" · " + ArchiveStateClass.format_krw(est_val)) if est_val > 0 else ""
 	if item.reread_count > 1:
 		author_label.text += " · 🔁" + str(item.reread_count) + "회독"
 	if item.duplicate_count > 1:

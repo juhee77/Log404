@@ -5,6 +5,21 @@
 
 ---
 
+## 🚀 [Sprint 49] 상단 KPI 평균 별점(`★5.0`) 병기, 모달 권별 목표 달성률 헤더(`3/3권 · 100%`) & `ArchiveState.format_krw` 정적 헬퍼 통일
+- **날짜/시각**: 2026-11-16 01:46 (자동 스프린트)
+- **참여 스쿼드**: 14인 애자일 스쿼드 전원 (다꾸러 3인, PO/기획 2인, UX/UI 2인, 개발 4인, QA 2인, CEO 1인)
+- **핵심 VOC 및 기획 확정**:
+  1. **다꾸러 VOC #1 ("메인 화면 상단 헤더에도 서재 전체 평균 별점(`★5.0`)이 함께 보이면 좋겠어요!")**: `main_view.gd`의 `_update_stats()` 상단 라벨을 `📔 2026. 11. 16 · 완독 81% · ★5.0 · 자산 ₩80,000` 형태로 고도화하고 `show_library_infographic()` 브리핑에도 `평균 ★`를 추가.
+  2. **다꾸러 VOC #2 ("모달 내 권별 밑줄 노트 헤더에서도 목표 권수 대비 진행률(`소장 3/3권 · 100%`)을 바로 보고 싶어요")**: `detail_modal.gd`의 `_render_volumes()`에서 `target_volumes` 기준 달성률을 계산해 `📌 권별 밑줄 노트 (소장 3/3권 · 100% · 초판 2권)`으로 표시.
+  3. **코드 품질 개선 ("카드·모달에 흩어진 KRW 천단위 콤마 포맷 중복을 없애주세요")**: `card_item.gd`에서 수동 콤마 루프를 제거하고 `ArchiveStateClass.format_krw()` 정적 헬퍼를 재사용하도록 리팩터링.
+- **구현 및 검증 내역**:
+  - `main_view.gd`: `_update_stats()` 및 `show_library_infographic()`에 서재 평균 별점(`★`) 연동.
+  - `detail_modal.gd`: `vol_header.text`에 `소장/목표 권수 · 달성률(%) · 초판 권수` 표시.
+  - `card_item.gd`: `ArchiveStateClass.format_krw()` 호출로 중복 포맷 로직 제거.
+  - `tests/test_main_integration.gd`: Sprint 49 통합 테스트(`Header Avg Rating KPI & Modal Vol Progress Header + KRW Helper verified`) 추가 후 3대 헤드리스 테스트 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 육안 검증 완료.
+
+---
+
 ## 🚀 [Sprint 48] 권별 별점·권수·복수소장 변경 시 모달 상단 실시간 동기화 & 서재 전체 평균 별점(`get_average_library_rating`) 백업 연동
 - **날짜/시각**: 2026-11-15 23:59 (자동 스프린트)
 - **참여 스쿼드**: 14인 애자일 스쿼드 전원 (다꾸러 3인, PO/기획 2인, UX/UI 2인, 개발 4인, QA 2인, CEO 1인)
