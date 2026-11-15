@@ -469,6 +469,22 @@ func _init() -> void:
 	assert("회독" in card_out_s54 and "👯×" in card_out_s54, "copy_book_quote_card should include reread_count and duplicate_count when > 1")
 	print("✓ Gacha 3rd Checklist Line, Share Card Reread/Dup & Nav Tooltips verified")
 
+	# Test Sprint 55: Active Ink Swatch Highlight, Quote Banner Tooltip & Empty Search State
+	main_inst.detail_modal.set_fountain_pen_ink("#7f1d1d")
+	var ink_burgundy = main_inst.detail_modal.get_node_or_null("Panel/VBox/BodyMargin/Body/InkRow/InkBurgundy")
+	var ink_espresso = main_inst.detail_modal.get_node_or_null("Panel/VBox/BodyMargin/Body/InkRow/InkEspresso")
+	assert(ink_burgundy != null and ink_burgundy.get_theme_stylebox("normal").border_width_left == 2, "Active ink button should have 2px highlight border")
+	assert(ink_espresso != null and ink_espresso.get_theme_stylebox("normal").border_width_left == 1, "Inactive ink button should keep 1px border")
+	main_inst._refresh_today_quote()
+	assert("독서 일기장 펼치기" in main_inst.today_quote_label.tooltip_text, "today_quote_label should expose dynamic open tooltip")
+	main_inst.search_input.text = "존재하지않는작품XYZ"
+	main_inst._render_cards()
+	var empty_lbl = main_inst.card_grid.get_node_or_null("EmptyStateLabel")
+	assert(empty_lbl != null and "조건에 맞는 서재 기록이 없습니다" in empty_lbl.text, "Empty search should display EmptyStateLabel guidance")
+	main_inst.search_input.text = ""
+	main_inst._render_cards()
+	print("✓ Active Ink Swatch Highlight, Quote Banner Tooltip & Empty Search State verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

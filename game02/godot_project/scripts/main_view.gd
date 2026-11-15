@@ -79,11 +79,16 @@ func _ready() -> void:
 	var stat_vols_panel: Control = $VBox/TopBar/TopMargin/StatsVBox/StatRow/StatVols
 	var stat_firsts_panel: Control = $VBox/TopBar/TopMargin/StatsVBox/StatRow/StatFirsts
 	var stat_gacha_panel: Control = $VBox/TopBar/TopMargin/StatsVBox/StatRow/StatGacha
+	stat_items_panel.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	stat_vols_panel.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	stat_firsts_panel.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	stat_gacha_panel.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	stat_items_panel.gui_input.connect(func(ev): if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_LEFT: _on_tab_all_pressed())
 	stat_vols_panel.gui_input.connect(func(ev): if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_LEFT: _on_tab_manga_pressed())
 	stat_firsts_panel.gui_input.connect(func(ev): if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_LEFT: _on_stat_firsts_clicked())
 	stat_gacha_panel.gui_input.connect(func(ev): if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_LEFT: _on_tab_gacha_pressed())
 	today_quote_label.mouse_filter = Control.MOUSE_FILTER_STOP
+	today_quote_label.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	today_quote_label.gui_input.connect(func(ev): if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_LEFT: open_current_quote_item())
 
 	if search_input != null:
@@ -265,17 +270,25 @@ func _collect_all_quotes() -> Array:
 		quotes.append({"text": "🖋️ 오늘의 밑줄: \"나만의 첫 독서 일기를 시작해보세요.\"", "item": fallback})
 	return quotes
 
+func _apply_today_quote(entry: Dictionary) -> void:
+	today_quote_label.text = entry["text"]
+	var target_item = entry.get("item", null)
+	if target_item != null:
+		today_quote_label.tooltip_text = "클릭하여 「%s」 독서 일기장 펼치기" % target_item.title
+	else:
+		today_quote_label.tooltip_text = "나만의 첫 독서 일기를 시작해보세요"
+
 func _refresh_today_quote() -> void:
 	if today_quote_label == null:
 		return
 	var quotes = _collect_all_quotes()
 	quote_cursor = quote_cursor % quotes.size()
-	today_quote_label.text = quotes[quote_cursor]["text"]
+	_apply_today_quote(quotes[quote_cursor])
 
 func _on_next_quote_btn_pressed() -> void:
 	var quotes = _collect_all_quotes()
 	quote_cursor = (quote_cursor + 1) % quotes.size()
-	today_quote_label.text = quotes[quote_cursor]["text"]
+	_apply_today_quote(quotes[quote_cursor])
 
 func open_current_quote_item() -> void:
 	var quotes = _collect_all_quotes()
@@ -317,6 +330,19 @@ func _render_cards() -> void:
 	elif sort_mode == 3:
 		filtered.sort_custom(func(a, b): return a.get_item_value() > b.get_item_value())
 	
+	if filtered.is_empty():
+		var empty_lbl := Label.new()
+		empty_lbl.name = "EmptyStateLabel"
+		empty_lbl.text = "📭 조건에 맞는 서재 기록이 없습니다.\n검색어를 비우거나 '+ 일기 쓰기'로 새 추억을 남겨보세요!"
+		empty_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		empty_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		empty_lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		empty_lbl.custom_minimum_size = Vector2(360, 120)
+		empty_lbl.add_theme_color_override("font_color", Color(0.45, 0.37, 0.30, 1.0))
+		empty_lbl.add_theme_font_size_override("font_size", 13)
+		card_grid.add_child(empty_lbl)
+		return
+
 	for it in filtered:
 		var card = CardItemScene.instantiate()
 		card_grid.add_child(card)

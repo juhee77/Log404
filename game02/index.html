@@ -519,6 +519,11 @@
             const container = document.getElementById('shelf-container');
             container.innerHTML = '';
 
+            if (filtered.length === 0) {
+                container.innerHTML = `<div class="bg-[#faf6f0] border border-dashed border-[#d6c9b8] rounded-2xl p-8 text-center text-[#786a5e] text-sm">📭 조건에 맞는 서재 기록이 없습니다.<br/>검색어를 비우거나 '+ 일기 쓰기'로 새 추억을 남겨보세요!</div>`;
+                return;
+            }
+
             // Group in rows of 3 to place wooden shelf ledges under each row (Apple Books / 북적북적 감성)
             for (let i = 0; i < filtered.length; i += 3) {
                 const slice = filtered.slice(i, i + 3);
@@ -588,13 +593,19 @@
                         if (v.quote) allQuotes.push(`🖋️ 오늘의 밑줄: "${v.quote}" — ${it.title}`);
                     });
                 } else if (it.memo) {
-                    allQuotes.push(`🖋️ 오늘의 밑줄: "${it.memo}" — ${it.title}`);
+                    allQuotes.push({ text: `🖋️ 오늘의 밑줄: "${it.memo}" — ${it.title}`, title: it.title });
                 }
             });
             if (!allQuotes.length) return;
             quoteIdx = (quoteIdx + 1) % allQuotes.length;
             const el = document.getElementById('today-quote-banner');
-            if (el) el.textContent = allQuotes[quoteIdx];
+            if (el) {
+                const cur = allQuotes[quoteIdx];
+                el.textContent = typeof cur === 'string' ? cur : cur.text;
+                if (typeof cur !== 'string' && cur.title) {
+                    el.title = `클릭하여 「${cur.title}」 독서 일기장 펼치기`;
+                }
+            }
         }
 
         function openJournalModal(id) {

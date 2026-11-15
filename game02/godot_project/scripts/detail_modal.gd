@@ -222,6 +222,37 @@ func _apply_ink_style() -> void:
 			memo_label.remove_theme_stylebox_override("normal")
 	if quote_input != null:
 		quote_input.add_theme_color_override("font_color", ink)
+	_highlight_active_ink_btn(current_item.memo_ink_color)
+
+func _highlight_active_ink_btn(active_hex: String) -> void:
+	var ink_row: HFlowContainer = get_node_or_null("Panel/VBox/BodyMargin/Body/InkRow")
+	if ink_row == null:
+		return
+	var ink_map := {
+		"InkEspresso": "#2c221e",
+		"InkBurgundy": "#7f1d1d",
+		"InkSepia": "#78350f",
+		"InkForest": "#14532d"
+	}
+	for node_name in ink_map.keys():
+		var btn: Button = ink_row.get_node_or_null(node_name)
+		if btn == null:
+			continue
+		var hex: String = ink_map[node_name]
+		var is_active: bool = (active_hex.to_lower() == hex)
+		var sb = StyleBoxFlat.new()
+		sb.bg_color = Color(0.98, 0.94, 0.87, 1) if is_active else Color(0.95, 0.91, 0.84, 1)
+		sb.border_width_left = 2 if is_active else 1
+		sb.border_width_top = 2 if is_active else 1
+		sb.border_width_right = 2 if is_active else 1
+		sb.border_width_bottom = 2 if is_active else 1
+		sb.border_color = Color.from_string(hex, Color(0.28, 0.22, 0.18)) if is_active else Color(0.80, 0.72, 0.62, 1)
+		sb.corner_radius_top_left = 6
+		sb.corner_radius_top_right = 6
+		sb.corner_radius_bottom_left = 6
+		sb.corner_radius_bottom_right = 6
+		btn.add_theme_stylebox_override("normal", sb)
+		btn.add_theme_color_override("font_color", Color.from_string(hex, Color(0.28, 0.22, 0.18)) if is_active else Color(0.28, 0.22, 0.18))
 
 func open(item) -> void:
 	current_item = item

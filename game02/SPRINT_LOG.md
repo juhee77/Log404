@@ -5,6 +5,21 @@
 
 ---
 
+## 🚀 [Sprint 55] 활성 만년필 잉크 스와치 하이라이트, 오늘의 밑줄 동적 툴팁 & 검색 빈 상태 가이드
+- **날짜/시각**: 2026-11-16 07:38 (자동 스프린트)
+- **참여 스쿼드**: 14인 애자일 스쿼드 전원 (다꾸러 3인, PO/기획 2인, UX/UI 2인, 개발 4인, QA 2인, CEO 1인)
+- **핵심 VOC 및 기획 확정**:
+  1. **다꾸러 VOC #1 ("모달에서 현재 어떤 만년필 잉크를 선택해뒀는지 잉크 버튼 테두리로 한눈에 보이면 좋겠어요!")**: `detail_modal.gd`에 `_highlight_active_ink_btn()`을 추가해 현재 `memo_ink_color`와 일치하는 잉크 버튼(`☕에스프레소`, `🍷버건디`, `🍂세피아`, `🌲포레스트`)에 2px 잉크 컬러 테두리와 크림 하이라이트 배경을 적용.
+  2. **다꾸러 VOC #2 ("오늘의 밑줄 배너를 누르면 해당 책 일기장이 열린다는 걸 호버 툴팁과 손가락 커서로 알려주고, 검색 결과가 없을 때도 빈 화면 대신 안내 문구가 나오면 좋겠어요")**: `main_view.gd`에서 `_apply_today_quote()`를 통해 `today_quote_label.tooltip_text`("클릭하여 「작품명」 독서 일기장 펼치기")와 `CURSOR_POINTING_HAND`를 적용하고, `_render_cards()`에서 검색/필터 결과가 비어 있을 때 `EmptyStateLabel` 안내 문구를 표시.
+  3. **웹 목업 동기화**: `game02/index.html`의 `renderShelf()` 빈 상태 안내 카드 및 `cycleQuote()` 동적 `title` 툴팁을 동기화.
+- **구현 및 검증 내역**:
+  - `detail_modal.gd`: `_highlight_active_ink_btn()` 추가 및 `_apply_ink_style()` 연동.
+  - `main_view.gd`: `_apply_today_quote()` 헬퍼, 상단 4대 통계 카드 & 밑줄 배너 포인팅 커서, `_render_cards()` `EmptyStateLabel` 추가.
+  - `game02/index.html`: `renderShelf()` 빈 상태 안내 및 `today-quote-banner` 툴팁 동기화.
+  - `tests/test_main_integration.gd`: Sprint 55 통합 테스트(`Active Ink Swatch Highlight, Quote Banner Tooltip & Empty Search State verified`) 추가 후 3대 헤드리스 테스트 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 캡처 완료.
+
+---
+
 ## 🚀 [Sprint 54] 가챠 체크리스트 3줄 메타 요약, 감상 카드 회독·복수소장 연동 & 하단 내비게이션 툴팁 완성
 - **날짜/시각**: 2026-11-16 07:18 (자동 스프린트)
 - **참여 스쿼드**: 14인 애자일 스쿼드 전원 (다꾸러 3인, PO/기획 2인, UX/UI 2인, 개발 4인, QA 2인, CEO 1인)
