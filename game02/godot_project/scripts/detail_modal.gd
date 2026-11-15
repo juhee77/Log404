@@ -323,9 +323,7 @@ func apply_stamp(stamp_name: String) -> void:
 	if current_item == null:
 		return
 	current_item.status_tag = stamp_name
-	var sticker = current_item.get("deco_sticker") if current_item.get("deco_sticker") != null else "✨"
-	var r_tier = current_item.get("rarity_tier") if current_item.get("rarity_tier") != null else "🌟노말"
-	tag_label.text = "💮 스탬프: " + current_item.status_tag + " " + sticker + " [" + r_tier + "] | " + current_item.obi_text
+	_refresh_tag_label()
 	diary_updated.emit(current_item)
 
 func cycle_rarity_tier() -> String:
@@ -335,8 +333,7 @@ func cycle_rarity_tier() -> String:
 	var r_btn: Button = get_node_or_null("Panel/VBox/BodyMargin/Body/StampRow/RarityBtn")
 	if r_btn != null:
 		r_btn.text = r
-	var sticker = current_item.get("deco_sticker") if current_item.get("deco_sticker") != null else "✨"
-	tag_label.text = "💮 스탬프: " + current_item.status_tag + " " + sticker + " [" + r + "] | " + current_item.obi_text
+	_refresh_tag_label()
 	diary_updated.emit(current_item)
 	return r
 
@@ -347,7 +344,7 @@ func cycle_deco_sticker() -> String:
 	var deco_btn: Button = get_node_or_null("Panel/VBox/BodyMargin/Body/StampRow/DecoStickerBtn")
 	if deco_btn != null:
 		deco_btn.text = s + "스티커"
-	tag_label.text = "💮 스탬프: " + current_item.status_tag + " " + s + "  |  " + current_item.obi_text
+	_refresh_tag_label()
 	memo_label.text = s + " 🖋️ \"" + (current_item.memo if current_item.memo != "" else "오늘 읽은 페이지의 감동을 일기장에 기록합니다.") + "\""
 	_apply_ink_style()
 	diary_updated.emit(current_item)
@@ -380,10 +377,7 @@ func cycle_storage_location() -> String:
 	var s_btn: Button = get_node_or_null("Panel/VBox/BodyMargin/Body/StampRow/StorageBtn")
 	if s_btn != null:
 		s_btn.text = s
-	var sticker = current_item.get("deco_sticker") if current_item.get("deco_sticker") != null else "✨"
-	var r_tier = current_item.get("rarity_tier") if current_item.get("rarity_tier") != null else "🌟노말"
-	var src = current_item.get("acquisition_source") if current_item.get("acquisition_source") != null else "🏪 오프라인 서점"
-	tag_label.text = "💮 " + current_item.status_tag + " " + sticker + " [" + r_tier + " · " + s + " · " + src + "] | " + current_item.obi_text
+	_refresh_tag_label()
 	diary_updated.emit(current_item)
 	return s
 
@@ -394,10 +388,7 @@ func cycle_acquisition_source() -> String:
 	var src_btn: Button = get_node_or_null("Panel/VBox/BodyMargin/Body/StampRow/SourceBtn")
 	if src_btn != null:
 		src_btn.text = src
-	var sticker = current_item.get("deco_sticker") if current_item.get("deco_sticker") != null else "✨"
-	var r_tier = current_item.get("rarity_tier") if current_item.get("rarity_tier") != null else "🌟노말"
-	var loc = current_item.get("storage_location") if current_item.get("storage_location") != null else "🗄️ 1층 장식장"
-	tag_label.text = "💮 " + current_item.status_tag + " " + sticker + " [" + r_tier + " · " + loc + " · " + src + "] | " + current_item.obi_text
+	_refresh_tag_label()
 	diary_updated.emit(current_item)
 	return src
 
@@ -408,10 +399,7 @@ func cycle_reading_mood() -> String:
 	var m_btn: Button = get_node_or_null("Panel/VBox/BodyMargin/Body/StampRow/MoodBtn")
 	if m_btn != null:
 		m_btn.text = m
-	var sticker = current_item.get("deco_sticker") if current_item.get("deco_sticker") != null else "✨"
-	var r_tier = current_item.get("rarity_tier") if current_item.get("rarity_tier") != null else "🌟노말"
-	var loc = current_item.get("storage_location") if current_item.get("storage_location") != null else "🗄️ 1층 장식장"
-	tag_label.text = "💮 " + current_item.status_tag + " " + sticker + " [" + m + " · " + r_tier + " · " + loc + "] | " + current_item.obi_text
+	_refresh_tag_label()
 	diary_updated.emit(current_item)
 	return m
 

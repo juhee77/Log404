@@ -5,6 +5,21 @@
 
 ---
 
+## 🚀 [Sprint 46] 모달 스탬프 `_refresh_tag_label()` 단일 경로 통합 & 서재 카드 진행률·소장 가치(`₩21,000`) 병기
+- **날짜/시각**: 2026-11-15 23:22 (자동 스프린트)
+- **참여 스쿼드**: 14인 애자일 스쿼드 전원 (다꾸러 3인, PO/기획 2인, UX/UI 2인, 개발 4인, QA 2인, CEO 1인)
+- **핵심 VOC 및 기획 확정**:
+  1. **다꾸러 VOC #1 ("기분·등급·보관위치·소장경로 스탬프를 누를 때마다 상단 메타에 있던 날씨·장소 스팟이 사라져요!")**: `detail_modal.gd` 내 `apply_stamp()`, `cycle_rarity_tier()`, `cycle_deco_sticker()`, `cycle_storage_location()`, `cycle_acquisition_source()`, `cycle_reading_mood()`가 각각 다르게 포맷하던 중복 코드를 모두 `_refresh_tag_label()` 단일 헬퍼로 통합.
+  2. **다꾸러 VOC #2 ("책장 카드 겉면에서도 작품별 소장 가치(`₩21,000`)가 잘리지 않고 한눈에 보였으면 좋겠어요")**: `card_item.gd`에서 작가명이 길어도 잘리지 않도록 `progress_label` 우측에 `완독 · ₩21,000` / `75% · ₩21,000` / `보관 · ₩5,000` 형태로 소장 가치를 깔끔하게 병기하고 Metal 스크린샷으로 잘림 없음 확인.
+  3. **웹 목업 동기화**: `game02/index.html`에 `refreshDiaryStamp(item)` 헬퍼를 도입해 모든 스탬프 순환 버튼이 `#diary-stamp`의 날씨·장소 스팟을 일관되게 유지하도록 동기화.
+- **구현 및 검증 내역**:
+  - `detail_modal.gd`: 6개 스탬프 핸들러를 `_refresh_tag_label()`로 통합하여 메타 표시 중복 및 날씨·장소 누락 제거.
+  - `card_item.gd`: `get_item_value()` 기반 천단위 콤마 포맷 소장 가치를 `progress_label`에 병기(`완독 · ₩21,000` 등).
+  - `game02/index.html`: `refreshDiaryStamp(item)` 추출 및 스탬프 순환 핸들러 전수 동기화.
+  - `tests/test_main_integration.gd`: Sprint 46 통합 테스트(`Unified _refresh_tag_label & Card Value Display verified`) 추가 후 3대 헤드리스 테스트 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 육안 검증 완료.
+
+---
+
 ## 🚀 [Sprint 45] 모달 메타 라벨(`TagLabel`)·감상 카드 공유 내 독서 날씨·장소 스팟 통합 동기화 & 소장 경로 검색 검증
 - **날짜/시각**: 2026-11-15 22:59 (자동 스프린트)
 - **참여 스쿼드**: 14인 애자일 스쿼드 전원 (다꾸러 3인, PO/기획 2인, UX/UI 2인, 개발 4인, QA 2인, CEO 1인)

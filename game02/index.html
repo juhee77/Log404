@@ -642,8 +642,21 @@
             if (wBtn) wBtn.textContent = item.reading_weather || '☀️ 맑은 오후';
             const spBtn = document.getElementById('spot-cycle-btn');
             if (spBtn) spBtn.textContent = item.reading_spot || '🛋️ 이불 속';
-            document.getElementById('diary-stamp').textContent = `💮 ${item.stamp} ${sticker} [${item.reading_mood || '🥰 힐링'} · ${rTier} · ${loc} · ${item.reading_weather || '☀️ 맑은 오후'} · ${item.reading_spot || '🛋️ 이불 속'}]`;
+            refreshDiaryStamp(item);
             document.getElementById('journal-modal').classList.remove('hidden');
+        }
+
+        function refreshDiaryStamp(item) {
+            if (!item) return;
+            const stampEl = document.getElementById('diary-stamp');
+            if (!stampEl) return;
+            const sticker = item.deco_sticker || '✨';
+            const rTier = item.rarity_tier || '🌟 노말';
+            const loc = item.storage_location || '🗄️ 장식장';
+            const mood = item.reading_mood || '🥰 힐링';
+            const rw = item.reading_weather || '☀️ 맑은 오후';
+            const rs = item.reading_spot || '🛋️ 이불 속';
+            stampEl.textContent = `💮 ${item.stamp} ${sticker} [${mood} · ${rTier} · ${loc} · ${rw} · ${rs}]`;
         }
 
         const MOOD_PRESETS = ["🥰 힐링", "🔥 열혈", "😭 감동", "🤯 반전", "🤣 유쾌"];
@@ -655,8 +668,7 @@
             item.reading_mood = MOOD_PRESETS[(idx + 1) % MOOD_PRESETS.length];
             const btn = document.getElementById('mood-cycle-btn');
             if (btn) btn.textContent = item.reading_mood;
-            const stampEl = document.getElementById('diary-stamp');
-            if (stampEl) stampEl.textContent = `💮 ${item.stamp} ${item.deco_sticker || '✨'} [${item.reading_mood} · ${item.rarity_tier || '🌟 노말'} · ${item.storage_location || '🗄️ 장식장'}]`;
+            refreshDiaryStamp(item);
         }
 
         function incrementRereadCount() {
@@ -773,8 +785,7 @@
             item.reading_weather = WEATHER_PRESETS[(idx + 1) % WEATHER_PRESETS.length];
             const btn = document.getElementById('weather-cycle-btn');
             if (btn) btn.textContent = item.reading_weather;
-            const stampEl = document.getElementById('diary-stamp');
-            if (stampEl) stampEl.textContent = `💮 ${item.stamp} ${item.deco_sticker || '✨'} [${item.reading_mood || '🥰 힐링'} · ${item.rarity_tier || '🌟 노말'} · ${item.storage_location || '🗄️ 장식장'} · ${item.reading_weather} · ${item.reading_spot || '🛋️ 이불 속'}]`;
+            refreshDiaryStamp(item);
         }
 
         const SPOT_PRESETS = ["🛋️ 이불 속", "☕ 북카페", "🪑 내 방 책상", "🚃 출퇴근길"];
@@ -786,8 +797,7 @@
             item.reading_spot = SPOT_PRESETS[(idx + 1) % SPOT_PRESETS.length];
             const btn = document.getElementById('spot-cycle-btn');
             if (btn) btn.textContent = item.reading_spot;
-            const stampEl = document.getElementById('diary-stamp');
-            if (stampEl) stampEl.textContent = `💮 ${item.stamp} ${item.deco_sticker || '✨'} [${item.reading_mood || '🥰 힐링'} · ${item.rarity_tier || '🌟 노말'} · ${item.storage_location || '🗄️ 장식장'} · ${item.reading_weather || '☀️ 맑은 오후'} · ${item.reading_spot}]`;
+            refreshDiaryStamp(item);
         }
 
         const SOURCE_PRESETS = ["🏪 오프라인 서점", "🇯🇵 직구/해외", "🎁 선물", "🎪 팝업/행사", "📦 온라인 서점"];
@@ -799,8 +809,7 @@
             item.acquisition_source = SOURCE_PRESETS[(idx + 1) % SOURCE_PRESETS.length];
             const btn = document.getElementById('source-cycle-btn');
             if (btn) btn.textContent = item.acquisition_source;
-            const stampEl = document.getElementById('diary-stamp');
-            if (stampEl) stampEl.textContent = `💮 ${item.stamp} ${item.deco_sticker || '✨'} [${item.rarity_tier || '🌟 노말'} · ${item.storage_location || '🗄️ 장식장'} · ${item.acquisition_source}]`;
+            refreshDiaryStamp(item);
         }
 
         const AMBIENT_PRESETS = ["🔕 무음", "🌧️ 빗소리", "☕ 북카페", "📖 책장넘김", "🔥 모닥불", "🦗 밤귀뚜라미"];
@@ -821,8 +830,7 @@
             item.rarity_tier = RARITY_PRESETS[(idx + 1) % RARITY_PRESETS.length];
             const btn = document.getElementById('rarity-cycle-btn');
             if (btn) btn.textContent = item.rarity_tier;
-            const stampEl = document.getElementById('diary-stamp');
-            if (stampEl) stampEl.textContent = `💮 ${item.stamp} ${item.deco_sticker || '✨'} [${item.rarity_tier}]`;
+            refreshDiaryStamp(item);
             renderShelf();
         }
 
@@ -835,8 +843,7 @@
             item.deco_sticker = DECO_STICKERS[(idx + 1) % DECO_STICKERS.length];
             const btn = document.getElementById('deco-sticker-btn');
             if (btn) btn.textContent = `${item.deco_sticker} 스티커`;
-            const stampEl = document.getElementById('diary-stamp');
-            if (stampEl) stampEl.textContent = `💮 ${item.stamp} ${item.deco_sticker} [${item.rarity_tier || '🌟 노말'}]`;
+            refreshDiaryStamp(item);
             renderShelf();
         }
 

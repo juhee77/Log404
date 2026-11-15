@@ -54,6 +54,18 @@ func setup(item) -> void:
 			sum_r += float(v.get("rating", 5))
 		avg_r = sum_r / float(item.volumes.size())
 	author_label.text = base_author + " · ★" + String.num(avg_r, 1)
+	var est_val = item.get_item_value() if item.has_method("get_item_value") else int(item.estimated_value)
+	var val_suffix = ""
+	if est_val > 0:
+		var s_val = str(est_val)
+		var fmt_val = ""
+		var cnt = 0
+		for i in range(s_val.length() - 1, -1, -1):
+			if cnt > 0 and cnt % 3 == 0:
+				fmt_val = "," + fmt_val
+			fmt_val = s_val[i] + fmt_val
+			cnt += 1
+		val_suffix = " · ₩" + fmt_val
 	if item.reread_count > 1:
 		author_label.text += " · 🔁" + str(item.reread_count) + "회독"
 	if item.duplicate_count > 1:
@@ -67,11 +79,11 @@ func setup(item) -> void:
 		progress_bar.value = prog
 	if progress_label != null:
 		if item.category == 1:
-			progress_label.text = "진열완료 100%" if prog >= 100.0 else "굿즈 보관중"
+			progress_label.text = ("진열" if prog >= 100.0 else "보관") + val_suffix
 		elif prog >= 100.0:
-			progress_label.text = "완독 100%"
+			progress_label.text = "완독" + val_suffix
 		else:
-			progress_label.text = str(int(prog)) + "%"
+			progress_label.text = str(int(prog)) + "%" + val_suffix
 	
 	# 다꾸 도장 스탬프 (💮 전권완결, 초판특전 등) & 감성 데코 스티커
 	var sticker = item.get("deco_sticker") if item.get("deco_sticker") != null else "✨"

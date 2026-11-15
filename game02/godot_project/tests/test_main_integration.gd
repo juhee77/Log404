@@ -374,6 +374,18 @@ func _init() -> void:
 	assert(src_hits.size() >= 1, "get_filtered_items should match acquisition_source")
 	print("✓ Modal Meta & Share Card Spot Sync + Acquisition Source Search verified")
 
+	# Test Sprint 46: Unified _refresh_tag_label & Card Value Display
+	main_inst.detail_modal.cycle_reading_mood()
+	main_inst.detail_modal.cycle_rarity_tier()
+	main_inst.detail_modal.cycle_storage_location()
+	main_inst.detail_modal.cycle_acquisition_source()
+	assert(new_rw in main_inst.detail_modal.tag_label.text and new_rs in main_inst.detail_modal.tag_label.text, "All stamp cyclers should preserve reading_weather and reading_spot in tag_label")
+	main_inst.archive_state.reset_to_rich_defaults()
+	main_inst._render_cards()
+	var first_card_s46 = main_inst.card_grid.get_child(0)
+	assert("₩" in first_card_s46.progress_label.text, "Card progress_label should display formatted KRW estimated_value")
+	print("✓ Unified _refresh_tag_label & Card Value Display verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()
