@@ -5,6 +5,21 @@
 
 ---
 
+## 🚀 [Sprint 53] 가챠 파츠 체크리스트 헤더 실시간 갱신(`_refresh_vol_header`) & 통합 검색창·액션 버튼 파워 툴팁 추가
+- **날짜/시각**: 2026-11-16 06:59 (자동 스프린트)
+- **참여 스쿼드**: 14인 애자일 스쿼드 전원 (다꾸러 3인, PO/기획 2인, UX/UI 2인, 개발 4인, QA 2인, CEO 1인)
+- **핵심 VOC 및 기획 확정**:
+  1. **다꾸러 VOC #1 ("가챠·굿즈 모달에서 보관 위치나 컨디션 등급을 바꿨을 때 체크리스트 헤더도 즉시 바뀌면 좋겠어요!")**: `detail_modal.gd`에 `_refresh_vol_header()` 헬퍼를 추출해 `_render_volumes()`, `cycle_storage_location()`, `cycle_condition_grade()`에서 호출하여 가챠 체크리스트 헤더가 실시간 동기화되도록 개선.
+  2. **다꾸러 VOC #2 ("검색창에서 날씨·장소·보관위치·소장경로까지 검색된다는 걸 툴팁으로 바로 알 수 있으면 좋겠어요")**: `main_view.gd`에서 `SearchInput`, `NextQuoteBtn`, `RandomPickBtn`, `SortBtn`에 통합 검색 범위 및 정렬 순환 안내 툴팁(`tooltip_text`)을 추가.
+  3. **웹 목업 동기화**: `game02/index.html`의 `#search-box` `placeholder`와 `title` 툴팁을 통합 검색 안내로 동기화.
+- **구현 및 검증 내역**:
+  - `detail_modal.gd`: `_refresh_vol_header()` 추출 및 `cycle_storage_location()`/`cycle_condition_grade()` 연동.
+  - `main_view.gd`: `SearchInput`·`NextQuoteBtn`·`RandomPickBtn`·`SortBtn` 파워 기능 툴팁 추가.
+  - `game02/index.html`: `#search-box` `placeholder` 및 `title` 동기화.
+  - `tests/test_main_integration.gd`: Sprint 53 통합 테스트(`Gacha Checklist Header Live Refresh & Search Power Tooltips verified`) 추가 후 3대 헤드리스 테스트 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 캡처 완료.
+
+---
+
 ## 🚀 [Sprint 52] 모달 권별 북마크 개수(`🔖 N`) 헤더 표시 & 상단 4대 통계 카드 리치 툴팁(`tooltip_text`) 연동
 - **날짜/시각**: 2026-11-16 06:57 (자동 스프린트)
 - **참여 스쿼드**: 14인 애자일 스쿼드 전원 (다꾸러 3인, PO/기획 2인, UX/UI 2인, 개발 4인, QA 2인, CEO 1인)

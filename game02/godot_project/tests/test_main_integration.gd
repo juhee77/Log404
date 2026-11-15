@@ -449,6 +449,14 @@ func _init() -> void:
 	assert("🔖" in main_inst.detail_modal.vol_header.text, "Modal vol_header should show bookmarked volume count when > 0")
 	print("✓ Modal Bookmark Count Header & Stat Card Tooltips verified")
 
+	# Test Sprint 53: Gacha Checklist Header Live Refresh & Search Power Tooltips
+	assert("날씨" in main_inst.search_input.tooltip_text and "장소" in main_inst.search_input.tooltip_text, "SearchInput tooltip_text should describe unified search fields")
+	main_inst.detail_modal.open(gacha_item_s50)
+	var new_loc_s53 = main_inst.detail_modal.cycle_storage_location()
+	var new_cg_s53 = main_inst.detail_modal.cycle_condition_grade()
+	assert(new_loc_s53 in main_inst.detail_modal.vol_header.text and new_cg_s53 in main_inst.detail_modal.vol_header.text, "Gacha vol_header should live-refresh on storage_location and condition_grade changes")
+	print("✓ Gacha Checklist Header Live Refresh & Search Power Tooltips verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

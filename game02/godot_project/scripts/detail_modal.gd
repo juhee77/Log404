@@ -372,6 +372,8 @@ func cycle_storage_location() -> String:
 	if s_btn != null:
 		s_btn.text = s
 	_refresh_tag_label()
+	if current_item.category == 1:
+		_refresh_vol_header()
 	diary_updated.emit(current_item)
 	return s
 
@@ -383,6 +385,8 @@ func cycle_acquisition_source() -> String:
 	if src_btn != null:
 		src_btn.text = src
 	_refresh_tag_label()
+	if current_item.category == 1:
+		_refresh_vol_header()
 	diary_updated.emit(current_item)
 	return src
 
@@ -490,6 +494,8 @@ func cycle_condition_grade() -> String:
 	var cond_btn: Button = get_node_or_null("Panel/VBox/BodyMargin/Body/InkRow/ConditionBtn")
 	if cond_btn != null:
 		cond_btn.text = cg
+	if current_item.category == 1:
+		_refresh_vol_header()
 	diary_updated.emit(current_item)
 	return cg
 
@@ -659,6 +665,22 @@ func stamp_volume_date(vol_idx: int) -> void:
 	_render_volumes()
 	diary_updated.emit(current_item)
 
+func _refresh_vol_header() -> void:
+	if current_item == null or vol_header == null:
+		return
+	if current_item.volumes.is_empty() and current_item.category == 1:
+		vol_header.text = "🔮 가챠 · 굿즈 파츠 체크리스트 (" + current_item.storage_location + " · " + current_item.condition_grade + ")"
+		return
+	var first_cnt = 0
+	for v in current_item.volumes:
+		if v.get("status", "") == "first":
+			first_cnt += 1
+	var tgt_v = max(int(current_item.target_volumes), current_item.volumes.size())
+	var pct_v = int(round(float(current_item.volumes.size()) / float(tgt_v) * 100.0))
+	var bm_cnt = current_item.get_bookmarked_volumes_count() if current_item.has_method("get_bookmarked_volumes_count") else 0
+	var bm_part = (" · 🔖" + str(bm_cnt)) if bm_cnt > 0 else ""
+	vol_header.text = "📌 권별 밑줄 노트 (소장 " + str(current_item.volumes.size()) + "/" + str(tgt_v) + "권 · " + str(pct_v) + "% · 초판 " + str(first_cnt) + "권" + bm_part + ")"
+
 func _render_volumes() -> void:
 	for child in vol_list.get_children():
 		child.queue_free()
@@ -668,7 +690,7 @@ func _render_volumes() -> void:
 
 	if current_item.volumes.is_empty():
 		if current_item.category == 1:
-			vol_header.text = "🔮 가챠 · 굿즈 파츠 체크리스트 (" + current_item.storage_location + " · " + current_item.condition_grade + ")"
+			_refresh_vol_header()
 			var gacha_notes = [
 				"🔖 캡슐 미니북(보증서) 스크랩북 보관 완료",
 				"✨ 아크릴 케이스 방진 전시 완료"
@@ -688,15 +710,7 @@ func _render_volumes() -> void:
 		vol_list.add_child(empty_lbl)
 		return
 
-	var first_cnt = 0
-	for v in current_item.volumes:
-		if v.get("status", "") == "first":
-			first_cnt += 1
-	var tgt_v = max(int(current_item.target_volumes), current_item.volumes.size())
-	var pct_v = int(round(float(current_item.volumes.size()) / float(tgt_v) * 100.0))
-	var bm_cnt = current_item.get_bookmarked_volumes_count() if current_item.has_method("get_bookmarked_volumes_count") else 0
-	var bm_part = (" · 🔖" + str(bm_cnt)) if bm_cnt > 0 else ""
-	vol_header.text = "📌 권별 밑줄 노트 (소장 " + str(current_item.volumes.size()) + "/" + str(tgt_v) + "권 · " + str(pct_v) + "% · 초판 " + str(first_cnt) + "권" + bm_part + ")"
+	_refresh_vol_header()
 
 	for idx in range(current_item.volumes.size()):
 		var v = current_item.volumes[idx]

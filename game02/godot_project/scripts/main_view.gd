@@ -85,6 +85,15 @@ func _ready() -> void:
 	stat_gacha_panel.gui_input.connect(func(ev): if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_LEFT: _on_tab_gacha_pressed())
 	today_quote_label.mouse_filter = Control.MOUSE_FILTER_STOP
 	today_quote_label.gui_input.connect(func(ev): if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_LEFT: open_current_quote_item())
+
+	if search_input != null:
+		search_input.tooltip_text = "작품명·작가·대사·태그·보관위치·날씨·장소·소장경로 통합 검색"
+	if next_quote_btn != null:
+		next_quote_btn.tooltip_text = "서재 속 다음 밑줄 문장으로 넘기기"
+	if random_pick_btn != null:
+		random_pick_btn.tooltip_text = "오늘의 랜덤 작품 추천 열기"
+	if sort_btn != null:
+		sort_btn.tooltip_text = "정렬 순환: 기본순 → 권수순 → 최신순 → 가치순"
 	
 	_apply_journal_button_theme()
 	_update_stats()
