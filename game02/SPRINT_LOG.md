@@ -5,6 +5,21 @@
 
 ---
 
+## 🚀 [Sprint 47] 모달 상단 작가·평점·가치 통합 헬퍼(`_refresh_author_label`) & 서재 백업 요약 내 날씨·장소·가치 통합
+- **날짜/시각**: 2026-11-15 23:54 (자동 스프린트)
+- **참여 스쿼드**: 14인 애자일 스쿼드 전원 (다꾸러 3인, PO/기획 2인, UX/UI 2인, 개발 4인, QA 2인, CEO 1인)
+- **핵심 VOC 및 기획 확정**:
+  1. **다꾸러 VOC #1 ("일기장 모달 상단 작가 라인에서도 평균 별점(`★5.0`)과 소장 가치(`💎 ₩21,000`)를 한 번에 보고 싶어요!")**: `detail_modal.gd` 내 `open()`과 `boost_estimated_value()`에 중복되던 콤마 포맷 로직을 `_refresh_author_label()` 단일 헬퍼로 통합하고 평균 별점(`★5.0`)을 함께 병기, `copy_book_quote_card()` 감상 카드에도 소장 가치(`💎 ₩`)를 포함.
+  2. **다꾸러 VOC #2 ("서재 일기장 백업 요약(`export_diary_summary`)에도 독서 날씨·장소 스팟·작품별 가치가 다 남았으면 좋겠어요")**: `archive_state.gd`의 `export_diary_summary()` 각 작품 라인에 `format_krw(it.get_item_value())`, `reading_weather`, `reading_spot`을 포함해 백업 완성도를 강화.
+  3. **웹 목업 동기화**: `game02/index.html`의 `openJournalModal()`에서 `#diary-author`에 평균 별점과 소장 가치를 동일 포맷(`작가 · ... · ★5.0 · 💎 ₩...`)으로 동기화.
+- **구현 및 검증 내역**:
+  - `detail_modal.gd`: `_refresh_author_label()` 추출, `open()`/`boost_estimated_value()`/`copy_book_quote_card()`에 평균 별점 및 포맷된 소장 가치 연동.
+  - `archive_state.gd`: `export_diary_summary()`에 작품별 가치·독서 날씨·독서 장소 스팟 포함.
+  - `game02/index.html`: `#diary-author` 포맷 동기화.
+  - `tests/test_main_integration.gd`: Sprint 47 통합 테스트(`Modal Author Rating Display & Summary Weather/Spot/Value Export verified`) 추가 후 3대 헤드리스 테스트 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 육안 검증 완료.
+
+---
+
 ## 🚀 [Sprint 46] 모달 스탬프 `_refresh_tag_label()` 단일 경로 통합 & 서재 카드 진행률·소장 가치(`₩21,000`) 병기
 - **날짜/시각**: 2026-11-15 23:22 (자동 스프린트)
 - **참여 스쿼드**: 14인 애자일 스쿼드 전원 (다꾸러 3인, PO/기획 2인, UX/UI 2인, 개발 4인, QA 2인, CEO 1인)

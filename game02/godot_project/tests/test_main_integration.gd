@@ -386,6 +386,16 @@ func _init() -> void:
 	assert("₩" in first_card_s46.progress_label.text, "Card progress_label should display formatted KRW estimated_value")
 	print("✓ Unified _refresh_tag_label & Card Value Display verified")
 
+	# Test Sprint 47: Modal Author Rating Display & Summary Weather/Spot/Value Export
+	main_inst.detail_modal.open(main_inst.archive_state.items[0])
+	assert("★" in main_inst.detail_modal.author_label.text and "💎 ₩" in main_inst.detail_modal.author_label.text, "Modal author_label should include average rating and formatted KRW value")
+	var card_out_s47 = main_inst.detail_modal.copy_book_quote_card()
+	assert("💎 ₩" in card_out_s47, "copy_book_quote_card should include formatted KRW value")
+	var summary_s47 = main_inst.archive_state.export_diary_summary()
+	assert("☀️" in summary_s47 or "🌧️" in summary_s47 or "❄️" in summary_s47 or "🌙" in summary_s47, "export_diary_summary should include reading_weather")
+	assert("🛋️" in summary_s47 or "☕" in summary_s47 or "🪑" in summary_s47 or "🚃" in summary_s47, "export_diary_summary should include reading_spot")
+	print("✓ Modal Author Rating Display & Summary Weather/Spot/Value Export verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

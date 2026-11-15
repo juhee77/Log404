@@ -174,7 +174,16 @@ func copy_book_quote_card() -> String:
 	lines.append("[📔 주희의 다꾸 서재 — 독서 감상 카드]")
 	lines.append("📖 작품: " + current_item.title + " (" + current_item.author_or_series + ")")
 	var avg_str = String.num(current_item.get_average_rating(), 1) if current_item.has_method("get_average_rating") else "5.0"
-	lines.append("💮 스탬프: " + current_item.status_tag + " | 평점: ★" + avg_str)
+	var val_amt = current_item.get_item_value() if current_item.has_method("get_item_value") else 5000
+	var s_v = str(val_amt)
+	var fmt_v = ""
+	var c_v = 0
+	for i in range(s_v.length() - 1, -1, -1):
+		if c_v > 0 and c_v % 3 == 0:
+			fmt_v = "," + fmt_v
+		fmt_v = s_v[i] + fmt_v
+		c_v += 1
+	lines.append("💮 스탬프: " + current_item.status_tag + " | 평점: ★" + avg_str + " | 💎 ₩" + fmt_v)
 	lines.append("🖋️ \"" + current_item.memo + "\"")
 	if current_item.obi_text != "":
 		lines.append("🏷️ 띠지: " + current_item.obi_text)
@@ -219,16 +228,7 @@ func open(item) -> void:
 	current_item = item
 	editing_vol_index = -1
 	title_label.text = "📔 " + item.title
-	var val_amt = item.get_item_value() if item.has_method("get_item_value") else 5000
-	var s_val = str(val_amt)
-	var formatted_val = ""
-	var cnt_v = 0
-	for i in range(s_val.length() - 1, -1, -1):
-		if cnt_v > 0 and cnt_v % 3 == 0:
-			formatted_val = "," + formatted_val
-		formatted_val = s_val[i] + formatted_val
-		cnt_v += 1
-	author_label.text = "작가 · " + (item.author_or_series if item.author_or_series != "" else "미상") + " · 💎 ₩" + formatted_val
+	_refresh_author_label()
 	var sticker = current_item.get("deco_sticker") if current_item.get("deco_sticker") != null else "✨"
 	var r_tier = current_item.get("rarity_tier") if current_item.get("rarity_tier") != null else "🌟노말"
 	var loc = current_item.get("storage_location") if current_item.get("storage_location") != null else "🗄️ 1층 장식장"
@@ -463,11 +463,11 @@ func cycle_custom_tag() -> String:
 	diary_updated.emit(current_item)
 	return ct
 
-func boost_estimated_value() -> int:
-	if current_item == null:
-		return 0
-	var new_val = current_item.boost_estimated_value(5000) if current_item.has_method("boost_estimated_value") else 5000
-	var s_val = str(new_val)
+func _refresh_author_label() -> void:
+	if current_item == null or author_label == null:
+		return
+	var val_amt = current_item.get_item_value() if current_item.has_method("get_item_value") else 5000
+	var s_val = str(val_amt)
 	var formatted_val = ""
 	var cnt_v = 0
 	for i in range(s_val.length() - 1, -1, -1):
@@ -475,7 +475,14 @@ func boost_estimated_value() -> int:
 			formatted_val = "," + formatted_val
 		formatted_val = s_val[i] + formatted_val
 		cnt_v += 1
-	author_label.text = "작가 · " + (current_item.author_or_series if current_item.author_or_series != "" else "미상") + " · 💎 ₩" + formatted_val
+	var avg_str = String.num(current_item.get_average_rating(), 1) if current_item.has_method("get_average_rating") else "5.0"
+	author_label.text = "작가 · " + (current_item.author_or_series if current_item.author_or_series != "" else "미상") + " · ★" + avg_str + " · 💎 ₩" + formatted_val
+
+func boost_estimated_value() -> int:
+	if current_item == null:
+		return 0
+	var new_val = current_item.boost_estimated_value(5000) if current_item.has_method("boost_estimated_value") else 5000
+	_refresh_author_label()
 	diary_updated.emit(current_item)
 	return new_val
 

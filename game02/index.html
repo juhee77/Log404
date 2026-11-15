@@ -597,7 +597,7 @@
             document.getElementById('diary-cover-icon').textContent = item.icon;
             document.getElementById('diary-cover-obi').textContent = item.obi;
             document.getElementById('diary-title').textContent = item.title;
-            document.getElementById('diary-author').textContent = item.author;
+            document.getElementById('diary-author').textContent = `작가 · ${item.author} · ★5.0 · 💎 ₩${(item.estimated_value || 5000).toLocaleString()}`;
             document.getElementById('diary-stamp').textContent = '💮 ' + item.stamp;
             document.getElementById('diary-memo').textContent = item.memo;
 
