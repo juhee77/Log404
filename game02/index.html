@@ -737,6 +737,13 @@
         function renderDiaryVolumes(item) {
             const list = document.getElementById('diary-volumes-list');
             list.innerHTML = '';
+            if (item.category === 'gacha' && (!item.volumes || item.volumes.length === 0)) {
+                const info = document.createElement('div');
+                info.className = 'p-2.5 rounded-xl bg-[#faf6f0] border border-[#e5dac9] text-xs font-bold text-[#5c4938]';
+                info.textContent = `🔮 가챠 · 굿즈 파츠 체크리스트 (${item.storage_location || '🗄️ 1층 장식장'} · ${item.condition_grade || '✨ S급(최상)'})`;
+                list.appendChild(info);
+                return;
+            }
             (item.volumes || []).forEach((v, idx) => {
                 const row = document.createElement('div');
                 row.className = 'p-2.5 rounded-xl bg-[#faf6f0] border border-[#e5dac9] flex items-center justify-between text-xs';

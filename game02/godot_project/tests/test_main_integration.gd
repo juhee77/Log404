@@ -415,6 +415,19 @@ func _init() -> void:
 	assert("/" in main_inst.detail_modal.vol_header.text and "%" in main_inst.detail_modal.vol_header.text, "Modal vol_header should show owned/target volume ratio and percentage")
 	print("✓ Header Avg Rating KPI & Modal Vol Progress Header + KRW Helper verified")
 
+	# Test Sprint 50 Milestone: Gacha Checklist Header, Quote Mood/Weather Toast & Zero-Dup format_krw
+	var gacha_item_s50 = null
+	for it in main_inst.archive_state.items:
+		if it.category == 1:
+			gacha_item_s50 = it
+			break
+	assert(gacha_item_s50 != null, "Should have a gacha item in defaults")
+	main_inst.detail_modal.open(gacha_item_s50)
+	assert(gacha_item_s50.storage_location in main_inst.detail_modal.vol_header.text and gacha_item_s50.condition_grade in main_inst.detail_modal.vol_header.text, "Gacha modal vol_header should show storage_location and condition_grade")
+	var picked_s50 = main_inst.pick_random_item()
+	assert(picked_s50 != null and picked_s50.reading_weather in main_inst.status_toast.text and picked_s50.reading_spot in main_inst.status_toast.text, "pick_random_item toast should include reading_weather and reading_spot")
+	print("✓ Sprint 50 Milestone: Gacha Checklist Header, Quote Mood/Weather Toast & Zero-Dup format_krw verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

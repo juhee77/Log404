@@ -426,7 +426,7 @@ func pick_random_item():
 	var r_idx = randi() % archive_state.items.size()
 	var picked = archive_state.items[r_idx]
 	detail_modal.open(picked)
-	_show_toast("🎲 오늘 서재가 추천하는 작품: " + picked.title)
+	_show_toast("🎲 오늘 서재가 추천하는 작품: " + picked.title + " · " + picked.reading_weather + " · " + picked.reading_spot)
 	return picked
 
 func _on_random_pick_btn_pressed() -> void:

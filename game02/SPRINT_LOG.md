@@ -5,6 +5,21 @@
 
 ---
 
+## 🎉 [Sprint 50 — 마일스톤] 가챠 체크리스트 보관·등급 헤더, 랜덤 추천 날씨·장소 연동 & `format_krw` 중복 완전 제거
+- **날짜/시각**: 2026-11-16 02:37 (자동 스프린트)
+- **참여 스쿼드**: 14인 애자일 스쿼드 전원 (다꾸러 3인, PO/기획 2인, UX/UI 2인, 개발 4인, QA 2인, CEO 1인)
+- **핵심 VOC 및 기획 확정**:
+  1. **다꾸러 VOC #1 ("가챠·굿즈 모달을 열었을 때도 체크리스트 헤더에 보관 위치(`🗄️ 1층 장식장`)와 컨디션 등급(`✨ S급(최상)`)이 바로 보이면 좋겠어요!")**: `detail_modal.gd`의 `_render_volumes()`에서 `category == 1` 가챠 항목일 때 `vol_header.text`에 `storage_location`과 `condition_grade`를 함께 표시.
+  2. **다꾸러 VOC #2 ("🎲 추천(`pick_random_item`)으로 작품을 뽑았을 때 토스트에도 독서 날씨·장소 스팟이 함께 뜨면 좋겠어요")**: `main_view.gd`의 `pick_random_item()` 토스트에 `picked.reading_weather`와 `picked.reading_spot`을 연동.
+  3. **코드 품질 마일스톤 ("`detail_modal.gd` 내 남은 KRW 수동 콤마 루프도 전부 `ArchiveStateClass.format_krw`로 통합해주세요")**: `copy_book_quote_card()` 및 `_refresh_author_label()`의 수동 콤마 루프를 `ArchiveStateClass.format_krw()`로 대체해 프로젝트 전체 금액 포맷 중복 0건 달성.
+- **구현 및 검증 내역**:
+  - `detail_modal.gd`: `ArchiveStateClass.format_krw()` 통합, 가챠 모달 `vol_header`에 `storage_location`·`condition_grade` 표시.
+  - `main_view.gd`: `pick_random_item()` 토스트에 `reading_weather`·`reading_spot` 연동.
+  - `game02/index.html`: `renderDiaryVolumes()` 가챠 파츠 체크리스트 헤더 동기화.
+  - `tests/test_main_integration.gd`: Sprint 50 마일스톤 테스트(`Sprint 50 Milestone: Gacha Checklist Header, Quote Mood/Weather Toast & Zero-Dup format_krw verified`) 추가 후 3대 헤드리스 테스트 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 캡처 완료.
+
+---
+
 ## 🚀 [Sprint 49] 상단 KPI 평균 별점(`★5.0`) 병기, 모달 권별 목표 달성률 헤더(`3/3권 · 100%`) & `ArchiveState.format_krw` 정적 헬퍼 통일
 - **날짜/시각**: 2026-11-16 01:46 (자동 스프린트)
 - **참여 스쿼드**: 14인 애자일 스쿼드 전원 (다꾸러 3인, PO/기획 2인, UX/UI 2인, 개발 4인, QA 2인, CEO 1인)

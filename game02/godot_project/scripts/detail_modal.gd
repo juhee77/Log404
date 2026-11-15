@@ -1,6 +1,8 @@
 class_name DetailModal
 extends Control
 
+const ArchiveStateClass = preload("res://scripts/archive_state.gd")
+
 signal item_deleted(item)
 signal volume_added(item)
 signal diary_updated(item)
@@ -175,15 +177,7 @@ func copy_book_quote_card() -> String:
 	lines.append("📖 작품: " + current_item.title + " (" + current_item.author_or_series + ")")
 	var avg_str = String.num(current_item.get_average_rating(), 1) if current_item.has_method("get_average_rating") else "5.0"
 	var val_amt = current_item.get_item_value() if current_item.has_method("get_item_value") else 5000
-	var s_v = str(val_amt)
-	var fmt_v = ""
-	var c_v = 0
-	for i in range(s_v.length() - 1, -1, -1):
-		if c_v > 0 and c_v % 3 == 0:
-			fmt_v = "," + fmt_v
-		fmt_v = s_v[i] + fmt_v
-		c_v += 1
-	lines.append("💮 스탬프: " + current_item.status_tag + " | 평점: ★" + avg_str + " | 💎 ₩" + fmt_v)
+	lines.append("💮 스탬프: " + current_item.status_tag + " | 평점: ★" + avg_str + " | 💎 " + ArchiveStateClass.format_krw(val_amt))
 	lines.append("🖋️ \"" + current_item.memo + "\"")
 	if current_item.obi_text != "":
 		lines.append("🏷️ 띠지: " + current_item.obi_text)
@@ -468,16 +462,8 @@ func _refresh_author_label() -> void:
 	if current_item == null or author_label == null:
 		return
 	var val_amt = current_item.get_item_value() if current_item.has_method("get_item_value") else 5000
-	var s_val = str(val_amt)
-	var formatted_val = ""
-	var cnt_v = 0
-	for i in range(s_val.length() - 1, -1, -1):
-		if cnt_v > 0 and cnt_v % 3 == 0:
-			formatted_val = "," + formatted_val
-		formatted_val = s_val[i] + formatted_val
-		cnt_v += 1
 	var avg_str = String.num(current_item.get_average_rating(), 1) if current_item.has_method("get_average_rating") else "5.0"
-	author_label.text = "작가 · " + (current_item.author_or_series if current_item.author_or_series != "" else "미상") + " · ★" + avg_str + " · 💎 ₩" + formatted_val
+	author_label.text = "작가 · " + (current_item.author_or_series if current_item.author_or_series != "" else "미상") + " · ★" + avg_str + " · 💎 " + ArchiveStateClass.format_krw(val_amt)
 
 func boost_estimated_value() -> int:
 	if current_item == null:
@@ -682,7 +668,7 @@ func _render_volumes() -> void:
 
 	if current_item.volumes.is_empty():
 		if current_item.category == 1:
-			vol_header.text = "🔮 가챠 · 굿즈 소장 파츠 & 전시 체크리스트"
+			vol_header.text = "🔮 가챠 · 굿즈 파츠 체크리스트 (" + current_item.storage_location + " · " + current_item.condition_grade + ")"
 			var gacha_notes = [
 				"🔖 캡슐 미니북(보증서) 스크랩북 보관 완료",
 				"✨ 아크릴 케이스 방진 전시 완료"
