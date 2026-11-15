@@ -122,3 +122,14 @@ func setup(item) -> void:
 		vol_badge.visible = true
 		vol_badge.text = "🔮가챠"
 		status_label.text = "🖋️ " + first_quote
+
+	var val_fmt = ArchiveStateClass.format_krw(est_val) if est_val > 0 else "₩0"
+	tooltip_text = "%s\n%s · %s · %s\n%s · %s · %s" % [
+		item.title,
+		item.storage_location,
+		item.reading_weather,
+		item.reading_spot,
+		item.cover_finish,
+		item.condition_grade,
+		val_fmt
+	]

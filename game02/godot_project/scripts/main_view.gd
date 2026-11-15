@@ -496,5 +496,6 @@ func _on_diary_updated(item) -> void:
 		item.updated_at = int(Time.get_unix_time_from_system())
 	archive_state.save_to_file()
 	_update_stats()
+	_refresh_today_quote()
 	_render_cards()
 	_show_toast("💮 일기장 스탬프·밑줄 문장이 저장되었습니다: " + item.title)

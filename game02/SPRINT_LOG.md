@@ -5,6 +5,21 @@
 
 ---
 
+## 🚀 [Sprint 51] 서재 카드 리치 툴팁(`tooltip_text`) 추가 & 일기장 수정 시 '오늘의 밑줄' 배너 실시간 동기화
+- **날짜/시각**: 2026-11-16 03:54 (자동 스프린트)
+- **참여 스쿼드**: 14인 애자일 스쿼드 전원 (다꾸러 3인, PO/기획 2인, UX/UI 2인, 개발 4인, QA 2인, CEO 1인)
+- **핵심 VOC 및 기획 확정**:
+  1. **다꾸러 VOC #1 ("책장 카드에 마우스를 올리면 모달을 열지 않고도 보관 위치·독서 날씨·장소·표지 질감·컨디션·소장 가치가 툴팁으로 바로 보이면 좋겠어요!")**: `card_item.gd`의 `setup(item)`에서 `tooltip_text`에 작품명, 보관 위치(`storage_location`), 독서 날씨(`reading_weather`), 장소(`reading_spot`), 표지 마감(`cover_finish`), 컨디션(`condition_grade`), 소장 가치(`format_krw`)를 3줄 요약 툴팁으로 구성.
+  2. **다꾸러 VOC #2 ("모달에서 밑줄 문장을 수정·저장했을 때 메인 상단 '오늘의 밑줄' 배너에도 즉시 반영되면 좋겠어요")**: `main_view.gd`의 `_on_diary_updated()`에서 `_refresh_today_quote()`를 호출해 문장 변경 시 배너가 즉시 최신화되도록 개선.
+  3. **웹 목업 동기화**: `game02/index.html`의 `renderShelf()` 카드 `title` 속성에도 동일한 3줄 리치 툴팁을 동기화.
+- **구현 및 검증 내역**:
+  - `card_item.gd`: `setup(item)`에 리치 툴팁(`tooltip_text`) 설정.
+  - `main_view.gd`: `_on_diary_updated()` 내 `_refresh_today_quote()` 호출 추가.
+  - `game02/index.html`: 카드 DOM `title` 툴팁 동기화.
+  - `tests/test_main_integration.gd`: Sprint 51 통합 테스트(`Card Rich Tooltip & Today Quote Live Refresh on Diary Update verified`) 추가 후 3대 헤드리스 테스트 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 캡처 완료.
+
+---
+
 ## 🎉 [Sprint 50 — 마일스톤] 가챠 체크리스트 보관·등급 헤더, 랜덤 추천 날씨·장소 연동 & `format_krw` 중복 완전 제거
 - **날짜/시각**: 2026-11-16 02:37 (자동 스프린트)
 - **참여 스쿼드**: 14인 애자일 스쿼드 전원 (다꾸러 3인, PO/기획 2인, UX/UI 2인, 개발 4인, QA 2인, CEO 1인)

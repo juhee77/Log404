@@ -428,6 +428,18 @@ func _init() -> void:
 	assert(picked_s50 != null and picked_s50.reading_weather in main_inst.status_toast.text and picked_s50.reading_spot in main_inst.status_toast.text, "pick_random_item toast should include reading_weather and reading_spot")
 	print("✓ Sprint 50 Milestone: Gacha Checklist Header, Quote Mood/Weather Toast & Zero-Dup format_krw verified")
 
+	# Test Sprint 51: Card Rich Tooltip & Today Quote Live Refresh on Diary Update
+	main_inst.archive_state.reset_to_rich_defaults()
+	main_inst._render_cards()
+	var card_s51 = main_inst.card_grid.get_child(0)
+	assert("₩" in card_s51.tooltip_text and "맑은 오후" in card_s51.tooltip_text and "이불 속" in card_s51.tooltip_text, "Card tooltip_text should include value, reading_weather, and reading_spot")
+	var first_it = main_inst.archive_state.items[0]
+	first_it.volumes[0]["quote"] = "스프린트51 실시간 밑줄 동기화"
+	main_inst.quote_cursor = 0
+	main_inst._on_diary_updated(first_it)
+	assert("스프린트51 실시간 밑줄 동기화" in main_inst.today_quote_label.text, "_on_diary_updated should refresh today_quote_label")
+	print("✓ Card Rich Tooltip & Today Quote Live Refresh on Diary Update verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()
