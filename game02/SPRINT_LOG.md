@@ -5,6 +5,22 @@
 
 ---
 
+## 🚀 [Sprint 36] 소장·구매 기념일 스탬프(`📅 기념일` / `stamp_purchase_date`) · 배송 상태 카드 배지 · 헤더 실시간 총 자산 요약
+- **시각**: 2026-11-15 18:36 KST
+- **1. 다꾸러 3인 VOC (수집러 A · 가챠러 B · 미니멀러 C)**
+  - **만년필 다꾸러 A**: *"일기장 모달에서 오늘 날짜로 구매·완독 기념일(`📅 MM.DD`)을 원터치 스탬프로 찍어둘 수 있으면 훗날 서재를 돌아볼 때 추억이 선명할 것 같아요!"*
+  - **가챠 수집러 B**: *"소장품이 '🛒 예약중'이나 '🚚 배송중' 상태일 때는 메인 카드에서도 바로 눈에 띄어야 아직 못 받은 택배를 한눈에 구분할 수 있습니다!"*
+  - **미니멀 수집러 C**: *"서재 메인 상단 서브타이틀의 '서재 완독률' 옆에 현재 총 소장 자산(`자산 ₩...`)이 실시간으로 보이면 통계 토스트를 누르지 않아도 규모를 바로 파악할 수 있어요."*
+- **2. 기획 & UI/UX & Godot 4.6 개발 내역**
+  - **소장·구매 기념일 스탬프(`DateStampBtn` / `stamp_purchase_date`)**: `collection_item.gd`에 `purchase_date` 및 오늘 날짜(`📅 MM.DD`) 스탬프 메서드 추가, `archive_state.gd` JSON 영구 저장/복원 연동, `detail_modal.tscn` `InkRow`에 `📅 기념일` 원터치 스탬프 버튼 배치
+  - **배송·예약 상태 카드 배지 & 헤더 실시간 총 자산(`card_item.gd` · `main_view.gd`)**: `possession_state != "📦 소장중"`일 때 카드 하단에 상태 배지를 노출하고, `main_view.gd` `_update_stats()` 상단 서브타이틀에 `자산 ₩...` 실시간 합산 표시
+  - **HTML 인터랙티브 목업 동기화**: `game02/index.html`에 `#date-stamp-btn` / `stampPurchaseDate()` 및 카드 배송 상태 배지 동기화 완료
+- **3. TDD & QA 검증**
+  - `tests/test_main_integration.gd`에 Sprint 36 기념일 스탬프 및 헤더 실시간 자산 요약 검증 추가 → 3개 헤드리스 테스트 스위트 전수 100% PASS (스크립트 에러 0건)
+  - Metal 렌더러 최신 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 캡처 완료
+
+---
+
 ## 🚀 [Sprint 35] 메인 `FilterBar` `HFlowContainer` 반응형 줄바꿈 개선 & 소장품 배송·보유 상태 트래커(`📦 소장중` / `cycle_possession_state`)
 - **시각**: 2026-11-15 11:08 KST
 - **1. 다꾸러 3인 VOC (수집러 A · 가챠러 B · 미니멀러 C)**

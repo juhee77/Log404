@@ -251,6 +251,10 @@ func open(item) -> void:
 	if pos_btn != null:
 		var ps = current_item.get("possession_state") if current_item.get("possession_state") != null else "📦 소장중"
 		pos_btn.text = ps
+	var date_btn: Button = get_node_or_null("Panel/VBox/BodyMargin/Body/InkRow/DateStampBtn")
+	if date_btn != null:
+		var pd = current_item.get("purchase_date") if (current_item.get("purchase_date") != null and current_item.get("purchase_date") != "") else "📅 기념일"
+		date_btn.text = pd
 	_apply_paper_style()
 	_apply_ink_style()
 	_apply_washi_style()
@@ -408,6 +412,16 @@ func cycle_possession_state() -> String:
 		pos_btn.text = ps
 	diary_updated.emit(current_item)
 	return ps
+
+func stamp_purchase_date() -> String:
+	if current_item == null:
+		return "📅 기념일"
+	var pd = current_item.stamp_purchase_date() if current_item.has_method("stamp_purchase_date") else "📅 11.15"
+	var date_btn: Button = get_node_or_null("Panel/VBox/BodyMargin/Body/InkRow/DateStampBtn")
+	if date_btn != null:
+		date_btn.text = pd
+	diary_updated.emit(current_item)
+	return pd
 
 func cycle_obi_preset() -> void:
 	if current_item == null:

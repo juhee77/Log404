@@ -29,6 +29,7 @@ var estimated_value: int = 0
 var duplicate_count: int = 1
 var diary_signature: String = "✍️ 주희의 서재"
 var possession_state: String = "📦 소장중"
+var purchase_date: String = ""
 var updated_at: int = 0
 var volumes: Array = []
 
@@ -195,6 +196,12 @@ func cycle_possession_state() -> String:
 	updated_at = int(Time.get_unix_time_from_system())
 	return possession_state
 
+func stamp_purchase_date() -> String:
+	var dt = Time.get_date_dict_from_system()
+	purchase_date = "📅 %02d.%02d" % [int(dt.get("month", 11)), int(dt.get("day", 15))]
+	updated_at = int(Time.get_unix_time_from_system())
+	return purchase_date
+
 func get_item_value() -> int:
 	var qty = maxi(1, duplicate_count)
 	if estimated_value > 0:
@@ -232,6 +239,7 @@ func to_dict() -> Dictionary:
 		"duplicate_count": duplicate_count,
 		"diary_signature": diary_signature,
 		"possession_state": possession_state,
+		"purchase_date": purchase_date,
 		"updated_at": updated_at,
 		"volumes": volumes
 	}

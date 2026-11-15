@@ -15,6 +15,11 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 
 ## 🚀 최신 스프린트 업데이트 요약 ([전체 회의록 보기](SPRINT_LOG.md))
 
+### [Sprint 36] 소장·구매 기념일 스탬프(`📅 기념일`) · 배송 상태 카드 배지 · 헤더 실시간 총 자산 요약
+- **소장·구매 기념일 스탬프(`stamp_purchase_date`)**: 모달 `InkRow`의 `📅 기념일` 버튼으로 오늘 날짜(`📅 MM.DD`)를 원터치 스탬프하고 JSON 영구 보존
+- **배송·예약 상태 카드 배지**: `🛒 예약중`, `🚚 배송중`, `✨ 전시중` 상태일 때 메인 카드 하단에 상태 배지를 자동 표시
+- **헤더 실시간 총 자산 요약**: 서재 상단 서브타이틀에 `서재 완독률 · 자산 ₩...` 실시간 표시 및 `game02/index.html` 동기화
+
 ### [Sprint 35] 메인 `FilterBar` `HFlowContainer` 줄바꿈 개선 & 소장품 배송·보유 상태 트래커(`📦 소장중` / `cycle_possession_state`)
 - **메인 `FilterBar` `HFlowContainer` 줄바꿈**: `main.tscn`의 `FilterBar/HBox`를 `HFlowContainer`로 전환해 `↕ 기본순` 버튼 우측 클리핑을 해소하고 필터·검색·정렬 UI를 깔끔히 정렬
 - **소장품 배송·보유 상태 트래커(`cycle_possession_state`)**: `📦 소장중`, `🛒 예약중`, `🚚 배송중`, `✨ 전시중` 4종 배송·전시 상태를 모달에서 원터치 순환

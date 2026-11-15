@@ -58,6 +58,8 @@ func setup(item) -> void:
 		author_label.text += " · 🔁" + str(item.reread_count) + "회독"
 	if item.duplicate_count > 1:
 		author_label.text += " · 👯×" + str(item.duplicate_count)
+	if item.possession_state != "" and item.possession_state != "📦 소장중":
+		author_label.text += " · " + item.possession_state
 
 	# 독서 진행률 (E-Book 리더기 & 굿노트 독서트래커 감성)
 	var prog = get_reading_progress()

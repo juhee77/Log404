@@ -175,8 +175,9 @@ func _update_stats() -> void:
 	stat_gacha.text = str(g_count) + "개"
 	
 	var prog = get_overall_reading_progress()
+	var total_val = archive_state.get_total_collection_value() if archive_state.has_method("get_total_collection_value") else 0
 	if sub_title != null:
-		sub_title.text = "📔 2026. 11. 12 · 서재 완독률 " + str(int(prog)) + "% · MY ARCHIVE"
+		sub_title.text = "📔 2026. 11. 12 · 서재 완독률 " + str(int(prog)) + "% · 자산 ₩" + str(total_val)
 	
 	_render_spine_shelf()
 	_refresh_today_quote()

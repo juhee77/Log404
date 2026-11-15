@@ -300,6 +300,12 @@ func _init() -> void:
 	assert(new_pos in ["📦 소장중", "🛒 예약중", "🚚 배송중", "✨ 전시중"], "cycle_possession_state should cycle possession presets")
 	print("✓ FilterBar HFlowContainer Wrap & Possession State Tracker verified")
 
+	# Test Sprint 36: Purchase Date Stamp & Header Live Asset Value Summary
+	var stamped_date = main_inst.detail_modal.stamp_purchase_date()
+	assert(stamped_date.begins_with("📅 "), "stamp_purchase_date should stamp formatted MM.DD date")
+	assert("자산 ₩" in main_inst.sub_title.text, "main_view sub_title should display live collection asset value")
+	print("✓ Purchase Date Stamp & Header Live Asset Value Summary verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()
