@@ -740,8 +740,8 @@
             list.innerHTML = '';
             if (item.category === 'gacha' && (!item.volumes || item.volumes.length === 0)) {
                 const info = document.createElement('div');
-                info.className = 'p-2.5 rounded-xl bg-[#faf6f0] border border-[#e5dac9] text-xs font-bold text-[#5c4938]';
-                info.textContent = `🔮 가챠 · 굿즈 파츠 체크리스트 (${item.storage_location || '🗄️ 1층 장식장'} · ${item.condition_grade || '✨ S급(최상)'})`;
+                info.className = 'p-2.5 rounded-xl bg-[#faf6f0] border border-[#e5dac9] text-xs font-bold text-[#5c4938] space-y-1';
+                info.innerHTML = `<div>🔮 가챠 · 굿즈 파츠 체크리스트 (${item.storage_location || '🗄️ 1층 장식장'} · ${item.condition_grade || '✨ S급(최상)'})</div><div class="text-[11px] font-normal text-[#786b63]">🎁 ${item.acquisition_source || '🏪 오프라인 서점'} · ${item.reading_mood || '🥰 힐링'} · ${item.favorite_character || '🌟 최애 캐릭터'}</div>`;
                 list.appendChild(info);
                 return;
             }

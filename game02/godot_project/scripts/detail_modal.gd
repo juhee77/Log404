@@ -188,7 +188,12 @@ func copy_book_quote_card() -> String:
 	var cf = current_item.get("cover_finish") if current_item.get("cover_finish") != null else "📜 무광 매트"
 	var rw = current_item.get("reading_weather") if current_item.get("reading_weather") != null else "☀️ 맑은 오후"
 	var rs = current_item.get("reading_spot") if current_item.get("reading_spot") != null else "🛋️ 이불 속"
-	lines.append(ct + " · " + cg + " · " + cf + " · " + rw + " · " + rs + " · " + fc + " · " + sig)
+	var extra_meta = ""
+	if int(current_item.reread_count) > 1:
+		extra_meta += " · 🔁" + str(current_item.reread_count) + "회독"
+	if int(current_item.duplicate_count) > 1:
+		extra_meta += " · 👯×" + str(current_item.duplicate_count)
+	lines.append(ct + " · " + cg + " · " + cf + " · " + rw + " · " + rs + " · " + fc + extra_meta + " · " + sig)
 	var card_text = "\n".join(lines)
 	DisplayServer.clipboard_set(card_text)
 	return card_text
@@ -693,7 +698,8 @@ func _render_volumes() -> void:
 			_refresh_vol_header()
 			var gacha_notes = [
 				"🔖 캡슐 미니북(보증서) 스크랩북 보관 완료",
-				"✨ 아크릴 케이스 방진 전시 완료"
+				"✨ 아크릴 케이스 방진 전시 완료",
+				"🎁 %s · %s · %s" % [current_item.acquisition_source, current_item.reading_mood, current_item.favorite_character]
 			]
 			for gn in gacha_notes:
 				var glbl = Label.new()

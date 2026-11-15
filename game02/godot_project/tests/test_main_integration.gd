@@ -457,6 +457,18 @@ func _init() -> void:
 	assert(new_loc_s53 in main_inst.detail_modal.vol_header.text and new_cg_s53 in main_inst.detail_modal.vol_header.text, "Gacha vol_header should live-refresh on storage_location and condition_grade changes")
 	print("✓ Gacha Checklist Header Live Refresh & Search Power Tooltips verified")
 
+	# Test Sprint 54: Gacha 3rd Checklist Line, Share Card Reread/Dup & Nav Tooltips
+	var nav_row_s54 = main_inst.get_node_or_null("VBox/BottomBar/Margin/VBox/NavRow")
+	assert(nav_row_s54 != null and nav_row_s54.get_child(0).tooltip_text != "", "Bottom NavRow buttons should have descriptive tooltips")
+	main_inst.detail_modal.open(gacha_item_s50)
+	assert(main_inst.detail_modal.vol_list.get_child_count() >= 3, "Gacha checklist should include 3rd summary line with source, mood, and favorite character")
+	main_inst.detail_modal.open(main_inst.archive_state.items[0])
+	main_inst.detail_modal.increment_reread_count()
+	main_inst.detail_modal.increment_duplicate_count()
+	var card_out_s54 = main_inst.detail_modal.copy_book_quote_card()
+	assert("회독" in card_out_s54 and "👯×" in card_out_s54, "copy_book_quote_card should include reread_count and duplicate_count when > 1")
+	print("✓ Gacha 3rd Checklist Line, Share Card Reread/Dup & Nav Tooltips verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

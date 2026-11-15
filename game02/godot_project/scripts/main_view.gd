@@ -94,6 +94,18 @@ func _ready() -> void:
 		random_pick_btn.tooltip_text = "오늘의 랜덤 작품 추천 열기"
 	if sort_btn != null:
 		sort_btn.tooltip_text = "정렬 순환: 기본순 → 권수순 → 최신순 → 가치순"
+	var nav_row = get_node_or_null("VBox/BottomBar/Margin/VBox/NavRow")
+	if nav_row != null:
+		var nav_tips = [
+			"웹에서 작품 표지와 기본 정보 자동 스크랩 추가",
+			"실물 굿즈·단행본 폴라로이드 촬영 기록 추가",
+			"새 독서 일기·가챠 스크랩 직접 작성",
+			"다꾸 다이어리 속지 테마 순환 (크림 · 모눈 · 핑크 · 다크)"
+		]
+		var children = nav_row.get_children()
+		for i in range(min(children.size(), nav_tips.size())):
+			if children[i] is Control:
+				children[i].tooltip_text = nav_tips[i]
 	
 	_apply_journal_button_theme()
 	_update_stats()

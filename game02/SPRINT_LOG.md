@@ -5,6 +5,21 @@
 
 ---
 
+## 🚀 [Sprint 54] 가챠 체크리스트 3줄 메타 요약, 감상 카드 회독·복수소장 연동 & 하단 내비게이션 툴팁 완성
+- **날짜/시각**: 2026-11-16 07:18 (자동 스프린트)
+- **참여 스쿼드**: 14인 애자일 스쿼드 전원 (다꾸러 3인, PO/기획 2인, UX/UI 2인, 개발 4인, QA 2인, CEO 1인)
+- **핵심 VOC 및 기획 확정**:
+  1. **다꾸러 VOC #1 ("가챠·굿즈 모달의 체크리스트에도 소장 경로·기분·최애 캐릭터가 한 줄 더 보이면 굿즈 일기장 느낌이 확 살 것 같아요!")**: `detail_modal.gd`의 `_render_volumes()`에서 가챠 항목 체크리스트 3번째 줄(`🎁 acquisition_source · reading_mood · favorite_character`)을 추가.
+  2. **다꾸러 VOC #2 ("감상 카드 공유(`copy_book_quote_card`)에도 다회독(`🔁2회독`)과 복수 소장(`👯×2`) 기록이 함께 찍히면 좋겠어요")**: `copy_book_quote_card()`에서 `reread_count > 1` 또는 `duplicate_count > 1`일 때 하단 메타 라인에 `🔁N회독`, `👯×N`을 자동 포함.
+  3. **UX/UI & 웹 목업 동기화**: `main_view.gd`의 하단 `NavRow` 4개 액션 버튼(웹표지 스크랩·폴라로이드 촬영·새 일기 쓰기·속지 테마)에 가이드 툴팁(`tooltip_text`)을 추가하고, `game02/index.html` 가챠 체크리스트 UI를 동기화.
+- **구현 및 검증 내역**:
+  - `detail_modal.gd`: 가챠 체크리스트 3번째 요약 줄 추가 및 `copy_book_quote_card()` 회독·복수소장 연동.
+  - `main_view.gd`: 하단 `NavRow` 4개 버튼 툴팁 추가.
+  - `game02/index.html`: `renderDiaryVolumes()` 가챠 체크리스트 2단 요약 동기화.
+  - `tests/test_main_integration.gd`: Sprint 54 통합 테스트(`Gacha 3rd Checklist Line, Share Card Reread/Dup & Nav Tooltips verified`) 추가 후 3대 헤드리스 테스트 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 캡처 완료.
+
+---
+
 ## 🚀 [Sprint 53] 가챠 파츠 체크리스트 헤더 실시간 갱신(`_refresh_vol_header`) & 통합 검색창·액션 버튼 파워 툴팁 추가
 - **날짜/시각**: 2026-11-16 06:59 (자동 스프린트)
 - **참여 스쿼드**: 14인 애자일 스쿼드 전원 (다꾸러 3인, PO/기획 2인, UX/UI 2인, 개발 4인, QA 2인, CEO 1인)
