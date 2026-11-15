@@ -271,6 +271,10 @@ func open(item) -> void:
 	if tag_btn != null:
 		var ct = current_item.get("custom_tag") if (current_item.get("custom_tag") != null and current_item.get("custom_tag") != "") else "#소장각"
 		tag_btn.text = ct
+	var fc_btn: Button = get_node_or_null("Panel/VBox/BodyMargin/Body/InkRow/FavCharBtn")
+	if fc_btn != null:
+		var fc = current_item.get("favorite_character") if (current_item.get("favorite_character") != null and current_item.get("favorite_character") != "") else "🌟 최애 캐릭터"
+		fc_btn.text = fc
 	_apply_paper_style()
 	_apply_ink_style()
 	_apply_washi_style()
@@ -464,6 +468,16 @@ func boost_estimated_value() -> int:
 	author_label.text = "작가 · " + (current_item.author_or_series if current_item.author_or_series != "" else "미상") + " · 💎 ₩" + formatted_val
 	diary_updated.emit(current_item)
 	return new_val
+
+func cycle_favorite_character() -> String:
+	if current_item == null:
+		return "🌟 최애 캐릭터"
+	var fc = current_item.cycle_favorite_character() if current_item.has_method("cycle_favorite_character") else "🌟 최애 캐릭터"
+	var fc_btn: Button = get_node_or_null("Panel/VBox/BodyMargin/Body/InkRow/FavCharBtn")
+	if fc_btn != null:
+		fc_btn.text = fc
+	diary_updated.emit(current_item)
+	return fc
 
 func cycle_obi_preset() -> void:
 	if current_item == null:

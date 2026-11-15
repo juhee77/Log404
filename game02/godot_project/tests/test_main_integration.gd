@@ -192,6 +192,8 @@ func _init() -> void:
 	main_inst._on_sort_btn_pressed()
 	assert(main_inst.sort_mode == 2 and main_inst.sort_btn.text == "↕ 최신순", "Sort button should switch to sort_mode 2")
 	main_inst._on_sort_btn_pressed()
+	assert(main_inst.sort_mode == 3 and main_inst.sort_btn.text == "↕ 가치순", "Sort button should switch to sort_mode 3")
+	main_inst._on_sort_btn_pressed()
 	assert(main_inst.sort_mode == 0 and main_inst.sort_btn.text == "↕ 기본순", "Sort button should cycle back to sort_mode 0")
 	var first_spine = main_inst.spine_shelf_row.get_child(0)
 	assert(first_spine.tooltip_text.contains("소장"), "Spine shelf ColorRect should have informative tooltip_text")
@@ -327,6 +329,11 @@ func _init() -> void:
 	var after_val = main_inst.detail_modal.boost_estimated_value()
 	assert(after_val > before_val, "boost_estimated_value should increase item estimated value")
 	print("✓ TagLabel Autowrap & One-Tap Estimated Value Boost verified")
+
+	# Test Sprint 40: 4-Way Sort Cycler (Value Sort) & Favorite Character Stamp
+	var new_fc = main_inst.detail_modal.cycle_favorite_character()
+	assert(new_fc in ["🌟 최애 캐릭터", "🏀 강백호", "🧙‍♀️ 프리렌", "🐾 치이카와", "🏐 히나타", "🌸 체리"], "cycle_favorite_character should cycle character presets")
+	print("✓ 4-Way Sort Cycler (Value Sort) & Favorite Character Stamp verified")
 
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()

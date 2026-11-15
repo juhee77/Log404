@@ -31,6 +31,7 @@ var diary_signature: String = "✍️ 주희의 서재"
 var possession_state: String = "📦 소장중"
 var purchase_date: String = ""
 var custom_tag: String = "#소장각"
+var favorite_character: String = "🌟 최애 캐릭터"
 var updated_at: int = 0
 var volumes: Array = []
 
@@ -213,6 +214,16 @@ func cycle_custom_tag() -> String:
 	updated_at = int(Time.get_unix_time_from_system())
 	return custom_tag
 
+func cycle_favorite_character() -> String:
+	const PRESETS = ["🌟 최애 캐릭터", "🏀 강백호", "🧙‍♀️ 프리렌", "🐾 치이카와", "🏐 히나타", "🌸 체리"]
+	var idx = PRESETS.find(favorite_character)
+	if idx == -1:
+		favorite_character = PRESETS[0]
+	else:
+		favorite_character = PRESETS[(idx + 1) % PRESETS.size()]
+	updated_at = int(Time.get_unix_time_from_system())
+	return favorite_character
+
 func get_item_value() -> int:
 	var qty = maxi(1, duplicate_count)
 	if estimated_value > 0:
@@ -261,6 +272,7 @@ func to_dict() -> Dictionary:
 		"possession_state": possession_state,
 		"purchase_date": purchase_date,
 		"custom_tag": custom_tag,
+		"favorite_character": favorite_character,
 		"updated_at": updated_at,
 		"volumes": volumes
 	}

@@ -209,6 +209,7 @@ func load_from_file(custom_path: String = "") -> bool:
 			it.possession_state = d.get("possession_state", "📦 소장중")
 			it.purchase_date = d.get("purchase_date", "")
 			it.custom_tag = d.get("custom_tag", "#소장각")
+			it.favorite_character = d.get("favorite_character", "🌟 최애 캐릭터")
 			it.updated_at = int(d.get("updated_at", 0))
 			it.volumes = d.get("volumes", [])
 			items.append(it)

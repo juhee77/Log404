@@ -5,6 +5,22 @@
 
 ---
 
+## 🚀 [Sprint 40] 4단 정렬 사이클러(`↕ 가치순` 추가) & 최애 캐릭터 스탬프(`🌟 최애 캐릭터` / `cycle_favorite_character`)
+- **시각**: 2026-11-15 20:09 KST
+- **1. 다꾸러 3인 VOC (수집러 A · 가챠러 B · 미니멀러 C)**
+  - **만년필 다꾸러 A**: *"일기장 모달에서 이 작품의 '최애 캐릭터'(`🏀 강백호`, `🧙‍♀️ 프리렌`, `🐾 치이카와` 등)를 원터치 스탬프로 기록해 두면 덕질 일기 감성이 더 살아날 것 같아요!"*
+  - **가챠 수집러 B**: *"상단 정렬 버튼(`↕ 기본순`)에 '고액순(`↕ 가치순`)' 정렬 모드가 추가되어 내 서재에서 가장 가치 있는 보물부터 순서대로 볼 수 있으면 좋겠습니다."*
+  - **미니멀 수집러 C**: *"기존 `SortBtn` 하나에서 `기본순 → 다독순 → 최신순 → 가치순` 4단 순환으로 통합하면 UI가 깔끔하게 유지됩니다."*
+- **2. 기획 & UI/UX & Godot 4.6 개발 내역**
+  - **4단 정렬 사이클러(`↕ 가치순` / `main_view.gd`)**: `_on_sort_btn_pressed()`를 4단 순환(`기본순 → 다독순 → 최신순 → 가치순`)으로 확장하고 `get_item_value()` 기준 내림차순 정렬 구현
+  - **최애 캐릭터 스탬프(`FavCharBtn` / `cycle_favorite_character`)**: `collection_item.gd`에 `favorite_character` 및 6종 프리셋(`🌟 최애 캐릭터`, `🏀 강백호`, `🧙‍♀️ 프리렌`, `🐾 치이카와`, `🏐 히나타`, `🌸 체리`) 추가, `archive_state.gd` JSON 영구 저장/복원 연동 및 `detail_modal.tscn` `InkRow`에 배치
+  - **HTML 인터랙티브 목업 동기화**: `game02/index.html`에 `#favchar-cycle-btn` / `cycleFavoriteCharacter()` 동기화 완료
+- **3. TDD & QA 검증**
+  - `tests/test_main_integration.gd`에 Sprint 40 4단 가치순 정렬 및 최애 캐릭터 스탬프 검증 추가 → 3개 헤드리스 테스트 스위트 전수 100% PASS (스크립트 에러 0건)
+  - Metal 렌더러 최신 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 캡처 완료
+
+---
+
 ## 🚀 [Sprint 39] 모달 태그·띠지 줄바꿈 개선(`autowrap_mode = 3`) & 소장품 추정 가치 +₩5,000 원터치 조정(`💎 +5천원`)
 - **시각**: 2026-11-15 19:18 KST
 - **1. 다꾸러 3인 VOC (수집러 A · 가챠러 B · 미니멀러 C)**

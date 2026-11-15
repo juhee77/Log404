@@ -297,6 +297,7 @@
                             <button id="date-stamp-btn" onclick="stampPurchaseDate()" class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">📅 기념일</button>
                             <button id="tag-cycle-btn" onclick="cycleCustomTag()" class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">#소장각</button>
                             <button id="value-boost-btn" onclick="boostEstimatedValue()" class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">💎 +5천원</button>
+                            <button id="favchar-cycle-btn" onclick="cycleFavoriteCharacter()" class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">🌟 최애 캐릭터</button>
                             <button onclick="copyBookQuoteCard()" class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">💌 감상 카드 공유</button>
                             <button onclick="closeJournalModal()" class="w-7 h-7 rounded-full bg-[#efe7da] hover:bg-[#e2d6c5] text-[#5c4938] text-xs font-bold cursor-pointer">✕</button>
                         </div>
@@ -627,6 +628,8 @@
             if (dateBtn) dateBtn.textContent = item.purchase_date || '📅 기념일';
             const tagBtn = document.getElementById('tag-cycle-btn');
             if (tagBtn) tagBtn.textContent = item.custom_tag || '#소장각';
+            const fcBtn = document.getElementById('favchar-cycle-btn');
+            if (fcBtn) fcBtn.textContent = item.favorite_character || '🌟 최애 캐릭터';
             document.getElementById('diary-stamp').textContent = `💮 ${item.stamp} ${sticker} [${item.reading_mood || '🥰 힐링'} · ${rTier} · ${loc}]`;
             document.getElementById('journal-modal').classList.remove('hidden');
         }
@@ -714,6 +717,17 @@
             item.estimated_value = base + 5000;
             const btn = document.getElementById('value-boost-btn');
             if (btn) btn.textContent = `💎 ₩${item.estimated_value.toLocaleString()}`;
+        }
+
+        const FAV_CHAR_PRESETS = ["🌟 최애 캐릭터", "🏀 강백호", "🧙‍♀️ 프리렌", "🐾 치이카와", "🏐 히나타", "🌸 체리"];
+        function cycleFavoriteCharacter() {
+            const item = ITEMS.find(x => x.id === activeId);
+            if (!item) return;
+            const cur = item.favorite_character || "🌟 최애 캐릭터";
+            const idx = FAV_CHAR_PRESETS.indexOf(cur);
+            item.favorite_character = FAV_CHAR_PRESETS[(idx + 1) % FAV_CHAR_PRESETS.length];
+            const btn = document.getElementById('favchar-cycle-btn');
+            if (btn) btn.textContent = item.favorite_character;
         }
 
         const SOURCE_PRESETS = ["🏪 오프라인 서점", "🇯🇵 직구/해외", "🎁 선물", "🎪 팝업/행사", "📦 온라인 서점"];

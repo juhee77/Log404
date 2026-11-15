@@ -274,6 +274,8 @@ func _render_cards() -> void:
 		filtered.sort_custom(func(a, b): return a.volumes.size() > b.volumes.size())
 	elif sort_mode == 2:
 		filtered.sort_custom(func(a, b): return a.updated_at > b.updated_at)
+	elif sort_mode == 3:
+		filtered.sort_custom(func(a, b): return a.get_item_value() > b.get_item_value())
 	
 	for it in filtered:
 		var card = CardItemScene.instantiate()
@@ -320,14 +322,15 @@ func filter_by_smart_tag(tag: String) -> int:
 	return card_grid.get_child_count()
 
 func _on_sort_btn_pressed() -> void:
-	sort_mode = (sort_mode + 1) % 3
+	sort_mode = (sort_mode + 1) % 4
 	if sort_btn != null:
 		match sort_mode:
 			0: sort_btn.text = "↕ 기본순"
 			1: sort_btn.text = "↕ 다독순"
 			2: sort_btn.text = "↕ 최신순"
+			3: sort_btn.text = "↕ 가치순"
 	_render_cards()
-	var mode_name = "기본 등록순" if sort_mode == 0 else ("권수 많은 순(다독순)" if sort_mode == 1 else "최근 기록순(최신순)")
+	var mode_name = "기본 등록순" if sort_mode == 0 else ("권수 많은 순(다독순)" if sort_mode == 1 else ("최근 기록순(최신순)" if sort_mode == 2 else "소장 가치순(고액순)"))
 	_show_toast("📚 정렬 기준 변경: " + mode_name)
 
 func _show_toast(msg: String) -> void:
