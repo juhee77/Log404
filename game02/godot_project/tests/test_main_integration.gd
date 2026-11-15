@@ -365,6 +365,15 @@ func _init() -> void:
 	assert(spot_hits.size() >= 1, "get_filtered_items should match reading_spot")
 	print("✓ Reading Spot Stamp & Weather/Spot Search Integration verified")
 
+	# Test Sprint 45: Modal Meta & Share Card Spot Sync + Acquisition Source Search
+	assert(new_rw in main_inst.detail_modal.tag_label.text, "tag_label should include reading_weather")
+	assert(new_rs in main_inst.detail_modal.tag_label.text, "tag_label should include reading_spot")
+	var card_out_s45 = main_inst.detail_modal.copy_book_quote_card()
+	assert(new_rs in card_out_s45, "copy_book_quote_card should include reading_spot")
+	var src_hits = main_inst.archive_state.get_filtered_items(-1, "오프라인 서점")
+	assert(src_hits.size() >= 1, "get_filtered_items should match acquisition_source")
+	print("✓ Modal Meta & Share Card Spot Sync + Acquisition Source Search verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

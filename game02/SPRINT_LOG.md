@@ -5,6 +5,20 @@
 
 ---
 
+## 🚀 [Sprint 45] 모달 메타 라벨(`TagLabel`)·감상 카드 공유 내 독서 날씨·장소 스팟 통합 동기화 & 소장 경로 검색 검증
+- **날짜/시각**: 2026-11-15 22:59 (자동 스프린트)
+- **참여 스쿼드**: 14인 애자일 스쿼드 전원 (다꾸러 3인, PO/기획 2인, UX/UI 2인, 개발 4인, QA 2인, CEO 1인)
+- **핵심 VOC 및 기획 확정**:
+  1. **다꾸러 VOC #1 ("감상 카드 공유(`copy_book_quote_card`)에도 독서 장소 스팟(`🛋️ 이불 속`)이 함께 찍히면 좋겠어요!")**: 독서 날씨(`reading_weather`)와 더불어 독서 장소 스팟(`reading_spot`)까지 감상 공유 카드 하단 메타 라인에 포함되도록 동기화.
+  2. **다꾸러 VOC #2 ("일기장 모달 상단 메타 요약(`TagLabel`)에서도 지금 설정된 날씨·장소 스탬프를 한눈에 보고 싶어요")**: `detail_modal.gd`에 공통 헬퍼 `_refresh_tag_label()`을 추출해 중복 포맷 로직을 통합하고, `open()`, `cycle_reading_weather()`, `cycle_reading_spot()`, `cycle_obi_preset()` 시 즉시 `[기분 · 등급 · 보관위치 · 날씨 · 장소]`가 상단 메타에 실시간 반영되도록 개선.
+  3. **다꾸러 VOC #3 ("구매처/소장 경로(`오프라인 서점` 등) 검색과 웹 목업 메타 배지도 동일하게 동작하나요?")**: `ArchiveState.get_filtered_items()`의 `acquisition_source` 통합 검색을 회귀 테스트로 고정하고 `game02/index.html`의 `#diary-stamp`도 날씨·장소 스팟과 실시간 동기화.
+- **구현 및 검증 내역**:
+  - `detail_modal.gd`: `copy_book_quote_card()`에 `reading_spot` 추가, `_refresh_tag_label()` 공통 헬퍼 신설 및 `open()`/`cycle_reading_weather()`/`cycle_reading_spot()`/`cycle_obi_preset()` 연동.
+  - `game02/index.html`: `openJournalModal()`, `cycleReadingWeather()`, `cycleReadingSpot()`에서 `#diary-stamp`가 `reading_weather`·`reading_spot`을 실시간 반영하도록 동기화.
+  - `tests/test_main_integration.gd`: Sprint 45 통합 테스트(`Modal Meta & Share Card Spot Sync + Acquisition Source Search verified`) 추가 후 3대 헤드리스 테스트(`test_archive`, `test_persistence`, `test_main_integration`) 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 캡처·육안 검증 완료.
+
+---
+
 ## 🚀 [Sprint 44] 독서 장소 스팟 스탬프(`🛋️ 이불 속` / `cycle_reading_spot`), 날씨·장소 통합 검색 & 모달 재오픈 시 표지 질감 광택 유지
 - **날짜/시각**: 2026-11-15 22:39 (자동 스프린트)
 - **참여 스쿼드**: 14인 애자일 스쿼드 전원 (다꾸러 3인, PO/기획 2인, UX/UI 2인, 개발 4인, QA 2인, CEO 1인)

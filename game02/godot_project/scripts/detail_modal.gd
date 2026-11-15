@@ -184,7 +184,8 @@ func copy_book_quote_card() -> String:
 	var fc = current_item.get("favorite_character") if current_item.get("favorite_character") != null else "🌟 최애 캐릭터"
 	var cf = current_item.get("cover_finish") if current_item.get("cover_finish") != null else "📜 무광 매트"
 	var rw = current_item.get("reading_weather") if current_item.get("reading_weather") != null else "☀️ 맑은 오후"
-	lines.append(ct + " · " + cg + " · " + cf + " · " + rw + " · " + fc + " · " + sig)
+	var rs = current_item.get("reading_spot") if current_item.get("reading_spot") != null else "🛋️ 이불 속"
+	lines.append(ct + " · " + cg + " · " + cf + " · " + rw + " · " + rs + " · " + fc + " · " + sig)
 	var card_text = "\n".join(lines)
 	DisplayServer.clipboard_set(card_text)
 	return card_text
@@ -233,7 +234,7 @@ func open(item) -> void:
 	var loc = current_item.get("storage_location") if current_item.get("storage_location") != null else "🗄️ 1층 장식장"
 	var src = current_item.get("acquisition_source") if current_item.get("acquisition_source") != null else "🏪 오프라인 서점"
 	var mood = current_item.get("reading_mood") if current_item.get("reading_mood") != null else "🥰 힐링"
-	tag_label.text = "💮 " + current_item.status_tag + " " + sticker + " [" + mood + " · " + r_tier + " · " + loc + "] | " + current_item.obi_text
+	_refresh_tag_label()
 	memo_label.text = sticker + " 🖋️ \"" + (item.memo if item.memo != "" else "오늘 읽은 페이지의 감동을 일기장에 기록합니다.") + "\""
 	quote_input.text = item.memo
 	var deco_btn: Button = get_node_or_null("Panel/VBox/BodyMargin/Body/StampRow/DecoStickerBtn")
@@ -535,6 +536,17 @@ func _apply_cover_finish_style() -> void:
 	else:
 		cover_rect.color = base_c
 
+func _refresh_tag_label() -> void:
+	if current_item == null or tag_label == null:
+		return
+	var sticker = current_item.get("deco_sticker") if current_item.get("deco_sticker") != null else "✨"
+	var r_tier = current_item.get("rarity_tier") if current_item.get("rarity_tier") != null else "🌟노말"
+	var loc = current_item.get("storage_location") if current_item.get("storage_location") != null else "🗄️ 1층 장식장"
+	var mood = current_item.get("reading_mood") if current_item.get("reading_mood") != null else "🥰 힐링"
+	var rw = current_item.get("reading_weather") if (current_item.get("reading_weather") != null and current_item.get("reading_weather") != "") else "☀️ 맑은 오후"
+	var rs = current_item.get("reading_spot") if (current_item.get("reading_spot") != null and current_item.get("reading_spot") != "") else "🛋️ 이불 속"
+	tag_label.text = "💮 " + current_item.status_tag + " " + sticker + " [" + mood + " · " + r_tier + " · " + loc + " · " + rw + " · " + rs + "] | " + current_item.obi_text
+
 func cycle_reading_weather() -> String:
 	if current_item == null:
 		return "☀️ 맑은 오후"
@@ -542,6 +554,7 @@ func cycle_reading_weather() -> String:
 	var w_btn: Button = get_node_or_null("Panel/VBox/BodyMargin/Body/InkRow/WeatherBtn")
 	if w_btn != null:
 		w_btn.text = rw
+	_refresh_tag_label()
 	diary_updated.emit(current_item)
 	return rw
 
@@ -552,6 +565,7 @@ func cycle_reading_spot() -> String:
 	var sp_btn: Button = get_node_or_null("Panel/VBox/BodyMargin/Body/InkRow/SpotBtn")
 	if sp_btn != null:
 		sp_btn.text = rs
+	_refresh_tag_label()
 	diary_updated.emit(current_item)
 	return rs
 
@@ -562,7 +576,7 @@ func cycle_obi_preset() -> void:
 	if OBI_PRESETS[obi_cursor] == current_item.obi_text:
 		obi_cursor = (obi_cursor + 1) % OBI_PRESETS.size()
 	current_item.obi_text = OBI_PRESETS[obi_cursor]
-	tag_label.text = "💮 스탬프: " + current_item.status_tag + "  |  " + current_item.obi_text
+	_refresh_tag_label()
 	diary_updated.emit(current_item)
 
 func cycle_cover_icon() -> void:

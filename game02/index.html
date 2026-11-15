@@ -642,7 +642,7 @@
             if (wBtn) wBtn.textContent = item.reading_weather || '☀️ 맑은 오후';
             const spBtn = document.getElementById('spot-cycle-btn');
             if (spBtn) spBtn.textContent = item.reading_spot || '🛋️ 이불 속';
-            document.getElementById('diary-stamp').textContent = `💮 ${item.stamp} ${sticker} [${item.reading_mood || '🥰 힐링'} · ${rTier} · ${loc}]`;
+            document.getElementById('diary-stamp').textContent = `💮 ${item.stamp} ${sticker} [${item.reading_mood || '🥰 힐링'} · ${rTier} · ${loc} · ${item.reading_weather || '☀️ 맑은 오후'} · ${item.reading_spot || '🛋️ 이불 속'}]`;
             document.getElementById('journal-modal').classList.remove('hidden');
         }
 
@@ -773,6 +773,8 @@
             item.reading_weather = WEATHER_PRESETS[(idx + 1) % WEATHER_PRESETS.length];
             const btn = document.getElementById('weather-cycle-btn');
             if (btn) btn.textContent = item.reading_weather;
+            const stampEl = document.getElementById('diary-stamp');
+            if (stampEl) stampEl.textContent = `💮 ${item.stamp} ${item.deco_sticker || '✨'} [${item.reading_mood || '🥰 힐링'} · ${item.rarity_tier || '🌟 노말'} · ${item.storage_location || '🗄️ 장식장'} · ${item.reading_weather} · ${item.reading_spot || '🛋️ 이불 속'}]`;
         }
 
         const SPOT_PRESETS = ["🛋️ 이불 속", "☕ 북카페", "🪑 내 방 책상", "🚃 출퇴근길"];
@@ -784,6 +786,8 @@
             item.reading_spot = SPOT_PRESETS[(idx + 1) % SPOT_PRESETS.length];
             const btn = document.getElementById('spot-cycle-btn');
             if (btn) btn.textContent = item.reading_spot;
+            const stampEl = document.getElementById('diary-stamp');
+            if (stampEl) stampEl.textContent = `💮 ${item.stamp} ${item.deco_sticker || '✨'} [${item.reading_mood || '🥰 힐링'} · ${item.rarity_tier || '🌟 노말'} · ${item.storage_location || '🗄️ 장식장'} · ${item.reading_weather || '☀️ 맑은 오후'} · ${item.reading_spot}]`;
         }
 
         const SOURCE_PRESETS = ["🏪 오프라인 서점", "🇯🇵 직구/해외", "🎁 선물", "🎪 팝업/행사", "📦 온라인 서점"];
