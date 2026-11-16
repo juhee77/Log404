@@ -379,7 +379,7 @@
                 <div
                     class="mt-6 pt-3 border-t border-[#e2d6c5] flex justify-between items-center text-xs text-[#8c7a6b]">
                     <span>Page 1 of 1 · 주희의 다꾸 일기장</span>
-                    <button onclick="deleteSelectedDiary()"
+                    <button id="delete-diary-btn" onclick="deleteSelectedDiary()"
                         class="text-rose-600 hover:underline font-semibold cursor-pointer">이 일기 삭제</button>
                 </div>
             </div>
@@ -976,7 +976,16 @@
             renderShelf();
         }
 
+        let deleteArmed = false;
         function deleteSelectedDiary() {
+            const btn = document.getElementById('delete-diary-btn');
+            if (!deleteArmed) {
+                deleteArmed = true;
+                if (btn) btn.textContent = '⚠️ 정말 삭제? (다시 클릭)';
+                return;
+            }
+            deleteArmed = false;
+            if (btn) btn.textContent = '이 일기 삭제';
             const idx = ITEMS.findIndex(x => x.id === activeId);
             if (idx !== -1 && ITEMS.length > 1) {
                 ITEMS.splice(idx, 1);

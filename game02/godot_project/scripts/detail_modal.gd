@@ -390,9 +390,7 @@ func open(item) -> void:
 	if share_btn_reset != null:
 		share_btn_reset.text = "💌 공유"
 	delete_armed = false
-	var del_btn_reset: Button = get_node_or_null("Panel/VBox/BodyMargin/Body/TopInfo/MetaVBox/BtnRow/DeleteBtn")
-	if del_btn_reset != null:
-		del_btn_reset.text = "일기 삭제"
+	_apply_delete_btn_style(false)
 	if save_quote_btn != null:
 		save_quote_btn.text = "🖋️ 밑줄 저장"
 	if quote_input != null:
@@ -494,7 +492,11 @@ func _unhandled_input(event: InputEvent) -> void:
 	if not visible or not (event is InputEventKey) or not event.pressed or event.echo:
 		return
 	if event.keycode == KEY_ESCAPE:
-		close()
+		if delete_armed:
+			delete_armed = false
+			_apply_delete_btn_style(false)
+		else:
+			close()
 		get_viewport().set_input_as_handled()
 	elif quote_input == null or not quote_input.has_focus():
 		if event.keycode == KEY_LEFT:
@@ -1156,15 +1158,33 @@ func remove_last_volume() -> void:
 		_refresh_author_label()
 		volume_removed.emit(current_item)
 
+func _apply_delete_btn_style(armed: bool) -> void:
+	var del_btn: Button = get_node_or_null("Panel/VBox/BodyMargin/Body/TopInfo/MetaVBox/BtnRow/DeleteBtn")
+	if del_btn == null:
+		return
+	del_btn.text = "⚠️ 삭제 확인" if armed else "일기 삭제"
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = Color(0.85, 0.22, 0.18, 1.0) if armed else Color(0.95, 0.91, 0.84, 1.0)
+	sb.border_width_left = 1
+	sb.border_width_top = 1
+	sb.border_width_right = 1
+	sb.border_width_bottom = 1
+	sb.border_color = Color(0.65, 0.12, 0.10, 1.0) if armed else Color(0.80, 0.72, 0.62, 1.0)
+	sb.corner_radius_top_left = 6
+	sb.corner_radius_top_right = 6
+	sb.corner_radius_bottom_left = 6
+	sb.corner_radius_bottom_right = 6
+	del_btn.add_theme_stylebox_override("normal", sb)
+	del_btn.add_theme_color_override("font_color", Color(1.0, 1.0, 1.0, 1.0) if armed else Color(0.78, 0.25, 0.20, 1.0))
+
 func _on_delete_btn_pressed() -> void:
 	if current_item == null:
 		return
 	if not delete_armed:
 		delete_armed = true
-		var del_btn: Button = get_node_or_null("Panel/VBox/BodyMargin/Body/TopInfo/MetaVBox/BtnRow/DeleteBtn")
-		if del_btn != null:
-			del_btn.text = "⚠️ 삭제 확인"
+		_apply_delete_btn_style(true)
 		return
 	delete_armed = false
+	_apply_delete_btn_style(false)
 	item_deleted.emit(current_item)
 	close()

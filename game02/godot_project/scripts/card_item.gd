@@ -22,8 +22,11 @@ signal quick_advanced(item)
 var current_item = null
 
 func _gui_input(event: InputEvent) -> void:
-	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-		clicked.emit(current_item)
+	if event is InputEventMouseButton and event.pressed:
+		if event.button_index == MOUSE_BUTTON_LEFT:
+			clicked.emit(current_item)
+		elif event.button_index == MOUSE_BUTTON_RIGHT:
+			quick_advance()
 
 func quick_advance() -> void:
 	if current_item != null:
@@ -132,7 +135,7 @@ func setup(item) -> void:
 		status_label.text = "🖋️ " + first_quote
 
 	var val_fmt = ArchiveStateClass.format_krw(est_val) if est_val > 0 else "₩0"
-	tooltip_text = "%s\n%s · %s · %s\n%s · %s · %s" % [
+	tooltip_text = "%s\n%s · %s · %s\n%s · %s · %s\n(우클릭: +1권 빠른 기록)" % [
 		item.title,
 		item.storage_location,
 		item.reading_weather,

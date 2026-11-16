@@ -837,6 +837,27 @@ func _init() -> void:
 	assert("단축키:" in main_inst.status_toast.text, "Pressing H should display keyboard shortcut cheatsheet toast")
 	print("✓ Two-Step Delete Confirmation Safety & Keyboard H Shortcut Cheatsheet verified")
 
+	# Test Sprint 79: Visual Delete Arm + Escape Disarm & Card Right-Click Quick Advance
+	var item_s79 = main_inst.archive_state.items[0]
+	main_inst.detail_modal.open(item_s79)
+	main_inst.detail_modal._on_delete_btn_pressed()
+	var del_btn_s79 = main_inst.detail_modal.get_node_or_null("Panel/VBox/BodyMargin/Body/TopInfo/MetaVBox/BtnRow/DeleteBtn")
+	assert(main_inst.detail_modal.delete_armed and del_btn_s79.get_theme_color("font_color") == Color(1.0, 1.0, 1.0, 1.0), "Armed DeleteBtn should highlight with white-on-red styling")
+	var esc_disarm := InputEventKey.new()
+	esc_disarm.pressed = true
+	esc_disarm.keycode = KEY_ESCAPE
+	main_inst.detail_modal._unhandled_input(esc_disarm)
+	assert(main_inst.detail_modal.visible and not main_inst.detail_modal.delete_armed and del_btn_s79.text == "일기 삭제", "First ESC while delete_armed should disarm without closing modal")
+	main_inst.detail_modal.close()
+	var card_s79 = main_inst.card_grid.get_child(0)
+	var vols_before_s79 = item_s79.volumes.size()
+	var rclick_card := InputEventMouseButton.new()
+	rclick_card.pressed = true
+	rclick_card.button_index = MOUSE_BUTTON_RIGHT
+	card_s79._gui_input(rclick_card)
+	assert(item_s79.volumes.size() == vols_before_s79 + 1 and "완독 기록 완료" in main_inst.status_toast.text, "Right-clicking CardItem should quick_advance volume and show toast")
+	print("✓ Visual Delete Arm + Escape Disarm & Card Right-Click Quick Advance verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

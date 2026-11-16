@@ -5,6 +5,21 @@
 
 ---
 
+## 🚀 [Sprint 79] 삭제 경고 빨간색 강조 + ESC 해제 & 서재 카드 우클릭 +1권 빠른 기록(`quick_advance`)
+- **날짜/시각**: 2026-11-17 05:59 (자동 스프린트)
+- **참여 스쿼드**: 14인 애자일 스쿼드 전원 (다꾸러 3인, PO/기획 2인, UX/UI 2인, 개발 4인, QA 2인, CEO 1인)
+- **핵심 VOC 및 기획 확정**:
+  1. **다꾸러 VOC #1 ("모달의 `일기 삭제` 버튼을 한 번 눌러 `'⚠️ 삭제 확인'` 상태가 되었을 때 빨간색 경고 배경으로 확 눈에 띄게 강조되고, 이 상태에서 `ESC`를 누르면 모달이 닫히지 않고 삭제 확인만 취소되면 더 안전할 것 같아요!")**: `detail_modal.gd`에 `_apply_delete_btn_style(armed)`를 추가해 경고 시 빨간 배경+흰 글씨로 강조하고, `_unhandled_input()`에서 `delete_armed` 상태일 때 첫 `ESC`로 경고 해제만 수행.
+  2. **다꾸러 VOC #2 ("메인 서재 목록에서 카드를 우클릭하면 모달을 열지 않고도 곧바로 `+1권 완독`(`quick_advance()`)이 기록되면 진도 관리가 엄청 빠를 것 같아요!")**: `card_item.gd`의 `_gui_input()` 우클릭(`MOUSE_BUTTON_RIGHT`)을 `quick_advance()`에 연결하고 카드 툴팁에 안내 문구를 추가.
+  3. **웹 목업 동기화**: `game02/index.html`의 `deleteSelectedDiary()`에도 2단계 삭제 확인(`deleteArmed`) 안전장치를 동기화.
+- **구현 및 검증 내역**:
+  - `detail_modal.gd`: `_apply_delete_btn_style()` 빨간 경고 스타일 및 `ESC` 1차 삭제 확인 해제 추가.
+  - `card_item.gd`: 우클릭 `quick_advance()` 연동 및 툴팁 안내 추가.
+  - `game02/index.html`: `deleteSelectedDiary()` 2단계 삭제 확인 안전장치 동기화.
+  - `tests/test_main_integration.gd`: Sprint 79 통합 테스트(`Visual Delete Arm + Escape Disarm & Card Right-Click Quick Advance verified`) 추가 후 3대 헤드리스 테스트 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 캡처 완료.
+
+---
+
 ## 🚀 [Sprint 78] 일기 삭제 2단계 확인 안전장치(`delete_armed`) & 단축키 `H` 키보드 치트시트 토스트
 - **날짜/시각**: 2026-11-17 05:39 (자동 스프린트)
 - **참여 스쿼드**: 14인 애자일 스쿼드 전원 (다꾸러 3인, PO/기획 2인, UX/UI 2인, 개발 4인, QA 2인, CEO 1인)
