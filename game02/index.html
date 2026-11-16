@@ -222,11 +222,14 @@
             </div>
 
             <!-- Fountain-pen Search Input -->
-            <div class="relative w-full sm:w-64">
-                <i
-                    class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-[#9c8c7c] text-xs"></i>
-                <input type="search" id="search-box" oninput="renderShelf()" placeholder="일기장 속 작품·문장·날씨·장소 검색..." title="작품명·작가·대사·태그·보관위치·날씨·장소·소장경로 통합 검색"
-                    class="w-full pl-8 pr-3 py-1.5 rounded-xl bg-[#fffdf9] border border-[#d8cbb8] text-xs focus:outline-none focus:border-[#c85a32]">
+            <div class="flex items-center gap-2.5 w-full sm:w-auto">
+                <span id="filter-summary-badge" class="text-[11px] font-semibold text-[#8c7a6b] whitespace-nowrap"></span>
+                <div class="relative w-full sm:w-64">
+                    <i
+                        class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-[#9c8c7c] text-xs"></i>
+                    <input type="search" id="search-box" oninput="renderShelf()" placeholder="일기장 속 작품·문장·날씨·장소 검색..." title="작품명·작가·대사·태그·보관위치·날씨·장소·소장경로 통합 검색"
+                        class="w-full pl-8 pr-3 py-1.5 rounded-xl bg-[#fffdf9] border border-[#d8cbb8] text-xs focus:outline-none focus:border-[#c85a32]">
+                </div>
             </div>
         </section>
 
@@ -283,9 +286,9 @@
                     <div class="flex items-center justify-between pb-3 border-b border-[#e2d6c5]">
                         <span class="serif-font text-sm font-bold text-[#2c221e]">🖋️ 나만의 독서 노트 & 권별 밑줄</span>
                         <div class="flex items-center gap-1.5">
-                            <button onclick="navigateJournalModal(-1)" title="이전 작품 (←)"
+                            <button id="prev-page-btn" onclick="navigateJournalModal(-1)" title="이전 작품 (←)"
                                 class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">◀</button>
-                            <button onclick="navigateJournalModal(1)" title="다음 작품 (→)"
+                            <button id="next-page-btn" onclick="navigateJournalModal(1)" title="다음 작품 (→)"
                                 class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">▶</button>
                             <button id="tape-cycle-btn" onclick="cycleWashiTape()"
                                 class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">🎨
@@ -522,6 +525,12 @@
                 return cMatch && qMatch;
             });
 
+            const summaryEl = document.getElementById('filter-summary-badge');
+            if (summaryEl) {
+                const totalVal = filtered.reduce((acc, it) => acc + (it.estimated_value || 0), 0);
+                summaryEl.textContent = `${filtered.length}종 · ₩${totalVal.toLocaleString('ko-KR')}`;
+            }
+
             const container = document.getElementById('shelf-container');
             container.innerHTML = '';
 
@@ -622,6 +631,14 @@
             const pageEl = document.getElementById('journal-page-indicator');
             if (pageEl && idx >= 0) {
                 pageEl.textContent = `Page ${idx + 1} / ${ITEMS.length} · 주희의 다꾸 일기장`;
+            }
+            if (idx >= 0 && ITEMS.length > 0) {
+                const prevIdx = (idx - 1 + ITEMS.length) % ITEMS.length;
+                const nextIdx = (idx + 1) % ITEMS.length;
+                const prevBtn = document.getElementById('prev-page-btn');
+                const nextBtn = document.getElementById('next-page-btn');
+                if (prevBtn) prevBtn.title = `◀ 이전 일기 (${prevIdx + 1}/${ITEMS.length}): ${ITEMS[prevIdx].title} (←)`;
+                if (nextBtn) nextBtn.title = `▶ 다음 일기 (${nextIdx + 1}/${ITEMS.length}): ${ITEMS[nextIdx].title} (→)`;
             }
 
             document.getElementById('diary-cover-box').style.background = item.color;

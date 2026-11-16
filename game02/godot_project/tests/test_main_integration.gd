@@ -885,6 +885,21 @@ func _init() -> void:
 	main_inst._on_tab_all_pressed()
 	print("✓ Modal Page Index Toast & Filtered Value Summary Toast verified")
 
+	# Sprint 82: All-5-Tab Value Summary Toasts & Dynamic Modal Nav Tooltips
+	main_inst._on_tab_manga_pressed()
+	assert("이북·단행본" in main_inst.status_toast.text and "₩" in main_inst.status_toast.text, "Manga tab toast should show filtered count and KRW total")
+	main_inst._on_tab_gacha_pressed()
+	assert("가챠·굿즈" in main_inst.status_toast.text and "₩" in main_inst.status_toast.text, "Gacha tab toast should show filtered count and KRW total")
+	main_inst._on_tab_all_pressed()
+	assert("전체 서재" in main_inst.status_toast.text and "₩" in main_inst.status_toast.text, "All tab toast should show filtered count and KRW total")
+	main_inst._on_card_clicked(main_inst.archive_state.items[0])
+	var modal_next_btn = main_inst.detail_modal.find_child("NextItemBtn", true, false)
+	assert(modal_next_btn != null and "(2/6)" in modal_next_btn.tooltip_text, "Modal next button tooltip should preview (2/6) item")
+	main_inst._on_modal_navigate_requested(1)
+	assert("(3/6)" in modal_next_btn.tooltip_text, "Modal next button tooltip should update to (3/6) after navigation")
+	main_inst.detail_modal.close()
+	print("✓ All-5-Tab Value Summary Toasts & Dynamic Modal Nav Tooltips verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

@@ -504,8 +504,25 @@ func show_library_infographic() -> String:
 	_show_toast(text)
 	return text
 
+func _update_modal_nav_tooltips(item) -> void:
+	if detail_modal == null or archive_state == null or archive_state.items.is_empty():
+		return
+	var total: int = archive_state.items.size()
+	var idx: int = archive_state.items.find(item)
+	if idx == -1:
+		idx = 0
+	var prev_idx: int = (idx - 1 + total) % total
+	var next_idx: int = (idx + 1) % total
+	var prev_btn = detail_modal.find_child("PrevItemBtn", true, false)
+	var next_btn = detail_modal.find_child("NextItemBtn", true, false)
+	if prev_btn != null:
+		prev_btn.tooltip_text = "◀ 이전 일기 (%d/%d): %s (←)" % [prev_idx + 1, total, archive_state.items[prev_idx].title]
+	if next_btn != null:
+		next_btn.tooltip_text = "▶ 다음 일기 (%d/%d): %s (→)" % [next_idx + 1, total, archive_state.items[next_idx].title]
+
 func _on_card_clicked(item) -> void:
 	detail_modal.open(item)
+	_update_modal_nav_tooltips(item)
 
 func _reset_all_filters() -> void:
 	if search_input != null:
@@ -520,6 +537,7 @@ func _on_tab_all_pressed() -> void:
 	archive_state.current_filter = -1
 	_highlight_tabs(tab_all)
 	_render_cards()
+	_show_toast("📚 전체 서재 (%s)를 펼쳤습니다." % _get_filtered_cards_summary())
 
 func _on_tab_manga_pressed() -> void:
 	filter_firsts_only = false
@@ -528,6 +546,7 @@ func _on_tab_manga_pressed() -> void:
 	archive_state.current_filter = 0
 	_highlight_tabs(tab_manga)
 	_render_cards()
+	_show_toast("📖 이북·단행본 (%s)만 모아봅니다." % _get_filtered_cards_summary())
 
 func _on_tab_gacha_pressed() -> void:
 	filter_firsts_only = false
@@ -536,6 +555,7 @@ func _on_tab_gacha_pressed() -> void:
 	archive_state.current_filter = 1
 	_highlight_tabs(tab_gacha)
 	_render_cards()
+	_show_toast("🔮 가챠·굿즈 (%s)만 모아봅니다." % _get_filtered_cards_summary())
 
 func _get_filtered_cards_summary() -> String:
 	var count: int = 0
@@ -706,6 +726,7 @@ func _on_modal_navigate_requested(delta: int) -> void:
 	var next_idx: int = (idx + delta + int(archive_state.items.size())) % int(archive_state.items.size())
 	var next_item = archive_state.items[next_idx]
 	detail_modal.open(next_item)
+	_update_modal_nav_tooltips(next_item)
 	_show_toast("📖 책장 넘김 (%d/%d): %s" % [next_idx + 1, archive_state.items.size(), next_item.title])
 
 func _on_card_copied(item) -> void:
