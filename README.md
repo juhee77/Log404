@@ -18,13 +18,14 @@ Godot 4+ 기반의 감성 게임 및 인터랙티브 아카이브 애플리케�
 > **Godot 4.6.2 모바일 기반 E-Book 리더기 서재(Apple Books · 리디북스) & 만년필 다꾸 독서노트(굿노트 · 몰스킨) 감성 아카이브 앱**  
 > 14인 가상 애자일 스쿼드가 20분 주기 자동 스프린트로 지속 개선 중입니다.
 
-### 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 57)
+### 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 58)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
 | ![Pocket Archive Main Screen](game02/godot_project/screenshots/godot_app_screen.png) | ![Pocket Archive Detail Modal](game02/godot_project/screenshots/godot_modal_screen.png) |
 
 ### ✨ 주요 핵심 기능
+- **최신 Sprint 58 하이라이트**: 권별 밑줄 대사 클릭 시 원클릭 해당 권 편집 모드(`start_editing_volume_quote`) 전환 및 서재 카드 표지 북마크 수 배지(`N권 · 🔖M`) 추가
 - **최신 Sprint 57 하이라이트**: `AddModal` 선택 표지 컬러 스와치 체크마크/2px 테두리 강조, 빈 제목 입력 경고 포커스, 상단 `초판 스탬프` KPI 필터 동기화 추가
 - **최신 Sprint 56 하이라이트**: 모달 내 활성 인장 스탬프 2px 컬러 테두리 하이라이트 및 `🖍️ 형광펜 ON/OFF` 버튼 상태 시각화 추가
 - **최신 Sprint 55 하이라이트**: 모달 내 선택된 만년필 잉크 스와치 2px 컬러 테두리 하이라이트, 오늘의 밑줄 배너 동적 책 열기 툴팁, 검색 결과 0건 빈 상태 다꾸 가이드 안내 추가

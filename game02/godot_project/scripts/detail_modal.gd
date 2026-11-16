@@ -274,6 +274,10 @@ func _highlight_active_ink_btn(active_hex: String) -> void:
 func open(item) -> void:
 	current_item = item
 	editing_vol_index = -1
+	if save_quote_btn != null:
+		save_quote_btn.text = "🖋️ 밑줄 저장"
+	if quote_input != null:
+		quote_input.placeholder_text = "🖋️ 오늘 밑줄 친 명대사·감상평 수정..."
 	title_label.text = "📔 " + item.title
 	_refresh_author_label()
 	var sticker = current_item.get("deco_sticker") if current_item.get("deco_sticker") != null else "✨"
@@ -708,6 +712,19 @@ func update_volume_quote(vol_idx: int, new_quote: String) -> void:
 	_render_volumes()
 	diary_updated.emit(current_item)
 
+func start_editing_volume_quote(vol_idx: int) -> void:
+	if current_item == null or vol_idx < 0 or vol_idx >= current_item.volumes.size():
+		return
+	editing_vol_index = vol_idx
+	var v = current_item.volumes[vol_idx]
+	var vol_num = int(v.get("vol", vol_idx + 1))
+	if quote_input != null:
+		quote_input.text = str(v.get("quote", ""))
+		quote_input.placeholder_text = "🖋️ %d권 밑줄 문장 편집 중..." % vol_num
+		quote_input.grab_focus()
+	if save_quote_btn != null:
+		save_quote_btn.text = "🖋️ %d권 저장" % vol_num
+
 func _on_save_quote_btn_pressed() -> void:
 	if current_item == null:
 		return
@@ -716,6 +733,10 @@ func _on_save_quote_btn_pressed() -> void:
 		if editing_vol_index >= 0 and editing_vol_index < current_item.volumes.size():
 			update_volume_quote(editing_vol_index, trimmed)
 			editing_vol_index = -1
+			if save_quote_btn != null:
+				save_quote_btn.text = "🖋️ 밑줄 저장"
+			if quote_input != null:
+				quote_input.placeholder_text = "🖋️ 오늘 밑줄 친 명대사·감상평 수정..."
 		else:
 			current_item.memo = trimmed
 			memo_label.text = "🖋️ \"" + current_item.memo + "\""
@@ -876,6 +897,10 @@ func _render_volumes() -> void:
 		quote_lbl.add_theme_color_override("font_color", Color(0.32, 0.25, 0.20))
 		quote_lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		quote_lbl.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+		quote_lbl.mouse_filter = Control.MOUSE_FILTER_STOP
+		quote_lbl.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+		quote_lbl.tooltip_text = "클릭하여 %d권 밑줄 문장 편집" % int(v.get("vol", idx + 1))
+		quote_lbl.gui_input.connect(func(ev): if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_LEFT: start_editing_volume_quote(capture_idx))
 		
 		var star_btn = Button.new()
 		var r = int(v.get("rating", 5))

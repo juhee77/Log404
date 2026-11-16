@@ -47,6 +47,7 @@ const ArchiveStateClass = preload("res://scripts/archive_state.gd")
 
 func setup(item) -> void:
 	current_item = item
+	mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	title_label.text = item.title
 	var base_author = item.author_or_series if item.author_or_series != "" else "작가 미상"
 	var avg_r = 5.0
@@ -115,7 +116,7 @@ func setup(item) -> void:
 		var vols = item.volumes.size()
 		var bm_cnt = item.get_bookmarked_volumes_count() if item.has_method("get_bookmarked_volumes_count") else 0
 		vol_badge.visible = true
-		vol_badge.text = str(vols) + "권 " + ("🔖" if bm_cnt > 0 else "")
+		vol_badge.text = (str(vols) + "권 · 🔖" + str(bm_cnt)) if bm_cnt > 0 else (str(vols) + "권")
 		status_label.text = "🖋️ \"" + first_quote + "\""
 	else: # GACHA
 		cat_badge.text = " DIARY "

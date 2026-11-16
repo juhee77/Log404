@@ -515,6 +515,21 @@ func _init() -> void:
 	main_inst._on_tab_all_pressed()
 	print("✓ AddModal Cover Swatch Highlight, Empty Title Feedback & StatFirsts Filter Sync verified")
 
+	# Test Sprint 58: Clickable Volume Quote Edit Mode & Card Bookmark Count Badge
+	main_inst.detail_modal.open(main_inst.archive_state.items[0])
+	main_inst.detail_modal.start_editing_volume_quote(1)
+	assert(main_inst.detail_modal.editing_vol_index == 1 and "2권" in main_inst.detail_modal.save_quote_btn.text, "start_editing_volume_quote should set editing_vol_index and update SaveQuoteBtn text")
+	main_inst.detail_modal.quote_input.text = "2권 직접 클릭 편집 테스트"
+	main_inst.detail_modal._on_save_quote_btn_pressed()
+	assert(main_inst.archive_state.items[0].volumes[1]["quote"] == "2권 직접 클릭 편집 테스트" and main_inst.detail_modal.editing_vol_index == -1, "Saving in volume edit mode should update volume quote and reset editing_vol_index")
+	assert(main_inst.detail_modal.save_quote_btn.text == "🖋️ 밑줄 저장", "SaveQuoteBtn should reset to default text after volume quote save")
+	var first_card_s58 = main_inst.card_grid.get_child(0)
+	assert(first_card_s58.mouse_default_cursor_shape == Control.CURSOR_POINTING_HAND, "CardItem should use CURSOR_POINTING_HAND")
+	main_inst.archive_state.items[0].volumes[0]["bookmarked"] = true
+	first_card_s58.setup(main_inst.archive_state.items[0])
+	assert("🔖1" in first_card_s58.vol_badge.text, "CardItem vol_badge should show bookmark count when > 0")
+	print("✓ Clickable Volume Quote Edit Mode & Card Bookmark Count Badge verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

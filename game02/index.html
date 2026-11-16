@@ -768,7 +768,7 @@
                         <span class="serif-font font-bold text-[#2c221e] shrink-0">${v.vol}권</span>
                         <button onclick="toggleVolStatus(${idx})" class="px-1.5 py-0.5 rounded border ${isFirst ? 'bg-[#fff8f5] border-[#c85a32]/50 text-[#c85a32]' : 'bg-[#eef5f0] border-[#4a6b5d]/50 text-[#4a6b5d]'} text-[10px] font-bold shrink-0 cursor-pointer">${isFirst ? '🔖 초판특전' : '✓ 소장완료'}</button>
                         <button onclick="toggleVolBookmark(${idx})" class="text-[12px] shrink-0 cursor-pointer hover:scale-110" title="북마크 토글">${isBm ? '🔖' : '🏷️'}</button>
-                        <span class="serif-font text-[#5c4938] truncate">${v.quote ? `"${v.quote}"` : '메모 없음'}</span>
+                        <span onclick="startEditVolQuote(${idx})" class="serif-font text-[#5c4938] truncate cursor-pointer hover:text-[#c85a32]" title="클릭하여 ${v.vol}권 밑줄 문장 편집">${v.quote ? `"${v.quote}"` : '메모 없음'}</span>
                     </div>
                     <button onclick="cycleVolRating(${idx})" class="text-[#c85a32] font-bold shrink-0 ml-2 cursor-pointer hover:opacity-80" title="클릭하여 별점 변경">${'★'.repeat(v.rating || 5)}</button>
                 `;
@@ -838,12 +838,32 @@
             renderShelf();
         }
 
+        let editingVolIdx = -1;
+        function startEditVolQuote(idx) {
+            const item = ITEMS.find(x => x.id === activeId);
+            if (!item || !item.volumes || !item.volumes[idx]) return;
+            editingVolIdx = idx;
+            const inp = document.getElementById('diary-quote-input');
+            if (inp) {
+                inp.value = item.volumes[idx].quote || '';
+                inp.placeholder = `🖋️ ${item.volumes[idx].vol}권 밑줄 문장 편집 중...`;
+                inp.focus();
+            }
+        }
+
         function saveDiaryQuote() {
             const item = ITEMS.find(x => x.id === activeId);
             const inp = document.getElementById('diary-quote-input');
             if (!item || !inp || !inp.value.trim()) return;
-            item.memo = inp.value.trim();
-            document.getElementById('diary-memo').innerText = item.memo;
+            if (editingVolIdx >= 0 && item.volumes && item.volumes[editingVolIdx]) {
+                item.volumes[editingVolIdx].quote = inp.value.trim();
+                editingVolIdx = -1;
+                inp.placeholder = '🖋️ 오늘 밑줄 친 명대사·감상평 수정...';
+                renderDiaryVolumes(item);
+            } else {
+                item.memo = inp.value.trim();
+                document.getElementById('diary-memo').innerText = item.memo;
+            }
             renderShelf();
         }
 

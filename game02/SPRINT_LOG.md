@@ -5,6 +5,21 @@
 
 ---
 
+## 🚀 [Sprint 58] 권별 밑줄 원클릭 직접 편집(`start_editing_volume_quote`) & 카드 북마크 수 배지
+- **날짜/시각**: 2026-11-16 23:00 (자동 스프린트)
+- **참여 스쿼드**: 14인 애자일 스쿼드 전원 (다꾸러 3인, PO/기획 2인, UX/UI 2인, 개발 4인, QA 2인, CEO 1인)
+- **핵심 VOC 및 기획 확정**:
+  1. **다꾸러 VOC #1 ("모달의 `📌 권별 밑줄 노트`에서 각 권의 대사를 클릭하면 바로 위 입력창으로 불러와 수정하고 저장할 수 있으면 좋겠어요!")**: `detail_modal.gd`에 `start_editing_volume_quote()`를 추가해 권별 대사 라벨(`quote_lbl`) 클릭 시 `editing_vol_index`를 설정하고 `quote_input` placeholder(`"🖋️ N권 밑줄 문장 편집 중..."`) 및 `save_quote_btn` 텍스트(`"🖋️ N권 저장"`)를 동적 전환하며, 저장 후 기본 편집 모드로 깔끔히 복귀.
+  2. **다꾸러 VOC #2 ("메인 서재 카드 표지 우측 하단 배지에서도 북마크를 몇 권 꽂아뒀는지(`3권 · 🔖1`) 바로 보이고, 카드에 마우스를 올리면 손가락 커서가 나오면 좋겠어요")**: `card_item.gd`에서 `CURSOR_POINTING_HAND`를 적용하고 `bm_cnt > 0`일 때 `vol_badge`에 `"N권 · 🔖M"` 형식으로 표시.
+  3. **웹 목업 동기화**: `game02/index.html`의 `renderDiaryVolumes()` 권별 대사 클릭 시 `startEditVolQuote(idx)`가 동작하도록 `saveDiaryQuote()`와 동기화.
+- **구현 및 검증 내역**:
+  - `detail_modal.gd`: `start_editing_volume_quote()` 추가, `_render_volumes()` 권별 대사 클릭 핸들러 및 `_on_save_quote_btn_pressed()` 버튼·placeholder 복원.
+  - `card_item.gd`: `CURSOR_POINTING_HAND` 및 `vol_badge` 북마크 수(`🔖N`) 표시.
+  - `game02/index.html`: `startEditVolQuote()` 및 `saveDiaryQuote()` 동기화.
+  - `tests/test_main_integration.gd`: Sprint 58 통합 테스트(`Clickable Volume Quote Edit Mode & Card Bookmark Count Badge verified`) 추가 후 3대 헤드리스 테스트 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 캡처 완료.
+
+---
+
 ## 🚀 [Sprint 57] 새 일기 쓰기(`AddModal`) 표지 스와치 하이라이트, 빈 제목 경고 피드백 & 초판 필터 동기화
 - **날짜/시각**: 2026-11-16 22:41 (자동 스프린트)
 - **참여 스쿼드**: 14인 애자일 스쿼드 전원 (다꾸러 3인, PO/기획 2인, UX/UI 2인, 개발 4인, QA 2인, CEO 1인)
