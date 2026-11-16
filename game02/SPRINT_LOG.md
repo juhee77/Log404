@@ -5,6 +5,21 @@
 
 ---
 
+## 🚀 [Sprint 70] 마일스톤 70: 편집 중인 권별 행 하이라이트 & 서재 탭 단축키·실시간 작품수 툴팁
+- **날짜/시각**: 2026-11-17 03:01 (자동 스프린트)
+- **참여 스쿼드**: 14인 애자일 스쿼드 전원 (다꾸러 3인, PO/기획 2인, UX/UI 2인, 개발 4인, QA 2인, CEO 1인)
+- **핵심 VOC 및 기획 확정**:
+  1. **다꾸러 VOC #1 ("모달의 `📌 권별 밑줄 노트`에서 특정 권의 대사를 클릭해 편집 중일 때, 현재 어느 권 행을 수정 중인지 행 테두리와 따뜻한 크림 하이라이트로 바로 보이면 좋겠어요!")**: `detail_modal.gd`의 `start_editing_volume_quote()`에서 `_render_volumes()`를 재호출하고, `idx == editing_vol_index`인 행에 2px 스탬프 컬러 테두리와 하이라이트 배경을 적용(동시에 `_render_volumes()` 기존 자식 노드 `remove_child` 누락도 개선).
+  2. **다꾸러 VOC #2 ("상단 5대 필터 탭(`전체일기`~`인생작`)에 마우스를 올렸을 때 숫자 단축키 `[1]~[5]`와 해당 작품 종수가 툴팁으로 보이면 좋겠어요")**: `main_view.gd`의 `_update_stats()`에서 5개 필터 탭 버튼에 `[1]~[5]` 단축키 및 실시간 종수 `tooltip_text`를 동적으로 설정.
+  3. **웹 목업 동기화**: `game02/index.html`의 `#tab-all`에 `[1] 전체 서재 보기` 툴팁을 동기화.
+- **구현 및 검증 내역**:
+  - `detail_modal.gd`: `start_editing_volume_quote()` 내 `_render_volumes()` 재렌더, 편집 행 2px 테두리 하이라이트 및 `remove_child` 정리 보강.
+  - `main_view.gd`: `_update_stats()` 내 5개 필터 탭 단축키/실시간 종수 툴팁 추가.
+  - `game02/index.html`: `#tab-all` `[1]` 단축키 툴팁 동기화.
+  - `tests/test_main_integration.gd`: Sprint 70 통합 테스트(`Active Editing Volume Row Highlight & Tab Shortcut Tooltips verified`) 추가 후 3대 헤드리스 테스트 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 캡처 완료.
+
+---
+
 ## 🚀 [Sprint 69] 감상 카드 복사 완료 피드백(`✅ 복사됨!`) & 숫자키 `1~5` 서재 탭 빠른 전환
 - **날짜/시각**: 2026-11-17 02:40 (자동 스프린트)
 - **참여 스쿼드**: 14인 애자일 스쿼드 전원 (다꾸러 3인, PO/기획 2인, UX/UI 2인, 개발 4인, QA 2인, CEO 1인)

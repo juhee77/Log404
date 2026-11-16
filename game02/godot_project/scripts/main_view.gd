@@ -252,6 +252,16 @@ func _update_stats() -> void:
 		var card_node = pair[0].get_parent().get_parent() if pair[0] != null and pair[0].get_parent() != null else null
 		if card_node is Control:
 			card_node.tooltip_text = pair[1]
+	if tab_all != null:
+		tab_all.tooltip_text = "[1] 전체 일기 (%d종)" % archive_state.items.size()
+	if tab_manga != null:
+		tab_manga.tooltip_text = "[2] 이북·단행본 (%d종)" % (archive_state.items.size() - g_count)
+	if tab_gacha != null:
+		tab_gacha.tooltip_text = "[3] 가챠·굿즈 (%d종)" % g_count
+	if tab_complete != null:
+		tab_complete.tooltip_text = "[4] 완독·2권 이상 작품 보기"
+	if tab_fav != null:
+		tab_fav.tooltip_text = "[5] 인생최애·★5.0 만점작 보기"
 	
 	_render_spine_shelf()
 	_refresh_today_quote()

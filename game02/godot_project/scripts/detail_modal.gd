@@ -796,6 +796,7 @@ func start_editing_volume_quote(vol_idx: int) -> void:
 		quote_input.grab_focus()
 	if save_quote_btn != null:
 		save_quote_btn.text = "🖋️ %d권 저장" % vol_num
+	_render_volumes()
 
 func _on_save_quote_btn_pressed() -> void:
 	if current_item == null:
@@ -858,6 +859,7 @@ func _refresh_vol_header() -> void:
 
 func _render_volumes() -> void:
 	for child in vol_list.get_children():
+		vol_list.remove_child(child)
 		child.queue_free()
 	
 	if current_item == null:
@@ -892,9 +894,13 @@ func _render_volumes() -> void:
 		var v = current_item.volumes[idx]
 		var panel = PanelContainer.new()
 		var sb = StyleBoxFlat.new()
-		sb.bg_color = Color(0.97, 0.945, 0.90, 1)
-		sb.border_width_bottom = 1
-		sb.border_color = Color(0.86, 0.80, 0.72, 1)
+		var is_editing_row := (idx == editing_vol_index)
+		sb.bg_color = Color(1.0, 0.96, 0.88, 1) if is_editing_row else Color(0.97, 0.945, 0.90, 1)
+		sb.border_width_left = 2 if is_editing_row else 0
+		sb.border_width_top = 2 if is_editing_row else 0
+		sb.border_width_right = 2 if is_editing_row else 0
+		sb.border_width_bottom = 2 if is_editing_row else 1
+		sb.border_color = Color(0.78, 0.35, 0.20, 0.85) if is_editing_row else Color(0.86, 0.80, 0.72, 1)
 		sb.corner_radius_top_left = 6
 		sb.corner_radius_top_right = 6
 		sb.corner_radius_bottom_left = 6

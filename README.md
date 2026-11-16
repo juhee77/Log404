@@ -18,13 +18,14 @@ Godot 4+ 기반의 감성 게임 및 인터랙티브 아카이브 애플리케�
 > **Godot 4.6.2 모바일 기반 E-Book 리더기 서재(Apple Books · 리디북스) & 만년필 다꾸 독서노트(굿노트 · 몰스킨) 감성 아카이브 앱**  
 > 14인 가상 애자일 스쿼드가 20분 주기 자동 스프린트로 지속 개선 중입니다.
 
-### 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 69)
+### 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 70)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
 | ![Pocket Archive Main Screen](game02/godot_project/screenshots/godot_app_screen.png) | ![Pocket Archive Detail Modal](game02/godot_project/screenshots/godot_modal_screen.png) |
 
 ### ✨ 주요 핵심 기능
+- **최신 Sprint 70 하이라이트**: 편집 중인 권별 행 2px 하이라이트(`detail_modal.gd`) 및 서재 5대 필터 탭 `[1]~[5]` 단축키·실시간 종수 툴팁(`main_view.gd` · `index.html`) 완성
 - **최신 Sprint 69 하이라이트**: `💌 공유` 감상 카드 복사 완료 피드백(`✅ 복사됨!` + 토스트) 및 숫자키 `1~5` 서재 탭 빠른 전환 단축키(`main_view.gd` · `index.html`) 추가
 - **최신 Sprint 68 하이라이트**: `volume_removed` 권 삭제 전용 토스트 피드백 및 `/` · `Ctrl/Cmd+F` 키보드 통합 검색 단축키(`main_view.gd` · `index.html`) 추가
 - **최신 Sprint 67 하이라이트**: 상단 요약줄(`SubTitle`) 원클릭 인포그래픽 브리핑(`show_library_infographic`) 및 헤더 버튼 툴팁 100% 완성

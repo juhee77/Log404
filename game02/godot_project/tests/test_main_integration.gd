@@ -682,6 +682,18 @@ func _init() -> void:
 	assert(main_inst.archive_state.current_filter == -1, "Pressing 1 should switch back to All filter")
 	print("✓ Share Card Copied Feedback & Number Key 1-5 Tab Shortcuts verified")
 
+	# Test Sprint 70: Active Editing Volume Row Highlight & Tab Shortcut Tooltips
+	main_inst.archive_state.reset_to_rich_defaults()
+	main_inst.detail_modal.open(main_inst.archive_state.items[0])
+	main_inst.detail_modal.start_editing_volume_quote(1)
+	var row0_panel = main_inst.detail_modal.vol_list.get_child(0)
+	var row1_panel = main_inst.detail_modal.vol_list.get_child(1)
+	assert(row1_panel is PanelContainer and row1_panel.get_theme_stylebox("panel").border_width_left == 2, "Editing volume row should have 2px highlight border")
+	assert(row0_panel is PanelContainer and row0_panel.get_theme_stylebox("panel").border_width_left == 0, "Non-editing volume row should have 0px left border")
+	main_inst.detail_modal.close()
+	assert("[1]" in main_inst.tab_all.tooltip_text and "[2]" in main_inst.tab_manga.tooltip_text, "Filter tabs should include [1]-[5] shortcut tooltips")
+	print("✓ Active Editing Volume Row Highlight & Tab Shortcut Tooltips verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()
