@@ -189,7 +189,7 @@ func _style_diary_controls() -> void:
 		"Panel/VBox/BodyMargin/Body/InkRow/SignatureBtn": "다이어리 서명 스탬프 순환",
 		"Panel/VBox/BodyMargin/Body/InkRow/DateStampBtn": "오늘 날짜로 구매·기념일 스탬프 갱신",
 		"Panel/VBox/BodyMargin/Body/InkRow/CustomTagBtn": "커스텀 해시태그 순환",
-		"Panel/VBox/BodyMargin/Body/InkRow/ValueBtn": "추정 소장 가치 +5,000원 증액",
+		"Panel/VBox/BodyMargin/Body/InkRow/ValueBtn": "추정 소장 가치 +5,000원 (우클릭: -5,000원)",
 		"Panel/VBox/BodyMargin/Body/InkRow/FavCharBtn": "최애 캐릭터 태그 순환",
 		"Panel/VBox/BodyMargin/Body/InkRow/ConditionBtn": "실물 컨디션 등급 순환 (S급~개봉전시)",
 		"Panel/VBox/BodyMargin/Body/InkRow/FinishBtn": "표지 코팅 마감 순환 (무광·유광·홀로그램·양장)",
@@ -211,6 +211,12 @@ func _style_diary_controls() -> void:
 		dup_btn_ctrl.gui_input.connect(func(ev):
 			if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_RIGHT:
 				decrement_duplicate_count()
+		)
+	var val_btn_ctrl: Control = get_node_or_null("Panel/VBox/BodyMargin/Body/InkRow/ValueBtn")
+	if val_btn_ctrl != null:
+		val_btn_ctrl.gui_input.connect(func(ev):
+			if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_RIGHT:
+				reduce_estimated_value()
 		)
 
 func set_fountain_pen_ink(ink_hex: String) -> void:
@@ -667,6 +673,14 @@ func boost_estimated_value() -> int:
 	_refresh_author_label()
 	diary_updated.emit(current_item)
 	return new_val
+
+func reduce_estimated_value() -> int:
+	if current_item == null:
+		return 0
+	current_item.estimated_value = max(0, int(current_item.estimated_value) - 5000)
+	_refresh_author_label()
+	diary_updated.emit(current_item)
+	return current_item.estimated_value
 
 func cycle_favorite_character() -> String:
 	if current_item == null:

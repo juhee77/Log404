@@ -122,9 +122,9 @@ func _ready() -> void:
 	if next_quote_btn != null:
 		next_quote_btn.tooltip_text = "서재 속 다음 밑줄 문장으로 넘기기"
 	if random_pick_btn != null:
-		random_pick_btn.tooltip_text = "오늘의 랜덤 작품 추천 열기"
+		random_pick_btn.tooltip_text = "[R] 오늘의 랜덤 작품 추천 열기"
 	if sort_btn != null:
-		sort_btn.tooltip_text = "정렬 순환: 기본순 → 권수순 → 최신순 → 가치순"
+		sort_btn.tooltip_text = "[S] 정렬 순환: 기본순 → 권수순 → 최신순 → 가치순"
 	var nav_row = get_node_or_null("VBox/BottomBar/Margin/VBox/NavRow")
 	if nav_row != null:
 		var nav_tips = [
@@ -655,6 +655,12 @@ func _unhandled_input(event: InputEvent) -> void:
 					get_viewport().set_input_as_handled()
 				KEY_5:
 					_on_tab_fav_pressed()
+					get_viewport().set_input_as_handled()
+				KEY_S:
+					_on_sort_btn_pressed()
+					get_viewport().set_input_as_handled()
+				KEY_R:
+					pick_random_item()
 					get_viewport().set_input_as_handled()
 
 func _on_card_copied(item) -> void:

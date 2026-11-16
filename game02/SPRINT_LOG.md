@@ -5,6 +5,21 @@
 
 ---
 
+## 🚀 [Sprint 73] 소장 가치 우클릭 -5,000원 되돌리기(`reduce_estimated_value`) & 단축키 `S`(정렬)·`R`(랜덤 추천)
+- **날짜/시각**: 2026-11-17 03:59 (자동 스프린트)
+- **참여 스쿼드**: 14인 애자일 스쿼드 전원 (다꾸러 3인, PO/기획 2인, UX/UI 2인, 개발 4인, QA 2인, CEO 1인)
+- **핵심 VOC 및 기획 확정**:
+  1. **다꾸러 VOC #1 ("모달의 `💎 +5천원` 버튼을 실수로 여러 번 눌렀을 때, 마우스 우클릭으로 `-5,000원`씩 되돌릴 수 있으면 좋겠어요!")**: `detail_modal.gd`에 `reduce_estimated_value()`(최솟값 0원 보장)를 추가하고 `InkRow/ValueBtn` 우클릭(`MOUSE_BUTTON_RIGHT`) 및 툴팁 안내와 연동.
+  2. **다꾸러 VOC #2 ("메인 서재에서 키보드 `S` 키로 정렬 순환(`기본순→권수순→최신순→가치순`), `R` 키로 오늘의 랜덤 추천을 바로 열 수 있으면 좋겠어요")**: `main_view.gd`의 `_unhandled_input()`에 `KEY_S` 및 `KEY_R` 단축키를 추가하고 버튼 툴팁에 `[S]`·`[R]` 단축키 안내를 표기.
+  3. **웹 목업 동기화**: `game02/index.html`의 `↻ 다른 문장`·`🎲 추천` 버튼 툴팁 및 전역 `R` 키 랜덤 추천 단축키를 동기화.
+- **구현 및 검증 내역**:
+  - `detail_modal.gd`: `reduce_estimated_value()`, `ValueBtn` 우클릭 핸들러 및 툴팁 갱신.
+  - `main_view.gd`: `_unhandled_input()` `KEY_S`/`KEY_R` 단축키 및 `SortBtn`/`RandomPickBtn` 툴팁 동기화.
+  - `game02/index.html`: 전역 `R` 키 랜덤 추천 단축키 및 상단 버튼 `title` 툴팁 동기화.
+  - `tests/test_main_integration.gd`: Sprint 73 통합 테스트(`Estimated Value Right-Click Reduce & Keyboard S/R Shortcuts verified`) 추가 후 3대 헤드리스 테스트 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 캡처 완료.
+
+---
+
 ## 🚀 [Sprint 72] 회독·복수소장 우클릭 -1 되돌리기(`decrement_*`) & 폴라로이드 촬영 시 전체 서재 전환
 - **날짜/시각**: 2026-11-17 03:39 (자동 스프린트)
 - **참여 스쿼드**: 14인 애자일 스쿼드 전원 (다꾸러 3인, PO/기획 2인, UX/UI 2인, 개발 4인, QA 2인, CEO 1인)

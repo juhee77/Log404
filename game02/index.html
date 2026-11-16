@@ -179,11 +179,11 @@
                         onclick="openCurrentQuoteItem()">
                         🖋️ 오늘의 밑줄: "농구... 좋아하세요?" — 슬램덩크 신장재편판
                     </span>
-                    <button onclick="cycleTodayQuote()"
+                    <button onclick="cycleTodayQuote()" title="서재 속 다음 밑줄 문장으로 넘기기"
                         class="px-2.5 py-1 rounded-lg bg-[#f3ece1] hover:bg-[#e5dac9] border border-[#d6c7b2] text-[#2c221e] text-[11px] font-bold shrink-0 cursor-pointer">
                         ↻ 다른 문장
                     </button>
-                    <button onclick="pickRandomItem()"
+                    <button onclick="pickRandomItem()" title="[R] 오늘의 랜덤 작품 추천 열기"
                         class="px-2.5 py-1 rounded-lg bg-[#c85a32] hover:bg-[#b04b25] text-white text-[11px] font-bold shrink-0 cursor-pointer">
                         🎲 추천
                     </button>
@@ -910,6 +910,11 @@
                 if (!jm || jm.classList.contains('hidden')) {
                     const tabMap = { '1': 'all', '2': 'manga', '3': 'gacha', '4': 'complete', '5': 'fav' };
                     setFilter(tabMap[e.key]);
+                }
+            } else if ((e.key === 'r' || e.key === 'R') && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
+                const jm = document.getElementById('journal-modal');
+                if (!jm || jm.classList.contains('hidden')) {
+                    pickRandomItem();
                 }
             }
         });

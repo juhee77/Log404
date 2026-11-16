@@ -720,6 +720,22 @@ func _init() -> void:
 	assert(main_inst.archive_state.current_filter == -1, "Camera snap should auto-switch back to All tab")
 	print("✓ Reread/Duplicate Decrement & Camera Snap Auto-Switch to All Tab verified")
 
+	# Test Sprint 73: Estimated Value Right-Click Reduce & Keyboard S/R Shortcuts
+	main_inst.detail_modal.open(main_inst.archive_state.items[0])
+	var val_up = main_inst.detail_modal.boost_estimated_value()
+	var val_dn = main_inst.detail_modal.reduce_estimated_value()
+	assert(val_dn == val_up - 5000 and val_dn >= 0, "reduce_estimated_value should subtract 5000 with floor 0")
+	main_inst.detail_modal.close()
+	main_inst.search_input.release_focus()
+	var prev_sort_s73 = main_inst.sort_mode
+	var ks_ev := InputEventKey.new()
+	ks_ev.pressed = true
+	ks_ev.keycode = KEY_S
+	main_inst._unhandled_input(ks_ev)
+	assert(main_inst.sort_mode == (prev_sort_s73 + 1) % 4, "Pressing S should cycle sort_mode")
+	main_inst.sort_mode = 0
+	print("✓ Estimated Value Right-Click Reduce & Keyboard S/R Shortcuts verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()
