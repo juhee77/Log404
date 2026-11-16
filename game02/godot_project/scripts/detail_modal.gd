@@ -5,6 +5,7 @@ const ArchiveStateClass = preload("res://scripts/archive_state.gd")
 
 signal item_deleted(item)
 signal volume_added(item)
+signal volume_removed(item)
 signal diary_updated(item)
 
 @onready var title_label: Label = $Panel/VBox/Header/HBox/TitleLabel
@@ -1026,7 +1027,7 @@ func remove_last_volume() -> void:
 		current_item.volumes.pop_back()
 		_render_volumes()
 		_refresh_author_label()
-		diary_updated.emit(current_item)
+		volume_removed.emit(current_item)
 
 func _on_delete_btn_pressed() -> void:
 	if current_item != null:

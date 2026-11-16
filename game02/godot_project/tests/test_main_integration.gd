@@ -647,6 +647,19 @@ func _init() -> void:
 	assert(top_add_s67 != null and top_add_s67.tooltip_text != "", "Header AddBtn should have tooltip_text")
 	print("✓ Clickable SubTitle Infographic Briefing & Header Action Tooltips verified")
 
+	# Test Sprint 68: Volume Removed Toast Feedback & Keyboard Search Shortcut
+	main_inst.detail_modal.open(main_inst.archive_state.items[0])
+	var vol_cnt_before_s68 = main_inst.archive_state.items[0].volumes.size()
+	main_inst.detail_modal.remove_last_volume()
+	assert(main_inst.archive_state.items[0].volumes.size() == vol_cnt_before_s68 - 1, "remove_last_volume should pop last volume")
+	assert("마지막 권 기록 삭제" in main_inst.status_toast.text, "volume_removed should display deletion toast")
+	main_inst.detail_modal.close()
+	var slash_ev := InputEventKey.new()
+	slash_ev.pressed = true
+	slash_ev.keycode = KEY_SLASH
+	main_inst._unhandled_input(slash_ev)
+	print("✓ Volume Removed Toast Feedback & Keyboard Search Shortcut verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

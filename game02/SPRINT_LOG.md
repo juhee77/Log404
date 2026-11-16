@@ -5,6 +5,21 @@
 
 ---
 
+## 🚀 [Sprint 68] 마지막 권 삭제 전용 토스트 피드백(`volume_removed`) & 키보드 검색 단축키(`/` · `Ctrl/Cmd+F`)
+- **날짜/시각**: 2026-11-17 02:19 (자동 스프린트)
+- **참여 스쿼드**: 14인 애자일 스쿼드 전원 (다꾸러 3인, PO/기획 2인, UX/UI 2인, 개발 4인, QA 2인, CEO 1인)
+- **핵심 VOC 및 기획 확정**:
+  1. **다꾸러 VOC #1 ("모달에서 `- 권 삭제`를 눌렀을 때 마지막 권이 삭제되고 현재 몇 권 남았는지 하단 토스트로 명확히 알려주면 좋겠어요!")**: `detail_modal.gd`에 `volume_removed(item)` 시그널을 신설하고 `main_view.gd`의 `_on_volume_removed()`와 연동해 로컬 저장·통계 갱신 후 `"🗑️ 작품명 마지막 권 기록 삭제 (현재 N권)"` 토스트를 표시.
+  2. **다꾸러 VOC #2 ("메인 서재에서 `/` 또는 `Cmd+F` / `Ctrl+F` 키를 누르면 바로 통합 검색창으로 포커스가 점프하면 좋겠어요")**: `main_view.gd`에 `_unhandled_input()`을 추가해 모달이 닫혀 있을 때 `/` 또는 `Ctrl/Cmd+F` 입력 시 `search_input.grab_focus()` + `select_all()`을 실행.
+  3. **웹 목업 동기화**: `game02/index.html`의 전역 `keydown` 리스너에 `/` 키 검색창 포커스 단축키를 동기화.
+- **구현 및 검증 내역**:
+  - `detail_modal.gd`: `volume_removed(item)` 시그널 추가 및 `remove_last_volume()` 연동.
+  - `main_view.gd`: `_on_volume_removed()` 핸들러 및 `_unhandled_input()` `/` · `Ctrl/Cmd+F` 검색 단축키 추가.
+  - `game02/index.html`: 전역 `/` 키 `#search-box` 포커스 단축키 동기화.
+  - `tests/test_main_integration.gd`: Sprint 68 통합 테스트(`Volume Removed Toast Feedback & Keyboard Search Shortcut verified`) 추가 후 3대 헤드리스 테스트 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 캡처 완료.
+
+---
+
 ## 🚀 [Sprint 67] 상단 요약줄(`SubTitle`) 원클릭 인포그래픽 브리핑 & 헤더 버튼 툴팁 완성
 - **날짜/시각**: 2026-11-17 01:58 (자동 스프린트)
 - **참여 스쿼드**: 14인 애자일 스쿼드 전원 (다꾸러 3인, PO/기획 2인, UX/UI 2인, 개발 4인, QA 2인, CEO 1인)

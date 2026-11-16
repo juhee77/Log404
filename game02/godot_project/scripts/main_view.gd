@@ -72,6 +72,7 @@ func _ready() -> void:
 	
 	detail_modal.item_deleted.connect(_on_item_deleted)
 	detail_modal.volume_added.connect(_on_volume_added)
+	detail_modal.volume_removed.connect(_on_volume_removed)
 	detail_modal.diary_updated.connect(_on_diary_updated)
 	add_modal.item_submitted.connect(_on_item_submitted)
 
@@ -617,6 +618,26 @@ func _on_volume_added(item) -> void:
 	_update_stats()
 	_render_cards()
 	_show_toast("📖 다음 권이 추가되고 로컬 JSON에 저장되었습니다.")
+
+func _unhandled_input(event: InputEvent) -> void:
+	if (detail_modal != null and detail_modal.visible) or (add_modal != null and add_modal.visible):
+		return
+	if event is InputEventKey and event.pressed and not event.echo:
+		var is_find: bool = (event.keycode == KEY_F and (event.ctrl_pressed or event.meta_pressed)) or (event.keycode == KEY_SLASH and not event.ctrl_pressed and not event.meta_pressed)
+		if is_find and search_input != null:
+			search_input.grab_focus()
+			search_input.select_all()
+			get_viewport().set_input_as_handled()
+
+func _on_volume_removed(item) -> void:
+	if item != null:
+		item.updated_at = int(Time.get_unix_time_from_system())
+	archive_state.save_to_file()
+	_update_stats()
+	_refresh_today_quote()
+	_render_cards()
+	if item != null:
+		_show_toast("🗑️ " + item.title + " 마지막 권 기록 삭제 (현재 " + str(item.volumes.size()) + "권)")
 
 func _on_diary_updated(item) -> void:
 	if item != null:

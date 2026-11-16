@@ -883,6 +883,12 @@
                         renderShelf();
                     }
                 }
+            } else if (e.key === '/' && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
+                const jm = document.getElementById('journal-modal');
+                if (!jm || jm.classList.contains('hidden')) {
+                    e.preventDefault();
+                    document.getElementById('search-box')?.focus();
+                }
             }
         });
 

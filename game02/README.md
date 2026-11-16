@@ -5,7 +5,7 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 
 ---
 
-## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 67)
+## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 68)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
@@ -14,6 +14,10 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 ---
 
 ## 🚀 최신 스프린트 업데이트 요약 ([전체 회의록 보기](SPRINT_LOG.md))
+
+### [Sprint 68] 마지막 권 삭제 전용 토스트 피드백(`volume_removed`) & 키보드 검색 단축키(`/` · `Ctrl/Cmd+F`)
+- **권 삭제 전용 토스트 (`detail_modal.gd` · `main_view.gd`)**: 모달에서 마지막 권 삭제 시 `volume_removed` 시그널을 통해 남은 권수와 함께 명확한 삭제 토스트 피드백을 제공합니다.
+- **키보드 검색 단축키 (`main_view.gd` · `index.html`)**: 서재 메인 화면에서 `/` 또는 `Ctrl/Cmd+F`를 누르면 즉시 통합 검색창으로 포커스가 이동합니다.
 
 ### [Sprint 67] 상단 요약줄(`SubTitle`) 원클릭 인포그래픽 브리핑 & 헤더 버튼 툴팁 완성
 - **상단 요약줄 원클릭 인포그래픽 (`main_view.gd`)**: 메인 상단 날짜·완독률·자산 요약 줄(`SubTitle`)을 클릭하면 `show_library_infographic()` 전체 서재 요약 리포트가 하단에 표시됩니다.
