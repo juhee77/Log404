@@ -736,6 +736,29 @@ func _init() -> void:
 	main_inst.sort_mode = 0
 	print("✓ Estimated Value Right-Click Reduce & Keyboard S/R Shortcuts verified")
 
+	# Test Sprint 74: Volume Rating Right-Click Reverse Cycle & Keyboard N/T Shortcuts
+	main_inst.detail_modal.open(main_inst.archive_state.items[0])
+	var r0_before = int(main_inst.archive_state.items[0].volumes[0]["rating"])
+	main_inst.detail_modal.reverse_cycle_volume_rating(0)
+	var r0_after = int(main_inst.archive_state.items[0].volumes[0]["rating"])
+	assert(r0_after != r0_before, "reverse_cycle_volume_rating should change volume rating")
+	main_inst.detail_modal.cycle_volume_rating(0)
+	main_inst.detail_modal.close()
+	main_inst.search_input.release_focus()
+	var prev_theme_s74 = main_inst.theme_cursor
+	var kt_ev := InputEventKey.new()
+	kt_ev.pressed = true
+	kt_ev.keycode = KEY_T
+	main_inst._unhandled_input(kt_ev)
+	assert(main_inst.theme_cursor == (prev_theme_s74 + 1) % main_inst.ROOM_THEMES.size(), "Pressing T should cycle room theme")
+	var kn_ev := InputEventKey.new()
+	kn_ev.pressed = true
+	kn_ev.keycode = KEY_N
+	main_inst._unhandled_input(kn_ev)
+	assert(main_inst.add_modal.visible, "Pressing N should open AddModal")
+	main_inst.add_modal.close()
+	print("✓ Volume Rating Right-Click Reverse Cycle & Keyboard N/T Shortcuts verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

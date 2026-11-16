@@ -5,6 +5,21 @@
 
 ---
 
+## 🚀 [Sprint 74] 권별 별점 우클릭 역순환(`reverse_cycle_volume_rating`) & 단축키 `N`(새 일기)·`T`(속지 테마)
+- **날짜/시각**: 2026-11-17 04:19 (자동 스프린트)
+- **참여 스쿼드**: 14인 애자일 스쿼드 전원 (다꾸러 3인, PO/기획 2인, UX/UI 2인, 개발 4인, QA 2인, CEO 1인)
+- **핵심 VOC 및 기획 확정**:
+  1. **다꾸러 VOC #1 ("모달의 `📌 권별 밑줄 노트`에서 `★★★★★` 별점 버튼을 실수로 한 번 더 눌렀을 때 마우스 우클릭으로 5→4→3 역순환이 되면 편하겠어요!")**: `detail_modal.gd`에 `reverse_cycle_volume_rating(vol_idx)`를 추가하고 `star_btn` 우클릭(`MOUSE_BUTTON_RIGHT`) 및 툴팁 안내와 연동.
+  2. **다꾸러 VOC #2 ("메인 서재에서 키보드 `N` 키로 `+ 일기 쓰기`, `T` 키로 `속지 테마`를 바로 전환할 수 있으면 좋겠어요")**: `main_view.gd`의 `_unhandled_input()`에 `KEY_N`·`KEY_T` 단축키를 추가하고 `AddBtn`·`NavRow` 테마 버튼 툴팁에 `[N]`·`[T]` 단축키 안내를 표기.
+  3. **웹 목업 동기화**: `game02/index.html`의 `+ 새 일기 쓰기` 버튼에 `[N]` 단축키 안내 `title` 툴팁을 동기화.
+- **구현 및 검증 내역**:
+  - `detail_modal.gd`: `reverse_cycle_volume_rating()` 및 `star_btn` 우클릭 핸들러·툴팁 추가.
+  - `main_view.gd`: `_unhandled_input()` `KEY_N`/`KEY_T` 단축키 및 버튼 툴팁 동기화.
+  - `game02/index.html`: `+ 새 일기 쓰기` `[N]` 툴팁 동기화.
+  - `tests/test_main_integration.gd`: Sprint 74 통합 테스트(`Volume Rating Right-Click Reverse Cycle & Keyboard N/T Shortcuts verified`) 추가 후 3대 헤드리스 테스트 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 캡처 완료.
+
+---
+
 ## 🚀 [Sprint 73] 소장 가치 우클릭 -5,000원 되돌리기(`reduce_estimated_value`) & 단축키 `S`(정렬)·`R`(랜덤 추천)
 - **날짜/시각**: 2026-11-17 03:59 (자동 스프린트)
 - **참여 스쿼드**: 14인 애자일 스쿼드 전원 (다꾸러 3인, PO/기획 2인, UX/UI 2인, 개발 4인, QA 2인, CEO 1인)

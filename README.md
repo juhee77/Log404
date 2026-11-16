@@ -18,13 +18,14 @@ Godot 4+ 기반의 감성 게임 및 인터랙티브 아카이브 애플리케�
 > **Godot 4.6.2 모바일 기반 E-Book 리더기 서재(Apple Books · 리디북스) & 만년필 다꾸 독서노트(굿노트 · 몰스킨) 감성 아카이브 앱**  
 > 14인 가상 애자일 스쿼드가 20분 주기 자동 스프린트로 지속 개선 중입니다.
 
-### 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 73)
+### 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 74)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
 | ![Pocket Archive Main Screen](game02/godot_project/screenshots/godot_app_screen.png) | ![Pocket Archive Detail Modal](game02/godot_project/screenshots/godot_modal_screen.png) |
 
 ### ✨ 주요 핵심 기능
+- **최신 Sprint 74 하이라이트**: 권별 별점 우클릭 역순환(`reverse_cycle_volume_rating`) 및 키보드 `N`(새 일기)·`T`(속지 테마) 단축키(`main_view.gd` · `index.html`) 완성
 - **최신 Sprint 73 하이라이트**: 소장 가치 우클릭 `-5,000원` 되돌리기(`reduce_estimated_value`) 및 키보드 `S`(정렬)·`R`(랜덤 추천) 단축키(`main_view.gd` · `index.html`) 완성
 - **최신 Sprint 72 하이라이트**: 회독·복수 소장 우클릭 `-1` 되돌리기(`detail_modal.gd` · `index.html`) 및 폴라로이드 촬영 시 전체 서재 자동 전환(`main_view.gd`) 완성
 - **최신 Sprint 71 하이라이트**: 권별 밑줄 편집 재클릭 토글 해제(`detail_modal.gd` · `index.html`) 및 새 일기 등록/웹 스크랩 시 전체 서재 자동 전환(`main_view.gd`) 완성

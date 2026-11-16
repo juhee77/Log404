@@ -107,7 +107,7 @@ func _ready() -> void:
 			ctrl.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	var top_add_btn: Control = get_node_or_null("VBox/TopBar/TopMargin/StatsVBox/TitleRow/AddBtn")
 	if top_add_btn != null:
-		top_add_btn.tooltip_text = "새 독서 일기·가챠 스크랩 직접 작성"
+		top_add_btn.tooltip_text = "[N] 새 독서 일기·가챠 스크랩 직접 작성"
 	var top_amb_btn: Control = get_node_or_null("VBox/TopBar/TopMargin/StatsVBox/TitleRow/AmbientBtn")
 	if top_amb_btn != null:
 		top_amb_btn.tooltip_text = "독서 몰입 백색소음 사운드 전환 (무음·빗소리·북카페 등)"
@@ -131,7 +131,7 @@ func _ready() -> void:
 			"웹에서 작품 표지와 기본 정보 자동 스크랩 추가",
 			"실물 굿즈·단행본 폴라로이드 촬영 기록 추가",
 			"새 독서 일기·가챠 스크랩 직접 작성",
-			"다꾸 다이어리 속지 테마 순환 (크림 · 모눈 · 핑크 · 다크)"
+			"[T] 다꾸 다이어리 속지 테마 순환 (크림 · 모눈 · 핑크 · 다크)"
 		]
 		var children = nav_row.get_children()
 		for i in range(min(children.size(), nav_tips.size())):
@@ -661,6 +661,12 @@ func _unhandled_input(event: InputEvent) -> void:
 					get_viewport().set_input_as_handled()
 				KEY_R:
 					pick_random_item()
+					get_viewport().set_input_as_handled()
+				KEY_N:
+					_on_add_btn_pressed()
+					get_viewport().set_input_as_handled()
+				KEY_T:
+					_on_theme_btn_pressed()
 					get_viewport().set_input_as_handled()
 
 func _on_card_copied(item) -> void:

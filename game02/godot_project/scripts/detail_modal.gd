@@ -889,6 +889,16 @@ func cycle_volume_rating(vol_idx: int) -> void:
 	_refresh_author_label()
 	diary_updated.emit(current_item)
 
+func reverse_cycle_volume_rating(vol_idx: int) -> void:
+	if current_item == null or vol_idx < 0 or vol_idx >= current_item.volumes.size():
+		return
+	var cur_r = int(current_item.volumes[vol_idx].get("rating", 5))
+	var prev_r = 5 if cur_r <= 3 else (cur_r - 1)
+	current_item.volumes[vol_idx]["rating"] = prev_r
+	_render_volumes()
+	_refresh_author_label()
+	diary_updated.emit(current_item)
+
 func stamp_volume_date(vol_idx: int) -> void:
 	if current_item == null or vol_idx < 0 or vol_idx >= current_item.volumes.size():
 		return
@@ -1048,8 +1058,12 @@ func _render_volumes() -> void:
 		star_btn.add_theme_font_size_override("font_size", 11)
 		star_btn.add_theme_color_override("font_color", Color(0.78, 0.35, 0.2))
 		star_btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
-		star_btn.tooltip_text = "클릭하여 이 권의 별점 순환 (★★★~★★★★★)"
+		star_btn.tooltip_text = "클릭: 별점 순환 · 우클릭: 역순환 (★★★~★★★★★)"
 		star_btn.pressed.connect(func(): cycle_volume_rating(capture_idx))
+		star_btn.gui_input.connect(func(ev):
+			if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_RIGHT:
+				reverse_cycle_volume_rating(capture_idx)
+		)
 		
 		hbox.add_child(vol_lbl)
 		hbox.add_child(status_btn)
