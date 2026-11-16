@@ -5,6 +5,21 @@
 
 ---
 
+## 🚀 [Sprint 75] 마일스톤 75: 모달 표지 우클릭 색상 순환 & 단축키 `M`(백색소음)·`Q`(오늘의 문장)
+- **날짜/시각**: 2026-11-17 04:38 (자동 스프린트)
+- **참여 스쿼드**: 14인 애자일 스쿼드 전원 (다꾸러 3인, PO/기획 2인, UX/UI 2인, 개발 4인, QA 2인, CEO 1인)
+- **핵심 VOC 및 기획 확정**:
+  1. **다꾸러 VOC #1 ("모달 왼쪽 책 표지(`CoverRect`)를 좌클릭하면 아이콘이 바뀌고, 우클릭하면 표지 배경 컬러가 바뀌면 모달 안에서도 표지 색을 바로 꾸밀 수 있어 좋을 것 같아요!")**: `detail_modal.gd`의 `_ready()`에서 `cover_rect.gui_input` 우클릭(`MOUSE_BUTTON_RIGHT`) 시 `cycle_cover_color()`가 호출되도록 연결하고 툴팁을 `"좌클릭: 표지 아이콘 변경 · 우클릭: 표지 색상 변경"`으로 갱신.
+  2. **다꾸러 VOC #2 ("메인 서재에서 키보드 `M` 키로 백색소음(`AmbientBtn`)을 전환하고 `Q` 키로 `↻ 문장`을 넘기면 서재의 모든 핵심 기능이 키보드 단축키로 완성될 것 같아요")**: `main_view.gd`의 `_unhandled_input()`에 `KEY_M`·`KEY_Q` 단축키를 추가하고 `AmbientBtn`·`NextQuoteBtn` 툴팁에 `[M]`·`[Q]` 단축키 안내를 표기.
+  3. **웹 목업 동기화**: `game02/index.html`의 `#ambient-sound-btn`에 `[M]` 툴팁 및 전역 `M` 키 백색소음 전환 단축키를 동기화.
+- **구현 및 검증 내역**:
+  - `detail_modal.gd`: `cover_rect` 우클릭 `cycle_cover_color()` 연동 및 툴팁 갱신.
+  - `main_view.gd`: `_unhandled_input()` `KEY_M`/`KEY_Q` 단축키 및 버튼 툴팁 동기화.
+  - `game02/index.html`: 전역 `M` 키 백색소음 전환 및 `[M]` 툴팁 동기화.
+  - `tests/test_main_integration.gd`: Sprint 75 통합 테스트(`Cover Right-Click Color Cycle & Keyboard M/Q Shortcuts verified`) 추가 후 3대 헤드리스 테스트 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 캡처 완료.
+
+---
+
 ## 🚀 [Sprint 74] 권별 별점 우클릭 역순환(`reverse_cycle_volume_rating`) & 단축키 `N`(새 일기)·`T`(속지 테마)
 - **날짜/시각**: 2026-11-17 04:19 (자동 스프린트)
 - **참여 스쿼드**: 14인 애자일 스쿼드 전원 (다꾸러 3인, PO/기획 2인, UX/UI 2인, 개발 4인, QA 2인, CEO 1인)

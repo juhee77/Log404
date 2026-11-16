@@ -187,7 +187,7 @@
                         class="px-2.5 py-1 rounded-lg bg-[#c85a32] hover:bg-[#b04b25] text-white text-[11px] font-bold shrink-0 cursor-pointer">
                         🎲 추천
                     </button>
-                    <button id="ambient-sound-btn" onclick="cycleAmbientSound()"
+                    <button id="ambient-sound-btn" onclick="cycleAmbientSound()" title="[M] 독서 몰입 백색소음 전환"
                         class="px-2.5 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] border border-[#d6c7b2] text-[#2c221e] text-[11px] font-bold shrink-0 cursor-pointer">
                         🔕 무음
                     </button>
@@ -915,6 +915,11 @@
                 const jm = document.getElementById('journal-modal');
                 if (!jm || jm.classList.contains('hidden')) {
                     pickRandomItem();
+                }
+            } else if ((e.key === 'm' || e.key === 'M') && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
+                const jm = document.getElementById('journal-modal');
+                if (!jm || jm.classList.contains('hidden')) {
+                    cycleAmbientSound();
                 }
             }
         });

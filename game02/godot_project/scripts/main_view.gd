@@ -110,7 +110,7 @@ func _ready() -> void:
 		top_add_btn.tooltip_text = "[N] 새 독서 일기·가챠 스크랩 직접 작성"
 	var top_amb_btn: Control = get_node_or_null("VBox/TopBar/TopMargin/StatsVBox/TitleRow/AmbientBtn")
 	if top_amb_btn != null:
-		top_amb_btn.tooltip_text = "독서 몰입 백색소음 사운드 전환 (무음·빗소리·북카페 등)"
+		top_amb_btn.tooltip_text = "[M] 독서 몰입 백색소음 사운드 전환 (무음·빗소리·북카페 등)"
 	if sub_title != null:
 		sub_title.mouse_filter = Control.MOUSE_FILTER_STOP
 		sub_title.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
@@ -120,7 +120,7 @@ func _ready() -> void:
 				show_library_infographic()
 		)
 	if next_quote_btn != null:
-		next_quote_btn.tooltip_text = "서재 속 다음 밑줄 문장으로 넘기기"
+		next_quote_btn.tooltip_text = "[Q] 서재 속 다음 밑줄 문장으로 넘기기"
 	if random_pick_btn != null:
 		random_pick_btn.tooltip_text = "[R] 오늘의 랜덤 작품 추천 열기"
 	if sort_btn != null:
@@ -667,6 +667,12 @@ func _unhandled_input(event: InputEvent) -> void:
 					get_viewport().set_input_as_handled()
 				KEY_T:
 					_on_theme_btn_pressed()
+					get_viewport().set_input_as_handled()
+				KEY_M:
+					cycle_ambient_sound()
+					get_viewport().set_input_as_handled()
+				KEY_Q:
+					_on_next_quote_btn_pressed()
 					get_viewport().set_input_as_handled()
 
 func _on_card_copied(item) -> void:

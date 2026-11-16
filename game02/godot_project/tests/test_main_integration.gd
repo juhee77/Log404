@@ -759,6 +759,30 @@ func _init() -> void:
 	main_inst.add_modal.close()
 	print("✓ Volume Rating Right-Click Reverse Cycle & Keyboard N/T Shortcuts verified")
 
+	# Test Sprint 75: Cover Right-Click Color Cycle & Keyboard M/Q Shortcuts
+	main_inst.detail_modal.open(main_inst.archive_state.items[0])
+	var prev_col_s75 = main_inst.archive_state.items[0].cover_color
+	var rclick_cov := InputEventMouseButton.new()
+	rclick_cov.pressed = true
+	rclick_cov.button_index = MOUSE_BUTTON_RIGHT
+	main_inst.detail_modal.cover_rect.gui_input.emit(rclick_cov)
+	assert(main_inst.archive_state.items[0].cover_color != prev_col_s75, "Right-clicking CoverRect should cycle cover_color")
+	main_inst.detail_modal.close()
+	main_inst.search_input.release_focus()
+	var prev_amb_s75 = main_inst.ambient_sound_index
+	var km_ev := InputEventKey.new()
+	km_ev.pressed = true
+	km_ev.keycode = KEY_M
+	main_inst._unhandled_input(km_ev)
+	assert(main_inst.ambient_sound_index != prev_amb_s75, "Pressing M should cycle ambient sound")
+	var prev_q_s75 = main_inst.quote_cursor
+	var kq_ev := InputEventKey.new()
+	kq_ev.pressed = true
+	kq_ev.keycode = KEY_Q
+	main_inst._unhandled_input(kq_ev)
+	assert(main_inst.quote_cursor != prev_q_s75, "Pressing Q should advance today quote")
+	print("✓ Cover Right-Click Color Cycle & Keyboard M/Q Shortcuts verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

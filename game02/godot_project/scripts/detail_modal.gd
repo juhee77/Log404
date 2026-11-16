@@ -60,10 +60,13 @@ func _ready() -> void:
 				close()
 		)
 	cover_rect.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
-	cover_rect.tooltip_text = "클릭하여 표지 아이콘 변경"
+	cover_rect.tooltip_text = "좌클릭: 표지 아이콘 변경 · 우클릭: 표지 색상 변경"
 	cover_rect.gui_input.connect(func(ev):
-		if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_LEFT:
-			cycle_cover_icon()
+		if ev is InputEventMouseButton and ev.pressed:
+			if ev.button_index == MOUSE_BUTTON_LEFT:
+				cycle_cover_icon()
+			elif ev.button_index == MOUSE_BUTTON_RIGHT:
+				cycle_cover_color()
 	)
 	var washi_node: ColorRect = get_node_or_null("Panel/VBox/BodyMargin/Body/TopInfo/CoverRect/ModalWashiTape")
 	if washi_node != null:
