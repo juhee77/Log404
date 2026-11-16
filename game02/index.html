@@ -326,13 +326,13 @@
                     <div class="mt-3 p-2.5 rounded-xl bg-[#faf5ed] border border-[#e6dccd] space-y-2">
                         <div class="flex items-center gap-1.5 flex-wrap">
                             <span class="text-[11px] font-bold text-[#786b63] mr-1">💮 인장 찍기:</span>
-                            <button onclick="applyDiaryStamp('전권완결')"
+                            <button data-stamp-btn="전권완결" onclick="applyDiaryStamp('전권완결')"
                                 class="px-2 py-0.5 rounded border border-[#c85a32]/50 bg-[#fff8f5] text-[#c85a32] text-[10px] font-bold hover:bg-[#c85a32] hover:text-white cursor-pointer">💮전권완결</button>
-                            <button onclick="applyDiaryStamp('초판특전')"
+                            <button data-stamp-btn="초판특전" onclick="applyDiaryStamp('초판특전')"
                                 class="px-2 py-0.5 rounded border border-[#c85a32]/50 bg-[#fff8f5] text-[#c85a32] text-[10px] font-bold hover:bg-[#c85a32] hover:text-white cursor-pointer">🔖초판특전</button>
-                            <button onclick="applyDiaryStamp('인생최애')"
+                            <button data-stamp-btn="인생최애" onclick="applyDiaryStamp('인생최애')"
                                 class="px-2 py-0.5 rounded border border-[#c85a32]/50 bg-[#fff8f5] text-[#c85a32] text-[10px] font-bold hover:bg-[#c85a32] hover:text-white cursor-pointer">♥인생최애</button>
-                            <button onclick="applyDiaryStamp('위시리스트')"
+                            <button data-stamp-btn="위시리스트" onclick="applyDiaryStamp('위시리스트')"
                                 class="px-2 py-0.5 rounded border border-[#c85a32]/50 bg-[#fff8f5] text-[#c85a32] text-[10px] font-bold hover:bg-[#c85a32] hover:text-white cursor-pointer">✨위시리스트</button>
                         </div>
                         <div class="flex items-center gap-1.5">
@@ -643,6 +643,7 @@
             const rereadBtn = document.getElementById('reread-cycle-btn');
             if (rereadBtn) rereadBtn.textContent = `🔁 ${item.reread_count || 1}회독`;
             document.getElementById('diary-stamp').textContent = `💮 ${item.stamp} ${sticker} [${item.reading_mood || '🥰 힐링'} · ${rTier} · ${loc}]`;
+            highlightActiveStampBtn(item.stamp);
             document.getElementById('journal-modal').classList.remove('hidden');
         }
 
@@ -818,11 +819,21 @@
             renderShelf();
         }
 
+        function highlightActiveStampBtn(stampName) {
+            document.querySelectorAll('[data-stamp-btn]').forEach(btn => {
+                const isActive = btn.getAttribute('data-stamp-btn') === stampName;
+                btn.classList.toggle('ring-2', isActive);
+                btn.classList.toggle('ring-[#c85a32]', isActive);
+                btn.classList.toggle('bg-[#ffe8df]', isActive);
+            });
+        }
+
         function applyDiaryStamp(stampName) {
             const item = ITEMS.find(x => x.id === activeId);
             if (!item) return;
             item.stamp = stampName;
             document.getElementById('diary-stamp').innerText = '💮 ' + item.stamp;
+            highlightActiveStampBtn(stampName);
             renderShelf();
         }
 

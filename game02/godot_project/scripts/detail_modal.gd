@@ -223,6 +223,23 @@ func _apply_ink_style() -> void:
 	if quote_input != null:
 		quote_input.add_theme_color_override("font_color", ink)
 	_highlight_active_ink_btn(current_item.memo_ink_color)
+	var hl_btn: Button = get_node_or_null("Panel/VBox/BodyMargin/Body/QuoteEditRow/HighlightBtn")
+	if hl_btn != null:
+		var hl_on := bool(current_item.highlight_enabled)
+		hl_btn.text = "🖍️ 형광펜 ON" if hl_on else "🖍️ 형광펜"
+		var h_sb = StyleBoxFlat.new()
+		h_sb.bg_color = Color(1.0, 0.94, 0.70, 1.0) if hl_on else Color(0.95, 0.91, 0.84, 1.0)
+		h_sb.border_width_left = 2 if hl_on else 1
+		h_sb.border_width_top = 2 if hl_on else 1
+		h_sb.border_width_right = 2 if hl_on else 1
+		h_sb.border_width_bottom = 2 if hl_on else 1
+		h_sb.border_color = Color(0.82, 0.60, 0.12, 1.0) if hl_on else Color(0.80, 0.72, 0.62, 1.0)
+		h_sb.corner_radius_top_left = 6
+		h_sb.corner_radius_top_right = 6
+		h_sb.corner_radius_bottom_left = 6
+		h_sb.corner_radius_bottom_right = 6
+		hl_btn.add_theme_stylebox_override("normal", h_sb)
+		hl_btn.add_theme_color_override("font_color", Color(0.45, 0.28, 0.05, 1.0) if hl_on else Color(0.55, 0.38, 0.12))
 
 func _highlight_active_ink_btn(active_hex: String) -> void:
 	var ink_row: HFlowContainer = get_node_or_null("Panel/VBox/BodyMargin/Body/InkRow")
@@ -329,6 +346,7 @@ func open(item) -> void:
 	_apply_paper_style()
 	_apply_ink_style()
 	_apply_washi_style()
+	_highlight_active_stamp_btn(item.status_tag)
 	
 	cover_rect.color = Color.from_string(item.cover_color, Color(0.65, 0.25, 0.2))
 	_apply_cover_finish_style()
@@ -354,7 +372,35 @@ func apply_stamp(stamp_name: String) -> void:
 		return
 	current_item.status_tag = stamp_name
 	_refresh_tag_label()
+	_highlight_active_stamp_btn(stamp_name)
 	diary_updated.emit(current_item)
+
+func _highlight_active_stamp_btn(active_stamp: String) -> void:
+	if stamp_row == null:
+		return
+	var stamp_map := {
+		"StampComplete": "전권완결",
+		"StampFirst": "초판특전",
+		"StampFav": "인생최애",
+		"StampWish": "위시"
+	}
+	for node_name in stamp_map.keys():
+		var btn: Button = stamp_row.get_node_or_null(node_name)
+		if btn == null:
+			continue
+		var is_active: bool = (active_stamp == stamp_map[node_name])
+		var sb = StyleBoxFlat.new()
+		sb.bg_color = Color(1.0, 0.92, 0.88, 1.0) if is_active else Color(0.99, 0.96, 0.94, 1.0)
+		sb.border_width_left = 2 if is_active else 1
+		sb.border_width_top = 2 if is_active else 1
+		sb.border_width_right = 2 if is_active else 1
+		sb.border_width_bottom = 2 if is_active else 1
+		sb.border_color = Color(0.78, 0.35, 0.20, 1.0) if is_active else Color(0.78, 0.35, 0.20, 0.65)
+		sb.corner_radius_top_left = 6
+		sb.corner_radius_top_right = 6
+		sb.corner_radius_bottom_left = 6
+		sb.corner_radius_bottom_right = 6
+		btn.add_theme_stylebox_override("normal", sb)
 
 func cycle_rarity_tier() -> String:
 	if current_item == null:

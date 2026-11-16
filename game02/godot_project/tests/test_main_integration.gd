@@ -485,6 +485,21 @@ func _init() -> void:
 	main_inst._render_cards()
 	print("✓ Active Ink Swatch Highlight, Quote Banner Tooltip & Empty Search State verified")
 
+	# Test Sprint 56: Active Stamp Highlight & Highlighter Button ON/OFF Visual State
+	main_inst.detail_modal.open(main_inst.archive_state.items[0])
+	main_inst.detail_modal.apply_stamp("초판특전")
+	var stamp_first_btn = main_inst.detail_modal.stamp_row.get_node_or_null("StampFirst")
+	var stamp_comp_btn = main_inst.detail_modal.stamp_row.get_node_or_null("StampComplete")
+	assert(stamp_first_btn != null and stamp_first_btn.get_theme_stylebox("normal").border_width_left == 2, "Active stamp button should have 2px border highlight")
+	assert(stamp_comp_btn != null and stamp_comp_btn.get_theme_stylebox("normal").border_width_left == 1, "Inactive stamp button should keep 1px border")
+	var hl_btn_s56 = main_inst.detail_modal.get_node_or_null("Panel/VBox/BodyMargin/Body/QuoteEditRow/HighlightBtn")
+	assert(hl_btn_s56 != null, "HighlightBtn should exist")
+	var prev_hl = main_inst.archive_state.items[0].highlight_enabled
+	main_inst.detail_modal.toggle_quote_highlight()
+	assert(("ON" in hl_btn_s56.text) == (not prev_hl), "HighlightBtn text should reflect highlight ON/OFF state")
+	main_inst.detail_modal.toggle_quote_highlight()
+	print("✓ Active Stamp Highlight & Highlighter Button ON/OFF Visual State verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

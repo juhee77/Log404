@@ -5,6 +5,20 @@
 
 ---
 
+## 🚀 [Sprint 56] 활성 인장 스탬프 하이라이트 & 형광펜 버튼 ON/OFF 상태 시각화
+- **날짜/시각**: 2026-11-16 17:25 (자동 스프린트)
+- **참여 스쿼드**: 14인 애자일 스쿼드 전원 (다꾸러 3인, PO/기획 2인, UX/UI 2인, 개발 4인, QA 2인, CEO 1인)
+- **핵심 VOC 및 기획 확정**:
+  1. **다꾸러 VOC #1 ("모달 상단 `💮전권완결`, `🔖초판특전`, `♥인생최애`, `✨위시` 인장 버튼 중 현재 찍혀 있는 도장도 잉크 버튼처럼 2px 테두리로 강조되면 좋겠어요!")**: `detail_modal.gd`에 `_highlight_active_stamp_btn()`을 추가하고 `open()`·`apply_stamp()`에 연동해 현재 `status_tag`와 일치하는 인장 버튼에 2px 스탬프 레드 테두리와 블러시 하이라이트 배경을 적용.
+  2. **다꾸러 VOC #2 ("`🖍️ 형광펜` 버튼을 눌렀을 때 형광펜이 켜진 상태인지 버튼 자체에서도 바로 보이면 좋겠어요")**: `_apply_ink_style()`에서 `HighlightBtn`을 `highlight_enabled` 상태에 따라 `"🖍️ 형광펜 ON"`(노란 하이라이트 + 2px 앰버 테두리) ↔ `"🖍️ 형광펜"`(크림 기본 스타일)으로 동적 전환.
+  3. **웹 목업 동기화**: `game02/index.html`에 `highlightActiveStampBtn()`을 추가해 `openJournalModal()` 및 `applyDiaryStamp()`에서 활성 인장 버튼 링 강조를 동기화.
+- **구현 및 검증 내역**:
+  - `detail_modal.gd`: `_highlight_active_stamp_btn()` 추가 및 `_apply_ink_style()` 내 `HighlightBtn` ON/OFF 스타일링 추가.
+  - `game02/index.html`: `data-stamp-btn` 속성 및 `highlightActiveStampBtn()` 동기화.
+  - `tests/test_main_integration.gd`: Sprint 56 통합 테스트(`Active Stamp Highlight & Highlighter Button ON/OFF Visual State verified`) 추가 후 3대 헤드리스 테스트 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 캡처 완료.
+
+---
+
 ## 🚀 [Sprint 55] 활성 만년필 잉크 스와치 하이라이트, 오늘의 밑줄 동적 툴팁 & 검색 빈 상태 가이드
 - **날짜/시각**: 2026-11-16 07:38 (자동 스프린트)
 - **참여 스쿼드**: 14인 애자일 스쿼드 전원 (다꾸러 3인, PO/기획 2인, UX/UI 2인, 개발 4인, QA 2인, CEO 1인)
