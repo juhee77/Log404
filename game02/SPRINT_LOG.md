@@ -5,6 +5,20 @@
 
 ---
 
+## 🚀 [Sprint 66] 모달 표지·와시테이프 인터랙티브 툴팁 & 상단 액션 버튼 안전 가이드
+- **날짜/시각**: 2026-11-17 01:38 (자동 스프린트)
+- **참여 스쿼드**: 14인 애자일 스쿼드 전원 (다꾸러 3인, PO/기획 2인, UX/UI 2인, 개발 4인, QA 2인, CEO 1인)
+- **핵심 VOC 및 기획 확정**:
+  1. **다꾸러 VOC #1 ("모달 왼쪽 책 표지(`CoverRect`)와 상단 와시 테이프(`ModalWashiTape`)를 클릭하면 이모지와 테이프 색상이 바뀐다는 걸 호버 툴팁과 손가락 커서로 바로 알 수 있으면 좋겠어요!")**: `detail_modal.gd`의 `_ready()`에서 `cover_rect`와 `ModalWashiTape`에 `CURSOR_POINTING_HAND` 및 기능 안내 `tooltip_text`를 적용.
+  2. **다꾸러 VOC #2 ("모달 상단 버튼(`+ 다음 권 일기 추가`, `- 권 삭제`, `공유`, `일기 삭제`, `밑줄 저장`, `형광펜`, `닫기`)에도 각각 상세 툴팁이 있으면 실수 없이 안전하게 조작할 수 있을 것 같아요")**: `_style_diary_controls()`에서 상단 및 편집 버튼 7종에 상세 `tooltip_text`를 추가.
+  3. **웹 목업 동기화**: `game02/index.html`의 모달 상단 마스킹 테이프와 표지 박스에도 클릭 안내 `title` 툴팁을 동기화.
+- **구현 및 검증 내역**:
+  - `detail_modal.gd`: `cover_rect`/`ModalWashiTape` 커서·툴팁 및 상단/편집 7종 버튼 툴팁 추가.
+  - `game02/index.html`: 모달 마스킹 테이프 및 표지 박스 `title` 툴팁 동기화.
+  - `tests/test_main_integration.gd`: Sprint 66 통합 테스트(`Cover/Washi Interactive Tooltips & Modal Top Action Tooltips verified`) 추가 후 3대 헤드리스 테스트 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 캡처 완료.
+
+---
+
 ## 🚀 [Sprint 65] 모달 스탬프·잉크 21종 풀 툴팁 가이드 & 바깥 배경(`Dimmer`) 클릭 닫기
 - **날짜/시각**: 2026-11-17 01:19 (자동 스프린트)
 - **참여 스쿼드**: 14인 애자일 스쿼드 전원 (다꾸러 3인, PO/기획 2인, UX/UI 2인, 개발 4인, QA 2인, CEO 1인)

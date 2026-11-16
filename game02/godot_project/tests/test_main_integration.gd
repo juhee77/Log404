@@ -628,6 +628,14 @@ func _init() -> void:
 	assert(not main_inst.add_modal.visible, "Clicking AddModal Dimmer should close AddModal")
 	print("✓ Modal Stamp/Ink Tooltips & Dimmer Click-Outside Close verified")
 
+	# Test Sprint 66: Cover/Washi Interactive Tooltips & Modal Top Action Tooltips
+	assert(main_inst.detail_modal.cover_rect.mouse_default_cursor_shape == Control.CURSOR_POINTING_HAND and main_inst.detail_modal.cover_rect.tooltip_text != "", "Modal CoverRect should have pointing cursor and tooltip")
+	var washi_s66 = main_inst.detail_modal.get_node_or_null("Panel/VBox/BodyMargin/Body/TopInfo/CoverRect/ModalWashiTape")
+	assert(washi_s66 != null and washi_s66.tooltip_text != "", "ModalWashiTape should have tooltip_text")
+	var del_btn_s66 = main_inst.detail_modal.get_node_or_null("Panel/VBox/BodyMargin/Body/TopInfo/MetaVBox/BtnRow/DeleteBtn")
+	assert(del_btn_s66 != null and del_btn_s66.tooltip_text != "", "Modal top action buttons should have tooltip_text")
+	print("✓ Cover/Washi Interactive Tooltips & Modal Top Action Tooltips verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

@@ -57,6 +57,8 @@ func _ready() -> void:
 			if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_LEFT:
 				close()
 		)
+	cover_rect.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	cover_rect.tooltip_text = "클릭하여 표지 아이콘 변경"
 	cover_rect.gui_input.connect(func(ev):
 		if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_LEFT:
 			cycle_cover_icon()
@@ -65,6 +67,7 @@ func _ready() -> void:
 	if washi_node != null:
 		washi_node.mouse_filter = Control.MOUSE_FILTER_STOP
 		washi_node.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+		washi_node.tooltip_text = "클릭하여 마스킹 테이프 색상 변경"
 		washi_node.gui_input.connect(func(ev):
 			if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_LEFT:
 				cycle_washi_tape()
@@ -154,6 +157,20 @@ func _style_diary_controls() -> void:
 	for ctrl in [save_quote_btn, add_vol_btn, rem_btn, share_btn, del_btn, close_btn, hl_btn]:
 		if ctrl != null:
 			ctrl.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	if add_vol_btn != null:
+		add_vol_btn.tooltip_text = "새 권·파츠 일기 1개 추가"
+	if rem_btn != null:
+		rem_btn.tooltip_text = "마지막 권·파츠 기록 삭제"
+	if share_btn != null:
+		share_btn.tooltip_text = "감상 카드 텍스트를 클립보드에 복사"
+	if del_btn != null:
+		del_btn.tooltip_text = "이 작품의 일기장을 서재에서 삭제"
+	if save_quote_btn != null:
+		save_quote_btn.tooltip_text = "작성한 밑줄·감상평 저장 (Enter)"
+	if hl_btn != null:
+		hl_btn.tooltip_text = "밑줄 문장 형광펜 하이라이트 켜기/끄기"
+	if close_btn != null:
+		close_btn.tooltip_text = "일기장 닫기 (ESC)"
 	var row_tips := {
 		"Panel/VBox/BodyMargin/Body/StampRow/ObiCycleBtn": "띠지 문구 프리셋 순환",
 		"Panel/VBox/BodyMargin/Body/StampRow/TapeCycleBtn": "상단 마스킹 테이프 컬러 순환",

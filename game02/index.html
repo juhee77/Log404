@@ -246,9 +246,9 @@
             <!-- Left Page: E-Book Cover & Stamp Card -->
             <div
                 class="w-full md:w-5/12 bg-[#f5efe6] p-6 border-b md:border-b-0 md:border-r-2 border-dashed border-[#d8cbb8] flex flex-col justify-between relative">
-                <div class="masking-tape absolute top-2 left-1/2 -translate-x-1/2"></div>
+                <div onclick="cycleJournalWashiTape()" title="클릭하여 마스킹 테이프 색상 변경" class="masking-tape absolute top-2 left-1/2 -translate-x-1/2 cursor-pointer"></div>
                 <div class="flex flex-col items-center text-center mt-2">
-                    <div id="diary-cover-box"
+                    <div id="diary-cover-box" title="작품 표지 미리보기"
                         class="w-36 ebook-cover flex flex-col justify-between p-3 text-white shadow-lg">
                         <div class="text-[9px] font-bold opacity-80 text-left" id="diary-cover-cat">MANGA ARCHIVE</div>
                         <div class="text-4xl my-auto" id="diary-cover-icon">🏀</div>
