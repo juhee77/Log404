@@ -875,6 +875,16 @@ func _init() -> void:
 	assert(main_inst.search_input.text == "" and main_inst.archive_state.current_filter == -1, "Pressing 0 should reset search and all filters")
 	print("✓ Bookmarked Volume Row Gold Accent & Keyboard 0 Reset All Filters verified")
 
+	# Sprint 81: Modal Page Index Toast & Filtered Value Summary Toast
+	main_inst.detail_modal.open(main_inst.archive_state.items[0])
+	main_inst._on_modal_navigate_requested(1)
+	assert("(2/6)" in main_inst.status_toast.text, "Modal page flip toast should include (2/6) index indicator")
+	main_inst.detail_modal.close()
+	main_inst._on_tab_fav_pressed()
+	assert("₩" in main_inst.status_toast.text and "종" in main_inst.status_toast.text, "Favorites tab toast should show filtered count and KRW total")
+	main_inst._on_tab_all_pressed()
+	print("✓ Modal Page Index Toast & Filtered Value Summary Toast verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

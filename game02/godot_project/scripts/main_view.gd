@@ -537,6 +537,15 @@ func _on_tab_gacha_pressed() -> void:
 	_highlight_tabs(tab_gacha)
 	_render_cards()
 
+func _get_filtered_cards_summary() -> String:
+	var count: int = 0
+	var total_val: int = 0
+	for c in card_grid.get_children():
+		if not c.is_queued_for_deletion() and c.get("current_item") != null:
+			count += 1
+			total_val += c.current_item.get_item_value()
+	return "%d종 · %s" % [count, ArchiveStateClass.format_krw(total_val)]
+
 func _on_tab_complete_pressed() -> void:
 	filter_firsts_only = false
 	filter_completed_only = true
@@ -544,7 +553,7 @@ func _on_tab_complete_pressed() -> void:
 	archive_state.current_filter = 0
 	_highlight_tabs(tab_complete)
 	_render_cards()
-	_show_toast("💮 완독한 작품만 모아봅니다.")
+	_show_toast("💮 완독 작품 (%s)만 모아봅니다." % _get_filtered_cards_summary())
 
 func _on_tab_fav_pressed() -> void:
 	filter_firsts_only = false
@@ -553,7 +562,7 @@ func _on_tab_fav_pressed() -> void:
 	archive_state.current_filter = -1
 	_highlight_tabs(tab_fav)
 	_render_cards()
-	_show_toast("★ 내 인생 최애 만점(5.0) 작품만 모아봅니다.")
+	_show_toast("★ 내 인생 최애 만점(5.0) 작품 (%s)만 모아봅니다." % _get_filtered_cards_summary())
 
 func _highlight_tabs(active_btn: Button) -> void:
 	for btn in [tab_all, tab_manga, tab_gacha, tab_complete, tab_fav]:
@@ -697,7 +706,7 @@ func _on_modal_navigate_requested(delta: int) -> void:
 	var next_idx: int = (idx + delta + int(archive_state.items.size())) % int(archive_state.items.size())
 	var next_item = archive_state.items[next_idx]
 	detail_modal.open(next_item)
-	_show_toast("📖 책장 넘김: " + next_item.title)
+	_show_toast("📖 책장 넘김 (%d/%d): %s" % [next_idx + 1, archive_state.items.size(), next_item.title])
 
 func _on_card_copied(item) -> void:
 	if item != null:
