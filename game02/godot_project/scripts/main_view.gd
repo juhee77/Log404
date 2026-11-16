@@ -678,6 +678,9 @@ func _unhandled_input(event: InputEvent) -> void:
 				KEY_I:
 					show_library_infographic()
 					get_viewport().set_input_as_handled()
+				KEY_C:
+					copy_summary_to_clipboard()
+					get_viewport().set_input_as_handled()
 
 func _on_modal_navigate_requested(delta: int) -> void:
 	if archive_state == null or archive_state.items.is_empty():

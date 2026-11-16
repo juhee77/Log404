@@ -177,6 +177,31 @@ func _style_diary_controls() -> void:
 		hl_btn.tooltip_text = "밑줄 문장 형광펜 하이라이트 켜기/끄기"
 	if close_btn != null:
 		close_btn.tooltip_text = "일기장 닫기 (ESC)"
+		var header_hbox: HBoxContainer = close_btn.get_parent() as HBoxContainer
+		if header_hbox != null and header_hbox.get_node_or_null("PrevItemBtn") == null:
+			var prev_btn := Button.new()
+			prev_btn.name = "PrevItemBtn"
+			prev_btn.text = "◀"
+			prev_btn.custom_minimum_size = Vector2(26, 26)
+			prev_btn.tooltip_text = "이전 작품 일기장 (←)"
+			prev_btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+			prev_btn.add_theme_stylebox_override("normal", cream_btn)
+			prev_btn.add_theme_color_override("font_color", Color(0.32, 0.25, 0.20))
+			prev_btn.pressed.connect(func(): navigate_requested.emit(-1))
+			var next_btn := Button.new()
+			next_btn.name = "NextItemBtn"
+			next_btn.text = "▶"
+			next_btn.custom_minimum_size = Vector2(26, 26)
+			next_btn.tooltip_text = "다음 작품 일기장 (→)"
+			next_btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+			next_btn.add_theme_stylebox_override("normal", cream_btn)
+			next_btn.add_theme_color_override("font_color", Color(0.32, 0.25, 0.20))
+			next_btn.pressed.connect(func(): navigate_requested.emit(1))
+			var close_idx := close_btn.get_index()
+			header_hbox.add_child(prev_btn)
+			header_hbox.move_child(prev_btn, close_idx)
+			header_hbox.add_child(next_btn)
+			header_hbox.move_child(next_btn, close_idx + 1)
 	var row_tips := {
 		"Panel/VBox/BodyMargin/Body/StampRow/ObiCycleBtn": "띠지 문구 프리셋 순환",
 		"Panel/VBox/BodyMargin/Body/StampRow/TapeCycleBtn": "상단 마스킹 테이프 컬러 순환",

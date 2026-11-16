@@ -5,6 +5,21 @@
 
 ---
 
+## 🚀 [Sprint 77] 모달 헤더 `◀`·`▶` 이전/다음 작품 버튼 & 단축키 `C`(서재 요약 클립보드 복사)
+- **날짜/시각**: 2026-11-17 05:19 (자동 스프린트)
+- **참여 스쿼드**: 14인 애자일 스쿼드 전원 (다꾸러 3인, PO/기획 2인, UX/UI 2인, 개발 4인, QA 2인, CEO 1인)
+- **핵심 VOC 및 기획 확정**:
+  1. **다꾸러 VOC #1 ("상세 일기장 모달 상단 헤더의 닫기(`✕`) 버튼 옆에 `◀` / `▶` 이전·다음 작품 버튼이 있으면 모바일/터치 환경에서도 모달을 닫지 않고 책장을 바로 넘길 수 있을 것 같아요!")**: `detail_modal.gd`의 `_style_diary_controls()`에서 `Header/HBox` 닫기 버튼 왼쪽에 `PrevItemBtn`(`◀`)과 `NextItemBtn`(`▶`)을 배치하고 `navigate_requested` 시그널과 연동.
+  2. **다꾸러 VOC #2 ("메인 서재에서 키보드 `C` 키를 누르면 `copy_summary_to_clipboard()` 내 서재 전체 요약 리포트가 클립보드에 바로 복사되면 좋겠어요")**: `main_view.gd`의 `_unhandled_input()`에 `KEY_C` 단축키를 추가.
+  3. **웹 목업 동기화**: `game02/index.html`의 모달 헤더에도 `◀`/`▶` 이전·다음 작품 넘김 버튼을 동기화.
+- **구현 및 검증 내역**:
+  - `detail_modal.gd`: 모달 헤더 `PrevItemBtn`(`◀`), `NextItemBtn`(`▶`) 동적 생성 및 `navigate_requested` 연동.
+  - `main_view.gd`: `_unhandled_input()` `KEY_C` 서재 요약 클립보드 복사 단축키 추가.
+  - `game02/index.html`: 모달 헤더 `◀`/`▶` 책장 넘김 버튼 동기화.
+  - `tests/test_main_integration.gd`: Sprint 77 통합 테스트(`Modal Header Prev/Next Buttons & Keyboard C Summary Copy verified`) 추가 후 3대 헤드리스 테스트 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 캡처 완료.
+
+---
+
 ## 🚀 [Sprint 76] 모달 좌/우 화살표(`←`·`→`) 책장 넘김 내비게이션 & 단축키 `I`(서재 인포그래픽)
 - **날짜/시각**: 2026-11-17 04:59 (자동 스프린트)
 - **참여 스쿼드**: 14인 애자일 스쿼드 전원 (다꾸러 3인, PO/기획 2인, UX/UI 2인, 개발 4인, QA 2인, CEO 1인)

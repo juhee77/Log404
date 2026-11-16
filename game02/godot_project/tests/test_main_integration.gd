@@ -804,6 +804,22 @@ func _init() -> void:
 	assert("📊 소장:" in main_inst.status_toast.text, "Pressing I should show library infographic toast")
 	print("✓ DetailModal Left/Right Page Flip Navigation & Keyboard I Infographic verified")
 
+	# Test Sprint 77: Modal Header Prev/Next Buttons & Keyboard C Summary Copy
+	main_inst.detail_modal.open(main_inst.archive_state.items[0])
+	var prev_btn_s77 = main_inst.detail_modal.get_node_or_null("Panel/VBox/Header/HBox/PrevItemBtn")
+	var next_btn_s77 = main_inst.detail_modal.get_node_or_null("Panel/VBox/Header/HBox/NextItemBtn")
+	assert(prev_btn_s77 != null and next_btn_s77 != null, "DetailModal header should have PrevItemBtn and NextItemBtn")
+	next_btn_s77.pressed.emit()
+	assert(main_inst.detail_modal.current_item == main_inst.archive_state.items[1], "Pressing NextItemBtn should open next item")
+	main_inst.detail_modal.close()
+	main_inst.search_input.release_focus()
+	var kc_ev := InputEventKey.new()
+	kc_ev.pressed = true
+	kc_ev.keycode = KEY_C
+	main_inst._unhandled_input(kc_ev)
+	assert("클립보드에 복사되었습니다" in main_inst.status_toast.text, "Pressing C should copy library summary to clipboard")
+	print("✓ Modal Header Prev/Next Buttons & Keyboard C Summary Copy verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()
