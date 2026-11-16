@@ -7,6 +7,7 @@ signal item_deleted(item)
 signal volume_added(item)
 signal volume_removed(item)
 signal card_copied(item)
+signal navigate_requested(delta: int)
 signal diary_updated(item)
 
 @onready var title_label: Label = $Panel/VBox/Header/HBox/TitleLabel
@@ -460,9 +461,18 @@ func close() -> void:
 	visible = false
 
 func _unhandled_input(event: InputEvent) -> void:
-	if visible and event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_ESCAPE:
+	if not visible or not (event is InputEventKey) or not event.pressed or event.echo:
+		return
+	if event.keycode == KEY_ESCAPE:
 		close()
 		get_viewport().set_input_as_handled()
+	elif quote_input == null or not quote_input.has_focus():
+		if event.keycode == KEY_LEFT:
+			navigate_requested.emit(-1)
+			get_viewport().set_input_as_handled()
+		elif event.keycode == KEY_RIGHT:
+			navigate_requested.emit(1)
+			get_viewport().set_input_as_handled()
 
 func apply_stamp(stamp_name: String) -> void:
 	if current_item == null:

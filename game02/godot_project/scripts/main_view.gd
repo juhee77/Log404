@@ -74,6 +74,7 @@ func _ready() -> void:
 	detail_modal.volume_added.connect(_on_volume_added)
 	detail_modal.volume_removed.connect(_on_volume_removed)
 	detail_modal.card_copied.connect(_on_card_copied)
+	detail_modal.navigate_requested.connect(_on_modal_navigate_requested)
 	detail_modal.diary_updated.connect(_on_diary_updated)
 	add_modal.item_submitted.connect(_on_item_submitted)
 
@@ -674,6 +675,20 @@ func _unhandled_input(event: InputEvent) -> void:
 				KEY_Q:
 					_on_next_quote_btn_pressed()
 					get_viewport().set_input_as_handled()
+				KEY_I:
+					show_library_infographic()
+					get_viewport().set_input_as_handled()
+
+func _on_modal_navigate_requested(delta: int) -> void:
+	if archive_state == null or archive_state.items.is_empty():
+		return
+	var idx: int = archive_state.items.find(detail_modal.current_item)
+	if idx == -1:
+		idx = 0
+	var next_idx: int = (idx + delta + int(archive_state.items.size())) % int(archive_state.items.size())
+	var next_item = archive_state.items[next_idx]
+	detail_modal.open(next_item)
+	_show_toast("📖 책장 넘김: " + next_item.title)
 
 func _on_card_copied(item) -> void:
 	if item != null:

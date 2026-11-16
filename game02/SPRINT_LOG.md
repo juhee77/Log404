@@ -5,6 +5,21 @@
 
 ---
 
+## 🚀 [Sprint 76] 모달 좌/우 화살표(`←`·`→`) 책장 넘김 내비게이션 & 단축키 `I`(서재 인포그래픽)
+- **날짜/시각**: 2026-11-17 04:59 (자동 스프린트)
+- **참여 스쿼드**: 14인 애자일 스쿼드 전원 (다꾸러 3인, PO/기획 2인, UX/UI 2인, 개발 4인, QA 2인, CEO 1인)
+- **핵심 VOC 및 기획 확정**:
+  1. **다꾸러 VOC #1 ("상세 일기장 모달(`DetailModal`)을 열어둔 상태에서 키보드 `←` / `→` 화살표 키로 이전·다음 작품의 일기장으로 책장을 넘기듯 바로 이동할 수 있으면 정말 E-Book·다이어리 같을 것 같아요!")**: `detail_modal.gd`에 `navigate_requested(delta)` 시그널과 `_unhandled_input()` `KEY_LEFT`/`KEY_RIGHT` 핸들러를 추가하고, `main_view.gd`의 `_on_modal_navigate_requested()`에서 서재 내 이전/다음 작품으로 순환 오픈 및 `"📖 책장 넘김: 작품명"` 토스트를 표시.
+  2. **다꾸러 VOC #2 ("메인 서재에서 키보드 `I` 키만 누르면 `show_library_infographic()` 전체 서재 인포그래픽 브리핑이 하단 토스트에 바로 뜨면 좋겠어요")**: `main_view.gd`의 `_unhandled_input()`에 `KEY_I` 단축키를 추가.
+  3. **웹 목업 동기화**: `game02/index.html`에 `navigateJournalModal(delta)`를 추가하고 `#journal-modal` 오픈 상태에서 `ArrowLeft`/`ArrowRight` 키로 이전/다음 일기장을 넘길 수 있도록 동기화.
+- **구현 및 검증 내역**:
+  - `detail_modal.gd`: `navigate_requested(delta)` 시그널 및 `KEY_LEFT`/`KEY_RIGHT` 책장 넘김 핸들러 추가.
+  - `main_view.gd`: `_on_modal_navigate_requested()` 및 `_unhandled_input()` `KEY_I` 인포그래픽 단축키 추가.
+  - `game02/index.html`: `navigateJournalModal()` 및 전역 `ArrowLeft`/`ArrowRight` 키 동기화.
+  - `tests/test_main_integration.gd`: Sprint 76 통합 테스트(`DetailModal Left/Right Page Flip Navigation & Keyboard I Infographic verified`) 추가 후 3대 헤드리스 테스트 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 캡처 완료.
+
+---
+
 ## 🚀 [Sprint 75] 마일스톤 75: 모달 표지 우클릭 색상 순환 & 단축키 `M`(백색소음)·`Q`(오늘의 문장)
 - **날짜/시각**: 2026-11-17 04:38 (자동 스프린트)
 - **참여 스쿼드**: 14인 애자일 스쿼드 전원 (다꾸러 3인, PO/기획 2인, UX/UI 2인, 개발 4인, QA 2인, CEO 1인)

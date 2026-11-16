@@ -783,6 +783,27 @@ func _init() -> void:
 	assert(main_inst.quote_cursor != prev_q_s75, "Pressing Q should advance today quote")
 	print("✓ Cover Right-Click Color Cycle & Keyboard M/Q Shortcuts verified")
 
+	# Test Sprint 76: DetailModal Left/Right Page Flip Navigation & Keyboard I Infographic
+	main_inst.detail_modal.open(main_inst.archive_state.items[0])
+	var k_right := InputEventKey.new()
+	k_right.pressed = true
+	k_right.keycode = KEY_RIGHT
+	main_inst.detail_modal._unhandled_input(k_right)
+	assert(main_inst.detail_modal.current_item == main_inst.archive_state.items[1], "KEY_RIGHT in DetailModal should navigate to next item")
+	var k_left := InputEventKey.new()
+	k_left.pressed = true
+	k_left.keycode = KEY_LEFT
+	main_inst.detail_modal._unhandled_input(k_left)
+	assert(main_inst.detail_modal.current_item == main_inst.archive_state.items[0], "KEY_LEFT in DetailModal should navigate back to previous item")
+	main_inst.detail_modal.close()
+	main_inst.search_input.release_focus()
+	var ki_ev := InputEventKey.new()
+	ki_ev.pressed = true
+	ki_ev.keycode = KEY_I
+	main_inst._unhandled_input(ki_ev)
+	assert("📊 소장:" in main_inst.status_toast.text, "Pressing I should show library infographic toast")
+	print("✓ DetailModal Left/Right Page Flip Navigation & Keyboard I Infographic verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

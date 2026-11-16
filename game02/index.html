@@ -887,6 +887,12 @@
         function closeJournalModal() {
             document.getElementById('journal-modal').classList.add('hidden');
         }
+        function navigateJournalModal(delta) {
+            if (!ITEMS.length) return;
+            const idx = ITEMS.findIndex(x => x.id === activeId);
+            const nextIdx = ((idx === -1 ? 0 : idx) + delta + ITEMS.length) % ITEMS.length;
+            openJournalModal(ITEMS[nextIdx].id);
+        }
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
                 const jm = document.getElementById('journal-modal');
@@ -920,6 +926,11 @@
                 const jm = document.getElementById('journal-modal');
                 if (!jm || jm.classList.contains('hidden')) {
                     cycleAmbientSound();
+                }
+            } else if ((e.key === 'ArrowLeft' || e.key === 'ArrowRight') && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
+                const jm = document.getElementById('journal-modal');
+                if (jm && !jm.classList.contains('hidden')) {
+                    navigateJournalModal(e.key === 'ArrowLeft' ? -1 : 1);
                 }
             }
         });
