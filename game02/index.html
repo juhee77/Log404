@@ -238,7 +238,7 @@
     </main>
 
     <!-- MODAL: 📖 Open Two-Page Reading Diary (펼친 일기장 뷰) -->
-    <div id="journal-modal"
+    <div id="journal-modal" onclick="if(event.target===this) closeJournalModal();"
         class="fixed inset-0 bg-[#1e1612]/65 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
         <div
             class="bg-[#fffdf9] w-full max-w-3xl rounded-3xl border-4 border-[#d8c3a5] shadow-2xl overflow-hidden flex flex-col md:flex-row max-h-[90vh]">

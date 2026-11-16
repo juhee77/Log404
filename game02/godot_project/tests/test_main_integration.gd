@@ -612,6 +612,22 @@ func _init() -> void:
 	main_inst.add_modal.close()
 	print("✓ EmptyState Reset All Filters Button & AddModal Title Auto-Focus verified")
 
+	# Test Sprint 65: Modal Stamp/Ink Tooltips & Dimmer Click-Outside Close
+	var mood_tip_btn = main_inst.detail_modal.get_node_or_null("Panel/VBox/BodyMargin/Body/StampRow/MoodBtn")
+	var weather_tip_btn = main_inst.detail_modal.get_node_or_null("Panel/VBox/BodyMargin/Body/InkRow/WeatherBtn")
+	assert(mood_tip_btn != null and mood_tip_btn.tooltip_text != "", "StampRow buttons should have descriptive tooltips")
+	assert(weather_tip_btn != null and weather_tip_btn.tooltip_text != "", "InkRow buttons should have descriptive tooltips")
+	var dim_click := InputEventMouseButton.new()
+	dim_click.pressed = true
+	dim_click.button_index = MOUSE_BUTTON_LEFT
+	main_inst.detail_modal.open(main_inst.archive_state.items[0])
+	main_inst.detail_modal.get_node("Dimmer").gui_input.emit(dim_click)
+	assert(not main_inst.detail_modal.visible, "Clicking DetailModal Dimmer should close DetailModal")
+	main_inst.add_modal.open()
+	main_inst.add_modal.get_node("Dimmer").gui_input.emit(dim_click)
+	assert(not main_inst.add_modal.visible, "Clicking AddModal Dimmer should close AddModal")
+	print("✓ Modal Stamp/Ink Tooltips & Dimmer Click-Outside Close verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

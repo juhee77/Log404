@@ -5,6 +5,21 @@
 
 ---
 
+## 🚀 [Sprint 65] 모달 스탬프·잉크 21종 풀 툴팁 가이드 & 바깥 배경(`Dimmer`) 클릭 닫기
+- **날짜/시각**: 2026-11-17 01:19 (자동 스프린트)
+- **참여 스쿼드**: 14인 애자일 스쿼드 전원 (다꾸러 3인, PO/기획 2인, UX/UI 2인, 개발 4인, QA 2인, CEO 1인)
+- **핵심 VOC 및 기획 확정**:
+  1. **다꾸러 VOC #1 ("모달의 `🌸 인장:` 줄과 `🖋️ 잉크:` 줄에 있는 21개 다꾸·수집 버튼마다 마우스를 올렸을 때 어떤 기능인지 한눈에 알 수 있는 툴팁이 나오면 좋겠어요!")**: `detail_modal.gd`의 `_style_diary_controls()`에서 `StampRow` 11종 + `InkRow` 10종 버튼 전체에 직관적인 `tooltip_text` 가이드를 적용.
+  2. **다꾸러 VOC #2 ("`DetailModal`이나 `AddModal`을 열었을 때 모달 바깥의 어두운 배경(`Dimmer`)을 클릭해도 모달이 자연스럽게 닫히면 좋겠어요")**: `detail_modal.gd`와 `add_modal.gd`의 `_ready()`에서 `Dimmer.gui_input` 좌클릭 시 `close()`가 호출되도록 연결.
+  3. **웹 목업 동기화**: `game02/index.html`의 `#journal-modal` 바깥 오버레이 클릭 시 `closeJournalModal()`이 호출되도록 동기화.
+- **구현 및 검증 내역**:
+  - `detail_modal.gd`: `Dimmer` 클릭 닫기 및 `StampRow`/`InkRow` 21종 버튼 툴팁 추가.
+  - `add_modal.gd`: `Dimmer` 클릭 닫기 추가.
+  - `game02/index.html`: `#journal-modal` 배경 클릭 닫기 동기화.
+  - `tests/test_main_integration.gd`: Sprint 65 통합 테스트(`Modal Stamp/Ink Tooltips & Dimmer Click-Outside Close verified`) 추가 후 3대 헤드리스 테스트 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 캡처 완료.
+
+---
+
 ## 🚀 [Sprint 64] 빈 검색 상태 원클릭 `'🔄 전체 서재 보기'` 복원 버튼 & `AddModal` 제목 자동 포커스
 - **날짜/시각**: 2026-11-17 00:58 (자동 스프린트)
 - **참여 스쿼드**: 14인 애자일 스쿼드 전원 (다꾸러 3인, PO/기획 2인, UX/UI 2인, 개발 4인, QA 2인, CEO 1인)

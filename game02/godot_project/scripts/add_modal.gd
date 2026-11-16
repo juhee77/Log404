@@ -31,6 +31,12 @@ func _ready() -> void:
 	_style_inputs()
 	title_input.text_submitted.connect(func(_t): author_input.grab_focus())
 	quote_input.text_submitted.connect(func(_t): _on_submit_btn_pressed())
+	var dimmer: Control = get_node_or_null("Dimmer")
+	if dimmer != null:
+		dimmer.gui_input.connect(func(ev):
+			if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_LEFT:
+				close()
+		)
 
 func _build_color_swatches() -> void:
 	for child in color_row.get_children():

@@ -51,6 +51,12 @@ func _ready() -> void:
 	_style_diary_controls()
 	if quote_input != null:
 		quote_input.text_submitted.connect(func(_t): _on_save_quote_btn_pressed())
+	var dimmer: Control = get_node_or_null("Dimmer")
+	if dimmer != null:
+		dimmer.gui_input.connect(func(ev):
+			if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_LEFT:
+				close()
+		)
 	cover_rect.gui_input.connect(func(ev):
 		if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_LEFT:
 			cycle_cover_icon()
@@ -148,6 +154,33 @@ func _style_diary_controls() -> void:
 	for ctrl in [save_quote_btn, add_vol_btn, rem_btn, share_btn, del_btn, close_btn, hl_btn]:
 		if ctrl != null:
 			ctrl.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	var row_tips := {
+		"Panel/VBox/BodyMargin/Body/StampRow/ObiCycleBtn": "띠지 문구 프리셋 순환",
+		"Panel/VBox/BodyMargin/Body/StampRow/TapeCycleBtn": "상단 마스킹 테이프 컬러 순환",
+		"Panel/VBox/BodyMargin/Body/StampRow/DecoStickerBtn": "다꾸 데코 스티커 팩 순환",
+		"Panel/VBox/BodyMargin/Body/StampRow/RarityBtn": "수집 레어도 등급 순환 (노말~시크릿)",
+		"Panel/VBox/BodyMargin/Body/StampRow/PaperBtn": "일기장 속지 패턴 순환 (줄노트·모눈·도트·무지)",
+		"Panel/VBox/BodyMargin/Body/StampRow/StorageBtn": "실물 보관 위치 순환",
+		"Panel/VBox/BodyMargin/Body/StampRow/SourceBtn": "소장·입수 경로 순환",
+		"Panel/VBox/BodyMargin/Body/StampRow/MoodBtn": "독서·수집 기분 태그 순환",
+		"Panel/VBox/BodyMargin/Body/StampRow/RereadBtn": "재독 횟수 +1 증가",
+		"Panel/VBox/BodyMargin/Body/StampRow/DuplicateBtn": "복수 소장 수량 +1 증가",
+		"Panel/VBox/BodyMargin/Body/StampRow/PossessionBtn": "소장 상태 순환 (소장중·예약중·배송중·전시중)",
+		"Panel/VBox/BodyMargin/Body/InkRow/NibBtn": "만년필 펜촉 굵기 순환 (EF·M·B)",
+		"Panel/VBox/BodyMargin/Body/InkRow/SignatureBtn": "다이어리 서명 스탬프 순환",
+		"Panel/VBox/BodyMargin/Body/InkRow/DateStampBtn": "오늘 날짜로 구매·기념일 스탬프 갱신",
+		"Panel/VBox/BodyMargin/Body/InkRow/CustomTagBtn": "커스텀 해시태그 순환",
+		"Panel/VBox/BodyMargin/Body/InkRow/ValueBtn": "추정 소장 가치 +5,000원 증액",
+		"Panel/VBox/BodyMargin/Body/InkRow/FavCharBtn": "최애 캐릭터 태그 순환",
+		"Panel/VBox/BodyMargin/Body/InkRow/ConditionBtn": "실물 컨디션 등급 순환 (S급~개봉전시)",
+		"Panel/VBox/BodyMargin/Body/InkRow/FinishBtn": "표지 코팅 마감 순환 (무광·유광·홀로그램·양장)",
+		"Panel/VBox/BodyMargin/Body/InkRow/WeatherBtn": "독서·수집 날씨 스탬프 순환",
+		"Panel/VBox/BodyMargin/Body/InkRow/SpotBtn": "독서·수집 장소 스탬프 순환"
+	}
+	for path in row_tips.keys():
+		var tip_btn: Control = get_node_or_null(path)
+		if tip_btn != null:
+			tip_btn.tooltip_text = row_tips[path]
 
 func set_fountain_pen_ink(ink_hex: String) -> void:
 	if current_item == null:

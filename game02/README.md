@@ -5,7 +5,7 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 
 ---
 
-## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 64)
+## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 65)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
@@ -14,6 +14,10 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 ---
 
 ## 🚀 최신 스프린트 업데이트 요약 ([전체 회의록 보기](SPRINT_LOG.md))
+
+### [Sprint 65] 모달 스탬프·잉크 21종 풀 툴팁 가이드 & 바깥 배경(`Dimmer`) 클릭 닫기
+- **모달 스탬프·잉크 21종 풀 툴팁 (`detail_modal.gd`)**: 상세 일기장 모달 내 `StampRow`·`InkRow` 21종 다꾸/수집 버튼 전체에 기능 안내 툴팁을 적용했습니다.
+- **모달 바깥 배경 클릭 닫기 (`detail_modal.gd` · `add_modal.gd` · `index.html`)**: 상세 일기장과 새 일기 쓰기 모달 바깥의 어두운 오버레이(`Dimmer`)를 클릭하면 모달이 자연스럽게 닫힙니다.
 
 ### [Sprint 64] 빈 검색 상태 원클릭 `'🔄 전체 서재 보기'` 복원 버튼 & `AddModal` 제목 자동 포커스
 - **빈 상태 원클릭 복원 (`main_view.gd` · `index.html`)**: 검색·필터 결과가 0건일 때 안내 문구와 함께 `'🔄 전체 서재 보기'` 버튼을 제공해 검색어와 필터를 한 번에 초기화할 수 있습니다.
