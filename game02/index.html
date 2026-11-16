@@ -549,7 +549,7 @@
                         <div class="masking-tape absolute -top-2 left-1/2 -translate-x-1/2"></div>
                         <div class="flex gap-3.5 items-end">
                             <div class="w-24 ebook-cover shrink-0 flex flex-col justify-between p-2.5 text-white" style="background:${item.color}">
-                                <span class="text-[8px] font-bold opacity-80">${item.category === 'manga' ? 'E-BOOK' : (item.rarity_tier || '🔮가챠')}</span>
+                                <span class="text-[8px] font-bold opacity-80">${item.category === 'manga' ? 'E-BOOK' : ((item.duplicate_count || 1) > 1 ? `🔮×${item.duplicate_count}` : (item.rarity_tier || '🔮가챠'))}</span>
                                 <span class="text-3xl text-center my-auto">${item.icon}</span>
                                 <div class="bg-[#fff8e7] text-[#2c221e] text-[8px] font-bold px-1 py-0.5 rounded-xs truncate text-center">
                                     ${item.obi}

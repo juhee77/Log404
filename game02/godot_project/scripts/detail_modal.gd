@@ -81,6 +81,7 @@ func _style_diary_controls() -> void:
 		if child is Button:
 			child.add_theme_stylebox_override("normal", stamp_sb)
 			child.add_theme_color_override("font_color", Color(0.78, 0.35, 0.20))
+			child.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 
 	var input_sb = StyleBoxFlat.new()
 	input_sb.bg_color = Color(0.98, 0.96, 0.92, 1)
@@ -143,6 +144,10 @@ func _style_diary_controls() -> void:
 			if btn is Button:
 				btn.add_theme_stylebox_override("normal", cream_btn)
 				btn.add_theme_color_override("font_color", Color(0.28, 0.22, 0.18))
+				btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	for ctrl in [save_quote_btn, add_vol_btn, rem_btn, share_btn, del_btn, close_btn, hl_btn]:
+		if ctrl != null:
+			ctrl.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 
 func set_fountain_pen_ink(ink_hex: String) -> void:
 	if current_item == null:

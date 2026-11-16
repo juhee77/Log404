@@ -5,6 +5,22 @@
 
 ---
 
+## 🚀 [Sprint 62] 가챠 소장상태 카드 진행률 반영(`전시`/`배송`/`예약`), `AddModal` 지우기 버튼 & 모달 커서 통일
+- **날짜/시각**: 2026-11-17 00:19 (자동 스프린트)
+- **참여 스쿼드**: 14인 애자일 스쿼드 전원 (다꾸러 3인, PO/기획 2인, UX/UI 2인, 개발 4인, QA 2인, CEO 1인)
+- **핵심 VOC 및 기획 확정**:
+  1. **다꾸러 VOC #1 ("가챠 카드 하단 진행률 줄에도 `✨ 전시중`, `🚚 배송중`, `🛒 예약중` 상태에 맞춰 `전시 · ₩5,000`, `배송 · ₩5,000`처럼 바로 표시되면 좋겠어요!")**: `card_item.gd`의 `setup()`에서 `category == 1`일 때 `possession_state`에 따라 `전시`/`배송`/`예약`/`진열`/`보관`을 동적으로 표시.
+  2. **다꾸러 VOC #2 ("새 일기 쓰기(`AddModal`)의 제목·작가·명대사 입력창에도 `✕` 지우기 버튼이 있고, 상세 모달 스탬프·잉크 버튼에도 모두 손가락 커서가 나오면 좋겠어요")**: `add_modal.gd` 입력창 전체에 `clear_button_enabled = true`를 적용하고 `detail_modal.gd` 및 `add_modal.gd`의 모든 버튼에 `CURSOR_POINTING_HAND`를 적용.
+  3. **웹 목업 동기화**: `game02/index.html`의 `renderShelf()`에서 가챠 카드 복수 소장(`🔮×N`) 배지 표기를 동기화.
+- **구현 및 검증 내역**:
+  - `card_item.gd`: 가챠 `possession_state` 기반 진행률 라벨(`전시`/`배송`/`예약`) 반영.
+  - `add_modal.gd`: 모든 `LineEdit`에 `clear_button_enabled = true` 및 액션 버튼 `CURSOR_POINTING_HAND` 적용.
+  - `detail_modal.gd`: 스탬프·잉크·액션 버튼 전체 `CURSOR_POINTING_HAND` 적용.
+  - `game02/index.html`: 가챠 카드 복수 소장(`🔮×N`) 배지 동기화.
+  - `tests/test_main_integration.gd`: Sprint 62 통합 테스트(`Gacha Possession Progress Label, AddModal Clear Buttons & Modal Cursor Affordance verified`) 추가 후 3대 헤드리스 테스트 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 캡처 완료.
+
+---
+
 ## 🚀 [Sprint 61] 검색창·인용 입력창 원탭 지우기(`clear_button_enabled`) & 전체 액션 버튼 커서 통일
 - **날짜/시각**: 2026-11-16 23:59 (자동 스프린트)
 - **참여 스쿼드**: 14인 애자일 스쿼드 전원 (다꾸러 3인, PO/기획 2인, UX/UI 2인, 개발 4인, QA 2인, CEO 1인)

@@ -60,9 +60,13 @@ func _style_inputs() -> void:
 	inp_sb.border_color = Color(0.80, 0.72, 0.62, 1)
 	inp_sb.content_margin_left = 8
 	for le in [title_input, author_input, quote_input]:
+		le.clear_button_enabled = true
 		le.add_theme_stylebox_override("normal", inp_sb)
 		le.add_theme_color_override("font_color", Color(0.18, 0.14, 0.11))
 		le.add_theme_color_override("font_placeholder_color", Color(0.55, 0.48, 0.42))
+	for ctrl in [submit_btn, close_btn, cat_option]:
+		if ctrl != null:
+			ctrl.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 
 	var ink_sb = StyleBoxFlat.new()
 	ink_sb.bg_color = Color(0.22, 0.16, 0.13, 1)

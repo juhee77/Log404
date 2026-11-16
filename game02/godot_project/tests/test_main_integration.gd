@@ -568,6 +568,21 @@ func _init() -> void:
 	assert(main_inst.tab_all.mouse_default_cursor_shape == Control.CURSOR_POINTING_HAND, "Header/Filter action buttons should use CURSOR_POINTING_HAND")
 	print("✓ Search & Quote Clear Buttons + Unified Action Cursor Affordance verified")
 
+	# Test Sprint 62: Gacha Possession Progress Label, AddModal Clear Buttons & Modal Cursor Affordance
+	var gacha_it_s62 = null
+	for it in main_inst.archive_state.items:
+		if it.category == 1:
+			gacha_it_s62 = it
+			break
+	assert(gacha_it_s62 != null, "Should find a gacha item")
+	gacha_it_s62.possession_state = "✨ 전시중"
+	var gacha_card_s62 = main_inst.card_grid.get_child(0)
+	gacha_card_s62.setup(gacha_it_s62)
+	assert("전시" in gacha_card_s62.progress_label.text, "Gacha CardItem progress_label should reflect possession_state 전시")
+	assert(main_inst.add_modal.title_input.clear_button_enabled and main_inst.add_modal.author_input.clear_button_enabled and main_inst.add_modal.quote_input.clear_button_enabled, "AddModal LineEdits should enable clear_button_enabled")
+	assert(main_inst.detail_modal.save_quote_btn.mouse_default_cursor_shape == Control.CURSOR_POINTING_HAND, "DetailModal action buttons should use CURSOR_POINTING_HAND")
+	print("✓ Gacha Possession Progress Label, AddModal Clear Buttons & Modal Cursor Affordance verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

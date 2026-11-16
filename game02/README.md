@@ -5,7 +5,7 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 
 ---
 
-## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 61)
+## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 62)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
@@ -14,6 +14,10 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 ---
 
 ## 🚀 최신 스프린트 업데이트 요약 ([전체 회의록 보기](SPRINT_LOG.md))
+
+### [Sprint 62] 가챠 소장상태 카드 진행률 반영(`전시`/`배송`/`예약`), `AddModal` 지우기 버튼 & 모달 커서 통일
+- **가챠 소장 상태 카드 연동 (`card_item.gd` · `index.html`)**: 가챠 카드의 진행률 줄에 `possession_state`에 따른 `전시`·`배송`·`예약` 상태가 반영되며, 웹 목업에도 `🔮×N` 배지가 동기화되었습니다.
+- **`AddModal` 지우기 버튼 & 모달 커서 통일 (`add_modal.gd` · `detail_modal.gd`)**: 새 일기 쓰기 입력창 3종에 `✕` 원탭 지우기 버튼을 활성화하고, 양쪽 모달의 모든 스탬프·잉크·액션 버튼에 포인팅 커서를 적용했습니다.
 
 ### [Sprint 61] 검색창·인용 입력창 원탭 지우기(`clear_button_enabled`) & 전체 액션 버튼 커서 통일
 - **원탭 `✕` 지우기 버튼 (`main_view.gd` · `detail_modal.gd` · `index.html`)**: 서재 통합 검색창과 모달 밑줄 입력창에 네이티브 `✕` 초기화 버튼을 활성화해 한 번에 입력 내용을 지울 수 있습니다.

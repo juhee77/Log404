@@ -72,7 +72,14 @@ func setup(item) -> void:
 		progress_bar.value = prog
 	if progress_label != null:
 		if item.category == 1:
-			progress_label.text = ("진열" if prog >= 100.0 else "보관") + val_suffix
+			var g_state := "진열" if prog >= 100.0 else "보관"
+			if item.possession_state == "✨ 전시중":
+				g_state = "전시"
+			elif item.possession_state == "🚚 배송중":
+				g_state = "배송"
+			elif item.possession_state == "🛒 예약중":
+				g_state = "예약"
+			progress_label.text = g_state + val_suffix
 		elif prog >= 100.0:
 			progress_label.text = "완독" + val_suffix
 		else:
