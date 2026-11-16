@@ -5,6 +5,20 @@
 
 ---
 
+## 🚀 [Sprint 67] 상단 요약줄(`SubTitle`) 원클릭 인포그래픽 브리핑 & 헤더 버튼 툴팁 완성
+- **날짜/시각**: 2026-11-17 01:58 (자동 스프린트)
+- **참여 스쿼드**: 14인 애자일 스쿼드 전원 (다꾸러 3인, PO/기획 2인, UX/UI 2인, 개발 4인, QA 2인, CEO 1인)
+- **핵심 VOC 및 기획 확정**:
+  1. **다꾸러 VOC #1 ("메인 화면 최상단 요약 줄(`2026. 11. 17 · 완독 81% · ★5.0 · 자산 ₩80,000`)을 클릭했을 때 내 서재 전체 인포그래픽(`show_library_infographic()`) 브리핑이 하단 토스트로 바로 뜨면 좋겠어요!")**: `main_view.gd`의 `_ready()`에서 `sub_title`에 `MOUSE_FILTER_STOP`, `CURSOR_POINTING_HAND`, `tooltip_text`를 적용하고 좌클릭 시 `show_library_infographic()`을 호출하도록 연결.
+  2. **다꾸러 VOC #2 ("상단 우측 `+ 일기 쓰기`와 `무음` 버튼에도 마우스 호버 시 상세 툴팁이 나오면 앱 내 모든 버튼의 툴팁 가이드가 100% 완성될 것 같아요")**: `AddBtn`과 `AmbientBtn`에 상세 `tooltip_text`를 추가.
+  3. **웹 목업 동기화**: `game02/index.html`의 상단 `서재 작품` KPI 카드 클릭 시 `setFilter('all')`로 전체 서재 복원이 동작하도록 동기화.
+- **구현 및 검증 내역**:
+  - `main_view.gd`: `sub_title` 클릭 인포그래픽 브리핑 연동 및 `AddBtn`/`AmbientBtn` 툴팁 추가.
+  - `game02/index.html`: 상단 `서재 작품` 카드 클릭 필터 동기화.
+  - `tests/test_main_integration.gd`: Sprint 67 통합 테스트(`Clickable SubTitle Infographic Briefing & Header Action Tooltips verified`) 추가 후 3대 헤드리스 테스트 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 캡처 완료.
+
+---
+
 ## 🚀 [Sprint 66] 모달 표지·와시테이프 인터랙티브 툴팁 & 상단 액션 버튼 안전 가이드
 - **날짜/시각**: 2026-11-17 01:38 (자동 스프린트)
 - **참여 스쿼드**: 14인 애자일 스쿼드 전원 (다꾸러 3인, PO/기획 2인, UX/UI 2인, 개발 4인, QA 2인, CEO 1인)

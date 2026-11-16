@@ -636,6 +636,17 @@ func _init() -> void:
 	assert(del_btn_s66 != null and del_btn_s66.tooltip_text != "", "Modal top action buttons should have tooltip_text")
 	print("✓ Cover/Washi Interactive Tooltips & Modal Top Action Tooltips verified")
 
+	# Test Sprint 67: Clickable SubTitle Infographic Briefing & Header Action Tooltips
+	assert(main_inst.sub_title.mouse_default_cursor_shape == Control.CURSOR_POINTING_HAND and main_inst.sub_title.tooltip_text != "", "SubTitle should be clickable with pointing cursor and tooltip")
+	var sub_click := InputEventMouseButton.new()
+	sub_click.pressed = true
+	sub_click.button_index = MOUSE_BUTTON_LEFT
+	main_inst.sub_title.gui_input.emit(sub_click)
+	assert("📊 소장:" in main_inst.status_toast.text, "Clicking SubTitle should display library infographic in status_toast")
+	var top_add_s67 = main_inst.get_node_or_null("VBox/TopBar/TopMargin/StatsVBox/TitleRow/AddBtn")
+	assert(top_add_s67 != null and top_add_s67.tooltip_text != "", "Header AddBtn should have tooltip_text")
+	print("✓ Clickable SubTitle Infographic Briefing & Header Action Tooltips verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

@@ -103,6 +103,20 @@ func _ready() -> void:
 	for ctrl in [get_node_or_null("VBox/TopBar/TopMargin/StatsVBox/TitleRow/AddBtn"), get_node_or_null("VBox/TopBar/TopMargin/StatsVBox/TitleRow/AmbientBtn"), next_quote_btn, random_pick_btn, sort_btn, tab_all, tab_manga, tab_gacha, tab_complete, tab_fav]:
 		if ctrl != null:
 			ctrl.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	var top_add_btn: Control = get_node_or_null("VBox/TopBar/TopMargin/StatsVBox/TitleRow/AddBtn")
+	if top_add_btn != null:
+		top_add_btn.tooltip_text = "새 독서 일기·가챠 스크랩 직접 작성"
+	var top_amb_btn: Control = get_node_or_null("VBox/TopBar/TopMargin/StatsVBox/TitleRow/AmbientBtn")
+	if top_amb_btn != null:
+		top_amb_btn.tooltip_text = "독서 몰입 백색소음 사운드 전환 (무음·빗소리·북카페 등)"
+	if sub_title != null:
+		sub_title.mouse_filter = Control.MOUSE_FILTER_STOP
+		sub_title.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+		sub_title.tooltip_text = "클릭하여 내 서재 전체 인포그래픽 요약 보기"
+		sub_title.gui_input.connect(func(ev):
+			if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_LEFT:
+				show_library_infographic()
+		)
 	if next_quote_btn != null:
 		next_quote_btn.tooltip_text = "서재 속 다음 밑줄 문장으로 넘기기"
 	if random_pick_btn != null:
