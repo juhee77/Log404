@@ -872,7 +872,18 @@
             document.getElementById('journal-modal').classList.add('hidden');
         }
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') closeJournalModal();
+            if (e.key === 'Escape') {
+                const jm = document.getElementById('journal-modal');
+                if (jm && !jm.classList.contains('hidden')) {
+                    closeJournalModal();
+                } else {
+                    const sb = document.getElementById('search-box');
+                    if (sb && sb.value !== '') {
+                        sb.value = '';
+                        renderShelf();
+                    }
+                }
+            }
         });
 
         function openWebScraperModal() {

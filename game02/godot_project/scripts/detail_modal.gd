@@ -874,6 +874,8 @@ func _render_volumes() -> void:
 		btn_sb.corner_radius_bottom_right = 4
 		status_btn.add_theme_stylebox_override("normal", btn_sb)
 		status_btn.add_theme_color_override("font_color", Color(0.78, 0.35, 0.2) if is_first else Color(0.29, 0.45, 0.36))
+		status_btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+		status_btn.tooltip_text = "클릭하여 초판특전 / 소장완료 전환"
 		var capture_idx = idx
 		status_btn.pressed.connect(func(): toggle_volume_status(capture_idx))
 		
@@ -892,6 +894,8 @@ func _render_volumes() -> void:
 		date_sb.corner_radius_bottom_right = 4
 		date_btn.add_theme_stylebox_override("normal", date_sb)
 		date_btn.add_theme_color_override("font_color", Color(0.48, 0.38, 0.3))
+		date_btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+		date_btn.tooltip_text = "클릭하여 오늘 날짜로 읽은 날 스탬프 갱신"
 		date_btn.pressed.connect(func(): stamp_volume_date(capture_idx))
 
 		var bm_btn = Button.new()
@@ -901,6 +905,7 @@ func _render_volumes() -> void:
 		bm_btn.add_theme_font_size_override("font_size", 10)
 		bm_btn.add_theme_color_override("font_color", Color(0.85, 0.55, 0.15) if is_bm else Color(0.65, 0.58, 0.50))
 		bm_btn.tooltip_text = "이 권을 북마크에 추가/해제합니다"
+		bm_btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 		bm_btn.pressed.connect(func(): toggle_volume_bookmark(capture_idx))
 
 		var quote_lbl = Label.new()
@@ -921,6 +926,8 @@ func _render_volumes() -> void:
 		star_btn.flat = true
 		star_btn.add_theme_font_size_override("font_size", 11)
 		star_btn.add_theme_color_override("font_color", Color(0.78, 0.35, 0.2))
+		star_btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+		star_btn.tooltip_text = "클릭하여 이 권의 별점 순환 (★★★~★★★★★)"
 		star_btn.pressed.connect(func(): cycle_volume_rating(capture_idx))
 		
 		hbox.add_child(vol_lbl)

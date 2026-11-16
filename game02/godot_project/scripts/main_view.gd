@@ -93,7 +93,13 @@ func _ready() -> void:
 
 	if search_input != null:
 		search_input.clear_button_enabled = true
-		search_input.tooltip_text = "작품명·작가·대사·태그·보관위치·날씨·장소·소장경로 통합 검색"
+		search_input.tooltip_text = "작품명·작가·대사·태그·보관위치·날씨·장소·소장경로 통합 검색 (ESC로 지우기)"
+		search_input.gui_input.connect(func(ev):
+			if ev is InputEventKey and ev.pressed and not ev.echo and ev.keycode == KEY_ESCAPE and search_input.text != "":
+				search_input.text = ""
+				_render_cards()
+				_show_toast("🔍 검색어가 초기화되었습니다.")
+		)
 	for ctrl in [get_node_or_null("VBox/TopBar/TopMargin/StatsVBox/TitleRow/AddBtn"), get_node_or_null("VBox/TopBar/TopMargin/StatsVBox/TitleRow/AmbientBtn"), next_quote_btn, random_pick_btn, sort_btn, tab_all, tab_manga, tab_gacha, tab_complete, tab_fav]:
 		if ctrl != null:
 			ctrl.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND

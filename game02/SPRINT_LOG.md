@@ -5,6 +5,21 @@
 
 ---
 
+## 🚀 [Sprint 63] 권별 노트 툴팁·커서 완성 & 검색창 `ESC` 즉시 초기화
+- **날짜/시각**: 2026-11-17 00:38 (자동 스프린트)
+- **참여 스쿼드**: 14인 애자일 스쿼드 전원 (다꾸러 3인, PO/기획 2인, UX/UI 2인, 개발 4인, QA 2인, CEO 1인)
+- **핵심 VOC 및 기획 확정**:
+  1. **다꾸러 VOC #1 ("모달 내 `📌 권별 밑줄 노트` 각 권의 `🔖초판특전`/`✓소장완료`, `📅 날짜`, `🔖 북마크`, `★★★★★` 버튼에도 마우스 호버 시 손가락 커서와 안내 툴팁이 나오면 좋겠어요!")**: `detail_modal.gd`의 `_render_volumes()`에서 권별 4종 버튼에 `CURSOR_POINTING_HAND`와 상세 `tooltip_text`를 적용.
+  2. **다꾸러 VOC #2 ("검색창(`SearchInput`)에서 검색어를 입력해둔 상태에서 `ESC` 키를 누르면 검색어가 즉시 비워지고 전체 서재가 복원되면 좋겠어요")**: `main_view.gd`에서 `search_input.gui_input`에 `KEY_ESCAPE` 핸들러를 추가해 검색어를 비우고 카드를 즉시 복원하며 토스트를 표시.
+  3. **웹 목업 동기화**: `game02/index.html`의 전역 `Escape` 키 리스너에서 모달이 닫혀 있을 때 `#search-box`를 초기화하도록 동기화.
+- **구현 및 검증 내역**:
+  - `detail_modal.gd`: `_render_volumes()` 권별 `status_btn`, `date_btn`, `bm_btn`, `star_btn`에 포인팅 커서 및 `tooltip_text` 추가.
+  - `main_view.gd`: `search_input` `KEY_ESCAPE` 즉시 초기화 및 토스트 안내 추가.
+  - `game02/index.html`: 전역 `Escape` 키 `#search-box` 초기화 동기화.
+  - `tests/test_main_integration.gd`: Sprint 63 통합 테스트(`Volume Row Tooltips/Cursors & Search Escape Clear verified`) 추가 후 3대 헤드리스 테스트 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 캡처 완료.
+
+---
+
 ## 🚀 [Sprint 62] 가챠 소장상태 카드 진행률 반영(`전시`/`배송`/`예약`), `AddModal` 지우기 버튼 & 모달 커서 통일
 - **날짜/시각**: 2026-11-17 00:19 (자동 스프린트)
 - **참여 스쿼드**: 14인 애자일 스쿼드 전원 (다꾸러 3인, PO/기획 2인, UX/UI 2인, 개발 4인, QA 2인, CEO 1인)

@@ -583,6 +583,23 @@ func _init() -> void:
 	assert(main_inst.detail_modal.save_quote_btn.mouse_default_cursor_shape == Control.CURSOR_POINTING_HAND, "DetailModal action buttons should use CURSOR_POINTING_HAND")
 	print("✓ Gacha Possession Progress Label, AddModal Clear Buttons & Modal Cursor Affordance verified")
 
+	# Test Sprint 63: Volume Row Tooltips/Cursors & Search Escape Clear
+	main_inst.detail_modal.open(main_inst.archive_state.items[0])
+	var first_vol_row = main_inst.detail_modal.vol_list.get_child(0)
+	var first_hbox = first_vol_row.get_child(0).get_child(0)
+	var vol_status_btn = first_hbox.get_child(1)
+	assert(vol_status_btn.mouse_default_cursor_shape == Control.CURSOR_POINTING_HAND and vol_status_btn.tooltip_text != "", "Volume row buttons should have CURSOR_POINTING_HAND and tooltip_text")
+	main_inst.detail_modal.close()
+	main_inst.search_input.text = "슬램덩크"
+	main_inst._render_cards()
+	assert(main_inst.card_grid.get_child_count() == 1, "Search should filter to 1 card before Escape")
+	var esc_search_ev := InputEventKey.new()
+	esc_search_ev.pressed = true
+	esc_search_ev.keycode = KEY_ESCAPE
+	main_inst.search_input.gui_input.emit(esc_search_ev)
+	assert(main_inst.search_input.text == "" and main_inst.card_grid.get_child_count() > 1, "Pressing Escape in SearchInput should clear text and restore cards")
+	print("✓ Volume Row Tooltips/Cursors & Search Escape Clear verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()
