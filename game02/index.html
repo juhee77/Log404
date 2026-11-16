@@ -889,6 +889,12 @@
                     e.preventDefault();
                     document.getElementById('search-box')?.focus();
                 }
+            } else if (['1', '2', '3', '4', '5'].includes(e.key) && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
+                const jm = document.getElementById('journal-modal');
+                if (!jm || jm.classList.contains('hidden')) {
+                    const tabMap = { '1': 'all', '2': 'manga', '3': 'gacha', '4': 'complete', '5': 'fav' };
+                    setFilter(tabMap[e.key]);
+                }
             }
         });
 

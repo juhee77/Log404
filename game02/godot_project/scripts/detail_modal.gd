@@ -6,6 +6,7 @@ const ArchiveStateClass = preload("res://scripts/archive_state.gd")
 signal item_deleted(item)
 signal volume_added(item)
 signal volume_removed(item)
+signal card_copied(item)
 signal diary_updated(item)
 
 @onready var title_label: Label = $Panel/VBox/Header/HBox/TitleLabel
@@ -255,6 +256,10 @@ func copy_book_quote_card() -> String:
 	lines.append(ct + " · " + cg + " · " + cf + " · " + rw + " · " + rs + " · " + fc + extra_meta + " · " + sig)
 	var card_text = "\n".join(lines)
 	DisplayServer.clipboard_set(card_text)
+	var share_btn: Button = get_node_or_null("Panel/VBox/BodyMargin/Body/TopInfo/MetaVBox/BtnRow/ShareCardBtn")
+	if share_btn != null:
+		share_btn.text = "✅ 복사됨!"
+	card_copied.emit(current_item)
 	return card_text
 
 func _apply_ink_style() -> void:
@@ -333,6 +338,9 @@ func _highlight_active_ink_btn(active_hex: String) -> void:
 func open(item) -> void:
 	current_item = item
 	editing_vol_index = -1
+	var share_btn_reset: Button = get_node_or_null("Panel/VBox/BodyMargin/Body/TopInfo/MetaVBox/BtnRow/ShareCardBtn")
+	if share_btn_reset != null:
+		share_btn_reset.text = "💌 공유"
 	if save_quote_btn != null:
 		save_quote_btn.text = "🖋️ 밑줄 저장"
 	if quote_input != null:

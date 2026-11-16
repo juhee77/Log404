@@ -5,6 +5,21 @@
 
 ---
 
+## 🚀 [Sprint 69] 감상 카드 복사 완료 피드백(`✅ 복사됨!`) & 숫자키 `1~5` 서재 탭 빠른 전환
+- **날짜/시각**: 2026-11-17 02:40 (자동 스프린트)
+- **참여 스쿼드**: 14인 애자일 스쿼드 전원 (다꾸러 3인, PO/기획 2인, UX/UI 2인, 개발 4인, QA 2인, CEO 1인)
+- **핵심 VOC 및 기획 확정**:
+  1. **다꾸러 VOC #1 ("모달에서 `💌 공유` 버튼을 눌러 감상 카드를 클립보드에 복사했을 때 버튼 자체가 `✅ 복사됨!`으로 바뀌고 하단 토스트도 함께 뜨면 복사가 확실히 됐는지 바로 알 수 있을 것 같아요!")**: `detail_modal.gd`에 `card_copied(item)` 시그널을 추가해 `copy_book_quote_card()` 실행 시 `ShareCardBtn` 텍스트를 `"✅ 복사됨!"`으로 바꾸고 `main_view.gd`의 `_on_card_copied()`에서 복사 완료 토스트를 표시(모달 재오픈 시 `"💌 공유"`로 초기화).
+  2. **다꾸러 VOC #2 ("메인 서재에서 숫자 키 `1~5`만 누르면 `전체일기`, `이북·단행본`, `가챠노트`, `완독작`, `인생작` 탭으로 바로 전환되면 키보드 탐색이 완벽해질 것 같아요")**: `main_view.gd`의 `_unhandled_input()`에서 검색창 포커스 중이 아닐 때 `KEY_1`~`KEY_5` 입력으로 5대 필터 탭을 즉시 전환.
+  3. **웹 목업 동기화**: `game02/index.html`의 전역 `keydown` 리스너에도 `1~5` 숫자 키 서재 탭 전환 단축키를 동기화.
+- **구현 및 검증 내역**:
+  - `detail_modal.gd`: `card_copied(item)` 시그널, `ShareCardBtn` `"✅ 복사됨!"` 피드백 및 `open()` 시 리셋.
+  - `main_view.gd`: `_on_card_copied()` 토스트 연동 및 `_unhandled_input()` `KEY_1`~`KEY_5` 탭 전환 단축키 추가.
+  - `game02/index.html`: 전역 `1~5` 숫자 키 서재 탭 전환 단축키 동기화.
+  - `tests/test_main_integration.gd`: Sprint 69 통합 테스트(`Share Card Copied Feedback & Number Key 1-5 Tab Shortcuts verified`) 추가 후 3대 헤드리스 테스트 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 캡처 완료.
+
+---
+
 ## 🚀 [Sprint 68] 마지막 권 삭제 전용 토스트 피드백(`volume_removed`) & 키보드 검색 단축키(`/` · `Ctrl/Cmd+F`)
 - **날짜/시각**: 2026-11-17 02:19 (자동 스프린트)
 - **참여 스쿼드**: 14인 애자일 스쿼드 전원 (다꾸러 3인, PO/기획 2인, UX/UI 2인, 개발 4인, QA 2인, CEO 1인)

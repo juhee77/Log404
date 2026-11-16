@@ -5,7 +5,7 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 
 ---
 
-## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 68)
+## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 69)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
@@ -14,6 +14,10 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 ---
 
 ## 🚀 최신 스프린트 업데이트 요약 ([전체 회의록 보기](SPRINT_LOG.md))
+
+### [Sprint 69] 감상 카드 복사 완료 피드백(`✅ 복사됨!`) & 숫자키 `1~5` 서재 탭 빠른 전환
+- **감상 카드 복사 피드백 (`detail_modal.gd` · `main_view.gd`)**: `💌 공유` 클릭 시 버튼이 `✅ 복사됨!`으로 전환되고 클립보드 복사 완료 토스트가 즉시 표시됩니다.
+- **숫자키 `1~5` 탭 단축키 (`main_view.gd` · `index.html`)**: 서재 메인 화면에서 숫자 `1~5` 키로 5대 필터 탭을 한 번에 전환할 수 있습니다.
 
 ### [Sprint 68] 마지막 권 삭제 전용 토스트 피드백(`volume_removed`) & 키보드 검색 단축키(`/` · `Ctrl/Cmd+F`)
 - **권 삭제 전용 토스트 (`detail_modal.gd` · `main_view.gd`)**: 모달에서 마지막 권 삭제 시 `volume_removed` 시그널을 통해 남은 권수와 함께 명확한 삭제 토스트 피드백을 제공합니다.

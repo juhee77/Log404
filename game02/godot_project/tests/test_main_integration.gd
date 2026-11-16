@@ -660,6 +660,28 @@ func _init() -> void:
 	main_inst._unhandled_input(slash_ev)
 	print("✓ Volume Removed Toast Feedback & Keyboard Search Shortcut verified")
 
+	# Test Sprint 69: Share Card Copied Feedback & Number Key 1-5 Tab Shortcuts
+	main_inst.detail_modal.open(main_inst.archive_state.items[0])
+	var share_btn_s69 = main_inst.detail_modal.get_node_or_null("Panel/VBox/BodyMargin/Body/TopInfo/MetaVBox/BtnRow/ShareCardBtn")
+	assert(share_btn_s69 != null and share_btn_s69.text == "💌 공유", "ShareCardBtn should start with 💌 공유")
+	main_inst.detail_modal.copy_book_quote_card()
+	assert(share_btn_s69.text == "✅ 복사됨!" and "클립보드에 복사되었습니다" in main_inst.status_toast.text, "copy_book_quote_card should update ShareCardBtn and status_toast")
+	main_inst.detail_modal.open(main_inst.archive_state.items[0])
+	assert(share_btn_s69.text == "💌 공유", "Re-opening DetailModal should reset ShareCardBtn text")
+	main_inst.detail_modal.close()
+	main_inst.search_input.release_focus()
+	var k2_ev := InputEventKey.new()
+	k2_ev.pressed = true
+	k2_ev.keycode = KEY_2
+	main_inst._unhandled_input(k2_ev)
+	assert(main_inst.archive_state.current_filter == 0, "Pressing 2 should switch to Manga filter")
+	var k1_ev := InputEventKey.new()
+	k1_ev.pressed = true
+	k1_ev.keycode = KEY_1
+	main_inst._unhandled_input(k1_ev)
+	assert(main_inst.archive_state.current_filter == -1, "Pressing 1 should switch back to All filter")
+	print("✓ Share Card Copied Feedback & Number Key 1-5 Tab Shortcuts verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

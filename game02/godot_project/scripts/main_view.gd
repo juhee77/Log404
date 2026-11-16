@@ -73,6 +73,7 @@ func _ready() -> void:
 	detail_modal.item_deleted.connect(_on_item_deleted)
 	detail_modal.volume_added.connect(_on_volume_added)
 	detail_modal.volume_removed.connect(_on_volume_removed)
+	detail_modal.card_copied.connect(_on_card_copied)
 	detail_modal.diary_updated.connect(_on_diary_updated)
 	add_modal.item_submitted.connect(_on_item_submitted)
 
@@ -628,6 +629,27 @@ func _unhandled_input(event: InputEvent) -> void:
 			search_input.grab_focus()
 			search_input.select_all()
 			get_viewport().set_input_as_handled()
+		elif search_input == null or not search_input.has_focus():
+			match event.keycode:
+				KEY_1:
+					_on_tab_all_pressed()
+					get_viewport().set_input_as_handled()
+				KEY_2:
+					_on_tab_manga_pressed()
+					get_viewport().set_input_as_handled()
+				KEY_3:
+					_on_tab_gacha_pressed()
+					get_viewport().set_input_as_handled()
+				KEY_4:
+					_on_tab_complete_pressed()
+					get_viewport().set_input_as_handled()
+				KEY_5:
+					_on_tab_fav_pressed()
+					get_viewport().set_input_as_handled()
+
+func _on_card_copied(item) -> void:
+	if item != null:
+		_show_toast("💌 「" + item.title + "」 독서 감상 카드가 클립보드에 복사되었습니다!")
 
 func _on_volume_removed(item) -> void:
 	if item != null:
