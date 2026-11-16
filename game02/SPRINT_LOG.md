@@ -5,6 +5,21 @@
 
 ---
 
+## 🚀 [Sprint 60] 마일스톤 60: 키보드 Escape 모달 닫기 & 새 일기 쓰기(`AddModal`) 엔터 연속 입력/등록
+- **날짜/시각**: 2026-11-16 23:38 (자동 스프린트)
+- **참여 스쿼드**: 14인 애자일 스쿼드 전원 (다꾸러 3인, PO/기획 2인, UX/UI 2인, 개발 4인, QA 2인, CEO 1인)
+- **핵심 VOC 및 기획 확정**:
+  1. **다꾸러 VOC #1 ("상세 일기장이나 새 일기 쓰기 창을 열었을 때 `ESC` 키만 누르면 바로 닫히면 맥/PC 앱에서도 훨씬 편할 것 같아요!")**: `detail_modal.gd`와 `add_modal.gd`에 `_unhandled_input()`을 추가해 `KEY_ESCAPE` 입력 시 열려 있는 모달을 즉시 닫고 입력을 소비(`set_input_as_handled()`)하도록 구현.
+  2. **다꾸러 VOC #2 ("새 일기 쓰기(`AddModal`)에서 제목 입력 후 Enter 치면 작가 칸으로 넘어가고, 명대사 칸에서 Enter 치면 바로 등록되면 좋겠어요")**: `add_modal.gd`의 `_ready()`에서 `title_input.text_submitted` → `author_input.grab_focus()`, `quote_input.text_submitted` → `_on_submit_btn_pressed()`를 연결.
+  3. **웹 목업 동기화**: `game02/index.html`에 전역 `Escape` 키 리스너를 추가해 웹 목업에서도 `ESC`로 다이어리 모달을 닫을 수 있도록 동기화.
+- **구현 및 검증 내역**:
+  - `detail_modal.gd`: `_unhandled_input()` `KEY_ESCAPE` 닫기 추가.
+  - `add_modal.gd`: `_unhandled_input()` `KEY_ESCAPE` 닫기 및 `title_input`/`quote_input` Enter 키 흐름 연결.
+  - `game02/index.html`: 전역 `Escape` 키 모달 닫기 동기화.
+  - `tests/test_main_integration.gd`: Sprint 60 통합 테스트(`Keyboard Escape Modal Close & AddModal Enter-to-Submit verified`) 추가 후 3대 헤드리스 테스트 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 캡처 완료.
+
+---
+
 ## 🚀 [Sprint 59] 밑줄 입력창 엔터키 즉시 저장, 가챠 복수소장 배지(`🔮×N`) & macOS/Web 빌드 프리셋 구축
 - **날짜/시각**: 2026-11-16 23:19 (자동 스프린트)
 - **참여 스쿼드**: 14인 애자일 스쿼드 전원 (다꾸러 3인, PO/기획 2인, UX/UI 2인, 개발 4인, QA 2인, CEO 1인)

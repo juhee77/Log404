@@ -871,6 +871,9 @@
         function closeJournalModal() {
             document.getElementById('journal-modal').classList.add('hidden');
         }
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeJournalModal();
+        });
 
         function openWebScraperModal() {
             ITEMS.unshift({

@@ -5,7 +5,7 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 
 ---
 
-## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 59)
+## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 60)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
@@ -14,6 +14,10 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 ---
 
 ## 🚀 최신 스프린트 업데이트 요약 ([전체 회의록 보기](SPRINT_LOG.md))
+
+### [Sprint 60] 마일스톤 60: 키보드 Escape 모달 닫기 & 새 일기 쓰기(`AddModal`) 엔터 연속 입력/등록
+- **키보드 `ESC` 모달 닫기 (`detail_modal.gd` · `add_modal.gd` · `index.html`)**: 상세 일기장 및 새 일기 쓰기 모달이 열린 상태에서 `Escape` 키로 즉시 닫을 수 있습니다.
+- **새 일기 쓰기 엔터 연속 흐름 (`add_modal.gd`)**: 제목 입력 후 Enter 시 작가 입력창으로 포커스가 이동하고, 감상평 입력 후 Enter 시 즉시 일기가 등록됩니다.
 
 ### [Sprint 59] 밑줄 입력창 엔터키 즉시 저장, 가챠 복수소장 배지(`🔮×N`) & macOS/Web 빌드 프리셋 구축
 - **엔터키 즉시 저장 & 가챠 복수 소장 배지 (`detail_modal.gd` · `card_item.gd` · `index.html`)**: 모달 밑줄 입력창에서 Enter 키로 즉시 저장할 수 있으며, 가챠 카드 복수 소장 시 우측 하단 배지에 `🔮×N`이 표시됩니다.

@@ -543,6 +543,25 @@ func _init() -> void:
 	assert(FileAccess.file_exists("res://export_presets.cfg"), "export_presets.cfg should exist for macOS/Web builds")
 	print("✓ Quote Input Enter-to-Save, Gacha Duplicate Badge & Export Presets Ready verified")
 
+	# Test Sprint 60: Keyboard Escape Modal Close & AddModal Enter-to-Submit
+	var esc_ev := InputEventKey.new()
+	esc_ev.pressed = true
+	esc_ev.keycode = KEY_ESCAPE
+	main_inst.detail_modal.open(main_inst.archive_state.items[0])
+	assert(main_inst.detail_modal.visible, "DetailModal should be open before Escape")
+	main_inst.detail_modal._unhandled_input(esc_ev)
+	assert(not main_inst.detail_modal.visible, "DetailModal should close on KEY_ESCAPE")
+	main_inst.add_modal.open()
+	assert(main_inst.add_modal.visible, "AddModal should be open before Escape")
+	main_inst.add_modal._unhandled_input(esc_ev)
+	assert(not main_inst.add_modal.visible, "AddModal should close on KEY_ESCAPE")
+	main_inst.add_modal.open()
+	main_inst.add_modal.title_input.text = "키보드 엔터 등록 테스트"
+	main_inst.add_modal.quote_input.text = "엔터 한 번으로 등록"
+	main_inst.add_modal.quote_input.text_submitted.emit("엔터 한 번으로 등록")
+	assert(not main_inst.add_modal.visible, "AddModal should submit and close on quote_input Enter")
+	print("✓ Keyboard Escape Modal Close & AddModal Enter-to-Submit verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

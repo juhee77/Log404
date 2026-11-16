@@ -373,6 +373,11 @@ func open(item) -> void:
 func close() -> void:
 	visible = false
 
+func _unhandled_input(event: InputEvent) -> void:
+	if visible and event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_ESCAPE:
+		close()
+		get_viewport().set_input_as_handled()
+
 func apply_stamp(stamp_name: String) -> void:
 	if current_item == null:
 		return

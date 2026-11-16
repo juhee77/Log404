@@ -29,6 +29,8 @@ func _ready() -> void:
 	cat_option.add_item("🔮 가챠 · 굿즈 스크랩 노트", 1)
 	_build_color_swatches()
 	_style_inputs()
+	title_input.text_submitted.connect(func(_t): author_input.grab_focus())
+	quote_input.text_submitted.connect(func(_t): _on_submit_btn_pressed())
 
 func _build_color_swatches() -> void:
 	for child in color_row.get_children():
@@ -120,6 +122,11 @@ func open() -> void:
 
 func close() -> void:
 	visible = false
+
+func _unhandled_input(event: InputEvent) -> void:
+	if visible and event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_ESCAPE:
+		close()
+		get_viewport().set_input_as_handled()
 
 func _on_close_btn_pressed() -> void:
 	close()
