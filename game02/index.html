@@ -157,7 +157,7 @@
                         <div class="serif-font text-lg font-bold text-[#c85a32]" id="stat-vols">10권</div>
                     </div>
                     <div class="h-7 w-[1px] bg-[#e2d6c5]"></div>
-                    <div class="text-center px-2" title="클릭 시 초판본 현황 및 초판 비율 요약">
+                    <div onclick="setFilter('firsts')" class="text-center px-2 cursor-pointer hover:opacity-80" title="클릭 시 초판 스탬프 보유 작품만 필터링">
                         <div class="text-[11px] text-[#8c7a6b]">초판 스탬프</div>
                         <div class="serif-font text-lg font-bold text-[#4a6b5d]" id="stat-firsts">7개</div>
                     </div>
@@ -511,6 +511,7 @@
                 else if (currentCat === 'gacha') cMatch = it.category === 'gacha';
                 else if (currentCat === 'complete') cMatch = it.stamp === '전권완결' || (it.volumes && it.volumes.length >= 2);
                 else if (currentCat === 'fav') cMatch = it.stamp === '인생최애' || (it.volumes && it.volumes.every(v => v.rating === 5));
+                else if (currentCat === 'firsts') cMatch = it.stamp === '초판특전' || (it.volumes && it.volumes.some(v => v.status === 'first'));
 
                 const qMatch = !q || it.title.toLowerCase().includes(q) || it.author.toLowerCase().includes(q) || it.memo.toLowerCase().includes(q);
                 return cMatch && qMatch;

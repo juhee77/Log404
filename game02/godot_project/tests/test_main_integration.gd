@@ -500,6 +500,21 @@ func _init() -> void:
 	main_inst.detail_modal.toggle_quote_highlight()
 	print("✓ Active Stamp Highlight & Highlighter Button ON/OFF Visual State verified")
 
+	# Test Sprint 57: AddModal Cover Swatch Highlight, Empty Title Feedback & StatFirsts Filter Sync
+	main_inst.add_modal.open()
+	main_inst.add_modal.select_color("#1d4ed8")
+	var cobalt_btn = main_inst.add_modal.color_row.get_child(1)
+	assert("✓ " in cobalt_btn.text and cobalt_btn.get_theme_stylebox("normal").border_width_left == 2, "Selected AddModal swatch should show checkmark and 2px border")
+	main_inst.add_modal.title_input.text = "   "
+	main_inst.add_modal._on_submit_btn_pressed()
+	assert("⚠️" in main_inst.add_modal.title_input.placeholder_text and main_inst.add_modal.visible, "Empty title submit should show warning placeholder and keep AddModal open")
+	main_inst.add_modal.close()
+	main_inst._on_tab_complete_pressed()
+	main_inst._on_stat_firsts_clicked()
+	assert(main_inst.filter_firsts_only and not main_inst.filter_completed_only and not main_inst.filter_favorites_only, "_on_stat_firsts_clicked should reset completed/favorites flags")
+	main_inst._on_tab_all_pressed()
+	print("✓ AddModal Cover Swatch Highlight, Empty Title Feedback & StatFirsts Filter Sync verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

@@ -49,6 +49,7 @@ func _build_color_swatches() -> void:
 		var hex_val = sw["hex"]
 		btn.pressed.connect(func(): select_color(hex_val))
 		color_row.add_child(btn)
+	_highlight_selected_swatch()
 
 func _style_inputs() -> void:
 	var inp_sb = StyleBoxFlat.new()
@@ -81,13 +82,40 @@ func _style_inputs() -> void:
 
 func select_color(hex_code: String) -> void:
 	selected_color = hex_code
+	_highlight_selected_swatch()
+
+func _highlight_selected_swatch() -> void:
+	if color_row == null:
+		return
+	var children = color_row.get_children()
+	for i in range(min(children.size(), COVER_SWATCHES.size())):
+		var btn = children[i]
+		if not (btn is Button):
+			continue
+		var sw = COVER_SWATCHES[i]
+		var is_sel = (selected_color.to_lower() == sw["hex"].to_lower())
+		btn.text = ("✓ " + sw["name"]) if is_sel else sw["name"]
+		var sb = StyleBoxFlat.new()
+		sb.bg_color = Color.from_string(sw["hex"], Color(0.7, 0.2, 0.2))
+		sb.border_width_left = 2 if is_sel else 0
+		sb.border_width_top = 2 if is_sel else 0
+		sb.border_width_right = 2 if is_sel else 0
+		sb.border_width_bottom = 2 if is_sel else 0
+		sb.border_color = Color(0.99, 0.96, 0.88, 1)
+		sb.corner_radius_top_left = 6
+		sb.corner_radius_top_right = 6
+		sb.corner_radius_bottom_left = 6
+		sb.corner_radius_bottom_right = 6
+		btn.add_theme_stylebox_override("normal", sb)
 
 func open() -> void:
 	title_input.text = ""
+	title_input.placeholder_text = "작품·굿즈 제목 (예: 슬램덩크 신장재편판)"
 	author_input.text = ""
 	quote_input.text = ""
 	cat_option.selected = 0
 	selected_color = "#b91c1c"
+	_highlight_selected_swatch()
 	visible = true
 
 func close() -> void:
@@ -99,6 +127,8 @@ func _on_close_btn_pressed() -> void:
 func _on_submit_btn_pressed() -> void:
 	var t = title_input.text.strip_edges()
 	if t.is_empty():
+		title_input.placeholder_text = "⚠️ 작품 제목을 먼저 입력해주세요!"
+		title_input.grab_focus()
 		return
 	var cat = cat_option.selected
 	var a = author_input.text.strip_edges()

@@ -359,7 +359,10 @@ func _on_card_quick_advanced(it) -> void:
 
 func _on_stat_firsts_clicked() -> void:
 	filter_firsts_only = true
+	filter_completed_only = false
+	filter_favorites_only = false
 	archive_state.current_filter = -1
+	_highlight_tabs(tab_all)
 	_render_cards()
 	_show_toast("🔖 초판 스탬프 보유 작품만 필터링되었습니다.")
 

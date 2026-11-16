@@ -5,6 +5,21 @@
 
 ---
 
+## 🚀 [Sprint 57] 새 일기 쓰기(`AddModal`) 표지 스와치 하이라이트, 빈 제목 경고 피드백 & 초판 필터 동기화
+- **날짜/시각**: 2026-11-16 22:41 (자동 스프린트)
+- **참여 스쿼드**: 14인 애자일 스쿼드 전원 (다꾸러 3인, PO/기획 2인, UX/UI 2인, 개발 4인, QA 2인, CEO 1인)
+- **핵심 VOC 및 기획 확정**:
+  1. **다꾸러 VOC #1 ("새 일기 쓰기(`AddModal`)에서 표지 색상을 눌렀을 때 어떤 색상이 선택됐는지 테두리나 체크표시로 바로 보이면 좋겠어요!")**: `add_modal.gd`에 `_highlight_selected_swatch()`를 추가해 선택된 표지 컬러 버튼에 `✓ ` 체크마크와 2px 크림 테두리를 표시.
+  2. **다꾸러 VOC #2 ("제목을 비우고 등록 버튼을 눌렀을 때 아무 반응이 없는 대신 입력창에 안내 문구가 뜨고 포커스가 가면 좋겠어요")**: `add_modal.gd`의 `_on_submit_btn_pressed()`에서 빈 제목일 때 `placeholder_text = "⚠️ 작품 제목을 먼저 입력해주세요!"` 및 `grab_focus()`를 실행.
+  3. **다꾸러 VOC #3 ("상단 `초판 스탬프` KPI를 클릭했을 때도 기존 완독작/인생작 필터 상태가 깔끔히 초기화되면 좋겠어요")**: `main_view.gd`의 `_on_stat_firsts_clicked()`에서 `filter_completed_only`/`filter_favorites_only`를 초기화하고 `_highlight_tabs(tab_all)`을 호출. `game02/index.html`의 `초판 스탬프` 클릭 필터(`setFilter('firsts')`)도 동기화.
+- **구현 및 검증 내역**:
+  - `add_modal.gd`: `_highlight_selected_swatch()` 추가, `open()`/`select_color()` 연동, 빈 제목 경고 포커스 추가.
+  - `main_view.gd`: `_on_stat_firsts_clicked()` 필터 플래그 초기화 및 탭 하이라이트 동기화.
+  - `game02/index.html`: `초판 스탬프` KPI 카드 클릭 필터(`setFilter('firsts')`) 동기화.
+  - `tests/test_main_integration.gd`: Sprint 57 통합 테스트(`AddModal Cover Swatch Highlight, Empty Title Feedback & StatFirsts Filter Sync verified`) 추가 후 3대 헤드리스 테스트 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 캡처 완료.
+
+---
+
 ## 🚀 [Sprint 56] 활성 인장 스탬프 하이라이트 & 형광펜 버튼 ON/OFF 상태 시각화
 - **날짜/시각**: 2026-11-16 17:25 (자동 스프린트)
 - **참여 스쿼드**: 14인 애자일 스쿼드 전원 (다꾸러 3인, PO/기획 2인, UX/UI 2인, 개발 4인, QA 2인, CEO 1인)
