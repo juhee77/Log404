@@ -787,6 +787,15 @@ func update_volume_quote(vol_idx: int, new_quote: String) -> void:
 func start_editing_volume_quote(vol_idx: int) -> void:
 	if current_item == null or vol_idx < 0 or vol_idx >= current_item.volumes.size():
 		return
+	if editing_vol_index == vol_idx:
+		editing_vol_index = -1
+		if quote_input != null:
+			quote_input.text = current_item.memo
+			quote_input.placeholder_text = "🖋️ 오늘 밑줄 친 명대사·감상평 수정..."
+		if save_quote_btn != null:
+			save_quote_btn.text = "🖋️ 밑줄 저장"
+		_render_volumes()
+		return
 	editing_vol_index = vol_idx
 	var v = current_item.volumes[vol_idx]
 	var vol_num = int(v.get("vol", vol_idx + 1))

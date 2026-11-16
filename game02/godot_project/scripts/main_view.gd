@@ -581,7 +581,7 @@ func _on_web_scrape_btn_pressed() -> void:
 	var added = archive_state.scrape_web_preset(web_preset_cursor)
 	web_preset_cursor = (web_preset_cursor + 1) % archive_state.WEB_PRESET_CATALOG.size()
 	_update_stats()
-	_render_cards()
+	_on_tab_all_pressed()
 	_show_toast("🌐 웹 표지 자동 스크랩 완료: " + added.title)
 
 func _on_camera_snap_btn_pressed() -> void:
@@ -613,7 +613,7 @@ func _on_item_submitted(p_title: String, p_cat: int, p_author: String, p_color: 
 			added.volumes[0]["quote"] = p_quote
 		archive_state.save_to_file()
 	_update_stats()
-	_render_cards()
+	_on_tab_all_pressed()
 	_show_toast("✨ 새 일기장이 서재에 꽂혔습니다: " + p_title)
 
 func _on_item_deleted(item) -> void:

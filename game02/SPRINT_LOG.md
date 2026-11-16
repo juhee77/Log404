@@ -5,6 +5,21 @@
 
 ---
 
+## 🚀 [Sprint 71] 권별 밑줄 편집 토글 해제 & 새 일기 등록/스크랩 시 전체 서재 자동 전환
+- **날짜/시각**: 2026-11-17 03:18 (자동 스프린트)
+- **참여 스쿼드**: 14인 애자일 스쿼드 전원 (다꾸러 3인, PO/기획 2인, UX/UI 2인, 개발 4인, QA 2인, CEO 1인)
+- **핵심 VOC 및 기획 확정**:
+  1. **다꾸러 VOC #1 ("모달에서 특정 권 대사를 클릭해 편집하다가 같은 권을 한 번 더 클릭하면 권별 편집 모드가 취소되고 전체 감상평 편집으로 돌아가면 좋겠어요!")**: `detail_modal.gd`의 `start_editing_volume_quote()`에서 이미 편집 중인 권(`editing_vol_index == vol_idx`)을 다시 클릭하면 `editing_vol_index = -1`로 토글 해제하고 `quote_input`과 `save_quote_btn`을 기본 상태로 복원.
+  2. **다꾸러 VOC #2 ("특정 필터 탭(`이북·단행본` 등)을 켜둔 상태에서 새 일기를 등록하거나 웹 스크랩을 추가했을 때, 방금 추가한 작품이 바로 보이도록 자동으로 `전체일기` 탭으로 전환되면 좋겠어요")**: `main_view.gd`의 `_on_item_submitted()`와 `_on_web_scrape_btn_pressed()`에서 `_on_tab_all_pressed()`를 호출해 새로 추가된 작품을 즉시 노출.
+  3. **웹 목업 동기화**: `game02/index.html`의 `startEditVolQuote(idx)`에도 같은 권 재클릭 시 편집 모드 토글 해제 동작을 동기화.
+- **구현 및 검증 내역**:
+  - `detail_modal.gd`: `start_editing_volume_quote()` 재클릭 토글 해제 추가.
+  - `main_view.gd`: `_on_item_submitted()` / `_on_web_scrape_btn_pressed()` 시 전체 서재 탭 자동 전환.
+  - `game02/index.html`: `startEditVolQuote()` 토글 해제 동기화.
+  - `tests/test_main_integration.gd`: Sprint 71 통합 테스트(`Toggle-Off Volume Quote Edit & Auto-Switch to All Tab on Submit verified`) 추가 후 3대 헤드리스 테스트 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 캡처 완료.
+
+---
+
 ## 🚀 [Sprint 70] 마일스톤 70: 편집 중인 권별 행 하이라이트 & 서재 탭 단축키·실시간 작품수 툴팁
 - **날짜/시각**: 2026-11-17 03:01 (자동 스프린트)
 - **참여 스쿼드**: 14인 애자일 스쿼드 전원 (다꾸러 3인, PO/기획 2인, UX/UI 2인, 개발 4인, QA 2인, CEO 1인)

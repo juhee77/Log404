@@ -694,6 +694,18 @@ func _init() -> void:
 	assert("[1]" in main_inst.tab_all.tooltip_text and "[2]" in main_inst.tab_manga.tooltip_text, "Filter tabs should include [1]-[5] shortcut tooltips")
 	print("✓ Active Editing Volume Row Highlight & Tab Shortcut Tooltips verified")
 
+	# Test Sprint 71: Toggle-Off Volume Quote Edit & Auto-Switch to All Tab on Submit
+	main_inst.detail_modal.open(main_inst.archive_state.items[0])
+	main_inst.detail_modal.start_editing_volume_quote(1)
+	assert(main_inst.detail_modal.editing_vol_index == 1, "First click should enter volume edit mode")
+	main_inst.detail_modal.start_editing_volume_quote(1)
+	assert(main_inst.detail_modal.editing_vol_index == -1 and main_inst.detail_modal.save_quote_btn.text == "🖋️ 밑줄 저장", "Second click on same volume should toggle off volume edit mode")
+	main_inst.detail_modal.close()
+	main_inst._on_tab_manga_pressed()
+	main_inst._on_item_submitted("가챠 자동 탭 복귀 테스트", 1, "테스트", "#6d28d9", "테스트 문장")
+	assert(main_inst.archive_state.current_filter == -1, "Submitting new item should switch back to All tab so new item is visible")
+	print("✓ Toggle-Off Volume Quote Edit & Auto-Switch to All Tab on Submit verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

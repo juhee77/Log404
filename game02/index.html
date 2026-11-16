@@ -843,8 +843,16 @@
         function startEditVolQuote(idx) {
             const item = ITEMS.find(x => x.id === activeId);
             if (!item || !item.volumes || !item.volumes[idx]) return;
-            editingVolIdx = idx;
             const inp = document.getElementById('diary-quote-input');
+            if (editingVolIdx === idx) {
+                editingVolIdx = -1;
+                if (inp) {
+                    inp.value = item.memo || '';
+                    inp.placeholder = '🖋️ 오늘 밑줄 친 명대사·감상평 수정...';
+                }
+                return;
+            }
+            editingVolIdx = idx;
             if (inp) {
                 inp.value = item.volumes[idx].quote || '';
                 inp.placeholder = `🖋️ ${item.volumes[idx].vol}권 밑줄 문장 편집 중...`;
