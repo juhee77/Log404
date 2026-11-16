@@ -92,7 +92,11 @@ func _ready() -> void:
 	today_quote_label.gui_input.connect(func(ev): if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_LEFT: open_current_quote_item())
 
 	if search_input != null:
+		search_input.clear_button_enabled = true
 		search_input.tooltip_text = "작품명·작가·대사·태그·보관위치·날씨·장소·소장경로 통합 검색"
+	for ctrl in [get_node_or_null("VBox/TopBar/TopMargin/StatsVBox/TitleRow/AddBtn"), get_node_or_null("VBox/TopBar/TopMargin/StatsVBox/TitleRow/AmbientBtn"), next_quote_btn, random_pick_btn, sort_btn, tab_all, tab_manga, tab_gacha, tab_complete, tab_fav]:
+		if ctrl != null:
+			ctrl.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	if next_quote_btn != null:
 		next_quote_btn.tooltip_text = "서재 속 다음 밑줄 문장으로 넘기기"
 	if random_pick_btn != null:

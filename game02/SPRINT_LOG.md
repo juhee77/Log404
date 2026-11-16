@@ -5,6 +5,21 @@
 
 ---
 
+## 🚀 [Sprint 61] 검색창·인용 입력창 원탭 지우기(`clear_button_enabled`) & 전체 액션 버튼 커서 통일
+- **날짜/시각**: 2026-11-16 23:59 (자동 스프린트)
+- **참여 스쿼드**: 14인 애자일 스쿼드 전원 (다꾸러 3인, PO/기획 2인, UX/UI 2인, 개발 4인, QA 2인, CEO 1인)
+- **핵심 VOC 및 기획 확정**:
+  1. **다꾸러 VOC #1 ("검색창과 모달 밑줄 입력창 오른쪽에 `✕` 원탭 지우기 버튼이 있으면 검색어를 지우거나 새 문장을 쓸 때 훨씬 빠를 것 같아요!")**: `main_view.gd`의 `search_input.clear_button_enabled = true`와 `detail_modal.gd`의 `quote_input.clear_button_enabled = true`를 활성화해 네이티브 `✕` 초기화 버튼을 제공.
+  2. **다꾸러 VOC #2 ("상단 필터 탭(`TabAll`~`TabFav`), 정렬·추천·문장 넘기기 버튼에도 마우스를 올렸을 때 손가락 커서(`CURSOR_POINTING_HAND`)가 나오면 좋겠어요")**: `main_view.gd`에서 상단·필터 주요 액션 버튼 전체에 `CURSOR_POINTING_HAND`를 일괄 적용.
+  3. **웹 목업 동기화**: `game02/index.html`의 `#search-box`를 `type="search"`로 전환해 브라우저 기본 `✕` 검색어 지우기 버튼을 동기화.
+- **구현 및 검증 내역**:
+  - `main_view.gd`: `search_input.clear_button_enabled = true` 및 주요 액션/탭 버튼 `CURSOR_POINTING_HAND` 적용.
+  - `detail_modal.gd`: `quote_input.clear_button_enabled = true` 적용.
+  - `game02/index.html`: `#search-box` `type="search"` 동기화.
+  - `tests/test_main_integration.gd`: Sprint 61 통합 테스트(`Search & Quote Clear Buttons + Unified Action Cursor Affordance verified`) 추가 후 3대 헤드리스 테스트 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 캡처 완료.
+
+---
+
 ## 🚀 [Sprint 60] 마일스톤 60: 키보드 Escape 모달 닫기 & 새 일기 쓰기(`AddModal`) 엔터 연속 입력/등록
 - **날짜/시각**: 2026-11-16 23:38 (자동 스프린트)
 - **참여 스쿼드**: 14인 애자일 스쿼드 전원 (다꾸러 3인, PO/기획 2인, UX/UI 2인, 개발 4인, QA 2인, CEO 1인)

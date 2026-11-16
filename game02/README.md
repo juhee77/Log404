@@ -5,7 +5,7 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 
 ---
 
-## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 60)
+## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 61)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
@@ -14,6 +14,10 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 ---
 
 ## 🚀 최신 스프린트 업데이트 요약 ([전체 회의록 보기](SPRINT_LOG.md))
+
+### [Sprint 61] 검색창·인용 입력창 원탭 지우기(`clear_button_enabled`) & 전체 액션 버튼 커서 통일
+- **원탭 `✕` 지우기 버튼 (`main_view.gd` · `detail_modal.gd` · `index.html`)**: 서재 통합 검색창과 모달 밑줄 입력창에 네이티브 `✕` 초기화 버튼을 활성화해 한 번에 입력 내용을 지울 수 있습니다.
+- **액션 버튼 커서 통일 (`main_view.gd`)**: 상단 `+ 일기 쓰기`, `무음`, `문장`, `추천`, `정렬` 및 필터 탭 버튼 전체에 손가락 포인팅 커서를 적용했습니다.
 
 ### [Sprint 60] 마일스톤 60: 키보드 Escape 모달 닫기 & 새 일기 쓰기(`AddModal`) 엔터 연속 입력/등록
 - **키보드 `ESC` 모달 닫기 (`detail_modal.gd` · `add_modal.gd` · `index.html`)**: 상세 일기장 및 새 일기 쓰기 모달이 열린 상태에서 `Escape` 키로 즉시 닫을 수 있습니다.

@@ -562,6 +562,12 @@ func _init() -> void:
 	assert(not main_inst.add_modal.visible, "AddModal should submit and close on quote_input Enter")
 	print("✓ Keyboard Escape Modal Close & AddModal Enter-to-Submit verified")
 
+	# Test Sprint 61: Search & Quote Clear Buttons + Unified Action Cursor Affordance
+	assert(main_inst.search_input.clear_button_enabled, "SearchInput should enable built-in clear button")
+	assert(main_inst.detail_modal.quote_input.clear_button_enabled, "DetailModal quote_input should enable built-in clear button")
+	assert(main_inst.tab_all.mouse_default_cursor_shape == Control.CURSOR_POINTING_HAND, "Header/Filter action buttons should use CURSOR_POINTING_HAND")
+	print("✓ Search & Quote Clear Buttons + Unified Action Cursor Affordance verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

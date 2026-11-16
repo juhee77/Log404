@@ -87,6 +87,7 @@ func _style_diary_controls() -> void:
 	input_sb.border_width_bottom = 2
 	input_sb.border_color = Color(0.78, 0.68, 0.56, 1)
 	input_sb.content_margin_left = 8
+	quote_input.clear_button_enabled = true
 	quote_input.add_theme_stylebox_override("normal", input_sb)
 	quote_input.add_theme_color_override("font_color", Color(0.18, 0.14, 0.11))
 	quote_input.add_theme_color_override("font_placeholder_color", Color(0.55, 0.48, 0.42))
