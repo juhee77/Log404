@@ -706,6 +706,20 @@ func _init() -> void:
 	assert(main_inst.archive_state.current_filter == -1, "Submitting new item should switch back to All tab so new item is visible")
 	print("✓ Toggle-Off Volume Quote Edit & Auto-Switch to All Tab on Submit verified")
 
+	# Test Sprint 72: Reread/Duplicate Decrement & Camera Snap Auto-Switch to All Tab
+	main_inst.detail_modal.open(main_inst.archive_state.items[0])
+	var rr_up = main_inst.detail_modal.increment_reread_count()
+	var rr_dn = main_inst.detail_modal.decrement_reread_count()
+	assert(rr_dn == rr_up - 1 and rr_dn >= 1, "decrement_reread_count should decrement reread_count with floor 1")
+	var dc_up = main_inst.detail_modal.increment_duplicate_count()
+	var dc_dn = main_inst.detail_modal.decrement_duplicate_count()
+	assert(dc_dn == dc_up - 1 and dc_dn >= 1, "decrement_duplicate_count should decrement duplicate_count with floor 1")
+	main_inst.detail_modal.close()
+	main_inst._on_tab_gacha_pressed()
+	main_inst._on_camera_snap_btn_pressed()
+	assert(main_inst.archive_state.current_filter == -1, "Camera snap should auto-switch back to All tab")
+	print("✓ Reread/Duplicate Decrement & Camera Snap Auto-Switch to All Tab verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

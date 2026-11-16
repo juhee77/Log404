@@ -5,6 +5,21 @@
 
 ---
 
+## 🚀 [Sprint 72] 회독·복수소장 우클릭 -1 되돌리기(`decrement_*`) & 폴라로이드 촬영 시 전체 서재 전환
+- **날짜/시각**: 2026-11-17 03:39 (자동 스프린트)
+- **참여 스쿼드**: 14인 애자일 스쿼드 전원 (다꾸러 3인, PO/기획 2인, UX/UI 2인, 개발 4인, QA 2인, CEO 1인)
+- **핵심 VOC 및 기획 확정**:
+  1. **다꾸러 VOC #1 ("모달의 `🔁1회독`과 `👯×1` 버튼을 실수로 한 번 더 눌렀을 때, 마우스 우클릭으로 `-1` 되돌리기가 되면 정말 편리할 것 같아요!")**: `detail_modal.gd`에 `decrement_reread_count()`와 `decrement_duplicate_count()`(최솟값 1 보장)를 추가하고 `RereadBtn`/`DuplicateBtn` 우클릭(`MOUSE_BUTTON_RIGHT`) 및 툴팁 안내와 연동.
+  2. **다꾸러 VOC #2 ("`폴라로이드 촬영` 버튼을 눌렀을 때도 현재 다른 필터 탭에 머물러 있으면 방금 찍은 실물 인증 카드가 안 보일 수 있으니 `전체일기` 탭으로 자동 전환되면 좋겠어요")**: `main_view.gd`의 `_on_camera_snap_btn_pressed()`에서 `_on_tab_all_pressed()`를 호출하도록 개선.
+  3. **웹 목업 동기화**: `game02/index.html`의 `#reread-cycle-btn`에 `oncontextmenu` 우클릭 `decrementRereadCount()`를 동기화.
+- **구현 및 검증 내역**:
+  - `detail_modal.gd`: `decrement_reread_count()`, `decrement_duplicate_count()`, 우클릭 핸들러 및 툴팁 갱신.
+  - `main_view.gd`: `_on_camera_snap_btn_pressed()` 시 전체 서재 탭 자동 전환.
+  - `game02/index.html`: `#reread-cycle-btn` 우클릭 `-1` 되돌리기 동기화.
+  - `tests/test_main_integration.gd`: Sprint 72 통합 테스트(`Reread/Duplicate Decrement & Camera Snap Auto-Switch to All Tab verified`) 추가 후 3대 헤드리스 테스트 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 캡처 완료.
+
+---
+
 ## 🚀 [Sprint 71] 권별 밑줄 편집 토글 해제 & 새 일기 등록/스크랩 시 전체 서재 자동 전환
 - **날짜/시각**: 2026-11-17 03:18 (자동 스프린트)
 - **참여 스쿼드**: 14인 애자일 스쿼드 전원 (다꾸러 3인, PO/기획 2인, UX/UI 2인, 개발 4인, QA 2인, CEO 1인)

@@ -595,7 +595,7 @@ func _on_camera_snap_btn_pressed() -> void:
 		"실물인증"
 	)
 	_update_stats()
-	_render_cards()
+	_on_tab_all_pressed()
 	_show_toast("📸 카메라 찰칵! 실물 표지가 등록되었습니다: " + added.title)
 
 func _on_theme_btn_pressed() -> void:

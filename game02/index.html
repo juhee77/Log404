@@ -304,7 +304,7 @@
                             <button id="mood-cycle-btn" onclick="cycleReadingMood()"
                                 class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">🥰
                                 힐링</button>
-                            <button id="reread-cycle-btn" onclick="incrementRereadCount()"
+                            <button id="reread-cycle-btn" onclick="incrementRereadCount()" oncontextmenu="event.preventDefault(); decrementRereadCount();" title="클릭: +1회독 · 우클릭: -1회독"
                                 class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">🔁
                                 1회독</button>
                             <button onclick="copyBookQuoteCard()"
@@ -666,6 +666,14 @@
             const item = ITEMS.find(x => x.id === activeId);
             if (!item) return;
             item.reread_count = (item.reread_count || 1) + 1;
+            const btn = document.getElementById('reread-cycle-btn');
+            if (btn) btn.textContent = `🔁 ${item.reread_count}회독`;
+            renderShelf();
+        }
+        function decrementRereadCount() {
+            const item = ITEMS.find(x => x.id === activeId);
+            if (!item) return;
+            item.reread_count = Math.max(1, (item.reread_count || 1) - 1);
             const btn = document.getElementById('reread-cycle-btn');
             if (btn) btn.textContent = `🔁 ${item.reread_count}회독`;
             renderShelf();

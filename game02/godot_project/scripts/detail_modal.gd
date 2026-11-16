@@ -182,8 +182,8 @@ func _style_diary_controls() -> void:
 		"Panel/VBox/BodyMargin/Body/StampRow/StorageBtn": "실물 보관 위치 순환",
 		"Panel/VBox/BodyMargin/Body/StampRow/SourceBtn": "소장·입수 경로 순환",
 		"Panel/VBox/BodyMargin/Body/StampRow/MoodBtn": "독서·수집 기분 태그 순환",
-		"Panel/VBox/BodyMargin/Body/StampRow/RereadBtn": "재독 횟수 +1 증가",
-		"Panel/VBox/BodyMargin/Body/StampRow/DuplicateBtn": "복수 소장 수량 +1 증가",
+		"Panel/VBox/BodyMargin/Body/StampRow/RereadBtn": "재독 횟수 +1 (우클릭: -1)",
+		"Panel/VBox/BodyMargin/Body/StampRow/DuplicateBtn": "복수 소장 수량 +1 (우클릭: -1)",
 		"Panel/VBox/BodyMargin/Body/StampRow/PossessionBtn": "소장 상태 순환 (소장중·예약중·배송중·전시중)",
 		"Panel/VBox/BodyMargin/Body/InkRow/NibBtn": "만년필 펜촉 굵기 순환 (EF·M·B)",
 		"Panel/VBox/BodyMargin/Body/InkRow/SignatureBtn": "다이어리 서명 스탬프 순환",
@@ -200,6 +200,18 @@ func _style_diary_controls() -> void:
 		var tip_btn: Control = get_node_or_null(path)
 		if tip_btn != null:
 			tip_btn.tooltip_text = row_tips[path]
+	var rr_btn: Control = get_node_or_null("Panel/VBox/BodyMargin/Body/StampRow/RereadBtn")
+	if rr_btn != null:
+		rr_btn.gui_input.connect(func(ev):
+			if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_RIGHT:
+				decrement_reread_count()
+		)
+	var dup_btn_ctrl: Control = get_node_or_null("Panel/VBox/BodyMargin/Body/StampRow/DuplicateBtn")
+	if dup_btn_ctrl != null:
+		dup_btn_ctrl.gui_input.connect(func(ev):
+			if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_RIGHT:
+				decrement_duplicate_count()
+		)
 
 func set_fountain_pen_ink(ink_hex: String) -> void:
 	if current_item == null:
@@ -569,6 +581,16 @@ func increment_reread_count() -> int:
 	diary_updated.emit(current_item)
 	return rc
 
+func decrement_reread_count() -> int:
+	if current_item == null:
+		return 1
+	current_item.reread_count = max(1, int(current_item.reread_count) - 1)
+	var reread_btn: Button = get_node_or_null("Panel/VBox/BodyMargin/Body/StampRow/RereadBtn")
+	if reread_btn != null:
+		reread_btn.text = "🔁" + str(current_item.reread_count) + "회독"
+	diary_updated.emit(current_item)
+	return current_item.reread_count
+
 func increment_duplicate_count() -> int:
 	if current_item == null:
 		return 1
@@ -579,6 +601,17 @@ func increment_duplicate_count() -> int:
 	_refresh_author_label()
 	diary_updated.emit(current_item)
 	return dc
+
+func decrement_duplicate_count() -> int:
+	if current_item == null:
+		return 1
+	current_item.duplicate_count = max(1, int(current_item.duplicate_count) - 1)
+	var dup_btn: Button = get_node_or_null("Panel/VBox/BodyMargin/Body/StampRow/DuplicateBtn")
+	if dup_btn != null:
+		dup_btn.text = "👯×" + str(current_item.duplicate_count)
+	_refresh_author_label()
+	diary_updated.emit(current_item)
+	return current_item.duplicate_count
 
 func cycle_diary_signature() -> String:
 	if current_item == null:
