@@ -642,6 +642,9 @@ func _unhandled_input(event: InputEvent) -> void:
 			get_viewport().set_input_as_handled()
 		elif search_input == null or not search_input.has_focus():
 			match event.keycode:
+				KEY_0:
+					_reset_all_filters()
+					get_viewport().set_input_as_handled()
 				KEY_1:
 					_on_tab_all_pressed()
 					get_viewport().set_input_as_handled()
@@ -682,7 +685,7 @@ func _unhandled_input(event: InputEvent) -> void:
 					copy_summary_to_clipboard()
 					get_viewport().set_input_as_handled()
 				KEY_H:
-					_show_toast("⌨️ 단축키: [1~5] 탭 · [/] 검색 · [S] 정렬 · [R] 추천 · [N] 새 일기 · [T] 테마 · [M] 소음 · [Q] 문장 · [I] 요약 · [C] 복사")
+					_show_toast("⌨️ 단축키: [0] 초기화 · [1~5] 탭 · [/] 검색 · [S] 정렬 · [R] 추천 · [N] 새 일기 · [T] 테마 · [M] 소음 · [Q] 문장 · [I] 요약 · [C] 복사")
 					get_viewport().set_input_as_handled()
 
 func _on_modal_navigate_requested(delta: int) -> void:

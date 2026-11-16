@@ -5,6 +5,21 @@
 
 ---
 
+## 🚀 [Sprint 80] 마일스톤 80: 북마크된 권별 행 골드 리본 액센트 & 단축키 `0` 전체 서재 초기화
+- **날짜/시각**: 2026-11-17 06:18 (자동 스프린트)
+- **참여 스쿼드**: 14인 애자일 스쿼드 전원 (다꾸러 3인, PO/기획 2인, UX/UI 2인, 개발 4인, QA 2인, CEO 1인)
+- **핵심 VOC 및 기획 확정**:
+  1. **다꾸러 VOC #1 ("모달의 `📌 권별 밑줄 노트`에서 북마크 리본(`🔖`)을 꽂아둔 권은 행 자체 왼쪽에도 금빛 리본 라인과 따뜻한 배경이 들어가면 최애 권이 한눈에 확 들어올 것 같아요!")**: `detail_modal.gd`의 `_render_volumes()`에서 `bookmarked == true`인 권 행에 3px 골드 좌측 보더와 웜 크림 배경을 적용.
+  2. **다꾸러 VOC #2 ("메인 서재에서 어떤 검색어나 필터가 걸려 있든 숫자 `0` 키만 누르면 한 번에 전체 서재 초기화(`_reset_all_filters()`)가 되면 키보드 탐색이 완벽해질 것 같아요")**: `main_view.gd`의 `_unhandled_input()`에 `KEY_0` 전체 초기화 단축키를 추가하고 `KEY_H` 치트시트 토스트에 `[0] 초기화`를 반영.
+  3. **웹 목업 동기화**: `game02/index.html`의 전역 `keydown` 리스너에 `0` 키 전체 서재 초기화 단축키를 동기화.
+- **구현 및 검증 내역**:
+  - `detail_modal.gd`: `_render_volumes()` 북마크 권 행 3px 골드 좌측 리본 액센트 추가.
+  - `main_view.gd`: `_unhandled_input()` `KEY_0` 전체 초기화 및 `KEY_H` 치트시트 갱신.
+  - `game02/index.html`: 전역 `0` 키 검색·필터 초기화 단축키 동기화.
+  - `tests/test_main_integration.gd`: Sprint 80 통합 테스트(`Bookmarked Volume Row Gold Accent & Keyboard 0 Reset All Filters verified`) 추가 후 3대 헤드리스 테스트 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 캡처 완료.
+
+---
+
 ## 🚀 [Sprint 79] 삭제 경고 빨간색 강조 + ESC 해제 & 서재 카드 우클릭 +1권 빠른 기록(`quick_advance`)
 - **날짜/시각**: 2026-11-17 05:59 (자동 스프린트)
 - **참여 스쿼드**: 14인 애자일 스쿼드 전원 (다꾸러 3인, PO/기획 2인, UX/UI 2인, 개발 4인, QA 2인, CEO 1인)

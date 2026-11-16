@@ -858,6 +858,23 @@ func _init() -> void:
 	assert(item_s79.volumes.size() == vols_before_s79 + 1 and "완독 기록 완료" in main_inst.status_toast.text, "Right-clicking CardItem should quick_advance volume and show toast")
 	print("✓ Visual Delete Arm + Escape Disarm & Card Right-Click Quick Advance verified")
 
+	# Test Sprint 80: Bookmarked Volume Row Gold Accent & Keyboard 0 Reset All Filters
+	main_inst.archive_state.reset_to_rich_defaults()
+	main_inst.detail_modal.open(main_inst.archive_state.items[0])
+	main_inst.detail_modal.toggle_volume_bookmark(0)
+	var bm_row_panel: PanelContainer = main_inst.detail_modal.vol_list.get_child(0)
+	assert(bm_row_panel.get_theme_stylebox("panel").border_width_left == 3, "Bookmarked volume row should have 3px gold left accent border")
+	main_inst.detail_modal.close()
+	main_inst.search_input.text = "프리렌"
+	main_inst._on_tab_manga_pressed()
+	main_inst.search_input.release_focus()
+	var k0_ev := InputEventKey.new()
+	k0_ev.pressed = true
+	k0_ev.keycode = KEY_0
+	main_inst._unhandled_input(k0_ev)
+	assert(main_inst.search_input.text == "" and main_inst.archive_state.current_filter == -1, "Pressing 0 should reset search and all filters")
+	print("✓ Bookmarked Volume Row Gold Accent & Keyboard 0 Reset All Filters verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

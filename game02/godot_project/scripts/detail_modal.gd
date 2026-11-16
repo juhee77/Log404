@@ -1006,12 +1006,13 @@ func _render_volumes() -> void:
 		var panel = PanelContainer.new()
 		var sb = StyleBoxFlat.new()
 		var is_editing_row := (idx == editing_vol_index)
-		sb.bg_color = Color(1.0, 0.96, 0.88, 1) if is_editing_row else Color(0.97, 0.945, 0.90, 1)
-		sb.border_width_left = 2 if is_editing_row else 0
+		var is_bm_row := bool(v.get("bookmarked", false))
+		sb.bg_color = Color(1.0, 0.96, 0.88, 1) if is_editing_row else (Color(0.99, 0.965, 0.91, 1) if is_bm_row else Color(0.97, 0.945, 0.90, 1))
+		sb.border_width_left = 2 if is_editing_row else (3 if is_bm_row else 0)
 		sb.border_width_top = 2 if is_editing_row else 0
 		sb.border_width_right = 2 if is_editing_row else 0
 		sb.border_width_bottom = 2 if is_editing_row else 1
-		sb.border_color = Color(0.78, 0.35, 0.20, 0.85) if is_editing_row else Color(0.86, 0.80, 0.72, 1)
+		sb.border_color = Color(0.78, 0.35, 0.20, 0.85) if is_editing_row else (Color(0.85, 0.58, 0.16, 0.90) if is_bm_row else Color(0.86, 0.80, 0.72, 1))
 		sb.corner_radius_top_left = 6
 		sb.corner_radius_top_right = 6
 		sb.corner_radius_bottom_left = 6
