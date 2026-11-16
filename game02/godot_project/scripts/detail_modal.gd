@@ -27,6 +27,7 @@ signal diary_updated(item)
 
 var current_item = null
 var editing_vol_index: int = -1
+var delete_armed: bool = false
 var obi_cursor: int = 0
 var icon_cursor: int = 0
 var color_cursor: int = 0
@@ -388,6 +389,10 @@ func open(item) -> void:
 	var share_btn_reset: Button = get_node_or_null("Panel/VBox/BodyMargin/Body/TopInfo/MetaVBox/BtnRow/ShareCardBtn")
 	if share_btn_reset != null:
 		share_btn_reset.text = "💌 공유"
+	delete_armed = false
+	var del_btn_reset: Button = get_node_or_null("Panel/VBox/BodyMargin/Body/TopInfo/MetaVBox/BtnRow/DeleteBtn")
+	if del_btn_reset != null:
+		del_btn_reset.text = "일기 삭제"
 	if save_quote_btn != null:
 		save_quote_btn.text = "🖋️ 밑줄 저장"
 	if quote_input != null:
@@ -1152,6 +1157,14 @@ func remove_last_volume() -> void:
 		volume_removed.emit(current_item)
 
 func _on_delete_btn_pressed() -> void:
-	if current_item != null:
-		item_deleted.emit(current_item)
-		close()
+	if current_item == null:
+		return
+	if not delete_armed:
+		delete_armed = true
+		var del_btn: Button = get_node_or_null("Panel/VBox/BodyMargin/Body/TopInfo/MetaVBox/BtnRow/DeleteBtn")
+		if del_btn != null:
+			del_btn.text = "⚠️ 삭제 확인"
+		return
+	delete_armed = false
+	item_deleted.emit(current_item)
+	close()

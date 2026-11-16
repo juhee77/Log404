@@ -820,6 +820,23 @@ func _init() -> void:
 	assert("클립보드에 복사되었습니다" in main_inst.status_toast.text, "Pressing C should copy library summary to clipboard")
 	print("✓ Modal Header Prev/Next Buttons & Keyboard C Summary Copy verified")
 
+	# Test Sprint 78: Two-Step Delete Confirmation Safety & Keyboard H Shortcut Cheatsheet
+	var temp_item_s78 = main_inst.archive_state.add_item("삭제 안전 테스트 작품", 0, "테스터", "#b91c1c", "📕", "삭제 테스트", "테스트")
+	var count_before_s78 = main_inst.archive_state.items.size()
+	main_inst.detail_modal.open(temp_item_s78)
+	var del_btn_s78 = main_inst.detail_modal.get_node_or_null("Panel/VBox/BodyMargin/Body/TopInfo/MetaVBox/BtnRow/DeleteBtn")
+	main_inst.detail_modal._on_delete_btn_pressed()
+	assert(main_inst.detail_modal.delete_armed and "삭제 확인" in del_btn_s78.text and main_inst.archive_state.items.size() == count_before_s78, "First delete click should arm confirmation without deleting")
+	main_inst.detail_modal._on_delete_btn_pressed()
+	assert(not main_inst.detail_modal.visible and main_inst.archive_state.items.size() == count_before_s78 - 1, "Second delete click should delete item and close modal")
+	main_inst.search_input.release_focus()
+	var kh_ev := InputEventKey.new()
+	kh_ev.pressed = true
+	kh_ev.keycode = KEY_H
+	main_inst._unhandled_input(kh_ev)
+	assert("단축키:" in main_inst.status_toast.text, "Pressing H should display keyboard shortcut cheatsheet toast")
+	print("✓ Two-Step Delete Confirmation Safety & Keyboard H Shortcut Cheatsheet verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

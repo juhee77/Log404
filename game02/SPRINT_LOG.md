@@ -5,6 +5,21 @@
 
 ---
 
+## 🚀 [Sprint 78] 일기 삭제 2단계 확인 안전장치(`delete_armed`) & 단축키 `H` 키보드 치트시트 토스트
+- **날짜/시각**: 2026-11-17 05:39 (자동 스프린트)
+- **참여 스쿼드**: 14인 애자일 스쿼드 전원 (다꾸러 3인, PO/기획 2인, UX/UI 2인, 개발 4인, QA 2인, CEO 1인)
+- **핵심 VOC 및 기획 확정**:
+  1. **다꾸러 VOC #1 ("모달의 `일기 삭제` 버튼을 실수로 한 번 눌렀을 때 곧바로 작품이 삭제되지 않고 `'⚠️ 삭제 확인'`으로 1차 경고를 보여준 뒤 두 번째 클릭에서 삭제되면 안심될 것 같아요!")**: `detail_modal.gd`에 `delete_armed` 상태 플래그를 추가해 첫 클릭 시 `"⚠️ 삭제 확인"`으로 전환하고 두 번째 클릭 시 실제 삭제를 수행(모달 재오픈 시 `"일기 삭제"`로 초기화).
+  2. **다꾸러 VOC #2 ("서재에서 지원하는 키보드 단축키(`1~5`, `/`, `S`, `R`, `N`, `T`, `M`, `Q`, `I`, `C`)를 한눈에 볼 수 있는 단축키 치트시트(`H` 키)가 있으면 좋겠어요")**: `main_view.gd`의 `_unhandled_input()`에 `KEY_H` 단축키를 추가해 전체 단축키 치트시트 토스트를 표시.
+  3. **웹 목업 동기화**: `game02/index.html`의 전역 `keydown` 리스너에 `H` / `?` 키 단축키 안내 팝업을 동기화.
+- **구현 및 검증 내역**:
+  - `detail_modal.gd`: `delete_armed` 2단계 삭제 확인 안전장치 추가 및 `open()` 리셋.
+  - `main_view.gd`: `_unhandled_input()` `KEY_H` 단축키 치트시트 토스트 추가.
+  - `game02/index.html`: 전역 `H`/`?` 키 단축키 안내 동기화.
+  - `tests/test_main_integration.gd`: Sprint 78 통합 테스트(`Two-Step Delete Confirmation Safety & Keyboard H Shortcut Cheatsheet verified`) 추가 후 3대 헤드리스 테스트 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 캡처 완료.
+
+---
+
 ## 🚀 [Sprint 77] 모달 헤더 `◀`·`▶` 이전/다음 작품 버튼 & 단축키 `C`(서재 요약 클립보드 복사)
 - **날짜/시각**: 2026-11-17 05:19 (자동 스프린트)
 - **참여 스쿼드**: 14인 애자일 스쿼드 전원 (다꾸러 3인, PO/기획 2인, UX/UI 2인, 개발 4인, QA 2인, CEO 1인)

@@ -681,6 +681,9 @@ func _unhandled_input(event: InputEvent) -> void:
 				KEY_C:
 					copy_summary_to_clipboard()
 					get_viewport().set_input_as_handled()
+				KEY_H:
+					_show_toast("⌨️ 단축키: [1~5] 탭 · [/] 검색 · [S] 정렬 · [R] 추천 · [N] 새 일기 · [T] 테마 · [M] 소음 · [Q] 문장 · [I] 요약 · [C] 복사")
+					get_viewport().set_input_as_handled()
 
 func _on_modal_navigate_requested(delta: int) -> void:
 	if archive_state == null or archive_state.items.is_empty():
