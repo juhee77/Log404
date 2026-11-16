@@ -123,6 +123,7 @@ func open() -> void:
 	selected_color = "#b91c1c"
 	_highlight_selected_swatch()
 	visible = true
+	title_input.grab_focus()
 
 func close() -> void:
 	visible = false

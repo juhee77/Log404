@@ -5,6 +5,21 @@
 
 ---
 
+## 🚀 [Sprint 64] 빈 검색 상태 원클릭 `'🔄 전체 서재 보기'` 복원 버튼 & `AddModal` 제목 자동 포커스
+- **날짜/시각**: 2026-11-17 00:58 (자동 스프린트)
+- **참여 스쿼드**: 14인 애자일 스쿼드 전원 (다꾸러 3인, PO/기획 2인, UX/UI 2인, 개발 4인, QA 2인, CEO 1인)
+- **핵심 VOC 및 기획 확정**:
+  1. **다꾸러 VOC #1 ("검색·필터 결과가 0건일 때 나오는 빈 상태 안내 아래에 `'🔄 전체 서재 보기'` 버튼을 두어 한 번의 클릭으로 검색어와 필터를 모두 초기화할 수 있으면 좋겠어요!")**: `main_view.gd`에 `_reset_all_filters()`를 추가하고 `_render_cards()`의 빈 상태 컨테이너(`EmptyStateBox`)에 `EmptyStateResetBtn`을 배치.
+  2. **다꾸러 VOC #2 ("`+ 일기 쓰기`를 눌러 `AddModal`을 열었을 때 곧바로 제목 입력창에 커서가 깜빡이면 바로 타이핑을 시작할 수 있어 편할 것 같아요")**: `add_modal.gd`의 `open()` 마지막에 `title_input.grab_focus()`를 추가.
+  3. **웹 목업 동기화**: `game02/index.html`의 `renderShelf()` 빈 상태 안내 카드에도 `'🔄 전체 서재 보기'` 초기화 버튼을 동일하게 추가.
+- **구현 및 검증 내역**:
+  - `main_view.gd`: `_reset_all_filters()` 및 `EmptyStateBox/EmptyStateResetBtn` 추가.
+  - `add_modal.gd`: `open()` 시 `title_input.grab_focus()` 자동 포커스 추가.
+  - `game02/index.html`: 빈 상태 카드 `'🔄 전체 서재 보기'` 버튼 동기화.
+  - `tests/test_main_integration.gd`: Sprint 64 통합 테스트(`EmptyState Reset All Filters Button & AddModal Title Auto-Focus verified`) 추가 후 3대 헤드리스 테스트 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 캡처 완료.
+
+---
+
 ## 🚀 [Sprint 63] 권별 노트 툴팁·커서 완성 & 검색창 `ESC` 즉시 초기화
 - **날짜/시각**: 2026-11-17 00:38 (자동 스프린트)
 - **참여 스쿼드**: 14인 애자일 스쿼드 전원 (다꾸러 3인, PO/기획 2인, UX/UI 2인, 개발 4인, QA 2인, CEO 1인)

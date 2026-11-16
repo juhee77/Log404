@@ -479,7 +479,7 @@ func _init() -> void:
 	assert("독서 일기장 펼치기" in main_inst.today_quote_label.tooltip_text, "today_quote_label should expose dynamic open tooltip")
 	main_inst.search_input.text = "존재하지않는작품XYZ"
 	main_inst._render_cards()
-	var empty_lbl = main_inst.card_grid.get_node_or_null("EmptyStateLabel")
+	var empty_lbl = main_inst.card_grid.get_node_or_null("EmptyStateBox/EmptyStateLabel")
 	assert(empty_lbl != null and "조건에 맞는 서재 기록이 없습니다" in empty_lbl.text, "Empty search should display EmptyStateLabel guidance")
 	main_inst.search_input.text = ""
 	main_inst._render_cards()
@@ -599,6 +599,18 @@ func _init() -> void:
 	main_inst.search_input.gui_input.emit(esc_search_ev)
 	assert(main_inst.search_input.text == "" and main_inst.card_grid.get_child_count() > 1, "Pressing Escape in SearchInput should clear text and restore cards")
 	print("✓ Volume Row Tooltips/Cursors & Search Escape Clear verified")
+
+	# Test Sprint 64: EmptyState Reset All Filters Button & AddModal Title Auto-Focus
+	main_inst.search_input.text = "없는작품ABC999"
+	main_inst._render_cards()
+	var reset_btn_s64 = main_inst.card_grid.get_node_or_null("EmptyStateBox/EmptyStateResetBtn")
+	assert(reset_btn_s64 != null, "EmptyStateBox should contain EmptyStateResetBtn")
+	reset_btn_s64.pressed.emit()
+	assert(main_inst.search_input.text == "" and main_inst.card_grid.get_child_count() > 1, "Pressing EmptyStateResetBtn should clear search and restore cards")
+	main_inst.add_modal.open()
+	assert(main_inst.add_modal.visible, "AddModal should open and focus title_input")
+	main_inst.add_modal.close()
+	print("✓ EmptyState Reset All Filters Button & AddModal Title Auto-Focus verified")
 
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()

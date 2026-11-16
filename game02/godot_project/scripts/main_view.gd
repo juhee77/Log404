@@ -341,16 +341,45 @@ func _render_cards() -> void:
 		filtered.sort_custom(func(a, b): return a.get_item_value() > b.get_item_value())
 	
 	if filtered.is_empty():
+		var empty_box := VBoxContainer.new()
+		empty_box.name = "EmptyStateBox"
+		empty_box.custom_minimum_size = Vector2(360, 140)
+		empty_box.alignment = BoxContainer.ALIGNMENT_CENTER
 		var empty_lbl := Label.new()
 		empty_lbl.name = "EmptyStateLabel"
 		empty_lbl.text = "📭 조건에 맞는 서재 기록이 없습니다.\n검색어를 비우거나 '+ 일기 쓰기'로 새 추억을 남겨보세요!"
 		empty_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		empty_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 		empty_lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		empty_lbl.custom_minimum_size = Vector2(360, 120)
 		empty_lbl.add_theme_color_override("font_color", Color(0.45, 0.37, 0.30, 1.0))
 		empty_lbl.add_theme_font_size_override("font_size", 13)
-		card_grid.add_child(empty_lbl)
+		var reset_btn := Button.new()
+		reset_btn.name = "EmptyStateResetBtn"
+		reset_btn.text = "🔄 전체 서재 보기"
+		reset_btn.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+		reset_btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+		var r_sb := StyleBoxFlat.new()
+		r_sb.bg_color = Color(0.95, 0.91, 0.84, 1.0)
+		r_sb.border_width_left = 1
+		r_sb.border_width_top = 1
+		r_sb.border_width_right = 1
+		r_sb.border_width_bottom = 1
+		r_sb.border_color = Color(0.80, 0.72, 0.62, 1.0)
+		r_sb.corner_radius_top_left = 8
+		r_sb.corner_radius_top_right = 8
+		r_sb.corner_radius_bottom_left = 8
+		r_sb.corner_radius_bottom_right = 8
+		r_sb.content_margin_left = 12
+		r_sb.content_margin_right = 12
+		r_sb.content_margin_top = 6
+		r_sb.content_margin_bottom = 6
+		reset_btn.add_theme_stylebox_override("normal", r_sb)
+		reset_btn.add_theme_color_override("font_color", Color(0.28, 0.22, 0.18, 1.0))
+		reset_btn.add_theme_font_size_override("font_size", 12)
+		reset_btn.pressed.connect(_reset_all_filters)
+		empty_box.add_child(empty_lbl)
+		empty_box.add_child(reset_btn)
+		card_grid.add_child(empty_box)
 		return
 
 	for it in filtered:
@@ -450,6 +479,12 @@ func show_library_infographic() -> String:
 
 func _on_card_clicked(item) -> void:
 	detail_modal.open(item)
+
+func _reset_all_filters() -> void:
+	if search_input != null:
+		search_input.text = ""
+	_on_tab_all_pressed()
+	_show_toast("📚 전체 서재가 복원되었습니다.")
 
 func _on_tab_all_pressed() -> void:
 	filter_firsts_only = false
