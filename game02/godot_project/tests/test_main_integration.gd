@@ -530,6 +530,19 @@ func _init() -> void:
 	assert("🔖1" in first_card_s58.vol_badge.text, "CardItem vol_badge should show bookmark count when > 0")
 	print("✓ Clickable Volume Quote Edit Mode & Card Bookmark Count Badge verified")
 
+	# Test Sprint 59: Quote Input Enter-to-Save, Gacha Duplicate Badge & Export Presets Ready
+	main_inst.detail_modal.open(main_inst.archive_state.items[0])
+	main_inst.detail_modal.quote_input.text = "엔터키 바로 저장 테스트"
+	main_inst.detail_modal.quote_input.text_submitted.emit("엔터키 바로 저장 테스트")
+	assert(main_inst.archive_state.items[0].memo == "엔터키 바로 저장 테스트", "Pressing Enter in quote_input should save memo immediately")
+	var gacha_it_s59 = main_inst.archive_state.items[2]
+	gacha_it_s59.duplicate_count = 2
+	var gacha_card_s59 = main_inst.card_grid.get_child(2)
+	gacha_card_s59.setup(gacha_it_s59)
+	assert(gacha_card_s59.vol_badge.text == "🔮×2", "Gacha CardItem vol_badge should show 🔮×2 when duplicate_count == 2")
+	assert(FileAccess.file_exists("res://export_presets.cfg"), "export_presets.cfg should exist for macOS/Web builds")
+	print("✓ Quote Input Enter-to-Save, Gacha Duplicate Badge & Export Presets Ready verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

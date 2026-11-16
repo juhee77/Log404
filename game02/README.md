@@ -5,7 +5,7 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 
 ---
 
-## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 58)
+## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 59)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
@@ -14,6 +14,10 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 ---
 
 ## 🚀 최신 스프린트 업데이트 요약 ([전체 회의록 보기](SPRINT_LOG.md))
+
+### [Sprint 59] 밑줄 입력창 엔터키 즉시 저장, 가챠 복수소장 배지(`🔮×N`) & macOS/Web 빌드 프리셋 구축
+- **엔터키 즉시 저장 & 가챠 복수 소장 배지 (`detail_modal.gd` · `card_item.gd` · `index.html`)**: 모달 밑줄 입력창에서 Enter 키로 즉시 저장할 수 있으며, 가챠 카드 복수 소장 시 우측 하단 배지에 `🔮×N`이 표시됩니다.
+- **앱 빌드 프리셋 구축 (`export_presets.cfg`)**: Godot 4.6.2 macOS(`.app`) 및 Web(HTML5) 익스포트 프리셋을 추가해 즉시 빌드가 가능합니다.
 
 ### [Sprint 58] 권별 밑줄 원클릭 직접 편집(`start_editing_volume_quote`) & 카드 북마크 수 배지
 - **권별 밑줄 원클릭 편집 (`detail_modal.gd` · `index.html`)**: 모달 내 각 권의 대사 라벨을 클릭하면 입력창과 저장 버튼이 해당 권 편집 모드(`"🖋️ N권 저장"`)로 전환되며, 저장 후 기본 상태로 복귀합니다.

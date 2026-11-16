@@ -49,6 +49,8 @@ const OBI_PRESETS = [
 func _ready() -> void:
 	visible = false
 	_style_diary_controls()
+	if quote_input != null:
+		quote_input.text_submitted.connect(func(_t): _on_save_quote_btn_pressed())
 	cover_rect.gui_input.connect(func(ev):
 		if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_LEFT:
 			cycle_cover_icon()

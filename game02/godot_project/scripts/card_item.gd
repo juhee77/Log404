@@ -121,7 +121,7 @@ func setup(item) -> void:
 	else: # GACHA
 		cat_badge.text = " DIARY "
 		vol_badge.visible = true
-		vol_badge.text = "🔮가챠"
+		vol_badge.text = ("🔮×" + str(item.duplicate_count)) if item.duplicate_count > 1 else "🔮가챠"
 		status_label.text = "🖋️ " + first_quote
 
 	var val_fmt = ArchiveStateClass.format_krw(est_val) if est_val > 0 else "₩0"

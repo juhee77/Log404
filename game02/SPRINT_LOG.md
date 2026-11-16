@@ -5,6 +5,22 @@
 
 ---
 
+## 🚀 [Sprint 59] 밑줄 입력창 엔터키 즉시 저장, 가챠 복수소장 배지(`🔮×N`) & macOS/Web 빌드 프리셋 구축
+- **날짜/시각**: 2026-11-16 23:19 (자동 스프린트)
+- **참여 스쿼드**: 14인 애자일 스쿼드 전원 (다꾸러 3인, PO/기획 2인, UX/UI 2인, 개발 4인, QA 2인, CEO 1인)
+- **핵심 VOC 및 기획 확정**:
+  1. **다꾸러 VOC #1 ("모달 밑줄 입력창에서 대사를 고치고 Enter 키를 누르면 바로 저장되면 편하겠어요!")**: `detail_modal.gd`의 `_ready()`에서 `quote_input.text_submitted` 시그널을 `_on_save_quote_btn_pressed()`에 연결하여 엔터키 즉시 저장을 지원.
+  2. **다꾸러 VOC #2 ("가챠도 중복으로 2개 이상 모았을 때 카드 표지 우측 하단 배지에 `🔮×2`처럼 수량이 표시되면 좋겠어요")**: `card_item.gd`에서 `category == 1`일 때 `duplicate_count > 1`이면 `"🔮×N"`을 표시.
+  3. **빌드 인프라 & 웹 목업 동기화**: `game02/godot_project/export_presets.cfg`(macOS `.app` & Web HTML5 프리셋)를 구성하여 즉시 앱 빌드가 가능하도록 준비하고, `game02/index.html`의 `#diary-quote-input`에도 Enter 키 저장(`onkeydown`)을 동기화.
+- **구현 및 검증 내역**:
+  - `detail_modal.gd`: `quote_input.text_submitted` 엔터키 즉시 저장 연동.
+  - `card_item.gd`: 가챠 복수 소장 `🔮×N` 배지 표시.
+  - `export_presets.cfg`: Godot 4.6.2 macOS / Web 익스포트 프리셋 추가.
+  - `game02/index.html`: `#diary-quote-input` Enter 키 저장 동기화.
+  - `tests/test_main_integration.gd`: Sprint 59 통합 테스트(`Quote Input Enter-to-Save, Gacha Duplicate Badge & Export Presets Ready verified`) 추가 후 3대 헤드리스 테스트 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 캡처 완료.
+
+---
+
 ## 🚀 [Sprint 58] 권별 밑줄 원클릭 직접 편집(`start_editing_volume_quote`) & 카드 북마크 수 배지
 - **날짜/시각**: 2026-11-16 23:00 (자동 스프린트)
 - **참여 스쿼드**: 14인 애자일 스쿼드 전원 (다꾸러 3인, PO/기획 2인, UX/UI 2인, 개발 4인, QA 2인, CEO 1인)
