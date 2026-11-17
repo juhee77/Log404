@@ -288,7 +288,7 @@ func _render_spine_shelf() -> void:
 		spine.mouse_entered.connect(func(): _show_toast("📚 책등 엿보기: " + capture_item.title + " (" + str(capture_item.volumes.size()) + "권)"))
 		spine.gui_input.connect(func(ev: InputEvent):
 			if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_LEFT:
-				detail_modal.open(capture_item)
+				_open_detail_modal(capture_item)
 		)
 		spine_shelf_row.add_child(spine)
 
@@ -334,7 +334,7 @@ func open_current_quote_item() -> void:
 	quote_cursor = quote_cursor % quotes.size()
 	var target_item = quotes[quote_cursor].get("item", null)
 	if target_item != null:
-		detail_modal.open(target_item)
+		_open_detail_modal(target_item)
 
 func _render_cards() -> void:
 	for child in card_grid.get_children():
@@ -466,7 +466,7 @@ func _on_sort_btn_pressed() -> void:
 			3: sort_btn.text = "↕ 가치순"
 	_render_cards()
 	var mode_name = "기본 등록순" if sort_mode == 0 else ("권수 많은 순(다독순)" if sort_mode == 1 else ("최근 기록순(최신순)" if sort_mode == 2 else "소장 가치순(고액순)"))
-	_show_toast("📚 정렬 기준 변경: " + mode_name)
+	_show_toast("📚 정렬 기준 변경: %s (%s)" % [mode_name, _get_filtered_cards_summary()])
 
 func _show_toast(msg: String) -> void:
 	if status_toast != null:
@@ -523,9 +523,14 @@ func _update_modal_nav_tooltips(item) -> void:
 	if page_lbl != null:
 		page_lbl.text = "%d/%d" % [idx + 1, total]
 
-func _on_card_clicked(item) -> void:
+func _open_detail_modal(item) -> void:
+	if item == null or detail_modal == null:
+		return
 	detail_modal.open(item)
 	_update_modal_nav_tooltips(item)
+
+func _on_card_clicked(item) -> void:
+	_open_detail_modal(item)
 
 func _reset_all_filters() -> void:
 	if search_input != null:
@@ -597,7 +602,7 @@ func pick_random_item():
 		return null
 	var r_idx = randi() % archive_state.items.size()
 	var picked = archive_state.items[r_idx]
-	detail_modal.open(picked)
+	_open_detail_modal(picked)
 	_show_toast("🎲 오늘 서재가 추천하는 작품: " + picked.title + " · " + picked.reading_weather + " · " + picked.reading_spot)
 	return picked
 
@@ -733,8 +738,7 @@ func _on_modal_navigate_requested(delta: int) -> void:
 		idx = 0
 	var next_idx: int = (idx + delta + int(archive_state.items.size())) % int(archive_state.items.size())
 	var next_item = archive_state.items[next_idx]
-	detail_modal.open(next_item)
-	_update_modal_nav_tooltips(next_item)
+	_open_detail_modal(next_item)
 	_show_toast("📖 책장 넘김 (%d/%d): %s" % [next_idx + 1, archive_state.items.size(), next_item.title])
 
 func _on_card_copied(item) -> void:

@@ -914,6 +914,21 @@ func _init() -> void:
 	main_inst.detail_modal.close()
 	print("✓ Live Search Summary Toast & Modal Header Page Badge verified")
 
+	# Sprint 84: Unified _open_detail_modal Sync (Quote Jump & Random Pick) & Sort Summary Toast
+	main_inst.quote_cursor = 3
+	main_inst.open_current_quote_item()
+	var expected_item = main_inst.detail_modal.current_item
+	var expected_idx = main_inst.archive_state.items.find(expected_item)
+	assert(header_page_lbl.text == "%d/%d" % [expected_idx + 1, main_inst.archive_state.items.size()], "Quote jump should sync PageBadgeLabel")
+	main_inst.detail_modal.close()
+	var s84_picked = main_inst.pick_random_item()
+	var s84_picked_idx = main_inst.archive_state.items.find(s84_picked)
+	assert(header_page_lbl.text == "%d/%d" % [s84_picked_idx + 1, main_inst.archive_state.items.size()], "Random pick should sync PageBadgeLabel")
+	main_inst.detail_modal.close()
+	main_inst._on_sort_btn_pressed()
+	assert("정렬 기준 변경" in main_inst.status_toast.text and "₩" in main_inst.status_toast.text, "Sort toast should include filtered count and KRW total")
+	print("✓ Unified _open_detail_modal Sync & Sort Summary Toast verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()
