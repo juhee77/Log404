@@ -979,6 +979,36 @@
                 } else if (activeId != null) {
                     cycleReadingMood();
                 }
+            } else if ((e.key === 'q' || e.key === 'Q' || e.key === 'y' || e.key === 'Y' || e.key === 'z' || e.key === 'Z') && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
+                const jm = document.getElementById('journal-modal');
+                if (jm && !jm.classList.contains('hidden') && activeId != null) {
+                    const item = ITEMS.find(x => x.id === activeId);
+                    if (item) {
+                        let msg = '';
+                        if (e.key === 'q' || e.key === 'Q') {
+                            const colors = ['#b91c1c', '#0369a1', '#db2777', '#c2410c', '#e11d48', '#7e22ce'];
+                            item.color = colors[(colors.indexOf(item.color) + 1) % colors.length];
+                            const cbox = document.getElementById('diary-cover-box');
+                            if (cbox) cbox.style.background = item.color;
+                            renderShelf();
+                            msg = '🎨 표지 색상 변경됨';
+                        } else if (e.key === 'y' || e.key === 'Y') {
+                            const cur = item.reread_count || 1;
+                            item.reread_count = e.shiftKey ? Math.max(1, cur - 1) : cur + 1;
+                            msg = `🔁 ${item.reread_count}회독`;
+                        } else {
+                            const states = ['📦 소장중', '🔖 예약중', '🚚 배송중', '🖼️ 전시중'];
+                            item.possession_state = states[(states.indexOf(item.possession_state || states[0]) + 1) % states.length];
+                            msg = `📌 상태: ${item.possession_state}`;
+                        }
+                        const pageEl = document.getElementById('journal-page-indicator');
+                        if (pageEl) {
+                            const prevTxt = pageEl.textContent;
+                            pageEl.textContent = msg;
+                            setTimeout(() => { if (pageEl.textContent === msg) pageEl.textContent = prevTxt; }, 1600);
+                        }
+                    }
+                }
             } else if ((e.key === 'u' || e.key === 'U' || e.key === 'j' || e.key === 'J') && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
                 const jm = document.getElementById('journal-modal');
                 if (jm && !jm.classList.contains('hidden') && activeId != null) {

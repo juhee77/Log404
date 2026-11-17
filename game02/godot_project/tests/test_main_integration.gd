@@ -1244,6 +1244,40 @@ func _init() -> void:
 	main_inst.detail_modal.close()
 	print("✓ In-Modal Keyboard U Reading Weather & J Reading Spot Cyclers verified")
 
+	# Sprint 100 Milestone: In-Modal Keyboard Q Cover Color, Y/Shift+Y Reread & Z Possession State + Dispatch Refactor
+	var target_s100 = main_inst.archive_state.items[0]
+	var orig_col_s100: String = target_s100.cover_color
+	var orig_rr_s100: int = target_s100.reread_count
+	var orig_pos_s100: String = target_s100.possession_state
+	main_inst._on_card_clicked(target_s100)
+	var mq_ev := InputEventKey.new()
+	mq_ev.pressed = true
+	mq_ev.keycode = KEY_Q
+	main_inst.detail_modal._unhandled_input(mq_ev)
+	assert(target_s100.cover_color != orig_col_s100, "Pressing Q inside modal should cycle cover color")
+	var my_ev := InputEventKey.new()
+	my_ev.pressed = true
+	my_ev.keycode = KEY_Y
+	main_inst.detail_modal._unhandled_input(my_ev)
+	assert(target_s100.reread_count == orig_rr_s100 + 1, "Pressing Y inside modal should increment reread_count")
+	var msy_ev := InputEventKey.new()
+	msy_ev.pressed = true
+	msy_ev.keycode = KEY_Y
+	msy_ev.shift_pressed = true
+	main_inst.detail_modal._unhandled_input(msy_ev)
+	assert(target_s100.reread_count == orig_rr_s100, "Pressing Shift+Y inside modal should decrement reread_count")
+	var mz_ev := InputEventKey.new()
+	mz_ev.pressed = true
+	mz_ev.keycode = KEY_Z
+	main_inst.detail_modal._unhandled_input(mz_ev)
+	assert(target_s100.possession_state != orig_pos_s100, "Pressing Z inside modal should cycle possession_state")
+	var pos_btn_s100: Button = main_inst.detail_modal.get_node("Panel/VBox/BodyMargin/Body/StampRow/PossessionBtn")
+	assert("(Z" in pos_btn_s100.tooltip_text, "PossessionBtn tooltip should include (Z shortcut hint")
+	main_inst._on_modal_help_requested()
+	assert("[Q]" in main_inst.status_toast.text and "[Y]" in main_inst.status_toast.text and "[Z]" in main_inst.status_toast.text, "Modal help cheatsheet should list [Q], [Y], and [Z] shortcuts")
+	main_inst.detail_modal.close()
+	print("✓ Sprint 100 Milestone: In-Modal Keyboard Q/Y/Z & Dispatch Table Refactor verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

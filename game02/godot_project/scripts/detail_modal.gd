@@ -231,9 +231,9 @@ func _style_diary_controls() -> void:
 		"Panel/VBox/BodyMargin/Body/StampRow/StorageBtn": "실물 보관 위치 순환 (B)",
 		"Panel/VBox/BodyMargin/Body/StampRow/SourceBtn": "소장·입수 경로 순환 (A)",
 		"Panel/VBox/BodyMargin/Body/StampRow/MoodBtn": "독서·수집 기분 태그 순환 (M)",
-		"Panel/VBox/BodyMargin/Body/StampRow/RereadBtn": "재독 횟수 +1 (우클릭: -1)",
+		"Panel/VBox/BodyMargin/Body/StampRow/RereadBtn": "재독 횟수 +1 (Y / 우클릭·Shift+Y: -1)",
 		"Panel/VBox/BodyMargin/Body/StampRow/DuplicateBtn": "복수 소장 수량 +1 (D / 우클릭·Shift+D: -1)",
-		"Panel/VBox/BodyMargin/Body/StampRow/PossessionBtn": "소장 상태 순환 (소장중·예약중·배송중·전시중)",
+		"Panel/VBox/BodyMargin/Body/StampRow/PossessionBtn": "소장 상태 순환 (Z: 소장중·예약중·배송중·전시중)",
 		"Panel/VBox/BodyMargin/Body/InkRow/NibBtn": "만년필 펜촉 굵기 순환 (N: EF·M·B)",
 		"Panel/VBox/BodyMargin/Body/InkRow/SignatureBtn": "다이어리 서명 스탬프 순환",
 		"Panel/VBox/BodyMargin/Body/InkRow/DateStampBtn": "오늘 날짜로 구매·기념일 스탬프 갱신",
@@ -542,9 +542,6 @@ func _unhandled_input(event: InputEvent) -> void:
 		elif event.keycode == KEY_END:
 			navigate_requested.emit(9999)
 			get_viewport().set_input_as_handled()
-		elif event.keycode == KEY_C:
-			copy_book_quote_card()
-			get_viewport().set_input_as_handled()
 		elif event.keycode in [KEY_EQUAL, KEY_PLUS, KEY_KP_ADD]:
 			_on_add_vol_btn_pressed()
 			get_viewport().set_input_as_handled()
@@ -559,9 +556,6 @@ func _unhandled_input(event: InputEvent) -> void:
 				quote_input.grab_focus()
 				quote_input.caret_column = quote_input.text.length()
 			get_viewport().set_input_as_handled()
-		elif event.keycode == KEY_L:
-			toggle_quote_highlight()
-			get_viewport().set_input_as_handled()
 		elif event.keycode in [KEY_1, KEY_2, KEY_3, KEY_4]:
 			var stamp_map := {
 				KEY_1: "전권완결",
@@ -571,66 +565,43 @@ func _unhandled_input(event: InputEvent) -> void:
 			}
 			apply_stamp(stamp_map[event.keycode])
 			get_viewport().set_input_as_handled()
-		elif event.keycode == KEY_I:
-			cycle_fountain_pen_ink()
-			get_viewport().set_input_as_handled()
-		elif event.keycode == KEY_V:
-			if event.shift_pressed:
-				reduce_estimated_value()
-			else:
-				boost_estimated_value()
-			get_viewport().set_input_as_handled()
-		elif event.keycode == KEY_W:
-			cycle_washi_tape()
-			get_viewport().set_input_as_handled()
-		elif event.keycode == KEY_P:
-			cycle_paper_pattern()
-			get_viewport().set_input_as_handled()
-		elif event.keycode == KEY_S:
-			cycle_deco_sticker()
-			get_viewport().set_input_as_handled()
-		elif event.keycode == KEY_R:
-			cycle_rarity_tier()
-			get_viewport().set_input_as_handled()
-		elif event.keycode == KEY_O:
-			cycle_obi_preset()
-			get_viewport().set_input_as_handled()
-		elif event.keycode == KEY_M:
-			cycle_reading_mood()
-			get_viewport().set_input_as_handled()
-		elif event.keycode == KEY_G:
-			cycle_condition_grade()
-			get_viewport().set_input_as_handled()
-		elif event.keycode == KEY_T:
-			cycle_custom_tag()
-			get_viewport().set_input_as_handled()
-		elif event.keycode == KEY_F:
-			cycle_cover_finish()
-			get_viewport().set_input_as_handled()
-		elif event.keycode == KEY_A:
-			cycle_acquisition_source()
-			get_viewport().set_input_as_handled()
-		elif event.keycode == KEY_N:
-			cycle_pen_nib_size()
-			get_viewport().set_input_as_handled()
-		elif event.keycode == KEY_B:
-			cycle_storage_location()
-			get_viewport().set_input_as_handled()
-		elif event.keycode == KEY_D:
-			if event.shift_pressed:
-				decrement_duplicate_count()
-			else:
-				increment_duplicate_count()
-			get_viewport().set_input_as_handled()
-		elif event.keycode == KEY_K:
-			cycle_favorite_character()
-			get_viewport().set_input_as_handled()
-		elif event.keycode == KEY_U:
-			cycle_reading_weather()
-			get_viewport().set_input_as_handled()
-		elif event.keycode == KEY_J:
-			cycle_reading_spot()
-			get_viewport().set_input_as_handled()
+		else:
+			var shift_pairs := {
+				KEY_V: [boost_estimated_value, reduce_estimated_value],
+				KEY_D: [increment_duplicate_count, decrement_duplicate_count],
+				KEY_Y: [increment_reread_count, decrement_reread_count],
+			}
+			if shift_pairs.has(event.keycode):
+				var pair: Array = shift_pairs[event.keycode]
+				var fn: Callable = pair[1] if event.shift_pressed else pair[0]
+				fn.call()
+				get_viewport().set_input_as_handled()
+				return
+			var simple_actions := {
+				KEY_C: copy_book_quote_card,
+				KEY_L: toggle_quote_highlight,
+				KEY_I: cycle_fountain_pen_ink,
+				KEY_W: cycle_washi_tape,
+				KEY_P: cycle_paper_pattern,
+				KEY_S: cycle_deco_sticker,
+				KEY_R: cycle_rarity_tier,
+				KEY_O: cycle_obi_preset,
+				KEY_M: cycle_reading_mood,
+				KEY_G: cycle_condition_grade,
+				KEY_T: cycle_custom_tag,
+				KEY_F: cycle_cover_finish,
+				KEY_A: cycle_acquisition_source,
+				KEY_N: cycle_pen_nib_size,
+				KEY_B: cycle_storage_location,
+				KEY_K: cycle_favorite_character,
+				KEY_U: cycle_reading_weather,
+				KEY_J: cycle_reading_spot,
+				KEY_Q: cycle_cover_color,
+				KEY_Z: cycle_possession_state,
+			}
+			if simple_actions.has(event.keycode):
+				simple_actions[event.keycode].call()
+				get_viewport().set_input_as_handled()
 
 func apply_stamp(stamp_name: String) -> void:
 	if current_item == null:
