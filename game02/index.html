@@ -979,6 +979,29 @@
                 } else if (activeId != null) {
                     cycleReadingMood();
                 }
+            } else if ((e.key === 'd' || e.key === 'D' || e.key === 'k' || e.key === 'K') && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
+                const jm = document.getElementById('journal-modal');
+                if (jm && !jm.classList.contains('hidden') && activeId != null) {
+                    const item = ITEMS.find(x => x.id === activeId);
+                    if (item) {
+                        let msg = '';
+                        if (e.key === 'd' || e.key === 'D') {
+                            const cur = item.duplicate_count || 1;
+                            item.duplicate_count = e.shiftKey ? Math.max(1, cur - 1) : cur + 1;
+                            msg = `👯 복수 소장: ×${item.duplicate_count}`;
+                        } else {
+                            const chars = ['🌟 최애 캐릭터', '🏀 강백호·서태웅', '🪄 프리렌·힘멜', '🎀 체리·케로'];
+                            item.favorite_character = chars[(chars.indexOf(item.favorite_character || chars[0]) + 1) % chars.length];
+                            msg = `🌟 최애캐: ${item.favorite_character}`;
+                        }
+                        const pageEl = document.getElementById('journal-page-indicator');
+                        if (pageEl) {
+                            const prevTxt = pageEl.textContent;
+                            pageEl.textContent = msg;
+                            setTimeout(() => { if (pageEl.textContent === msg) pageEl.textContent = prevTxt; }, 1600);
+                        }
+                    }
+                }
             } else if ((e.key === 'b' || e.key === 'B' || e.key === 'n' || e.key === 'N') && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
                 const jm = document.getElementById('journal-modal');
                 if (jm && !jm.classList.contains('hidden') && activeId != null) {

@@ -5,6 +5,20 @@
 
 ---
 
+## 🚀 [Sprint 98] 모달 내 `D`/`Shift+D` 복수 소장 ±1 & `K` 키 최애 캐릭터 태그 순환
+- **날짜/시각**: 2026-11-18 03:48 (자동 스프린트)
+- **참여 스쿼드**: 14인 애자일 스쿼드 전원 (다꾸러 3인, PO/기획 2인, UX/UI 2인, 개발 4인, QA 2인, CEO 1인)
+- **다꾸러·수집러 VOC**:
+  - **소장러 A**: *"모달 안에서 `D` 키로 복수 소장 수량을 +1 (`Shift+D`로 -1) 올리고 내릴 수 있으면 소장용/열람용 세트를 키보드만으로 바로 기록할 수 있어서 정말 편할 것 같아요."*
+  - **가챠러 B**: *"최애 캐릭터 태그(`FavCharBtn`)도 `K` 키로 즉시 순환할 수 있고 버튼 툴팁에도 `(D)` / `(K)` 힌트가 함께 표시되면 좋겠어요."*
+  - **미니멀러 C**: *"웹 목업(`index.html`)에서도 모달 열람 중 `D`/`Shift+D` 복수 소장 수량 조정과 `K` 최애 캐릭터 순환이 동일하게 동작하도록 맞춰주세요."*
+- **주요 개선 사항**:
+  1. **모달 내 `D`/`Shift+D` 복수 소장 & `K` 최애캐 순환 (`detail_modal.gd` · `index.html`)**: `quote_input` 비포커스 상태에서 `D` 입력 시 `increment_duplicate_count()`(`Shift+D`는 `decrement_duplicate_count()`), `K` 입력 시 `cycle_favorite_character()` 실행(웹 목업 포함).
+  2. **버튼 툴팁 힌트 & 치트시트 동기화 (`detail_modal.gd` · `main_view.gd`)**: `DuplicateBtn` `(D / Shift+D)`, `FavCharBtn` `(K)` 툴팁 반영 및 `H` 치트시트 토스트에 `[D] 복수 · [K] 최애캐` 추가.
+  3. **TDD 통합 테스트 확장 (`tests/test_main_integration.gd`)**: `In-Modal Keyboard D/Shift+D Duplicate & K Favorite Character Cyclers` 테스트를 추가해 3종 헤드리스 테스트 100% 통과 및 Metal 4.0 스크린샷 갱신.
+
+---
+
 ## 🚀 [Sprint 97] 모달 내 `N` 키 만년필 펜촉 굵기 순환 & `B` 키 실물 보관 위치 순환
 - **날짜/시각**: 2026-11-18 03:28 (자동 스프린트)
 - **참여 스쿼드**: 14인 애자일 스쿼드 전원 (다꾸러 3인, PO/기획 2인, UX/UI 2인, 개발 4인, QA 2인, CEO 1인)

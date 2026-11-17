@@ -1194,6 +1194,34 @@ func _init() -> void:
 	main_inst.detail_modal.close()
 	print("✓ In-Modal Keyboard N Pen Nib & B Storage Location Cyclers verified")
 
+	# Sprint 98: In-Modal Keyboard D/Shift+D Duplicate & K Favorite Character Cyclers
+	var target_s98 = main_inst.archive_state.items[0]
+	var orig_dup_s98: int = target_s98.duplicate_count
+	var orig_fc_s98: String = target_s98.favorite_character
+	main_inst._on_card_clicked(target_s98)
+	var md_ev := InputEventKey.new()
+	md_ev.pressed = true
+	md_ev.keycode = KEY_D
+	main_inst.detail_modal._unhandled_input(md_ev)
+	assert(target_s98.duplicate_count == orig_dup_s98 + 1, "Pressing D inside modal should increment duplicate_count")
+	var msd_ev := InputEventKey.new()
+	msd_ev.pressed = true
+	msd_ev.keycode = KEY_D
+	msd_ev.shift_pressed = true
+	main_inst.detail_modal._unhandled_input(msd_ev)
+	assert(target_s98.duplicate_count == orig_dup_s98, "Pressing Shift+D inside modal should decrement duplicate_count")
+	var mk_ev := InputEventKey.new()
+	mk_ev.pressed = true
+	mk_ev.keycode = KEY_K
+	main_inst.detail_modal._unhandled_input(mk_ev)
+	assert(target_s98.favorite_character != orig_fc_s98, "Pressing K inside modal should cycle favorite_character")
+	var fc_btn_s98: Button = main_inst.detail_modal.get_node("Panel/VBox/BodyMargin/Body/InkRow/FavCharBtn")
+	assert("(K)" in fc_btn_s98.tooltip_text, "FavCharBtn tooltip should include (K) shortcut hint")
+	main_inst._on_modal_help_requested()
+	assert("[D]" in main_inst.status_toast.text and "[K]" in main_inst.status_toast.text, "Modal help cheatsheet should list [D] and [K] shortcuts")
+	main_inst.detail_modal.close()
+	print("✓ In-Modal Keyboard D/Shift+D Duplicate & K Favorite Character Cyclers verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()
