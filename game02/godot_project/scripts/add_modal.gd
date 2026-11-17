@@ -30,6 +30,7 @@ func _ready() -> void:
 	_build_color_swatches()
 	_style_inputs()
 	title_input.text_submitted.connect(func(_t): author_input.grab_focus())
+	author_input.text_submitted.connect(func(_t): _on_submit_btn_pressed())
 	quote_input.text_submitted.connect(func(_t): _on_submit_btn_pressed())
 	var dimmer: Control = get_node_or_null("Dimmer")
 	if dimmer != null:

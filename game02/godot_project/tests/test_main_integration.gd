@@ -1416,6 +1416,22 @@ func _init() -> void:
 	assert("클립보드에 복사되었습니다" in main_inst.status_toast.text, "Right-clicking SubTitle should copy library summary to clipboard")
 	print("✓ Right-Click Spine Peek & Right-Click SubTitle Clipboard Copy verified")
 
+	# Sprint 109: Right-Click TodayQuoteLabel Step & AddModal Author Enter-to-Submit
+	main_inst.quote_cursor = 0
+	main_inst._refresh_today_quote()
+	var tq_rc := InputEventMouseButton.new()
+	tq_rc.pressed = true
+	tq_rc.button_index = MOUSE_BUTTON_RIGHT
+	main_inst.today_quote_label.gui_input.emit(tq_rc)
+	assert(main_inst.quote_cursor == 1, "Right-clicking today_quote_label should advance to next quote")
+	var count_before_s109: int = main_inst.archive_state.items.size()
+	main_inst.add_modal.open()
+	main_inst.add_modal.title_input.text = "작가엔터등록테스트"
+	main_inst.add_modal.author_input.text = "테스트작가"
+	main_inst.add_modal.author_input.text_submitted.emit("테스트작가")
+	assert(main_inst.archive_state.items.size() == count_before_s109 + 1 and not main_inst.add_modal.visible, "Pressing Enter in AddModal author_input should submit new item")
+	print("✓ Right-Click TodayQuoteLabel Step & AddModal Author Enter-to-Submit verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

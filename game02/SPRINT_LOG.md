@@ -5,6 +5,20 @@
 
 ---
 
+## 🚀 [Sprint 109] `TodayQuoteLabel` 우클릭 다음·이전 밑줄 전환 & `AddModal` 작가란 `Enter` 즉시 등록
+- **날짜/시각**: 2026-11-18 07:29 (자동 스프린트)
+- **참여 스쿼드**: 14인 애자일 스쿼드 전원 (다꾸러 3인, PO/기획 2인, UX/UI 2인, 개발 4인, QA 2인, CEO 1인)
+- **다꾸러·수집러 VOC**:
+  - **소장러 A**: *"상단 `오늘의 밑줄` 문장 텍스트를 우클릭했을 때도 바로 다음 밑줄 문장(`Shift+우클릭` 시 이전 문장)으로 넘어가면 마우스를 `↻ 문장` 버튼까지 안 옮겨도 돼서 훨씬 편할 것 같아요."*
+  - **가챠러 B**: *"`+ 일기 쓰기` 모달에서 제목 입력 후 `Enter`로 작가란으로 넘어간 뒤, 작가만 입력하고 바로 `Enter`를 쳐도 새 일기가 즉시 등록되면 1초 기록이 가능할 것 같아요."*
+  - **미니멀러 C**: *"웹 목업(`index.html`)의 `#today-quote-banner` 툴팁에도 `우클릭: 다음 밑줄` 안내가 함께 표시되도록 맞춰주세요."*
+- **주요 개선 사항**:
+  1. **`TodayQuoteLabel` 우클릭·`Shift+우클릭` 문장 순환 (`main_view.gd` · `index.html`)**: 오늘의 밑줄 라벨 좌클릭(일기장 펼치기) + 우클릭(`_step_today_quote(1)`, `Shift+우클릭` 시 `-1`) 지원 및 툴팁 동기화.
+  2. **`AddModal` 작가 입력란 `Enter` 즉시 등록 (`add_modal.gd`)**: `author_input.text_submitted` 시 `_on_submit_btn_pressed()`를 연결해 제목+작가 입력만으로 즉시 등록 가능.
+  3. **TDD 통합 테스트 확장 (`tests/test_main_integration.gd`)**: `Right-Click TodayQuoteLabel Step & AddModal Author Enter-to-Submit` 테스트를 추가해 3종 헤드리스 테스트 100% 통과 및 Metal 4.0 스크린샷 갱신.
+
+---
+
 ## 🚀 [Sprint 108] 책등(Spine) 우클릭 상세 미리보기 & 상단 요약줄(`SubTitle`) 우클릭 클립보드 복사
 - **날짜/시각**: 2026-11-18 07:09 (자동 스프린트)
 - **참여 스쿼드**: 14인 애자일 스쿼드 전원 (다꾸러 3인, PO/기획 2인, UX/UI 2인, 개발 4인, QA 2인, CEO 1인)

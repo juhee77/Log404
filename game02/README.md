@@ -5,7 +5,7 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 
 ---
 
-## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 108)
+## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 109)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
@@ -14,6 +14,10 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 ---
 
 ## 🚀 최신 스프린트 업데이트 요약 ([전체 회의록 보기](SPRINT_LOG.md))
+
+### [Sprint 109] `TodayQuoteLabel` 우클릭 다음·이전 밑줄 전환 & `AddModal` 작가란 `Enter` 즉시 등록
+- **오늘의 밑줄 우클릭 순환 (`main_view.gd` · `index.html`)**: 상단 오늘의 밑줄 문장 라벨을 좌클릭하면 해당 일기장이 열리고, 우클릭(`Shift+우클릭`: 이전)하면 바로 다음 문장으로 넘어갑니다.
+- **`AddModal` 작가란 `Enter` 즉시 등록 (`add_modal.gd`)**: 새 일기 추가 모달에서 작가명 입력 후 `Enter`를 누르면 즉시 서재에 등록됩니다.
 
 ### [Sprint 108] 책등(Spine) 우클릭 상세 미리보기 & 상단 요약줄(`SubTitle`) 우클릭 클립보드 복사
 - **책등 우클릭 상세 미리보기 (`main_view.gd`)**: 상단 책등 배너 우클릭 시 모달을 열지 않고 권수·완독률·소장 가치(`₩`)를 토스트로 바로 미리 볼 수 있습니다.
