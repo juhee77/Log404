@@ -1064,6 +1064,26 @@ func _init() -> void:
 	main_inst.detail_modal.close()
 	print("✓ In-Modal Keyboard I Ink Cycle & V/Shift+V Value Adjust verified")
 
+	# Sprint 92: In-Modal Keyboard W Washi Tape & P Paper Pattern Cyclers
+	var target_s92 = main_inst.archive_state.items[0]
+	var orig_tape_s92: String = target_s92.washi_tape_color
+	var orig_paper_s92: String = target_s92.paper_pattern
+	main_inst._on_card_clicked(target_s92)
+	var mw_ev := InputEventKey.new()
+	mw_ev.pressed = true
+	mw_ev.keycode = KEY_W
+	main_inst.detail_modal._unhandled_input(mw_ev)
+	assert(target_s92.washi_tape_color != orig_tape_s92, "Pressing W inside modal should cycle washi tape color")
+	var mp_ev := InputEventKey.new()
+	mp_ev.pressed = true
+	mp_ev.keycode = KEY_P
+	main_inst.detail_modal._unhandled_input(mp_ev)
+	assert(target_s92.paper_pattern != orig_paper_s92, "Pressing P inside modal should cycle paper pattern")
+	main_inst._on_modal_help_requested()
+	assert("[W]" in main_inst.status_toast.text and "[P]" in main_inst.status_toast.text, "Modal help cheatsheet should list [W] and [P] shortcuts")
+	main_inst.detail_modal.close()
+	print("✓ In-Modal Keyboard W Washi Tape & P Paper Pattern Cyclers verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

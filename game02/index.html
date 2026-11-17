@@ -996,6 +996,16 @@
                         }
                     }
                 }
+            } else if ((e.key === 'w' || e.key === 'W') && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
+                const jm = document.getElementById('journal-modal');
+                if (jm && !jm.classList.contains('hidden') && activeId != null) {
+                    cycleWashiTape();
+                }
+            } else if ((e.key === 'p' || e.key === 'P') && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
+                const jm = document.getElementById('journal-modal');
+                if (jm && !jm.classList.contains('hidden') && activeId != null) {
+                    cyclePaperPattern();
+                }
             } else if ((e.key === 'i' || e.key === 'I') && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
                 const jm = document.getElementById('journal-modal');
                 if (jm && !jm.classList.contains('hidden') && activeId != null) {

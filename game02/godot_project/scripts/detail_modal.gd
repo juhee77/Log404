@@ -580,6 +580,12 @@ func _unhandled_input(event: InputEvent) -> void:
 			else:
 				boost_estimated_value()
 			get_viewport().set_input_as_handled()
+		elif event.keycode == KEY_W:
+			cycle_washi_tape()
+			get_viewport().set_input_as_handled()
+		elif event.keycode == KEY_P:
+			cycle_paper_pattern()
+			get_viewport().set_input_as_handled()
 
 func apply_stamp(stamp_name: String) -> void:
 	if current_item == null:
