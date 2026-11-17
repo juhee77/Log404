@@ -120,10 +120,13 @@ func _ready() -> void:
 	if sub_title != null:
 		sub_title.mouse_filter = Control.MOUSE_FILTER_STOP
 		sub_title.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
-		sub_title.tooltip_text = "클릭하여 내 서재 전체 인포그래픽 요약 보기"
+		sub_title.tooltip_text = "좌클릭: 서재 인포그래픽 요약 · 우클릭: 서재 리포트 클립보드 복사"
 		sub_title.gui_input.connect(func(ev):
-			if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_LEFT:
-				show_library_infographic()
+			if ev is InputEventMouseButton and ev.pressed:
+				if ev.button_index == MOUSE_BUTTON_LEFT:
+					show_library_infographic()
+				elif ev.button_index == MOUSE_BUTTON_RIGHT:
+					copy_summary_to_clipboard()
 		)
 	if next_quote_btn != null:
 		next_quote_btn.tooltip_text = "[Q] 서재 속 다음 밑줄 문장으로 넘기기"
@@ -302,11 +305,14 @@ func _render_spine_shelf() -> void:
 		ribbon.size = Vector2(w, 3)
 		spine.add_child(ribbon)
 		var capture_item = it
-		spine.tooltip_text = it.title + " (" + str(it.volumes.size()) + "권 소장)"
+		spine.tooltip_text = "%s (%d권 소장 · 좌클릭: 열기 · 우클릭: 미리보기)" % [it.title, it.volumes.size()]
 		spine.mouse_entered.connect(func(): _show_toast("📚 책등 엿보기: " + capture_item.title + " (" + str(capture_item.volumes.size()) + "권)"))
 		spine.gui_input.connect(func(ev: InputEvent):
-			if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_LEFT:
-				_open_detail_modal(capture_item)
+			if ev is InputEventMouseButton and ev.pressed:
+				if ev.button_index == MOUSE_BUTTON_LEFT:
+					_open_detail_modal(capture_item)
+				elif ev.button_index == MOUSE_BUTTON_RIGHT:
+					_show_toast("📚 책등 상세 미리보기: 「%s」 · %d권 · %d%% · %s" % [capture_item.title, capture_item.volumes.size(), int(capture_item.get_completion_percentage()), ArchiveStateClass.format_krw(capture_item.get_item_value())])
 		)
 		spine_shelf_row.add_child(spine)
 

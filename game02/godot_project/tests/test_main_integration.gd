@@ -1405,6 +1405,17 @@ func _init() -> void:
 	assert(not main_inst.detail_modal.visible and "미리보기" in main_inst.status_toast.text, "Right-clicking RandomPickBtn should peek random item without opening modal")
 	print("✓ Shift+R / Right-Click Random Pick Peek Without Opening Modal verified")
 
+	# Sprint 108: Right-Click Spine Peek & Right-Click SubTitle Clipboard Copy
+	var s108_spine = main_inst.spine_shelf_row.get_child(0)
+	var sp_rc := InputEventMouseButton.new()
+	sp_rc.pressed = true
+	sp_rc.button_index = MOUSE_BUTTON_RIGHT
+	s108_spine.gui_input.emit(sp_rc)
+	assert("책등 상세 미리보기" in main_inst.status_toast.text and "₩" in main_inst.status_toast.text, "Right-clicking spine should show detailed preview with KRW value")
+	main_inst.sub_title.gui_input.emit(sp_rc)
+	assert("클립보드에 복사되었습니다" in main_inst.status_toast.text, "Right-clicking SubTitle should copy library summary to clipboard")
+	print("✓ Right-Click Spine Peek & Right-Click SubTitle Clipboard Copy verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

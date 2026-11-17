@@ -176,7 +176,8 @@
                 <div class="flex items-center justify-between sm:justify-end gap-2 flex-1">
                     <span id="today-quote-banner"
                         class="serif-font text-xs text-[#5c4938] italic truncate cursor-pointer hover:underline"
-                        onclick="openCurrentQuoteItem()">
+                        onclick="openCurrentQuoteItem()"
+                        oncontextmenu="event.preventDefault(); cycleTodayQuote(1);">
                         🖋️ 오늘의 밑줄: "농구... 좋아하세요?" — 슬램덩크 신장재편판
                     </span>
                     <button id="next-quote-btn" onclick="cycleTodayQuote(1)" oncontextmenu="event.preventDefault(); cycleTodayQuote(-1);" title="[Q] 서재 속 다음 밑줄 문장 (우클릭: 이전)"
