@@ -229,7 +229,7 @@ func _style_diary_controls() -> void:
 		"Panel/VBox/BodyMargin/Body/StampRow/RarityBtn": "수집 레어도 등급 순환 (R)",
 		"Panel/VBox/BodyMargin/Body/StampRow/PaperBtn": "일기장 속지 패턴 순환 (P)",
 		"Panel/VBox/BodyMargin/Body/StampRow/StorageBtn": "실물 보관 위치 순환",
-		"Panel/VBox/BodyMargin/Body/StampRow/SourceBtn": "소장·입수 경로 순환",
+		"Panel/VBox/BodyMargin/Body/StampRow/SourceBtn": "소장·입수 경로 순환 (A)",
 		"Panel/VBox/BodyMargin/Body/StampRow/MoodBtn": "독서·수집 기분 태그 순환 (M)",
 		"Panel/VBox/BodyMargin/Body/StampRow/RereadBtn": "재독 횟수 +1 (우클릭: -1)",
 		"Panel/VBox/BodyMargin/Body/StampRow/DuplicateBtn": "복수 소장 수량 +1 (우클릭: -1)",
@@ -241,7 +241,7 @@ func _style_diary_controls() -> void:
 		"Panel/VBox/BodyMargin/Body/InkRow/ValueBtn": "추정 소장 가치 +5,000원 (V / 우클릭·Shift+V: -5,000원)",
 		"Panel/VBox/BodyMargin/Body/InkRow/FavCharBtn": "최애 캐릭터 태그 순환",
 		"Panel/VBox/BodyMargin/Body/InkRow/ConditionBtn": "실물 컨디션 등급 순환 (G)",
-		"Panel/VBox/BodyMargin/Body/InkRow/FinishBtn": "표지 코팅 마감 순환 (무광·유광·홀로그램·양장)",
+		"Panel/VBox/BodyMargin/Body/InkRow/FinishBtn": "표지 코팅 마감 순환 (F: 무광·유광·홀로그램·양장)",
 		"Panel/VBox/BodyMargin/Body/InkRow/WeatherBtn": "독서·수집 날씨 스탬프 순환",
 		"Panel/VBox/BodyMargin/Body/InkRow/SpotBtn": "독서·수집 장소 스탬프 순환"
 	}
@@ -603,6 +603,12 @@ func _unhandled_input(event: InputEvent) -> void:
 			get_viewport().set_input_as_handled()
 		elif event.keycode == KEY_T:
 			cycle_custom_tag()
+			get_viewport().set_input_as_handled()
+		elif event.keycode == KEY_F:
+			cycle_cover_finish()
+			get_viewport().set_input_as_handled()
+		elif event.keycode == KEY_A:
+			cycle_acquisition_source()
 			get_viewport().set_input_as_handled()
 
 func apply_stamp(stamp_name: String) -> void:

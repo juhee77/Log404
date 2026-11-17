@@ -1150,6 +1150,28 @@ func _init() -> void:
 	main_inst.detail_modal.close()
 	print("✓ In-Modal Keyboard G Condition Grade & T Custom Tag Cyclers verified")
 
+	# Sprint 96: In-Modal Keyboard F Cover Finish & A Acquisition Source Cyclers
+	var target_s96 = main_inst.archive_state.items[0]
+	var orig_finish_s96: String = target_s96.cover_finish
+	var orig_src_s96: String = target_s96.acquisition_source
+	main_inst._on_card_clicked(target_s96)
+	var mf_ev := InputEventKey.new()
+	mf_ev.pressed = true
+	mf_ev.keycode = KEY_F
+	main_inst.detail_modal._unhandled_input(mf_ev)
+	assert(target_s96.cover_finish != orig_finish_s96, "Pressing F inside modal should cycle cover finish")
+	var ma_ev := InputEventKey.new()
+	ma_ev.pressed = true
+	ma_ev.keycode = KEY_A
+	main_inst.detail_modal._unhandled_input(ma_ev)
+	assert(target_s96.acquisition_source != orig_src_s96, "Pressing A inside modal should cycle acquisition source")
+	var src_btn_s96: Button = main_inst.detail_modal.get_node("Panel/VBox/BodyMargin/Body/StampRow/SourceBtn")
+	assert("(A)" in src_btn_s96.tooltip_text, "SourceBtn tooltip should include (A) shortcut hint")
+	main_inst._on_modal_help_requested()
+	assert("[F]" in main_inst.status_toast.text and "[A]" in main_inst.status_toast.text, "Modal help cheatsheet should list [F] and [A] shortcuts")
+	main_inst.detail_modal.close()
+	print("✓ In-Modal Keyboard F Cover Finish & A Acquisition Source Cyclers verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()
