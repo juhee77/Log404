@@ -1334,6 +1334,17 @@ func _init() -> void:
 	assert("₩" in main_inst.status_toast.text and "종" in main_inst.status_toast.text, "Item submit toast should show updated library count and KRW total")
 	print("✓ Quote Index Tooltip, Quick-Advance KRW Toast & Submit Library Summary Toast verified")
 
+	# Sprint 104: Web Scrape / Camera Snap / Delete Library Summary Toasts & NextQuoteBtn Index Tooltip
+	assert("(1/" in main_inst.next_quote_btn.tooltip_text, "NextQuoteBtn tooltip should show (1/N) index")
+	main_inst._on_web_scrape_btn_pressed()
+	assert("웹 표지 자동 스크랩" in main_inst.status_toast.text and "₩" in main_inst.status_toast.text, "Web scrape toast should include library count and KRW total")
+	main_inst._on_camera_snap_btn_pressed()
+	assert("카메라 찰칵" in main_inst.status_toast.text and "₩" in main_inst.status_toast.text, "Camera snap toast should include library count and KRW total")
+	var last_s104 = main_inst.archive_state.items[main_inst.archive_state.items.size() - 1]
+	main_inst._on_item_deleted(last_s104)
+	assert("삭제되었습니다" in main_inst.status_toast.text and "₩" in main_inst.status_toast.text, "Delete toast should include remaining library count and KRW total")
+	print("✓ Web Scrape / Camera Snap / Delete Library Summary Toasts & NextQuoteBtn Index Tooltip verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

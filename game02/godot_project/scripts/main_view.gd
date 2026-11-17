@@ -315,6 +315,8 @@ func _apply_today_quote(entry: Dictionary, total_count: int = 1) -> void:
 		today_quote_label.tooltip_text = "클릭하여 「%s」 독서 일기장 펼치기 (%d/%d)" % [target_item.title, quote_cursor + 1, maxi(1, total_count)]
 	else:
 		today_quote_label.tooltip_text = "나만의 첫 독서 일기를 시작해보세요"
+	if next_quote_btn != null:
+		next_quote_btn.tooltip_text = "[Q] 서재 속 다음 밑줄 문장으로 넘기기 (%d/%d)" % [quote_cursor + 1, maxi(1, total_count)]
 
 func _refresh_today_quote() -> void:
 	if today_quote_label == null:
@@ -626,7 +628,7 @@ func _on_web_scrape_btn_pressed() -> void:
 	web_preset_cursor = (web_preset_cursor + 1) % archive_state.WEB_PRESET_CATALOG.size()
 	_update_stats()
 	_on_tab_all_pressed()
-	_show_toast("🌐 웹 표지 자동 스크랩 완료: " + added.title)
+	_show_toast("🌐 웹 표지 자동 스크랩 완료: %s (%s)" % [added.title, _get_filtered_cards_summary()])
 
 func _on_camera_snap_btn_pressed() -> void:
 	var added = archive_state.add_item(
@@ -640,7 +642,7 @@ func _on_camera_snap_btn_pressed() -> void:
 	)
 	_update_stats()
 	_on_tab_all_pressed()
-	_show_toast("📸 카메라 찰칵! 실물 표지가 등록되었습니다: " + added.title)
+	_show_toast("📸 카메라 찰칵! 실물 표지가 등록되었습니다: %s (%s)" % [added.title, _get_filtered_cards_summary()])
 
 func _on_theme_btn_pressed() -> void:
 	theme_cursor = (theme_cursor + 1) % ROOM_THEMES.size()
@@ -661,10 +663,11 @@ func _on_item_submitted(p_title: String, p_cat: int, p_author: String, p_color: 
 	_show_toast("✨ 새 일기장이 서재에 꽂혔습니다: %s (%s)" % [p_title, _get_filtered_cards_summary()])
 
 func _on_item_deleted(item) -> void:
+	var del_title: String = item.title if item != null else "소장품"
 	archive_state.remove_item(item.id)
 	_update_stats()
 	_render_cards()
-	_show_toast("🗑️ 소장품이 삭제되었습니다.")
+	_show_toast("🗑️ 「%s」 일기장이 삭제되었습니다. (%s)" % [del_title, _get_filtered_cards_summary()])
 
 func _on_volume_added(item) -> void:
 	if item != null:

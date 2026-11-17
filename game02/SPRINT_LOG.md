@@ -5,6 +5,20 @@
 
 ---
 
+## 🚀 [Sprint 104] 웹 스크랩·카메라 촬영·삭제 KRW 서재 요약 토스트 & `↻ 문장` 버튼 `(n/N)` 툴팁 동기화
+- **날짜/시각**: 2026-11-18 05:48 (자동 스프린트)
+- **참여 스쿼드**: 14인 애자일 스쿼드 전원 (다꾸러 3인, PO/기획 2인, UX/UI 2인, 개발 4인, QA 2인, CEO 1인)
+- **다꾸러·수집러 VOC**:
+  - **소장러 A**: *"메인 화면에서 `웹표지 스크랩`, `폴라로이드 촬영`, 그리고 `일기 삭제` 직후 토스트에도 현재 갱신된 전체 서재의 `N종 · ₩총액` 요약이 함께 표시되면 모든 추가·삭제 동작의 피드백 포맷이 통일될 것 같아요."*
+  - **가챠러 B**: *"상단 `↻ 문장` 버튼(`NextQuoteBtn`)에 마우스를 올렸을 때도 현재 몇 번째 밑줄 문장인지 `(1/N)` 순번이 함께 보이면 좋겠어요."*
+  - **미니멀러 C**: *"웹 목업(`index.html`)의 `↻ 다른 문장` 버튼 툴팁에도 `[Q]` 단축키 안내와 `(n/N)` 순번이 실시간으로 동기화되도록 맞춰주세요."*
+- **주요 개선 사항**:
+  1. **웹 스크랩·카메라 촬영·삭제 KRW 요약 토스트 통일 (`main_view.gd`)**: `_on_web_scrape_btn_pressed()`, `_on_camera_snap_btn_pressed()`, `_on_item_deleted()` 호출 시 `_get_filtered_cards_summary()`를 활용해 `N종 · ₩총액` 요약을 토스트로 안내.
+  2. **`NextQuoteBtn` `(n/N)` 순번 툴팁 동기화 (`main_view.gd` · `index.html`)**: `_apply_today_quote()` 및 `cycleTodayQuote()`에서 `next_quote_btn` 툴팁에 `[Q]` 힌트와 현재 문장 순번 `(%d/%d)` 실시간 표시.
+  3. **TDD 통합 테스트 확장 (`tests/test_main_integration.gd`)**: `Web Scrape / Camera Snap / Delete Library Summary Toasts & NextQuoteBtn Index Tooltip` 테스트를 추가해 3종 헤드리스 테스트 100% 통과 및 Metal 4.0 스크린샷 갱신.
+
+---
+
 ## 🚀 [Sprint 103] 오늘의 밑줄 순번(`(n/N)`) 툴팁 & 새 일기 등록·우클릭 빠른 기록 KRW 요약 토스트
 - **날짜/시각**: 2026-11-18 05:29 (자동 스프린트)
 - **참여 스쿼드**: 14인 애자일 스쿼드 전원 (다꾸러 3인, PO/기획 2인, UX/UI 2인, 개발 4인, QA 2인, CEO 1인)
