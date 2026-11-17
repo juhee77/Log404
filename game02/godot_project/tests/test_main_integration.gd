@@ -1084,6 +1084,28 @@ func _init() -> void:
 	main_inst.detail_modal.close()
 	print("✓ In-Modal Keyboard W Washi Tape & P Paper Pattern Cyclers verified")
 
+	# Sprint 93: In-Modal Keyboard S Sticker & R Rarity Cyclers + Tooltip Hints
+	var target_s93 = main_inst.archive_state.items[0]
+	var orig_sticker_s93: String = target_s93.deco_sticker
+	var orig_rarity_s93: String = target_s93.rarity_tier
+	main_inst._on_card_clicked(target_s93)
+	var ms_ev := InputEventKey.new()
+	ms_ev.pressed = true
+	ms_ev.keycode = KEY_S
+	main_inst.detail_modal._unhandled_input(ms_ev)
+	assert(target_s93.deco_sticker != orig_sticker_s93, "Pressing S inside modal should cycle deco sticker")
+	var mr_ev := InputEventKey.new()
+	mr_ev.pressed = true
+	mr_ev.keycode = KEY_R
+	main_inst.detail_modal._unhandled_input(mr_ev)
+	assert(target_s93.rarity_tier != orig_rarity_s93, "Pressing R inside modal should cycle rarity tier")
+	var tape_btn_s93: Button = main_inst.detail_modal.get_node("Panel/VBox/BodyMargin/Body/StampRow/TapeCycleBtn")
+	assert("(W)" in tape_btn_s93.tooltip_text, "TapeCycleBtn tooltip should include (W) shortcut hint")
+	main_inst._on_modal_help_requested()
+	assert("[S]" in main_inst.status_toast.text and "[R]" in main_inst.status_toast.text, "Modal help cheatsheet should list [S] and [R] shortcuts")
+	main_inst.detail_modal.close()
+	print("✓ In-Modal Keyboard S Sticker & R Rarity Cyclers + Tooltip Hints verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

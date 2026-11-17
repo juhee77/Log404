@@ -18,13 +18,14 @@ Godot 4+ 기반의 감성 게임 및 인터랙티브 아카이브 애플리케�
 > **Godot 4.6.2 모바일 기반 E-Book 리더기 서재(Apple Books · 리디북스) & 만년필 다꾸 독서노트(굿노트 · 몰스킨) 감성 아카이브 앱**  
 > 14인 가상 애자일 스쿼드가 20분 주기 자동 스프린트로 지속 개선 중입니다.
 
-### 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 92)
+### 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 93)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
 | ![Pocket Archive Main Screen](game02/godot_project/screenshots/godot_app_screen.png) | ![Pocket Archive Detail Modal](game02/godot_project/screenshots/godot_modal_screen.png) |
 
 ### ✨ 주요 핵심 기능
+- **최신 Sprint 93 하이라이트**: 모달 내 `S` 키 데코 스티커 순환, `R` 키 수집 레어도 순환 및 마테`(W)`·스티커`(S)`·레어도`(R)`·속지`(P)` 단축키 툴팁 힌트 완성
 - **최신 Sprint 92 하이라이트**: 모달 내 `W` 키 마스킹 테이프 순환 및 `P` 키 종이 속지 패턴 순환(`detail_modal.gd` · `main_view.gd` · `index.html`) 완성
 - **최신 Sprint 91 하이라이트**: 모달 내 `I` 키 만년필 잉크 4종 순환(`detail_modal.gd` · `index.html`) 및 `V`/`Shift+V` 소장 가치 ±5,000원 키보드 조정 완성
 - **최신 Sprint 90 하이라이트**: 모달 내 `1~4` 키 4대 고무인장 원클릭 찍기(`전권완결`·`초판특전`·`인생최애`·`위시리스트`) 및 버튼 툴팁 단축키 힌트 `(+)`/`(-)`/`(L)` 완성

@@ -964,6 +964,13 @@
                 const jm = document.getElementById('journal-modal');
                 if (!jm || jm.classList.contains('hidden')) {
                     pickRandomItem();
+                } else if (activeId != null) {
+                    cycleRarityTier();
+                }
+            } else if ((e.key === 's' || e.key === 'S') && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
+                const jm = document.getElementById('journal-modal');
+                if (jm && !jm.classList.contains('hidden') && activeId != null) {
+                    cycleDecoSticker();
                 }
             } else if ((e.key === 'm' || e.key === 'M') && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
                 const jm = document.getElementById('journal-modal');
