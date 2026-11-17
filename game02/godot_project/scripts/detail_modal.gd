@@ -542,6 +542,11 @@ func _unhandled_input(event: InputEvent) -> void:
 		elif event.keycode == KEY_H:
 			help_requested.emit()
 			get_viewport().set_input_as_handled()
+		elif event.keycode == KEY_E:
+			if quote_input != null:
+				quote_input.grab_focus()
+				quote_input.caret_column = quote_input.text.length()
+			get_viewport().set_input_as_handled()
 
 func apply_stamp(stamp_name: String) -> void:
 	if current_item == null:

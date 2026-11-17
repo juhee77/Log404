@@ -989,13 +989,19 @@
                         }
                     }
                 }
+            } else if ((e.key === 'e' || e.key === 'E') && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
+                const jm = document.getElementById('journal-modal');
+                if (jm && !jm.classList.contains('hidden')) {
+                    e.preventDefault();
+                    document.getElementById('diary-quote-input')?.focus();
+                }
             } else if ((e.key === 'h' || e.key === '?') && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
                 const jm = document.getElementById('journal-modal');
                 if (jm && !jm.classList.contains('hidden')) {
                     const pageEl = document.getElementById('journal-page-indicator');
                     if (pageEl) {
                         const prevTxt = pageEl.textContent;
-                        pageEl.textContent = '⌨️ [←/→] 넘김 · [Home/End] 처음·끝 · [C] 감상 복사 · [ESC] 닫기';
+                        pageEl.textContent = '⌨️ [←/→] 넘김 · [Home/End] 처음·끝 · [E] 문장 · [C] 복사 · [ESC] 닫기';
                         setTimeout(() => { if (pageEl.textContent.includes('넘김')) pageEl.textContent = prevTxt; }, 2200);
                     }
                 } else {

@@ -991,6 +991,20 @@ func _init() -> void:
 	main_inst.detail_modal.close()
 	print("✓ In-Modal Keyboard +/- Volume Control & H Modal Shortcut Help verified")
 
+	# Sprint 88: In-Modal Keyboard E Quote Focus & Updated H Cheatsheet
+	main_inst._on_card_clicked(main_inst.archive_state.items[0])
+	main_inst.detail_modal.quote_input.caret_column = 0
+	var me_ev := InputEventKey.new()
+	me_ev.pressed = true
+	me_ev.keycode = KEY_E
+	main_inst.detail_modal._unhandled_input(me_ev)
+	assert(main_inst.detail_modal.quote_input.caret_column == main_inst.detail_modal.quote_input.text.length(), "Pressing E in modal should focus quote_input and move caret to end")
+	main_inst.detail_modal.quote_input.release_focus()
+	main_inst._on_modal_help_requested()
+	assert("[E]" in main_inst.status_toast.text, "Modal help cheatsheet should list [E] quote edit shortcut")
+	main_inst.detail_modal.close()
+	print("✓ In-Modal Keyboard E Quote Focus & Updated H Cheatsheet verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

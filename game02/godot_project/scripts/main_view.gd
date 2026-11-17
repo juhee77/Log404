@@ -732,7 +732,7 @@ func _unhandled_input(event: InputEvent) -> void:
 					get_viewport().set_input_as_handled()
 
 func _on_modal_help_requested() -> void:
-	_show_toast("⌨️ 모달 단축키: [←/→] 책장 넘김 · [Home/End] 처음·끝 · [+/-] 권 추가·삭제 · [C] 감상 복사 · [ESC] 닫기")
+	_show_toast("⌨️ 모달 단축키: [←/→] 책장 넘김 · [Home/End] 처음·끝 · [+/-] 권 추가·삭제 · [E] 문장 편집 · [C] 감상 복사 · [ESC] 닫기")
 
 func _on_modal_navigate_requested(delta: int) -> void:
 	if archive_state == null or archive_state.items.is_empty():
