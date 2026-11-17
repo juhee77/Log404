@@ -5,7 +5,7 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 
 ---
 
-## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 98)
+## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 99)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
@@ -14,6 +14,10 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 ---
 
 ## 🚀 최신 스프린트 업데이트 요약 ([전체 회의록 보기](SPRINT_LOG.md))
+
+### [Sprint 99] 모달 내 `U` 키 독서 날씨 스탬프 순환 & `J` 키 독서 장소 스탬프 순환
+- **모달 내 `U` 날씨 & `J` 장소 순환 (`detail_modal.gd` · `index.html`)**: 모달 열람 중 `U` 키로 독서 날씨 스탬프를, `J` 키로 독서 장소 스탬프를 즉시 순환할 수 있습니다.
+- **버튼 툴팁 힌트 & 치트시트 동기화 (`detail_modal.gd` · `main_view.gd`)**: `WeatherBtn` `(U)`, `SpotBtn` `(J)` 툴팁과 `H` 단축키 안내를 동기화했습니다.
 
 ### [Sprint 98] 모달 내 `D`/`Shift+D` 복수 소장 ±1 & `K` 키 최애 캐릭터 태그 순환
 - **모달 내 `D` 복수 소장 & `K` 최애캐 순환 (`detail_modal.gd` · `index.html`)**: 모달 열람 중 `D`(`Shift+D`: -1) 키로 복수 소장 수량을, `K` 키로 최애 캐릭터 태그를 즉시 순환할 수 있습니다.

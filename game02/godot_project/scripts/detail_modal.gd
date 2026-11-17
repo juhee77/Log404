@@ -242,8 +242,8 @@ func _style_diary_controls() -> void:
 		"Panel/VBox/BodyMargin/Body/InkRow/FavCharBtn": "최애 캐릭터 태그 순환 (K)",
 		"Panel/VBox/BodyMargin/Body/InkRow/ConditionBtn": "실물 컨디션 등급 순환 (G)",
 		"Panel/VBox/BodyMargin/Body/InkRow/FinishBtn": "표지 코팅 마감 순환 (F: 무광·유광·홀로그램·양장)",
-		"Panel/VBox/BodyMargin/Body/InkRow/WeatherBtn": "독서·수집 날씨 스탬프 순환",
-		"Panel/VBox/BodyMargin/Body/InkRow/SpotBtn": "독서·수집 장소 스탬프 순환"
+		"Panel/VBox/BodyMargin/Body/InkRow/WeatherBtn": "독서·수집 날씨 스탬프 순환 (U)",
+		"Panel/VBox/BodyMargin/Body/InkRow/SpotBtn": "독서·수집 장소 스탬프 순환 (J)"
 	}
 	for path in row_tips.keys():
 		var tip_btn: Control = get_node_or_null(path)
@@ -624,6 +624,12 @@ func _unhandled_input(event: InputEvent) -> void:
 			get_viewport().set_input_as_handled()
 		elif event.keycode == KEY_K:
 			cycle_favorite_character()
+			get_viewport().set_input_as_handled()
+		elif event.keycode == KEY_U:
+			cycle_reading_weather()
+			get_viewport().set_input_as_handled()
+		elif event.keycode == KEY_J:
+			cycle_reading_spot()
 			get_viewport().set_input_as_handled()
 
 func apply_stamp(stamp_name: String) -> void:

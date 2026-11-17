@@ -1222,6 +1222,28 @@ func _init() -> void:
 	main_inst.detail_modal.close()
 	print("✓ In-Modal Keyboard D/Shift+D Duplicate & K Favorite Character Cyclers verified")
 
+	# Sprint 99: In-Modal Keyboard U Reading Weather & J Reading Spot Cyclers
+	var target_s99 = main_inst.archive_state.items[0]
+	var orig_weather_s99: String = target_s99.reading_weather
+	var orig_spot_s99: String = target_s99.reading_spot
+	main_inst._on_card_clicked(target_s99)
+	var mu_ev := InputEventKey.new()
+	mu_ev.pressed = true
+	mu_ev.keycode = KEY_U
+	main_inst.detail_modal._unhandled_input(mu_ev)
+	assert(target_s99.reading_weather != orig_weather_s99, "Pressing U inside modal should cycle reading weather")
+	var mj_ev := InputEventKey.new()
+	mj_ev.pressed = true
+	mj_ev.keycode = KEY_J
+	main_inst.detail_modal._unhandled_input(mj_ev)
+	assert(target_s99.reading_spot != orig_spot_s99, "Pressing J inside modal should cycle reading spot")
+	var w_btn_s99: Button = main_inst.detail_modal.get_node("Panel/VBox/BodyMargin/Body/InkRow/WeatherBtn")
+	assert("(U)" in w_btn_s99.tooltip_text, "WeatherBtn tooltip should include (U) shortcut hint")
+	main_inst._on_modal_help_requested()
+	assert("[U]" in main_inst.status_toast.text and "[J]" in main_inst.status_toast.text, "Modal help cheatsheet should list [U] and [J] shortcuts")
+	main_inst.detail_modal.close()
+	print("✓ In-Modal Keyboard U Reading Weather & J Reading Spot Cyclers verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

@@ -979,6 +979,29 @@
                 } else if (activeId != null) {
                     cycleReadingMood();
                 }
+            } else if ((e.key === 'u' || e.key === 'U' || e.key === 'j' || e.key === 'J') && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
+                const jm = document.getElementById('journal-modal');
+                if (jm && !jm.classList.contains('hidden') && activeId != null) {
+                    const item = ITEMS.find(x => x.id === activeId);
+                    if (item) {
+                        let msg = '';
+                        if (e.key === 'u' || e.key === 'U') {
+                            const weathers = ['☀️ 맑은 오후', '🌧️ 비 오는 밤', '❄️ 눈 오는 겨울', '🌙 새벽 감성'];
+                            item.reading_weather = weathers[(weathers.indexOf(item.reading_weather || weathers[0]) + 1) % weathers.length];
+                            msg = `🌤️ 날씨: ${item.reading_weather}`;
+                        } else {
+                            const spots = ['🛏️ 이불 속', '☕ 카페 창가', '📚 동네 도서관', '🛋️ 거실 소파'];
+                            item.reading_spot = spots[(spots.indexOf(item.reading_spot || spots[0]) + 1) % spots.length];
+                            msg = `📍 장소: ${item.reading_spot}`;
+                        }
+                        const pageEl = document.getElementById('journal-page-indicator');
+                        if (pageEl) {
+                            const prevTxt = pageEl.textContent;
+                            pageEl.textContent = msg;
+                            setTimeout(() => { if (pageEl.textContent === msg) pageEl.textContent = prevTxt; }, 1600);
+                        }
+                    }
+                }
             } else if ((e.key === 'd' || e.key === 'D' || e.key === 'k' || e.key === 'K') && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
                 const jm = document.getElementById('journal-modal');
                 if (jm && !jm.classList.contains('hidden') && activeId != null) {
