@@ -1172,6 +1172,28 @@ func _init() -> void:
 	main_inst.detail_modal.close()
 	print("✓ In-Modal Keyboard F Cover Finish & A Acquisition Source Cyclers verified")
 
+	# Sprint 97: In-Modal Keyboard N Pen Nib & B Storage Location Cyclers
+	var target_s97 = main_inst.archive_state.items[0]
+	var orig_nib_s97: int = target_s97.pen_nib_size
+	var orig_loc_s97: String = target_s97.storage_location
+	main_inst._on_card_clicked(target_s97)
+	var mn_ev := InputEventKey.new()
+	mn_ev.pressed = true
+	mn_ev.keycode = KEY_N
+	main_inst.detail_modal._unhandled_input(mn_ev)
+	assert(target_s97.pen_nib_size != orig_nib_s97, "Pressing N inside modal should cycle pen nib size")
+	var mb_ev := InputEventKey.new()
+	mb_ev.pressed = true
+	mb_ev.keycode = KEY_B
+	main_inst.detail_modal._unhandled_input(mb_ev)
+	assert(target_s97.storage_location != orig_loc_s97, "Pressing B inside modal should cycle storage location")
+	var loc_btn_s97: Button = main_inst.detail_modal.get_node("Panel/VBox/BodyMargin/Body/StampRow/StorageBtn")
+	assert("(B)" in loc_btn_s97.tooltip_text, "StorageBtn tooltip should include (B) shortcut hint")
+	main_inst._on_modal_help_requested()
+	assert("[N]" in main_inst.status_toast.text and "[B]" in main_inst.status_toast.text, "Modal help cheatsheet should list [N] and [B] shortcuts")
+	main_inst.detail_modal.close()
+	print("✓ In-Modal Keyboard N Pen Nib & B Storage Location Cyclers verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

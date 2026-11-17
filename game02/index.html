@@ -979,6 +979,22 @@
                 } else if (activeId != null) {
                     cycleReadingMood();
                 }
+            } else if ((e.key === 'b' || e.key === 'B' || e.key === 'n' || e.key === 'N') && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
+                const jm = document.getElementById('journal-modal');
+                if (jm && !jm.classList.contains('hidden') && activeId != null) {
+                    if (e.key === 'b' || e.key === 'B') {
+                        cycleStorageLocation();
+                    } else {
+                        const item = ITEMS.find(x => x.id === activeId);
+                        if (item) {
+                            const nibs = [10, 12, 14];
+                            const cur = item.pen_nib_size || 10;
+                            item.pen_nib_size = nibs[(nibs.indexOf(cur) + 1) % nibs.length];
+                            const memoEl = document.getElementById('diary-memo');
+                            if (memoEl) memoEl.style.fontSize = item.pen_nib_size + 'px';
+                        }
+                    }
+                }
             } else if ((e.key === 'f' || e.key === 'F' || e.key === 'a' || e.key === 'A') && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
                 const jm = document.getElementById('journal-modal');
                 if (jm && !jm.classList.contains('hidden') && activeId != null) {

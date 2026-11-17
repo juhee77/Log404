@@ -228,13 +228,13 @@ func _style_diary_controls() -> void:
 		"Panel/VBox/BodyMargin/Body/StampRow/DecoStickerBtn": "다꾸 데코 스티커 팩 순환 (S)",
 		"Panel/VBox/BodyMargin/Body/StampRow/RarityBtn": "수집 레어도 등급 순환 (R)",
 		"Panel/VBox/BodyMargin/Body/StampRow/PaperBtn": "일기장 속지 패턴 순환 (P)",
-		"Panel/VBox/BodyMargin/Body/StampRow/StorageBtn": "실물 보관 위치 순환",
+		"Panel/VBox/BodyMargin/Body/StampRow/StorageBtn": "실물 보관 위치 순환 (B)",
 		"Panel/VBox/BodyMargin/Body/StampRow/SourceBtn": "소장·입수 경로 순환 (A)",
 		"Panel/VBox/BodyMargin/Body/StampRow/MoodBtn": "독서·수집 기분 태그 순환 (M)",
 		"Panel/VBox/BodyMargin/Body/StampRow/RereadBtn": "재독 횟수 +1 (우클릭: -1)",
 		"Panel/VBox/BodyMargin/Body/StampRow/DuplicateBtn": "복수 소장 수량 +1 (우클릭: -1)",
 		"Panel/VBox/BodyMargin/Body/StampRow/PossessionBtn": "소장 상태 순환 (소장중·예약중·배송중·전시중)",
-		"Panel/VBox/BodyMargin/Body/InkRow/NibBtn": "만년필 펜촉 굵기 순환 (EF·M·B)",
+		"Panel/VBox/BodyMargin/Body/InkRow/NibBtn": "만년필 펜촉 굵기 순환 (N: EF·M·B)",
 		"Panel/VBox/BodyMargin/Body/InkRow/SignatureBtn": "다이어리 서명 스탬프 순환",
 		"Panel/VBox/BodyMargin/Body/InkRow/DateStampBtn": "오늘 날짜로 구매·기념일 스탬프 갱신",
 		"Panel/VBox/BodyMargin/Body/InkRow/CustomTagBtn": "커스텀 해시태그 순환 (T)",
@@ -609,6 +609,12 @@ func _unhandled_input(event: InputEvent) -> void:
 			get_viewport().set_input_as_handled()
 		elif event.keycode == KEY_A:
 			cycle_acquisition_source()
+			get_viewport().set_input_as_handled()
+		elif event.keycode == KEY_N:
+			cycle_pen_nib_size()
+			get_viewport().set_input_as_handled()
+		elif event.keycode == KEY_B:
+			cycle_storage_location()
 			get_viewport().set_input_as_handled()
 
 func apply_stamp(stamp_name: String) -> void:
