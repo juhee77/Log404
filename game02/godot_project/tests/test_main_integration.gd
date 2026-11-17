@@ -929,6 +929,26 @@ func _init() -> void:
 	assert("정렬 기준 변경" in main_inst.status_toast.text and "₩" in main_inst.status_toast.text, "Sort toast should include filtered count and KRW total")
 	print("✓ Unified _open_detail_modal Sync & Sort Summary Toast verified")
 
+	# Sprint 85: Modal Home/End Direct Jump & Firsts/Smart-Tag Value Summary Toasts
+	main_inst._on_stat_firsts_clicked()
+	assert("초판 스탬프" in main_inst.status_toast.text and "₩" in main_inst.status_toast.text, "StatFirsts toast should show filtered count and KRW total")
+	main_inst.filter_by_smart_tag("#만화")
+	assert("스마트 태그 #만화" in main_inst.status_toast.text and "₩" in main_inst.status_toast.text, "Smart tag toast should show filtered count and KRW total")
+	main_inst._on_tab_all_pressed()
+	main_inst._on_card_clicked(main_inst.archive_state.items[2])
+	var end_ev := InputEventKey.new()
+	end_ev.pressed = true
+	end_ev.keycode = KEY_END
+	main_inst.detail_modal._unhandled_input(end_ev)
+	assert(header_page_lbl.text == "6/6", "Pressing End in modal should jump to last page 6/6")
+	var home_ev := InputEventKey.new()
+	home_ev.pressed = true
+	home_ev.keycode = KEY_HOME
+	main_inst.detail_modal._unhandled_input(home_ev)
+	assert(header_page_lbl.text == "1/6", "Pressing Home in modal should jump to first page 1/6")
+	main_inst.detail_modal.close()
+	print("✓ Modal Home/End Direct Jump & Firsts/Smart-Tag Value Summary Toasts verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

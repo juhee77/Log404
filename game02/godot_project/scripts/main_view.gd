@@ -430,7 +430,7 @@ func _on_stat_firsts_clicked() -> void:
 	archive_state.current_filter = -1
 	_highlight_tabs(tab_all)
 	_render_cards()
-	_show_toast("🔖 초판 스탬프 보유 작품만 필터링되었습니다.")
+	_show_toast("🔖 초판 스탬프 보유 작품 (%s)만 모아봅니다." % _get_filtered_cards_summary())
 
 func filter_by_smart_tag(tag: String) -> int:
 	filter_firsts_only = false
@@ -453,7 +453,7 @@ func filter_by_smart_tag(tag: String) -> int:
 		_:
 			search_input.text = tag
 	_render_cards()
-	_show_toast("🏷️ 스마트 태그: " + tag)
+	_show_toast("🏷️ 스마트 태그 %s (%s)" % [tag, _get_filtered_cards_summary()])
 	return card_grid.get_child_count()
 
 func _on_sort_btn_pressed() -> void:
@@ -733,13 +733,20 @@ func _unhandled_input(event: InputEvent) -> void:
 func _on_modal_navigate_requested(delta: int) -> void:
 	if archive_state == null or archive_state.items.is_empty():
 		return
+	var total: int = archive_state.items.size()
 	var idx: int = archive_state.items.find(detail_modal.current_item)
 	if idx == -1:
 		idx = 0
-	var next_idx: int = (idx + delta + int(archive_state.items.size())) % int(archive_state.items.size())
+	var next_idx: int = 0
+	if delta <= -9999:
+		next_idx = 0
+	elif delta >= 9999:
+		next_idx = total - 1
+	else:
+		next_idx = (idx + delta + total) % total
 	var next_item = archive_state.items[next_idx]
 	_open_detail_modal(next_item)
-	_show_toast("📖 책장 넘김 (%d/%d): %s" % [next_idx + 1, archive_state.items.size(), next_item.title])
+	_show_toast("📖 책장 넘김 (%d/%d): %s" % [next_idx + 1, total, next_item.title])
 
 func _on_card_copied(item) -> void:
 	if item != null:

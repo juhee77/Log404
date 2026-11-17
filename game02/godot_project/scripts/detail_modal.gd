@@ -205,7 +205,7 @@ func _style_diary_controls() -> void:
 			page_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 			page_lbl.add_theme_font_size_override("font_size", 11)
 			page_lbl.add_theme_color_override("font_color", Color(0.48, 0.38, 0.31))
-			page_lbl.tooltip_text = "현재 일기장 순번"
+			page_lbl.tooltip_text = "현재 일기장 순번 (Home: 첫 페이지 · End: 마지막 페이지)"
 			header_hbox.add_child(prev_btn)
 			header_hbox.move_child(prev_btn, close_idx)
 			header_hbox.add_child(page_lbl)
@@ -513,6 +513,12 @@ func _unhandled_input(event: InputEvent) -> void:
 			get_viewport().set_input_as_handled()
 		elif event.keycode == KEY_RIGHT:
 			navigate_requested.emit(1)
+			get_viewport().set_input_as_handled()
+		elif event.keycode == KEY_HOME:
+			navigate_requested.emit(-9999)
+			get_viewport().set_input_as_handled()
+		elif event.keycode == KEY_END:
+			navigate_requested.emit(9999)
 			get_viewport().set_input_as_handled()
 
 func apply_stamp(stamp_name: String) -> void:
