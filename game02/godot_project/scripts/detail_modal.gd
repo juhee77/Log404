@@ -223,14 +223,14 @@ func _style_diary_controls() -> void:
 			header_hbox.add_child(next_btn)
 			header_hbox.move_child(next_btn, close_idx + 2)
 	var row_tips := {
-		"Panel/VBox/BodyMargin/Body/StampRow/ObiCycleBtn": "띠지 문구 프리셋 순환",
+		"Panel/VBox/BodyMargin/Body/StampRow/ObiCycleBtn": "띠지 문구 프리셋 순환 (O)",
 		"Panel/VBox/BodyMargin/Body/StampRow/TapeCycleBtn": "상단 마스킹 테이프 컬러 순환 (W)",
 		"Panel/VBox/BodyMargin/Body/StampRow/DecoStickerBtn": "다꾸 데코 스티커 팩 순환 (S)",
 		"Panel/VBox/BodyMargin/Body/StampRow/RarityBtn": "수집 레어도 등급 순환 (R)",
 		"Panel/VBox/BodyMargin/Body/StampRow/PaperBtn": "일기장 속지 패턴 순환 (P)",
 		"Panel/VBox/BodyMargin/Body/StampRow/StorageBtn": "실물 보관 위치 순환",
 		"Panel/VBox/BodyMargin/Body/StampRow/SourceBtn": "소장·입수 경로 순환",
-		"Panel/VBox/BodyMargin/Body/StampRow/MoodBtn": "독서·수집 기분 태그 순환",
+		"Panel/VBox/BodyMargin/Body/StampRow/MoodBtn": "독서·수집 기분 태그 순환 (M)",
 		"Panel/VBox/BodyMargin/Body/StampRow/RereadBtn": "재독 횟수 +1 (우클릭: -1)",
 		"Panel/VBox/BodyMargin/Body/StampRow/DuplicateBtn": "복수 소장 수량 +1 (우클릭: -1)",
 		"Panel/VBox/BodyMargin/Body/StampRow/PossessionBtn": "소장 상태 순환 (소장중·예약중·배송중·전시중)",
@@ -591,6 +591,12 @@ func _unhandled_input(event: InputEvent) -> void:
 			get_viewport().set_input_as_handled()
 		elif event.keycode == KEY_R:
 			cycle_rarity_tier()
+			get_viewport().set_input_as_handled()
+		elif event.keycode == KEY_O:
+			cycle_obi_preset()
+			get_viewport().set_input_as_handled()
+		elif event.keycode == KEY_M:
+			cycle_reading_mood()
 			get_viewport().set_input_as_handled()
 
 func apply_stamp(stamp_name: String) -> void:

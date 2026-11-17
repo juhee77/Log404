@@ -1106,6 +1106,28 @@ func _init() -> void:
 	main_inst.detail_modal.close()
 	print("✓ In-Modal Keyboard S Sticker & R Rarity Cyclers + Tooltip Hints verified")
 
+	# Sprint 94: In-Modal Keyboard O Obi Band & M Mood Tag Cyclers
+	var target_s94 = main_inst.archive_state.items[0]
+	var orig_obi_s94: String = target_s94.obi_text
+	var orig_mood_s94: String = target_s94.reading_mood
+	main_inst._on_card_clicked(target_s94)
+	var mo_ev := InputEventKey.new()
+	mo_ev.pressed = true
+	mo_ev.keycode = KEY_O
+	main_inst.detail_modal._unhandled_input(mo_ev)
+	assert(target_s94.obi_text != orig_obi_s94, "Pressing O inside modal should cycle obi band preset")
+	var mm_ev := InputEventKey.new()
+	mm_ev.pressed = true
+	mm_ev.keycode = KEY_M
+	main_inst.detail_modal._unhandled_input(mm_ev)
+	assert(target_s94.reading_mood != orig_mood_s94, "Pressing M inside modal should cycle reading mood tag")
+	var mood_btn_s94: Button = main_inst.detail_modal.get_node("Panel/VBox/BodyMargin/Body/StampRow/MoodBtn")
+	assert("(M)" in mood_btn_s94.tooltip_text, "MoodBtn tooltip should include (M) shortcut hint")
+	main_inst._on_modal_help_requested()
+	assert("[O]" in main_inst.status_toast.text and "[M]" in main_inst.status_toast.text, "Modal help cheatsheet should list [O] and [M] shortcuts")
+	main_inst.detail_modal.close()
+	print("✓ In-Modal Keyboard O Obi Band & M Mood Tag Cyclers verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

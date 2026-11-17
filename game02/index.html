@@ -976,6 +976,21 @@
                 const jm = document.getElementById('journal-modal');
                 if (!jm || jm.classList.contains('hidden')) {
                     cycleAmbientSound();
+                } else if (activeId != null) {
+                    cycleReadingMood();
+                }
+            } else if ((e.key === 'o' || e.key === 'O') && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
+                const jm = document.getElementById('journal-modal');
+                if (jm && !jm.classList.contains('hidden') && activeId != null) {
+                    const item = ITEMS.find(x => x.id === activeId);
+                    if (item) {
+                        const obis = ['★ 전20권 완결 박스세트', '★ 초판 투명 북마크 동봉', '★ 소장각 100% 인생작', '★ 2026 올해의 서재 픽'];
+                        const idx = obis.indexOf(item.obi);
+                        item.obi = obis[(idx + 1) % obis.length];
+                        const obiEl = document.getElementById('diary-cover-obi');
+                        if (obiEl) obiEl.textContent = item.obi;
+                        renderShelf();
+                    }
                 }
             } else if ((e.key === 'ArrowLeft' || e.key === 'ArrowRight' || e.key === 'Home' || e.key === 'End') && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
                 const jm = document.getElementById('journal-modal');
