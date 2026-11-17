@@ -76,6 +76,7 @@ func _ready() -> void:
 	detail_modal.card_copied.connect(_on_card_copied)
 	detail_modal.navigate_requested.connect(_on_modal_navigate_requested)
 	detail_modal.diary_updated.connect(_on_diary_updated)
+	detail_modal.help_requested.connect(_on_modal_help_requested)
 	add_modal.item_submitted.connect(_on_item_submitted)
 
 	var stat_items_panel: Control = $VBox/TopBar/TopMargin/StatsVBox/StatRow/StatItems
@@ -729,6 +730,9 @@ func _unhandled_input(event: InputEvent) -> void:
 				KEY_H:
 					_show_toast("⌨️ 단축키: [0] 초기화 · [1~5] 탭 · [/] 검색 · [S] 정렬 · [R] 추천 · [N] 새 일기 · [T] 테마 · [M] 소음 · [Q] 문장 · [I] 요약 · [C] 복사")
 					get_viewport().set_input_as_handled()
+
+func _on_modal_help_requested() -> void:
+	_show_toast("⌨️ 모달 단축키: [←/→] 책장 넘김 · [Home/End] 처음·끝 · [+/-] 권 추가·삭제 · [C] 감상 복사 · [ESC] 닫기")
 
 func _on_modal_navigate_requested(delta: int) -> void:
 	if archive_state == null or archive_state.items.is_empty():

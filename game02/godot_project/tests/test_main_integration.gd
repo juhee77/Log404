@@ -969,6 +969,28 @@ func _init() -> void:
 	main_inst.detail_modal.close()
 	print("✓ Clickable PageBadgeLabel & In-Modal Keyboard C Share Card Copy verified")
 
+	# Sprint 87: In-Modal Keyboard +/- Volume Control & H Modal Shortcut Help
+	var target_s87 = main_inst.archive_state.items[0]
+	var orig_vols: int = target_s87.volumes.size()
+	main_inst._on_card_clicked(target_s87)
+	var plus_ev := InputEventKey.new()
+	plus_ev.pressed = true
+	plus_ev.keycode = KEY_EQUAL
+	main_inst.detail_modal._unhandled_input(plus_ev)
+	assert(target_s87.volumes.size() == orig_vols + 1, "Pressing =/+ inside modal should add a volume")
+	var minus_ev := InputEventKey.new()
+	minus_ev.pressed = true
+	minus_ev.keycode = KEY_MINUS
+	main_inst.detail_modal._unhandled_input(minus_ev)
+	assert(target_s87.volumes.size() == orig_vols, "Pressing - inside modal should remove the last volume")
+	var mh_ev := InputEventKey.new()
+	mh_ev.pressed = true
+	mh_ev.keycode = KEY_H
+	main_inst.detail_modal._unhandled_input(mh_ev)
+	assert("모달 단축키" in main_inst.status_toast.text, "Pressing H inside modal should show modal shortcut cheatsheet toast")
+	main_inst.detail_modal.close()
+	print("✓ In-Modal Keyboard +/- Volume Control & H Modal Shortcut Help verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

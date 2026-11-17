@@ -9,6 +9,7 @@ signal volume_removed(item)
 signal card_copied(item)
 signal navigate_requested(delta: int)
 signal diary_updated(item)
+signal help_requested
 
 @onready var title_label: Label = $Panel/VBox/Header/HBox/TitleLabel
 @onready var cat_badge: Label = $Panel/VBox/Header/HBox/CatBadge
@@ -531,6 +532,15 @@ func _unhandled_input(event: InputEvent) -> void:
 			get_viewport().set_input_as_handled()
 		elif event.keycode == KEY_C:
 			copy_book_quote_card()
+			get_viewport().set_input_as_handled()
+		elif event.keycode in [KEY_EQUAL, KEY_PLUS, KEY_KP_ADD]:
+			_on_add_vol_btn_pressed()
+			get_viewport().set_input_as_handled()
+		elif event.keycode in [KEY_MINUS, KEY_KP_SUBTRACT]:
+			remove_last_volume()
+			get_viewport().set_input_as_handled()
+		elif event.keycode == KEY_H:
+			help_requested.emit()
 			get_viewport().set_input_as_handled()
 
 func apply_stamp(stamp_name: String) -> void:

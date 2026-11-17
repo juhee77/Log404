@@ -5,7 +5,7 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 
 ---
 
-## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 86)
+## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 87)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
@@ -14,6 +14,10 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 ---
 
 ## 🚀 최신 스프린트 업데이트 요약 ([전체 회의록 보기](SPRINT_LOG.md))
+
+### [Sprint 87] 모달 내 `+`/`-` 키 권 빠른 추가·삭제 & `H` 모달 전용 단축키 안내
+- **모달 내 `+`/`-` 권 빠른 추가·삭제 (`detail_modal.gd`)**: 모달 열람 중 `=`/`+` 키로 다음 권을 즉시 추가하고 `-` 키로 마지막 권을 삭제할 수 있습니다.
+- **모달 내 `H` 단축키 치트시트 (`detail_modal.gd` · `main_view.gd` · `index.html`)**: 모달 열람 중 `H` 키를 누르면 모달 전용 단축키(`←/→`, `Home/End`, `+/-`, `C`, `ESC`) 안내가 즉시 표시됩니다.
 
 ### [Sprint 86] 모달 `PageBadgeLabel` 클릭/우클릭 책장 넘김 & 모달 내 `C` 키 감상 카드 복사
 - **클릭 가능한 `PageBadgeLabel` (`detail_modal.gd` · `index.html`)**: 모달 상단 `1/6` 배지 좌클릭(다음)·우클릭(이전)으로 바로 책장을 넘길 수 있습니다.
