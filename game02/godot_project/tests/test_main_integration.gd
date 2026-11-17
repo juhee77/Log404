@@ -1020,6 +1020,23 @@ func _init() -> void:
 	main_inst.detail_modal.close()
 	print("✓ In-Modal Keyboard L Highlighter Toggle & Updated Cheatsheet verified")
 
+	# Sprint 90 Milestone: In-Modal Keyboard 1-4 Quick Stamp & Shortcut Tooltip Hints
+	var target_s90 = main_inst.archive_state.items[0]
+	var orig_stamp_s90: String = target_s90.status_tag
+	main_inst._on_card_clicked(target_s90)
+	var m3_ev := InputEventKey.new()
+	m3_ev.pressed = true
+	m3_ev.keycode = KEY_3
+	main_inst.detail_modal._unhandled_input(m3_ev)
+	assert(target_s90.status_tag == "인생최애", "Pressing 3 inside modal should apply 인생최애 stamp")
+	main_inst.detail_modal.apply_stamp(orig_stamp_s90)
+	var add_btn_s90: Button = main_inst.detail_modal.get_node("Panel/VBox/BodyMargin/Body/TopInfo/MetaVBox/BtnRow/AddVolBtn")
+	assert("(+)" in add_btn_s90.tooltip_text, "AddVolBtn tooltip should show (+) shortcut hint")
+	main_inst._on_modal_help_requested()
+	assert("[1~4]" in main_inst.status_toast.text, "Modal help cheatsheet should list [1~4] stamp shortcuts")
+	main_inst.detail_modal.close()
+	print("✓ Sprint 90 Milestone: In-Modal Keyboard 1-4 Quick Stamp & Shortcut Tooltip Hints verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

@@ -956,6 +956,9 @@
                         const tabMap = { '1': 'all', '2': 'manga', '3': 'gacha', '4': 'complete', '5': 'fav' };
                         setFilter(tabMap[e.key]);
                     }
+                } else if (['1', '2', '3', '4'].includes(e.key)) {
+                    const stampMap = { '1': '전권완결', '2': '초판특전', '3': '인생최애', '4': '위시리스트' };
+                    applyDiaryStamp(stampMap[e.key]);
                 }
             } else if ((e.key === 'r' || e.key === 'R') && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
                 const jm = document.getElementById('journal-modal');

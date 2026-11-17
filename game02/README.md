@@ -5,7 +5,7 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 
 ---
 
-## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 89)
+## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 90)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
@@ -14,6 +14,10 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 ---
 
 ## 🚀 최신 스프린트 업데이트 요약 ([전체 회의록 보기](SPRINT_LOG.md))
+
+### 🏆 [Sprint 90] 마일스톤 90: 모달 내 `1~4` 키 인장 원클릭 찍기 & 단축키 툴팁 힌트 동기화
+- **모달 내 `1~4` 키 인장 원클릭 찍기 (`detail_modal.gd` · `index.html`)**: 모달 열람 중 숫자키 `1`~`4`로 `전권완결`·`초판특전`·`인생최애`·`위시리스트` 인장을 즉시 찍을 수 있습니다.
+- **버튼 단축키 툴팁 힌트 & 치트시트 동기화 (`detail_modal.gd` · `main_view.gd`)**: `AddVolBtn` `(+)`, `RemVolBtn` `(-)`, `HighlighterBtn` `(L)` 툴팁과 `H` 치트시트(`[1~4] 인장`)를 완성했습니다.
 
 ### [Sprint 89] 모달 `ESC` 3단계 안전 해제(`quote_input` 포커스 보호) & `L` 키 형광펜 토글
 - **모달 `ESC` 3단계 안전 해제 (`detail_modal.gd` · `index.html`)**: 밑줄 입력창 포커스 중 `ESC`를 누르면 모달이 닫히지 않고 입력창 포커스만 안전하게 해제됩니다.

@@ -166,9 +166,9 @@ func _style_diary_controls() -> void:
 		if ctrl != null:
 			ctrl.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	if add_vol_btn != null:
-		add_vol_btn.tooltip_text = "새 권·파츠 일기 1개 추가"
+		add_vol_btn.tooltip_text = "새 권·파츠 일기 1개 추가 (+)"
 	if rem_btn != null:
-		rem_btn.tooltip_text = "마지막 권·파츠 기록 삭제"
+		rem_btn.tooltip_text = "마지막 권·파츠 기록 삭제 (-)"
 	if share_btn != null:
 		share_btn.tooltip_text = "감상 카드 텍스트를 클립보드에 복사 (C)"
 	if del_btn != null:
@@ -176,7 +176,7 @@ func _style_diary_controls() -> void:
 	if save_quote_btn != null:
 		save_quote_btn.tooltip_text = "작성한 밑줄·감상평 저장 (Enter)"
 	if hl_btn != null:
-		hl_btn.tooltip_text = "밑줄 문장 형광펜 하이라이트 켜기/끄기"
+		hl_btn.tooltip_text = "밑줄 문장 형광펜 하이라이트 켜기/끄기 (L)"
 	if close_btn != null:
 		close_btn.tooltip_text = "일기장 닫기 (ESC)"
 		var header_hbox: HBoxContainer = close_btn.get_parent() as HBoxContainer
@@ -552,6 +552,15 @@ func _unhandled_input(event: InputEvent) -> void:
 			get_viewport().set_input_as_handled()
 		elif event.keycode == KEY_L:
 			toggle_quote_highlight()
+			get_viewport().set_input_as_handled()
+		elif event.keycode in [KEY_1, KEY_2, KEY_3, KEY_4]:
+			var stamp_map := {
+				KEY_1: "전권완결",
+				KEY_2: "초판특전",
+				KEY_3: "인생최애",
+				KEY_4: "위시리스트",
+			}
+			apply_stamp(stamp_map[event.keycode])
 			get_viewport().set_input_as_handled()
 
 func apply_stamp(stamp_name: String) -> void:
