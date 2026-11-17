@@ -102,7 +102,7 @@ func _ready() -> void:
 			if ev is InputEventKey and ev.pressed and not ev.echo and ev.keycode == KEY_ESCAPE and search_input.text != "":
 				search_input.text = ""
 				_render_cards()
-				_show_toast("🔍 검색어가 초기화되었습니다.")
+				_show_toast("🔍 검색어 초기화 (%s)" % _get_filtered_cards_summary())
 		)
 	for ctrl in [get_node_or_null("VBox/TopBar/TopMargin/StatsVBox/TitleRow/AddBtn"), get_node_or_null("VBox/TopBar/TopMargin/StatsVBox/TitleRow/AmbientBtn"), next_quote_btn, random_pick_btn, sort_btn, tab_all, tab_manga, tab_gacha, tab_complete, tab_fav]:
 		if ctrl != null:

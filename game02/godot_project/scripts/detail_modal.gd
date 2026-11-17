@@ -542,6 +542,15 @@ func _unhandled_input(event: InputEvent) -> void:
 		elif event.keycode == KEY_END:
 			navigate_requested.emit(9999)
 			get_viewport().set_input_as_handled()
+		elif event.keycode == KEY_PAGEDOWN:
+			navigate_requested.emit(1)
+			get_viewport().set_input_as_handled()
+		elif event.keycode == KEY_PAGEUP:
+			navigate_requested.emit(-1)
+			get_viewport().set_input_as_handled()
+		elif event.keycode == KEY_SPACE:
+			navigate_requested.emit(-1 if event.shift_pressed else 1)
+			get_viewport().set_input_as_handled()
 		elif event.keycode in [KEY_EQUAL, KEY_PLUS, KEY_KP_ADD]:
 			_on_add_vol_btn_pressed()
 			get_viewport().set_input_as_handled()

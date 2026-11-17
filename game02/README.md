@@ -5,7 +5,7 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 
 ---
 
-## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 101)
+## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 102)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
@@ -14,6 +14,10 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 ---
 
 ## 🚀 최신 스프린트 업데이트 요약 ([전체 회의록 보기](SPRINT_LOG.md))
+
+### [Sprint 102] E-Book `Space`/`PageUp`/`PageDown` 책장 넘김 & 검색창 `ESC` 초기화 요약 토스트
+- **E-Book `Space`/`PageUp`/`PageDown` 책장 넘김 (`detail_modal.gd` · `index.html`)**: 모달 열람 중 `Space`·`PageDown`으로 다음 일기장, `Shift+Space`·`PageUp`으로 이전 일기장을 바로 넘길 수 있습니다.
+- **검색창 `ESC` 초기화 요약 토스트 (`main_view.gd`)**: 검색창에서 `ESC`로 검색어를 지울 때도 현재 서재의 `N종 · ₩총액` 요약을 토스트로 안내합니다.
 
 ### [Sprint 101] 모달 내 `X` 키 표지 이모지 아이콘 순환 & `Delete`/`Backspace` 2단계 삭제 안전 트리거
 - **모달 내 `X` 표지 아이콘 & `Delete` 2단계 삭제 (`detail_modal.gd` · `index.html`)**: 모달 열람 중 `X` 키로 표지 이모지 아이콘을 즉시 순환하고, `Delete`/`Backspace` 키로 2단계 안전 삭제 확인(`ESC` 해제 가능)을 실행할 수 있습니다.

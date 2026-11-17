@@ -1302,6 +1302,28 @@ func _init() -> void:
 	main_inst.detail_modal.close()
 	print("✓ In-Modal Keyboard X Cover Icon & Delete Key Two-Step Safety verified")
 
+	# Sprint 102: E-Book Space/PageUp/PageDown Navigation & Search Escape Value Summary
+	main_inst.search_input.text = "프리렌"
+	main_inst._render_cards()
+	var sesc_ev := InputEventKey.new()
+	sesc_ev.pressed = true
+	sesc_ev.keycode = KEY_ESCAPE
+	main_inst.search_input.gui_input.emit(sesc_ev)
+	assert(main_inst.search_input.text == "" and "₩" in main_inst.status_toast.text, "Search Escape reset toast should show filtered KRW summary")
+	main_inst._on_card_clicked(main_inst.archive_state.items[0])
+	var space_ev := InputEventKey.new()
+	space_ev.pressed = true
+	space_ev.keycode = KEY_SPACE
+	main_inst.detail_modal._unhandled_input(space_ev)
+	assert(header_page_lbl.text == "2/6", "Pressing Space in modal should turn to next page 2/6")
+	var pgup_ev := InputEventKey.new()
+	pgup_ev.pressed = true
+	pgup_ev.keycode = KEY_PAGEUP
+	main_inst.detail_modal._unhandled_input(pgup_ev)
+	assert(header_page_lbl.text == "1/6", "Pressing PageUp in modal should turn to previous page 1/6")
+	main_inst.detail_modal.close()
+	print("✓ E-Book Space/PageUp/PageDown Navigation & Search Escape Value Summary verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

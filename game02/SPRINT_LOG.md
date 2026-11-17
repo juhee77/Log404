@@ -5,6 +5,20 @@
 
 ---
 
+## 🚀 [Sprint 102] E-Book `Space`/`PageUp`/`PageDown` 책장 넘김 & 검색창 `ESC` 초기화 건수·자산 요약 토스트
+- **날짜/시각**: 2026-11-18 05:08 (자동 스프린트)
+- **참여 스쿼드**: 14인 애자일 스쿼드 전원 (다꾸러 3인, PO/기획 2인, UX/UI 2인, 개발 4인, QA 2인, CEO 1인)
+- **다꾸러·수집러 VOC**:
+  - **소장러 A**: *"모달을 열었을 때 실제 E-Book 리더기(리디북스·Apple Books)처럼 `Space` / `PageDown` 키로 다음 책장, `Shift+Space` / `PageUp` 키로 이전 책장을 넘길 수 있으면 한 손으로 넘기기가 훨씬 편할 것 같아요."*
+  - **가챠러 B**: *"검색창에서 `ESC` 키로 검색어를 지웠을 때도 다른 필터 탭처럼 전체 서재의 `N종 · ₩총액` 요약을 토스트로 보여주면 통일감이 완성될 것 같아요."*
+  - **미니멀러 C**: *"웹 목업(`index.html`)에서도 모달 열람 중 `Space` / `PageUp` / `PageDown` 책장 넘김이 배경 스크롤 없이 매끄럽게 동작하도록 맞춰주세요."*
+- **주요 개선 사항**:
+  1. **E-Book `Space`/`PageUp`/`PageDown` 책장 넘김 (`detail_modal.gd` · `index.html`)**: 모달 열람 중 `quote_input` 비포커스 상태에서 `Space`/`PageDown` 입력 시 다음 페이지, `Shift+Space`/`PageUp` 입력 시 이전 페이지로 이동(웹 목업 배경 스크롤 방지 포함).
+  2. **검색창 `ESC` 초기화 건수·자산 요약 토스트 (`main_view.gd`)**: 검색창에서 `ESC` 초기화 시 `_get_filtered_cards_summary()`를 활용해 `"🔍 검색어 초기화 (N종 · ₩총액)"` 토스트 출력.
+  3. **TDD 통합 테스트 확장 (`tests/test_main_integration.gd`)**: `E-Book Space/PageUp/PageDown Navigation & Search Escape Value Summary` 테스트를 추가해 3종 헤드리스 테스트 100% 통과 및 Metal 4.0 스크린샷 갱신.
+
+---
+
 ## 🚀 [Sprint 101] 모달 내 `X` 키 표지 이모지 아이콘 순환 & `Delete`/`Backspace` 2단계 삭제 안전 트리거
 - **날짜/시각**: 2026-11-18 04:49 (자동 스프린트)
 - **참여 스쿼드**: 14인 애자일 스쿼드 전원 (다꾸러 3인, PO/기획 2인, UX/UI 2인, 개발 4인, QA 2인, CEO 1인)
