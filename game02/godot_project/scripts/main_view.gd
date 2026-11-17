@@ -316,7 +316,20 @@ func _apply_today_quote(entry: Dictionary, total_count: int = 1) -> void:
 	else:
 		today_quote_label.tooltip_text = "나만의 첫 독서 일기를 시작해보세요"
 	if next_quote_btn != null:
-		next_quote_btn.tooltip_text = "[Q] 서재 속 다음 밑줄 문장으로 넘기기 (%d/%d)" % [quote_cursor + 1, maxi(1, total_count)]
+		next_quote_btn.tooltip_text = "[Q] 다음 밑줄 (우클릭·Shift+Q: 이전) (%d/%d)" % [quote_cursor + 1, maxi(1, total_count)]
+		if not next_quote_btn.has_meta("rclick_wired"):
+			next_quote_btn.set_meta("rclick_wired", true)
+			next_quote_btn.gui_input.connect(func(ev: InputEvent):
+				if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_RIGHT:
+					_step_today_quote(-1)
+			)
+
+func _step_today_quote(delta: int) -> void:
+	var quotes = _collect_all_quotes()
+	if quotes.is_empty():
+		return
+	quote_cursor = (quote_cursor + delta + quotes.size()) % quotes.size()
+	_apply_today_quote(quotes[quote_cursor], quotes.size())
 
 func _refresh_today_quote() -> void:
 	if today_quote_label == null:
@@ -326,9 +339,7 @@ func _refresh_today_quote() -> void:
 	_apply_today_quote(quotes[quote_cursor], quotes.size())
 
 func _on_next_quote_btn_pressed() -> void:
-	var quotes = _collect_all_quotes()
-	quote_cursor = (quote_cursor + 1) % quotes.size()
-	_apply_today_quote(quotes[quote_cursor], quotes.size())
+	_step_today_quote(1)
 
 func open_current_quote_item() -> void:
 	var quotes = _collect_all_quotes()
@@ -675,7 +686,10 @@ func _on_volume_added(item) -> void:
 	archive_state.save_to_file()
 	_update_stats()
 	_render_cards()
-	_show_toast("📖 다음 권이 추가되고 로컬 JSON에 저장되었습니다.")
+	if item != null:
+		_show_toast("📖 %s %d권 기록 추가! (%s)" % [item.title, item.volumes.size(), ArchiveStateClass.format_krw(item.get_item_value())])
+	else:
+		_show_toast("📖 다음 권이 추가되고 로컬 JSON에 저장되었습니다.")
 
 func _unhandled_input(event: InputEvent) -> void:
 	if (detail_modal != null and detail_modal.visible) or (add_modal != null and add_modal.visible):
@@ -722,7 +736,7 @@ func _unhandled_input(event: InputEvent) -> void:
 					cycle_ambient_sound()
 					get_viewport().set_input_as_handled()
 				KEY_Q:
-					_on_next_quote_btn_pressed()
+					_step_today_quote(-1 if event.shift_pressed else 1)
 					get_viewport().set_input_as_handled()
 				KEY_I:
 					show_library_infographic()
@@ -767,7 +781,7 @@ func _on_volume_removed(item) -> void:
 	_refresh_today_quote()
 	_render_cards()
 	if item != null:
-		_show_toast("🗑️ " + item.title + " 마지막 권 기록 삭제 (현재 " + str(item.volumes.size()) + "권)")
+		_show_toast("🗑️ %s 마지막 권 기록 삭제 (현재 %d권 · %s)" % [item.title, item.volumes.size(), ArchiveStateClass.format_krw(item.get_item_value())])
 
 func _on_diary_updated(item) -> void:
 	if item != null:

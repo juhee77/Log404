@@ -179,7 +179,7 @@
                         onclick="openCurrentQuoteItem()">
                         🖋️ 오늘의 밑줄: "농구... 좋아하세요?" — 슬램덩크 신장재편판
                     </span>
-                    <button id="next-quote-btn" onclick="cycleTodayQuote()" title="[Q] 서재 속 다음 밑줄 문장으로 넘기기"
+                    <button id="next-quote-btn" onclick="cycleTodayQuote(1)" oncontextmenu="event.preventDefault(); cycleTodayQuote(-1);" title="[Q] 서재 속 다음 밑줄 문장 (우클릭: 이전)"
                         class="px-2.5 py-1 rounded-lg bg-[#f3ece1] hover:bg-[#e5dac9] border border-[#d6c7b2] text-[#2c221e] text-[11px] font-bold shrink-0 cursor-pointer">
                         ↻ 다른 문장
                     </button>
@@ -602,7 +602,7 @@
         }
 
         let quoteIdx = 0;
-        function cycleTodayQuote() {
+        function cycleTodayQuote(delta = 1) {
             const allQuotes = [];
             ITEMS.forEach(it => {
                 if (it.volumes && it.volumes.length) {
@@ -614,7 +614,7 @@
                 }
             });
             if (!allQuotes.length) return;
-            quoteIdx = (quoteIdx + 1) % allQuotes.length;
+            quoteIdx = (quoteIdx + delta + allQuotes.length) % allQuotes.length;
             const el = document.getElementById('today-quote-banner');
             if (el) {
                 const cur = allQuotes[quoteIdx];

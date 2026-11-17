@@ -1345,6 +1345,27 @@ func _init() -> void:
 	assert("삭제되었습니다" in main_inst.status_toast.text and "₩" in main_inst.status_toast.text, "Delete toast should include remaining library count and KRW total")
 	print("✓ Web Scrape / Camera Snap / Delete Library Summary Toasts & NextQuoteBtn Index Tooltip verified")
 
+	# Sprint 105: Shift+Q / Right-Click Prev Quote & Vol Add/Remove KRW Toasts
+	main_inst.quote_cursor = 1
+	main_inst._refresh_today_quote()
+	var sq_ev := InputEventKey.new()
+	sq_ev.pressed = true
+	sq_ev.keycode = KEY_Q
+	sq_ev.shift_pressed = true
+	main_inst._unhandled_input(sq_ev)
+	assert(main_inst.quote_cursor == 0, "Pressing Shift+Q on main view should step to previous quote")
+	var rq_ev := InputEventMouseButton.new()
+	rq_ev.pressed = true
+	rq_ev.button_index = MOUSE_BUTTON_RIGHT
+	main_inst.next_quote_btn.gui_input.emit(rq_ev)
+	assert(main_inst.quote_cursor > 0, "Right-clicking NextQuoteBtn should wrap to previous quote")
+	var vol_it_s105 = main_inst.archive_state.items[0]
+	main_inst._on_volume_added(vol_it_s105)
+	assert("₩" in main_inst.status_toast.text, "Volume added toast should include item KRW value")
+	main_inst._on_volume_removed(vol_it_s105)
+	assert("₩" in main_inst.status_toast.text, "Volume removed toast should include item KRW value")
+	print("✓ Shift+Q / Right-Click Prev Quote & Vol Add/Remove KRW Toasts verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()
