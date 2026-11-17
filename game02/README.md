@@ -5,7 +5,7 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 
 ---
 
-## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 85)
+## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 86)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
@@ -14,6 +14,10 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 ---
 
 ## 🚀 최신 스프린트 업데이트 요약 ([전체 회의록 보기](SPRINT_LOG.md))
+
+### [Sprint 86] 모달 `PageBadgeLabel` 클릭/우클릭 책장 넘김 & 모달 내 `C` 키 감상 카드 복사
+- **클릭 가능한 `PageBadgeLabel` (`detail_modal.gd` · `index.html`)**: 모달 상단 `1/6` 배지 좌클릭(다음)·우클릭(이전)으로 바로 책장을 넘길 수 있습니다.
+- **모달 내 `C` 키 감상 카드 복사 (`detail_modal.gd` · `index.html`)**: 모달 열람 중 `C` 키를 누르면 현재 작품의 독서 감상 카드를 클립보드에 즉시 복사합니다.
 
 ### [Sprint 85] 모달 `Home`/`End` 첫·끝 일기장 점프 & 초판·스마트 태그 건수·자산 요약 토스트
 - **모달 `Home`/`End` 첫·끝 페이지 점프 (`detail_modal.gd` · `main_view.gd` · `index.html`)**: 모달을 연 상태에서 `Home` 키를 누르면 첫 작품(`1/N`), `End` 키를 누르면 마지막 작품(`N/N`)으로 즉시 이동합니다.

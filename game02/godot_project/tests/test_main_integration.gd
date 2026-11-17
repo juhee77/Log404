@@ -949,6 +949,26 @@ func _init() -> void:
 	main_inst.detail_modal.close()
 	print("✓ Modal Home/End Direct Jump & Firsts/Smart-Tag Value Summary Toasts verified")
 
+	# Sprint 86: Clickable PageBadgeLabel & In-Modal Keyboard C Share Card Copy
+	main_inst._on_card_clicked(main_inst.archive_state.items[0])
+	var badge_click_ev := InputEventMouseButton.new()
+	badge_click_ev.pressed = true
+	badge_click_ev.button_index = MOUSE_BUTTON_LEFT
+	header_page_lbl.gui_input.emit(badge_click_ev)
+	assert(header_page_lbl.text == "2/6", "Clicking PageBadgeLabel should advance to 2/6")
+	var badge_rclick_ev := InputEventMouseButton.new()
+	badge_rclick_ev.pressed = true
+	badge_rclick_ev.button_index = MOUSE_BUTTON_RIGHT
+	header_page_lbl.gui_input.emit(badge_rclick_ev)
+	assert(header_page_lbl.text == "1/6", "Right-clicking PageBadgeLabel should go back to 1/6")
+	var mc_ev := InputEventKey.new()
+	mc_ev.pressed = true
+	mc_ev.keycode = KEY_C
+	main_inst.detail_modal._unhandled_input(mc_ev)
+	assert("복사되었습니다" in main_inst.status_toast.text, "Pressing C inside modal should copy current item's quote card")
+	main_inst.detail_modal.close()
+	print("✓ Clickable PageBadgeLabel & In-Modal Keyboard C Share Card Copy verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

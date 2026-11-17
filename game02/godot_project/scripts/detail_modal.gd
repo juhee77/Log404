@@ -169,7 +169,7 @@ func _style_diary_controls() -> void:
 	if rem_btn != null:
 		rem_btn.tooltip_text = "마지막 권·파츠 기록 삭제"
 	if share_btn != null:
-		share_btn.tooltip_text = "감상 카드 텍스트를 클립보드에 복사"
+		share_btn.tooltip_text = "감상 카드 텍스트를 클립보드에 복사 (C)"
 	if del_btn != null:
 		del_btn.tooltip_text = "이 작품의 일기장을 서재에서 삭제"
 	if save_quote_btn != null:
@@ -205,7 +205,16 @@ func _style_diary_controls() -> void:
 			page_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 			page_lbl.add_theme_font_size_override("font_size", 11)
 			page_lbl.add_theme_color_override("font_color", Color(0.48, 0.38, 0.31))
-			page_lbl.tooltip_text = "현재 일기장 순번 (Home: 첫 페이지 · End: 마지막 페이지)"
+			page_lbl.mouse_filter = Control.MOUSE_FILTER_STOP
+			page_lbl.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+			page_lbl.tooltip_text = "현재 일기장 순번 (클릭: 다음 · 우클릭: 이전 · Home/End: 처음·끝)"
+			page_lbl.gui_input.connect(func(ev: InputEvent):
+				if ev is InputEventMouseButton and ev.pressed:
+					if ev.button_index == MOUSE_BUTTON_LEFT:
+						navigate_requested.emit(1)
+					elif ev.button_index == MOUSE_BUTTON_RIGHT:
+						navigate_requested.emit(-1)
+			)
 			header_hbox.add_child(prev_btn)
 			header_hbox.move_child(prev_btn, close_idx)
 			header_hbox.add_child(page_lbl)
@@ -519,6 +528,9 @@ func _unhandled_input(event: InputEvent) -> void:
 			get_viewport().set_input_as_handled()
 		elif event.keycode == KEY_END:
 			navigate_requested.emit(9999)
+			get_viewport().set_input_as_handled()
+		elif event.keycode == KEY_C:
+			copy_book_quote_card()
 			get_viewport().set_input_as_handled()
 
 func apply_stamp(stamp_name: String) -> void:

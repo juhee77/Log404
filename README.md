@@ -18,13 +18,14 @@ Godot 4+ 기반의 감성 게임 및 인터랙티브 아카이브 애플리케�
 > **Godot 4.6.2 모바일 기반 E-Book 리더기 서재(Apple Books · 리디북스) & 만년필 다꾸 독서노트(굿노트 · 몰스킨) 감성 아카이브 앱**  
 > 14인 가상 애자일 스쿼드가 20분 주기 자동 스프린트로 지속 개선 중입니다.
 
-### 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 85)
+### 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 86)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
 | ![Pocket Archive Main Screen](game02/godot_project/screenshots/godot_app_screen.png) | ![Pocket Archive Detail Modal](game02/godot_project/screenshots/godot_modal_screen.png) |
 
 ### ✨ 주요 핵심 기능
+- **최신 Sprint 86 하이라이트**: 모달 `PageBadgeLabel` 좌/우클릭 책장 넘김 및 모달 내 `C` 키 현재 작품 감상 카드 클립보드 복사(`detail_modal.gd` · `index.html`) 완성
 - **최신 Sprint 85 하이라이트**: 모달 `Home`/`End` 첫·끝 일기장 점프(`detail_modal.gd` · `main_view.gd` · `index.html`) 및 초판 스탬프·스마트 태그 필터 `N종 · ₩총액` 요약 토스트 완성
 - **최신 Sprint 84 하이라이트**: 모달 열기 단일 헬퍼(`_open_detail_modal`) 5대 진입 경로 통합으로 `◀ n/N ▶` 페이지 배지·툴팁 100% 동기화 및 정렬 시 건수·자산 요약 토스트(`main_view.gd`) 완성
 - **최신 Sprint 83 하이라이트**: 실시간 검색 결과 건수·자산 요약 토스트(`main_view.gd`) 및 모달 헤더 `◀ 1/6 ▶` 실시간 페이지 배지(`detail_modal.gd` · `index.html`) 완성
