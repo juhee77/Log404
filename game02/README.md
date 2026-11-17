@@ -5,7 +5,7 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 
 ---
 
-## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 105)
+## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 106)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
@@ -14,6 +14,9 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 ---
 
 ## 🚀 최신 스프린트 업데이트 요약 ([전체 회의록 보기](SPRINT_LOG.md))
+
+### [Sprint 106] 메인 서재 정렬(`S`)·테마(`T`)·백색소음(`M`) `Shift`·우클릭 양방향 역순환 완성
+- **양방향 서재 도구 순환 (`main_view.gd` · `index.html`)**: 정렬(`SortBtn`), 속지 테마(`ThemeBtn`), 백색소음(`AmbientBtn`) 모두 우클릭 및 `Shift+S`/`Shift+T`/`Shift+M`으로 이전 프리셋으로 즉시 되돌아갈 수 있습니다.
 
 ### [Sprint 105] `Shift+Q`·우클릭 이전 밑줄 문장 되돌리기 & 권 추가·삭제 KRW 가치 토스트
 - **양방향 오늘의 밑줄 탐색 (`main_view.gd` · `index.html`)**: `↻ 문장` 버튼 우클릭 및 `Shift+Q` 키로 이전 밑줄 문장으로 즉시 되돌아갈 수 있습니다.

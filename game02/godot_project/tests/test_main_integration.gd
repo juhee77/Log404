@@ -1366,6 +1366,30 @@ func _init() -> void:
 	assert("₩" in main_inst.status_toast.text, "Volume removed toast should include item KRW value")
 	print("✓ Shift+Q / Right-Click Prev Quote & Vol Add/Remove KRW Toasts verified")
 
+	# Sprint 106: Shift+S/T/M & Right-Click Reverse Cycle for Sort, Theme & Ambient Sound
+	main_inst.sort_mode = 2
+	var ss_ev := InputEventKey.new()
+	ss_ev.pressed = true
+	ss_ev.keycode = KEY_S
+	ss_ev.shift_pressed = true
+	main_inst._unhandled_input(ss_ev)
+	assert(main_inst.sort_mode == 1, "Shift+S should step sort_mode backward")
+	main_inst.theme_cursor = 2
+	var st_ev := InputEventKey.new()
+	st_ev.pressed = true
+	st_ev.keycode = KEY_T
+	st_ev.shift_pressed = true
+	main_inst._unhandled_input(st_ev)
+	assert(main_inst.theme_cursor == 1, "Shift+T should step theme_cursor backward")
+	main_inst.ambient_sound_index = 2
+	var sm_ev := InputEventKey.new()
+	sm_ev.pressed = true
+	sm_ev.keycode = KEY_M
+	sm_ev.shift_pressed = true
+	main_inst._unhandled_input(sm_ev)
+	assert(main_inst.ambient_sound_index == 1, "Shift+M should step ambient_sound_index backward")
+	print("✓ Shift+S/T/M & Right-Click Reverse Cycle for Sort, Theme & Ambient Sound verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

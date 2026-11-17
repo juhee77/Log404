@@ -187,7 +187,7 @@
                         class="px-2.5 py-1 rounded-lg bg-[#c85a32] hover:bg-[#b04b25] text-white text-[11px] font-bold shrink-0 cursor-pointer">
                         🎲 추천
                     </button>
-                    <button id="ambient-sound-btn" onclick="cycleAmbientSound()" title="[M] 독서 몰입 백색소음 전환"
+                    <button id="ambient-sound-btn" onclick="cycleAmbientSound(1)" oncontextmenu="event.preventDefault(); cycleAmbientSound(-1);" title="[M] 독서 몰입 백색소음 전환 (우클릭·Shift+M: 이전)"
                         class="px-2.5 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] border border-[#d6c7b2] text-[#2c221e] text-[11px] font-bold shrink-0 cursor-pointer">
                         🔕 무음
                     </button>
@@ -728,8 +728,8 @@
 
         const AMBIENT_PRESETS = ["🔕 무음", "🌧️ 빗소리", "☕ 북카페", "📖 책장넘김", "🔥 모닥불", "🦗 밤귀뚜라미"];
         let ambientIdx = 0;
-        function cycleAmbientSound() {
-            ambientIdx = (ambientIdx + 1) % AMBIENT_PRESETS.length;
+        function cycleAmbientSound(delta = 1) {
+            ambientIdx = (ambientIdx + delta + AMBIENT_PRESETS.length) % AMBIENT_PRESETS.length;
             const snd = AMBIENT_PRESETS[ambientIdx];
             const btn = document.getElementById('ambient-sound-btn');
             if (btn) btn.textContent = snd;

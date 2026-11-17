@@ -50,8 +50,8 @@ const AMBIENT_SOUND_PRESETS = [
 	"🦗 밤귀뚜라미"
 ]
 
-func cycle_ambient_sound() -> String:
-	ambient_sound_index = (ambient_sound_index + 1) % AMBIENT_SOUND_PRESETS.size()
+func cycle_ambient_sound(delta: int = 1) -> String:
+	ambient_sound_index = (ambient_sound_index + delta + AMBIENT_SOUND_PRESETS.size()) % AMBIENT_SOUND_PRESETS.size()
 	var snd = AMBIENT_SOUND_PRESETS[ambient_sound_index]
 	var ambient_btn: Button = get_node_or_null("VBox/TopBar/TopMargin/StatsVBox/TitleRow/AmbientBtn")
 	if ambient_btn != null:
@@ -112,7 +112,11 @@ func _ready() -> void:
 		top_add_btn.tooltip_text = "[N] 새 독서 일기·가챠 스크랩 직접 작성"
 	var top_amb_btn: Control = get_node_or_null("VBox/TopBar/TopMargin/StatsVBox/TitleRow/AmbientBtn")
 	if top_amb_btn != null:
-		top_amb_btn.tooltip_text = "[M] 독서 몰입 백색소음 사운드 전환 (무음·빗소리·북카페 등)"
+		top_amb_btn.tooltip_text = "[M] 독서 몰입 백색소음 전환 (우클릭·Shift+M: 이전)"
+		top_amb_btn.gui_input.connect(func(ev: InputEvent):
+			if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_RIGHT:
+				cycle_ambient_sound(-1)
+		)
 	if sub_title != null:
 		sub_title.mouse_filter = Control.MOUSE_FILTER_STOP
 		sub_title.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
@@ -126,19 +130,28 @@ func _ready() -> void:
 	if random_pick_btn != null:
 		random_pick_btn.tooltip_text = "[R] 오늘의 랜덤 작품 추천 열기"
 	if sort_btn != null:
-		sort_btn.tooltip_text = "[S] 정렬 순환: 기본순 → 권수순 → 최신순 → 가치순"
+		sort_btn.tooltip_text = "[S] 정렬 순환 (우클릭·Shift+S: 이전): 기본순 → 권수순 → 최신순 → 가치순"
+		sort_btn.gui_input.connect(func(ev: InputEvent):
+			if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_RIGHT:
+				_step_sort(-1)
+		)
 	var nav_row = get_node_or_null("VBox/BottomBar/Margin/VBox/NavRow")
 	if nav_row != null:
 		var nav_tips = [
 			"웹에서 작품 표지와 기본 정보 자동 스크랩 추가",
 			"실물 굿즈·단행본 폴라로이드 촬영 기록 추가",
 			"새 독서 일기·가챠 스크랩 직접 작성",
-			"[T] 다꾸 다이어리 속지 테마 순환 (크림 · 모눈 · 핑크 · 다크)"
+			"[T] 다꾸 다이어리 속지 테마 순환 (우클릭·Shift+T: 이전)"
 		]
 		var children = nav_row.get_children()
 		for i in range(min(children.size(), nav_tips.size())):
 			if children[i] is Control:
 				children[i].tooltip_text = nav_tips[i]
+		if children.size() >= 4 and children[3] is Control:
+			children[3].gui_input.connect(func(ev: InputEvent):
+				if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_RIGHT:
+					_step_theme(-1)
+			)
 	
 	_apply_journal_button_theme()
 	_update_stats()
@@ -470,8 +483,8 @@ func filter_by_smart_tag(tag: String) -> int:
 	_show_toast("🏷️ 스마트 태그 %s (%s)" % [tag, _get_filtered_cards_summary()])
 	return card_grid.get_child_count()
 
-func _on_sort_btn_pressed() -> void:
-	sort_mode = (sort_mode + 1) % 4
+func _step_sort(delta: int) -> void:
+	sort_mode = (sort_mode + delta + 4) % 4
 	if sort_btn != null:
 		match sort_mode:
 			0: sort_btn.text = "↕ 기본순"
@@ -481,6 +494,9 @@ func _on_sort_btn_pressed() -> void:
 	_render_cards()
 	var mode_name = "기본 등록순" if sort_mode == 0 else ("권수 많은 순(다독순)" if sort_mode == 1 else ("최근 기록순(최신순)" if sort_mode == 2 else "소장 가치순(고액순)"))
 	_show_toast("📚 정렬 기준 변경: %s (%s)" % [mode_name, _get_filtered_cards_summary()])
+
+func _on_sort_btn_pressed() -> void:
+	_step_sort(1)
 
 func _show_toast(msg: String) -> void:
 	if status_toast != null:
@@ -655,11 +671,14 @@ func _on_camera_snap_btn_pressed() -> void:
 	_on_tab_all_pressed()
 	_show_toast("📸 카메라 찰칵! 실물 표지가 등록되었습니다: %s (%s)" % [added.title, _get_filtered_cards_summary()])
 
-func _on_theme_btn_pressed() -> void:
-	theme_cursor = (theme_cursor + 1) % ROOM_THEMES.size()
+func _step_theme(delta: int) -> void:
+	theme_cursor = (theme_cursor + delta + ROOM_THEMES.size()) % ROOM_THEMES.size()
 	var t = ROOM_THEMES[theme_cursor]
 	bg_rect.color = t["bg"]
 	_show_toast("🎨 진열장 배경 테마 변경: " + t["name"])
+
+func _on_theme_btn_pressed() -> void:
+	_step_theme(1)
 
 func _on_item_submitted(p_title: String, p_cat: int, p_author: String, p_color: String = "#b91c1c", p_quote: String = "") -> void:
 	var ic = "📕" if p_cat == 0 else "🔮"
@@ -721,7 +740,7 @@ func _unhandled_input(event: InputEvent) -> void:
 					_on_tab_fav_pressed()
 					get_viewport().set_input_as_handled()
 				KEY_S:
-					_on_sort_btn_pressed()
+					_step_sort(-1 if event.shift_pressed else 1)
 					get_viewport().set_input_as_handled()
 				KEY_R:
 					pick_random_item()
@@ -730,10 +749,10 @@ func _unhandled_input(event: InputEvent) -> void:
 					_on_add_btn_pressed()
 					get_viewport().set_input_as_handled()
 				KEY_T:
-					_on_theme_btn_pressed()
+					_step_theme(-1 if event.shift_pressed else 1)
 					get_viewport().set_input_as_handled()
 				KEY_M:
-					cycle_ambient_sound()
+					cycle_ambient_sound(-1 if event.shift_pressed else 1)
 					get_viewport().set_input_as_handled()
 				KEY_Q:
 					_step_today_quote(-1 if event.shift_pressed else 1)

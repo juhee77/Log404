@@ -5,6 +5,20 @@
 
 ---
 
+## 🚀 [Sprint 106] 메인 서재 정렬(`S`)·테마(`T`)·백색소음(`M`) `Shift`·우클릭 양방향 역순환 완성
+- **날짜/시각**: 2026-11-18 06:30 (자동 스프린트)
+- **참여 스쿼드**: 14인 애자일 스쿼드 전원 (다꾸러 3인, PO/기획 2인, UX/UI 2인, 개발 4인, QA 2인, CEO 1인)
+- **다꾸러·수집러 VOC**:
+  - **소장러 A**: *"메인 화면에서 `🎨 속지 테마`나 `🔇 무음(백색소음)` 버튼을 넘기다가 방금 전 테마나 사운드로 되돌아가고 싶을 때, 우클릭이나 `Shift+T`·`Shift+M`으로 바로 이전 프리셋으로 돌아갈 수 있으면 좋겠어요."*
+  - **가챠러 B**: *"정렬 버튼(`↕ 기본순`)도 우클릭이나 `Shift+S` 키로 역순환할 수 있으면 4가지 정렬 모드를 오갈 때 훨씬 편할 것 같아요."*
+  - **미니멀러 C**: *"웹 목업(`index.html`)에서도 상단 백색소음 버튼 우클릭(`oncontextmenu`) 시 이전 소음 프리셋으로 되돌아가도록 맞춰주세요."*
+- **주요 개선 사항**:
+  1. **메인 서재 정렬·테마·백색소음 양방향 순환 (`main_view.gd` · `index.html`)**: `_step_sort(delta)`, `_step_theme(delta)`, `cycle_ambient_sound(delta)` 공용 헬퍼를 도입해 `SortBtn`, `ThemeBtn`, `AmbientBtn` 우클릭 및 `Shift+S`/`Shift+T`/`Shift+M` 역순환 지원(웹 목업 포함).
+  2. **버튼 툴팁 힌트 동기화 (`main_view.gd` · `index.html`)**: `SortBtn`, `AmbientBtn`, `ThemeBtn` 툴팁에 `(우클릭·Shift+키: 이전)` 안내 추가.
+  3. **TDD 통합 테스트 확장 (`tests/test_main_integration.gd`)**: `Shift+S/T/M & Right-Click Reverse Cycle for Sort, Theme & Ambient Sound` 테스트를 추가해 3종 헤드리스 테스트 100% 통과 및 Metal 4.0 스크린샷 갱신.
+
+---
+
 ## 🚀 [Sprint 105] `Shift+Q`·우클릭 이전 밑줄 문장 되돌리기 & 권 추가·삭제 KRW 가치 토스트
 - **날짜/시각**: 2026-11-18 06:08 (자동 스프린트)
 - **참여 스쿼드**: 14인 애자일 스쿼드 전원 (다꾸러 3인, PO/기획 2인, UX/UI 2인, 개발 4인, QA 2인, CEO 1인)
