@@ -128,7 +128,11 @@ func _ready() -> void:
 	if next_quote_btn != null:
 		next_quote_btn.tooltip_text = "[Q] 서재 속 다음 밑줄 문장으로 넘기기"
 	if random_pick_btn != null:
-		random_pick_btn.tooltip_text = "[R] 오늘의 랜덤 작품 추천 열기"
+		random_pick_btn.tooltip_text = "[R] 오늘의 랜덤 작품 추천 열기 (우클릭·Shift+R: 미리보기)"
+		random_pick_btn.gui_input.connect(func(ev: InputEvent):
+			if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_RIGHT:
+				pick_random_item(false)
+		)
 	if sort_btn != null:
 		sort_btn.tooltip_text = "[S] 정렬 순환 (우클릭·Shift+S: 이전): 기본순 → 권수순 → 최신순 → 가치순"
 		sort_btn.gui_input.connect(func(ev: InputEvent):
@@ -627,13 +631,16 @@ func _highlight_tabs(active_btn: Button) -> void:
 		if btn != null:
 			btn.modulate = Color(1, 1, 1, 0.65) if btn != active_btn else Color(1, 1, 1, 1)
 
-func pick_random_item():
+func pick_random_item(open_modal: bool = true):
 	if archive_state == null or archive_state.items.is_empty():
 		return null
 	var r_idx = randi() % archive_state.items.size()
 	var picked = archive_state.items[r_idx]
-	_open_detail_modal(picked)
-	_show_toast("🎲 오늘 서재가 추천하는 작품: " + picked.title + " · " + picked.reading_weather + " · " + picked.reading_spot)
+	if open_modal:
+		_open_detail_modal(picked)
+		_show_toast("🎲 오늘 서재가 추천하는 작품: " + picked.title + " · " + picked.reading_weather + " · " + picked.reading_spot)
+	else:
+		_show_toast("🎲 오늘의 추천 미리보기: 「%s」 · %s · %s · %s" % [picked.title, picked.reading_weather, picked.reading_spot, ArchiveStateClass.format_krw(picked.get_item_value())])
 	return picked
 
 func _on_random_pick_btn_pressed() -> void:
@@ -743,7 +750,7 @@ func _unhandled_input(event: InputEvent) -> void:
 					_step_sort(-1 if event.shift_pressed else 1)
 					get_viewport().set_input_as_handled()
 				KEY_R:
-					pick_random_item()
+					pick_random_item(not event.shift_pressed)
 					get_viewport().set_input_as_handled()
 				KEY_N:
 					_on_add_btn_pressed()
@@ -764,7 +771,7 @@ func _unhandled_input(event: InputEvent) -> void:
 					copy_summary_to_clipboard()
 					get_viewport().set_input_as_handled()
 				KEY_H:
-					_show_toast("⌨️ 단축키: [0] 초기화 · [1~5] 탭 · [/] 검색 · [S] 정렬 · [R] 추천 · [N] 새 일기 · [T] 테마 · [M] 소음 · [Q] 문장 · [I] 요약 · [C] 복사")
+					_show_toast("⌨️ 단축키: [0] 초기화 · [1~5] 탭 · [/] 검색 · [S/T/M/Q] 순환(Shift+역순) · [R] 추천(Shift+미리보기) · [N] 새 일기 · [I] 요약 · [C] 복사")
 					get_viewport().set_input_as_handled()
 
 func _on_modal_help_requested() -> void:

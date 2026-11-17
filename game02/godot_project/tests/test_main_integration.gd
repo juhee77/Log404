@@ -1390,6 +1390,21 @@ func _init() -> void:
 	assert(main_inst.ambient_sound_index == 1, "Shift+M should step ambient_sound_index backward")
 	print("✓ Shift+S/T/M & Right-Click Reverse Cycle for Sort, Theme & Ambient Sound verified")
 
+	# Sprint 107: Shift+R / Right-Click Random Pick Peek Without Opening Modal
+	main_inst.detail_modal.close()
+	var sr_ev := InputEventKey.new()
+	sr_ev.pressed = true
+	sr_ev.keycode = KEY_R
+	sr_ev.shift_pressed = true
+	main_inst._unhandled_input(sr_ev)
+	assert(not main_inst.detail_modal.visible and "미리보기" in main_inst.status_toast.text and "₩" in main_inst.status_toast.text, "Shift+R should peek random item in toast without opening modal")
+	var rpick_rc := InputEventMouseButton.new()
+	rpick_rc.pressed = true
+	rpick_rc.button_index = MOUSE_BUTTON_RIGHT
+	main_inst.random_pick_btn.gui_input.emit(rpick_rc)
+	assert(not main_inst.detail_modal.visible and "미리보기" in main_inst.status_toast.text, "Right-clicking RandomPickBtn should peek random item without opening modal")
+	print("✓ Shift+R / Right-Click Random Pick Peek Without Opening Modal verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

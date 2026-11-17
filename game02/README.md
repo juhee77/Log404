@@ -5,7 +5,7 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 
 ---
 
-## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 106)
+## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 107)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
@@ -14,6 +14,10 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 ---
 
 ## 🚀 최신 스프린트 업데이트 요약 ([전체 회의록 보기](SPRINT_LOG.md))
+
+### [Sprint 107] `Shift+R`·우클릭 랜덤 추천 모달 미개봉 미리보기(`엿보기`) & 메인 치트시트 동기화
+- **랜덤 추천 미리보기 (`main_view.gd` · `index.html`)**: `🎲 추천` 버튼 우클릭 및 `Shift+R` 키로 모달을 열지 않고 추천 작품의 제목·날씨·장소·가치(`₩`)를 토스트로 가볍게 미리 볼 수 있습니다.
+- **메인 치트시트 동기화 (`main_view.gd`)**: `H` 단축키 안내에 `Shift` 역순환(`S/T/M/Q`)과 `Shift+R` 추천 미리보기를 반영했습니다.
 
 ### [Sprint 106] 메인 서재 정렬(`S`)·테마(`T`)·백색소음(`M`) `Shift`·우클릭 양방향 역순환 완성
 - **양방향 서재 도구 순환 (`main_view.gd` · `index.html`)**: 정렬(`SortBtn`), 속지 테마(`ThemeBtn`), 백색소음(`AmbientBtn`) 모두 우클릭 및 `Shift+S`/`Shift+T`/`Shift+M`으로 이전 프리셋으로 즉시 되돌아갈 수 있습니다.
