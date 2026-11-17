@@ -308,11 +308,11 @@ func _collect_all_quotes() -> Array:
 		quotes.append({"text": "🖋️ 오늘의 밑줄: \"나만의 첫 독서 일기를 시작해보세요.\"", "item": fallback})
 	return quotes
 
-func _apply_today_quote(entry: Dictionary) -> void:
+func _apply_today_quote(entry: Dictionary, total_count: int = 1) -> void:
 	today_quote_label.text = entry["text"]
 	var target_item = entry.get("item", null)
 	if target_item != null:
-		today_quote_label.tooltip_text = "클릭하여 「%s」 독서 일기장 펼치기" % target_item.title
+		today_quote_label.tooltip_text = "클릭하여 「%s」 독서 일기장 펼치기 (%d/%d)" % [target_item.title, quote_cursor + 1, maxi(1, total_count)]
 	else:
 		today_quote_label.tooltip_text = "나만의 첫 독서 일기를 시작해보세요"
 
@@ -321,12 +321,12 @@ func _refresh_today_quote() -> void:
 		return
 	var quotes = _collect_all_quotes()
 	quote_cursor = quote_cursor % quotes.size()
-	_apply_today_quote(quotes[quote_cursor])
+	_apply_today_quote(quotes[quote_cursor], quotes.size())
 
 func _on_next_quote_btn_pressed() -> void:
 	var quotes = _collect_all_quotes()
 	quote_cursor = (quote_cursor + 1) % quotes.size()
-	_apply_today_quote(quotes[quote_cursor])
+	_apply_today_quote(quotes[quote_cursor], quotes.size())
 
 func open_current_quote_item() -> void:
 	var quotes = _collect_all_quotes()
@@ -422,7 +422,7 @@ func _on_card_quick_advanced(it) -> void:
 	archive_state.save_to_file()
 	_update_stats()
 	_render_spine_shelf()
-	_show_toast("📖 " + it.title + " " + str(it.volumes.size()) + "권 완독 기록 완료!")
+	_show_toast("📖 %s %d권 완독 기록 완료! (%s)" % [it.title, it.volumes.size(), ArchiveStateClass.format_krw(it.get_item_value())])
 
 func _on_stat_firsts_clicked() -> void:
 	filter_firsts_only = true
@@ -658,7 +658,7 @@ func _on_item_submitted(p_title: String, p_cat: int, p_author: String, p_color: 
 		archive_state.save_to_file()
 	_update_stats()
 	_on_tab_all_pressed()
-	_show_toast("✨ 새 일기장이 서재에 꽂혔습니다: " + p_title)
+	_show_toast("✨ 새 일기장이 서재에 꽂혔습니다: %s (%s)" % [p_title, _get_filtered_cards_summary()])
 
 func _on_item_deleted(item) -> void:
 	archive_state.remove_item(item.id)

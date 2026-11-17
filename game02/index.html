@@ -620,7 +620,7 @@
                 const cur = allQuotes[quoteIdx];
                 el.textContent = typeof cur === 'string' ? cur : cur.text;
                 if (typeof cur !== 'string' && cur.title) {
-                    el.title = `클릭하여 「${cur.title}」 독서 일기장 펼치기`;
+                    el.title = `클릭하여 「${cur.title}」 독서 일기장 펼치기 (${quoteIdx + 1}/${allQuotes.length})`;
                 }
             }
         }

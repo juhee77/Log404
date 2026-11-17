@@ -1324,6 +1324,16 @@ func _init() -> void:
 	main_inst.detail_modal.close()
 	print("✓ E-Book Space/PageUp/PageDown Navigation & Search Escape Value Summary verified")
 
+	# Sprint 103: Quote Index Tooltip, Quick-Advance KRW Toast & Submit Library Summary Toast
+	main_inst.quote_cursor = 0
+	main_inst._refresh_today_quote()
+	assert("(1/" in main_inst.today_quote_label.tooltip_text, "Today quote tooltip should include (1/N) index")
+	main_inst._on_card_quick_advanced(main_inst.archive_state.items[0])
+	assert("₩" in main_inst.status_toast.text, "Quick advance toast should show item KRW value")
+	main_inst._on_item_submitted("테스트 신작", 0, "테스트 작가")
+	assert("₩" in main_inst.status_toast.text and "종" in main_inst.status_toast.text, "Item submit toast should show updated library count and KRW total")
+	print("✓ Quote Index Tooltip, Quick-Advance KRW Toast & Submit Library Summary Toast verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

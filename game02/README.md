@@ -5,7 +5,7 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 
 ---
 
-## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 102)
+## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 103)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
@@ -14,6 +14,10 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 ---
 
 ## 🚀 최신 스프린트 업데이트 요약 ([전체 회의록 보기](SPRINT_LOG.md))
+
+### [Sprint 103] 오늘의 밑줄 순번(`(n/N)`) 툴팁 & 새 일기 등록·우클릭 빠른 기록 KRW 요약 토스트
+- **오늘의 밑줄 `(n/N)` 툴팁 (`main_view.gd` · `index.html`)**: 상단 오늘의 밑줄 문장에 마우스를 올리면 작품명과 함께 현재 몇 번째 밑줄인지 `(1/N)` 순번이 표시됩니다.
+- **새 일기 등록 & 우클릭 빠른 기록 KRW 요약 (`main_view.gd`)**: 새 일기 등록 시 전체 서재 `N종 · ₩총액`을, 카드 우클릭 `+1권 빠른 기록` 시 해당 작품의 갱신된 가치(`₩`)를 토스트로 즉시 안내합니다.
 
 ### [Sprint 102] E-Book `Space`/`PageUp`/`PageDown` 책장 넘김 & 검색창 `ESC` 초기화 요약 토스트
 - **E-Book `Space`/`PageUp`/`PageDown` 책장 넘김 (`detail_modal.gd` · `index.html`)**: 모달 열람 중 `Space`·`PageDown`으로 다음 일기장, `Shift+Space`·`PageUp`으로 이전 일기장을 바로 넘길 수 있습니다.
