@@ -237,10 +237,10 @@ func _style_diary_controls() -> void:
 		"Panel/VBox/BodyMargin/Body/InkRow/NibBtn": "만년필 펜촉 굵기 순환 (EF·M·B)",
 		"Panel/VBox/BodyMargin/Body/InkRow/SignatureBtn": "다이어리 서명 스탬프 순환",
 		"Panel/VBox/BodyMargin/Body/InkRow/DateStampBtn": "오늘 날짜로 구매·기념일 스탬프 갱신",
-		"Panel/VBox/BodyMargin/Body/InkRow/CustomTagBtn": "커스텀 해시태그 순환",
-		"Panel/VBox/BodyMargin/Body/InkRow/ValueBtn": "추정 소장 가치 +5,000원 (우클릭: -5,000원)",
+		"Panel/VBox/BodyMargin/Body/InkRow/CustomTagBtn": "커스텀 해시태그 순환 (T)",
+		"Panel/VBox/BodyMargin/Body/InkRow/ValueBtn": "추정 소장 가치 +5,000원 (V / 우클릭·Shift+V: -5,000원)",
 		"Panel/VBox/BodyMargin/Body/InkRow/FavCharBtn": "최애 캐릭터 태그 순환",
-		"Panel/VBox/BodyMargin/Body/InkRow/ConditionBtn": "실물 컨디션 등급 순환 (S급~개봉전시)",
+		"Panel/VBox/BodyMargin/Body/InkRow/ConditionBtn": "실물 컨디션 등급 순환 (G)",
 		"Panel/VBox/BodyMargin/Body/InkRow/FinishBtn": "표지 코팅 마감 순환 (무광·유광·홀로그램·양장)",
 		"Panel/VBox/BodyMargin/Body/InkRow/WeatherBtn": "독서·수집 날씨 스탬프 순환",
 		"Panel/VBox/BodyMargin/Body/InkRow/SpotBtn": "독서·수집 장소 스탬프 순환"
@@ -597,6 +597,12 @@ func _unhandled_input(event: InputEvent) -> void:
 			get_viewport().set_input_as_handled()
 		elif event.keycode == KEY_M:
 			cycle_reading_mood()
+			get_viewport().set_input_as_handled()
+		elif event.keycode == KEY_G:
+			cycle_condition_grade()
+			get_viewport().set_input_as_handled()
+		elif event.keycode == KEY_T:
+			cycle_custom_tag()
 			get_viewport().set_input_as_handled()
 
 func apply_stamp(stamp_name: String) -> void:

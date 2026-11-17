@@ -979,6 +979,26 @@
                 } else if (activeId != null) {
                     cycleReadingMood();
                 }
+            } else if ((e.key === 'g' || e.key === 'G' || e.key === 't' || e.key === 'T') && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
+                const jm = document.getElementById('journal-modal');
+                if (jm && !jm.classList.contains('hidden') && activeId != null) {
+                    const item = ITEMS.find(x => x.id === activeId);
+                    if (item) {
+                        if (e.key === 'g' || e.key === 'G') {
+                            const grades = ['✨ S급(최상)', '🌟 A급(양호)', '📦 B급(사용감)', '🖼️ 개봉전시'];
+                            item.condition_grade = grades[(grades.indexOf(item.condition_grade || grades[0]) + 1) % grades.length];
+                        } else {
+                            const tags = ['#소장각', '#인생만화', '#재독필수', '#초판수집'];
+                            item.custom_tag = tags[(tags.indexOf(item.custom_tag || tags[0]) + 1) % tags.length];
+                        }
+                        const pageEl = document.getElementById('journal-page-indicator');
+                        if (pageEl) {
+                            const prevTxt = pageEl.textContent;
+                            pageEl.textContent = (e.key === 'g' || e.key === 'G') ? `✨ 등급: ${item.condition_grade}` : `🏷️ 태그: ${item.custom_tag}`;
+                            setTimeout(() => { if (pageEl.textContent.includes('등급:') || pageEl.textContent.includes('태그:')) pageEl.textContent = prevTxt; }, 1600);
+                        }
+                    }
+                }
             } else if ((e.key === 'o' || e.key === 'O') && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
                 const jm = document.getElementById('journal-modal');
                 if (jm && !jm.classList.contains('hidden') && activeId != null) {

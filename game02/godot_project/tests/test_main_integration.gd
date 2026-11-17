@@ -1128,6 +1128,28 @@ func _init() -> void:
 	main_inst.detail_modal.close()
 	print("✓ In-Modal Keyboard O Obi Band & M Mood Tag Cyclers verified")
 
+	# Sprint 95: In-Modal Keyboard G Condition Grade & T Custom Tag Cyclers
+	var target_s95 = main_inst.archive_state.items[0]
+	var orig_grade_s95: String = target_s95.condition_grade
+	var orig_tag_s95: String = target_s95.custom_tag
+	main_inst._on_card_clicked(target_s95)
+	var mg_ev := InputEventKey.new()
+	mg_ev.pressed = true
+	mg_ev.keycode = KEY_G
+	main_inst.detail_modal._unhandled_input(mg_ev)
+	assert(target_s95.condition_grade != orig_grade_s95, "Pressing G inside modal should cycle condition grade")
+	var mt_ev := InputEventKey.new()
+	mt_ev.pressed = true
+	mt_ev.keycode = KEY_T
+	main_inst.detail_modal._unhandled_input(mt_ev)
+	assert(target_s95.custom_tag != orig_tag_s95, "Pressing T inside modal should cycle custom tag")
+	var tag_btn_s95: Button = main_inst.detail_modal.get_node("Panel/VBox/BodyMargin/Body/InkRow/CustomTagBtn")
+	assert("(T)" in tag_btn_s95.tooltip_text, "CustomTagBtn tooltip should include (T) shortcut hint")
+	main_inst._on_modal_help_requested()
+	assert("[G]" in main_inst.status_toast.text and "[T]" in main_inst.status_toast.text, "Modal help cheatsheet should list [G] and [T] shortcuts")
+	main_inst.detail_modal.close()
+	print("✓ In-Modal Keyboard G Condition Grade & T Custom Tag Cyclers verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()
