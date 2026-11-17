@@ -1005,6 +1005,21 @@ func _init() -> void:
 	main_inst.detail_modal.close()
 	print("✓ In-Modal Keyboard E Quote Focus & Updated H Cheatsheet verified")
 
+	# Sprint 89: In-Modal Keyboard L Highlighter Toggle & Updated Cheatsheet
+	var target_s89 = main_inst.archive_state.items[0]
+	var orig_hl: bool = target_s89.highlight_enabled
+	main_inst._on_card_clicked(target_s89)
+	var ml_ev := InputEventKey.new()
+	ml_ev.pressed = true
+	ml_ev.keycode = KEY_L
+	main_inst.detail_modal._unhandled_input(ml_ev)
+	assert(target_s89.highlight_enabled == (not orig_hl), "Pressing L inside modal should toggle quote highlight")
+	main_inst.detail_modal._unhandled_input(ml_ev)
+	main_inst._on_modal_help_requested()
+	assert("[L]" in main_inst.status_toast.text, "Modal help cheatsheet should list [L] highlighter shortcut")
+	main_inst.detail_modal.close()
+	print("✓ In-Modal Keyboard L Highlighter Toggle & Updated Cheatsheet verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

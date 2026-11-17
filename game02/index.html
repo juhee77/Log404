@@ -927,7 +927,11 @@
             if (e.key === 'Escape') {
                 const jm = document.getElementById('journal-modal');
                 if (jm && !jm.classList.contains('hidden')) {
-                    closeJournalModal();
+                    if (document.activeElement && document.activeElement.id === 'diary-quote-input') {
+                        document.activeElement.blur();
+                    } else {
+                        closeJournalModal();
+                    }
                 } else {
                     const sb = document.getElementById('search-box');
                     if (sb && sb.value !== '') {

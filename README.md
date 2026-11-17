@@ -18,13 +18,14 @@ Godot 4+ 기반의 감성 게임 및 인터랙티브 아카이브 애플리케�
 > **Godot 4.6.2 모바일 기반 E-Book 리더기 서재(Apple Books · 리디북스) & 만년필 다꾸 독서노트(굿노트 · 몰스킨) 감성 아카이브 앱**  
 > 14인 가상 애자일 스쿼드가 20분 주기 자동 스프린트로 지속 개선 중입니다.
 
-### 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 88)
+### 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 89)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
 | ![Pocket Archive Main Screen](game02/godot_project/screenshots/godot_app_screen.png) | ![Pocket Archive Detail Modal](game02/godot_project/screenshots/godot_modal_screen.png) |
 
 ### ✨ 주요 핵심 기능
+- **최신 Sprint 89 하이라이트**: 모달 `ESC` 3단계 안전 해제(`quote_input` 포커스 보호) 및 모달 내 `L` 키 형광펜 토글(`detail_modal.gd` · `main_view.gd` · `index.html`) 완성
 - **최신 Sprint 88 하이라이트**: 모달 내 `E` 키 밑줄 문장 즉시 편집 포커스(`detail_modal.gd` · `index.html`) 및 `[E] 문장 편집` 단축키 치트시트 동기화 완성
 - **최신 Sprint 87 하이라이트**: 모달 내 `+`/`-` 키 권 빠른 추가·삭제 및 `H` 모달 전용 단축키 치트시트(`detail_modal.gd` · `main_view.gd` · `index.html`) 완성
 - **최신 Sprint 86 하이라이트**: 모달 `PageBadgeLabel` 좌/우클릭 책장 넘김 및 모달 내 `C` 키 현재 작품 감상 카드 클립보드 복사(`detail_modal.gd` · `index.html`) 완성

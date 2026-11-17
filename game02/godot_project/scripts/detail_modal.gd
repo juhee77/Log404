@@ -413,6 +413,7 @@ func open(item) -> void:
 	if save_quote_btn != null:
 		save_quote_btn.text = "🖋️ 밑줄 저장"
 	if quote_input != null:
+		quote_input.release_focus()
 		quote_input.placeholder_text = "🖋️ 오늘 밑줄 친 명대사·감상평 수정..."
 	title_label.text = "📔 " + item.title
 	_refresh_author_label()
@@ -511,7 +512,9 @@ func _unhandled_input(event: InputEvent) -> void:
 	if not visible or not (event is InputEventKey) or not event.pressed or event.echo:
 		return
 	if event.keycode == KEY_ESCAPE:
-		if delete_armed:
+		if quote_input != null and quote_input.has_focus():
+			quote_input.release_focus()
+		elif delete_armed:
 			delete_armed = false
 			_apply_delete_btn_style(false)
 		else:
@@ -546,6 +549,9 @@ func _unhandled_input(event: InputEvent) -> void:
 			if quote_input != null:
 				quote_input.grab_focus()
 				quote_input.caret_column = quote_input.text.length()
+			get_viewport().set_input_as_handled()
+		elif event.keycode == KEY_L:
+			toggle_quote_highlight()
 			get_viewport().set_input_as_handled()
 
 func apply_stamp(stamp_name: String) -> void:
