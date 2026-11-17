@@ -288,6 +288,7 @@
                         <div class="flex items-center gap-1.5">
                             <button id="prev-page-btn" onclick="navigateJournalModal(-1)" title="이전 작품 (←)"
                                 class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">◀</button>
+                            <span id="header-page-badge" class="text-[10px] font-bold text-[#8c7a6b] px-1">1/6</span>
                             <button id="next-page-btn" onclick="navigateJournalModal(1)" title="다음 작품 (→)"
                                 class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">▶</button>
                             <button id="tape-cycle-btn" onclick="cycleWashiTape()"
@@ -639,6 +640,8 @@
                 const nextBtn = document.getElementById('next-page-btn');
                 if (prevBtn) prevBtn.title = `◀ 이전 일기 (${prevIdx + 1}/${ITEMS.length}): ${ITEMS[prevIdx].title} (←)`;
                 if (nextBtn) nextBtn.title = `▶ 다음 일기 (${nextIdx + 1}/${ITEMS.length}): ${ITEMS[nextIdx].title} (→)`;
+                const headerPageBadge = document.getElementById('header-page-badge');
+                if (headerPageBadge) headerPageBadge.textContent = `${idx + 1}/${ITEMS.length}`;
             }
 
             document.getElementById('diary-cover-box').style.background = item.color;

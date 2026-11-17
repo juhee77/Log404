@@ -900,6 +900,20 @@ func _init() -> void:
 	main_inst.detail_modal.close()
 	print("✓ All-5-Tab Value Summary Toasts & Dynamic Modal Nav Tooltips verified")
 
+	# Sprint 83: Live Search Summary Toast & Modal Header Page Badge
+	main_inst.search_input.text = "프리렌"
+	main_inst._on_search_text_changed("프리렌")
+	assert("검색 결과" in main_inst.status_toast.text and "₩" in main_inst.status_toast.text, "Search toast should include result count and KRW total")
+	main_inst.search_input.text = ""
+	main_inst._on_search_text_changed("")
+	main_inst._on_card_clicked(main_inst.archive_state.items[0])
+	var header_page_lbl = main_inst.detail_modal.find_child("PageBadgeLabel", true, false)
+	assert(header_page_lbl != null and header_page_lbl.text == "1/6", "Modal header page badge should display 1/6 on first item")
+	main_inst._on_modal_navigate_requested(1)
+	assert(header_page_lbl.text == "2/6", "Modal header page badge should update to 2/6 after next navigation")
+	main_inst.detail_modal.close()
+	print("✓ Live Search Summary Toast & Modal Header Page Badge verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

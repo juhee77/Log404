@@ -515,10 +515,13 @@ func _update_modal_nav_tooltips(item) -> void:
 	var next_idx: int = (idx + 1) % total
 	var prev_btn = detail_modal.find_child("PrevItemBtn", true, false)
 	var next_btn = detail_modal.find_child("NextItemBtn", true, false)
+	var page_lbl = detail_modal.find_child("PageBadgeLabel", true, false)
 	if prev_btn != null:
 		prev_btn.tooltip_text = "◀ 이전 일기 (%d/%d): %s (←)" % [prev_idx + 1, total, archive_state.items[prev_idx].title]
 	if next_btn != null:
 		next_btn.tooltip_text = "▶ 다음 일기 (%d/%d): %s (→)" % [next_idx + 1, total, archive_state.items[next_idx].title]
+	if page_lbl != null:
+		page_lbl.text = "%d/%d" % [idx + 1, total]
 
 func _on_card_clicked(item) -> void:
 	detail_modal.open(item)
@@ -601,8 +604,13 @@ func pick_random_item():
 func _on_random_pick_btn_pressed() -> void:
 	pick_random_item()
 
-func _on_search_text_changed(_new_text: String) -> void:
+func _on_search_text_changed(new_text: String) -> void:
 	_render_cards()
+	var q: String = new_text.strip_edges()
+	if q.is_empty():
+		_show_toast("📚 전체 서재 (%s)를 펼쳤습니다." % _get_filtered_cards_summary())
+	else:
+		_show_toast("🔍 '%s' 검색 결과 (%s)" % [q, _get_filtered_cards_summary()])
 
 func _on_add_btn_pressed() -> void:
 	add_modal.open()

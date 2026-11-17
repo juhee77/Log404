@@ -199,10 +199,19 @@ func _style_diary_controls() -> void:
 			next_btn.add_theme_color_override("font_color", Color(0.32, 0.25, 0.20))
 			next_btn.pressed.connect(func(): navigate_requested.emit(1))
 			var close_idx := close_btn.get_index()
+			var page_lbl := Label.new()
+			page_lbl.name = "PageBadgeLabel"
+			page_lbl.text = "1/6"
+			page_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+			page_lbl.add_theme_font_size_override("font_size", 11)
+			page_lbl.add_theme_color_override("font_color", Color(0.48, 0.38, 0.31))
+			page_lbl.tooltip_text = "현재 일기장 순번"
 			header_hbox.add_child(prev_btn)
 			header_hbox.move_child(prev_btn, close_idx)
+			header_hbox.add_child(page_lbl)
+			header_hbox.move_child(page_lbl, close_idx + 1)
 			header_hbox.add_child(next_btn)
-			header_hbox.move_child(next_btn, close_idx + 1)
+			header_hbox.move_child(next_btn, close_idx + 2)
 	var row_tips := {
 		"Panel/VBox/BodyMargin/Body/StampRow/ObiCycleBtn": "띠지 문구 프리셋 순환",
 		"Panel/VBox/BodyMargin/Body/StampRow/TapeCycleBtn": "상단 마스킹 테이프 컬러 순환",
