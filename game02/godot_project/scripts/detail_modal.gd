@@ -63,7 +63,7 @@ func _ready() -> void:
 				close()
 		)
 	cover_rect.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
-	cover_rect.tooltip_text = "좌클릭: 표지 아이콘 변경 · 우클릭: 표지 색상 변경"
+	cover_rect.tooltip_text = "좌클릭·X: 표지 아이콘 변경 · 우클릭·Q: 표지 색상 변경"
 	cover_rect.gui_input.connect(func(ev):
 		if ev is InputEventMouseButton and ev.pressed:
 			if ev.button_index == MOUSE_BUTTON_LEFT:
@@ -597,7 +597,10 @@ func _unhandled_input(event: InputEvent) -> void:
 				KEY_U: cycle_reading_weather,
 				KEY_J: cycle_reading_spot,
 				KEY_Q: cycle_cover_color,
+				KEY_X: cycle_cover_icon,
 				KEY_Z: cycle_possession_state,
+				KEY_DELETE: _on_delete_btn_pressed,
+				KEY_BACKSPACE: _on_delete_btn_pressed,
 			}
 			if simple_actions.has(event.keycode):
 				simple_actions[event.keycode].call()

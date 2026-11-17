@@ -5,7 +5,7 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 
 ---
 
-## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 100)
+## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 101)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
@@ -14,6 +14,10 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 ---
 
 ## 🚀 최신 스프린트 업데이트 요약 ([전체 회의록 보기](SPRINT_LOG.md))
+
+### [Sprint 101] 모달 내 `X` 키 표지 이모지 아이콘 순환 & `Delete`/`Backspace` 2단계 삭제 안전 트리거
+- **모달 내 `X` 표지 아이콘 & `Delete` 2단계 삭제 (`detail_modal.gd` · `index.html`)**: 모달 열람 중 `X` 키로 표지 이모지 아이콘을 즉시 순환하고, `Delete`/`Backspace` 키로 2단계 안전 삭제 확인(`ESC` 해제 가능)을 실행할 수 있습니다.
+- **툴팁 힌트 & 치트시트 동기화 (`detail_modal.gd` · `main_view.gd`)**: `CoverRect` 툴팁과 `H` 치트시트에 `[X] 아이콘 · [Del] 삭제`를 추가했습니다.
 
 ### 🏆 [Sprint 100] 대망의 마일스톤 100: 모달 `Q`/`Y`/`Z` 키보드 완결 & 단축키 디스패치 테이블 리팩토링
 - **모달 `Q` 표지색 · `Y` 회독 · `Z` 소장 상태 순환 (`detail_modal.gd` · `index.html`)**: `Q`(표지 색상), `Y`/`Shift+Y`(재독 ±1), `Z`(소장 상태)를 추가해 모달 내 모든 버튼 100% 키보드 조작을 달성했습니다.

@@ -979,6 +979,24 @@
                 } else if (activeId != null) {
                     cycleReadingMood();
                 }
+            } else if ((e.key === 'x' || e.key === 'X') && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
+                const jm = document.getElementById('journal-modal');
+                if (jm && !jm.classList.contains('hidden') && activeId != null) {
+                    const item = ITEMS.find(x => x.id === activeId);
+                    if (item) {
+                        const icons = ['🏀', '🪄', '🐱', '🏐', '🌸', '🌙', '📖', '✨'];
+                        item.icon = icons[(icons.indexOf(item.icon) + 1) % icons.length];
+                        const iconEl = document.getElementById('diary-cover-icon');
+                        if (iconEl) iconEl.textContent = item.icon;
+                        renderShelf();
+                        const pageEl = document.getElementById('journal-page-indicator');
+                        if (pageEl) {
+                            const prevTxt = pageEl.textContent;
+                            pageEl.textContent = `🎨 아이콘: ${item.icon}`;
+                            setTimeout(() => { if (pageEl.textContent.includes('아이콘:')) pageEl.textContent = prevTxt; }, 1600);
+                        }
+                    }
+                }
             } else if ((e.key === 'q' || e.key === 'Q' || e.key === 'y' || e.key === 'Y' || e.key === 'z' || e.key === 'Z') && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
                 const jm = document.getElementById('journal-modal');
                 if (jm && !jm.classList.contains('hidden') && activeId != null) {

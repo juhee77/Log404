@@ -1278,6 +1278,30 @@ func _init() -> void:
 	main_inst.detail_modal.close()
 	print("✓ Sprint 100 Milestone: In-Modal Keyboard Q/Y/Z & Dispatch Table Refactor verified")
 
+	# Sprint 101: In-Modal Keyboard X Cover Icon & Delete Key Two-Step Safety
+	var target_s101 = main_inst.archive_state.items[0]
+	var orig_icon_s101: String = target_s101.icon_emoji
+	main_inst._on_card_clicked(target_s101)
+	var mx_ev := InputEventKey.new()
+	mx_ev.pressed = true
+	mx_ev.keycode = KEY_X
+	main_inst.detail_modal._unhandled_input(mx_ev)
+	assert(target_s101.icon_emoji != orig_icon_s101, "Pressing X inside modal should cycle cover icon")
+	var mdel_ev := InputEventKey.new()
+	mdel_ev.pressed = true
+	mdel_ev.keycode = KEY_DELETE
+	main_inst.detail_modal._unhandled_input(mdel_ev)
+	assert(main_inst.detail_modal.delete_armed, "Pressing Delete inside modal should arm two-step delete")
+	var mesc_s101 := InputEventKey.new()
+	mesc_s101.pressed = true
+	mesc_s101.keycode = KEY_ESCAPE
+	main_inst.detail_modal._unhandled_input(mesc_s101)
+	assert(not main_inst.detail_modal.delete_armed and main_inst.detail_modal.visible, "Pressing Escape should disarm delete without closing modal")
+	main_inst._on_modal_help_requested()
+	assert("[X]" in main_inst.status_toast.text and "[Del]" in main_inst.status_toast.text, "Modal help cheatsheet should list [X] and [Del] shortcuts")
+	main_inst.detail_modal.close()
+	print("✓ In-Modal Keyboard X Cover Icon & Delete Key Two-Step Safety verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

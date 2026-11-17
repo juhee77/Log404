@@ -18,13 +18,14 @@ Godot 4+ 기반의 감성 게임 및 인터랙티브 아카이브 애플리케�
 > **Godot 4.6.2 모바일 기반 E-Book 리더기 서재(Apple Books · 리디북스) & 만년필 다꾸 독서노트(굿노트 · 몰스킨) 감성 아카이브 앱**  
 > 14인 가상 애자일 스쿼드가 20분 주기 자동 스프린트로 지속 개선 중입니다.
 
-### 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 100)
+### 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 101)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
 | ![Pocket Archive Main Screen](game02/godot_project/screenshots/godot_app_screen.png) | ![Pocket Archive Detail Modal](game02/godot_project/screenshots/godot_modal_screen.png) |
 
 ### ✨ 주요 핵심 기능
+- **최신 Sprint 101 하이라이트**: 모달 내 `X` 키 표지 이모지 아이콘 순환, `Delete`/`Backspace` 키 2단계 삭제 안전 트리거 및 `CoverRect` 툴팁 동기화(`detail_modal.gd` · `main_view.gd` · `index.html`) 완성
 - **🏆 Sprint 100 마일스톤 하이라이트**: 모달 내 `Q`(표지 색상)·`Y`/`Shift+Y`(재독 ±1)·`Z`(소장 상태) 추가로 **모달 내 모든 기능 100% 키보드 단축키 완성** 및 23종 디스패치 테이블 리팩토링(`detail_modal.gd` · `main_view.gd` · `index.html`)
 - **최신 Sprint 99 하이라이트**: 모달 내 `U` 키 독서 날씨 스탬프 순환, `J` 키 독서 장소 스탬프 순환 및 `(U)`/`(J)` 툴팁 힌트(`detail_modal.gd` · `main_view.gd` · `index.html`) 완성
 - **최신 Sprint 98 하이라이트**: 모달 내 `D`/`Shift+D` 복수 소장 ±1, `K` 키 최애 캐릭터 태그 순환 및 `(D)`/`(K)` 툴팁 힌트(`detail_modal.gd` · `main_view.gd` · `index.html`) 완성
