@@ -996,6 +996,16 @@
                         }
                     }
                 }
+            } else if ((e.key === 'i' || e.key === 'I') && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
+                const jm = document.getElementById('journal-modal');
+                if (jm && !jm.classList.contains('hidden') && activeId != null) {
+                    const item = ITEMS.find(x => x.id === activeId);
+                    if (item) {
+                        const inks = ['#2c221e', '#7f1d1d', '#78350f', '#14532d'];
+                        const idx = inks.indexOf(item.ink_color || '#2c221e');
+                        setDiaryInk(inks[(idx + 1) % inks.length]);
+                    }
+                }
             } else if ((e.key === 'e' || e.key === 'E') && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
                 const jm = document.getElementById('journal-modal');
                 if (jm && !jm.classList.contains('hidden')) {

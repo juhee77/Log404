@@ -275,6 +275,15 @@ func set_fountain_pen_ink(ink_hex: String) -> void:
 	_apply_ink_style()
 	diary_updated.emit(current_item)
 
+func cycle_fountain_pen_ink() -> String:
+	if current_item == null:
+		return ""
+	var inks: Array[String] = ["#2c221e", "#7f1d1d", "#78350f", "#14532d"]
+	var idx: int = inks.find(current_item.memo_ink_color)
+	var next_hex: String = inks[(idx + 1) % inks.size()]
+	set_fountain_pen_ink(next_hex)
+	return next_hex
+
 func toggle_quote_highlight() -> void:
 	if current_item == null:
 		return
@@ -561,6 +570,15 @@ func _unhandled_input(event: InputEvent) -> void:
 				KEY_4: "위시리스트",
 			}
 			apply_stamp(stamp_map[event.keycode])
+			get_viewport().set_input_as_handled()
+		elif event.keycode == KEY_I:
+			cycle_fountain_pen_ink()
+			get_viewport().set_input_as_handled()
+		elif event.keycode == KEY_V:
+			if event.shift_pressed:
+				reduce_estimated_value()
+			else:
+				boost_estimated_value()
 			get_viewport().set_input_as_handled()
 
 func apply_stamp(stamp_name: String) -> void:

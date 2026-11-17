@@ -1037,6 +1037,33 @@ func _init() -> void:
 	main_inst.detail_modal.close()
 	print("✓ Sprint 90 Milestone: In-Modal Keyboard 1-4 Quick Stamp & Shortcut Tooltip Hints verified")
 
+	# Sprint 91: In-Modal Keyboard I Ink Cycle & V/Shift+V Value Adjust
+	var target_s91 = main_inst.archive_state.items[0]
+	var orig_ink_s91: String = target_s91.memo_ink_color
+	var orig_val_s91: int = target_s91.get_item_value()
+	main_inst._on_card_clicked(target_s91)
+	var mi_ev := InputEventKey.new()
+	mi_ev.pressed = true
+	mi_ev.keycode = KEY_I
+	main_inst.detail_modal._unhandled_input(mi_ev)
+	assert(target_s91.memo_ink_color != orig_ink_s91, "Pressing I inside modal should cycle fountain pen ink color")
+	var mv_ev := InputEventKey.new()
+	mv_ev.pressed = true
+	mv_ev.keycode = KEY_V
+	main_inst.detail_modal._unhandled_input(mv_ev)
+	assert(target_s91.get_item_value() == orig_val_s91 + 5000, "Pressing V inside modal should boost item value by 5000")
+	var msv_ev := InputEventKey.new()
+	msv_ev.pressed = true
+	msv_ev.keycode = KEY_V
+	msv_ev.shift_pressed = true
+	main_inst.detail_modal._unhandled_input(msv_ev)
+	assert(target_s91.get_item_value() == orig_val_s91, "Pressing Shift+V inside modal should reduce item value by 5000")
+	main_inst.detail_modal.set_fountain_pen_ink(orig_ink_s91)
+	main_inst._on_modal_help_requested()
+	assert("[I]" in main_inst.status_toast.text and "[V]" in main_inst.status_toast.text, "Modal help cheatsheet should list [I] and [V] shortcuts")
+	main_inst.detail_modal.close()
+	print("✓ In-Modal Keyboard I Ink Cycle & V/Shift+V Value Adjust verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()
