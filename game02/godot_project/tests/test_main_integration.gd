@@ -1513,6 +1513,35 @@ func _init() -> void:
 	main_inst.detail_modal.close()
 	print("✓ Sprint 113 Milestone: Modal Decorator 5-Button Right-Click Reverse Cycle verified")
 
+	# Sprint 114 Milestone: Right-Click Reverse Cycle for Storage / Source / Mood / Possession
+	main_inst._on_card_clicked(main_inst.archive_state.items[0])
+	var rclick_s114 := InputEventMouseButton.new()
+	rclick_s114.pressed = true
+	rclick_s114.button_index = MOUSE_BUTTON_RIGHT
+	var sto_btn_s114 = main_inst.detail_modal.get_node("Panel/VBox/BodyMargin/Body/StampRow/StorageBtn")
+	var src_btn_s114 = main_inst.detail_modal.get_node("Panel/VBox/BodyMargin/Body/StampRow/SourceBtn")
+	var mood_btn_s114 = main_inst.detail_modal.get_node("Panel/VBox/BodyMargin/Body/StampRow/MoodBtn")
+	var pos_btn_s114 = main_inst.detail_modal.get_node("Panel/VBox/BodyMargin/Body/StampRow/PossessionBtn")
+	assert("우클릭: 이전" in sto_btn_s114.tooltip_text and "우클릭: 이전" in pos_btn_s114.tooltip_text, "Storage/Possession tooltips should mention right-click reverse cycle")
+	var sto_before = main_inst.archive_state.items[0].storage_location
+	main_inst.detail_modal.cycle_storage_location(1)
+	sto_btn_s114.gui_input.emit(rclick_s114)
+	assert(main_inst.archive_state.items[0].storage_location == sto_before, "Right-clicking StorageBtn should step backward")
+	var src_before = main_inst.archive_state.items[0].acquisition_source
+	main_inst.detail_modal.cycle_acquisition_source(1)
+	src_btn_s114.gui_input.emit(rclick_s114)
+	assert(main_inst.archive_state.items[0].acquisition_source == src_before, "Right-clicking SourceBtn should step backward")
+	var mood_before = main_inst.archive_state.items[0].reading_mood
+	main_inst.detail_modal.cycle_reading_mood(1)
+	mood_btn_s114.gui_input.emit(rclick_s114)
+	assert(main_inst.archive_state.items[0].reading_mood == mood_before, "Right-clicking MoodBtn should step backward")
+	var pos_before = main_inst.archive_state.items[0].possession_state
+	main_inst.detail_modal.cycle_possession_state(1)
+	pos_btn_s114.gui_input.emit(rclick_s114)
+	assert(main_inst.archive_state.items[0].possession_state == pos_before, "Right-clicking PossessionBtn should step backward")
+	main_inst.detail_modal.close()
+	print("✓ Sprint 114 Milestone: StampRow Storage/Source/Mood/Possession Right-Click Reverse Cycle verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

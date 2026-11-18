@@ -5,7 +5,7 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 
 ---
 
-## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 113)
+## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 114)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
@@ -14,6 +14,9 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 ---
 
 ## 🚀 최신 스프린트 업데이트 요약 ([전체 회의록 보기](SPRINT_LOG.md))
+
+### 📓 [Sprint 114] `StampRow` 보관위치·입수경로·기분·소장상태 4종 우클릭 역순환 완성
+- **`StampRow` 양방향 조작 완성 (`collection_item.gd` · `detail_modal.gd` · `index.html`)**: `StorageBtn`, `SourceBtn`, `MoodBtn`, `PossessionBtn` 우클릭 시 이전 프리셋으로 즉시 되돌아가며 툴팁에 `· 우클릭: 이전` 안내를 추가했습니다.
 
 ### 📓 [Sprint 113] 모달 다꾸 꾸미기 5대 버튼(`띠지`/`마테`/`스티커`/`레어도`/`속지`) 우클릭 역순환 & 툴팁 동기화
 - **모달 꾸미기 5종 우클릭 역순환 (`collection_item.gd` · `detail_modal.gd` · `index.html`)**: `ObiCycleBtn`, `TapeCycleBtn`, `DecoStickerBtn`, `RarityBtn`, `PaperBtn` 우클릭 시 이전 프리셋으로 즉시 되돌아가며 툴팁에도 `· 우클릭: 이전` 안내를 추가했습니다.

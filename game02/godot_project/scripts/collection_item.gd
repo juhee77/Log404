@@ -127,33 +127,21 @@ func cycle_paper_pattern(step: int = 1) -> String:
 	updated_at = int(Time.get_unix_time_from_system())
 	return paper_pattern
 
-func cycle_storage_location() -> String:
+func cycle_storage_location(step: int = 1) -> String:
 	const PRESETS = ["🗄️ 1층 장식장", "📦 아크릴함", "📚 책상 선반", "🎒 외출 파우치"]
-	var idx = PRESETS.find(storage_location)
-	if idx == -1:
-		storage_location = PRESETS[0]
-	else:
-		storage_location = PRESETS[(idx + 1) % PRESETS.size()]
+	storage_location = _step_preset(PRESETS, storage_location, step)
 	updated_at = int(Time.get_unix_time_from_system())
 	return storage_location
 
-func cycle_acquisition_source() -> String:
+func cycle_acquisition_source(step: int = 1) -> String:
 	const PRESETS = ["🏪 오프라인 서점", "🇯🇵 직구/해외", "🎁 선물", "🎪 팝업/행사", "📦 온라인 서점"]
-	var idx = PRESETS.find(acquisition_source)
-	if idx == -1:
-		acquisition_source = PRESETS[0]
-	else:
-		acquisition_source = PRESETS[(idx + 1) % PRESETS.size()]
+	acquisition_source = _step_preset(PRESETS, acquisition_source, step)
 	updated_at = int(Time.get_unix_time_from_system())
 	return acquisition_source
 
-func cycle_reading_mood() -> String:
+func cycle_reading_mood(step: int = 1) -> String:
 	const PRESETS = ["🥰 힐링", "🔥 열혈", "😭 감동", "🤯 반전", "🤣 유쾌"]
-	var idx = PRESETS.find(reading_mood)
-	if idx == -1:
-		reading_mood = PRESETS[0]
-	else:
-		reading_mood = PRESETS[(idx + 1) % PRESETS.size()]
+	reading_mood = _step_preset(PRESETS, reading_mood, step)
 	updated_at = int(Time.get_unix_time_from_system())
 	return reading_mood
 
@@ -186,13 +174,9 @@ func cycle_diary_signature() -> String:
 	updated_at = int(Time.get_unix_time_from_system())
 	return diary_signature
 
-func cycle_possession_state() -> String:
+func cycle_possession_state(step: int = 1) -> String:
 	const PRESETS = ["📦 소장중", "🛒 예약중", "🚚 배송중", "✨ 전시중"]
-	var idx = PRESETS.find(possession_state)
-	if idx == -1:
-		possession_state = PRESETS[0]
-	else:
-		possession_state = PRESETS[(idx + 1) % PRESETS.size()]
+	possession_state = _step_preset(PRESETS, possession_state, step)
 	updated_at = int(Time.get_unix_time_from_system())
 	return possession_state
 

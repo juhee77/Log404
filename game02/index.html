@@ -308,10 +308,10 @@
                             <button id="storage-cycle-btn" onclick="cycleStorageLocation()"
                                 class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">🗄️
                                 장식장</button>
-                            <button id="source-cycle-btn" onclick="cycleAcquisitionSource()"
+                            <button id="source-cycle-btn" onclick="cycleAcquisitionSource(1)" oncontextmenu="event.preventDefault(); cycleAcquisitionSource(-1);" title="소장·입수 경로 순환 (A) · 우클릭: 이전"
                                 class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">🏪
                                 서점</button>
-                            <button id="mood-cycle-btn" onclick="cycleReadingMood()"
+                            <button id="mood-cycle-btn" onclick="cycleReadingMood(1)" oncontextmenu="event.preventDefault(); cycleReadingMood(-1);" title="독서·수집 기분 태그 순환 (M) · 우클릭: 이전"
                                 class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">🥰
                                 힐링</button>
                             <button id="reread-cycle-btn" onclick="incrementRereadCount()" oncontextmenu="event.preventDefault(); decrementRereadCount();" title="클릭: +1회독 · 우클릭: -1회독"
@@ -693,12 +693,12 @@
         }
 
         const MOOD_PRESETS = ["🥰 힐링", "🔥 열혈", "😭 감동", "🤯 반전", "🤣 유쾌"];
-        function cycleReadingMood() {
+        function cycleReadingMood(step = 1) {
             const item = ITEMS.find(x => x.id === activeId);
             if (!item) return;
             const cur = item.reading_mood || '🥰 힐링';
             const idx = MOOD_PRESETS.indexOf(cur);
-            item.reading_mood = MOOD_PRESETS[(idx + 1) % MOOD_PRESETS.length];
+            item.reading_mood = MOOD_PRESETS[(idx + step + MOOD_PRESETS.length) % MOOD_PRESETS.length];
             const btn = document.getElementById('mood-cycle-btn');
             if (btn) btn.textContent = item.reading_mood;
             const stampEl = document.getElementById('diary-stamp');
@@ -723,12 +723,12 @@
         }
 
         const SOURCE_PRESETS = ["🏪 오프라인 서점", "🇯🇵 직구/해외", "🎁 선물", "🎪 팝업/행사", "📦 온라인 서점"];
-        function cycleAcquisitionSource() {
+        function cycleAcquisitionSource(step = 1) {
             const item = ITEMS.find(x => x.id === activeId);
             if (!item) return;
             const cur = item.acquisition_source || '🏪 오프라인 서점';
             const idx = SOURCE_PRESETS.indexOf(cur);
-            item.acquisition_source = SOURCE_PRESETS[(idx + 1) % SOURCE_PRESETS.length];
+            item.acquisition_source = SOURCE_PRESETS[(idx + step + SOURCE_PRESETS.length) % SOURCE_PRESETS.length];
             const btn = document.getElementById('source-cycle-btn');
             if (btn) btn.textContent = item.acquisition_source;
             const stampEl = document.getElementById('diary-stamp');

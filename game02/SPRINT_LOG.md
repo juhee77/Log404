@@ -5,6 +5,25 @@
 
 ---
 
+## 📓 [Sprint 114] `StampRow` 보관위치·입수경로·기분·소장상태 4종 우클릭 역순환 완성
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A**: "모달 `StampRow` 앞쪽 다꾸 5종(`띠지`/`마테`/`스티커`/`레어도`/`속지`)에 이어 나머지 순환 버튼(`보관위치`/`입수경로`/`기분`/`소장상태`)도 우클릭으로 뒤로 돌아가면 조작감이 완벽히 통일될 것 같아요."
+- **가챠러 B**: "`소장중 → 예약중 → 배송중 → 전시중`이나 보관 장소를 넘기다 지나쳤을 때 우클릭 한 번으로 바로 되돌릴 수 있으면 편하겠어요."
+- **기획자 (PO)**: "`collection_item.gd`의 `_step_preset()` 공용 헬퍼를 재사용해 `cycle_storage_location(step)`, `cycle_acquisition_source(step)`, `cycle_reading_mood(step)`, `cycle_possession_state(step)`를 양방향화하고, `detail_modal.gd`와 `index.html`에 우클릭 역순환 및 툴팁을 연결합니다."
+
+### 2. 핵심 구현 및 변경 내역
+- `game02/godot_project/scripts/collection_item.gd`:
+  - `cycle_storage_location(step)`, `cycle_acquisition_source(step)`, `cycle_reading_mood(step)`, `cycle_possession_state(step)`에 `_step_preset()` 공용 헬퍼를 적용해 `+1`/`-1` 양방향 순환을 지원했습니다.
+- `game02/godot_project/scripts/detail_modal.gd`:
+  - `StorageBtn`, `SourceBtn`, `MoodBtn`, `PossessionBtn` 4개 버튼에 `MOUSE_BUTTON_RIGHT` 역순환(`-1`)과 `(B)/(A)/(M)/(Z) · 우클릭: 이전` 툴팁을 연결해 `StampRow` 전체 순환 버튼의 양방향 조작을 완성했습니다.
+- `game02/index.html`:
+  - `source-cycle-btn`, `mood-cycle-btn`에 `step = 1` 지원과 `oncontextmenu` 우클릭 역순환(`-1`) 및 툴팁을 동기화했습니다.
+- `game02/godot_project/tests/test_main_integration.gd`:
+  - `StorageBtn`, `SourceBtn`, `MoodBtn`, `PossessionBtn` 우클릭 역순환 및 툴팁을 검증하는 Sprint 114 통합 테스트를 추가해 100% 통과했습니다.
+
+---
+
 ## 📓 [Sprint 113] 모달 다꾸 꾸미기 5대 버튼(`띠지`/`마테`/`스티커`/`레어도`/`속지`) 우클릭 역순환 & 툴팁 동기화
 
 ### 1. 14인 스쿼드 회의록 & VOC

@@ -236,12 +236,12 @@ func _style_diary_controls() -> void:
 		"Panel/VBox/BodyMargin/Body/StampRow/DecoStickerBtn": "다꾸 데코 스티커 팩 순환 (S) · 우클릭: 이전",
 		"Panel/VBox/BodyMargin/Body/StampRow/RarityBtn": "수집 레어도 등급 순환 (R) · 우클릭: 이전",
 		"Panel/VBox/BodyMargin/Body/StampRow/PaperBtn": "일기장 속지 패턴 순환 (P) · 우클릭: 이전",
-		"Panel/VBox/BodyMargin/Body/StampRow/StorageBtn": "실물 보관 위치 순환 (B)",
-		"Panel/VBox/BodyMargin/Body/StampRow/SourceBtn": "소장·입수 경로 순환 (A)",
-		"Panel/VBox/BodyMargin/Body/StampRow/MoodBtn": "독서·수집 기분 태그 순환 (M)",
+		"Panel/VBox/BodyMargin/Body/StampRow/StorageBtn": "실물 보관 위치 순환 (B) · 우클릭: 이전",
+		"Panel/VBox/BodyMargin/Body/StampRow/SourceBtn": "소장·입수 경로 순환 (A) · 우클릭: 이전",
+		"Panel/VBox/BodyMargin/Body/StampRow/MoodBtn": "독서·수집 기분 태그 순환 (M) · 우클릭: 이전",
 		"Panel/VBox/BodyMargin/Body/StampRow/RereadBtn": "재독 횟수 +1 (Y / 우클릭·Shift+Y: -1)",
 		"Panel/VBox/BodyMargin/Body/StampRow/DuplicateBtn": "복수 소장 수량 +1 (D / 우클릭·Shift+D: -1)",
-		"Panel/VBox/BodyMargin/Body/StampRow/PossessionBtn": "소장 상태 순환 (Z: 소장중·예약중·배송중·전시중)",
+		"Panel/VBox/BodyMargin/Body/StampRow/PossessionBtn": "소장 상태 순환 (Z: 소장중·예약중·배송중·전시중) · 우클릭: 이전",
 		"Panel/VBox/BodyMargin/Body/InkRow/NibBtn": "만년필 펜촉 굵기 순환 (N: EF·M·B)",
 		"Panel/VBox/BodyMargin/Body/InkRow/SignatureBtn": "다이어리 서명 스탬프 순환",
 		"Panel/VBox/BodyMargin/Body/InkRow/DateStampBtn": "오늘 날짜로 구매·기념일 스탬프 갱신",
@@ -262,7 +262,11 @@ func _style_diary_controls() -> void:
 		"Panel/VBox/BodyMargin/Body/StampRow/TapeCycleBtn": func() -> void: cycle_washi_tape(-1),
 		"Panel/VBox/BodyMargin/Body/StampRow/DecoStickerBtn": func() -> void: cycle_deco_sticker(-1),
 		"Panel/VBox/BodyMargin/Body/StampRow/RarityBtn": func() -> void: cycle_rarity_tier(-1),
-		"Panel/VBox/BodyMargin/Body/StampRow/PaperBtn": func() -> void: cycle_paper_pattern(-1)
+		"Panel/VBox/BodyMargin/Body/StampRow/PaperBtn": func() -> void: cycle_paper_pattern(-1),
+		"Panel/VBox/BodyMargin/Body/StampRow/StorageBtn": func() -> void: cycle_storage_location(-1),
+		"Panel/VBox/BodyMargin/Body/StampRow/SourceBtn": func() -> void: cycle_acquisition_source(-1),
+		"Panel/VBox/BodyMargin/Body/StampRow/MoodBtn": func() -> void: cycle_reading_mood(-1),
+		"Panel/VBox/BodyMargin/Body/StampRow/PossessionBtn": func() -> void: cycle_possession_state(-1)
 	}
 	for deco_path in deco_rclick_map.keys():
 		var deco_ctrl: Control = get_node_or_null(deco_path)
@@ -717,10 +721,10 @@ func _apply_paper_style() -> void:
 			"vintage": p_btn.text = "🍂양장"
 			_: p_btn.text = "📄줄노트"
 
-func cycle_storage_location() -> String:
+func cycle_storage_location(step: int = 1) -> String:
 	if current_item == null:
 		return "🗄️ 1층 장식장"
-	var s = current_item.cycle_storage_location() if current_item.has_method("cycle_storage_location") else "🗄️ 1층 장식장"
+	var s = current_item.cycle_storage_location(step) if current_item.has_method("cycle_storage_location") else "🗄️ 1층 장식장"
 	var s_btn: Button = get_node_or_null("Panel/VBox/BodyMargin/Body/StampRow/StorageBtn")
 	if s_btn != null:
 		s_btn.text = s
@@ -730,10 +734,10 @@ func cycle_storage_location() -> String:
 	diary_updated.emit(current_item)
 	return s
 
-func cycle_acquisition_source() -> String:
+func cycle_acquisition_source(step: int = 1) -> String:
 	if current_item == null:
 		return "🏪 오프라인 서점"
-	var src = current_item.cycle_acquisition_source() if current_item.has_method("cycle_acquisition_source") else "🏪 오프라인 서점"
+	var src = current_item.cycle_acquisition_source(step) if current_item.has_method("cycle_acquisition_source") else "🏪 오프라인 서점"
 	var src_btn: Button = get_node_or_null("Panel/VBox/BodyMargin/Body/StampRow/SourceBtn")
 	if src_btn != null:
 		src_btn.text = src
@@ -743,10 +747,10 @@ func cycle_acquisition_source() -> String:
 	diary_updated.emit(current_item)
 	return src
 
-func cycle_reading_mood() -> String:
+func cycle_reading_mood(step: int = 1) -> String:
 	if current_item == null:
 		return "🥰 힐링"
-	var m = current_item.cycle_reading_mood() if current_item.has_method("cycle_reading_mood") else "🥰 힐링"
+	var m = current_item.cycle_reading_mood(step) if current_item.has_method("cycle_reading_mood") else "🥰 힐링"
 	var m_btn: Button = get_node_or_null("Panel/VBox/BodyMargin/Body/StampRow/MoodBtn")
 	if m_btn != null:
 		m_btn.text = m
@@ -806,10 +810,10 @@ func cycle_diary_signature() -> String:
 	diary_updated.emit(current_item)
 	return sig
 
-func cycle_possession_state() -> String:
+func cycle_possession_state(step: int = 1) -> String:
 	if current_item == null:
 		return "📦 소장중"
-	var ps = current_item.cycle_possession_state() if current_item.has_method("cycle_possession_state") else "📦 소장중"
+	var ps = current_item.cycle_possession_state(step) if current_item.has_method("cycle_possession_state") else "📦 소장중"
 	var pos_btn: Button = get_node_or_null("Panel/VBox/BodyMargin/Body/StampRow/PossessionBtn")
 	if pos_btn != null:
 		pos_btn.text = ps
