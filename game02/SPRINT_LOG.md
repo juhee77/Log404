@@ -5,6 +5,25 @@
 
 ---
 
+## 📓 [Sprint 113] 모달 다꾸 꾸미기 5대 버튼(`띠지`/`마테`/`스티커`/`레어도`/`속지`) 우클릭 역순환 & 툴팁 동기화
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A**: "모달 안에서 `띠지`, `테이프`, `스티커`, `레어도`, `속지` 버튼을 누르다가 원하는 스타일을 지나쳤을 때 우클릭 한 번으로 바로 이전 프리셋으로 되돌아갈 수 있으면 정말 쾌적할 것 같아요."
+- **가챠러 B**: "웹 목업(`index.html`)의 마테·스티커·레어도 버튼도 똑같이 우클릭으로 역순환되면 손에 익은 조작감이 그대로 이어질 것 같아요."
+- **기획자 (PO)**: "`collection_item.gd`에 `_step_preset()` 공용 헬퍼와 `step: int = 1` 매개변수를 도입해 `cycle_deco_sticker`, `cycle_rarity_tier`, `cycle_paper_pattern`을 양방향화하고, `detail_modal.gd`에서 `ObiCycleBtn`, `TapeCycleBtn`, `DecoStickerBtn`, `RarityBtn`, `PaperBtn` 5개 버튼에 우클릭 역순환(`-1`)과 `(O)/(W)/(S)/(R)/(P) · 우클릭: 이전` 툴팁을 일괄 연결합니다."
+
+### 2. 핵심 구현 및 변경 내역
+- `game02/godot_project/scripts/collection_item.gd`:
+  - `_step_preset()` 헬퍼를 추가해 `cycle_deco_sticker(step)`, `cycle_rarity_tier(step)`, `cycle_paper_pattern(step)`이 양방향(`+1`/`-1`)으로 동작하도록 개선했습니다.
+- `game02/godot_project/scripts/detail_modal.gd`:
+  - `cycle_obi_preset(step)`, `cycle_washi_tape(step)`, `cycle_deco_sticker(step)`, `cycle_rarity_tier(step)`, `cycle_paper_pattern(step)`을 양방향화하고, 5개 버튼(`ObiCycleBtn`, `TapeCycleBtn`, `DecoStickerBtn`, `RarityBtn`, `PaperBtn`)에 `MOUSE_BUTTON_RIGHT` 역순환(`-1`) 및 툴팁을 연결했습니다.
+- `game02/index.html`:
+  - `tape-cycle-btn`, `deco-sticker-btn`, `rarity-cycle-btn`에 `step = 1` 지원과 `oncontextmenu` 우클릭 역순환(`-1`) 및 툴팁을 동기화했습니다.
+- `game02/godot_project/tests/test_main_integration.gd`:
+  - 모달 다꾸 꾸미기 5개 버튼 우클릭 역순환 및 툴팁을 검증하는 Sprint 113 통합 테스트를 추가해 100% 통과했습니다.
+
+---
+
 ## 📓 [Sprint 112] 하단 독 바(`WebBtn`/`CamBtn`/`DiyBtn`) 우클릭 파워 액션 & 즉시 JSON 백업 헬퍼 통합
 
 ### 1. 14인 스쿼드 회의록 & VOC

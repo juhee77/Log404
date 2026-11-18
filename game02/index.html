@@ -293,13 +293,13 @@
                                 class="text-[10px] font-bold text-[#8c7a6b] hover:text-[#2c221e] px-1 cursor-pointer select-none">1/6</span>
                             <button id="next-page-btn" onclick="navigateJournalModal(1)" oncontextmenu="event.preventDefault(); if (ITEMS.length) openJournalModal(ITEMS[ITEMS.length - 1].id);" title="다음 작품 (→ · 우클릭: 끝)"
                                 class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">▶</button>
-                            <button id="tape-cycle-btn" onclick="cycleWashiTape()"
+                            <button id="tape-cycle-btn" onclick="cycleWashiTape(1)" oncontextmenu="event.preventDefault(); cycleWashiTape(-1);" title="상단 마스킹 테이프 컬러 순환 (W / 우클릭: 이전)"
                                 class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">🎨
                                 마테 옐로우</button>
-                            <button id="deco-sticker-btn" onclick="cycleDecoSticker()"
+                            <button id="deco-sticker-btn" onclick="cycleDecoSticker(1)" oncontextmenu="event.preventDefault(); cycleDecoSticker(-1);" title="다꾸 데코 스티커 팩 순환 (S / 우클릭: 이전)"
                                 class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">✨
                                 스티커</button>
-                            <button id="rarity-cycle-btn" onclick="cycleRarityTier()"
+                            <button id="rarity-cycle-btn" onclick="cycleRarityTier(1)" oncontextmenu="event.preventDefault(); cycleRarityTier(-1);" title="수집 레어도 등급 순환 (R / 우클릭: 이전)"
                                 class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">💎
                                 레어</button>
                             <button id="paper-cycle-btn" onclick="cyclePaperPattern()"
@@ -745,12 +745,12 @@
         }
 
         const RARITY_PRESETS = ["🌟 노말", "💎 레어", "👑 슈퍼레어", "🔮 시크릿"];
-        function cycleRarityTier() {
+        function cycleRarityTier(step = 1) {
             const item = ITEMS.find(x => x.id === activeId);
             if (!item) return;
             const cur = item.rarity_tier || '🌟 노말';
             const idx = RARITY_PRESETS.indexOf(cur);
-            item.rarity_tier = RARITY_PRESETS[(idx + 1) % RARITY_PRESETS.length];
+            item.rarity_tier = RARITY_PRESETS[(idx + step + RARITY_PRESETS.length) % RARITY_PRESETS.length];
             const btn = document.getElementById('rarity-cycle-btn');
             if (btn) btn.textContent = item.rarity_tier;
             const stampEl = document.getElementById('diary-stamp');
@@ -759,12 +759,12 @@
         }
 
         const DECO_STICKERS = ["✨", "🌸", "☕", "🌙", "🍀", "🎧"];
-        function cycleDecoSticker() {
+        function cycleDecoSticker(step = 1) {
             const item = ITEMS.find(x => x.id === activeId);
             if (!item) return;
             const cur = item.deco_sticker || '✨';
             const idx = DECO_STICKERS.indexOf(cur);
-            item.deco_sticker = DECO_STICKERS[(idx + 1) % DECO_STICKERS.length];
+            item.deco_sticker = DECO_STICKERS[(idx + step + DECO_STICKERS.length) % DECO_STICKERS.length];
             const btn = document.getElementById('deco-sticker-btn');
             if (btn) btn.textContent = `${item.deco_sticker} 스티커`;
             const stampEl = document.getElementById('diary-stamp');
@@ -790,12 +790,12 @@
             }
         }
 
-        function cycleWashiTape() {
+        function cycleWashiTape(step = 1) {
             const item = ITEMS.find(x => x.id === activeId);
             if (!item) return;
             const curHex = (item.washi_tape_color || '#f4d394').toLowerCase();
             const idx = WASHI_PALETTE.findIndex(p => p.color.toLowerCase() === curHex);
-            const nextIdx = (idx + 1) % WASHI_PALETTE.length;
+            const nextIdx = (idx + step + WASHI_PALETTE.length) % WASHI_PALETTE.length;
             item.washi_tape_color = WASHI_PALETTE[nextIdx].color;
             applyJournalWashiTape(item.washi_tape_color);
         }

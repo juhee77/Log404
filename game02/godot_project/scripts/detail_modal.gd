@@ -231,11 +231,11 @@ func _style_diary_controls() -> void:
 			header_hbox.add_child(next_btn)
 			header_hbox.move_child(next_btn, close_idx + 2)
 	var row_tips := {
-		"Panel/VBox/BodyMargin/Body/StampRow/ObiCycleBtn": "띠지 문구 프리셋 순환 (O)",
-		"Panel/VBox/BodyMargin/Body/StampRow/TapeCycleBtn": "상단 마스킹 테이프 컬러 순환 (W)",
-		"Panel/VBox/BodyMargin/Body/StampRow/DecoStickerBtn": "다꾸 데코 스티커 팩 순환 (S)",
-		"Panel/VBox/BodyMargin/Body/StampRow/RarityBtn": "수집 레어도 등급 순환 (R)",
-		"Panel/VBox/BodyMargin/Body/StampRow/PaperBtn": "일기장 속지 패턴 순환 (P)",
+		"Panel/VBox/BodyMargin/Body/StampRow/ObiCycleBtn": "띠지 문구 프리셋 순환 (O) · 우클릭: 이전",
+		"Panel/VBox/BodyMargin/Body/StampRow/TapeCycleBtn": "상단 마스킹 테이프 컬러 순환 (W) · 우클릭: 이전",
+		"Panel/VBox/BodyMargin/Body/StampRow/DecoStickerBtn": "다꾸 데코 스티커 팩 순환 (S) · 우클릭: 이전",
+		"Panel/VBox/BodyMargin/Body/StampRow/RarityBtn": "수집 레어도 등급 순환 (R) · 우클릭: 이전",
+		"Panel/VBox/BodyMargin/Body/StampRow/PaperBtn": "일기장 속지 패턴 순환 (P) · 우클릭: 이전",
 		"Panel/VBox/BodyMargin/Body/StampRow/StorageBtn": "실물 보관 위치 순환 (B)",
 		"Panel/VBox/BodyMargin/Body/StampRow/SourceBtn": "소장·입수 경로 순환 (A)",
 		"Panel/VBox/BodyMargin/Body/StampRow/MoodBtn": "독서·수집 기분 태그 순환 (M)",
@@ -257,6 +257,21 @@ func _style_diary_controls() -> void:
 		var tip_btn: Control = get_node_or_null(path)
 		if tip_btn != null:
 			tip_btn.tooltip_text = row_tips[path]
+	var deco_rclick_map := {
+		"Panel/VBox/BodyMargin/Body/StampRow/ObiCycleBtn": func() -> void: cycle_obi_preset(-1),
+		"Panel/VBox/BodyMargin/Body/StampRow/TapeCycleBtn": func() -> void: cycle_washi_tape(-1),
+		"Panel/VBox/BodyMargin/Body/StampRow/DecoStickerBtn": func() -> void: cycle_deco_sticker(-1),
+		"Panel/VBox/BodyMargin/Body/StampRow/RarityBtn": func() -> void: cycle_rarity_tier(-1),
+		"Panel/VBox/BodyMargin/Body/StampRow/PaperBtn": func() -> void: cycle_paper_pattern(-1)
+	}
+	for deco_path in deco_rclick_map.keys():
+		var deco_ctrl: Control = get_node_or_null(deco_path)
+		if deco_ctrl != null:
+			var deco_cb: Callable = deco_rclick_map[deco_path]
+			deco_ctrl.gui_input.connect(func(ev: InputEvent) -> void:
+				if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_RIGHT:
+					deco_cb.call()
+			)
 	var rr_btn: Control = get_node_or_null("Panel/VBox/BodyMargin/Body/StampRow/RereadBtn")
 	if rr_btn != null:
 		rr_btn.gui_input.connect(func(ev):
@@ -658,10 +673,10 @@ func _highlight_active_stamp_btn(active_stamp: String) -> void:
 		sb.corner_radius_bottom_right = 6
 		btn.add_theme_stylebox_override("normal", sb)
 
-func cycle_rarity_tier() -> String:
+func cycle_rarity_tier(step: int = 1) -> String:
 	if current_item == null:
 		return "🌟노말"
-	var r = current_item.cycle_rarity_tier() if current_item.has_method("cycle_rarity_tier") else "🌟노말"
+	var r = current_item.cycle_rarity_tier(step) if current_item.has_method("cycle_rarity_tier") else "🌟노말"
 	var r_btn: Button = get_node_or_null("Panel/VBox/BodyMargin/Body/StampRow/RarityBtn")
 	if r_btn != null:
 		r_btn.text = r
@@ -669,10 +684,10 @@ func cycle_rarity_tier() -> String:
 	diary_updated.emit(current_item)
 	return r
 
-func cycle_deco_sticker() -> String:
+func cycle_deco_sticker(step: int = 1) -> String:
 	if current_item == null:
 		return "✨"
-	var s = current_item.cycle_deco_sticker() if current_item.has_method("cycle_deco_sticker") else "✨"
+	var s = current_item.cycle_deco_sticker(step) if current_item.has_method("cycle_deco_sticker") else "✨"
 	var deco_btn: Button = get_node_or_null("Panel/VBox/BodyMargin/Body/StampRow/DecoStickerBtn")
 	if deco_btn != null:
 		deco_btn.text = s + "스티커"
@@ -682,10 +697,10 @@ func cycle_deco_sticker() -> String:
 	diary_updated.emit(current_item)
 	return s
 
-func cycle_paper_pattern() -> String:
+func cycle_paper_pattern(step: int = 1) -> String:
 	if current_item == null:
 		return "ruled"
-	var p = current_item.cycle_paper_pattern() if current_item.has_method("cycle_paper_pattern") else "ruled"
+	var p = current_item.cycle_paper_pattern(step) if current_item.has_method("cycle_paper_pattern") else "ruled"
 	_apply_paper_style()
 	diary_updated.emit(current_item)
 	return p
@@ -924,12 +939,12 @@ func cycle_reading_spot() -> String:
 	diary_updated.emit(current_item)
 	return rs
 
-func cycle_obi_preset() -> void:
+func cycle_obi_preset(step: int = 1) -> void:
 	if current_item == null:
 		return
-	obi_cursor = (obi_cursor + 1) % OBI_PRESETS.size()
+	obi_cursor = (obi_cursor + step + OBI_PRESETS.size()) % OBI_PRESETS.size()
 	if OBI_PRESETS[obi_cursor] == current_item.obi_text:
-		obi_cursor = (obi_cursor + 1) % OBI_PRESETS.size()
+		obi_cursor = (obi_cursor + step + OBI_PRESETS.size()) % OBI_PRESETS.size()
 	current_item.obi_text = OBI_PRESETS[obi_cursor]
 	_refresh_tag_label()
 	diary_updated.emit(current_item)
@@ -954,12 +969,12 @@ func cycle_cover_color() -> void:
 	cover_rect.color = Color.from_string(current_item.cover_color, Color(0.65, 0.25, 0.2))
 	diary_updated.emit(current_item)
 
-func cycle_washi_tape() -> String:
+func cycle_washi_tape(step: int = 1) -> String:
 	if current_item == null:
 		return "#f4d394"
-	washi_cursor = (washi_cursor + 1) % WASHI_PRESETS.size()
+	washi_cursor = (washi_cursor + step + WASHI_PRESETS.size()) % WASHI_PRESETS.size()
 	if WASHI_PRESETS[washi_cursor] == current_item.get("washi_tape_color"):
-		washi_cursor = (washi_cursor + 1) % WASHI_PRESETS.size()
+		washi_cursor = (washi_cursor + step + WASHI_PRESETS.size()) % WASHI_PRESETS.size()
 	current_item.washi_tape_color = WASHI_PRESETS[washi_cursor]
 	_apply_washi_style()
 	diary_updated.emit(current_item)

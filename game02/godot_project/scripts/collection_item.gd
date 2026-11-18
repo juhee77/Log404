@@ -103,33 +103,27 @@ func quick_advance_volume() -> int:
 	updated_at = int(Time.get_unix_time_from_system())
 	return next_vol
 
-func cycle_deco_sticker() -> String:
-	const PRESETS = ["✨", "🌸", "☕", "🌙", "🍀", "🎧"]
-	var idx = PRESETS.find(deco_sticker)
+func _step_preset(presets: Array, current_val: String, step: int) -> String:
+	var idx = presets.find(current_val)
 	if idx == -1:
-		deco_sticker = PRESETS[0]
-	else:
-		deco_sticker = PRESETS[(idx + 1) % PRESETS.size()]
+		return presets[0]
+	return presets[(idx + step + presets.size()) % presets.size()]
+
+func cycle_deco_sticker(step: int = 1) -> String:
+	const PRESETS = ["✨", "🌸", "☕", "🌙", "🍀", "🎧"]
+	deco_sticker = _step_preset(PRESETS, deco_sticker, step)
 	updated_at = int(Time.get_unix_time_from_system())
 	return deco_sticker
 
-func cycle_rarity_tier() -> String:
+func cycle_rarity_tier(step: int = 1) -> String:
 	const PRESETS = ["🌟노말", "💎레어", "👑슈퍼레어", "🔮시크릿"]
-	var idx = PRESETS.find(rarity_tier)
-	if idx == -1:
-		rarity_tier = PRESETS[0]
-	else:
-		rarity_tier = PRESETS[(idx + 1) % PRESETS.size()]
+	rarity_tier = _step_preset(PRESETS, rarity_tier, step)
 	updated_at = int(Time.get_unix_time_from_system())
 	return rarity_tier
 
-func cycle_paper_pattern() -> String:
+func cycle_paper_pattern(step: int = 1) -> String:
 	const PRESETS = ["ruled", "grid", "blank", "vintage"]
-	var idx = PRESETS.find(paper_pattern)
-	if idx == -1:
-		paper_pattern = PRESETS[0]
-	else:
-		paper_pattern = PRESETS[(idx + 1) % PRESETS.size()]
+	paper_pattern = _step_preset(PRESETS, paper_pattern, step)
 	updated_at = int(Time.get_unix_time_from_system())
 	return paper_pattern
 

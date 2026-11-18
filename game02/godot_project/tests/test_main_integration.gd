@@ -1479,6 +1479,40 @@ func _init() -> void:
 	assert("로컬 JSON 서재 백업 저장 완료" in main_inst.status_toast.text and "₩" in main_inst.status_toast.text, "Right-clicking DiyBtn should trigger JSON backup toast with KRW summary")
 	print("✓ Sprint 112 Milestone: Bottom Dock WebBtn/CamBtn/DiyBtn Right-Click Power Actions verified")
 
+	# Sprint 113 Milestone: Right-Click Reverse Cycle for Obi / Washi / Sticker / Rarity / Paper
+	main_inst._on_card_clicked(main_inst.archive_state.items[0])
+	var rclick_s113 := InputEventMouseButton.new()
+	rclick_s113.pressed = true
+	rclick_s113.button_index = MOUSE_BUTTON_RIGHT
+	var obi_btn_s113 = main_inst.detail_modal.get_node("Panel/VBox/BodyMargin/Body/StampRow/ObiCycleBtn")
+	var tape_btn_s113 = main_inst.detail_modal.get_node("Panel/VBox/BodyMargin/Body/StampRow/TapeCycleBtn")
+	var deco_btn_s113 = main_inst.detail_modal.get_node("Panel/VBox/BodyMargin/Body/StampRow/DecoStickerBtn")
+	var rar_btn_s113 = main_inst.detail_modal.get_node("Panel/VBox/BodyMargin/Body/StampRow/RarityBtn")
+	var pap_btn_s113 = main_inst.detail_modal.get_node("Panel/VBox/BodyMargin/Body/StampRow/PaperBtn")
+	assert("우클릭: 이전" in obi_btn_s113.tooltip_text and "우클릭: 이전" in pap_btn_s113.tooltip_text, "Decorator tooltips should mention right-click reverse cycle")
+	main_inst.detail_modal.cycle_obi_preset(1)
+	var obi_after_fwd = main_inst.archive_state.items[0].obi_text
+	obi_btn_s113.gui_input.emit(rclick_s113)
+	assert(main_inst.archive_state.items[0].obi_text != obi_after_fwd, "Right-clicking ObiCycleBtn should step backward")
+	main_inst.detail_modal.cycle_washi_tape(1)
+	var tape_after_fwd = main_inst.archive_state.items[0].washi_tape_color
+	tape_btn_s113.gui_input.emit(rclick_s113)
+	assert(main_inst.archive_state.items[0].washi_tape_color != tape_after_fwd, "Right-clicking TapeCycleBtn should step backward")
+	var deco_before = main_inst.archive_state.items[0].deco_sticker
+	main_inst.detail_modal.cycle_deco_sticker(1)
+	deco_btn_s113.gui_input.emit(rclick_s113)
+	assert(main_inst.archive_state.items[0].deco_sticker == deco_before, "Right-clicking DecoStickerBtn should return to previous sticker")
+	var rar_before = main_inst.archive_state.items[0].rarity_tier
+	main_inst.detail_modal.cycle_rarity_tier(1)
+	rar_btn_s113.gui_input.emit(rclick_s113)
+	assert(main_inst.archive_state.items[0].rarity_tier == rar_before, "Right-clicking RarityBtn should return to previous rarity")
+	var pap_before = main_inst.archive_state.items[0].paper_pattern
+	main_inst.detail_modal.cycle_paper_pattern(1)
+	pap_btn_s113.gui_input.emit(rclick_s113)
+	assert(main_inst.archive_state.items[0].paper_pattern == pap_before, "Right-clicking PaperBtn should return to previous paper pattern")
+	main_inst.detail_modal.close()
+	print("✓ Sprint 113 Milestone: Modal Decorator 5-Button Right-Click Reverse Cycle verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()
