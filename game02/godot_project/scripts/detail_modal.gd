@@ -10,6 +10,7 @@ signal card_copied(item)
 signal navigate_requested(delta: int)
 signal diary_updated(item)
 signal help_requested
+signal summary_copy_requested
 
 @onready var title_label: Label = $Panel/VBox/Header/HBox/TitleLabel
 @onready var cat_badge: Label = $Panel/VBox/Header/HBox/CatBadge
@@ -75,10 +76,13 @@ func _ready() -> void:
 	if washi_node != null:
 		washi_node.mouse_filter = Control.MOUSE_FILTER_STOP
 		washi_node.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
-		washi_node.tooltip_text = "클릭하여 마스킹 테이프 색상 변경"
+		washi_node.tooltip_text = "좌클릭: 마스킹 테이프 다음 색 · 우클릭: 이전 색"
 		washi_node.gui_input.connect(func(ev):
-			if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_LEFT:
-				cycle_washi_tape()
+			if ev is InputEventMouseButton and ev.pressed:
+				if ev.button_index == MOUSE_BUTTON_LEFT:
+					cycle_washi_tape(1)
+				elif ev.button_index == MOUSE_BUTTON_RIGHT:
+					cycle_washi_tape(-1)
 		)
 
 func _style_diary_controls() -> void:
@@ -141,6 +145,10 @@ func _style_diary_controls() -> void:
 	if share_btn != null:
 		share_btn.add_theme_stylebox_override("normal", cream_btn)
 		share_btn.add_theme_color_override("font_color", Color(0.28, 0.45, 0.38))
+		share_btn.gui_input.connect(func(ev: InputEvent) -> void:
+			if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_RIGHT:
+				summary_copy_requested.emit()
+		)
 
 	var del_btn: Button = $Panel/VBox/BodyMargin/Body/TopInfo/MetaVBox/BtnRow/DeleteBtn
 	del_btn.add_theme_stylebox_override("normal", cream_btn)
@@ -170,7 +178,7 @@ func _style_diary_controls() -> void:
 	if rem_btn != null:
 		rem_btn.tooltip_text = "마지막 권·파츠 기록 삭제 (-)"
 	if share_btn != null:
-		share_btn.tooltip_text = "감상 카드 텍스트를 클립보드에 복사 (C)"
+		share_btn.tooltip_text = "감상 카드 텍스트를 클립보드에 복사 (C · 우클릭·Shift+C: 전체 서재 리포트 복사)"
 	if del_btn != null:
 		del_btn.tooltip_text = "이 작품의 일기장을 서재에서 삭제"
 	if save_quote_btn != null:
@@ -614,6 +622,7 @@ func _unhandled_input(event: InputEvent) -> void:
 				KEY_V: [boost_estimated_value, reduce_estimated_value],
 				KEY_D: [increment_duplicate_count, decrement_duplicate_count],
 				KEY_Y: [increment_reread_count, decrement_reread_count],
+				KEY_C: [copy_book_quote_card, func() -> void: summary_copy_requested.emit()],
 			}
 			if shift_pairs.has(event.keycode):
 				var pair: Array = shift_pairs[event.keycode]
@@ -647,7 +656,6 @@ func _unhandled_input(event: InputEvent) -> void:
 				get_viewport().set_input_as_handled()
 				return
 			var simple_actions := {
-				KEY_C: copy_book_quote_card,
 				KEY_L: toggle_quote_highlight,
 				KEY_DELETE: _on_delete_btn_pressed,
 				KEY_BACKSPACE: _on_delete_btn_pressed,

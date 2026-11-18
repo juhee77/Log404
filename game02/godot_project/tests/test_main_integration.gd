@@ -1669,6 +1669,30 @@ func _init() -> void:
 	main_inst.detail_modal.close()
 	print("✓ Sprint 118 Milestone: Main & Modal H Cheatsheet + CoverRect Tooltip Sync verified")
 
+	# Sprint 119 Milestone: ShareCardBtn Right-Click & Shift+C Summary Copy + ModalWashiTape Right-Click Reverse
+	main_inst._on_card_clicked(main_inst.archive_state.items[0])
+	var share_btn_s119 = main_inst.detail_modal.get_node("Panel/VBox/BodyMargin/Body/TopInfo/MetaVBox/BtnRow/ShareCardBtn")
+	assert("우클릭·Shift+C: 전체 서재 리포트 복사" in share_btn_s119.tooltip_text, "ShareCardBtn tooltip should mention right-click/Shift+C full summary copy")
+	var rclick_s119 := InputEventMouseButton.new()
+	rclick_s119.pressed = true
+	rclick_s119.button_index = MOUSE_BUTTON_RIGHT
+	share_btn_s119.gui_input.emit(rclick_s119)
+	assert("서재 요약 리포트가 클립보드에 복사되었습니다" in main_inst.status_toast.text or "클립보드" in main_inst.status_toast.text, "Right-clicking ShareCardBtn should copy library summary")
+	main_inst.status_toast.text = ""
+	var sc_s119 := InputEventKey.new()
+	sc_s119.pressed = true
+	sc_s119.shift_pressed = true
+	sc_s119.keycode = KEY_C
+	main_inst.detail_modal._unhandled_input(sc_s119)
+	assert("클립보드" in main_inst.status_toast.text, "Shift+C inside modal should copy library summary")
+	var washi_s119 = main_inst.detail_modal.get_node("Panel/VBox/BodyMargin/Body/TopInfo/CoverRect/ModalWashiTape")
+	var washi_orig = main_inst.archive_state.items[0].washi_tape_color
+	main_inst.detail_modal.cycle_washi_tape(1)
+	washi_s119.gui_input.emit(rclick_s119)
+	assert(main_inst.archive_state.items[0].washi_tape_color == washi_orig, "Right-clicking ModalWashiTape should step backward")
+	main_inst.detail_modal.close()
+	print("✓ Sprint 119 Milestone: ShareCardBtn Right-Click/Shift+C Summary Copy & ModalWashiTape Reverse verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

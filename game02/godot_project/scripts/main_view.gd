@@ -77,6 +77,7 @@ func _ready() -> void:
 	detail_modal.navigate_requested.connect(_on_modal_navigate_requested)
 	detail_modal.diary_updated.connect(_on_diary_updated)
 	detail_modal.help_requested.connect(_on_modal_help_requested)
+	detail_modal.summary_copy_requested.connect(copy_summary_to_clipboard)
 	add_modal.item_submitted.connect(_on_item_submitted)
 
 	var stat_items_panel: Control = $VBox/TopBar/TopMargin/StatsVBox/StatRow/StatItems

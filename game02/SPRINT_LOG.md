@@ -5,6 +5,26 @@
 
 ---
 
+## 📓 [Sprint 119] 모달 `💌 공유` 우클릭·`Shift+C` 전체 서재 리포트 복사 & 상단 마스킹 테이프 우클릭 역순환
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A**: "모달 안에서 현재 작품 감상 카드를 복사(`💌 공유` 좌클릭)하다가 전체 서재 통계 리포트도 바로 복사하고 싶을 때가 있는데, 모달을 닫지 않고 `💌 공유` 우클릭이나 `Shift+C` 한 번으로 복사되면 정말 편할 것 같아요."
+- **가챠러 B**: "모달 표지 위 마스킹 테이프(`ModalWashiTape`)도 좌클릭으로 다음 색이 되니 우클릭으로 이전 색으로 돌아갈 수 있으면 좋겠어요!"
+- **기획자 (PO)**: "`detail_modal.gd`에 `summary_copy_requested` 시그널을 신설해 `main_view.gd`의 `copy_summary_to_clipboard()`와 연결하고, `ShareCardBtn` 우클릭·`Shift+C` 및 `ModalWashiTape` 우클릭 역순환(`-1`)을 구현해 `index.html`과 동기화합니다."
+
+### 2. 핵심 구현 및 변경 내역
+- `game02/godot_project/scripts/detail_modal.gd`:
+  - `summary_copy_requested` 시그널을 추가해 `ShareCardBtn` 우클릭(`MOUSE_BUTTON_RIGHT`) 및 모달 내 `Shift+C` 시 전체 서재 요약 리포트를 복사하도록 연결했습니다.
+  - `ModalWashiTape` 우클릭 시 `cycle_washi_tape(-1)` 역순환과 양방향 툴팁을 추가했습니다.
+- `game02/godot_project/scripts/main_view.gd`:
+  - `detail_modal.summary_copy_requested` 시그널을 `copy_summary_to_clipboard()`에 연결했습니다.
+- `game02/index.html`:
+  - `💌 감상 카드 공유` 버튼에 `oncontextmenu` 기반 `copyLibrarySummaryReport()` 전체 서재 리포트 복사와 툴팁을 동기화했습니다.
+- `game02/godot_project/tests/test_main_integration.gd`:
+  - `ShareCardBtn` 우클릭, `Shift+C`, `ModalWashiTape` 우클릭 역순환을 검증하는 Sprint 119 통합 테스트를 추가해 100% 통과했습니다.
+
+---
+
 ## 📓 [Sprint 118] 메인·모달 `H` 단축키 치트시트 & 표지 커버 `Shift+Q/X` 툴팁 동기화
 
 ### 1. 14인 스쿼드 회의록 & VOC

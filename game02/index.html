@@ -317,7 +317,7 @@
                             <button id="reread-cycle-btn" onclick="incrementRereadCount()" oncontextmenu="event.preventDefault(); decrementRereadCount();" title="클릭: +1회독 · 우클릭: -1회독"
                                 class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">🔁
                                 1회독</button>
-                            <button onclick="copyBookQuoteCard()"
+                            <button onclick="copyBookQuoteCard()" oncontextmenu="event.preventDefault(); copyLibrarySummaryReport(this);" title="이 작품의 감상 카드 클립보드 복사 (C · 우클릭: 전체 서재 리포트 복사)"
                                 class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">💌
                                 감상 카드 공유</button>
                             <button onclick="closeJournalModal()"
@@ -1274,6 +1274,17 @@
                 ITEMS.splice(idx, 1);
                 closeJournalModal();
                 renderShelf();
+            }
+        }
+
+        function copyLibrarySummaryReport(btn) {
+            const totalVols = ITEMS.reduce((s, x) => s + (x.volumes ? x.volumes.length : 0), 0);
+            const report = `📚 주희의 다꾸 서재 리포트 · 총 ${ITEMS.length}종 · 단행본 ${totalVols}권`;
+            navigator.clipboard?.writeText(report).catch(() => {});
+            if (btn) {
+                const prev = btn.textContent;
+                btn.textContent = '📋 서재 리포트 복사됨';
+                setTimeout(() => { btn.textContent = prev; }, 1600);
             }
         }
 

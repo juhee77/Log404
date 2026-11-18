@@ -5,7 +5,7 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 
 ---
 
-## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 118)
+## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 119)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
@@ -14,6 +14,9 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 ---
 
 ## 🚀 최신 스프린트 업데이트 요약 ([전체 회의록 보기](SPRINT_LOG.md))
+
+### 📓 [Sprint 119] 모달 `💌 공유` 우클릭·`Shift+C` 전체 서재 리포트 복사 & 상단 마스킹 테이프 우클릭 역순환
+- **모달 `💌 공유` 전체 서재 복사 & 마테 역순환 (`detail_modal.gd` · `main_view.gd` · `index.html`)**: `ShareCardBtn` 우클릭 또는 `Shift+C` 시 전체 서재 요약 리포트가 즉시 클립보드에 복사되며, `ModalWashiTape` 우클릭 시 이전 마스킹 테이프 색으로 되돌아갑니다.
 
 ### 📓 [Sprint 118] 메인·모달 `H` 단축키 치트시트 & 표지 커버 `Shift+Q/X` 툴팁 동기화
 - **도움말 치트시트 & 툴팁 동기화 (`main_view.gd` · `detail_modal.gd` · `index.html`)**: 메인·모달 `H` 단축키 안내와 `CoverRect` 툴팁에 `[Space] 책장`, `[Shift+순환키] 역순환`, `[우클릭] 역순환·백업` 힌트를 최신 스펙으로 동기화했습니다.
