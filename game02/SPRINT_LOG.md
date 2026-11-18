@@ -5,6 +5,26 @@
 
 ---
 
+## 📓 [Sprint 118] 메인·모달 `H` 단축키 치트시트 & 표지 커버 `Shift+Q/X` 툴팁 동기화
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A**: "모달에서 `H` 키를 눌러 단축키 안내를 띄웠을 때, 지난 스프린트에서 완성된 `[Shift+순환키] 역순환` 규칙이 모달 도움말 토스트에도 함께 보이면 새 사용자도 바로 알 수 있을 것 같아요."
+- **가챠러 B**: "모달 표지 커버(`CoverRect`) 툴팁에도 `Shift+X: 이전` / `Shift+Q: 이전` 안내가 함께 적혀 있으면 좋겠어요!"
+- **미니멀러 C**: "메인 화면 `H` 키 도움말에도 `[Space] 책장 · [우클릭] 역순환·백업` 안내를 보강하고 `index.html`의 `H` 키 치트시트(`alert`)와 똑같이 맞춰주세요."
+- **기획자 (PO)**: "`main_view.gd`의 메인/모달 `H` 치트시트 토스트와 `detail_modal.gd`의 `cover_rect.tooltip_text`, `index.html`의 `H` 키 안내를 모두 최신 양방향 조작 스펙에 맞춰 동기화합니다."
+
+### 2. 핵심 구현 및 변경 내역
+- `game02/godot_project/scripts/main_view.gd`:
+  - 메인 `KEY_H` 토스트에 `[Space] 책장 · [우클릭] 역순환·백업` 안내를, `_on_modal_help_requested()` 토스트에 `[Shift+순환키] 역순환` 안내를 추가했습니다.
+- `game02/godot_project/scripts/detail_modal.gd`:
+  - `cover_rect.tooltip_text`에 `Shift+X: 이전` / `Shift+Q: 이전` 힌트를 추가했습니다.
+- `game02/index.html`:
+  - `H` 키 단축키 `alert`에 `[Shift+순환키] 역순환 · [우클릭] 역순환/백업/필터`를 동기화했습니다.
+- `game02/godot_project/tests/test_main_integration.gd`:
+  - 메인·모달 `H` 치트시트 및 `CoverRect` 툴팁을 검증하는 Sprint 118 통합 테스트를 추가해 100% 통과했습니다.
+
+---
+
 ## 📓 [Sprint 117] 모달 `Shift+I`/`Shift+Q`/`Shift+X` 역순환 추가 (모달 내 19/19 전 순환 단축키 양방향 완성)
 
 ### 1. 14인 스쿼드 회의록 & VOC

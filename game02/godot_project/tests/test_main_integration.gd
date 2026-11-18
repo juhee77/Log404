@@ -1656,6 +1656,19 @@ func _init() -> void:
 	main_inst.detail_modal.close()
 	print("✓ Sprint 117 Milestone: In-Modal Shift+I/Q/X Reverse Cycle (19/19 Cyclers Complete) verified")
 
+	# Sprint 118 Milestone: Main & Modal H Cheatsheet Shift+Reverse & CoverRect Tooltip Sync
+	var kh_s118 := InputEventKey.new()
+	kh_s118.pressed = true
+	kh_s118.keycode = KEY_H
+	main_inst._unhandled_input(kh_s118)
+	assert("[Space] 책장" in main_inst.status_toast.text and "[우클릭] 역순환·백업" in main_inst.status_toast.text, "Main H cheatsheet should mention Space and right-click backup/reverse")
+	main_inst._on_card_clicked(main_inst.archive_state.items[0])
+	assert("Shift+X: 이전" in main_inst.detail_modal.cover_rect.tooltip_text and "Shift+Q: 이전" in main_inst.detail_modal.cover_rect.tooltip_text, "CoverRect tooltip should mention Shift+X and Shift+Q")
+	main_inst._on_modal_help_requested()
+	assert("[Shift+순환키] 역순환" in main_inst.status_toast.text, "Modal H cheatsheet should mention Shift+cycler reverse navigation")
+	main_inst.detail_modal.close()
+	print("✓ Sprint 118 Milestone: Main & Modal H Cheatsheet + CoverRect Tooltip Sync verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

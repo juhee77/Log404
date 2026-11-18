@@ -797,11 +797,11 @@ func _unhandled_input(event: InputEvent) -> void:
 					copy_summary_to_clipboard()
 					get_viewport().set_input_as_handled()
 				KEY_H:
-					_show_toast("⌨️ 단축키: [0] 초기화 · [1~5] 탭 · [/] 검색 · [S/T/M/Q] 순환(Shift+역순) · [R] 추천(Shift+미리보기) · [N] 새 일기 · [I] 요약 · [C] 복사")
+					_show_toast("⌨️ 단축키: [0] 초기화 · [1~5] 탭 · [/] 검색 · [Space] 책장 · [S/T/M/Q] 순환(Shift+역순) · [R] 추천(Shift+미리보기) · [N] 새 일기 · [I] 요약 · [C] 복사 · [우클릭] 역순환·백업")
 					get_viewport().set_input_as_handled()
 
 func _on_modal_help_requested() -> void:
-	_show_toast("⌨️ 모달 단축키: [←/→] 넘김 · [Home/End] 처음·끝 · [1~4] 인장 · [+/-] 권 · [X] 아이콘 · [Q] 표지색 · [Y] 회독 · [Z] 상태 · [I] 잉크 · [N] 펜촉 · [W] 마테 · [S] 스티커 · [R] 레어도 · [P] 속지 · [O] 띠지 · [M] 기분 · [G] 등급 · [T] 태그 · [F] 마감 · [A] 경로 · [B] 보관 · [D] 복수 · [K] 최애캐 · [U] 날씨 · [J] 장소 · [V] 가치 · [E] 문장 · [L] 형광펜 · [C] 복사 · [Del] 삭제 · [ESC] 닫기")
+	_show_toast("⌨️ 모달 단축키: [←/→] 넘김 · [Home/End] 처음·끝 · [1~4] 인장 · [+/-] 권 · [X] 아이콘 · [Q] 표지색 · [Y] 회독 · [Z] 상태 · [I] 잉크 · [N] 펜촉 · [W] 마테 · [S] 스티커 · [R] 레어도 · [P] 속지 · [O] 띠지 · [M] 기분 · [G] 등급 · [T] 태그 · [F] 마감 · [A] 경로 · [B] 보관 · [D] 복수 · [K] 최애캐 · [U] 날씨 · [J] 장소 · [V] 가치 · [Shift+순환키] 역순환 · [E] 문장 · [L] 형광펜 · [C] 복사 · [Del] 삭제 · [ESC] 닫기")
 
 func _on_modal_navigate_requested(delta: int) -> void:
 	if archive_state == null or archive_state.items.is_empty():
