@@ -5,7 +5,7 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 
 ---
 
-## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 122)
+## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 123)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
@@ -14,6 +14,9 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 ---
 
 ## 🚀 최신 스프린트 업데이트 요약 ([전체 회의록 보기](SPRINT_LOG.md))
+
+### 📓 [Sprint 123] 모달 `AddVolBtn` 우클릭 권 추가+즉시 밑줄 편집 & `DeleteBtn` 우클릭 삭제 무장 안전 해제
+- **모달 `BtnRow` 우클릭 동선 & 안전성 강화 (`detail_modal.gd` · `index.html`)**: `AddVolBtn` 우클릭 시 새 권 추가 후 즉시 마지막 권 밑줄 편집 모드로 진입하고, `DeleteBtn` 우클릭 시 `delete_armed` 삭제 확인 상태를 안전하게 해제합니다.
 
 ### 📓 [Sprint 122] 모달 `밑줄 저장` 우클릭 원문 복원 & `형광펜` 우클릭 잉크색 순환
 - **`QuoteEditRow` 우클릭 보조 액션 (`detail_modal.gd` · `index.html`)**: `SaveQuoteBtn` 우클릭 시 입력창을 저장된 원문(`current_item.memo`)으로 즉시 복원하고, `HighlightBtn` 우클릭 시 만년필 잉크 색상을 순환합니다.

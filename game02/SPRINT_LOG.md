@@ -5,6 +5,24 @@
 
 ---
 
+## 📓 [Sprint 123] 모달 `AddVolBtn` 우클릭 권 추가+즉시 밑줄 편집 & `DeleteBtn` 우클릭 삭제 무장 안전 해제
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **가챠러 B**: "`+ 다음 권 일기 추가` 버튼을 우클릭하면 새 권이 추가되자마자 바로 그 권의 밑줄 문장 편집 모드로 들어가면, 연속 기록할 때 마우스 클릭 수를 한 번 더 줄일 수 있을 것 같아요."
+- **소장러 A**: "`일기 삭제` 버튼을 한 번 눌러 `⚠️ 정말 삭제?` 상태가 되었을 때, 우클릭 한 번으로 바로 삭제 확인 상태를 안전하게 해제할 수 있으면 실수 방지에 정말 좋을 것 같아요!"
+- **기획자 (PO)**: "`detail_modal.gd`의 `AddVolBtn` 우클릭 시 `_on_add_vol_btn_pressed()` + `start_editing_volume_quote(last)`를, `DeleteBtn` 우클릭 시 `delete_armed = false` 안전 해제를 연결하고 `index.html`의 동일 버튼들에도 동기화합니다."
+
+### 2. 핵심 구현 및 변경 내역
+- `game02/godot_project/scripts/detail_modal.gd`:
+  - `AddVolBtn` 우클릭 시 새 권 추가 후 즉시 마지막 권의 밑줄 편집 모드로 진입하도록 연결했습니다.
+  - `DeleteBtn` 우클릭 시 `delete_armed` 무장 상태를 안전하게 해제하고 툴팁을 동기화했습니다.
+- `game02/index.html`:
+  - `+ 다음 권 기록 추가` 및 `이 일기 삭제` 버튼에 `oncontextmenu` 우클릭 액션 및 툴팁을 동기화했습니다.
+- `game02/godot_project/tests/test_main_integration.gd`:
+  - `AddVolBtn` 우클릭 권 추가+편집 진입과 `DeleteBtn` 우클릭 무장 해제를 검증하는 Sprint 123 통합 테스트를 추가해 100% 통과했습니다.
+
+---
+
 ## 📓 [Sprint 122] 모달 `밑줄 저장` 우클릭 원문 복원 & `형광펜` 우클릭 잉크색 순환
 
 ### 1. 14인 스쿼드 회의록 & VOC

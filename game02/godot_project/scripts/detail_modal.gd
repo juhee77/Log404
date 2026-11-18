@@ -174,13 +174,25 @@ func _style_diary_controls() -> void:
 		if ctrl != null:
 			ctrl.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	if add_vol_btn != null:
-		add_vol_btn.tooltip_text = "새 권·파츠 일기 1개 추가 (+)"
+		add_vol_btn.tooltip_text = "새 권·파츠 일기 1개 추가 (+) · 우클릭: 추가 후 바로 밑줄 입력"
+		add_vol_btn.gui_input.connect(func(ev: InputEvent) -> void:
+			if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_RIGHT:
+				_on_add_vol_btn_pressed()
+				if current_item != null and not current_item.volumes.is_empty():
+					start_editing_volume_quote(current_item.volumes.size() - 1)
+		)
 	if rem_btn != null:
 		rem_btn.tooltip_text = "마지막 권·파츠 기록 삭제 (-)"
 	if share_btn != null:
 		share_btn.tooltip_text = "감상 카드 텍스트를 클립보드에 복사 (C · 우클릭·Shift+C: 전체 서재 리포트 복사)"
 	if del_btn != null:
-		del_btn.tooltip_text = "이 작품의 일기장을 서재에서 삭제"
+		del_btn.tooltip_text = "이 작품의 일기장을 서재에서 삭제 (우클릭: 삭제 확인 해제)"
+		del_btn.gui_input.connect(func(ev: InputEvent) -> void:
+			if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_RIGHT:
+				if delete_armed:
+					delete_armed = false
+					_apply_delete_btn_style(false)
+		)
 	if save_quote_btn != null:
 		save_quote_btn.tooltip_text = "작성한 밑줄·감상평 저장 (Enter · 우클릭: 원문 복원)"
 		save_quote_btn.gui_input.connect(func(ev: InputEvent) -> void:

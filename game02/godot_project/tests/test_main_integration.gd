@@ -1747,6 +1747,26 @@ func _init() -> void:
 	main_inst.detail_modal.close()
 	print("✓ Sprint 122 Milestone: SaveQuoteBtn Right-Click Restore & HighlightBtn Right-Click Ink Cycle verified")
 
+	# Sprint 123 Milestone: AddVolBtn Right-Click Add+Edit & DeleteBtn Right-Click Disarm
+	main_inst._on_card_clicked(main_inst.archive_state.items[0])
+	var item_s123 = main_inst.archive_state.items[0]
+	var orig_vols_s123 = item_s123.volumes.size()
+	var add_v_btn = main_inst.detail_modal.add_vol_btn
+	var del_btn_s123 = main_inst.detail_modal.get_node("Panel/VBox/BodyMargin/Body/TopInfo/MetaVBox/BtnRow/DeleteBtn")
+	assert("우클릭: 추가 후 바로 밑줄 입력" in add_v_btn.tooltip_text and "우클릭: 삭제 확인 해제" in del_btn_s123.tooltip_text, "AddVolBtn and DeleteBtn tooltips should mention right-click actions")
+	var rclick_s123 := InputEventMouseButton.new()
+	rclick_s123.pressed = true
+	rclick_s123.button_index = MOUSE_BUTTON_RIGHT
+	add_v_btn.gui_input.emit(rclick_s123)
+	assert(item_s123.volumes.size() == orig_vols_s123 + 1 and main_inst.detail_modal.editing_vol_index == orig_vols_s123, "Right-clicking AddVolBtn should add a volume and immediately enter quote edit mode")
+	main_inst.detail_modal.remove_last_volume()
+	main_inst.detail_modal._on_delete_btn_pressed()
+	assert(main_inst.detail_modal.delete_armed == true, "First click on DeleteBtn should arm deletion")
+	del_btn_s123.gui_input.emit(rclick_s123)
+	assert(main_inst.detail_modal.delete_armed == false, "Right-clicking DeleteBtn should disarm deletion safely")
+	main_inst.detail_modal.close()
+	print("✓ Sprint 123 Milestone: AddVolBtn Right-Click Add+Edit & DeleteBtn Right-Click Disarm verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()
