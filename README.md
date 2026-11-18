@@ -18,13 +18,14 @@ Godot 4+ 기반의 감성 게임 및 인터랙티브 아카이브 애플리케�
 > **Godot 4.6.2 모바일 기반 E-Book 리더기 서재(Apple Books · 리디북스) & 만년필 다꾸 독서노트(굿노트 · 몰스킨) 감성 아카이브 앱**  
 > 14인 가상 애자일 스쿼드가 20분 주기 자동 스프린트로 지속 개선 중입니다.
 
-### 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 109)
+### 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 110)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
 | ![Pocket Archive Main Screen](game02/godot_project/screenshots/godot_app_screen.png) | ![Pocket Archive Detail Modal](game02/godot_project/screenshots/godot_modal_screen.png) |
 
 ### ✨ 주요 핵심 기능
+- **🏆 Sprint 110 마일스톤 하이라이트**: 모달 헤더 `◀`/`▶` 버튼 우클릭 첫·끝 페이지 즉시 점프 및 양방향 툴팁 동기화(`detail_modal.gd` · `main_view.gd` · `index.html`) 완성
 - **최신 Sprint 109 하이라이트**: `TodayQuoteLabel` 우클릭·`Shift+우클릭` 밑줄 문장 전환(`main_view.gd` · `index.html`) 및 `AddModal` 작가 입력란 `Enter` 즉시 등록(`add_modal.gd`) 완성
 - **최신 Sprint 108 하이라이트**: 상단 책등(Spine) 우클릭 상세 미리보기(권수·완독률·`₩`) 및 `SubTitle` 요약줄 우클릭 클립보드 복사(`main_view.gd` · `index.html`) 완성
 - **최신 Sprint 107 하이라이트**: `Shift+R`·`🎲 추천` 우클릭 모달 미개봉 추천 미리보기(`main_view.gd` · `index.html`) 및 메인 `H` 치트시트 동기화 완성

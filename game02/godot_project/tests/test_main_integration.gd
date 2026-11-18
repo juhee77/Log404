@@ -1432,6 +1432,21 @@ func _init() -> void:
 	assert(main_inst.archive_state.items.size() == count_before_s109 + 1 and not main_inst.add_modal.visible, "Pressing Enter in AddModal author_input should submit new item")
 	print("✓ Right-Click TodayQuoteLabel Step & AddModal Author Enter-to-Submit verified")
 
+	# Sprint 110 Milestone: Right-Click PrevItemBtn/NextItemBtn First/Last Page Jump
+	main_inst._on_card_clicked(main_inst.archive_state.items[2])
+	var prev_btn_s110 = main_inst.detail_modal.find_child("PrevItemBtn", true, false)
+	var next_btn_s110 = main_inst.detail_modal.find_child("NextItemBtn", true, false)
+	var rclick_s110 := InputEventMouseButton.new()
+	rclick_s110.pressed = true
+	rclick_s110.button_index = MOUSE_BUTTON_RIGHT
+	next_btn_s110.gui_input.emit(rclick_s110)
+	assert(header_page_lbl.text.ends_with("/%d" % main_inst.archive_state.items.size()) and header_page_lbl.text.begins_with(str(main_inst.archive_state.items.size())), "Right-clicking NextItemBtn should jump to last page")
+	prev_btn_s110.gui_input.emit(rclick_s110)
+	assert(header_page_lbl.text.begins_with("1/"), "Right-clicking PrevItemBtn should jump to first page")
+	assert("우클릭: 끝" in next_btn_s110.tooltip_text, "NextItemBtn tooltip should mention right-click jump to end")
+	main_inst.detail_modal.close()
+	print("✓ Sprint 110 Milestone: Right-Click PrevItemBtn/NextItemBtn First/Last Page Jump verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

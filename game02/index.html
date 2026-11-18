@@ -287,11 +287,11 @@
                     <div class="flex items-center justify-between pb-3 border-b border-[#e2d6c5]">
                         <span class="serif-font text-sm font-bold text-[#2c221e]">🖋️ 나만의 독서 노트 & 권별 밑줄</span>
                         <div class="flex items-center gap-1.5">
-                            <button id="prev-page-btn" onclick="navigateJournalModal(-1)" title="이전 작품 (←)"
+                            <button id="prev-page-btn" onclick="navigateJournalModal(-1)" oncontextmenu="event.preventDefault(); if (ITEMS.length) openJournalModal(ITEMS[0].id);" title="이전 작품 (← · 우클릭: 처음)"
                                 class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">◀</button>
                             <span id="header-page-badge" onclick="navigateJournalModal(1)" title="클릭하여 다음 일기장 보기"
                                 class="text-[10px] font-bold text-[#8c7a6b] hover:text-[#2c221e] px-1 cursor-pointer select-none">1/6</span>
-                            <button id="next-page-btn" onclick="navigateJournalModal(1)" title="다음 작품 (→)"
+                            <button id="next-page-btn" onclick="navigateJournalModal(1)" oncontextmenu="event.preventDefault(); if (ITEMS.length) openJournalModal(ITEMS[ITEMS.length - 1].id);" title="다음 작품 (→ · 우클릭: 끝)"
                                 class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">▶</button>
                             <button id="tape-cycle-btn" onclick="cycleWashiTape()"
                                 class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">🎨
@@ -652,8 +652,8 @@
                 const nextIdx = (idx + 1) % ITEMS.length;
                 const prevBtn = document.getElementById('prev-page-btn');
                 const nextBtn = document.getElementById('next-page-btn');
-                if (prevBtn) prevBtn.title = `◀ 이전 일기 (${prevIdx + 1}/${ITEMS.length}): ${ITEMS[prevIdx].title} (←)`;
-                if (nextBtn) nextBtn.title = `▶ 다음 일기 (${nextIdx + 1}/${ITEMS.length}): ${ITEMS[nextIdx].title} (→)`;
+                if (prevBtn) prevBtn.title = `◀ 이전 일기 (${prevIdx + 1}/${ITEMS.length}): ${ITEMS[prevIdx].title} (← · 우클릭: 처음)`;
+                if (nextBtn) nextBtn.title = `▶ 다음 일기 (${nextIdx + 1}/${ITEMS.length}): ${ITEMS[nextIdx].title} (→ · 우클릭: 끝)`;
                 const headerPageBadge = document.getElementById('header-page-badge');
                 if (headerPageBadge) headerPageBadge.textContent = `${idx + 1}/${ITEMS.length}`;
             }

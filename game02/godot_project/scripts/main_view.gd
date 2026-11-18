@@ -563,9 +563,9 @@ func _update_modal_nav_tooltips(item) -> void:
 	var next_btn = detail_modal.find_child("NextItemBtn", true, false)
 	var page_lbl = detail_modal.find_child("PageBadgeLabel", true, false)
 	if prev_btn != null:
-		prev_btn.tooltip_text = "◀ 이전 일기 (%d/%d): %s (←)" % [prev_idx + 1, total, archive_state.items[prev_idx].title]
+		prev_btn.tooltip_text = "◀ 이전 일기 (%d/%d): %s (← · 우클릭: 처음)" % [prev_idx + 1, total, archive_state.items[prev_idx].title]
 	if next_btn != null:
-		next_btn.tooltip_text = "▶ 다음 일기 (%d/%d): %s (→)" % [next_idx + 1, total, archive_state.items[next_idx].title]
+		next_btn.tooltip_text = "▶ 다음 일기 (%d/%d): %s (→ · 우클릭: 끝)" % [next_idx + 1, total, archive_state.items[next_idx].title]
 	if page_lbl != null:
 		page_lbl.text = "%d/%d" % [idx + 1, total]
 

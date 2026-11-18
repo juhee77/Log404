@@ -190,6 +190,10 @@ func _style_diary_controls() -> void:
 			prev_btn.add_theme_stylebox_override("normal", cream_btn)
 			prev_btn.add_theme_color_override("font_color", Color(0.32, 0.25, 0.20))
 			prev_btn.pressed.connect(func(): navigate_requested.emit(-1))
+			prev_btn.gui_input.connect(func(ev: InputEvent):
+				if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_RIGHT:
+					navigate_requested.emit(-9999)
+			)
 			var next_btn := Button.new()
 			next_btn.name = "NextItemBtn"
 			next_btn.text = "▶"
@@ -199,6 +203,10 @@ func _style_diary_controls() -> void:
 			next_btn.add_theme_stylebox_override("normal", cream_btn)
 			next_btn.add_theme_color_override("font_color", Color(0.32, 0.25, 0.20))
 			next_btn.pressed.connect(func(): navigate_requested.emit(1))
+			next_btn.gui_input.connect(func(ev: InputEvent):
+				if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_RIGHT:
+					navigate_requested.emit(9999)
+			)
 			var close_idx := close_btn.get_index()
 			var page_lbl := Label.new()
 			page_lbl.name = "PageBadgeLabel"
