@@ -115,11 +115,11 @@
 
             <!-- Journal Index Bookmark Buttons -->
             <div class="flex items-center gap-2 self-end sm:self-center">
-                <button onclick="openWebScraperModal()"
+                <button onclick="openWebScraperModal()" oncontextmenu="event.preventDefault(); setFilter('manga')" title="웹에서 작품 표지와 기본 정보 자동 스크랩 추가 (우클릭: 이북·단행본 필터)"
                     class="px-3.5 py-2 rounded-xl bg-[#fffdf9] hover:bg-[#f7f0e6] text-[#5c4938] border border-[#d8cbb8] font-bold text-xs shadow-2xs cursor-pointer transition flex items-center gap-1.5">
                     <i class="fa-solid fa-magnifying-glass text-[#c85a32]"></i> 웹 표지 찾기
                 </button>
-                <button onclick="openCameraModal()"
+                <button onclick="openCameraModal()" oncontextmenu="event.preventDefault(); setFilter('gacha')" title="실물 굿즈·단행본 폴라로이드 촬영 기록 추가 (우클릭: 가챠노트 필터)"
                     class="px-3.5 py-2 rounded-xl bg-[#fffdf9] hover:bg-[#f7f0e6] text-[#5c4938] border border-[#d8cbb8] font-bold text-xs shadow-2xs cursor-pointer transition flex items-center gap-1.5">
                     <i class="fa-solid fa-camera text-[#4a6b5d]"></i> 표지/가챠 찍기
                 </button>

@@ -118,8 +118,7 @@ func _ready() -> void:
 		top_add_btn.tooltip_text = "[N] 새 독서 일기·가챠 스크랩 직접 작성 (우클릭: 즉시 JSON 저장)"
 		top_add_btn.gui_input.connect(func(ev: InputEvent) -> void:
 			if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_RIGHT:
-				archive_state.save_to_file()
-				_show_toast("💾 로컬 JSON 서재 백업 저장 완료 (%s)" % _get_filtered_cards_summary())
+				_trigger_instant_json_backup()
 		)
 	var top_amb_btn: Control = get_node_or_null("VBox/TopBar/TopMargin/StatsVBox/TitleRow/AmbientBtn")
 	if top_amb_btn != null:
@@ -156,20 +155,26 @@ func _ready() -> void:
 	var nav_row = get_node_or_null("VBox/BottomBar/Margin/VBox/NavRow")
 	if nav_row != null:
 		var nav_tips = [
-			"웹에서 작품 표지와 기본 정보 자동 스크랩 추가",
-			"실물 굿즈·단행본 폴라로이드 촬영 기록 추가",
-			"새 독서 일기·가챠 스크랩 직접 작성",
+			"웹에서 작품 표지와 기본 정보 자동 스크랩 추가 (우클릭: 이북·단행본 필터)",
+			"실물 굿즈·단행본 폴라로이드 촬영 기록 추가 (우클릭: 가챠노트 필터)",
+			"[N] 새 독서 일기·가챠 스크랩 직접 작성 (우클릭: 즉시 JSON 저장)",
 			"[T] 다꾸 다이어리 속지 테마 순환 (우클릭·Shift+T: 이전)"
+		]
+		var nav_rclicks: Array[Callable] = [
+			_on_tab_manga_pressed,
+			_on_tab_gacha_pressed,
+			_trigger_instant_json_backup,
+			func() -> void: _step_theme(-1)
 		]
 		var children = nav_row.get_children()
 		for i in range(min(children.size(), nav_tips.size())):
 			if children[i] is Control:
 				children[i].tooltip_text = nav_tips[i]
-		if children.size() >= 4 and children[3] is Control:
-			children[3].gui_input.connect(func(ev: InputEvent):
-				if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_RIGHT:
-					_step_theme(-1)
-			)
+				var cb: Callable = nav_rclicks[i]
+				children[i].gui_input.connect(func(ev: InputEvent) -> void:
+					if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_RIGHT:
+						cb.call()
+				)
 	
 	_apply_journal_button_theme()
 	_update_stats()
@@ -582,6 +587,10 @@ func _open_detail_modal(item) -> void:
 
 func _on_card_clicked(item) -> void:
 	_open_detail_modal(item)
+
+func _trigger_instant_json_backup() -> void:
+	archive_state.save_to_file()
+	_show_toast("💾 로컬 JSON 서재 백업 저장 완료 (%s)" % _get_filtered_cards_summary())
 
 func _reset_all_filters() -> void:
 	if search_input != null:

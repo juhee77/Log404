@@ -5,6 +5,24 @@
 
 ---
 
+## 📓 [Sprint 112] 하단 독 바(`WebBtn`/`CamBtn`/`DiyBtn`) 우클릭 파워 액션 & 즉시 JSON 백업 헬퍼 통합
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A**: "하단 `📔 속지 테마` 버튼은 이미 우클릭으로 역순환(`Shift+T`)이 되는데, `🖋️ 새 일기 쓰기` 버튼(`DiyBtn`)도 상단 `+ 일기 쓰기`처럼 우클릭 시 즉시 JSON 백업 저장이 되도록 통일하면 편하겠어요."
+- **가챠러 B**: "하단 `🌐 웹표지 스크랩`(`WebBtn`) 우클릭 시 이북·단행본 필터로, `📷 폴라로이드 촬영`(`CamBtn`) 우클릭 시 가챠노트 필터로 바로 이동하면 방금 찍은 아이템들을 모아보기 정말 좋을 것 같아요."
+- **기획자 (PO)**: "상단과 하단 `AddBtn`/`DiyBtn`의 백업 로직을 `_trigger_instant_json_backup()` 공용 헬퍼로 추출해 중복을 제거하고, 하단 `NavRow` 4개 버튼(`WebBtn`, `CamBtn`, `DiyBtn`, `ThemeBtn`) 모두에 좌클릭 생성/전환 + 우클릭 파워 액션(이북 필터·가챠 필터·즉시 JSON 백업·테마 역순환)과 툴팁을 완성합니다."
+
+### 2. 핵심 구현 및 변경 내역
+- `game02/godot_project/scripts/main_view.gd`:
+  - `_trigger_instant_json_backup()` 공용 헬퍼를 신설해 상단 `TitleRow/AddBtn`과 하단 `NavRow/DiyBtn` 우클릭 시 동일하게 `archive_state.save_to_file()` 및 `💾 로컬 JSON 서재 백업 저장 완료 (N종 · ₩총액)` 토스트를 출력합니다.
+  - 하단 `NavRow` 4개 버튼에 우클릭 콜백 테이블(`_on_tab_manga_pressed`, `_on_tab_gacha_pressed`, `_trigger_instant_json_backup`, `_step_theme(-1)`)과 상세 툴팁을 연결했습니다.
+- `game02/index.html`:
+  - 상단 `웹 표지 찾기` / `표지/가챠 찍기` 버튼에 `oncontextmenu` 기반 `setFilter('manga')` / `setFilter('gacha')` 우클릭 필터 점프 및 툴팁을 동기화했습니다.
+- `game02/godot_project/tests/test_main_integration.gd`:
+  - `WebBtn`, `CamBtn`, `DiyBtn` 우클릭 시 필터 전환(`0`/`1`)과 JSON 백업 저장 토스트 및 툴팁을 검증하는 Sprint 112 통합 테스트를 추가해 100% 통과했습니다.
+
+---
+
 ## 📓 [Sprint 111] 전체 초기화(`0`) KRW 자산 요약 토스트 통일 & `+ 일기 쓰기` 우클릭 즉시 JSON 백업 저장
 
 ### 1. 14인 스쿼드 회의록 & VOC

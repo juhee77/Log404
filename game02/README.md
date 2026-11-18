@@ -5,7 +5,7 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 
 ---
 
-## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 111)
+## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 112)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
@@ -14,6 +14,9 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 ---
 
 ## 🚀 최신 스프린트 업데이트 요약 ([전체 회의록 보기](SPRINT_LOG.md))
+
+### 📓 [Sprint 112] 하단 독 바(`WebBtn`/`CamBtn`/`DiyBtn`) 우클릭 파워 액션 & 즉시 JSON 백업 헬퍼 통합
+- **하단 독 바 4버튼 우클릭 완성 (`main_view.gd` · `index.html`)**: `WebBtn` 우클릭 시 이북·단행본 필터, `CamBtn` 우클릭 시 가챠노트 필터, `DiyBtn` 우클릭 시 즉시 JSON 백업 저장(`_trigger_instant_json_backup`), `ThemeBtn` 우클릭 시 속지 테마 역순환이 동작합니다.
 
 ### 📓 [Sprint 111] 전체 초기화(`0`) KRW 자산 요약 토스트 통일 & `+ 일기 쓰기` 우클릭 즉시 JSON 백업 저장
 - **전체 초기화 KRW 요약 통일 (`main_view.gd`)**: `_reset_all_filters()` 실행 시에도 `"📚 전체 서재가 복원되었습니다. (N종 · ₩총액)"` 형태로 다른 탭·검색 토스트와 동일한 자산 요약 피드백을 제공합니다.

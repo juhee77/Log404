@@ -1460,6 +1460,25 @@ func _init() -> void:
 	assert("₩" in main_inst.status_toast.text, "Right-clicking AddBtn backup toast should include KRW summary")
 	print("✓ Sprint 111 Milestone: Reset-All KRW Summary & Right-Click AddBtn JSON Backup verified")
 
+	# Sprint 112 Milestone: Bottom Dock WebBtn / CamBtn / DiyBtn Right-Click Power Actions
+	var web_btn_s112 = main_inst.get_node("VBox/BottomBar/Margin/VBox/NavRow/WebBtn")
+	var cam_btn_s112 = main_inst.get_node("VBox/BottomBar/Margin/VBox/NavRow/CamBtn")
+	var diy_btn_s112 = main_inst.get_node("VBox/BottomBar/Margin/VBox/NavRow/DiyBtn")
+	assert("우클릭: 이북·단행본 필터" in web_btn_s112.tooltip_text, "WebBtn tooltip should mention right-click manga filter")
+	assert("우클릭: 가챠노트 필터" in cam_btn_s112.tooltip_text, "CamBtn tooltip should mention right-click gacha filter")
+	assert("우클릭: 즉시 JSON 저장" in diy_btn_s112.tooltip_text, "DiyBtn tooltip should mention right-click JSON backup")
+	var rclick_s112 := InputEventMouseButton.new()
+	rclick_s112.pressed = true
+	rclick_s112.button_index = MOUSE_BUTTON_RIGHT
+	web_btn_s112.gui_input.emit(rclick_s112)
+	assert(main_inst.archive_state.current_filter == 0, "Right-clicking WebBtn should filter to manga (0)")
+	cam_btn_s112.gui_input.emit(rclick_s112)
+	assert(main_inst.archive_state.current_filter == 1, "Right-clicking CamBtn should filter to gacha (1)")
+	main_inst._on_tab_all_pressed()
+	diy_btn_s112.gui_input.emit(rclick_s112)
+	assert("로컬 JSON 서재 백업 저장 완료" in main_inst.status_toast.text and "₩" in main_inst.status_toast.text, "Right-clicking DiyBtn should trigger JSON backup toast with KRW summary")
+	print("✓ Sprint 112 Milestone: Bottom Dock WebBtn/CamBtn/DiyBtn Right-Click Power Actions verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()
