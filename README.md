@@ -18,13 +18,14 @@ Godot 4+ 기반의 감성 게임 및 인터랙티브 아카이브 애플리케�
 > **Godot 4.6.2 모바일 기반 E-Book 리더기 서재(Apple Books · 리디북스) & 만년필 다꾸 독서노트(굿노트 · 몰스킨) 감성 아카이브 앱**  
 > 14인 가상 애자일 스쿼드가 20분 주기 자동 스프린트로 지속 개선 중입니다.
 
-### 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 120)
+### 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 121)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
 | ![Pocket Archive Main Screen](game02/godot_project/screenshots/godot_app_screen.png) | ![Pocket Archive Detail Modal](game02/godot_project/screenshots/godot_modal_screen.png) |
 
 ### ✨ 주요 핵심 기능
+- **최신 Sprint 121 하이라이트**: 상단 5대 필터 탭 우클릭 파워 액션(`TabAll` 완전 초기화, `TabManga`/`TabGacha`/`TabComplete`/`TabFav` 즉시 `↕ 가치순` 정렬) 및 `index.html` 동기화 완성
 - **🏆 Sprint 120 마일스톤 하이라이트**: 상단 4대 통계 카드(`StatItems`/`StatVols`/`StatFirsts`/`StatGacha`) 우클릭 파워 액션(리포트 복사·이북 가치순 정렬·인포그래픽·즉시 JSON 백업) 및 모달 `[Shift+C] 리포트` 도움말 동기화(`main_view.gd` · `index.html`) 완성
 - **최신 Sprint 119 하이라이트**: 모달 `💌 공유` 우클릭·`Shift+C` 전체 서재 리포트 복사(`summary_copy_requested`) 및 표지 상단 `ModalWashiTape` 우클릭 역순환(`detail_modal.gd` · `main_view.gd` · `index.html`) 완성
 - **최신 Sprint 118 하이라이트**: 메인·모달 `H` 단축키 치트시트 및 `CoverRect` 툴팁에 `[Shift+순환키]`, `[Space]`, `[우클릭]` 최신 양방향 조작 안내 동기화(`main_view.gd` · `detail_modal.gd` · `index.html`)

@@ -200,23 +200,23 @@
         <section class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
             <!-- Physical Diary Index Tabs -->
             <div class="flex items-center gap-1.5 flex-wrap">
-                <button onclick="switchCategory('all')" id="tab-all" title="[1] 전체 서재 보기"
+                <button onclick="switchCategory('all')" oncontextmenu="event.preventDefault(); document.getElementById('search-box').value=''; switchCategory('all');" id="tab-all" title="[1] 전체 서재 보기 · 우클릭: 검색·필터 초기화"
                     class="px-3.5 py-2 rounded-t-xl border-t-2 border-x border-[#d8cbb8] bg-[#fffdf9] text-[#2c221e] font-bold text-xs shadow-2xs cursor-pointer">
                     📚 전체 서재
                 </button>
-                <button onclick="switchCategory('manga')" id="tab-manga"
+                <button onclick="switchCategory('manga')" oncontextmenu="event.preventDefault(); switchCategory('manga'); cycleSortMode();" id="tab-manga" title="[2] 이북·단행본 일기 · 우클릭: 정렬 전환"
                     class="px-3.5 py-2 rounded-t-xl border border-transparent bg-[#efe7da] text-[#786b63] hover:text-[#2c221e] font-bold text-xs cursor-pointer">
                     📖 이북·단행본 일기
                 </button>
-                <button onclick="switchCategory('gacha')" id="tab-gacha"
+                <button onclick="switchCategory('gacha')" oncontextmenu="event.preventDefault(); switchCategory('gacha'); cycleSortMode();" id="tab-gacha" title="[3] 가챠·굿즈 · 우클릭: 정렬 전환"
                     class="px-3.5 py-2 rounded-t-xl border border-transparent bg-[#efe7da] text-[#786b63] hover:text-[#2c221e] font-bold text-xs cursor-pointer">
                     🔮 가챠·굿즈
                 </button>
-                <button onclick="switchCategory('complete')" id="tab-complete"
+                <button onclick="switchCategory('complete')" oncontextmenu="event.preventDefault(); switchCategory('complete'); cycleSortMode();" id="tab-complete" title="[4] 완독작 · 우클릭: 정렬 전환"
                     class="px-3.5 py-2 rounded-t-xl border border-transparent bg-[#efe7da] text-[#786b63] hover:text-[#2c221e] font-bold text-xs cursor-pointer">
                     💮 완독작
                 </button>
-                <button onclick="switchCategory('fav')" id="tab-fav"
+                <button onclick="switchCategory('fav')" oncontextmenu="event.preventDefault(); switchCategory('fav'); cycleSortMode();" id="tab-fav" title="[5] 인생작 · 우클릭: 정렬 전환"
                     class="px-3.5 py-2 rounded-t-xl border border-transparent bg-[#efe7da] text-[#786b63] hover:text-[#2c221e] font-bold text-xs cursor-pointer">
                     ★ 인생작
                 </button>

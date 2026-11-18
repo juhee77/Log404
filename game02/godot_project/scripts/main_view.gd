@@ -121,6 +121,20 @@ func _ready() -> void:
 	for ctrl in [get_node_or_null("VBox/TopBar/TopMargin/StatsVBox/TitleRow/AddBtn"), get_node_or_null("VBox/TopBar/TopMargin/StatsVBox/TitleRow/AmbientBtn"), next_quote_btn, random_pick_btn, sort_btn, tab_all, tab_manga, tab_gacha, tab_complete, tab_fav]:
 		if ctrl != null:
 			ctrl.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	var tab_rclick_map := {
+		tab_all: func() -> void: _reset_all_filters(); _set_sort_mode(0),
+		tab_manga: func() -> void: _on_tab_manga_pressed(); _set_sort_mode(3),
+		tab_gacha: func() -> void: _on_tab_gacha_pressed(); _set_sort_mode(3),
+		tab_complete: func() -> void: _on_tab_complete_pressed(); _set_sort_mode(3),
+		tab_fav: func() -> void: _on_tab_fav_pressed(); _set_sort_mode(3),
+	}
+	for t_btn in tab_rclick_map.keys():
+		if t_btn != null:
+			var t_cb: Callable = tab_rclick_map[t_btn]
+			t_btn.gui_input.connect(func(ev: InputEvent) -> void:
+				if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_RIGHT:
+					t_cb.call()
+			)
 	var top_add_btn: Control = get_node_or_null("VBox/TopBar/TopMargin/StatsVBox/TitleRow/AddBtn")
 	if top_add_btn != null:
 		top_add_btn.tooltip_text = "[N] 새 독서 일기·가챠 스크랩 직접 작성 (우클릭: 즉시 JSON 저장)"
@@ -299,15 +313,15 @@ func _update_stats() -> void:
 		if card_node is Control:
 			card_node.tooltip_text = pair[1]
 	if tab_all != null:
-		tab_all.tooltip_text = "[1] 전체 일기 (%d종)" % archive_state.items.size()
+		tab_all.tooltip_text = "[1] 전체 일기 (%d종) · 우클릭: 완전 초기화" % archive_state.items.size()
 	if tab_manga != null:
-		tab_manga.tooltip_text = "[2] 이북·단행본 (%d종)" % (archive_state.items.size() - g_count)
+		tab_manga.tooltip_text = "[2] 이북·단행본 (%d종) · 우클릭: 가치순 보기" % (archive_state.items.size() - g_count)
 	if tab_gacha != null:
-		tab_gacha.tooltip_text = "[3] 가챠·굿즈 (%d종)" % g_count
+		tab_gacha.tooltip_text = "[3] 가챠·굿즈 (%d종) · 우클릭: 가치순 보기" % g_count
 	if tab_complete != null:
-		tab_complete.tooltip_text = "[4] 완독·2권 이상 작품 보기"
+		tab_complete.tooltip_text = "[4] 완독·2권 이상 작품 보기 · 우클릭: 가치순 보기"
 	if tab_fav != null:
-		tab_fav.tooltip_text = "[5] 인생최애·★5.0 만점작 보기"
+		tab_fav.tooltip_text = "[5] 인생최애·★5.0 만점작 보기 · 우클릭: 가치순 보기"
 	
 	_render_spine_shelf()
 	_refresh_today_quote()

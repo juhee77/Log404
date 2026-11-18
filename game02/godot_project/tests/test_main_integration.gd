@@ -1715,6 +1715,20 @@ func _init() -> void:
 	assert("Shift+C: 리포트" in main_inst.status_toast.text, "Modal H cheatsheet should mention Shift+C report copy")
 	print("✓ Sprint 120 Milestone: Stat Cards 4-Way Right-Click Power Actions & Modal Shift+C Help Hint verified")
 
+	# Sprint 121 Milestone: Filter Tabs 5-Way Right-Click Value Sort & Full Reset
+	var rclick_s121 := InputEventMouseButton.new()
+	rclick_s121.pressed = true
+	rclick_s121.button_index = MOUSE_BUTTON_RIGHT
+	assert("우클릭: 완전 초기화" in main_inst.tab_all.tooltip_text and "우클릭: 가치순 보기" in main_inst.tab_gacha.tooltip_text, "Filter tab tooltips should mention right-click power actions")
+	main_inst.tab_gacha.gui_input.emit(rclick_s121)
+	assert(main_inst.archive_state.current_filter == 1 and main_inst.sort_mode == 3, "Right-clicking TabGacha should filter gacha and sort by value (3)")
+	main_inst.tab_fav.gui_input.emit(rclick_s121)
+	assert(main_inst.filter_favorites_only and main_inst.sort_mode == 3, "Right-clicking TabFav should filter fav and sort by value (3)")
+	main_inst.search_input.text = "test_query"
+	main_inst.tab_all.gui_input.emit(rclick_s121)
+	assert(main_inst.archive_state.current_filter == -1 and main_inst.sort_mode == 0 and main_inst.search_input.text == "", "Right-clicking TabAll should reset search, filter, and sort mode to default")
+	print("✓ Sprint 121 Milestone: Filter Tabs 5-Way Right-Click Value Sort & Full Reset verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()
