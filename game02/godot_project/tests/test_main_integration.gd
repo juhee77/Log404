@@ -1617,6 +1617,45 @@ func _init() -> void:
 	main_inst.detail_modal.close()
 	print("✓ Sprint 116 Milestone: In-Modal Shift+Key 16-Cycler Reverse Navigation verified")
 
+	# Sprint 117 Milestone: In-Modal Shift+I/Q/X Reverse Cycle Completing All 19 Step Cyclers
+	main_inst._on_card_clicked(main_inst.archive_state.items[0])
+	var item_s117 = main_inst.archive_state.items[0]
+	var orig_ink_s117 = item_s117.memo_ink_color
+	var ink_fwd := InputEventKey.new()
+	ink_fwd.pressed = true
+	ink_fwd.keycode = KEY_I
+	main_inst.detail_modal._unhandled_input(ink_fwd)
+	var ink_rev := InputEventKey.new()
+	ink_rev.pressed = true
+	ink_rev.shift_pressed = true
+	ink_rev.keycode = KEY_I
+	main_inst.detail_modal._unhandled_input(ink_rev)
+	assert(item_s117.memo_ink_color == orig_ink_s117, "Shift+I should reverse-cycle fountain pen ink color")
+	var col_fwd := InputEventKey.new()
+	col_fwd.pressed = true
+	col_fwd.keycode = KEY_Q
+	main_inst.detail_modal._unhandled_input(col_fwd)
+	var col_after_fwd = item_s117.cover_color
+	var col_rev := InputEventKey.new()
+	col_rev.pressed = true
+	col_rev.shift_pressed = true
+	col_rev.keycode = KEY_Q
+	main_inst.detail_modal._unhandled_input(col_rev)
+	assert(item_s117.cover_color != col_after_fwd, "Shift+Q should reverse-cycle cover color")
+	var ico_fwd := InputEventKey.new()
+	ico_fwd.pressed = true
+	ico_fwd.keycode = KEY_X
+	main_inst.detail_modal._unhandled_input(ico_fwd)
+	var ico_after_fwd = item_s117.icon_emoji
+	var ico_rev := InputEventKey.new()
+	ico_rev.pressed = true
+	ico_rev.shift_pressed = true
+	ico_rev.keycode = KEY_X
+	main_inst.detail_modal._unhandled_input(ico_rev)
+	assert(item_s117.icon_emoji != ico_after_fwd, "Shift+X should reverse-cycle cover icon emoji")
+	main_inst.detail_modal.close()
+	print("✓ Sprint 117 Milestone: In-Modal Shift+I/Q/X Reverse Cycle (19/19 Cyclers Complete) verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

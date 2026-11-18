@@ -5,7 +5,7 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 
 ---
 
-## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 116)
+## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 117)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
@@ -14,6 +14,9 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 ---
 
 ## 🚀 최신 스프린트 업데이트 요약 ([전체 회의록 보기](SPRINT_LOG.md))
+
+### 📓 [Sprint 117] 모달 `Shift+I`/`Shift+Q`/`Shift+X` 역순환 추가 (모달 내 19/19 전 순환 단축키 양방향 완성)
+- **19/19 전 순환 단축키 양방향 완성 (`detail_modal.gd` · `index.html`)**: `Shift+I`(잉크색), `Shift+Q`(표지색), `Shift+X`(표지아이콘)까지 `step_cyclers` 테이블에 통합해 모달 내 모든 순환 단축키가 `Shift+키` 역순환을 지원합니다.
 
 ### 📓 [Sprint 116] 모달 내 16종 순환 단축키 `Shift+키` 역순환(`-1`) 통합 & 웹 목업 동기화
 - **모달 `Shift+키` 16종 역순환 통합 (`detail_modal.gd` · `index.html`)**: 모달 내 `W/P/S/R/O/M/G/T/F/A/N/B/K/U/J/Z` 16개 단축키에 `Shift` 조합 시 `-1` 역순환을 지원합니다.

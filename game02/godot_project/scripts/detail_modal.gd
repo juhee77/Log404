@@ -310,12 +310,12 @@ func set_fountain_pen_ink(ink_hex: String) -> void:
 	_apply_ink_style()
 	diary_updated.emit(current_item)
 
-func cycle_fountain_pen_ink() -> String:
+func cycle_fountain_pen_ink(step: int = 1) -> String:
 	if current_item == null:
 		return ""
 	var inks: Array[String] = ["#2c221e", "#7f1d1d", "#78350f", "#14532d"]
 	var idx: int = inks.find(current_item.memo_ink_color)
-	var next_hex: String = inks[(idx + 1) % inks.size()]
+	var next_hex: String = inks[0] if idx == -1 else inks[(idx + step + inks.size()) % inks.size()]
 	set_fountain_pen_ink(next_hex)
 	return next_hex
 
@@ -622,6 +622,9 @@ func _unhandled_input(event: InputEvent) -> void:
 				get_viewport().set_input_as_handled()
 				return
 			var step_cyclers := {
+				KEY_I: cycle_fountain_pen_ink,
+				KEY_Q: cycle_cover_color,
+				KEY_X: cycle_cover_icon,
 				KEY_W: cycle_washi_tape,
 				KEY_P: cycle_paper_pattern,
 				KEY_S: cycle_deco_sticker,
@@ -646,9 +649,6 @@ func _unhandled_input(event: InputEvent) -> void:
 			var simple_actions := {
 				KEY_C: copy_book_quote_card,
 				KEY_L: toggle_quote_highlight,
-				KEY_I: cycle_fountain_pen_ink,
-				KEY_Q: cycle_cover_color,
-				KEY_X: cycle_cover_icon,
 				KEY_DELETE: _on_delete_btn_pressed,
 				KEY_BACKSPACE: _on_delete_btn_pressed,
 			}
@@ -967,22 +967,22 @@ func cycle_obi_preset(step: int = 1) -> void:
 	_refresh_tag_label()
 	diary_updated.emit(current_item)
 
-func cycle_cover_icon() -> void:
+func cycle_cover_icon(step: int = 1) -> void:
 	if current_item == null:
 		return
-	icon_cursor = (icon_cursor + 1) % ICON_PRESETS.size()
+	icon_cursor = (icon_cursor + step + ICON_PRESETS.size()) % ICON_PRESETS.size()
 	if ICON_PRESETS[icon_cursor] == current_item.icon_emoji:
-		icon_cursor = (icon_cursor + 1) % ICON_PRESETS.size()
+		icon_cursor = (icon_cursor + step + ICON_PRESETS.size()) % ICON_PRESETS.size()
 	current_item.icon_emoji = ICON_PRESETS[icon_cursor]
 	cover_icon.text = current_item.icon_emoji
 	diary_updated.emit(current_item)
 
-func cycle_cover_color() -> void:
+func cycle_cover_color(step: int = 1) -> void:
 	if current_item == null:
 		return
-	color_cursor = (color_cursor + 1) % COLOR_PRESETS.size()
+	color_cursor = (color_cursor + step + COLOR_PRESETS.size()) % COLOR_PRESETS.size()
 	if COLOR_PRESETS[color_cursor] == current_item.cover_color:
-		color_cursor = (color_cursor + 1) % COLOR_PRESETS.size()
+		color_cursor = (color_cursor + step + COLOR_PRESETS.size()) % COLOR_PRESETS.size()
 	current_item.cover_color = COLOR_PRESETS[color_cursor]
 	cover_rect.color = Color.from_string(current_item.cover_color, Color(0.65, 0.25, 0.2))
 	diary_updated.emit(current_item)

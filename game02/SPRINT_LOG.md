@@ -5,6 +5,23 @@
 
 ---
 
+## 📓 [Sprint 117] 모달 `Shift+I`/`Shift+Q`/`Shift+X` 역순환 추가 (모달 내 19/19 전 순환 단축키 양방향 완성)
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A**: "모달 내 16종 순환 단축키는 `Shift+키`로 역순환되는데, `I`(만년필 잉크 색), `Q`(표지 색상), `X`(표지 아이콘 이모지) 3가지도 `Shift+I`, `Shift+Q`, `Shift+X`로 바로 이전 색·아이콘으로 돌아가면 좋겠어요!"
+- **가챠러 B**: "표지 이모지나 색상이 프리셋이 여러 개라 넘기다 지나칠 때가 많은데, `Shift+Q`와 `Shift+X`로 바로 뒤로 갈 수 있어 정말 편합니다."
+- **기획자 (PO)**: "`cycle_fountain_pen_ink(step)`, `cycle_cover_icon(step)`, `cycle_cover_color(step)`을 양방향화하고 `step_cyclers` 테이블(`KEY_I`, `KEY_Q`, `KEY_X`)에 편입해 모달 내 **19종 순환 단축키 전부**를 `Shift+키` 역순환(`-1`)으로 완성합니다."
+
+### 2. 핵심 구현 및 변경 내역
+- `game02/godot_project/scripts/detail_modal.gd`:
+  - `cycle_fountain_pen_ink(step)`, `cycle_cover_icon(step)`, `cycle_cover_color(step)`을 양방향(`+1`/`-1`)으로 개선하고 `step_cyclers` 테이블(`KEY_I`, `KEY_Q`, `KEY_X`)로 통합했습니다.
+- `game02/index.html`:
+  - 모달 단축키 안내(`H` 키)에 `[Shift+순환키] 역순환` 안내를 동기화했습니다.
+- `game02/godot_project/tests/test_main_integration.gd`:
+  - `Shift+I`, `Shift+Q`, `Shift+X` 역순환을 검증하는 Sprint 117 통합 테스트를 추가해 100% 통과했습니다.
+
+---
+
 ## 📓 [Sprint 116] 모달 내 16종 순환 단축키 `Shift+키` 역순환(`-1`) 통합 & 웹 목업 동기화
 
 ### 1. 14인 스쿼드 회의록 & VOC
