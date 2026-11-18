@@ -261,7 +261,7 @@
                             ★ 전20권 완결 박스세트
                         </div>
                     </div>
-                    <h2 class="serif-font text-lg font-bold text-[#2c221e] mt-4" id="diary-title">슬램덩크 신장재편판</h2>
+                    <h2 onclick="copyDiaryTitle()" title="클릭하여 작품 제목 클립보드 복사" class="serif-font text-lg font-bold text-[#2c221e] mt-4 cursor-pointer hover:text-[#c85a32]" id="diary-title">슬램덩크 신장재편판</h2>
                     <p class="text-xs text-[#786b63] mt-0.5" id="diary-author">이노우에 다케히코</p>
                     <div class="mt-2">
                         <span class="rubber-stamp text-xs px-2.5 py-0.5 rounded inline-block" id="diary-stamp">💮 전권완결
@@ -1275,6 +1275,14 @@
                 closeJournalModal();
                 renderShelf();
             }
+        }
+
+        function copyDiaryTitle() {
+            const el = document.getElementById('diary-title');
+            if (!el) return;
+            const titleText = el.textContent;
+            navigator.clipboard?.writeText(titleText).catch(() => {});
+            el.title = `✅ 복사됨: ${titleText}`;
         }
 
         function restoreDiaryQuoteInput() {

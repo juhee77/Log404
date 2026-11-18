@@ -1831,6 +1831,27 @@ func _init() -> void:
 	assert(not main_inst.detail_modal.visible and "로컬 JSON 서재 백업 저장 완료" in main_inst.status_toast.text, "Right-clicking CloseBtn should close modal and trigger instant JSON backup")
 	print("✓ Sprint 126 Milestone: CloseBtn Right-Click Close+Backup & Vol DateBtn Quote Copy verified")
 
+	# Sprint 127 Milestone: DateStampBtn Right-Click Reset & TitleLabel Click Title Copy
+	main_inst._on_card_clicked(main_inst.archive_state.items[0])
+	var item_s127 = main_inst.archive_state.items[0]
+	var date_stamp_btn = main_inst.detail_modal.get_node("Panel/VBox/BodyMargin/Body/InkRow/DateStampBtn")
+	assert("우클릭: 기본값 초기화" in date_stamp_btn.tooltip_text, "DateStampBtn tooltip should mention right-click reset")
+	main_inst.detail_modal.stamp_purchase_date()
+	assert(item_s127.purchase_date != "📅 기념일", "stamp_purchase_date should set today date")
+	var rclick_s127 := InputEventMouseButton.new()
+	rclick_s127.pressed = true
+	rclick_s127.button_index = MOUSE_BUTTON_RIGHT
+	date_stamp_btn.gui_input.emit(rclick_s127)
+	assert(item_s127.purchase_date == "📅 기념일" and date_stamp_btn.text == "📅 기념일", "Right-clicking DateStampBtn should reset purchase date")
+	var lclick_s127 := InputEventMouseButton.new()
+	lclick_s127.pressed = true
+	lclick_s127.button_index = MOUSE_BUTTON_LEFT
+	assert("작품 제목 클립보드 복사" in main_inst.detail_modal.title_label.tooltip_text, "TitleLabel tooltip should mention clipboard copy")
+	main_inst.detail_modal.title_label.gui_input.emit(lclick_s127)
+	assert("✅ 복사됨: " in main_inst.detail_modal.title_label.tooltip_text, "Clicking TitleLabel should update tooltip with copied confirmation")
+	main_inst.detail_modal.close()
+	print("✓ Sprint 127 Milestone: DateStampBtn Right-Click Reset & TitleLabel Click Copy verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

@@ -5,6 +5,24 @@
 
 ---
 
+## 📓 [Sprint 127] 모달 `📅 기념일` 우클릭 기본값 초기화 & 모달 제목(`TitleLabel`) 클릭 클립보드 복사
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A**: "모달 `InkRow`의 `📅 기념일(DateStampBtn)` 버튼을 실수로 눌러 오늘 날짜로 바뀌었을 때, 우클릭 한 번으로 다시 기본값(`📅 기념일`)으로 되돌릴 수 있으면 좋겠어요."
+- **미니멀러 C**: "모달 상단의 작품 제목을 클릭하면 바로 클립보드에 작품명이 복사되어 검색이나 기록에 붙여넣기 편하면 좋겠습니다!"
+- **기획자 (PO)**: "`detail_modal.gd`에 `reset_purchase_date()`와 `DateStampBtn` 우클릭 초기화를 추가하고, `title_label` 클릭 시 클립보드 복사 및 복사 확인 툴팁 피드백을 `index.html`의 `#diary-title`과 동기화합니다."
+
+### 2. 핵심 구현 및 변경 내역
+- `game02/godot_project/scripts/detail_modal.gd`:
+  - `reset_purchase_date()` 메서드를 추가해 `DateStampBtn` 우클릭 시 `purchase_date`를 `"📅 기념일"`로 초기화하고 `diary_updated` 시그널을 발행합니다.
+  - `title_label`에 클릭 핸들러를 연결해 좌클릭 시 `current_item.title`을 클립보드에 복사하고 `✅ 복사됨: ...` 툴팁 피드백을 제공합니다.
+- `game02/index.html`:
+  - `#diary-title` 클릭 시 `copyDiaryTitle()` 클립보드 복사 및 툴팁을 동기화했습니다.
+- `game02/godot_project/tests/test_main_integration.gd`:
+  - `DateStampBtn` 우클릭 초기화와 `title_label` 클릭 클립보드 복사를 검증하는 Sprint 127 통합 테스트를 추가해 100% 통과했습니다.
+
+---
+
 ## 📓 [Sprint 126] 모달 `✕` 닫기 우클릭(닫기+즉시 JSON 백업) & 권별 `📅` 날짜 버튼 우클릭(해당 권 대사 복사)
 
 ### 1. 14인 스쿼드 회의록 & VOC

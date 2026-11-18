@@ -78,6 +78,15 @@ func _ready() -> void:
 		)
 	cover_rect.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	cover_rect.tooltip_text = "좌클릭·X: 표지 아이콘 변경(Shift+X: 이전) · 우클릭·Q: 표지 색상 변경(Shift+Q: 이전)"
+	if title_label != null:
+		title_label.mouse_filter = Control.MOUSE_FILTER_STOP
+		title_label.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+		title_label.tooltip_text = "클릭하여 작품 제목 클립보드 복사"
+		title_label.gui_input.connect(func(ev: InputEvent) -> void:
+			if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_LEFT and current_item != null:
+				DisplayServer.clipboard_set(current_item.title)
+				title_label.tooltip_text = "✅ 복사됨: " + current_item.title
+		)
 	cover_rect.gui_input.connect(func(ev):
 		if ev is InputEventMouseButton and ev.pressed:
 			if ev.button_index == MOUSE_BUTTON_LEFT:
@@ -310,7 +319,7 @@ func _style_diary_controls() -> void:
 		"Panel/VBox/BodyMargin/Body/StampRow/PossessionBtn": "소장 상태 순환 (Z: 소장중·예약중·배송중·전시중) · 우클릭: 이전",
 		"Panel/VBox/BodyMargin/Body/InkRow/NibBtn": "만년필 펜촉 굵기 순환 (N: EF·M·B) · 우클릭: 이전",
 		"Panel/VBox/BodyMargin/Body/InkRow/SignatureBtn": "다이어리 서명 스탬프 순환 · 우클릭: 이전",
-		"Panel/VBox/BodyMargin/Body/InkRow/DateStampBtn": "오늘 날짜로 구매·기념일 스탬프 갱신",
+		"Panel/VBox/BodyMargin/Body/InkRow/DateStampBtn": "오늘 날짜로 구매·기념일 스탬프 갱신 · 우클릭: 기본값 초기화",
 		"Panel/VBox/BodyMargin/Body/InkRow/CustomTagBtn": "커스텀 해시태그 순환 (T) · 우클릭: 이전",
 		"Panel/VBox/BodyMargin/Body/InkRow/ValueBtn": "추정 소장 가치 +5,000원 (V / 우클릭·Shift+V: -5,000원)",
 		"Panel/VBox/BodyMargin/Body/InkRow/FavCharBtn": "최애 캐릭터 태그 순환 (K) · 우클릭: 이전",
@@ -335,6 +344,7 @@ func _style_diary_controls() -> void:
 		"Panel/VBox/BodyMargin/Body/StampRow/PossessionBtn": func() -> void: cycle_possession_state(-1),
 		"Panel/VBox/BodyMargin/Body/InkRow/NibBtn": func() -> void: cycle_pen_nib_size(-1),
 		"Panel/VBox/BodyMargin/Body/InkRow/SignatureBtn": func() -> void: cycle_diary_signature(-1),
+		"Panel/VBox/BodyMargin/Body/InkRow/DateStampBtn": reset_purchase_date,
 		"Panel/VBox/BodyMargin/Body/InkRow/CustomTagBtn": func() -> void: cycle_custom_tag(-1),
 		"Panel/VBox/BodyMargin/Body/InkRow/FavCharBtn": func() -> void: cycle_favorite_character(-1),
 		"Panel/VBox/BodyMargin/Body/InkRow/ConditionBtn": func() -> void: cycle_condition_grade(-1),
@@ -897,6 +907,16 @@ func stamp_purchase_date() -> String:
 		date_btn.text = pd
 	diary_updated.emit(current_item)
 	return pd
+
+func reset_purchase_date() -> String:
+	if current_item == null:
+		return "📅 기념일"
+	current_item.purchase_date = "📅 기념일"
+	var date_btn: Button = get_node_or_null("Panel/VBox/BodyMargin/Body/InkRow/DateStampBtn")
+	if date_btn != null:
+		date_btn.text = "📅 기념일"
+	diary_updated.emit(current_item)
+	return "📅 기념일"
 
 func cycle_custom_tag(step: int = 1) -> String:
 	if current_item == null:

@@ -5,7 +5,7 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 
 ---
 
-## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 126)
+## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 127)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
@@ -14,6 +14,9 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 ---
 
 ## 🚀 최신 스프린트 업데이트 요약 ([전체 회의록 보기](SPRINT_LOG.md))
+
+### 📓 [Sprint 127] 모달 `📅 기념일` 우클릭 기본값 초기화 & 모달 제목(`TitleLabel`) 클릭 클립보드 복사
+- **기념일 초기화 & 제목 클립보드 복사 (`detail_modal.gd` · `index.html`)**: `DateStampBtn` 우클릭 시 구매·기념일 스탬프를 `"📅 기념일"`로 초기화하고, 모달 제목(`TitleLabel`) 클릭 시 작품 제목을 클립보드에 복사합니다.
 
 ### 📓 [Sprint 126] 모달 `✕` 닫기 우클릭(닫기+즉시 JSON 백업) & 권별 `📅` 날짜 버튼 우클릭(해당 권 대사 복사)
 - **모달 `CloseBtn` 백업 & 권별 대사 복사 (`detail_modal.gd` · `main_view.gd` · `index.html`)**: 모달 `✕` 버튼 우클릭 시 일기장을 닫고 즉시 JSON 백업을 저장하며, 권별 `📅` 날짜 버튼 우클릭 시 해당 권의 밑줄 대사를 클립보드에 복사합니다.
