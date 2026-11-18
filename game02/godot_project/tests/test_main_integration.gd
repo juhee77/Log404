@@ -1542,6 +1542,55 @@ func _init() -> void:
 	main_inst.detail_modal.close()
 	print("✓ Sprint 114 Milestone: StampRow Storage/Source/Mood/Possession Right-Click Reverse Cycle verified")
 
+	# Sprint 115 Milestone: InkRow 8-Button Right-Click Reverse Cycle
+	main_inst._on_card_clicked(main_inst.archive_state.items[0])
+	var rclick_s115 := InputEventMouseButton.new()
+	rclick_s115.pressed = true
+	rclick_s115.button_index = MOUSE_BUTTON_RIGHT
+	var nib_btn_s115 = main_inst.detail_modal.get_node("Panel/VBox/BodyMargin/Body/InkRow/NibBtn")
+	var sig_btn_s115 = main_inst.detail_modal.get_node("Panel/VBox/BodyMargin/Body/InkRow/SignatureBtn")
+	var tag_btn_s115 = main_inst.detail_modal.get_node("Panel/VBox/BodyMargin/Body/InkRow/CustomTagBtn")
+	var fc_btn_s115 = main_inst.detail_modal.get_node("Panel/VBox/BodyMargin/Body/InkRow/FavCharBtn")
+	var cond_btn_s115 = main_inst.detail_modal.get_node("Panel/VBox/BodyMargin/Body/InkRow/ConditionBtn")
+	var fin_btn_s115 = main_inst.detail_modal.get_node("Panel/VBox/BodyMargin/Body/InkRow/FinishBtn")
+	var w_btn_s115 = main_inst.detail_modal.get_node("Panel/VBox/BodyMargin/Body/InkRow/WeatherBtn")
+	var sp_btn_s115 = main_inst.detail_modal.get_node("Panel/VBox/BodyMargin/Body/InkRow/SpotBtn")
+	assert("우클릭: 이전" in nib_btn_s115.tooltip_text and "우클릭: 이전" in sp_btn_s115.tooltip_text, "InkRow tooltips should mention right-click reverse cycle")
+	main_inst.detail_modal.cycle_pen_nib_size(1)
+	var nib_fwd = int(main_inst.archive_state.items[0].pen_nib_size)
+	nib_btn_s115.gui_input.emit(rclick_s115)
+	assert(int(main_inst.archive_state.items[0].pen_nib_size) != nib_fwd, "Right-clicking NibBtn should step backward")
+	var sig_b = main_inst.archive_state.items[0].diary_signature
+	main_inst.detail_modal.cycle_diary_signature(1)
+	sig_btn_s115.gui_input.emit(rclick_s115)
+	assert(main_inst.archive_state.items[0].diary_signature == sig_b, "Right-clicking SignatureBtn should step backward")
+	var tag_b = main_inst.archive_state.items[0].custom_tag
+	main_inst.detail_modal.cycle_custom_tag(1)
+	tag_btn_s115.gui_input.emit(rclick_s115)
+	assert(main_inst.archive_state.items[0].custom_tag == tag_b, "Right-clicking CustomTagBtn should step backward")
+	var fc_b = main_inst.archive_state.items[0].favorite_character
+	main_inst.detail_modal.cycle_favorite_character(1)
+	fc_btn_s115.gui_input.emit(rclick_s115)
+	assert(main_inst.archive_state.items[0].favorite_character == fc_b, "Right-clicking FavCharBtn should step backward")
+	var cond_b = main_inst.archive_state.items[0].condition_grade
+	main_inst.detail_modal.cycle_condition_grade(1)
+	cond_btn_s115.gui_input.emit(rclick_s115)
+	assert(main_inst.archive_state.items[0].condition_grade == cond_b, "Right-clicking ConditionBtn should step backward")
+	var fin_b = main_inst.archive_state.items[0].cover_finish
+	main_inst.detail_modal.cycle_cover_finish(1)
+	fin_btn_s115.gui_input.emit(rclick_s115)
+	assert(main_inst.archive_state.items[0].cover_finish == fin_b, "Right-clicking FinishBtn should step backward")
+	var rw_b = main_inst.archive_state.items[0].reading_weather
+	main_inst.detail_modal.cycle_reading_weather(1)
+	w_btn_s115.gui_input.emit(rclick_s115)
+	assert(main_inst.archive_state.items[0].reading_weather == rw_b, "Right-clicking WeatherBtn should step backward")
+	var rs_b = main_inst.archive_state.items[0].reading_spot
+	main_inst.detail_modal.cycle_reading_spot(1)
+	sp_btn_s115.gui_input.emit(rclick_s115)
+	assert(main_inst.archive_state.items[0].reading_spot == rs_b, "Right-clicking SpotBtn should step backward")
+	main_inst.detail_modal.close()
+	print("✓ Sprint 115 Milestone: InkRow 8-Button Right-Click Reverse Cycle verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

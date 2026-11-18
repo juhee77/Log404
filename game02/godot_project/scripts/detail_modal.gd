@@ -242,16 +242,16 @@ func _style_diary_controls() -> void:
 		"Panel/VBox/BodyMargin/Body/StampRow/RereadBtn": "재독 횟수 +1 (Y / 우클릭·Shift+Y: -1)",
 		"Panel/VBox/BodyMargin/Body/StampRow/DuplicateBtn": "복수 소장 수량 +1 (D / 우클릭·Shift+D: -1)",
 		"Panel/VBox/BodyMargin/Body/StampRow/PossessionBtn": "소장 상태 순환 (Z: 소장중·예약중·배송중·전시중) · 우클릭: 이전",
-		"Panel/VBox/BodyMargin/Body/InkRow/NibBtn": "만년필 펜촉 굵기 순환 (N: EF·M·B)",
-		"Panel/VBox/BodyMargin/Body/InkRow/SignatureBtn": "다이어리 서명 스탬프 순환",
+		"Panel/VBox/BodyMargin/Body/InkRow/NibBtn": "만년필 펜촉 굵기 순환 (N: EF·M·B) · 우클릭: 이전",
+		"Panel/VBox/BodyMargin/Body/InkRow/SignatureBtn": "다이어리 서명 스탬프 순환 · 우클릭: 이전",
 		"Panel/VBox/BodyMargin/Body/InkRow/DateStampBtn": "오늘 날짜로 구매·기념일 스탬프 갱신",
-		"Panel/VBox/BodyMargin/Body/InkRow/CustomTagBtn": "커스텀 해시태그 순환 (T)",
+		"Panel/VBox/BodyMargin/Body/InkRow/CustomTagBtn": "커스텀 해시태그 순환 (T) · 우클릭: 이전",
 		"Panel/VBox/BodyMargin/Body/InkRow/ValueBtn": "추정 소장 가치 +5,000원 (V / 우클릭·Shift+V: -5,000원)",
-		"Panel/VBox/BodyMargin/Body/InkRow/FavCharBtn": "최애 캐릭터 태그 순환 (K)",
-		"Panel/VBox/BodyMargin/Body/InkRow/ConditionBtn": "실물 컨디션 등급 순환 (G)",
-		"Panel/VBox/BodyMargin/Body/InkRow/FinishBtn": "표지 코팅 마감 순환 (F: 무광·유광·홀로그램·양장)",
-		"Panel/VBox/BodyMargin/Body/InkRow/WeatherBtn": "독서·수집 날씨 스탬프 순환 (U)",
-		"Panel/VBox/BodyMargin/Body/InkRow/SpotBtn": "독서·수집 장소 스탬프 순환 (J)"
+		"Panel/VBox/BodyMargin/Body/InkRow/FavCharBtn": "최애 캐릭터 태그 순환 (K) · 우클릭: 이전",
+		"Panel/VBox/BodyMargin/Body/InkRow/ConditionBtn": "실물 컨디션 등급 순환 (G) · 우클릭: 이전",
+		"Panel/VBox/BodyMargin/Body/InkRow/FinishBtn": "표지 코팅 마감 순환 (F: 무광·유광·홀로그램·양장) · 우클릭: 이전",
+		"Panel/VBox/BodyMargin/Body/InkRow/WeatherBtn": "독서·수집 날씨 스탬프 순환 (U) · 우클릭: 이전",
+		"Panel/VBox/BodyMargin/Body/InkRow/SpotBtn": "독서·수집 장소 스탬프 순환 (J) · 우클릭: 이전"
 	}
 	for path in row_tips.keys():
 		var tip_btn: Control = get_node_or_null(path)
@@ -266,7 +266,15 @@ func _style_diary_controls() -> void:
 		"Panel/VBox/BodyMargin/Body/StampRow/StorageBtn": func() -> void: cycle_storage_location(-1),
 		"Panel/VBox/BodyMargin/Body/StampRow/SourceBtn": func() -> void: cycle_acquisition_source(-1),
 		"Panel/VBox/BodyMargin/Body/StampRow/MoodBtn": func() -> void: cycle_reading_mood(-1),
-		"Panel/VBox/BodyMargin/Body/StampRow/PossessionBtn": func() -> void: cycle_possession_state(-1)
+		"Panel/VBox/BodyMargin/Body/StampRow/PossessionBtn": func() -> void: cycle_possession_state(-1),
+		"Panel/VBox/BodyMargin/Body/InkRow/NibBtn": func() -> void: cycle_pen_nib_size(-1),
+		"Panel/VBox/BodyMargin/Body/InkRow/SignatureBtn": func() -> void: cycle_diary_signature(-1),
+		"Panel/VBox/BodyMargin/Body/InkRow/CustomTagBtn": func() -> void: cycle_custom_tag(-1),
+		"Panel/VBox/BodyMargin/Body/InkRow/FavCharBtn": func() -> void: cycle_favorite_character(-1),
+		"Panel/VBox/BodyMargin/Body/InkRow/ConditionBtn": func() -> void: cycle_condition_grade(-1),
+		"Panel/VBox/BodyMargin/Body/InkRow/FinishBtn": func() -> void: cycle_cover_finish(-1),
+		"Panel/VBox/BodyMargin/Body/InkRow/WeatherBtn": func() -> void: cycle_reading_weather(-1),
+		"Panel/VBox/BodyMargin/Body/InkRow/SpotBtn": func() -> void: cycle_reading_spot(-1)
 	}
 	for deco_path in deco_rclick_map.keys():
 		var deco_ctrl: Control = get_node_or_null(deco_path)
@@ -318,16 +326,16 @@ func toggle_quote_highlight() -> void:
 	_apply_ink_style()
 	diary_updated.emit(current_item)
 
-func cycle_pen_nib_size() -> int:
+func cycle_pen_nib_size(step: int = 1) -> int:
 	if current_item == null:
 		return 11
+	const NIB_SIZES = [10, 12, 14]
 	var cur = int(current_item.get("pen_nib_size")) if current_item.get("pen_nib_size") != null else 11
-	if cur == 10:
-		current_item.pen_nib_size = 12
-	elif cur == 12:
-		current_item.pen_nib_size = 14
+	var idx = NIB_SIZES.find(cur)
+	if idx == -1:
+		current_item.pen_nib_size = NIB_SIZES[0]
 	else:
-		current_item.pen_nib_size = 10
+		current_item.pen_nib_size = NIB_SIZES[(idx + step + NIB_SIZES.size()) % NIB_SIZES.size()]
 	_apply_ink_style()
 	diary_updated.emit(current_item)
 	return current_item.pen_nib_size
@@ -800,10 +808,10 @@ func decrement_duplicate_count() -> int:
 	diary_updated.emit(current_item)
 	return current_item.duplicate_count
 
-func cycle_diary_signature() -> String:
+func cycle_diary_signature(step: int = 1) -> String:
 	if current_item == null:
 		return "✍️ 주희의 서재"
-	var sig = current_item.cycle_diary_signature() if current_item.has_method("cycle_diary_signature") else "✍️ 주희의 서재"
+	var sig = current_item.cycle_diary_signature(step) if current_item.has_method("cycle_diary_signature") else "✍️ 주희의 서재"
 	var sig_btn: Button = get_node_or_null("Panel/VBox/BodyMargin/Body/InkRow/SignatureBtn")
 	if sig_btn != null:
 		sig_btn.text = sig
@@ -830,10 +838,10 @@ func stamp_purchase_date() -> String:
 	diary_updated.emit(current_item)
 	return pd
 
-func cycle_custom_tag() -> String:
+func cycle_custom_tag(step: int = 1) -> String:
 	if current_item == null:
 		return "#소장각"
-	var ct = current_item.cycle_custom_tag() if current_item.has_method("cycle_custom_tag") else "#소장각"
+	var ct = current_item.cycle_custom_tag(step) if current_item.has_method("cycle_custom_tag") else "#소장각"
 	var tag_btn: Button = get_node_or_null("Panel/VBox/BodyMargin/Body/InkRow/CustomTagBtn")
 	if tag_btn != null:
 		tag_btn.text = ct
@@ -863,20 +871,20 @@ func reduce_estimated_value() -> int:
 	diary_updated.emit(current_item)
 	return current_item.estimated_value
 
-func cycle_favorite_character() -> String:
+func cycle_favorite_character(step: int = 1) -> String:
 	if current_item == null:
 		return "🌟 최애 캐릭터"
-	var fc = current_item.cycle_favorite_character() if current_item.has_method("cycle_favorite_character") else "🌟 최애 캐릭터"
+	var fc = current_item.cycle_favorite_character(step) if current_item.has_method("cycle_favorite_character") else "🌟 최애 캐릭터"
 	var fc_btn: Button = get_node_or_null("Panel/VBox/BodyMargin/Body/InkRow/FavCharBtn")
 	if fc_btn != null:
 		fc_btn.text = fc
 	diary_updated.emit(current_item)
 	return fc
 
-func cycle_condition_grade() -> String:
+func cycle_condition_grade(step: int = 1) -> String:
 	if current_item == null:
 		return "✨ S급(최상)"
-	var cg = current_item.cycle_condition_grade() if current_item.has_method("cycle_condition_grade") else "✨ S급(최상)"
+	var cg = current_item.cycle_condition_grade(step) if current_item.has_method("cycle_condition_grade") else "✨ S급(최상)"
 	var cond_btn: Button = get_node_or_null("Panel/VBox/BodyMargin/Body/InkRow/ConditionBtn")
 	if cond_btn != null:
 		cond_btn.text = cg
@@ -885,10 +893,10 @@ func cycle_condition_grade() -> String:
 	diary_updated.emit(current_item)
 	return cg
 
-func cycle_cover_finish() -> String:
+func cycle_cover_finish(step: int = 1) -> String:
 	if current_item == null:
 		return "📜 무광 매트"
-	var cf = current_item.cycle_cover_finish() if current_item.has_method("cycle_cover_finish") else "📜 무광 매트"
+	var cf = current_item.cycle_cover_finish(step) if current_item.has_method("cycle_cover_finish") else "📜 무광 매트"
 	var fin_btn: Button = get_node_or_null("Panel/VBox/BodyMargin/Body/InkRow/FinishBtn")
 	if fin_btn != null:
 		fin_btn.text = cf
@@ -921,10 +929,10 @@ func _refresh_tag_label() -> void:
 	var rs = current_item.get("reading_spot") if (current_item.get("reading_spot") != null and current_item.get("reading_spot") != "") else "🛋️ 이불 속"
 	tag_label.text = "💮 " + current_item.status_tag + " " + sticker + " [" + mood + " · " + r_tier + " · " + loc + " · " + rw + " · " + rs + "] | " + current_item.obi_text
 
-func cycle_reading_weather() -> String:
+func cycle_reading_weather(step: int = 1) -> String:
 	if current_item == null:
 		return "☀️ 맑은 오후"
-	var rw = current_item.cycle_reading_weather() if current_item.has_method("cycle_reading_weather") else "☀️ 맑은 오후"
+	var rw = current_item.cycle_reading_weather(step) if current_item.has_method("cycle_reading_weather") else "☀️ 맑은 오후"
 	var w_btn: Button = get_node_or_null("Panel/VBox/BodyMargin/Body/InkRow/WeatherBtn")
 	if w_btn != null:
 		w_btn.text = rw
@@ -932,10 +940,10 @@ func cycle_reading_weather() -> String:
 	diary_updated.emit(current_item)
 	return rw
 
-func cycle_reading_spot() -> String:
+func cycle_reading_spot(step: int = 1) -> String:
 	if current_item == null:
 		return "🛋️ 이불 속"
-	var rs = current_item.cycle_reading_spot() if current_item.has_method("cycle_reading_spot") else "🛋️ 이불 속"
+	var rs = current_item.cycle_reading_spot(step) if current_item.has_method("cycle_reading_spot") else "🛋️ 이불 속"
 	var sp_btn: Button = get_node_or_null("Panel/VBox/BodyMargin/Body/InkRow/SpotBtn")
 	if sp_btn != null:
 		sp_btn.text = rs

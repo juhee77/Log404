@@ -5,6 +5,23 @@
 
 ---
 
+## 🏆 [Sprint 115] 마일스톤 115: 모달 `InkRow` 8종 순환 버튼 우클릭 역순환 완성 (`StampRow`+`InkRow` 전 버튼 양방향화 달성)
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A**: "`StampRow`의 버튼들이 전부 우클릭 역순환이 되니 아래쪽 `✒️ 잉크:` 줄(`InkRow`)의 `펜촉`·`서명`·`해시태그`·`최애 캐릭터`·`컨디션`·`코팅`·`날씨`·`장소`도 우클릭으로 뒤로 돌아가면 모달 전체가 완벽하게 통일될 것 같아요!"
+- **가챠러 B**: "`S급(최상)` · `무광 매트` · `맑은 오후` · `이불 속`처럼 옵션이 여러 개인 버튼들을 지나쳤을 때 우클릭 한 번으로 바로 되돌릴 수 있어 쾌적합니다."
+- **기획자 (PO)**: "`collection_item.gd`의 `_step_preset()` 공용 헬퍼를 재사용해 `InkRow` 7종 프리셋 메서드에 `step: int = 1`을 적용하고, `detail_modal.gd`에서 `cycle_pen_nib_size(step)`까지 포함해 `InkRow` 8개 버튼 전체에 우클릭 역순환(`-1`)과 `· 우클릭: 이전` 툴팁을 완성했습니다."
+
+### 2. 핵심 구현 및 변경 내역
+- `game02/godot_project/scripts/collection_item.gd`:
+  - `cycle_diary_signature(step)`, `cycle_custom_tag(step)`, `cycle_favorite_character(step)`, `cycle_condition_grade(step)`, `cycle_cover_finish(step)`, `cycle_reading_weather(step)`, `cycle_reading_spot(step)` 7개 메서드에 `_step_preset()` 기반 `+1`/`-1` 양방향 순환을 적용했습니다.
+- `game02/godot_project/scripts/detail_modal.gd`:
+  - `cycle_pen_nib_size(step)`을 `[10, 12, 14]` 양방향 순환으로 개선하고, `NibBtn`, `SignatureBtn`, `CustomTagBtn`, `FavCharBtn`, `ConditionBtn`, `FinishBtn`, `WeatherBtn`, `SpotBtn` 8개 버튼에 `MOUSE_BUTTON_RIGHT` 역순환(`-1`)과 툴팁을 연결했습니다.
+- `game02/godot_project/tests/test_main_integration.gd`:
+  - `InkRow` 8개 버튼의 우클릭 역순환 및 툴팁을 검증하는 Sprint 115 통합 테스트를 추가해 100% 통과했습니다.
+
+---
+
 ## 📓 [Sprint 114] `StampRow` 보관위치·입수경로·기분·소장상태 4종 우클릭 역순환 완성
 
 ### 1. 14인 스쿼드 회의록 & VOC

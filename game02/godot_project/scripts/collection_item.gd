@@ -164,13 +164,9 @@ func increment_duplicate_count() -> int:
 	updated_at = int(Time.get_unix_time_from_system())
 	return duplicate_count
 
-func cycle_diary_signature() -> String:
+func cycle_diary_signature(step: int = 1) -> String:
 	const PRESETS = ["✍️ 주희의 서재", "🌙 밤독서 기록", "☕ 카페 다꾸", "🎁 소장 기념"]
-	var idx = PRESETS.find(diary_signature)
-	if idx == -1:
-		diary_signature = PRESETS[0]
-	else:
-		diary_signature = PRESETS[(idx + 1) % PRESETS.size()]
+	diary_signature = _step_preset(PRESETS, diary_signature, step)
 	updated_at = int(Time.get_unix_time_from_system())
 	return diary_signature
 
@@ -186,63 +182,39 @@ func stamp_purchase_date() -> String:
 	updated_at = int(Time.get_unix_time_from_system())
 	return purchase_date
 
-func cycle_custom_tag() -> String:
+func cycle_custom_tag(step: int = 1) -> String:
 	const PRESETS = ["#소장각", "#인생만화", "#힐링타임", "#전시필수", "#한정특전"]
-	var idx = PRESETS.find(custom_tag)
-	if idx == -1:
-		custom_tag = PRESETS[0]
-	else:
-		custom_tag = PRESETS[(idx + 1) % PRESETS.size()]
+	custom_tag = _step_preset(PRESETS, custom_tag, step)
 	updated_at = int(Time.get_unix_time_from_system())
 	return custom_tag
 
-func cycle_favorite_character() -> String:
+func cycle_favorite_character(step: int = 1) -> String:
 	const PRESETS = ["🌟 최애 캐릭터", "🏀 강백호", "🧙‍♀️ 프리렌", "🐾 치이카와", "🏐 히나타", "🌸 체리"]
-	var idx = PRESETS.find(favorite_character)
-	if idx == -1:
-		favorite_character = PRESETS[0]
-	else:
-		favorite_character = PRESETS[(idx + 1) % PRESETS.size()]
+	favorite_character = _step_preset(PRESETS, favorite_character, step)
 	updated_at = int(Time.get_unix_time_from_system())
 	return favorite_character
 
-func cycle_condition_grade() -> String:
+func cycle_condition_grade(step: int = 1) -> String:
 	const PRESETS = ["✨ S급(최상)", "📖 A급(양호)", "🏷️ B급(사용감)", "📦 미개봉(새상품)"]
-	var idx = PRESETS.find(condition_grade)
-	if idx == -1:
-		condition_grade = PRESETS[0]
-	else:
-		condition_grade = PRESETS[(idx + 1) % PRESETS.size()]
+	condition_grade = _step_preset(PRESETS, condition_grade, step)
 	updated_at = int(Time.get_unix_time_from_system())
 	return condition_grade
 
-func cycle_cover_finish() -> String:
+func cycle_cover_finish(step: int = 1) -> String:
 	const PRESETS = ["📜 무광 매트", "✨ 유광 코팅", "🌟 홀로그램", "🧶 패브릭 양장"]
-	var idx = PRESETS.find(cover_finish)
-	if idx == -1:
-		cover_finish = PRESETS[0]
-	else:
-		cover_finish = PRESETS[(idx + 1) % PRESETS.size()]
+	cover_finish = _step_preset(PRESETS, cover_finish, step)
 	updated_at = int(Time.get_unix_time_from_system())
 	return cover_finish
 
-func cycle_reading_weather() -> String:
+func cycle_reading_weather(step: int = 1) -> String:
 	const PRESETS = ["☀️ 맑은 오후", "🌧️ 비 오는 밤", "❄️ 눈 내리는 창가", "🌙 새벽 감성"]
-	var idx = PRESETS.find(reading_weather)
-	if idx == -1:
-		reading_weather = PRESETS[0]
-	else:
-		reading_weather = PRESETS[(idx + 1) % PRESETS.size()]
+	reading_weather = _step_preset(PRESETS, reading_weather, step)
 	updated_at = int(Time.get_unix_time_from_system())
 	return reading_weather
 
-func cycle_reading_spot() -> String:
+func cycle_reading_spot(step: int = 1) -> String:
 	const PRESETS = ["🛋️ 이불 속", "☕ 북카페", "🪑 내 방 책상", "🚃 출퇴근길"]
-	var idx = PRESETS.find(reading_spot)
-	if idx == -1:
-		reading_spot = PRESETS[0]
-	else:
-		reading_spot = PRESETS[(idx + 1) % PRESETS.size()]
+	reading_spot = _step_preset(PRESETS, reading_spot, step)
 	updated_at = int(Time.get_unix_time_from_system())
 	return reading_spot
 
