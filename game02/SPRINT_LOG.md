@@ -5,6 +5,24 @@
 
 ---
 
+## 📓 [Sprint 111] 전체 초기화(`0`) KRW 자산 요약 토스트 통일 & `+ 일기 쓰기` 우클릭 즉시 JSON 백업 저장
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **다꾸러 A**: "필터 전체 초기화(`0` 키나 초기화 버튼)를 눌렀을 때만 다른 탭들처럼 총 권수와 ₩ 자산 합계가 같이 안 떠서 살짝 아쉬웠어요."
+- **수집러 B**: "새 일기 쓰기 버튼 옆에 따로 저장 버튼은 없지만, 가끔 대량 기록 후 우클릭 한 번으로 즉시 로컬 JSON 백업이 저장되었다는 확신을 얻고 싶어요."
+- **기획자 (PO)**: "`_reset_all_filters()` 토스트에 `_get_filtered_cards_summary()`를 결합해 KRW 요약을 통일하고, 상단 `TitleRow/AddBtn`에 `MOUSE_BUTTON_RIGHT` 즉시 `save_to_file()` + ₩ 요약 토스트와 툴팁 힌트를 부여합니다."
+
+### 2. 핵심 구현 및 변경 내역
+- `game02/godot_project/scripts/main_view.gd`:
+  - `_reset_all_filters()` 토스트를 `"📚 전체 서재가 복원되었습니다. (%s)" % _get_filtered_cards_summary()`로 업데이트해 모든 탭·검색·초기화 피드백의 ₩ 자산 요약 포맷을 통일했습니다.
+  - `TitleRow/AddBtn`에 `MOUSE_BUTTON_RIGHT` 이벤트를 연결해 우클릭 시 `archive_state.save_to_file()`을 즉시 호출하고 `"💾 로컬 JSON 서재 백업 저장 완료 (%s)" % _get_filtered_cards_summary()` 토스트를 출력하며, 툴팁에 `(우클릭: 즉시 JSON 저장)` 안내를 추가했습니다.
+- `game02/index.html`:
+  - 상단 `+ 새 일기 쓰기` 버튼에 `oncontextmenu` 기반 `instantBackupArchive()` 즉시 로컬 백업 피드백 및 동일 툴팁을 동기화했습니다.
+- `game02/godot_project/tests/test_main_integration.gd`:
+  - `_reset_all_filters()` 토스트 `₩` 포함 여부와 `TitleRow/AddBtn` 우클릭 시 JSON 백업 저장 토스트·툴팁을 검증하는 Sprint 111 통합 테스트를 추가해 100% 통과했습니다.
+
+---
+
 ## 🏆 [Sprint 110] 마일스톤 110: 모달 `◀`/`▶` 우클릭 첫·끝 페이지 즉시 점프 & 양방향 툴팁 동기화
 - **날짜/시각**: 2026-11-18 12:57 (자동 스프린트 #110)
 - **참여 스쿼드**: 14인 애자일 스쿼드 전원 (다꾸러 3인, PO/기획 2인, UX/UI 2인, 개발 4인, QA 2인, CEO 1인)

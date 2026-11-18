@@ -115,7 +115,12 @@ func _ready() -> void:
 			ctrl.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	var top_add_btn: Control = get_node_or_null("VBox/TopBar/TopMargin/StatsVBox/TitleRow/AddBtn")
 	if top_add_btn != null:
-		top_add_btn.tooltip_text = "[N] 새 독서 일기·가챠 스크랩 직접 작성"
+		top_add_btn.tooltip_text = "[N] 새 독서 일기·가챠 스크랩 직접 작성 (우클릭: 즉시 JSON 저장)"
+		top_add_btn.gui_input.connect(func(ev: InputEvent) -> void:
+			if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_RIGHT:
+				archive_state.save_to_file()
+				_show_toast("💾 로컬 JSON 서재 백업 저장 완료 (%s)" % _get_filtered_cards_summary())
+		)
 	var top_amb_btn: Control = get_node_or_null("VBox/TopBar/TopMargin/StatsVBox/TitleRow/AmbientBtn")
 	if top_amb_btn != null:
 		top_amb_btn.tooltip_text = "[M] 독서 몰입 백색소음 전환 (우클릭·Shift+M: 이전)"
@@ -582,7 +587,7 @@ func _reset_all_filters() -> void:
 	if search_input != null:
 		search_input.text = ""
 	_on_tab_all_pressed()
-	_show_toast("📚 전체 서재가 복원되었습니다.")
+	_show_toast("📚 전체 서재가 복원되었습니다. (%s)" % _get_filtered_cards_summary())
 
 func _on_tab_all_pressed() -> void:
 	filter_firsts_only = false

@@ -5,7 +5,7 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 
 ---
 
-## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 110)
+## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 111)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
@@ -14,6 +14,10 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 ---
 
 ## 🚀 최신 스프린트 업데이트 요약 ([전체 회의록 보기](SPRINT_LOG.md))
+
+### 📓 [Sprint 111] 전체 초기화(`0`) KRW 자산 요약 토스트 통일 & `+ 일기 쓰기` 우클릭 즉시 JSON 백업 저장
+- **전체 초기화 KRW 요약 통일 (`main_view.gd`)**: `_reset_all_filters()` 실행 시에도 `"📚 전체 서재가 복원되었습니다. (N종 · ₩총액)"` 형태로 다른 탭·검색 토스트와 동일한 자산 요약 피드백을 제공합니다.
+- **`+ 일기 쓰기` 우클릭 즉시 JSON 백업 (`main_view.gd` · `index.html`)**: 상단 `TitleRow/AddBtn` 우클릭 시 즉시 `archive_state.save_to_file()`을 수행하고 `💾 로컬 JSON 서재 백업 저장 완료` 토스트와 ₩ 자산 요약을 표시합니다.
 
 ### 🏆 [Sprint 110] 마일스톤 110: 모달 `◀`/`▶` 우클릭 첫·끝 페이지 즉시 점프 & 양방향 툴팁 동기화
 - **모달 `◀`/`▶` 우클릭 첫·끝 점프 (`detail_modal.gd` · `main_view.gd` · `index.html`)**: `◀` 우클릭으로 첫 페이지(`1/N`), `▶` 우클릭으로 마지막 페이지(`N/N`)로 마우스만으로 즉시 점프합니다.

@@ -1447,6 +1447,19 @@ func _init() -> void:
 	main_inst.detail_modal.close()
 	print("✓ Sprint 110 Milestone: Right-Click PrevItemBtn/NextItemBtn First/Last Page Jump verified")
 
+	# Sprint 111 Milestone: Reset-All KRW Summary Toast & Right-Click AddBtn Instant JSON Backup
+	main_inst._reset_all_filters()
+	assert("전체 서재가 복원되었습니다." in main_inst.status_toast.text and "₩" in main_inst.status_toast.text, "Reset-all toast should include KRW summary")
+	var top_add_s111 = main_inst.get_node("VBox/TopBar/TopMargin/StatsVBox/TitleRow/AddBtn")
+	assert("우클릭: 즉시 JSON 저장" in top_add_s111.tooltip_text, "AddBtn tooltip should mention right-click JSON backup")
+	var rclick_s111 := InputEventMouseButton.new()
+	rclick_s111.pressed = true
+	rclick_s111.button_index = MOUSE_BUTTON_RIGHT
+	top_add_s111.gui_input.emit(rclick_s111)
+	assert("JSON 백업 저장 완료" in main_inst.status_toast.text or "로컬 JSON 서재 백업 저장 완료" in main_inst.status_toast.text, "Right-clicking AddBtn should show JSON backup toast")
+	assert("₩" in main_inst.status_toast.text, "Right-clicking AddBtn backup toast should include KRW summary")
+	print("✓ Sprint 111 Milestone: Reset-All KRW Summary & Right-Click AddBtn JSON Backup verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()
