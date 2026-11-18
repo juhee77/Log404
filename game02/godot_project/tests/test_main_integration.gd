@@ -1812,6 +1812,25 @@ func _init() -> void:
 	main_inst.detail_modal.close()
 	print("✓ Sprint 125 Milestone: Stamp Right-Click Stamp+Share & Vol Status Dual Toggle verified")
 
+	# Sprint 126 Milestone: CloseBtn Right-Click Close+Backup & Vol DateBtn Right-Click Quote Copy
+	main_inst._on_card_clicked(main_inst.archive_state.items[0])
+	var first_date_btn: Button = null
+	for b in main_inst.detail_modal.vol_list.get_child(0).find_children("*", "Button", true, false):
+		if "📅" in b.text:
+			first_date_btn = b
+			break
+	assert(first_date_btn != null and "우클릭: 이 권 대사 복사" in first_date_btn.tooltip_text, "Volume date button tooltip should mention right-click quote copy")
+	var rclick_s126 := InputEventMouseButton.new()
+	rclick_s126.pressed = true
+	rclick_s126.button_index = MOUSE_BUTTON_RIGHT
+	first_date_btn.gui_input.emit(rclick_s126)
+	assert(first_date_btn.text == "✅ 복사됨", "Right-clicking volume date button should show copied feedback")
+	var close_btn_s126 = main_inst.detail_modal.get_node("Panel/VBox/Header/HBox/CloseBtn")
+	assert("우클릭: 닫고 즉시 JSON 백업" in close_btn_s126.tooltip_text, "CloseBtn tooltip should mention right-click close+backup")
+	close_btn_s126.gui_input.emit(rclick_s126)
+	assert(not main_inst.detail_modal.visible and "로컬 JSON 서재 백업 저장 완료" in main_inst.status_toast.text, "Right-clicking CloseBtn should close modal and trigger instant JSON backup")
+	print("✓ Sprint 126 Milestone: CloseBtn Right-Click Close+Backup & Vol DateBtn Quote Copy verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

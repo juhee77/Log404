@@ -23,6 +23,7 @@ signal navigate_requested(delta: int)
 signal diary_updated(item)
 signal help_requested
 signal summary_copy_requested
+signal close_and_backup_requested
 
 @onready var title_label: Label = $Panel/VBox/Header/HBox/TitleLabel
 @onready var cat_badge: Label = $Panel/VBox/Header/HBox/CatBadge
@@ -238,7 +239,12 @@ func _style_diary_controls() -> void:
 				cycle_fountain_pen_ink(1)
 		)
 	if close_btn != null:
-		close_btn.tooltip_text = "일기장 닫기 (ESC)"
+		close_btn.tooltip_text = "일기장 닫기 (ESC · 우클릭: 닫고 즉시 JSON 백업)"
+		close_btn.gui_input.connect(func(ev: InputEvent) -> void:
+			if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_RIGHT:
+				close()
+				close_and_backup_requested.emit()
+		)
 		var header_hbox: HBoxContainer = close_btn.get_parent() as HBoxContainer
 		if header_hbox != null and header_hbox.get_node_or_null("PrevItemBtn") == null:
 			var prev_btn := Button.new()
@@ -1275,8 +1281,17 @@ func _render_volumes() -> void:
 		date_btn.add_theme_stylebox_override("normal", date_sb)
 		date_btn.add_theme_color_override("font_color", Color(0.48, 0.38, 0.3))
 		date_btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
-		date_btn.tooltip_text = "클릭하여 오늘 날짜로 읽은 날 스탬프 갱신"
+		date_btn.tooltip_text = "클릭하여 오늘 날짜로 읽은 날 스탬프 갱신 · 우클릭: 이 권 대사 복사"
 		date_btn.pressed.connect(func(): stamp_volume_date(capture_idx))
+		date_btn.gui_input.connect(func(ev: InputEvent) -> void:
+			if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_RIGHT:
+				if current_item != null and capture_idx >= 0 and capture_idx < current_item.volumes.size():
+					var v_data = current_item.volumes[capture_idx]
+					var q_str = str(v_data.get("quote", ""))
+					var copy_str = "%s %d권: \"%s\"" % [current_item.title, int(v_data.get("vol", capture_idx + 1)), q_str if q_str != "" else current_item.memo]
+					DisplayServer.clipboard_set(copy_str)
+					date_btn.text = "✅ 복사됨"
+		)
 
 		var bm_btn = Button.new()
 		var is_bm = bool(v.get("bookmarked", false))

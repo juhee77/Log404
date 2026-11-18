@@ -320,7 +320,7 @@
                             <button onclick="copyBookQuoteCard()" oncontextmenu="event.preventDefault(); copyLibrarySummaryReport(this);" title="이 작품의 감상 카드 클립보드 복사 (C · 우클릭: 전체 서재 리포트 복사)"
                                 class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">💌
                                 감상 카드 공유</button>
-                            <button onclick="closeJournalModal()"
+                            <button onclick="closeJournalModal()" oncontextmenu="event.preventDefault(); closeJournalModal(); instantBackupArchive();" title="일기장 닫기 (ESC · 우클릭: 닫고 즉시 JSON 백업)"
                                 class="w-7 h-7 rounded-full bg-[#efe7da] hover:bg-[#e2d6c5] text-[#5c4938] text-xs font-bold cursor-pointer">✕</button>
                         </div>
                     </div>

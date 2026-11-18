@@ -5,6 +5,26 @@
 
 ---
 
+## 📓 [Sprint 126] 모달 `✕` 닫기 우클릭(닫기+즉시 JSON 백업) & 권별 `📅` 날짜 버튼 우클릭(해당 권 대사 복사)
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A**: "모달에서 여러 권의 밑줄과 스탬프를 수정한 뒤 상단 `✕` 닫기 버튼을 우클릭하면 모달이 닫히면서 동시에 `로컬 JSON 백업 저장`까지 한 번에 완료되면 정말 안심이 될 것 같아요."
+- **가챠러 B**: "권별 로우의 `📅` 날짜 버튼을 우클릭했을 때 그 권에 적어둔 밑줄 대사만 클립보드에 한 줄로 복사되면 인용문 공유하기가 훨씬 간편해지겠어요!"
+- **기획자 (PO)**: "`detail_modal.gd`에 `close_and_backup_requested` 시그널을 신설해 `main_view.gd`의 `_trigger_instant_json_backup()`에 연결하고, 권별 `date_btn` 우클릭 시 해당 권 대사 클립보드 복사 및 `✅ 복사됨` 피드백을 구현해 `index.html`과 동기화합니다."
+
+### 2. 핵심 구현 및 변경 내역
+- `game02/godot_project/scripts/detail_modal.gd`:
+  - `close_and_backup_requested` 시그널을 추가해 `CloseBtn` 우클릭 시 모달을 닫고 즉시 로컬 JSON 백업 저장을 트리거합니다.
+  - 권별 로우 `date_btn` 우클릭 시 해당 권의 밑줄 대사를 클립보드에 복사하고 `✅ 복사됨` 피드백과 툴팁을 제공합니다.
+- `game02/godot_project/scripts/main_view.gd`:
+  - `detail_modal.close_and_backup_requested` 시그널을 `_trigger_instant_json_backup()`에 연결했습니다.
+- `game02/index.html`:
+  - 모달 `✕` 닫기 버튼에 `oncontextmenu="event.preventDefault(); closeJournalModal(); instantBackupArchive();"` 및 툴팁을 동기화했습니다.
+- `game02/godot_project/tests/test_main_integration.gd`:
+  - 권별 `date_btn` 우클릭 대사 복사와 `CloseBtn` 우클릭 닫기+JSON 백업을 검증하는 Sprint 126 통합 테스트를 추가해 100% 통과했습니다.
+
+---
+
 ## 🏆 [Sprint 125] 마일스톤 125: 모달 4대 인장 우클릭(인장+감상카드 복사) & 권별 초판 배지 우클릭(초판+북마크 동시 토글)
 
 ### 1. 14인 스쿼드 회의록 & VOC
