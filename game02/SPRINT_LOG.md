@@ -5,6 +5,24 @@
 
 ---
 
+## 📓 [Sprint 122] 모달 `밑줄 저장` 우클릭 원문 복원 & `형광펜` 우클릭 잉크색 순환
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A**: "모달에서 밑줄 문장을 수정하다가 원래 저장된 문장으로 되돌리고 싶을 때, `밑줄 저장` 버튼을 우클릭하면 바로 원문(`current_item.memo`)으로 복구되면 편할 것 같아요."
+- **미니멀러 C**: "`형광펜` 버튼도 우클릭 시 만년필 잉크 색상을 바로 다음 색으로 넘겨줄 수 있으면 글 꾸미기 동선이 훨씬 짧아질 거예요!"
+- **기획자 (PO)**: "`detail_modal.gd`의 `SaveQuoteBtn` 우클릭 시 `editing_vol_index` 해제 및 원문 복원을, `HighlightBtn` 우클릭 시 `cycle_fountain_pen_ink(1)` 호출과 툴팁 안내를 연결하고 `index.html`에도 `restoreDiaryQuoteInput()`을 동기화합니다."
+
+### 2. 핵심 구현 및 변경 내역
+- `game02/godot_project/scripts/detail_modal.gd`:
+  - `SaveQuoteBtn` 우클릭 시 `quote_input.text`를 `current_item.memo` 원문으로 복원하고 권별 편집 상태를 해제합니다.
+  - `HighlightBtn` 우클릭 시 `cycle_fountain_pen_ink(1)`을 호출해 잉크 색상을 순환하며 툴팁을 동기화했습니다.
+- `game02/index.html`:
+  - `🖋️ 밑줄 저장` 버튼에 `oncontextmenu` 기반 `restoreDiaryQuoteInput()` 및 툴팁을 동기화했습니다.
+- `game02/godot_project/tests/test_main_integration.gd`:
+  - `SaveQuoteBtn` 우클릭 원문 복원과 `HighlightBtn` 우클릭 잉크색 변경을 검증하는 Sprint 122 통합 테스트를 추가해 100% 통과했습니다.
+
+---
+
 ## 📓 [Sprint 121] 상단 5대 필터 탭 우클릭 가치순 보기 & 전체 초기화(`TabAll`) 원클릭 복원
 
 ### 1. 14인 스쿼드 회의록 & VOC

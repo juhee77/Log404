@@ -349,10 +349,10 @@
                             <input id="diary-quote-input" type="text" placeholder="🖋️ 오늘 밑줄 친 명대사·감상평 수정..."
                                 onkeydown="if(event.key==='Enter'){saveDiaryQuote();}"
                                 class="flex-1 px-2.5 py-1 rounded-lg bg-[#fffdf9] border border-[#d8cbb8] text-xs text-[#2c221e] focus:outline-none focus:border-[#c85a32]">
-                            <button onclick="saveDiaryQuote()"
+                            <button onclick="saveDiaryQuote()" oncontextmenu="event.preventDefault(); restoreDiaryQuoteInput();" title="작성한 밑줄·감상평 저장 (Enter · 우클릭: 원문 복원)"
                                 class="px-2.5 py-1 rounded-lg bg-[#2c221e] text-[#faf6f0] text-[11px] font-bold hover:bg-[#43352f] cursor-pointer">🖋️
                                 밑줄 저장</button>
-                            <button onclick="toggleDiaryHighlighter()" id="btn-highlighter"
+                            <button onclick="toggleDiaryHighlighter()" oncontextmenu="event.preventDefault(); toggleDiaryHighlighter();" id="btn-highlighter" title="밑줄 문장 형광펜 하이라이트 켜기/끄기 (L)"
                                 class="px-2.5 py-1 rounded-lg bg-[#fef08a] border border-[#eab308] text-[#854d0e] text-[11px] font-bold hover:bg-[#fde047] cursor-pointer">🖍️
                                 형광펜</button>
                         </div>
@@ -1274,6 +1274,14 @@
                 ITEMS.splice(idx, 1);
                 closeJournalModal();
                 renderShelf();
+            }
+        }
+
+        function restoreDiaryQuoteInput() {
+            const item = ITEMS.find(x => x.id === activeId);
+            const inp = document.getElementById('diary-quote-input');
+            if (item && inp) {
+                inp.value = item.memo || '';
             }
         }
 

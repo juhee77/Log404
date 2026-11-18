@@ -5,7 +5,7 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 
 ---
 
-## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 121)
+## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 122)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
@@ -14,6 +14,9 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 ---
 
 ## 🚀 최신 스프린트 업데이트 요약 ([전체 회의록 보기](SPRINT_LOG.md))
+
+### 📓 [Sprint 122] 모달 `밑줄 저장` 우클릭 원문 복원 & `형광펜` 우클릭 잉크색 순환
+- **`QuoteEditRow` 우클릭 보조 액션 (`detail_modal.gd` · `index.html`)**: `SaveQuoteBtn` 우클릭 시 입력창을 저장된 원문(`current_item.memo`)으로 즉시 복원하고, `HighlightBtn` 우클릭 시 만년필 잉크 색상을 순환합니다.
 
 ### 📓 [Sprint 121] 상단 5대 필터 탭 우클릭 가치순 보기 & 전체 초기화(`TabAll`) 원클릭 복원
 - **5대 필터 탭 우클릭 파워 액션 (`main_view.gd` · `index.html`)**: `TabAll` 우클릭 시 검색·필터·정렬을 기본값으로 완전 복원하고, `TabManga`·`TabGacha`·`TabComplete`·`TabFav` 우클릭 시 해당 탭 필터와 함께 `↕ 가치순` 정렬을 즉시 적용합니다.

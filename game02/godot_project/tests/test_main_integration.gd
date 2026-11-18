@@ -1729,6 +1729,24 @@ func _init() -> void:
 	assert(main_inst.archive_state.current_filter == -1 and main_inst.sort_mode == 0 and main_inst.search_input.text == "", "Right-clicking TabAll should reset search, filter, and sort mode to default")
 	print("✓ Sprint 121 Milestone: Filter Tabs 5-Way Right-Click Value Sort & Full Reset verified")
 
+	# Sprint 122 Milestone: SaveQuoteBtn Right-Click Restore Memo & HighlightBtn Right-Click Ink Cycle
+	main_inst._on_card_clicked(main_inst.archive_state.items[0])
+	var item_s122 = main_inst.archive_state.items[0]
+	var save_q_btn = main_inst.detail_modal.save_quote_btn
+	var hl_btn_s122 = main_inst.detail_modal.get_node("Panel/VBox/BodyMargin/Body/QuoteEditRow/HighlightBtn")
+	assert("우클릭: 원문 복원" in save_q_btn.tooltip_text and "우클릭: 잉크색 변경" in hl_btn_s122.tooltip_text, "SaveQuoteBtn and HighlightBtn tooltips should mention right-click actions")
+	var rclick_s122 := InputEventMouseButton.new()
+	rclick_s122.pressed = true
+	rclick_s122.button_index = MOUSE_BUTTON_RIGHT
+	main_inst.detail_modal.quote_input.text = "임시로 바꾼 미저장 문장"
+	save_q_btn.gui_input.emit(rclick_s122)
+	assert(main_inst.detail_modal.quote_input.text == item_s122.memo, "Right-clicking SaveQuoteBtn should restore quote_input to original memo")
+	var ink_before_s122 = item_s122.memo_ink_color
+	hl_btn_s122.gui_input.emit(rclick_s122)
+	assert(item_s122.memo_ink_color != ink_before_s122, "Right-clicking HighlightBtn should cycle fountain pen ink color")
+	main_inst.detail_modal.close()
+	print("✓ Sprint 122 Milestone: SaveQuoteBtn Right-Click Restore & HighlightBtn Right-Click Ink Cycle verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

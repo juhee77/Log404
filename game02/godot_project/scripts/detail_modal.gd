@@ -182,9 +182,21 @@ func _style_diary_controls() -> void:
 	if del_btn != null:
 		del_btn.tooltip_text = "이 작품의 일기장을 서재에서 삭제"
 	if save_quote_btn != null:
-		save_quote_btn.tooltip_text = "작성한 밑줄·감상평 저장 (Enter)"
+		save_quote_btn.tooltip_text = "작성한 밑줄·감상평 저장 (Enter · 우클릭: 원문 복원)"
+		save_quote_btn.gui_input.connect(func(ev: InputEvent) -> void:
+			if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_RIGHT:
+				if current_item != null and quote_input != null:
+					editing_vol_index = -1
+					quote_input.text = current_item.memo
+					quote_input.placeholder_text = "🖋️ 오늘 밑줄 친 감상평 수정..."
+					_render_volumes()
+		)
 	if hl_btn != null:
-		hl_btn.tooltip_text = "밑줄 문장 형광펜 하이라이트 켜기/끄기 (L)"
+		hl_btn.tooltip_text = "밑줄 문장 형광펜 하이라이트 켜기/끄기 (L · 우클릭: 잉크색 변경)"
+		hl_btn.gui_input.connect(func(ev: InputEvent) -> void:
+			if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_RIGHT:
+				cycle_fountain_pen_ink(1)
+		)
 	if close_btn != null:
 		close_btn.tooltip_text = "일기장 닫기 (ESC)"
 		var header_hbox: HBoxContainer = close_btn.get_parent() as HBoxContainer
