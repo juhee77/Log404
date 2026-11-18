@@ -80,18 +80,25 @@ func _ready() -> void:
 	detail_modal.summary_copy_requested.connect(copy_summary_to_clipboard)
 	add_modal.item_submitted.connect(_on_item_submitted)
 
-	var stat_items_panel: Control = $VBox/TopBar/TopMargin/StatsVBox/StatRow/StatItems
-	var stat_vols_panel: Control = $VBox/TopBar/TopMargin/StatsVBox/StatRow/StatVols
-	var stat_firsts_panel: Control = $VBox/TopBar/TopMargin/StatsVBox/StatRow/StatFirsts
-	var stat_gacha_panel: Control = $VBox/TopBar/TopMargin/StatsVBox/StatRow/StatGacha
-	stat_items_panel.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
-	stat_vols_panel.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
-	stat_firsts_panel.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
-	stat_gacha_panel.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
-	stat_items_panel.gui_input.connect(func(ev): if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_LEFT: _on_tab_all_pressed())
-	stat_vols_panel.gui_input.connect(func(ev): if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_LEFT: _on_tab_manga_pressed())
-	stat_firsts_panel.gui_input.connect(func(ev): if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_LEFT: _on_stat_firsts_clicked())
-	stat_gacha_panel.gui_input.connect(func(ev): if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_LEFT: _on_tab_gacha_pressed())
+	var stat_configs := [
+		[$VBox/TopBar/TopMargin/StatsVBox/StatRow/StatItems, _on_tab_all_pressed, copy_summary_to_clipboard, "좌클릭: 전체 서재 · 우클릭: 서재 리포트 클립보드 복사"],
+		[$VBox/TopBar/TopMargin/StatsVBox/StatRow/StatVols, _on_tab_manga_pressed, func() -> void: _on_tab_manga_pressed(); _set_sort_mode(3), "좌클릭: 이북·단행본 · 우클릭: 이북 가치순 정렬"],
+		[$VBox/TopBar/TopMargin/StatsVBox/StatRow/StatFirsts, _on_stat_firsts_clicked, show_library_infographic, "좌클릭: 초판 특전 필터 · 우클릭: 서재 인포그래픽 요약"],
+		[$VBox/TopBar/TopMargin/StatsVBox/StatRow/StatGacha, _on_tab_gacha_pressed, _trigger_instant_json_backup, "좌클릭: 가챠노트 필터 · 우클릭: 즉시 JSON 백업 저장"],
+	]
+	for cfg in stat_configs:
+		var panel: Control = cfg[0]
+		var lcb: Callable = cfg[1]
+		var rcb: Callable = cfg[2]
+		panel.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+		panel.tooltip_text = cfg[3]
+		panel.gui_input.connect(func(ev: InputEvent) -> void:
+			if ev is InputEventMouseButton and ev.pressed:
+				if ev.button_index == MOUSE_BUTTON_LEFT:
+					lcb.call()
+				elif ev.button_index == MOUSE_BUTTON_RIGHT:
+					rcb.call()
+		)
 	today_quote_label.mouse_filter = Control.MOUSE_FILTER_STOP
 	today_quote_label.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	today_quote_label.gui_input.connect(func(ev):
@@ -510,8 +517,8 @@ func filter_by_smart_tag(tag: String) -> int:
 	_show_toast("🏷️ 스마트 태그 %s (%s)" % [tag, _get_filtered_cards_summary()])
 	return card_grid.get_child_count()
 
-func _step_sort(delta: int) -> void:
-	sort_mode = (sort_mode + delta + 4) % 4
+func _set_sort_mode(target_mode: int) -> void:
+	sort_mode = (target_mode % 4 + 4) % 4
 	if sort_btn != null:
 		match sort_mode:
 			0: sort_btn.text = "↕ 기본순"
@@ -521,6 +528,9 @@ func _step_sort(delta: int) -> void:
 	_render_cards()
 	var mode_name = "기본 등록순" if sort_mode == 0 else ("권수 많은 순(다독순)" if sort_mode == 1 else ("최근 기록순(최신순)" if sort_mode == 2 else "소장 가치순(고액순)"))
 	_show_toast("📚 정렬 기준 변경: %s (%s)" % [mode_name, _get_filtered_cards_summary()])
+
+func _step_sort(delta: int) -> void:
+	_set_sort_mode(sort_mode + delta)
 
 func _on_sort_btn_pressed() -> void:
 	_step_sort(1)
@@ -802,7 +812,7 @@ func _unhandled_input(event: InputEvent) -> void:
 					get_viewport().set_input_as_handled()
 
 func _on_modal_help_requested() -> void:
-	_show_toast("⌨️ 모달 단축키: [←/→] 넘김 · [Home/End] 처음·끝 · [1~4] 인장 · [+/-] 권 · [X] 아이콘 · [Q] 표지색 · [Y] 회독 · [Z] 상태 · [I] 잉크 · [N] 펜촉 · [W] 마테 · [S] 스티커 · [R] 레어도 · [P] 속지 · [O] 띠지 · [M] 기분 · [G] 등급 · [T] 태그 · [F] 마감 · [A] 경로 · [B] 보관 · [D] 복수 · [K] 최애캐 · [U] 날씨 · [J] 장소 · [V] 가치 · [Shift+순환키] 역순환 · [E] 문장 · [L] 형광펜 · [C] 복사 · [Del] 삭제 · [ESC] 닫기")
+	_show_toast("⌨️ 모달 단축키: [←/→] 넘김 · [Home/End] 처음·끝 · [1~4] 인장 · [+/-] 권 · [X] 아이콘 · [Q] 표지색 · [Y] 회독 · [Z] 상태 · [I] 잉크 · [N] 펜촉 · [W] 마테 · [S] 스티커 · [R] 레어도 · [P] 속지 · [O] 띠지 · [M] 기분 · [G] 등급 · [T] 태그 · [F] 마감 · [A] 경로 · [B] 보관 · [D] 복수 · [K] 최애캐 · [U] 날씨 · [J] 장소 · [V] 가치 · [Shift+순환키] 역순환 · [E] 문장 · [L] 형광펜 · [C] 복사(Shift+C: 리포트) · [Del] 삭제 · [ESC] 닫기")
 
 func _on_modal_navigate_requested(delta: int) -> void:
 	if archive_state == null or archive_state.items.is_empty():

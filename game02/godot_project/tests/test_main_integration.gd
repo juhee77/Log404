@@ -1693,6 +1693,28 @@ func _init() -> void:
 	main_inst.detail_modal.close()
 	print("✓ Sprint 119 Milestone: ShareCardBtn Right-Click/Shift+C Summary Copy & ModalWashiTape Reverse verified")
 
+	# Sprint 120 Milestone: Stat Cards 4-Way Right-Click Power Actions & Modal Shift+C Help Hint
+	var rclick_s120 := InputEventMouseButton.new()
+	rclick_s120.pressed = true
+	rclick_s120.button_index = MOUSE_BUTTON_RIGHT
+	var s_items = main_inst.get_node("VBox/TopBar/TopMargin/StatsVBox/StatRow/StatItems")
+	var s_vols = main_inst.get_node("VBox/TopBar/TopMargin/StatsVBox/StatRow/StatVols")
+	var s_firsts = main_inst.get_node("VBox/TopBar/TopMargin/StatsVBox/StatRow/StatFirsts")
+	var s_gacha = main_inst.get_node("VBox/TopBar/TopMargin/StatsVBox/StatRow/StatGacha")
+	s_items.gui_input.emit(rclick_s120)
+	assert("클립보드" in main_inst.status_toast.text, "Right-clicking StatItems should copy summary report")
+	s_vols.gui_input.emit(rclick_s120)
+	assert(main_inst.archive_state.current_filter == 0 and main_inst.sort_mode == 3, "Right-clicking StatVols should filter manga and sort by value (3)")
+	s_firsts.gui_input.emit(rclick_s120)
+	assert("📊 소장:" in main_inst.status_toast.text and "총 가치:" in main_inst.status_toast.text, "Right-clicking StatFirsts should show infographic briefing")
+	s_gacha.gui_input.emit(rclick_s120)
+	assert("로컬 JSON 서재 백업 저장 완료" in main_inst.status_toast.text, "Right-clicking StatGacha should trigger instant JSON backup")
+	main_inst._on_tab_all_pressed()
+	main_inst._set_sort_mode(0)
+	main_inst._on_modal_help_requested()
+	assert("Shift+C: 리포트" in main_inst.status_toast.text, "Modal H cheatsheet should mention Shift+C report copy")
+	print("✓ Sprint 120 Milestone: Stat Cards 4-Way Right-Click Power Actions & Modal Shift+C Help Hint verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()
