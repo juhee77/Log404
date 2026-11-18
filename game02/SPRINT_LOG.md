@@ -5,6 +5,23 @@
 
 ---
 
+## 📓 [Sprint 116] 모달 내 16종 순환 단축키 `Shift+키` 역순환(`-1`) 통합 & 웹 목업 동기화
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A**: "모달 안의 모든 순환 버튼이 마우스 우클릭 역순환을 지원하는데, 키보드로 `W`/`P`/`S`/`R`/`O`/`M`/`G`/`T`/`F`/`A`/`N`/`B`/`K`/`U`/`J`/`Z`를 누를 때도 `Shift+키`로 이전 프리셋으로 돌아갈 수 있으면 키보드·마우스 조작감이 완전히 같아질 것 같아요."
+- **미니멀러 C**: "메인 화면과 모달 수치 증감(`Shift+V/D/Y`)처럼 모달 내 모든 순환 단축키에도 `Shift` 역순환 규칙을 통일합시다."
+- **기획자 (PO)**: "`detail_modal.gd`의 `_unhandled_input`에 `step_cyclers` 16종 디스패치 테이블을 도입해 `event.shift_pressed` 시 `-1`을 전달하고, `index.html`의 `W`/`S`/`R` 모달 키 핸들러도 `e.shiftKey`와 동기화합니다."
+
+### 2. 핵심 구현 및 변경 내역
+- `game02/godot_project/scripts/detail_modal.gd`:
+  - `KEY_W`, `KEY_P`, `KEY_S`, `KEY_R`, `KEY_O`, `KEY_M`, `KEY_G`, `KEY_T`, `KEY_F`, `KEY_A`, `KEY_N`, `KEY_B`, `KEY_K`, `KEY_U`, `KEY_J`, `KEY_Z` 16개 단축키를 `step_cyclers` 테이블로 분리해 `Shift` 조합 시 `-1` 역순환이 동작하도록 고도화했습니다.
+- `game02/index.html`:
+  - 모달 내 `R`/`S`/`W` 키 입력 시 `e.shiftKey ? -1 : 1`을 전달하도록 동기화했습니다.
+- `game02/godot_project/tests/test_main_integration.gd`:
+  - `Shift+W`, `Shift+R`, `Shift+M`, `Shift+F`, `Shift+Z` 역순환을 검증하는 Sprint 116 통합 테스트를 추가해 100% 통과했습니다.
+
+---
+
 ## 🏆 [Sprint 115] 마일스톤 115: 모달 `InkRow` 8종 순환 버튼 우클릭 역순환 완성 (`StampRow`+`InkRow` 전 버튼 양방향화 달성)
 
 ### 1. 14인 스쿼드 회의록 & VOC

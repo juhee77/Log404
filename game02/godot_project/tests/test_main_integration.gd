@@ -1591,6 +1591,32 @@ func _init() -> void:
 	main_inst.detail_modal.close()
 	print("✓ Sprint 115 Milestone: InkRow 8-Button Right-Click Reverse Cycle verified")
 
+	# Sprint 116 Milestone: In-Modal Shift+Key Reverse Cycle for 16 Step Cyclers
+	main_inst._on_card_clicked(main_inst.archive_state.items[0])
+	var item_s116 = main_inst.archive_state.items[0]
+	var orig_w_s116 = item_s116.washi_tape_color
+	var orig_r_s116 = item_s116.rarity_tier
+	var orig_m_s116 = item_s116.reading_mood
+	var orig_f_s116 = item_s116.cover_finish
+	var orig_z_s116 = item_s116.possession_state
+	for kc in [KEY_W, KEY_R, KEY_M, KEY_F, KEY_Z]:
+		var fwd_ev := InputEventKey.new()
+		fwd_ev.pressed = true
+		fwd_ev.keycode = kc
+		main_inst.detail_modal._unhandled_input(fwd_ev)
+		var rev_ev := InputEventKey.new()
+		rev_ev.pressed = true
+		rev_ev.shift_pressed = true
+		rev_ev.keycode = kc
+		main_inst.detail_modal._unhandled_input(rev_ev)
+	assert(item_s116.washi_tape_color == orig_w_s116, "Shift+W should reverse-cycle washi tape")
+	assert(item_s116.rarity_tier == orig_r_s116, "Shift+R should reverse-cycle rarity tier")
+	assert(item_s116.reading_mood == orig_m_s116, "Shift+M should reverse-cycle reading mood")
+	assert(item_s116.cover_finish == orig_f_s116, "Shift+F should reverse-cycle cover finish")
+	assert(item_s116.possession_state == orig_z_s116, "Shift+Z should reverse-cycle possession state")
+	main_inst.detail_modal.close()
+	print("✓ Sprint 116 Milestone: In-Modal Shift+Key 16-Cycler Reverse Navigation verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

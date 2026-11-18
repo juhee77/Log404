@@ -621,10 +621,7 @@ func _unhandled_input(event: InputEvent) -> void:
 				fn.call()
 				get_viewport().set_input_as_handled()
 				return
-			var simple_actions := {
-				KEY_C: copy_book_quote_card,
-				KEY_L: toggle_quote_highlight,
-				KEY_I: cycle_fountain_pen_ink,
+			var step_cyclers := {
 				KEY_W: cycle_washi_tape,
 				KEY_P: cycle_paper_pattern,
 				KEY_S: cycle_deco_sticker,
@@ -640,9 +637,18 @@ func _unhandled_input(event: InputEvent) -> void:
 				KEY_K: cycle_favorite_character,
 				KEY_U: cycle_reading_weather,
 				KEY_J: cycle_reading_spot,
+				KEY_Z: cycle_possession_state,
+			}
+			if step_cyclers.has(event.keycode):
+				step_cyclers[event.keycode].call(-1 if event.shift_pressed else 1)
+				get_viewport().set_input_as_handled()
+				return
+			var simple_actions := {
+				KEY_C: copy_book_quote_card,
+				KEY_L: toggle_quote_highlight,
+				KEY_I: cycle_fountain_pen_ink,
 				KEY_Q: cycle_cover_color,
 				KEY_X: cycle_cover_icon,
-				KEY_Z: cycle_possession_state,
 				KEY_DELETE: _on_delete_btn_pressed,
 				KEY_BACKSPACE: _on_delete_btn_pressed,
 			}
