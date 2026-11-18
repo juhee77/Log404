@@ -2,6 +2,12 @@ class_name DetailModal
 extends Control
 
 const ArchiveStateClass = preload("res://scripts/archive_state.gd")
+const INK_SWATCH_MAP := {
+	"InkEspresso": "#2c221e",
+	"InkBurgundy": "#7f1d1d",
+	"InkSepia": "#78350f",
+	"InkForest": "#14532d"
+}
 
 signal item_deleted(item)
 signal volume_added(item)
@@ -170,6 +176,14 @@ func _style_diary_controls() -> void:
 				btn.add_theme_stylebox_override("normal", cream_btn)
 				btn.add_theme_color_override("font_color", Color(0.28, 0.22, 0.18))
 				btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+				if INK_SWATCH_MAP.has(btn.name):
+					var sw_hex: String = INK_SWATCH_MAP[btn.name]
+					btn.tooltip_text = "좌클릭: 잉크색 적용 · 우클릭: 잉크 적용+형광펜 토글"
+					btn.gui_input.connect(func(ev: InputEvent) -> void:
+						if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_RIGHT:
+							set_fountain_pen_ink(sw_hex)
+							toggle_quote_highlight()
+					)
 	for ctrl in [save_quote_btn, add_vol_btn, rem_btn, share_btn, del_btn, close_btn, hl_btn]:
 		if ctrl != null:
 			ctrl.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
@@ -452,17 +466,11 @@ func _highlight_active_ink_btn(active_hex: String) -> void:
 	var ink_row: HFlowContainer = get_node_or_null("Panel/VBox/BodyMargin/Body/InkRow")
 	if ink_row == null:
 		return
-	var ink_map := {
-		"InkEspresso": "#2c221e",
-		"InkBurgundy": "#7f1d1d",
-		"InkSepia": "#78350f",
-		"InkForest": "#14532d"
-	}
-	for node_name in ink_map.keys():
+	for node_name in INK_SWATCH_MAP.keys():
 		var btn: Button = ink_row.get_node_or_null(node_name)
 		if btn == null:
 			continue
-		var hex: String = ink_map[node_name]
+		var hex: String = INK_SWATCH_MAP[node_name]
 		var is_active: bool = (active_hex.to_lower() == hex)
 		var sb = StyleBoxFlat.new()
 		sb.bg_color = Color(0.98, 0.94, 0.87, 1) if is_active else Color(0.95, 0.91, 0.84, 1)
@@ -1263,9 +1271,13 @@ func _render_volumes() -> void:
 		bm_btn.flat = true
 		bm_btn.add_theme_font_size_override("font_size", 10)
 		bm_btn.add_theme_color_override("font_color", Color(0.85, 0.55, 0.15) if is_bm else Color(0.65, 0.58, 0.50))
-		bm_btn.tooltip_text = "이 권을 북마크에 추가/해제합니다"
+		bm_btn.tooltip_text = "이 권을 북마크에 추가/해제합니다 (우클릭: 이 권 밑줄 편집)"
 		bm_btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 		bm_btn.pressed.connect(func(): toggle_volume_bookmark(capture_idx))
+		bm_btn.gui_input.connect(func(ev: InputEvent) -> void:
+			if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_RIGHT:
+				start_editing_volume_quote(capture_idx)
+		)
 
 		var quote_lbl = Label.new()
 		var q = v.get("quote", "")

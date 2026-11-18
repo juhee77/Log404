@@ -18,13 +18,14 @@ Godot 4+ 기반의 감성 게임 및 인터랙티브 아카이브 애플리케�
 > **Godot 4.6.2 모바일 기반 E-Book 리더기 서재(Apple Books · 리디북스) & 만년필 다꾸 독서노트(굿노트 · 몰스킨) 감성 아카이브 앱**  
 > 14인 가상 애자일 스쿼드가 20분 주기 자동 스프린트로 지속 개선 중입니다.
 
-### 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 123)
+### 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 124)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
 | ![Pocket Archive Main Screen](game02/godot_project/screenshots/godot_app_screen.png) | ![Pocket Archive Detail Modal](game02/godot_project/screenshots/godot_modal_screen.png) |
 
 ### ✨ 주요 핵심 기능
+- **최신 Sprint 124 하이라이트**: 모달 4대 잉크 스와치 우클릭(잉크+형광펜 동시 토글 `INK_SWATCH_MAP`) 및 권별 북마크 리본 우클릭 밑줄 편집 진입(`detail_modal.gd` · `index.html`) 완성
 - **최신 Sprint 123 하이라이트**: 모달 `AddVolBtn` 우클릭 새 권 추가+즉시 밑줄 편집 진입 및 `DeleteBtn` 우클릭 삭제 무장 안전 해제(`detail_modal.gd` · `index.html`) 완성
 - **최신 Sprint 122 하이라이트**: 모달 `밑줄 저장` 우클릭 원문 복원(`restoreDiaryQuoteInput`) 및 `형광펜` 우클릭 만년필 잉크색 순환(`detail_modal.gd` · `index.html`) 완성
 - **최신 Sprint 121 하이라이트**: 상단 5대 필터 탭 우클릭 파워 액션(`TabAll` 완전 초기화, `TabManga`/`TabGacha`/`TabComplete`/`TabFav` 즉시 `↕ 가치순` 정렬) 및 `index.html` 동기화 완성

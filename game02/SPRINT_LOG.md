@@ -5,6 +5,24 @@
 
 ---
 
+## 📓 [Sprint 124] 모달 4대 잉크 스와치 우클릭(잉크+형광펜 동시 토글) & 권별 북마크 리본 우클릭 밑줄 편집
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A**: "모달 `✒️ 잉크:` 줄 앞의 4개 잉크 스와치(`에스프레소`, `버건디`, `세피아`, `포레스트`)를 우클릭했을 때 해당 잉크 색상을 적용하면서 동시에 형광펜 하이라이트까지 한 번에 켜거나 끄면 꾸미기 속도가 두 배는 빨라질 것 같아요."
+- **미니멀러 C**: "권별 로우의 `🏷️`/`🔖` 북마크 리본 버튼도 우클릭하면 바로 그 권의 밑줄 문장 편집으로 들어가면 작은 리본에서도 편집 동선이 이어져 좋겠어요!"
+- **기획자 (PO)**: "`detail_modal.gd`에 `INK_SWATCH_MAP` 상수를 도입해 잉크 스와치 스타일링과 우클릭(잉크+형광펜 동시 토글)을 통합하고, 권별 로우 `bm_btn` 우클릭 시 `start_editing_volume_quote(capture_idx)`를 연결해 `index.html`과 동기화합니다."
+
+### 2. 핵심 구현 및 변경 내역
+- `game02/godot_project/scripts/detail_modal.gd`:
+  - `INK_SWATCH_MAP` 상수로 `InkEspresso`, `InkBurgundy`, `InkSepia`, `InkForest` 매핑 중복을 제거하고, 우클릭 시 `set_fountain_pen_ink(sw_hex)` + `toggle_quote_highlight()`를 함께 실행하도록 연결했습니다.
+  - 권별 로우 `bm_btn`에 우클릭 시 `start_editing_volume_quote(capture_idx)` 호출과 툴팁 안내를 추가했습니다.
+- `game02/index.html`:
+  - 권별 북마크 리본 버튼에 `oncontextmenu="event.preventDefault(); startEditVolQuote(${idx});"` 및 툴팁을 동기화했습니다.
+- `game02/godot_project/tests/test_main_integration.gd`:
+  - `InkSepia` 우클릭 잉크+형광펜 동시 전환 및 권별 북마크 리본 우클릭 밑줄 편집 진입을 검증하는 Sprint 124 통합 테스트를 추가해 100% 통과했습니다.
+
+---
+
 ## 📓 [Sprint 123] 모달 `AddVolBtn` 우클릭 권 추가+즉시 밑줄 편집 & `DeleteBtn` 우클릭 삭제 무장 안전 해제
 
 ### 1. 14인 스쿼드 회의록 & VOC

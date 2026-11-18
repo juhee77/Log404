@@ -1767,6 +1767,28 @@ func _init() -> void:
 	main_inst.detail_modal.close()
 	print("✓ Sprint 123 Milestone: AddVolBtn Right-Click Add+Edit & DeleteBtn Right-Click Disarm verified")
 
+	# Sprint 124 Milestone: Ink Swatches Right-Click Ink+Highlight & Volume Bookmark Right-Click Edit
+	main_inst._on_card_clicked(main_inst.archive_state.items[0])
+	var item_s124 = main_inst.archive_state.items[0]
+	var orig_hl_s124 = item_s124.highlight_enabled
+	var ink_sepia = main_inst.detail_modal.get_node("Panel/VBox/BodyMargin/Body/InkRow/InkSepia")
+	assert("우클릭: 잉크 적용+형광펜 토글" in ink_sepia.tooltip_text, "Ink swatch tooltip should mention right-click ink+highlight toggle")
+	var rclick_s124 := InputEventMouseButton.new()
+	rclick_s124.pressed = true
+	rclick_s124.button_index = MOUSE_BUTTON_RIGHT
+	ink_sepia.gui_input.emit(rclick_s124)
+	assert(item_s124.memo_ink_color == "#78350f" and item_s124.highlight_enabled != orig_hl_s124, "Right-clicking InkSepia should set sepia ink and toggle highlighter")
+	var first_row_bm: Button = null
+	for b in main_inst.detail_modal.vol_list.get_child(0).find_children("*", "Button", true, false):
+		if b.text == "🏷️" or b.text == "🔖":
+			first_row_bm = b
+			break
+	assert(first_row_bm != null and "우클릭: 이 권 밑줄 편집" in first_row_bm.tooltip_text, "Bookmark ribbon tooltip should mention right-click quote edit")
+	first_row_bm.gui_input.emit(rclick_s124)
+	assert(main_inst.detail_modal.editing_vol_index == 0, "Right-clicking volume bookmark ribbon should start editing that volume's quote")
+	main_inst.detail_modal.close()
+	print("✓ Sprint 124 Milestone: Ink Swatch Right-Click Ink+Highlight & Bookmark Right-Click Edit verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

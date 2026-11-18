@@ -5,7 +5,7 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 
 ---
 
-## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 123)
+## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 124)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
@@ -14,6 +14,9 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 ---
 
 ## 🚀 최신 스프린트 업데이트 요약 ([전체 회의록 보기](SPRINT_LOG.md))
+
+### 📓 [Sprint 124] 모달 4대 잉크 스와치 우클릭(잉크+형광펜 동시 토글) & 권별 북마크 리본 우클릭 밑줄 편집
+- **잉크 스와치 & 북마크 리본 우클릭 파워 액션 (`detail_modal.gd` · `index.html`)**: `InkRow` 4대 잉크 스와치 우클릭 시 잉크 적용과 함께 형광펜을 토글하고, 권별 북마크 리본(`🏷️`/`🔖`) 우클릭 시 해당 권의 밑줄 문장 편집 모드로 즉시 진입합니다.
 
 ### 📓 [Sprint 123] 모달 `AddVolBtn` 우클릭 권 추가+즉시 밑줄 편집 & `DeleteBtn` 우클릭 삭제 무장 안전 해제
 - **모달 `BtnRow` 우클릭 동선 & 안전성 강화 (`detail_modal.gd` · `index.html`)**: `AddVolBtn` 우클릭 시 새 권 추가 후 즉시 마지막 권 밑줄 편집 모드로 진입하고, `DeleteBtn` 우클릭 시 `delete_armed` 삭제 확인 상태를 안전하게 해제합니다.
