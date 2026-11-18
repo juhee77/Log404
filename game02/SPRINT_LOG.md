@@ -5,6 +5,24 @@
 
 ---
 
+## 🏆 [Sprint 125] 마일스톤 125: 모달 4대 인장 우클릭(인장+감상카드 복사) & 권별 초판 배지 우클릭(초판+북마크 동시 토글)
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A**: "모달 `StampRow`의 4개 인장 버튼(`전권완결`, `초판특전`, `인생최애`, `위시`)을 우클릭했을 때 인장을 찍는 동시에 감상 카드까지 바로 클립보드에 복사되면 인장 바꾸자마자 공유하기가 정말 편할 것 같아요!"
+- **가챠러 B**: "권별 로우의 `🔖초판특전`/`✓소장완료` 배지도 우클릭 한 번으로 초판 여부와 `🔖` 북마크 리본을 동시에 토글하면 핵심 소장 권 표시가 한결 빨라지겠네요."
+- **기획자 (PO)**: "`detail_modal.gd`에 `STAMP_PRESET_MAP` 상수를 도입해 인장 매핑 중복을 제거하고 우클릭(인장+감상카드 복사)을 연결하며, 권별 로우 `status_btn` 우클릭(초판+북마크 동시 토글)과 `index.html` 동기화까지 마일스톤 125로 완성합니다."
+
+### 2. 핵심 구현 및 변경 내역
+- `game02/godot_project/scripts/detail_modal.gd`:
+  - `STAMP_PRESET_MAP` 상수로 4대 인장 매핑 중복을 제거하고, `StampComplete`, `StampFirst`, `StampFav`, `StampWish` 우클릭 시 `apply_stamp(st_name)` + `copy_book_quote_card()`를 실행하도록 연결했습니다.
+  - 권별 로우 `status_btn` 우클릭 시 `toggle_volume_status(capture_idx)` + `toggle_volume_bookmark(capture_idx)` 동시 토글 및 툴팁을 추가했습니다.
+- `game02/index.html`:
+  - `data-stamp-btn` 4개 버튼 및 권별 초판/소장 배지에 `oncontextmenu` 우클릭 액션 및 툴팁을 동기화했습니다.
+- `game02/godot_project/tests/test_main_integration.gd`:
+  - `StampFav` 우클릭 인장+감상카드 복사와 권별 `status_btn` 우클릭 초판+북마크 동시 토글을 검증하는 Sprint 125 마일스톤 테스트를 추가해 100% 통과했습니다.
+
+---
+
 ## 📓 [Sprint 124] 모달 4대 잉크 스와치 우클릭(잉크+형광펜 동시 토글) & 권별 북마크 리본 우클릭 밑줄 편집
 
 ### 1. 14인 스쿼드 회의록 & VOC

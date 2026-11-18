@@ -336,13 +336,13 @@
                     <div class="mt-3 p-2.5 rounded-xl bg-[#faf5ed] border border-[#e6dccd] space-y-2">
                         <div class="flex items-center gap-1.5 flex-wrap">
                             <span class="text-[11px] font-bold text-[#786b63] mr-1">💮 인장 찍기:</span>
-                            <button data-stamp-btn="전권완결" onclick="applyDiaryStamp('전권완결')"
+                            <button data-stamp-btn="전권완결" onclick="applyDiaryStamp('전권완결')" oncontextmenu="event.preventDefault(); applyDiaryStamp('전권완결'); copyBookQuoteCard();" title="좌클릭: 인장 찍기 · 우클릭: 인장+감상카드 복사"
                                 class="px-2 py-0.5 rounded border border-[#c85a32]/50 bg-[#fff8f5] text-[#c85a32] text-[10px] font-bold hover:bg-[#c85a32] hover:text-white cursor-pointer">💮전권완결</button>
-                            <button data-stamp-btn="초판특전" onclick="applyDiaryStamp('초판특전')"
+                            <button data-stamp-btn="초판특전" onclick="applyDiaryStamp('초판특전')" oncontextmenu="event.preventDefault(); applyDiaryStamp('초판특전'); copyBookQuoteCard();" title="좌클릭: 인장 찍기 · 우클릭: 인장+감상카드 복사"
                                 class="px-2 py-0.5 rounded border border-[#c85a32]/50 bg-[#fff8f5] text-[#c85a32] text-[10px] font-bold hover:bg-[#c85a32] hover:text-white cursor-pointer">🔖초판특전</button>
-                            <button data-stamp-btn="인생최애" onclick="applyDiaryStamp('인생최애')"
+                            <button data-stamp-btn="인생최애" onclick="applyDiaryStamp('인생최애')" oncontextmenu="event.preventDefault(); applyDiaryStamp('인생최애'); copyBookQuoteCard();" title="좌클릭: 인장 찍기 · 우클릭: 인장+감상카드 복사"
                                 class="px-2 py-0.5 rounded border border-[#c85a32]/50 bg-[#fff8f5] text-[#c85a32] text-[10px] font-bold hover:bg-[#c85a32] hover:text-white cursor-pointer">♥인생최애</button>
-                            <button data-stamp-btn="위시리스트" onclick="applyDiaryStamp('위시리스트')"
+                            <button data-stamp-btn="위시리스트" onclick="applyDiaryStamp('위시리스트')" oncontextmenu="event.preventDefault(); applyDiaryStamp('위시리스트'); copyBookQuoteCard();" title="좌클릭: 인장 찍기 · 우클릭: 인장+감상카드 복사"
                                 class="px-2 py-0.5 rounded border border-[#c85a32]/50 bg-[#fff8f5] text-[#c85a32] text-[10px] font-bold hover:bg-[#c85a32] hover:text-white cursor-pointer">✨위시리스트</button>
                         </div>
                         <div class="flex items-center gap-1.5">
@@ -818,7 +818,7 @@
                 row.innerHTML = `
                     <div class="flex items-center gap-2 min-w-0">
                         <span class="serif-font font-bold text-[#2c221e] shrink-0">${v.vol}권</span>
-                        <button onclick="toggleVolStatus(${idx})" class="px-1.5 py-0.5 rounded border ${isFirst ? 'bg-[#fff8f5] border-[#c85a32]/50 text-[#c85a32]' : 'bg-[#eef5f0] border-[#4a6b5d]/50 text-[#4a6b5d]'} text-[10px] font-bold shrink-0 cursor-pointer">${isFirst ? '🔖 초판특전' : '✓ 소장완료'}</button>
+                        <button onclick="toggleVolStatus(${idx})" oncontextmenu="event.preventDefault(); toggleVolStatus(${idx}); toggleVolBookmark(${idx});" title="클릭: 초판/소장 전환 · 우클릭: 초판+북마크 동시 토글" class="px-1.5 py-0.5 rounded border ${isFirst ? 'bg-[#fff8f5] border-[#c85a32]/50 text-[#c85a32]' : 'bg-[#eef5f0] border-[#4a6b5d]/50 text-[#4a6b5d]'} text-[10px] font-bold shrink-0 cursor-pointer">${isFirst ? '🔖 초판특전' : '✓ 소장완료'}</button>
                         <button onclick="toggleVolBookmark(${idx})" oncontextmenu="event.preventDefault(); startEditVolQuote(${idx});" class="text-[12px] shrink-0 cursor-pointer hover:scale-110" title="북마크 토글 (우클릭: ${v.vol}권 밑줄 문장 편집)">${isBm ? '🔖' : '🏷️'}</button>
                         <span onclick="startEditVolQuote(${idx})" class="serif-font text-[#5c4938] truncate cursor-pointer hover:text-[#c85a32]" title="클릭하여 ${v.vol}권 밑줄 문장 편집">${v.quote ? `"${v.quote}"` : '메모 없음'}</span>
                     </div>

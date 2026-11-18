@@ -1789,6 +1789,29 @@ func _init() -> void:
 	main_inst.detail_modal.close()
 	print("✓ Sprint 124 Milestone: Ink Swatch Right-Click Ink+Highlight & Bookmark Right-Click Edit verified")
 
+	# Sprint 125 Milestone: Stamp Buttons Right-Click Stamp+Share & Vol Status Right-Click Dual Toggle
+	main_inst._on_card_clicked(main_inst.archive_state.items[0])
+	var item_s125 = main_inst.archive_state.items[0]
+	var stamp_fav_btn = main_inst.detail_modal.get_node("Panel/VBox/BodyMargin/Body/StampRow/StampFav")
+	assert("우클릭: 인장+감상카드 복사" in stamp_fav_btn.tooltip_text, "StampFav tooltip should mention right-click stamp+share copy")
+	var rclick_s125 := InputEventMouseButton.new()
+	rclick_s125.pressed = true
+	rclick_s125.button_index = MOUSE_BUTTON_RIGHT
+	stamp_fav_btn.gui_input.emit(rclick_s125)
+	assert(item_s125.status_tag == "인생최애" and "감상 카드" in main_inst.status_toast.text, "Right-clicking StampFav should apply stamp and copy quote card")
+	var first_status_btn: Button = null
+	for b in main_inst.detail_modal.vol_list.get_child(0).find_children("*", "Button", true, false):
+		if "초판" in b.text or "소장완료" in b.text:
+			first_status_btn = b
+			break
+	var orig_st_s125 = item_s125.volumes[0].get("status", "")
+	var orig_bm_s125 = bool(item_s125.volumes[0].get("bookmarked", false))
+	assert(first_status_btn != null and "우클릭: 초판+북마크 동시 토글" in first_status_btn.tooltip_text, "Status button tooltip should mention dual toggle")
+	first_status_btn.gui_input.emit(rclick_s125)
+	assert(item_s125.volumes[0].get("status", "") != orig_st_s125 and bool(item_s125.volumes[0].get("bookmarked", false)) != orig_bm_s125, "Right-clicking volume status button should toggle both status and bookmark")
+	main_inst.detail_modal.close()
+	print("✓ Sprint 125 Milestone: Stamp Right-Click Stamp+Share & Vol Status Dual Toggle verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

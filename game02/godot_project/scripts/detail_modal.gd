@@ -8,6 +8,12 @@ const INK_SWATCH_MAP := {
 	"InkSepia": "#78350f",
 	"InkForest": "#14532d"
 }
+const STAMP_PRESET_MAP := {
+	"StampComplete": "전권완결",
+	"StampFirst": "초판특전",
+	"StampFav": "인생최애",
+	"StampWish": "위시"
+}
 
 signal item_deleted(item)
 signal volume_added(item)
@@ -109,6 +115,14 @@ func _style_diary_controls() -> void:
 			child.add_theme_stylebox_override("normal", stamp_sb)
 			child.add_theme_color_override("font_color", Color(0.78, 0.35, 0.20))
 			child.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+			if STAMP_PRESET_MAP.has(child.name):
+				var st_name: String = STAMP_PRESET_MAP[child.name]
+				child.tooltip_text = "좌클릭: '%s' 인장 찍기 ([1]~[4]) · 우클릭: 인장+감상카드 복사" % st_name
+				child.gui_input.connect(func(ev: InputEvent) -> void:
+					if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_RIGHT:
+						apply_stamp(st_name)
+						copy_book_quote_card()
+				)
 
 	var input_sb = StyleBoxFlat.new()
 	input_sb.bg_color = Color(0.98, 0.96, 0.92, 1)
@@ -707,17 +721,11 @@ func apply_stamp(stamp_name: String) -> void:
 func _highlight_active_stamp_btn(active_stamp: String) -> void:
 	if stamp_row == null:
 		return
-	var stamp_map := {
-		"StampComplete": "전권완결",
-		"StampFirst": "초판특전",
-		"StampFav": "인생최애",
-		"StampWish": "위시"
-	}
-	for node_name in stamp_map.keys():
+	for node_name in STAMP_PRESET_MAP.keys():
 		var btn: Button = stamp_row.get_node_or_null(node_name)
 		if btn == null:
 			continue
-		var is_active: bool = (active_stamp == stamp_map[node_name])
+		var is_active: bool = (active_stamp == STAMP_PRESET_MAP[node_name])
 		var sb = StyleBoxFlat.new()
 		sb.bg_color = Color(1.0, 0.92, 0.88, 1.0) if is_active else Color(0.99, 0.96, 0.94, 1.0)
 		sb.border_width_left = 2 if is_active else 1
@@ -1242,9 +1250,14 @@ func _render_volumes() -> void:
 		status_btn.add_theme_stylebox_override("normal", btn_sb)
 		status_btn.add_theme_color_override("font_color", Color(0.78, 0.35, 0.2) if is_first else Color(0.29, 0.45, 0.36))
 		status_btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
-		status_btn.tooltip_text = "클릭하여 초판특전 / 소장완료 전환"
+		status_btn.tooltip_text = "클릭하여 초판특전 / 소장완료 전환 (우클릭: 초판+북마크 동시 토글)"
 		var capture_idx = idx
 		status_btn.pressed.connect(func(): toggle_volume_status(capture_idx))
+		status_btn.gui_input.connect(func(ev: InputEvent) -> void:
+			if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_RIGHT:
+				toggle_volume_status(capture_idx)
+				toggle_volume_bookmark(capture_idx)
+		)
 		
 		var date_btn = Button.new()
 		var d_val = str(v.get("date", "2026.11.12"))
