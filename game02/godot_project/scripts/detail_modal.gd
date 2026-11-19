@@ -2,6 +2,18 @@ class_name DetailModal
 extends Control
 
 const ArchiveStateClass = preload("res://scripts/archive_state.gd")
+const INK_SWATCH_MAP := {
+	"InkEspresso": "#2c221e",
+	"InkBurgundy": "#7f1d1d",
+	"InkSepia": "#78350f",
+	"InkForest": "#14532d"
+}
+const STAMP_PRESET_MAP := {
+	"StampComplete": "전권완결",
+	"StampFirst": "초판특전",
+	"StampFav": "인생최애",
+	"StampWish": "위시"
+}
 
 signal item_deleted(item)
 signal volume_added(item)
@@ -10,6 +22,10 @@ signal card_copied(item)
 signal navigate_requested(delta: int)
 signal diary_updated(item)
 signal help_requested
+signal summary_copy_requested
+signal close_and_backup_requested
+signal filter_category_requested(cat: int)
+signal search_author_requested(author_name: String)
 
 @onready var title_label: Label = $Panel/VBox/Header/HBox/TitleLabel
 @onready var cat_badge: Label = $Panel/VBox/Header/HBox/CatBadge
@@ -63,7 +79,76 @@ func _ready() -> void:
 				close()
 		)
 	cover_rect.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
-	cover_rect.tooltip_text = "좌클릭·X: 표지 아이콘 변경 · 우클릭·Q: 표지 색상 변경"
+	cover_rect.tooltip_text = "좌클릭·X: 표지 아이콘 변경(Shift+X: 이전) · 우클릭·Q: 표지 색상 변경(Shift+Q: 이전)"
+	if title_label != null:
+		title_label.mouse_filter = Control.MOUSE_FILTER_STOP
+		title_label.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+		title_label.tooltip_text = "클릭하여 작품 제목 클립보드 복사"
+		title_label.gui_input.connect(func(ev: InputEvent) -> void:
+			if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_LEFT and current_item != null:
+				DisplayServer.clipboard_set(current_item.title)
+				title_label.tooltip_text = "✅ 복사됨: " + current_item.title
+		)
+	if cat_badge != null:
+		cat_badge.mouse_filter = Control.MOUSE_FILTER_STOP
+		cat_badge.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+		cat_badge.tooltip_text = "클릭하여 같은 카테고리(이북/가챠) 서재만 모아보기"
+		cat_badge.gui_input.connect(func(ev: InputEvent) -> void:
+			if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_LEFT and current_item != null:
+				var target_cat: int = current_item.category
+				close()
+				filter_category_requested.emit(target_cat)
+		)
+	if author_label != null:
+		author_label.mouse_filter = Control.MOUSE_FILTER_STOP
+		author_label.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+		author_label.tooltip_text = "좌클릭: 이 작가·시리즈의 다른 작품 검색하기 · 우클릭: 가치 +5,000원(Shift: -5,000원)"
+		author_label.gui_input.connect(func(ev: InputEvent) -> void:
+			if ev is InputEventMouseButton and ev.pressed and current_item != null:
+				if ev.button_index == MOUSE_BUTTON_LEFT:
+					var author_q: String = current_item.author_or_series
+					close()
+					search_author_requested.emit(author_q)
+				elif ev.button_index == MOUSE_BUTTON_RIGHT:
+					if ev.shift_pressed:
+						reduce_estimated_value()
+					else:
+						boost_estimated_value()
+		)
+	if memo_label != null:
+		memo_label.mouse_filter = Control.MOUSE_FILTER_STOP
+		memo_label.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+		memo_label.tooltip_text = "좌클릭: 밑줄 문장 편집 입력창 이동 (E) · 우클릭: 형광펜 토글 (L)"
+		memo_label.gui_input.connect(func(ev: InputEvent) -> void:
+			if ev is InputEventMouseButton and ev.pressed and current_item != null:
+				if ev.button_index == MOUSE_BUTTON_LEFT and quote_input != null:
+					quote_input.grab_focus()
+					quote_input.caret_column = quote_input.text.length()
+				elif ev.button_index == MOUSE_BUTTON_RIGHT:
+					toggle_quote_highlight()
+		)
+	if tag_label != null:
+		tag_label.mouse_filter = Control.MOUSE_FILTER_STOP
+		tag_label.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+		tag_label.tooltip_text = "좌클릭: 띠지 문구 다음 순환 (O) · 우클릭: 이전 순환 (Shift+O)"
+		tag_label.gui_input.connect(func(ev: InputEvent) -> void:
+			if ev is InputEventMouseButton and ev.pressed and current_item != null:
+				if ev.button_index == MOUSE_BUTTON_LEFT:
+					cycle_obi_preset(1)
+				elif ev.button_index == MOUSE_BUTTON_RIGHT:
+					cycle_obi_preset(-1)
+		)
+	if vol_header != null:
+		vol_header.mouse_filter = Control.MOUSE_FILTER_STOP
+		vol_header.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+		vol_header.tooltip_text = "좌클릭: 새 권·파츠 추가 (+) · 우클릭: 마지막 권 삭제 (-)"
+		vol_header.gui_input.connect(func(ev: InputEvent) -> void:
+			if ev is InputEventMouseButton and ev.pressed and current_item != null:
+				if ev.button_index == MOUSE_BUTTON_LEFT:
+					_on_add_vol_btn_pressed()
+				elif ev.button_index == MOUSE_BUTTON_RIGHT:
+					remove_last_volume()
+		)
 	cover_rect.gui_input.connect(func(ev):
 		if ev is InputEventMouseButton and ev.pressed:
 			if ev.button_index == MOUSE_BUTTON_LEFT:
@@ -75,10 +160,13 @@ func _ready() -> void:
 	if washi_node != null:
 		washi_node.mouse_filter = Control.MOUSE_FILTER_STOP
 		washi_node.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
-		washi_node.tooltip_text = "클릭하여 마스킹 테이프 색상 변경"
+		washi_node.tooltip_text = "좌클릭: 마스킹 테이프 다음 색 · 우클릭: 이전 색"
 		washi_node.gui_input.connect(func(ev):
-			if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_LEFT:
-				cycle_washi_tape()
+			if ev is InputEventMouseButton and ev.pressed:
+				if ev.button_index == MOUSE_BUTTON_LEFT:
+					cycle_washi_tape(1)
+				elif ev.button_index == MOUSE_BUTTON_RIGHT:
+					cycle_washi_tape(-1)
 		)
 
 func _style_diary_controls() -> void:
@@ -99,6 +187,14 @@ func _style_diary_controls() -> void:
 			child.add_theme_stylebox_override("normal", stamp_sb)
 			child.add_theme_color_override("font_color", Color(0.78, 0.35, 0.20))
 			child.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+			if STAMP_PRESET_MAP.has(child.name):
+				var st_name: String = STAMP_PRESET_MAP[child.name]
+				child.tooltip_text = "좌클릭: '%s' 인장 찍기 ([1]~[4]) · 우클릭: 인장+감상카드 복사" % st_name
+				child.gui_input.connect(func(ev: InputEvent) -> void:
+					if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_RIGHT:
+						apply_stamp(st_name)
+						copy_book_quote_card()
+				)
 
 	var input_sb = StyleBoxFlat.new()
 	input_sb.bg_color = Color(0.98, 0.96, 0.92, 1)
@@ -141,6 +237,10 @@ func _style_diary_controls() -> void:
 	if share_btn != null:
 		share_btn.add_theme_stylebox_override("normal", cream_btn)
 		share_btn.add_theme_color_override("font_color", Color(0.28, 0.45, 0.38))
+		share_btn.gui_input.connect(func(ev: InputEvent) -> void:
+			if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_RIGHT:
+				summary_copy_requested.emit()
+		)
 
 	var del_btn: Button = $Panel/VBox/BodyMargin/Body/TopInfo/MetaVBox/BtnRow/DeleteBtn
 	del_btn.add_theme_stylebox_override("normal", cream_btn)
@@ -162,23 +262,60 @@ func _style_diary_controls() -> void:
 				btn.add_theme_stylebox_override("normal", cream_btn)
 				btn.add_theme_color_override("font_color", Color(0.28, 0.22, 0.18))
 				btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+				if INK_SWATCH_MAP.has(btn.name):
+					var sw_hex: String = INK_SWATCH_MAP[btn.name]
+					btn.tooltip_text = "좌클릭: 잉크색 적용 · 우클릭: 잉크 적용+형광펜 토글"
+					btn.gui_input.connect(func(ev: InputEvent) -> void:
+						if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_RIGHT:
+							set_fountain_pen_ink(sw_hex)
+							toggle_quote_highlight()
+					)
 	for ctrl in [save_quote_btn, add_vol_btn, rem_btn, share_btn, del_btn, close_btn, hl_btn]:
 		if ctrl != null:
 			ctrl.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	if add_vol_btn != null:
-		add_vol_btn.tooltip_text = "새 권·파츠 일기 1개 추가 (+)"
+		add_vol_btn.tooltip_text = "새 권·파츠 일기 1개 추가 (+) · 우클릭: 추가 후 바로 밑줄 입력"
+		add_vol_btn.gui_input.connect(func(ev: InputEvent) -> void:
+			if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_RIGHT:
+				_on_add_vol_btn_pressed()
+				if current_item != null and not current_item.volumes.is_empty():
+					start_editing_volume_quote(current_item.volumes.size() - 1)
+		)
 	if rem_btn != null:
 		rem_btn.tooltip_text = "마지막 권·파츠 기록 삭제 (-)"
 	if share_btn != null:
-		share_btn.tooltip_text = "감상 카드 텍스트를 클립보드에 복사 (C)"
+		share_btn.tooltip_text = "감상 카드 텍스트를 클립보드에 복사 (C · 우클릭·Shift+C: 전체 서재 리포트 복사)"
 	if del_btn != null:
-		del_btn.tooltip_text = "이 작품의 일기장을 서재에서 삭제"
+		del_btn.tooltip_text = "이 작품의 일기장을 서재에서 삭제 (우클릭: 삭제 확인 해제)"
+		del_btn.gui_input.connect(func(ev: InputEvent) -> void:
+			if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_RIGHT:
+				if delete_armed:
+					delete_armed = false
+					_apply_delete_btn_style(false)
+		)
 	if save_quote_btn != null:
-		save_quote_btn.tooltip_text = "작성한 밑줄·감상평 저장 (Enter)"
+		save_quote_btn.tooltip_text = "작성한 밑줄·감상평 저장 (Enter · 우클릭: 원문 복원)"
+		save_quote_btn.gui_input.connect(func(ev: InputEvent) -> void:
+			if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_RIGHT:
+				if current_item != null and quote_input != null:
+					editing_vol_index = -1
+					quote_input.text = current_item.memo
+					quote_input.placeholder_text = "🖋️ 오늘 밑줄 친 감상평 수정..."
+					_render_volumes()
+		)
 	if hl_btn != null:
-		hl_btn.tooltip_text = "밑줄 문장 형광펜 하이라이트 켜기/끄기 (L)"
+		hl_btn.tooltip_text = "밑줄 문장 형광펜 하이라이트 켜기/끄기 (L · 우클릭: 잉크색 변경)"
+		hl_btn.gui_input.connect(func(ev: InputEvent) -> void:
+			if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_RIGHT:
+				cycle_fountain_pen_ink(1)
+		)
 	if close_btn != null:
-		close_btn.tooltip_text = "일기장 닫기 (ESC)"
+		close_btn.tooltip_text = "일기장 닫기 (ESC · 우클릭: 닫고 즉시 JSON 백업)"
+		close_btn.gui_input.connect(func(ev: InputEvent) -> void:
+			if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_RIGHT:
+				close()
+				close_and_backup_requested.emit()
+		)
 		var header_hbox: HBoxContainer = close_btn.get_parent() as HBoxContainer
 		if header_hbox != null and header_hbox.get_node_or_null("PrevItemBtn") == null:
 			var prev_btn := Button.new()
@@ -236,22 +373,22 @@ func _style_diary_controls() -> void:
 		"Panel/VBox/BodyMargin/Body/StampRow/DecoStickerBtn": "다꾸 데코 스티커 팩 순환 (S) · 우클릭: 이전",
 		"Panel/VBox/BodyMargin/Body/StampRow/RarityBtn": "수집 레어도 등급 순환 (R) · 우클릭: 이전",
 		"Panel/VBox/BodyMargin/Body/StampRow/PaperBtn": "일기장 속지 패턴 순환 (P) · 우클릭: 이전",
-		"Panel/VBox/BodyMargin/Body/StampRow/StorageBtn": "실물 보관 위치 순환 (B)",
-		"Panel/VBox/BodyMargin/Body/StampRow/SourceBtn": "소장·입수 경로 순환 (A)",
-		"Panel/VBox/BodyMargin/Body/StampRow/MoodBtn": "독서·수집 기분 태그 순환 (M)",
+		"Panel/VBox/BodyMargin/Body/StampRow/StorageBtn": "실물 보관 위치 순환 (B) · 우클릭: 이전",
+		"Panel/VBox/BodyMargin/Body/StampRow/SourceBtn": "소장·입수 경로 순환 (A) · 우클릭: 이전",
+		"Panel/VBox/BodyMargin/Body/StampRow/MoodBtn": "독서·수집 기분 태그 순환 (M) · 우클릭: 이전",
 		"Panel/VBox/BodyMargin/Body/StampRow/RereadBtn": "재독 횟수 +1 (Y / 우클릭·Shift+Y: -1)",
 		"Panel/VBox/BodyMargin/Body/StampRow/DuplicateBtn": "복수 소장 수량 +1 (D / 우클릭·Shift+D: -1)",
-		"Panel/VBox/BodyMargin/Body/StampRow/PossessionBtn": "소장 상태 순환 (Z: 소장중·예약중·배송중·전시중)",
-		"Panel/VBox/BodyMargin/Body/InkRow/NibBtn": "만년필 펜촉 굵기 순환 (N: EF·M·B)",
-		"Panel/VBox/BodyMargin/Body/InkRow/SignatureBtn": "다이어리 서명 스탬프 순환",
-		"Panel/VBox/BodyMargin/Body/InkRow/DateStampBtn": "오늘 날짜로 구매·기념일 스탬프 갱신",
-		"Panel/VBox/BodyMargin/Body/InkRow/CustomTagBtn": "커스텀 해시태그 순환 (T)",
+		"Panel/VBox/BodyMargin/Body/StampRow/PossessionBtn": "소장 상태 순환 (Z: 소장중·예약중·배송중·전시중) · 우클릭: 이전",
+		"Panel/VBox/BodyMargin/Body/InkRow/NibBtn": "만년필 펜촉 굵기 순환 (N: EF·M·B) · 우클릭: 이전",
+		"Panel/VBox/BodyMargin/Body/InkRow/SignatureBtn": "다이어리 서명 스탬프 순환 · 우클릭: 이전",
+		"Panel/VBox/BodyMargin/Body/InkRow/DateStampBtn": "오늘 날짜로 구매·기념일 스탬프 갱신 · 우클릭: 기본값 초기화",
+		"Panel/VBox/BodyMargin/Body/InkRow/CustomTagBtn": "커스텀 해시태그 순환 (T) · 우클릭: 이전",
 		"Panel/VBox/BodyMargin/Body/InkRow/ValueBtn": "추정 소장 가치 +5,000원 (V / 우클릭·Shift+V: -5,000원)",
-		"Panel/VBox/BodyMargin/Body/InkRow/FavCharBtn": "최애 캐릭터 태그 순환 (K)",
-		"Panel/VBox/BodyMargin/Body/InkRow/ConditionBtn": "실물 컨디션 등급 순환 (G)",
-		"Panel/VBox/BodyMargin/Body/InkRow/FinishBtn": "표지 코팅 마감 순환 (F: 무광·유광·홀로그램·양장)",
-		"Panel/VBox/BodyMargin/Body/InkRow/WeatherBtn": "독서·수집 날씨 스탬프 순환 (U)",
-		"Panel/VBox/BodyMargin/Body/InkRow/SpotBtn": "독서·수집 장소 스탬프 순환 (J)"
+		"Panel/VBox/BodyMargin/Body/InkRow/FavCharBtn": "최애 캐릭터 태그 순환 (K) · 우클릭: 이전",
+		"Panel/VBox/BodyMargin/Body/InkRow/ConditionBtn": "실물 컨디션 등급 순환 (G) · 우클릭: 이전",
+		"Panel/VBox/BodyMargin/Body/InkRow/FinishBtn": "표지 코팅 마감 순환 (F: 무광·유광·홀로그램·양장) · 우클릭: 이전",
+		"Panel/VBox/BodyMargin/Body/InkRow/WeatherBtn": "독서·수집 날씨 스탬프 순환 (U) · 우클릭: 이전",
+		"Panel/VBox/BodyMargin/Body/InkRow/SpotBtn": "독서·수집 장소 스탬프 순환 (J) · 우클릭: 이전"
 	}
 	for path in row_tips.keys():
 		var tip_btn: Control = get_node_or_null(path)
@@ -262,7 +399,20 @@ func _style_diary_controls() -> void:
 		"Panel/VBox/BodyMargin/Body/StampRow/TapeCycleBtn": func() -> void: cycle_washi_tape(-1),
 		"Panel/VBox/BodyMargin/Body/StampRow/DecoStickerBtn": func() -> void: cycle_deco_sticker(-1),
 		"Panel/VBox/BodyMargin/Body/StampRow/RarityBtn": func() -> void: cycle_rarity_tier(-1),
-		"Panel/VBox/BodyMargin/Body/StampRow/PaperBtn": func() -> void: cycle_paper_pattern(-1)
+		"Panel/VBox/BodyMargin/Body/StampRow/PaperBtn": func() -> void: cycle_paper_pattern(-1),
+		"Panel/VBox/BodyMargin/Body/StampRow/StorageBtn": func() -> void: cycle_storage_location(-1),
+		"Panel/VBox/BodyMargin/Body/StampRow/SourceBtn": func() -> void: cycle_acquisition_source(-1),
+		"Panel/VBox/BodyMargin/Body/StampRow/MoodBtn": func() -> void: cycle_reading_mood(-1),
+		"Panel/VBox/BodyMargin/Body/StampRow/PossessionBtn": func() -> void: cycle_possession_state(-1),
+		"Panel/VBox/BodyMargin/Body/InkRow/NibBtn": func() -> void: cycle_pen_nib_size(-1),
+		"Panel/VBox/BodyMargin/Body/InkRow/SignatureBtn": func() -> void: cycle_diary_signature(-1),
+		"Panel/VBox/BodyMargin/Body/InkRow/DateStampBtn": reset_purchase_date,
+		"Panel/VBox/BodyMargin/Body/InkRow/CustomTagBtn": func() -> void: cycle_custom_tag(-1),
+		"Panel/VBox/BodyMargin/Body/InkRow/FavCharBtn": func() -> void: cycle_favorite_character(-1),
+		"Panel/VBox/BodyMargin/Body/InkRow/ConditionBtn": func() -> void: cycle_condition_grade(-1),
+		"Panel/VBox/BodyMargin/Body/InkRow/FinishBtn": func() -> void: cycle_cover_finish(-1),
+		"Panel/VBox/BodyMargin/Body/InkRow/WeatherBtn": func() -> void: cycle_reading_weather(-1),
+		"Panel/VBox/BodyMargin/Body/InkRow/SpotBtn": func() -> void: cycle_reading_spot(-1)
 	}
 	for deco_path in deco_rclick_map.keys():
 		var deco_ctrl: Control = get_node_or_null(deco_path)
@@ -298,12 +448,12 @@ func set_fountain_pen_ink(ink_hex: String) -> void:
 	_apply_ink_style()
 	diary_updated.emit(current_item)
 
-func cycle_fountain_pen_ink() -> String:
+func cycle_fountain_pen_ink(step: int = 1) -> String:
 	if current_item == null:
 		return ""
 	var inks: Array[String] = ["#2c221e", "#7f1d1d", "#78350f", "#14532d"]
 	var idx: int = inks.find(current_item.memo_ink_color)
-	var next_hex: String = inks[(idx + 1) % inks.size()]
+	var next_hex: String = inks[0] if idx == -1 else inks[(idx + step + inks.size()) % inks.size()]
 	set_fountain_pen_ink(next_hex)
 	return next_hex
 
@@ -314,16 +464,16 @@ func toggle_quote_highlight() -> void:
 	_apply_ink_style()
 	diary_updated.emit(current_item)
 
-func cycle_pen_nib_size() -> int:
+func cycle_pen_nib_size(step: int = 1) -> int:
 	if current_item == null:
 		return 11
+	const NIB_SIZES = [10, 12, 14]
 	var cur = int(current_item.get("pen_nib_size")) if current_item.get("pen_nib_size") != null else 11
-	if cur == 10:
-		current_item.pen_nib_size = 12
-	elif cur == 12:
-		current_item.pen_nib_size = 14
+	var idx = NIB_SIZES.find(cur)
+	if idx == -1:
+		current_item.pen_nib_size = NIB_SIZES[0]
 	else:
-		current_item.pen_nib_size = 10
+		current_item.pen_nib_size = NIB_SIZES[(idx + step + NIB_SIZES.size()) % NIB_SIZES.size()]
 	_apply_ink_style()
 	diary_updated.emit(current_item)
 	return current_item.pen_nib_size
@@ -408,17 +558,11 @@ func _highlight_active_ink_btn(active_hex: String) -> void:
 	var ink_row: HFlowContainer = get_node_or_null("Panel/VBox/BodyMargin/Body/InkRow")
 	if ink_row == null:
 		return
-	var ink_map := {
-		"InkEspresso": "#2c221e",
-		"InkBurgundy": "#7f1d1d",
-		"InkSepia": "#78350f",
-		"InkForest": "#14532d"
-	}
-	for node_name in ink_map.keys():
+	for node_name in INK_SWATCH_MAP.keys():
 		var btn: Button = ink_row.get_node_or_null(node_name)
 		if btn == null:
 			continue
-		var hex: String = ink_map[node_name]
+		var hex: String = INK_SWATCH_MAP[node_name]
 		var is_active: bool = (active_hex.to_lower() == hex)
 		var sb = StyleBoxFlat.new()
 		sb.bg_color = Color(0.98, 0.94, 0.87, 1) if is_active else Color(0.95, 0.91, 0.84, 1)
@@ -602,6 +746,7 @@ func _unhandled_input(event: InputEvent) -> void:
 				KEY_V: [boost_estimated_value, reduce_estimated_value],
 				KEY_D: [increment_duplicate_count, decrement_duplicate_count],
 				KEY_Y: [increment_reread_count, decrement_reread_count],
+				KEY_C: [copy_book_quote_card, func() -> void: summary_copy_requested.emit()],
 			}
 			if shift_pairs.has(event.keycode):
 				var pair: Array = shift_pairs[event.keycode]
@@ -609,10 +754,10 @@ func _unhandled_input(event: InputEvent) -> void:
 				fn.call()
 				get_viewport().set_input_as_handled()
 				return
-			var simple_actions := {
-				KEY_C: copy_book_quote_card,
-				KEY_L: toggle_quote_highlight,
+			var step_cyclers := {
 				KEY_I: cycle_fountain_pen_ink,
+				KEY_Q: cycle_cover_color,
+				KEY_X: cycle_cover_icon,
 				KEY_W: cycle_washi_tape,
 				KEY_P: cycle_paper_pattern,
 				KEY_S: cycle_deco_sticker,
@@ -628,9 +773,14 @@ func _unhandled_input(event: InputEvent) -> void:
 				KEY_K: cycle_favorite_character,
 				KEY_U: cycle_reading_weather,
 				KEY_J: cycle_reading_spot,
-				KEY_Q: cycle_cover_color,
-				KEY_X: cycle_cover_icon,
 				KEY_Z: cycle_possession_state,
+			}
+			if step_cyclers.has(event.keycode):
+				step_cyclers[event.keycode].call(-1 if event.shift_pressed else 1)
+				get_viewport().set_input_as_handled()
+				return
+			var simple_actions := {
+				KEY_L: toggle_quote_highlight,
 				KEY_DELETE: _on_delete_btn_pressed,
 				KEY_BACKSPACE: _on_delete_btn_pressed,
 			}
@@ -649,17 +799,11 @@ func apply_stamp(stamp_name: String) -> void:
 func _highlight_active_stamp_btn(active_stamp: String) -> void:
 	if stamp_row == null:
 		return
-	var stamp_map := {
-		"StampComplete": "전권완결",
-		"StampFirst": "초판특전",
-		"StampFav": "인생최애",
-		"StampWish": "위시"
-	}
-	for node_name in stamp_map.keys():
+	for node_name in STAMP_PRESET_MAP.keys():
 		var btn: Button = stamp_row.get_node_or_null(node_name)
 		if btn == null:
 			continue
-		var is_active: bool = (active_stamp == stamp_map[node_name])
+		var is_active: bool = (active_stamp == STAMP_PRESET_MAP[node_name])
 		var sb = StyleBoxFlat.new()
 		sb.bg_color = Color(1.0, 0.92, 0.88, 1.0) if is_active else Color(0.99, 0.96, 0.94, 1.0)
 		sb.border_width_left = 2 if is_active else 1
@@ -717,10 +861,10 @@ func _apply_paper_style() -> void:
 			"vintage": p_btn.text = "🍂양장"
 			_: p_btn.text = "📄줄노트"
 
-func cycle_storage_location() -> String:
+func cycle_storage_location(step: int = 1) -> String:
 	if current_item == null:
 		return "🗄️ 1층 장식장"
-	var s = current_item.cycle_storage_location() if current_item.has_method("cycle_storage_location") else "🗄️ 1층 장식장"
+	var s = current_item.cycle_storage_location(step) if current_item.has_method("cycle_storage_location") else "🗄️ 1층 장식장"
 	var s_btn: Button = get_node_or_null("Panel/VBox/BodyMargin/Body/StampRow/StorageBtn")
 	if s_btn != null:
 		s_btn.text = s
@@ -730,10 +874,10 @@ func cycle_storage_location() -> String:
 	diary_updated.emit(current_item)
 	return s
 
-func cycle_acquisition_source() -> String:
+func cycle_acquisition_source(step: int = 1) -> String:
 	if current_item == null:
 		return "🏪 오프라인 서점"
-	var src = current_item.cycle_acquisition_source() if current_item.has_method("cycle_acquisition_source") else "🏪 오프라인 서점"
+	var src = current_item.cycle_acquisition_source(step) if current_item.has_method("cycle_acquisition_source") else "🏪 오프라인 서점"
 	var src_btn: Button = get_node_or_null("Panel/VBox/BodyMargin/Body/StampRow/SourceBtn")
 	if src_btn != null:
 		src_btn.text = src
@@ -743,10 +887,10 @@ func cycle_acquisition_source() -> String:
 	diary_updated.emit(current_item)
 	return src
 
-func cycle_reading_mood() -> String:
+func cycle_reading_mood(step: int = 1) -> String:
 	if current_item == null:
 		return "🥰 힐링"
-	var m = current_item.cycle_reading_mood() if current_item.has_method("cycle_reading_mood") else "🥰 힐링"
+	var m = current_item.cycle_reading_mood(step) if current_item.has_method("cycle_reading_mood") else "🥰 힐링"
 	var m_btn: Button = get_node_or_null("Panel/VBox/BodyMargin/Body/StampRow/MoodBtn")
 	if m_btn != null:
 		m_btn.text = m
@@ -796,20 +940,20 @@ func decrement_duplicate_count() -> int:
 	diary_updated.emit(current_item)
 	return current_item.duplicate_count
 
-func cycle_diary_signature() -> String:
+func cycle_diary_signature(step: int = 1) -> String:
 	if current_item == null:
 		return "✍️ 주희의 서재"
-	var sig = current_item.cycle_diary_signature() if current_item.has_method("cycle_diary_signature") else "✍️ 주희의 서재"
+	var sig = current_item.cycle_diary_signature(step) if current_item.has_method("cycle_diary_signature") else "✍️ 주희의 서재"
 	var sig_btn: Button = get_node_or_null("Panel/VBox/BodyMargin/Body/InkRow/SignatureBtn")
 	if sig_btn != null:
 		sig_btn.text = sig
 	diary_updated.emit(current_item)
 	return sig
 
-func cycle_possession_state() -> String:
+func cycle_possession_state(step: int = 1) -> String:
 	if current_item == null:
 		return "📦 소장중"
-	var ps = current_item.cycle_possession_state() if current_item.has_method("cycle_possession_state") else "📦 소장중"
+	var ps = current_item.cycle_possession_state(step) if current_item.has_method("cycle_possession_state") else "📦 소장중"
 	var pos_btn: Button = get_node_or_null("Panel/VBox/BodyMargin/Body/StampRow/PossessionBtn")
 	if pos_btn != null:
 		pos_btn.text = ps
@@ -826,10 +970,20 @@ func stamp_purchase_date() -> String:
 	diary_updated.emit(current_item)
 	return pd
 
-func cycle_custom_tag() -> String:
+func reset_purchase_date() -> String:
+	if current_item == null:
+		return "📅 기념일"
+	current_item.purchase_date = "📅 기념일"
+	var date_btn: Button = get_node_or_null("Panel/VBox/BodyMargin/Body/InkRow/DateStampBtn")
+	if date_btn != null:
+		date_btn.text = "📅 기념일"
+	diary_updated.emit(current_item)
+	return "📅 기념일"
+
+func cycle_custom_tag(step: int = 1) -> String:
 	if current_item == null:
 		return "#소장각"
-	var ct = current_item.cycle_custom_tag() if current_item.has_method("cycle_custom_tag") else "#소장각"
+	var ct = current_item.cycle_custom_tag(step) if current_item.has_method("cycle_custom_tag") else "#소장각"
 	var tag_btn: Button = get_node_or_null("Panel/VBox/BodyMargin/Body/InkRow/CustomTagBtn")
 	if tag_btn != null:
 		tag_btn.text = ct
@@ -859,20 +1013,20 @@ func reduce_estimated_value() -> int:
 	diary_updated.emit(current_item)
 	return current_item.estimated_value
 
-func cycle_favorite_character() -> String:
+func cycle_favorite_character(step: int = 1) -> String:
 	if current_item == null:
 		return "🌟 최애 캐릭터"
-	var fc = current_item.cycle_favorite_character() if current_item.has_method("cycle_favorite_character") else "🌟 최애 캐릭터"
+	var fc = current_item.cycle_favorite_character(step) if current_item.has_method("cycle_favorite_character") else "🌟 최애 캐릭터"
 	var fc_btn: Button = get_node_or_null("Panel/VBox/BodyMargin/Body/InkRow/FavCharBtn")
 	if fc_btn != null:
 		fc_btn.text = fc
 	diary_updated.emit(current_item)
 	return fc
 
-func cycle_condition_grade() -> String:
+func cycle_condition_grade(step: int = 1) -> String:
 	if current_item == null:
 		return "✨ S급(최상)"
-	var cg = current_item.cycle_condition_grade() if current_item.has_method("cycle_condition_grade") else "✨ S급(최상)"
+	var cg = current_item.cycle_condition_grade(step) if current_item.has_method("cycle_condition_grade") else "✨ S급(최상)"
 	var cond_btn: Button = get_node_or_null("Panel/VBox/BodyMargin/Body/InkRow/ConditionBtn")
 	if cond_btn != null:
 		cond_btn.text = cg
@@ -881,10 +1035,10 @@ func cycle_condition_grade() -> String:
 	diary_updated.emit(current_item)
 	return cg
 
-func cycle_cover_finish() -> String:
+func cycle_cover_finish(step: int = 1) -> String:
 	if current_item == null:
 		return "📜 무광 매트"
-	var cf = current_item.cycle_cover_finish() if current_item.has_method("cycle_cover_finish") else "📜 무광 매트"
+	var cf = current_item.cycle_cover_finish(step) if current_item.has_method("cycle_cover_finish") else "📜 무광 매트"
 	var fin_btn: Button = get_node_or_null("Panel/VBox/BodyMargin/Body/InkRow/FinishBtn")
 	if fin_btn != null:
 		fin_btn.text = cf
@@ -917,10 +1071,10 @@ func _refresh_tag_label() -> void:
 	var rs = current_item.get("reading_spot") if (current_item.get("reading_spot") != null and current_item.get("reading_spot") != "") else "🛋️ 이불 속"
 	tag_label.text = "💮 " + current_item.status_tag + " " + sticker + " [" + mood + " · " + r_tier + " · " + loc + " · " + rw + " · " + rs + "] | " + current_item.obi_text
 
-func cycle_reading_weather() -> String:
+func cycle_reading_weather(step: int = 1) -> String:
 	if current_item == null:
 		return "☀️ 맑은 오후"
-	var rw = current_item.cycle_reading_weather() if current_item.has_method("cycle_reading_weather") else "☀️ 맑은 오후"
+	var rw = current_item.cycle_reading_weather(step) if current_item.has_method("cycle_reading_weather") else "☀️ 맑은 오후"
 	var w_btn: Button = get_node_or_null("Panel/VBox/BodyMargin/Body/InkRow/WeatherBtn")
 	if w_btn != null:
 		w_btn.text = rw
@@ -928,10 +1082,10 @@ func cycle_reading_weather() -> String:
 	diary_updated.emit(current_item)
 	return rw
 
-func cycle_reading_spot() -> String:
+func cycle_reading_spot(step: int = 1) -> String:
 	if current_item == null:
 		return "🛋️ 이불 속"
-	var rs = current_item.cycle_reading_spot() if current_item.has_method("cycle_reading_spot") else "🛋️ 이불 속"
+	var rs = current_item.cycle_reading_spot(step) if current_item.has_method("cycle_reading_spot") else "🛋️ 이불 속"
 	var sp_btn: Button = get_node_or_null("Panel/VBox/BodyMargin/Body/InkRow/SpotBtn")
 	if sp_btn != null:
 		sp_btn.text = rs
@@ -949,22 +1103,22 @@ func cycle_obi_preset(step: int = 1) -> void:
 	_refresh_tag_label()
 	diary_updated.emit(current_item)
 
-func cycle_cover_icon() -> void:
+func cycle_cover_icon(step: int = 1) -> void:
 	if current_item == null:
 		return
-	icon_cursor = (icon_cursor + 1) % ICON_PRESETS.size()
+	icon_cursor = (icon_cursor + step + ICON_PRESETS.size()) % ICON_PRESETS.size()
 	if ICON_PRESETS[icon_cursor] == current_item.icon_emoji:
-		icon_cursor = (icon_cursor + 1) % ICON_PRESETS.size()
+		icon_cursor = (icon_cursor + step + ICON_PRESETS.size()) % ICON_PRESETS.size()
 	current_item.icon_emoji = ICON_PRESETS[icon_cursor]
 	cover_icon.text = current_item.icon_emoji
 	diary_updated.emit(current_item)
 
-func cycle_cover_color() -> void:
+func cycle_cover_color(step: int = 1) -> void:
 	if current_item == null:
 		return
-	color_cursor = (color_cursor + 1) % COLOR_PRESETS.size()
+	color_cursor = (color_cursor + step + COLOR_PRESETS.size()) % COLOR_PRESETS.size()
 	if COLOR_PRESETS[color_cursor] == current_item.cover_color:
-		color_cursor = (color_cursor + 1) % COLOR_PRESETS.size()
+		color_cursor = (color_cursor + step + COLOR_PRESETS.size()) % COLOR_PRESETS.size()
 	current_item.cover_color = COLOR_PRESETS[color_cursor]
 	cover_rect.color = Color.from_string(current_item.cover_color, Color(0.65, 0.25, 0.2))
 	diary_updated.emit(current_item)
@@ -1184,9 +1338,14 @@ func _render_volumes() -> void:
 		status_btn.add_theme_stylebox_override("normal", btn_sb)
 		status_btn.add_theme_color_override("font_color", Color(0.78, 0.35, 0.2) if is_first else Color(0.29, 0.45, 0.36))
 		status_btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
-		status_btn.tooltip_text = "클릭하여 초판특전 / 소장완료 전환"
+		status_btn.tooltip_text = "클릭하여 초판특전 / 소장완료 전환 (우클릭: 초판+북마크 동시 토글)"
 		var capture_idx = idx
 		status_btn.pressed.connect(func(): toggle_volume_status(capture_idx))
+		status_btn.gui_input.connect(func(ev: InputEvent) -> void:
+			if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_RIGHT:
+				toggle_volume_status(capture_idx)
+				toggle_volume_bookmark(capture_idx)
+		)
 		
 		var date_btn = Button.new()
 		var d_val = str(v.get("date", "2026.11.12"))
@@ -1204,8 +1363,17 @@ func _render_volumes() -> void:
 		date_btn.add_theme_stylebox_override("normal", date_sb)
 		date_btn.add_theme_color_override("font_color", Color(0.48, 0.38, 0.3))
 		date_btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
-		date_btn.tooltip_text = "클릭하여 오늘 날짜로 읽은 날 스탬프 갱신"
+		date_btn.tooltip_text = "클릭하여 오늘 날짜로 읽은 날 스탬프 갱신 · 우클릭: 이 권 대사 복사"
 		date_btn.pressed.connect(func(): stamp_volume_date(capture_idx))
+		date_btn.gui_input.connect(func(ev: InputEvent) -> void:
+			if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_RIGHT:
+				if current_item != null and capture_idx >= 0 and capture_idx < current_item.volumes.size():
+					var v_data = current_item.volumes[capture_idx]
+					var q_str = str(v_data.get("quote", ""))
+					var copy_str = "%s %d권: \"%s\"" % [current_item.title, int(v_data.get("vol", capture_idx + 1)), q_str if q_str != "" else current_item.memo]
+					DisplayServer.clipboard_set(copy_str)
+					date_btn.text = "✅ 복사됨"
+		)
 
 		var bm_btn = Button.new()
 		var is_bm = bool(v.get("bookmarked", false))
@@ -1213,9 +1381,13 @@ func _render_volumes() -> void:
 		bm_btn.flat = true
 		bm_btn.add_theme_font_size_override("font_size", 10)
 		bm_btn.add_theme_color_override("font_color", Color(0.85, 0.55, 0.15) if is_bm else Color(0.65, 0.58, 0.50))
-		bm_btn.tooltip_text = "이 권을 북마크에 추가/해제합니다"
+		bm_btn.tooltip_text = "이 권을 북마크에 추가/해제합니다 (우클릭: 이 권 밑줄 편집)"
 		bm_btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 		bm_btn.pressed.connect(func(): toggle_volume_bookmark(capture_idx))
+		bm_btn.gui_input.connect(func(ev: InputEvent) -> void:
+			if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_RIGHT:
+				start_editing_volume_quote(capture_idx)
+		)
 
 		var quote_lbl = Label.new()
 		var q = v.get("quote", "")

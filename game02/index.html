@@ -107,7 +107,7 @@
                     <span>·</span>
                     <span id="today-date">2026. 11. 11. WED</span>
                 </div>
-                <h1 class="serif-font text-2xl sm:text-3xl font-bold text-[#2c221e] mt-1 flex items-center gap-2">
+                <h1 onclick="document.getElementById('search-box').value=''; switchCategory('all');" oncontextmenu="event.preventDefault(); toggleJournalTheme();" title="좌클릭: 전체 서재 복원 (0) · 우클릭: 속지 테마 순환 (T)" class="serif-font text-2xl sm:text-3xl font-bold text-[#2c221e] mt-1 flex items-center gap-2 cursor-pointer hover:opacity-85">
                     <span>주희의 다꾸 서재 & 소장 일기장</span>
                     <span class="rubber-stamp text-[11px] px-2 py-0.5 rounded">소장기록장</span>
                 </h1>
@@ -147,17 +147,17 @@
                     </p>
                 </div>
                 <div class="flex items-center gap-4 border-t sm:border-t-0 pt-3 sm:pt-0 border-[#eee5d8] shrink-0">
-                    <div onclick="setFilter('all')" class="text-center px-2 cursor-pointer hover:opacity-80" title="클릭 시 전체 서재 보기 · 총 소장 자산 및 평균 별점 요약">
+                    <div onclick="setFilter('all')" oncontextmenu="event.preventDefault(); copyLibrarySummaryReport();" class="text-center px-2 cursor-pointer hover:opacity-80" title="좌클릭: 전체 서재 보기 · 우클릭: 서재 리포트 클립보드 복사">
                         <div class="text-[11px] text-[#8c7a6b]">서재 작품</div>
                         <div class="serif-font text-lg font-bold text-[#2c221e]" id="stat-books">6권</div>
                     </div>
                     <div class="h-7 w-[1px] bg-[#e2d6c5]"></div>
-                    <div class="text-center px-2" title="클릭 시 단행본 기록 및 서재 완독률 요약">
+                    <div onclick="setFilter('manga')" oncontextmenu="event.preventDefault(); setFilter('manga'); cycleSortMode();" class="text-center px-2 cursor-pointer hover:opacity-80" title="좌클릭: 이북·단행본 · 우클릭: 이북 정렬 전환">
                         <div class="text-[11px] text-[#8c7a6b]">소장 단행본</div>
                         <div class="serif-font text-lg font-bold text-[#c85a32]" id="stat-vols">10권</div>
                     </div>
                     <div class="h-7 w-[1px] bg-[#e2d6c5]"></div>
-                    <div onclick="setFilter('firsts')" class="text-center px-2 cursor-pointer hover:opacity-80" title="클릭 시 초판 스탬프 보유 작품만 필터링">
+                    <div onclick="setFilter('firsts')" oncontextmenu="event.preventDefault(); instantBackupArchive();" class="text-center px-2 cursor-pointer hover:opacity-80" title="좌클릭: 초판 스탬프 보유작 필터 · 우클릭: 즉시 JSON 백업 저장">
                         <div class="text-[11px] text-[#8c7a6b]">초판 스탬프</div>
                         <div class="serif-font text-lg font-bold text-[#4a6b5d]" id="stat-firsts">7개</div>
                     </div>
@@ -200,23 +200,23 @@
         <section class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
             <!-- Physical Diary Index Tabs -->
             <div class="flex items-center gap-1.5 flex-wrap">
-                <button onclick="switchCategory('all')" id="tab-all" title="[1] 전체 서재 보기"
+                <button onclick="switchCategory('all')" oncontextmenu="event.preventDefault(); document.getElementById('search-box').value=''; switchCategory('all');" id="tab-all" title="[1] 전체 서재 보기 · 우클릭: 검색·필터 초기화"
                     class="px-3.5 py-2 rounded-t-xl border-t-2 border-x border-[#d8cbb8] bg-[#fffdf9] text-[#2c221e] font-bold text-xs shadow-2xs cursor-pointer">
                     📚 전체 서재
                 </button>
-                <button onclick="switchCategory('manga')" id="tab-manga"
+                <button onclick="switchCategory('manga')" oncontextmenu="event.preventDefault(); switchCategory('manga'); cycleSortMode();" id="tab-manga" title="[2] 이북·단행본 일기 · 우클릭: 정렬 전환"
                     class="px-3.5 py-2 rounded-t-xl border border-transparent bg-[#efe7da] text-[#786b63] hover:text-[#2c221e] font-bold text-xs cursor-pointer">
                     📖 이북·단행본 일기
                 </button>
-                <button onclick="switchCategory('gacha')" id="tab-gacha"
+                <button onclick="switchCategory('gacha')" oncontextmenu="event.preventDefault(); switchCategory('gacha'); cycleSortMode();" id="tab-gacha" title="[3] 가챠·굿즈 · 우클릭: 정렬 전환"
                     class="px-3.5 py-2 rounded-t-xl border border-transparent bg-[#efe7da] text-[#786b63] hover:text-[#2c221e] font-bold text-xs cursor-pointer">
                     🔮 가챠·굿즈
                 </button>
-                <button onclick="switchCategory('complete')" id="tab-complete"
+                <button onclick="switchCategory('complete')" oncontextmenu="event.preventDefault(); switchCategory('complete'); cycleSortMode();" id="tab-complete" title="[4] 완독작 · 우클릭: 정렬 전환"
                     class="px-3.5 py-2 rounded-t-xl border border-transparent bg-[#efe7da] text-[#786b63] hover:text-[#2c221e] font-bold text-xs cursor-pointer">
                     💮 완독작
                 </button>
-                <button onclick="switchCategory('fav')" id="tab-fav"
+                <button onclick="switchCategory('fav')" oncontextmenu="event.preventDefault(); switchCategory('fav'); cycleSortMode();" id="tab-fav" title="[5] 인생작 · 우클릭: 정렬 전환"
                     class="px-3.5 py-2 rounded-t-xl border border-transparent bg-[#efe7da] text-[#786b63] hover:text-[#2c221e] font-bold text-xs cursor-pointer">
                     ★ 인생작
                 </button>
@@ -228,7 +228,7 @@
                 <div class="relative w-full sm:w-64">
                     <i
                         class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-[#9c8c7c] text-xs"></i>
-                    <input type="search" id="search-box" oninput="renderShelf()" placeholder="일기장 속 작품·문장·날씨·장소 검색..." title="작품명·작가·대사·태그·보관위치·날씨·장소·소장경로 통합 검색"
+                    <input type="search" id="search-box" oninput="renderShelf()" onkeydown="if(event.key==='Enter'){const first=document.querySelector('#collection-grid > div');if(first&&typeof first.onclick==='function')first.onclick();}else if(event.key==='Escape'&&this.value){this.value='';renderShelf();}" placeholder="일기장 속 작품·문장·날씨·장소 검색..." title="작품명·작가·대사·태그·보관위치·날씨·장소·소장경로 통합 검색 (Enter: 첫 결과 열기 · ESC: 지우기)"
                         class="w-full pl-8 pr-3 py-1.5 rounded-xl bg-[#fffdf9] border border-[#d8cbb8] text-xs focus:outline-none focus:border-[#c85a32]">
                 </div>
             </div>
@@ -254,15 +254,15 @@
                 <div class="flex flex-col items-center text-center mt-2">
                     <div id="diary-cover-box" title="작품 표지 미리보기"
                         class="w-36 ebook-cover flex flex-col justify-between p-3 text-white shadow-lg">
-                        <div class="text-[9px] font-bold opacity-80 text-left" id="diary-cover-cat">MANGA ARCHIVE</div>
+                        <div onclick="filterModalCategory()" title="클릭하여 같은 카테고리(이북/가챠) 서재만 모아보기" class="text-[9px] font-bold opacity-80 text-left cursor-pointer hover:underline" id="diary-cover-cat">MANGA ARCHIVE</div>
                         <div class="text-4xl my-auto" id="diary-cover-icon">🏀</div>
                         <div class="bg-[#fff8e7] text-[#2c221e] text-[9px] font-bold py-1 px-1.5 rounded-xs shadow-2xs"
                             id="diary-cover-obi">
                             ★ 전20권 완결 박스세트
                         </div>
                     </div>
-                    <h2 class="serif-font text-lg font-bold text-[#2c221e] mt-4" id="diary-title">슬램덩크 신장재편판</h2>
-                    <p class="text-xs text-[#786b63] mt-0.5" id="diary-author">이노우에 다케히코</p>
+                    <h2 onclick="copyDiaryTitle()" title="클릭하여 작품 제목 클립보드 복사" class="serif-font text-lg font-bold text-[#2c221e] mt-4 cursor-pointer hover:text-[#c85a32]" id="diary-title">슬램덩크 신장재편판</h2>
+                    <p onclick="searchModalAuthor()" title="클릭하여 이 작가·시리즈의 다른 작품 검색하기" class="text-xs text-[#786b63] mt-0.5 cursor-pointer hover:text-[#c85a32]" id="diary-author">이노우에 다케히코</p>
                     <div class="mt-2">
                         <span class="rubber-stamp text-xs px-2.5 py-0.5 rounded inline-block" id="diary-stamp">💮 전권완결
                             소장</span>
@@ -308,26 +308,26 @@
                             <button id="storage-cycle-btn" onclick="cycleStorageLocation()"
                                 class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">🗄️
                                 장식장</button>
-                            <button id="source-cycle-btn" onclick="cycleAcquisitionSource()"
+                            <button id="source-cycle-btn" onclick="cycleAcquisitionSource(1)" oncontextmenu="event.preventDefault(); cycleAcquisitionSource(-1);" title="소장·입수 경로 순환 (A) · 우클릭: 이전"
                                 class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">🏪
                                 서점</button>
-                            <button id="mood-cycle-btn" onclick="cycleReadingMood()"
+                            <button id="mood-cycle-btn" onclick="cycleReadingMood(1)" oncontextmenu="event.preventDefault(); cycleReadingMood(-1);" title="독서·수집 기분 태그 순환 (M) · 우클릭: 이전"
                                 class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">🥰
                                 힐링</button>
                             <button id="reread-cycle-btn" onclick="incrementRereadCount()" oncontextmenu="event.preventDefault(); decrementRereadCount();" title="클릭: +1회독 · 우클릭: -1회독"
                                 class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">🔁
                                 1회독</button>
-                            <button onclick="copyBookQuoteCard()"
+                            <button onclick="copyBookQuoteCard()" oncontextmenu="event.preventDefault(); copyLibrarySummaryReport(this);" title="이 작품의 감상 카드 클립보드 복사 (C · 우클릭: 전체 서재 리포트 복사)"
                                 class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">💌
                                 감상 카드 공유</button>
-                            <button onclick="closeJournalModal()"
+                            <button onclick="closeJournalModal()" oncontextmenu="event.preventDefault(); closeJournalModal(); instantBackupArchive();" title="일기장 닫기 (ESC · 우클릭: 닫고 즉시 JSON 백업)"
                                 class="w-7 h-7 rounded-full bg-[#efe7da] hover:bg-[#e2d6c5] text-[#5c4938] text-xs font-bold cursor-pointer">✕</button>
                         </div>
                     </div>
 
                     <!-- Overall Diary Thought -->
                     <div class="journal-lined-paper px-3 py-2 mt-3 rounded-xl border border-[#ece3d5]">
-                        <p class="serif-font text-xs text-[#2c221e]" id="diary-memo">
+                        <p onclick="const i=document.getElementById('diary-quote-input'); if(i){i.focus();}" oncontextmenu="event.preventDefault(); toggleDiaryHighlighter();" title="좌클릭: 밑줄 문장 편집 입력창 이동 (E) · 우클릭: 형광펜 토글 (L)" class="serif-font text-xs text-[#2c221e] cursor-pointer hover:text-[#c85a32]" id="diary-memo">
                             학창시절부터 소중히 모아온 인생 만화. 마지막 페이지를 덮을 때마다 가슴이 벅차오른다.
                         </p>
                     </div>
@@ -336,23 +336,23 @@
                     <div class="mt-3 p-2.5 rounded-xl bg-[#faf5ed] border border-[#e6dccd] space-y-2">
                         <div class="flex items-center gap-1.5 flex-wrap">
                             <span class="text-[11px] font-bold text-[#786b63] mr-1">💮 인장 찍기:</span>
-                            <button data-stamp-btn="전권완결" onclick="applyDiaryStamp('전권완결')"
+                            <button data-stamp-btn="전권완결" onclick="applyDiaryStamp('전권완결')" oncontextmenu="event.preventDefault(); applyDiaryStamp('전권완결'); copyBookQuoteCard();" title="좌클릭: 인장 찍기 · 우클릭: 인장+감상카드 복사"
                                 class="px-2 py-0.5 rounded border border-[#c85a32]/50 bg-[#fff8f5] text-[#c85a32] text-[10px] font-bold hover:bg-[#c85a32] hover:text-white cursor-pointer">💮전권완결</button>
-                            <button data-stamp-btn="초판특전" onclick="applyDiaryStamp('초판특전')"
+                            <button data-stamp-btn="초판특전" onclick="applyDiaryStamp('초판특전')" oncontextmenu="event.preventDefault(); applyDiaryStamp('초판특전'); copyBookQuoteCard();" title="좌클릭: 인장 찍기 · 우클릭: 인장+감상카드 복사"
                                 class="px-2 py-0.5 rounded border border-[#c85a32]/50 bg-[#fff8f5] text-[#c85a32] text-[10px] font-bold hover:bg-[#c85a32] hover:text-white cursor-pointer">🔖초판특전</button>
-                            <button data-stamp-btn="인생최애" onclick="applyDiaryStamp('인생최애')"
+                            <button data-stamp-btn="인생최애" onclick="applyDiaryStamp('인생최애')" oncontextmenu="event.preventDefault(); applyDiaryStamp('인생최애'); copyBookQuoteCard();" title="좌클릭: 인장 찍기 · 우클릭: 인장+감상카드 복사"
                                 class="px-2 py-0.5 rounded border border-[#c85a32]/50 bg-[#fff8f5] text-[#c85a32] text-[10px] font-bold hover:bg-[#c85a32] hover:text-white cursor-pointer">♥인생최애</button>
-                            <button data-stamp-btn="위시리스트" onclick="applyDiaryStamp('위시리스트')"
+                            <button data-stamp-btn="위시리스트" onclick="applyDiaryStamp('위시리스트')" oncontextmenu="event.preventDefault(); applyDiaryStamp('위시리스트'); copyBookQuoteCard();" title="좌클릭: 인장 찍기 · 우클릭: 인장+감상카드 복사"
                                 class="px-2 py-0.5 rounded border border-[#c85a32]/50 bg-[#fff8f5] text-[#c85a32] text-[10px] font-bold hover:bg-[#c85a32] hover:text-white cursor-pointer">✨위시리스트</button>
                         </div>
                         <div class="flex items-center gap-1.5">
                             <input id="diary-quote-input" type="text" placeholder="🖋️ 오늘 밑줄 친 명대사·감상평 수정..."
-                                onkeydown="if(event.key==='Enter'){saveDiaryQuote();}"
+                                onkeydown="if(event.key==='Enter'){saveDiaryQuote();}else if(event.key==='Escape'&&this.value){event.stopPropagation();this.value='';}"
                                 class="flex-1 px-2.5 py-1 rounded-lg bg-[#fffdf9] border border-[#d8cbb8] text-xs text-[#2c221e] focus:outline-none focus:border-[#c85a32]">
-                            <button onclick="saveDiaryQuote()"
+                            <button onclick="saveDiaryQuote()" oncontextmenu="event.preventDefault(); restoreDiaryQuoteInput();" title="작성한 밑줄·감상평 저장 (Enter · 우클릭: 원문 복원)"
                                 class="px-2.5 py-1 rounded-lg bg-[#2c221e] text-[#faf6f0] text-[11px] font-bold hover:bg-[#43352f] cursor-pointer">🖋️
                                 밑줄 저장</button>
-                            <button onclick="toggleDiaryHighlighter()" id="btn-highlighter"
+                            <button onclick="toggleDiaryHighlighter()" oncontextmenu="event.preventDefault(); toggleDiaryHighlighter();" id="btn-highlighter" title="밑줄 문장 형광펜 하이라이트 켜기/끄기 (L)"
                                 class="px-2.5 py-1 rounded-lg bg-[#fef08a] border border-[#eab308] text-[#854d0e] text-[11px] font-bold hover:bg-[#fde047] cursor-pointer">🖍️
                                 형광펜</button>
                         </div>
@@ -372,8 +372,8 @@
                     <!-- Volume-by-Volume Entries -->
                     <div class="mt-5">
                         <div class="flex items-center justify-between mb-2">
-                            <span class="text-xs font-bold text-[#5c4938]">📌 권별 소장 스탬프 & 좋아하는 대사</span>
-                            <button onclick="addVolumeInDiary()"
+                            <span onclick="addVolumeInDiary()" title="클릭하여 다음 권 기록 추가 (+)" class="text-xs font-bold text-[#5c4938] cursor-pointer hover:text-[#c85a32]">📌 권별 소장 스탬프 & 좋아하는 대사</span>
+                            <button onclick="addVolumeInDiary()" oncontextmenu="event.preventDefault(); addVolumeInDiary(); const it = ITEMS.find(x => x.id === activeId); if (it && it.volumes && it.volumes.length) selectVolForEdit(it.volumes.length - 1);" title="새 권·파츠 일기 1개 추가 (+ · 우클릭: 추가 후 바로 밑줄 입력)"
                                 class="px-2.5 py-1 rounded-lg bg-[#c85a32] hover:bg-[#b04b25] text-white text-[11px] font-bold cursor-pointer">
                                 + 다음 권 기록 추가
                             </button>
@@ -385,7 +385,7 @@
                 <div
                     class="mt-6 pt-3 border-t border-[#e2d6c5] flex justify-between items-center text-xs text-[#8c7a6b]">
                     <span id="journal-page-indicator">Page 1 of 1 · 주희의 다꾸 일기장</span>
-                    <button id="delete-diary-btn" onclick="deleteSelectedDiary()"
+                    <button id="delete-diary-btn" onclick="deleteSelectedDiary()" oncontextmenu="event.preventDefault(); deleteArmed = false; this.textContent = '이 일기 삭제';" title="이 작품의 일기장을 서재에서 삭제 (우클릭: 삭제 확인 해제)"
                         class="text-rose-600 hover:underline font-semibold cursor-pointer">이 일기 삭제</button>
                 </div>
             </div>
@@ -546,7 +546,7 @@
             container.innerHTML = '';
 
             if (filtered.length === 0) {
-                container.innerHTML = `<div class="bg-[#faf6f0] border border-dashed border-[#d6c9b8] rounded-2xl p-8 text-center text-[#786a5e] text-sm space-y-3"><div>📭 조건에 맞는 서재 기록이 없습니다.<br/>검색어를 비우거나 '+ 일기 쓰기'로 새 추억을 남겨보세요!</div><button onclick="document.getElementById('search-box').value=''; setFilter('all');" class="px-3 py-1.5 rounded-lg bg-[#efe7da] border border-[#d8cbb8] text-[#2c221e] text-xs font-bold hover:bg-[#e5dac9] cursor-pointer">🔄 전체 서재 보기</button></div>`;
+                container.innerHTML = `<div class="bg-[#faf6f0] border border-dashed border-[#d6c9b8] rounded-2xl p-8 text-center text-[#786a5e] text-sm space-y-3"><div>📭 조건에 맞는 서재 기록이 없습니다.<br/>검색어를 비우거나 '+ 일기 쓰기'로 새 추억을 남겨보세요!</div><button onclick="document.getElementById('search-box').value=''; setFilter('all');" oncontextmenu="event.preventDefault(); document.getElementById('search-box').value=''; setFilter('all'); peekRandomItem();" title="좌클릭: 전체 서재 보기 · 우클릭: 복원 후 랜덤 추천 미리보기" class="px-3 py-1.5 rounded-lg bg-[#efe7da] border border-[#d8cbb8] text-[#2c221e] text-xs font-bold hover:bg-[#e5dac9] cursor-pointer">🔄 전체 서재 보기</button></div>`;
                 return;
             }
 
@@ -564,6 +564,14 @@
                     card.className = 'bg-[#faf6f0] rounded-2xl p-4 border border-[#e5dac9] relative cursor-pointer hover:border-[#c85a32] transition flex flex-col';
                     card.title = `${item.title}\n${item.storage_location || '🗄️ 1층 장식장'} · ${item.reading_weather || '☀️ 맑은 오후'} · ${item.reading_spot || '🛋️ 이불 속'}\n${item.cover_finish || '📜 무광 매트'} · ${item.condition_grade || '✨ S급(최상)'} · ₩${(item.estimated_value || 5000).toLocaleString()}`;
                     card.onclick = () => openJournalModal(item.id);
+                    card.title = `${item.title} · 좌클릭: 열기 · Shift+우클릭: 감상 요약 복사`;
+                    card.oncontextmenu = (ev) => {
+                        ev.preventDefault();
+                        if (ev.shiftKey) {
+                            const txt = `📖 「${item.title}」 — "${item.memo || '소장 기록'}" (${item.author})`;
+                            navigator.clipboard?.writeText(txt).catch(() => {});
+                        }
+                    };
 
                     const quotePreview = (item.volumes && item.volumes[0] && item.volumes[0].quote)
                         ? `"${item.volumes[0].quote}"`
@@ -693,12 +701,12 @@
         }
 
         const MOOD_PRESETS = ["🥰 힐링", "🔥 열혈", "😭 감동", "🤯 반전", "🤣 유쾌"];
-        function cycleReadingMood() {
+        function cycleReadingMood(step = 1) {
             const item = ITEMS.find(x => x.id === activeId);
             if (!item) return;
             const cur = item.reading_mood || '🥰 힐링';
             const idx = MOOD_PRESETS.indexOf(cur);
-            item.reading_mood = MOOD_PRESETS[(idx + 1) % MOOD_PRESETS.length];
+            item.reading_mood = MOOD_PRESETS[(idx + step + MOOD_PRESETS.length) % MOOD_PRESETS.length];
             const btn = document.getElementById('mood-cycle-btn');
             if (btn) btn.textContent = item.reading_mood;
             const stampEl = document.getElementById('diary-stamp');
@@ -723,12 +731,12 @@
         }
 
         const SOURCE_PRESETS = ["🏪 오프라인 서점", "🇯🇵 직구/해외", "🎁 선물", "🎪 팝업/행사", "📦 온라인 서점"];
-        function cycleAcquisitionSource() {
+        function cycleAcquisitionSource(step = 1) {
             const item = ITEMS.find(x => x.id === activeId);
             if (!item) return;
             const cur = item.acquisition_source || '🏪 오프라인 서점';
             const idx = SOURCE_PRESETS.indexOf(cur);
-            item.acquisition_source = SOURCE_PRESETS[(idx + 1) % SOURCE_PRESETS.length];
+            item.acquisition_source = SOURCE_PRESETS[(idx + step + SOURCE_PRESETS.length) % SOURCE_PRESETS.length];
             const btn = document.getElementById('source-cycle-btn');
             if (btn) btn.textContent = item.acquisition_source;
             const stampEl = document.getElementById('diary-stamp');
@@ -818,8 +826,8 @@
                 row.innerHTML = `
                     <div class="flex items-center gap-2 min-w-0">
                         <span class="serif-font font-bold text-[#2c221e] shrink-0">${v.vol}권</span>
-                        <button onclick="toggleVolStatus(${idx})" class="px-1.5 py-0.5 rounded border ${isFirst ? 'bg-[#fff8f5] border-[#c85a32]/50 text-[#c85a32]' : 'bg-[#eef5f0] border-[#4a6b5d]/50 text-[#4a6b5d]'} text-[10px] font-bold shrink-0 cursor-pointer">${isFirst ? '🔖 초판특전' : '✓ 소장완료'}</button>
-                        <button onclick="toggleVolBookmark(${idx})" class="text-[12px] shrink-0 cursor-pointer hover:scale-110" title="북마크 토글">${isBm ? '🔖' : '🏷️'}</button>
+                        <button onclick="toggleVolStatus(${idx})" oncontextmenu="event.preventDefault(); toggleVolStatus(${idx}); toggleVolBookmark(${idx});" title="클릭: 초판/소장 전환 · 우클릭: 초판+북마크 동시 토글" class="px-1.5 py-0.5 rounded border ${isFirst ? 'bg-[#fff8f5] border-[#c85a32]/50 text-[#c85a32]' : 'bg-[#eef5f0] border-[#4a6b5d]/50 text-[#4a6b5d]'} text-[10px] font-bold shrink-0 cursor-pointer">${isFirst ? '🔖 초판특전' : '✓ 소장완료'}</button>
+                        <button onclick="toggleVolBookmark(${idx})" oncontextmenu="event.preventDefault(); startEditVolQuote(${idx});" class="text-[12px] shrink-0 cursor-pointer hover:scale-110" title="북마크 토글 (우클릭: ${v.vol}권 밑줄 문장 편집)">${isBm ? '🔖' : '🏷️'}</button>
                         <span onclick="startEditVolQuote(${idx})" class="serif-font text-[#5c4938] truncate cursor-pointer hover:text-[#c85a32]" title="클릭하여 ${v.vol}권 밑줄 문장 편집">${v.quote ? `"${v.quote}"` : '메모 없음'}</span>
                     </div>
                     <button onclick="cycleVolRating(${idx})" class="text-[#c85a32] font-bold shrink-0 ml-2 cursor-pointer hover:opacity-80" title="클릭하여 별점 변경">${'★'.repeat(v.rating || 5)}</button>
@@ -979,12 +987,12 @@
                     if (e.shiftKey) peekRandomItem();
                     else pickRandomItem();
                 } else if (activeId != null) {
-                    cycleRarityTier();
+                    cycleRarityTier(e.shiftKey ? -1 : 1);
                 }
             } else if ((e.key === 's' || e.key === 'S') && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
                 const jm = document.getElementById('journal-modal');
                 if (jm && !jm.classList.contains('hidden') && activeId != null) {
-                    cycleDecoSticker();
+                    cycleDecoSticker(e.shiftKey ? -1 : 1);
                 }
             } else if ((e.key === 'm' || e.key === 'M') && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
                 const jm = document.getElementById('journal-modal');
@@ -1189,7 +1197,7 @@
             } else if ((e.key === 'w' || e.key === 'W') && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
                 const jm = document.getElementById('journal-modal');
                 if (jm && !jm.classList.contains('hidden') && activeId != null) {
-                    cycleWashiTape();
+                    cycleWashiTape(e.shiftKey ? -1 : 1);
                 }
             } else if ((e.key === 'p' || e.key === 'P') && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
                 const jm = document.getElementById('journal-modal');
@@ -1218,11 +1226,11 @@
                     const pageEl = document.getElementById('journal-page-indicator');
                     if (pageEl) {
                         const prevTxt = pageEl.textContent;
-                        pageEl.textContent = '⌨️ [←/→] 넘김 · [Home/End] 처음·끝 · [E] 문장 · [C] 복사 · [ESC] 닫기';
+                        pageEl.textContent = '⌨️ [←/→] 넘김 · [Home/End] 처음·끝 · [E] 문장 · [C] 복사 · [Shift+순환키] 역순환 · [ESC] 닫기';
                         setTimeout(() => { if (pageEl.textContent.includes('넘김')) pageEl.textContent = prevTxt; }, 2200);
                     }
                 } else {
-                    alert('⌨️ 단축키 안내\n[1~5] 서재 탭 전환 · [/] 검색 · [R] 랜덤 추천 · [M] 백색소음 · [←/→] 모달 책장 넘김 · [ESC] 닫기/초기화');
+                    alert('⌨️ 단축키 안내\n[1~5] 서재 탭 전환 · [/] 검색 · [R] 랜덤 추천 · [M] 백색소음 · [←/→] 모달 책장 넘김 · [Shift+순환키] 역순환 · [우클릭] 역순환/백업/필터 · [ESC] 닫기/초기화');
                 }
             }
         });
@@ -1274,6 +1282,49 @@
                 ITEMS.splice(idx, 1);
                 closeJournalModal();
                 renderShelf();
+            }
+        }
+
+        function filterModalCategory() {
+            const item = ITEMS.find(x => x.id === activeId);
+            if (!item) return;
+            closeJournalModal();
+            switchCategory(item.category === 'gacha' ? 'gacha' : 'manga');
+        }
+
+        function searchModalAuthor() {
+            const item = ITEMS.find(x => x.id === activeId);
+            if (!item) return;
+            const inp = document.getElementById('search-box');
+            if (inp) inp.value = item.author || '';
+            closeJournalModal();
+            renderShelf();
+        }
+
+        function copyDiaryTitle() {
+            const el = document.getElementById('diary-title');
+            if (!el) return;
+            const titleText = el.textContent;
+            navigator.clipboard?.writeText(titleText).catch(() => {});
+            el.title = `✅ 복사됨: ${titleText}`;
+        }
+
+        function restoreDiaryQuoteInput() {
+            const item = ITEMS.find(x => x.id === activeId);
+            const inp = document.getElementById('diary-quote-input');
+            if (item && inp) {
+                inp.value = item.memo || '';
+            }
+        }
+
+        function copyLibrarySummaryReport(btn) {
+            const totalVols = ITEMS.reduce((s, x) => s + (x.volumes ? x.volumes.length : 0), 0);
+            const report = `📚 주희의 다꾸 서재 리포트 · 총 ${ITEMS.length}종 · 단행본 ${totalVols}권`;
+            navigator.clipboard?.writeText(report).catch(() => {});
+            if (btn) {
+                const prev = btn.textContent;
+                btn.textContent = '📋 서재 리포트 복사됨';
+                setTimeout(() => { btn.textContent = prev; }, 1600);
             }
         }
 

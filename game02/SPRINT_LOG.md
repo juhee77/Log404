@@ -5,6 +5,410 @@
 
 ---
 
+## 🏆 [Sprint 135] 마일스톤 135: 검색창 `Enter` 첫 결과 즉시 열기 & 빈 결과(`EmptyState`) 우클릭 복원+랜덤 추천 미리보기
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A**: "검색창(`SearchInput`)에서 작품명을 입력한 뒤 `Enter`를 누르면 마우스로 카드를 클릭하지 않아도 첫 번째 검색 결과 일기장이 바로 열리면 정말 빠를 것 같아요!"
+- **가챠러 B**: "검색 결과가 0건일 때 뜨는 `🔄 전체 서재 보기` 버튼(`EmptyStateResetBtn`)을 우클릭하면 전체 서재가 복원됨과 동시에 오늘의 랜덤 추천 작품 미리보기까지 띄워주면 막다른 길 없이 바로 다음 작품을 발견할 수 있겠어요."
+- **기획자 (PO)**: "`main_view.gd`에 `_open_first_filtered_card()`를 추가해 `search_input.text_submitted`에 연결하고, `EmptyStateResetBtn` 우클릭 시 `_reset_all_filters()` + `pick_random_item(false)`를 실행하며 `index.html`의 `#search-box` 및 빈 상태 버튼과 동기화합니다."
+
+### 2. 핵심 구현 및 변경 내역
+- `game02/godot_project/scripts/main_view.gd`:
+  - `_open_first_filtered_card()`를 신설해 검색창에서 `Enter` 입력 시 필터링된 첫 번째 작품 일기장을 즉시 열어주며 툴팁을 동기화했습니다.
+  - `EmptyStateResetBtn` 우클릭 시 전체 필터 초기화 후 랜덤 추천 미리보기(`pick_random_item(false)`)를 실행하도록 연결했습니다.
+- `game02/index.html`:
+  - `#search-box` `Enter` 첫 결과 모달 열기·`Escape` 초기화와 빈 상태 버튼 우클릭 랜덤 추천 미리보기를 동기화했습니다.
+- `game02/godot_project/tests/test_main_integration.gd`:
+  - 검색창 `Enter` 첫 결과 열기와 `EmptyStateResetBtn` 우클릭 복원+랜덤 미리보기를 검증하는 Sprint 135 마일스톤 테스트를 추가해 100% 통과했습니다.
+
+---
+
+## 📓 [Sprint 134] `AddModal` 표지 색상 스와치 우클릭 즉시 등록 & `ESC` 2단계 입력 비우기·닫기 안전장치
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A**: "`AddModal`의 6개 표지 색상 스와치(`크림슨`, `코발트`, `테라코타`, `로즈`, `포레스트`, `바이올렛`)를 우클릭하면 그 색상을 선택함과 동시에 샘플 자동 채움으로 바로 등록되면 1초 만에 원하는 색 일기장을 만들 수 있을 것 같아요!"
+- **가챠러 B**: "`AddModal` 입력란에 글을 적다가 `ESC`를 눌렀을 때 바로 닫히지 않고, 먼저 입력 중인 텍스트를 비우고 빈 상태일 때 `ESC`를 누르면 모달이 닫히면 실수로 글을 날리지 않을 것 같아요."
+- **기획자 (PO)**: "`add_modal.gd`에 `_submit_with_sample_fallback()` 공용 헬퍼를 추출해 `SubmitBtn` 우클릭과 6개 스와치 우클릭을 통합하고, `KEY_ESCAPE` 시 포커스 입력란 우선 비우기 후 닫기 안전장치를 구현하며 `index.html` 인용문 입력란 `Escape` 동작도 동기화합니다."
+
+### 2. 핵심 구현 및 변경 내역
+- `game02/godot_project/scripts/add_modal.gd`:
+  - `_submit_with_sample_fallback()` 헬퍼를 추출해 `SubmitBtn` 우클릭과 표지 스와치 6종 우클릭 시 해당 색상으로 즉시 샘플 등록을 수행합니다.
+  - `_unhandled_input`에서 `KEY_ESCAPE` 시 포커스된 `LineEdit`에 텍스트가 있으면 먼저 비우고, 비어있을 때 모달을 닫도록 안전장치를 추가했습니다.
+- `game02/index.html`:
+  - `#diary-quote-input`에서 `Escape` 키 입력 시 작성 중인 텍스트가 있으면 먼저 비우도록 동기화했습니다.
+- `game02/godot_project/tests/test_main_integration.gd`:
+  - `AddModal` 스와치 우클릭 즉시 등록과 `ESC` 2단계 비우기/닫기를 검증하는 Sprint 134 통합 테스트를 추가해 100% 통과했습니다.
+
+---
+
+## 📓 [Sprint 133] 서재 카드 `Shift+우클릭` 툴팁 동기화 & `AddModal` 카테고리 드롭다운 우클릭 즉시 전환
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A**: "서재 카드(`card_item.gd`)에 마우스를 올렸을 때 나오는 리치 툴팁에도 `Shift+우클릭: 감상 요약 복사` 안내가 적혀 있으면 새로운 기능을 바로 발견할 수 있을 것 같아요!"
+- **가챠러 B**: "`AddModal`에서 `이북 · 만화 단행본 일기` ↔ `가챠 · 굿즈 스크랩 노트` 드롭다운(`CatOption`)을 우클릭하면 드롭다운을 열지 않고도 즉시 이북 ↔ 가챠가 전환되면 정말 편하겠어요."
+- **기획자 (PO)**: "`card_item.gd`와 `index.html` 카드 툴팁에 `Shift+우클릭: 감상 요약 복사` 힌트를 동기화하고, `add_modal.gd`의 `CatOption` 우클릭 시 카테고리 즉시 토글 및 툴팁을 연결합니다."
+
+### 2. 핵심 구현 및 변경 내역
+- `game02/godot_project/scripts/card_item.gd`:
+  - 리치 툴팁 하단에 `(우클릭: +1권 빠른 기록 · Shift+우클릭: 감상 요약 복사)` 안내를 추가했습니다.
+- `game02/godot_project/scripts/add_modal.gd`:
+  - `CatOption` 우클릭 시 이북(`0`) ↔ 가챠(`1`) 즉시 전환 및 툴팁을 연결했습니다.
+- `game02/index.html`:
+  - 서재 카드 `title` 속성에 `Shift+우클릭: 감상 요약 복사` 툴팁을 동기화했습니다.
+- `game02/godot_project/tests/test_main_integration.gd`:
+  - 카드 툴팁 동기화와 `AddModal` `CatOption` 우클릭 카테고리 토글을 검증하는 Sprint 133 통합 테스트를 추가해 100% 통과했습니다.
+
+---
+
+## 📓 [Sprint 132] 카드 `Shift+우클릭` 즉시 감상 요약 복사 & `AddModal` 우클릭 입력 초기화·샘플 자동 채움 등록
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A**: "서재 그리드에서 카드를 보다가 모달을 열지 않고도 바로 감상 카드를 공유하고 싶을 때가 있어요! 카드를 `Shift+우클릭`하면 해당 작품의 감상 요약이 클립보드에 복사되면 정말 빠를 것 같아요."
+- **가챠러 B**: "`AddModal`을 열었을 때 `등록` 버튼을 우클릭하면 빈 제목일 때 오늘의 샘플을 자동 채움해 바로 등록하고, `닫기` 버튼을 우클릭하면 입력란만 모두 비워 재입력할 수 있으면 편리하겠어요!"
+- **기획자 (PO)**: "`card_item.gd`에 `quote_copy_requested` 시그널과 `Shift+우클릭` 핸들러를 추가해 `main_view.gd`의 `_on_card_quote_copy_requested`에 연결하고, `add_modal.gd`에 `clear_inputs()` 및 `SubmitBtn` 우클릭 샘플 등록을 구현해 `index.html`과 동기화합니다."
+
+### 2. 핵심 구현 및 변경 내역
+- `game02/godot_project/scripts/card_item.gd` · `main_view.gd`:
+  - `Shift+우클릭` 시 모달을 열지 않고 즉시 카드 감상 요약(`📖 「제목」 — "대사"`)을 클립보드에 복사하고 토스트를 출력합니다.
+- `game02/godot_project/scripts/add_modal.gd`:
+  - `CloseBtn` 우클릭 시 `clear_inputs()`로 모든 입력란을 비우고, `SubmitBtn` 우클릭 시 빈 제목이면 샘플 텍스트를 자동 채움해 등록합니다.
+- `game02/index.html`:
+  - 카드 `Shift+우클릭`(`oncontextmenu`) 시 감상 요약 클립보드 복사를 동기화했습니다.
+- `game02/godot_project/tests/test_main_integration.gd`:
+  - 카드 `Shift+우클릭` 복사와 `AddModal` 우클릭 입력 초기화·샘플 자동 등록을 검증하는 Sprint 132 통합 테스트를 추가해 100% 통과했습니다.
+
+---
+
+## 📓 [Sprint 131] 메인 `AppTitle` 좌·우클릭(전체 복원/테마 순환) & 하단 `StatusToast` 좌·우클릭(치트시트/랜덤 미리보기)
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A**: "메인 화면 상단 큰 제목(`주희의 다꾸 서재 & 소장 일기장`)을 좌클릭하면 전체 서재가 복원(`0` 키)되고, 우클릭하면 속지 테마(`T` 키)가 순환되면 상단에서도 바로 서재 리셋과 분위기 전환이 가능해질 것 같아요!"
+- **미니멀러 C**: "하단 독 바 위의 안내 문구(`StatusToast`)를 좌클릭하면 단축키 치트시트(`H` 키)가 뜨고, 우클릭하면 오늘의 랜덤 작품 추천 미리보기(`Shift+R`)가 뜨면 메인 화면의 모든 텍스트 라벨까지 살아 숨 쉬는 UI가 되겠어요!"
+- **기획자 (PO)**: "`main_view.gd`에 `_show_shortcut_cheatsheet()` 공용 헬퍼를 추출해 `KEY_H`와 `status_toast` 좌클릭을 통합하고, `AppTitle`과 `status_toast`의 좌·우클릭 및 툴팁을 연결해 `index.html`의 `<h1>` 제목과 동기화합니다."
+
+### 2. 핵심 구현 및 변경 내역
+- `game02/godot_project/scripts/main_view.gd`:
+  - `AppTitle` 좌클릭 시 `_reset_all_filters()`, 우클릭 시 `_step_theme(1 / -1)`이 동작하도록 연결했습니다.
+  - `_show_shortcut_cheatsheet()` 헬퍼를 추출해 `KEY_H`와 `StatusToast` 좌클릭을 통합하고, `StatusToast` 우클릭 시 `pick_random_item(false)` 미리보기를 연결했습니다.
+- `game02/index.html`:
+  - 상단 `<h1>` 제목 클릭 시 전체 서재 복원, 우클릭 시 `toggleJournalTheme()` 테마 순환 및 툴팁을 동기화했습니다.
+- `game02/godot_project/tests/test_main_integration.gd`:
+  - `AppTitle` 좌·우클릭(전체 복원/테마 순환)과 `StatusToast` 좌·우클릭(치트시트/랜덤 미리보기)을 검증하는 Sprint 131 통합 테스트를 추가해 100% 통과했습니다.
+
+---
+
+## 🏆 [Sprint 130] 마일스톤 130: 모달 `TagLabel` 좌·우클릭 띠지 순환 & `VolHeader` 좌·우클릭 권 추가·삭제 (모달 전 영역 100% 인터랙티브화 달성)
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A**: "모달의 요약 태그줄(`TagLabel`)을 좌클릭하면 다음 띠지 문구로, 우클릭하면 이전 띠지 문구로 바뀌면 아래 `띠지` 버튼까지 마우스를 옮기지 않아도 바로 띠지를 갈아끼울 수 있을 것 같아요!"
+- **가챠러 B**: "`📌 권별 밑줄 노트 (소장 3/3권 · ...)` 헤더(`VolHeader`)를 좌클릭하면 다음 권 일기 추가(`+`), 우클릭하면 마지막 권 삭제(`-`)가 되면 마일스톤 130 기념으로 모달 내 **모든 텍스트·라벨 영역 100% 인터랙티브화**가 완성되겠어요!"
+- **기획자 (PO)**: "`detail_modal.gd`에서 `tag_label` 좌·우클릭(`cycle_obi_preset(1 / -1)`)과 `vol_header` 좌·우클릭(`_on_add_vol_btn_pressed` / `remove_last_volume`)을 연결해 모달 내 모든 영역의 양방향 상호작용을 완성하고 `index.html`과 동기화합니다."
+
+### 2. 핵심 구현 및 변경 내역
+- `game02/godot_project/scripts/detail_modal.gd`:
+  - `TagLabel` 좌클릭(`cycle_obi_preset(1)`) · 우클릭(`cycle_obi_preset(-1)`) 및 툴팁을 연결했습니다.
+  - `VolHeader` 좌클릭(`_on_add_vol_btn_pressed()`) · 우클릭(`remove_last_volume()`) 및 툴팁을 연결했습니다.
+- `game02/index.html`:
+  - `📌 권별 소장 스탬프 & 좋아하는 대사` 헤더 클릭 시 `addVolumeInDiary()`가 동작하도록 동기화했습니다.
+- `game02/godot_project/tests/test_main_integration.gd`:
+  - `TagLabel` 좌·우클릭 띠지 순환과 `VolHeader` 좌·우클릭 권 추가/삭제를 검증하는 Sprint 130 마일스톤 테스트를 추가해 100% 통과했습니다.
+
+---
+
+## 📓 [Sprint 129] 모달 `AuthorLabel` 우클릭 가치 증감 & `MemoLabel` 좌클릭(편집 이동)·우클릭(형광펜 토글)
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A**: "모달 `AuthorLabel`(`작가 · ... · 💎 ₩21,000`)을 우클릭하면 바로 추정 가치를 `+5,000원`(`Shift+우클릭`: `-5,000원`) 조정할 수 있으면 아래쪽 `+5천원` 버튼을 찾지 않아도 되어 정말 편할 것 같아요!"
+- **가챠러 B**: "모달 중앙의 큰 감상평 문장(`MemoLabel`)을 좌클릭하면 바로 밑줄 문장 편집 입력창으로 포커스(`E` 키)되고, 우클릭하면 형광펜(`L` 키)이 토글되면 굿노트처럼 직관적이겠어요!"
+- **기획자 (PO)**: "`detail_modal.gd`의 `author_label`에 우클릭(`boost_estimated_value` / `Shift`: `reduce_estimated_value`)을, `memo_label`에 좌클릭(`quote_input` 포커스) · 우클릭(`toggle_quote_highlight`)을 연결하고 `index.html`의 `#diary-memo`와 동기화합니다."
+
+### 2. 핵심 구현 및 변경 내역
+- `game02/godot_project/scripts/detail_modal.gd`:
+  - `AuthorLabel` 우클릭 시 `boost_estimated_value()` (`Shift+우클릭` 시 `reduce_estimated_value()`) 호출 및 툴팁을 연결했습니다.
+  - `MemoLabel` 좌클릭 시 `quote_input`으로 포커스를 이동하고, 우클릭 시 `toggle_quote_highlight()`를 실행하며 툴팁을 추가했습니다.
+- `game02/index.html`:
+  - `#diary-memo` 클릭 시 `#diary-quote-input` 포커스, 우클릭 시 `toggleDiaryHighlighter()` 및 툴팁을 동기화했습니다.
+- `game02/godot_project/tests/test_main_integration.gd`:
+  - `AuthorLabel` 우클릭/`Shift+우클릭` 가치 증감 및 `MemoLabel` 우클릭 형광펜 토글을 검증하는 Sprint 129 통합 테스트를 추가해 100% 통과했습니다.
+
+---
+
+## 📓 [Sprint 128] 모달 `CatBadge` 클릭(이북/가챠 카테고리 모아보기) & `AuthorLabel` 클릭(작가·시리즈 즉시 검색)
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A**: "모달 상단 왼쪽 `[이북·단행본 일기]` / `[가챠·소장 노트]` 배지(`CatBadge`)를 클릭하면 모달이 닫히면서 바로 그 카테고리 탭만 모아볼 수 있으면 탐색 동선이 자연스러울 것 같아요."
+- **가챠러 B**: "모달의 `작가 · 이노우에 다케히코 · ★5.0 · 💎 ₩21,000` 줄(`AuthorLabel`)을 클릭하면 바로 그 작가명으로 서재 검색이 실행되어 같은 작가·시리즈의 다른 작품까지 한눈에 찾을 수 있으면 좋겠어요!"
+- **기획자 (PO)**: "`detail_modal.gd`에 `filter_category_requested`와 `search_author_requested` 시그널을 신설해 `main_view.gd`의 탭 전환 및 검색 핸들러에 연결하고, `index.html`의 `#diary-cover-cat` 및 `#diary-author`와 동기화합니다."
+
+### 2. 핵심 구현 및 변경 내역
+- `game02/godot_project/scripts/detail_modal.gd`:
+  - `CatBadge` 클릭 시 모달을 닫고 `filter_category_requested` 시그널을 발행하며, `AuthorLabel` 클릭 시 모달을 닫고 `search_author_requested` 시그널을 발행하도록 연결했습니다.
+- `game02/godot_project/scripts/main_view.gd`:
+  - `filter_category_requested` 수신 시 이북(`0`)·가챠(`1`) 탭으로 전환하고, `search_author_requested` 수신 시 `search_input.text`를 설정해 즉시 검색 및 토스트를 출력합니다.
+- `game02/index.html`:
+  - `#diary-cover-cat` 클릭(`filterModalCategory`)과 `#diary-author` 클릭(`searchModalAuthor`)을 동기화했습니다.
+- `game02/godot_project/tests/test_main_integration.gd`:
+  - `CatBadge` 클릭 카테고리 필터링과 `AuthorLabel` 클릭 작가 검색을 검증하는 Sprint 128 통합 테스트를 추가해 100% 통과했습니다.
+
+---
+
+## 📓 [Sprint 127] 모달 `📅 기념일` 우클릭 기본값 초기화 & 모달 제목(`TitleLabel`) 클릭 클립보드 복사
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A**: "모달 `InkRow`의 `📅 기념일(DateStampBtn)` 버튼을 실수로 눌러 오늘 날짜로 바뀌었을 때, 우클릭 한 번으로 다시 기본값(`📅 기념일`)으로 되돌릴 수 있으면 좋겠어요."
+- **미니멀러 C**: "모달 상단의 작품 제목을 클릭하면 바로 클립보드에 작품명이 복사되어 검색이나 기록에 붙여넣기 편하면 좋겠습니다!"
+- **기획자 (PO)**: "`detail_modal.gd`에 `reset_purchase_date()`와 `DateStampBtn` 우클릭 초기화를 추가하고, `title_label` 클릭 시 클립보드 복사 및 복사 확인 툴팁 피드백을 `index.html`의 `#diary-title`과 동기화합니다."
+
+### 2. 핵심 구현 및 변경 내역
+- `game02/godot_project/scripts/detail_modal.gd`:
+  - `reset_purchase_date()` 메서드를 추가해 `DateStampBtn` 우클릭 시 `purchase_date`를 `"📅 기념일"`로 초기화하고 `diary_updated` 시그널을 발행합니다.
+  - `title_label`에 클릭 핸들러를 연결해 좌클릭 시 `current_item.title`을 클립보드에 복사하고 `✅ 복사됨: ...` 툴팁 피드백을 제공합니다.
+- `game02/index.html`:
+  - `#diary-title` 클릭 시 `copyDiaryTitle()` 클립보드 복사 및 툴팁을 동기화했습니다.
+- `game02/godot_project/tests/test_main_integration.gd`:
+  - `DateStampBtn` 우클릭 초기화와 `title_label` 클릭 클립보드 복사를 검증하는 Sprint 127 통합 테스트를 추가해 100% 통과했습니다.
+
+---
+
+## 📓 [Sprint 126] 모달 `✕` 닫기 우클릭(닫기+즉시 JSON 백업) & 권별 `📅` 날짜 버튼 우클릭(해당 권 대사 복사)
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A**: "모달에서 여러 권의 밑줄과 스탬프를 수정한 뒤 상단 `✕` 닫기 버튼을 우클릭하면 모달이 닫히면서 동시에 `로컬 JSON 백업 저장`까지 한 번에 완료되면 정말 안심이 될 것 같아요."
+- **가챠러 B**: "권별 로우의 `📅` 날짜 버튼을 우클릭했을 때 그 권에 적어둔 밑줄 대사만 클립보드에 한 줄로 복사되면 인용문 공유하기가 훨씬 간편해지겠어요!"
+- **기획자 (PO)**: "`detail_modal.gd`에 `close_and_backup_requested` 시그널을 신설해 `main_view.gd`의 `_trigger_instant_json_backup()`에 연결하고, 권별 `date_btn` 우클릭 시 해당 권 대사 클립보드 복사 및 `✅ 복사됨` 피드백을 구현해 `index.html`과 동기화합니다."
+
+### 2. 핵심 구현 및 변경 내역
+- `game02/godot_project/scripts/detail_modal.gd`:
+  - `close_and_backup_requested` 시그널을 추가해 `CloseBtn` 우클릭 시 모달을 닫고 즉시 로컬 JSON 백업 저장을 트리거합니다.
+  - 권별 로우 `date_btn` 우클릭 시 해당 권의 밑줄 대사를 클립보드에 복사하고 `✅ 복사됨` 피드백과 툴팁을 제공합니다.
+- `game02/godot_project/scripts/main_view.gd`:
+  - `detail_modal.close_and_backup_requested` 시그널을 `_trigger_instant_json_backup()`에 연결했습니다.
+- `game02/index.html`:
+  - 모달 `✕` 닫기 버튼에 `oncontextmenu="event.preventDefault(); closeJournalModal(); instantBackupArchive();"` 및 툴팁을 동기화했습니다.
+- `game02/godot_project/tests/test_main_integration.gd`:
+  - 권별 `date_btn` 우클릭 대사 복사와 `CloseBtn` 우클릭 닫기+JSON 백업을 검증하는 Sprint 126 통합 테스트를 추가해 100% 통과했습니다.
+
+---
+
+## 🏆 [Sprint 125] 마일스톤 125: 모달 4대 인장 우클릭(인장+감상카드 복사) & 권별 초판 배지 우클릭(초판+북마크 동시 토글)
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A**: "모달 `StampRow`의 4개 인장 버튼(`전권완결`, `초판특전`, `인생최애`, `위시`)을 우클릭했을 때 인장을 찍는 동시에 감상 카드까지 바로 클립보드에 복사되면 인장 바꾸자마자 공유하기가 정말 편할 것 같아요!"
+- **가챠러 B**: "권별 로우의 `🔖초판특전`/`✓소장완료` 배지도 우클릭 한 번으로 초판 여부와 `🔖` 북마크 리본을 동시에 토글하면 핵심 소장 권 표시가 한결 빨라지겠네요."
+- **기획자 (PO)**: "`detail_modal.gd`에 `STAMP_PRESET_MAP` 상수를 도입해 인장 매핑 중복을 제거하고 우클릭(인장+감상카드 복사)을 연결하며, 권별 로우 `status_btn` 우클릭(초판+북마크 동시 토글)과 `index.html` 동기화까지 마일스톤 125로 완성합니다."
+
+### 2. 핵심 구현 및 변경 내역
+- `game02/godot_project/scripts/detail_modal.gd`:
+  - `STAMP_PRESET_MAP` 상수로 4대 인장 매핑 중복을 제거하고, `StampComplete`, `StampFirst`, `StampFav`, `StampWish` 우클릭 시 `apply_stamp(st_name)` + `copy_book_quote_card()`를 실행하도록 연결했습니다.
+  - 권별 로우 `status_btn` 우클릭 시 `toggle_volume_status(capture_idx)` + `toggle_volume_bookmark(capture_idx)` 동시 토글 및 툴팁을 추가했습니다.
+- `game02/index.html`:
+  - `data-stamp-btn` 4개 버튼 및 권별 초판/소장 배지에 `oncontextmenu` 우클릭 액션 및 툴팁을 동기화했습니다.
+- `game02/godot_project/tests/test_main_integration.gd`:
+  - `StampFav` 우클릭 인장+감상카드 복사와 권별 `status_btn` 우클릭 초판+북마크 동시 토글을 검증하는 Sprint 125 마일스톤 테스트를 추가해 100% 통과했습니다.
+
+---
+
+## 📓 [Sprint 124] 모달 4대 잉크 스와치 우클릭(잉크+형광펜 동시 토글) & 권별 북마크 리본 우클릭 밑줄 편집
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A**: "모달 `✒️ 잉크:` 줄 앞의 4개 잉크 스와치(`에스프레소`, `버건디`, `세피아`, `포레스트`)를 우클릭했을 때 해당 잉크 색상을 적용하면서 동시에 형광펜 하이라이트까지 한 번에 켜거나 끄면 꾸미기 속도가 두 배는 빨라질 것 같아요."
+- **미니멀러 C**: "권별 로우의 `🏷️`/`🔖` 북마크 리본 버튼도 우클릭하면 바로 그 권의 밑줄 문장 편집으로 들어가면 작은 리본에서도 편집 동선이 이어져 좋겠어요!"
+- **기획자 (PO)**: "`detail_modal.gd`에 `INK_SWATCH_MAP` 상수를 도입해 잉크 스와치 스타일링과 우클릭(잉크+형광펜 동시 토글)을 통합하고, 권별 로우 `bm_btn` 우클릭 시 `start_editing_volume_quote(capture_idx)`를 연결해 `index.html`과 동기화합니다."
+
+### 2. 핵심 구현 및 변경 내역
+- `game02/godot_project/scripts/detail_modal.gd`:
+  - `INK_SWATCH_MAP` 상수로 `InkEspresso`, `InkBurgundy`, `InkSepia`, `InkForest` 매핑 중복을 제거하고, 우클릭 시 `set_fountain_pen_ink(sw_hex)` + `toggle_quote_highlight()`를 함께 실행하도록 연결했습니다.
+  - 권별 로우 `bm_btn`에 우클릭 시 `start_editing_volume_quote(capture_idx)` 호출과 툴팁 안내를 추가했습니다.
+- `game02/index.html`:
+  - 권별 북마크 리본 버튼에 `oncontextmenu="event.preventDefault(); startEditVolQuote(${idx});"` 및 툴팁을 동기화했습니다.
+- `game02/godot_project/tests/test_main_integration.gd`:
+  - `InkSepia` 우클릭 잉크+형광펜 동시 전환 및 권별 북마크 리본 우클릭 밑줄 편집 진입을 검증하는 Sprint 124 통합 테스트를 추가해 100% 통과했습니다.
+
+---
+
+## 📓 [Sprint 123] 모달 `AddVolBtn` 우클릭 권 추가+즉시 밑줄 편집 & `DeleteBtn` 우클릭 삭제 무장 안전 해제
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **가챠러 B**: "`+ 다음 권 일기 추가` 버튼을 우클릭하면 새 권이 추가되자마자 바로 그 권의 밑줄 문장 편집 모드로 들어가면, 연속 기록할 때 마우스 클릭 수를 한 번 더 줄일 수 있을 것 같아요."
+- **소장러 A**: "`일기 삭제` 버튼을 한 번 눌러 `⚠️ 정말 삭제?` 상태가 되었을 때, 우클릭 한 번으로 바로 삭제 확인 상태를 안전하게 해제할 수 있으면 실수 방지에 정말 좋을 것 같아요!"
+- **기획자 (PO)**: "`detail_modal.gd`의 `AddVolBtn` 우클릭 시 `_on_add_vol_btn_pressed()` + `start_editing_volume_quote(last)`를, `DeleteBtn` 우클릭 시 `delete_armed = false` 안전 해제를 연결하고 `index.html`의 동일 버튼들에도 동기화합니다."
+
+### 2. 핵심 구현 및 변경 내역
+- `game02/godot_project/scripts/detail_modal.gd`:
+  - `AddVolBtn` 우클릭 시 새 권 추가 후 즉시 마지막 권의 밑줄 편집 모드로 진입하도록 연결했습니다.
+  - `DeleteBtn` 우클릭 시 `delete_armed` 무장 상태를 안전하게 해제하고 툴팁을 동기화했습니다.
+- `game02/index.html`:
+  - `+ 다음 권 기록 추가` 및 `이 일기 삭제` 버튼에 `oncontextmenu` 우클릭 액션 및 툴팁을 동기화했습니다.
+- `game02/godot_project/tests/test_main_integration.gd`:
+  - `AddVolBtn` 우클릭 권 추가+편집 진입과 `DeleteBtn` 우클릭 무장 해제를 검증하는 Sprint 123 통합 테스트를 추가해 100% 통과했습니다.
+
+---
+
+## 📓 [Sprint 122] 모달 `밑줄 저장` 우클릭 원문 복원 & `형광펜` 우클릭 잉크색 순환
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A**: "모달에서 밑줄 문장을 수정하다가 원래 저장된 문장으로 되돌리고 싶을 때, `밑줄 저장` 버튼을 우클릭하면 바로 원문(`current_item.memo`)으로 복구되면 편할 것 같아요."
+- **미니멀러 C**: "`형광펜` 버튼도 우클릭 시 만년필 잉크 색상을 바로 다음 색으로 넘겨줄 수 있으면 글 꾸미기 동선이 훨씬 짧아질 거예요!"
+- **기획자 (PO)**: "`detail_modal.gd`의 `SaveQuoteBtn` 우클릭 시 `editing_vol_index` 해제 및 원문 복원을, `HighlightBtn` 우클릭 시 `cycle_fountain_pen_ink(1)` 호출과 툴팁 안내를 연결하고 `index.html`에도 `restoreDiaryQuoteInput()`을 동기화합니다."
+
+### 2. 핵심 구현 및 변경 내역
+- `game02/godot_project/scripts/detail_modal.gd`:
+  - `SaveQuoteBtn` 우클릭 시 `quote_input.text`를 `current_item.memo` 원문으로 복원하고 권별 편집 상태를 해제합니다.
+  - `HighlightBtn` 우클릭 시 `cycle_fountain_pen_ink(1)`을 호출해 잉크 색상을 순환하며 툴팁을 동기화했습니다.
+- `game02/index.html`:
+  - `🖋️ 밑줄 저장` 버튼에 `oncontextmenu` 기반 `restoreDiaryQuoteInput()` 및 툴팁을 동기화했습니다.
+- `game02/godot_project/tests/test_main_integration.gd`:
+  - `SaveQuoteBtn` 우클릭 원문 복원과 `HighlightBtn` 우클릭 잉크색 변경을 검증하는 Sprint 122 통합 테스트를 추가해 100% 통과했습니다.
+
+---
+
+## 📓 [Sprint 121] 상단 5대 필터 탭 우클릭 가치순 보기 & 전체 초기화(`TabAll`) 원클릭 복원
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A**: "필터 탭(`이북·단행본`, `가챠노트`, `완독작`, `인생작`)을 우클릭했을 때 해당 탭으로 이동하면서 동시에 소장 가치순(`↕ 가치순`) 정렬까지 한 번에 적용되면 고가 레어템부터 바로 볼 수 있어 정말 편할 것 같아요!"
+- **가챠러 B**: "`가챠노트` 탭 우클릭 한 번으로 가챠 필터 + 가치순 정렬이 즉시 적용되니 두 번 클릭할 필요가 없어졌어요."
+- **미니멀러 C**: "`전체일기` 탭(`TabAll`) 우클릭은 검색어·필터·정렬을 모두 기본값으로 되돌리는 완전 초기화로 맞추면 완벽하겠어요."
+- **기획자 (PO)**: "`main_view.gd`의 5대 필터 탭에 `tab_rclick_map` 우클릭 핸들러(`TabAll` → `_reset_all_filters(); _set_sort_mode(0)`, 나머지 4탭 → 필터 후 `_set_sort_mode(3)`)와 툴팁을 연결하고 `index.html` 탭 버튼에도 동기화합니다."
+
+### 2. 핵심 구현 및 변경 내역
+- `game02/godot_project/scripts/main_view.gd`:
+  - `TabAll` 우클릭 시 검색어·필터·정렬을 모두 기본값(`0`)으로 복원하고, `TabManga`/`TabGacha`/`TabComplete`/`TabFav` 우클릭 시 해당 필터 적용 후 즉시 `↕ 가치순` 정렬(`_set_sort_mode(3)`)을 적용하도록 연결했습니다.
+  - 5개 탭 툴팁에 `· 우클릭: 완전 초기화` 및 `· 우클릭: 가치순 보기` 안내를 추가했습니다.
+- `game02/index.html`:
+  - 상단 5개 필터 탭 버튼에 `oncontextmenu` 우클릭 초기화/정렬 전환 및 툴팁을 동기화했습니다.
+- `game02/godot_project/tests/test_main_integration.gd`:
+  - 5대 필터 탭 우클릭 가치순 정렬·완전 초기화 및 툴팁을 검증하는 Sprint 121 통합 테스트를 추가해 100% 통과했습니다.
+
+---
+
+## 🏆 [Sprint 120] 마일스톤 120: 상단 4대 통계 카드 우클릭 파워 액션 & 모달 `[Shift+C] 리포트` 치트시트 동기화
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A**: "상단 4개 통계 카드(`서재 작품`, `단행본 기록`, `초판 스탬프`, `가챠 스크랩`)를 좌클릭하면 필터가 바뀌는데, 우클릭했을 때도 바로 전체 서재 리포트 복사, 이북 가치순 정렬, 서재 인포그래픽 브리핑, 즉시 JSON 백업 저장이 실행되면 대시보드가 정말 강력해질 것 같아요!"
+- **가챠러 B**: "마일스톤 120 기념으로 모달 `H` 도움말 토스트에도 지난 스프린트에서 추가한 `Shift+C: 리포트` 안내를 함께 넣어주면 완벽하겠네요."
+- **기획자 (PO)**: "`main_view.gd`에 `_set_sort_mode()` 공용 헬퍼와 `stat_configs` 매핑 테이블을 도입해 4개 통계 카드의 좌·우클릭 및 툴팁을 일관되게 연결하고, `index.html` 통계 카드 우클릭과 모달 `H` 도움말을 동기화합니다."
+
+### 2. 핵심 구현 및 변경 내역
+- `game02/godot_project/scripts/main_view.gd`:
+  - `StatItems`(우클릭: 서재 리포트 복사), `StatVols`(우클릭: 이북 가치순 정렬 `_set_sort_mode(3)`), `StatFirsts`(우클릭: 서재 인포그래픽 요약), `StatGacha`(우클릭: 즉시 JSON 백업 저장) 4종 우클릭 파워 액션 및 툴팁을 `stat_configs` 테이블로 연결했습니다.
+  - `_on_modal_help_requested()` 토스트에 `[C] 복사(Shift+C: 리포트)` 안내를 보강했습니다.
+- `game02/index.html`:
+  - 상단 `서재 작품`, `소장 단행본`, `초판 스탬프` 통계 카드에 `oncontextmenu` 우클릭 파워 액션 및 툴팁을 동기화했습니다.
+- `game02/godot_project/tests/test_main_integration.gd`:
+  - 4대 통계 카드 우클릭 파워 액션 및 모달 `Shift+C` 도움말을 검증하는 Sprint 120 마일스톤 테스트를 추가해 100% 통과했습니다.
+
+---
+
+## 📓 [Sprint 119] 모달 `💌 공유` 우클릭·`Shift+C` 전체 서재 리포트 복사 & 상단 마스킹 테이프 우클릭 역순환
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A**: "모달 안에서 현재 작품 감상 카드를 복사(`💌 공유` 좌클릭)하다가 전체 서재 통계 리포트도 바로 복사하고 싶을 때가 있는데, 모달을 닫지 않고 `💌 공유` 우클릭이나 `Shift+C` 한 번으로 복사되면 정말 편할 것 같아요."
+- **가챠러 B**: "모달 표지 위 마스킹 테이프(`ModalWashiTape`)도 좌클릭으로 다음 색이 되니 우클릭으로 이전 색으로 돌아갈 수 있으면 좋겠어요!"
+- **기획자 (PO)**: "`detail_modal.gd`에 `summary_copy_requested` 시그널을 신설해 `main_view.gd`의 `copy_summary_to_clipboard()`와 연결하고, `ShareCardBtn` 우클릭·`Shift+C` 및 `ModalWashiTape` 우클릭 역순환(`-1`)을 구현해 `index.html`과 동기화합니다."
+
+### 2. 핵심 구현 및 변경 내역
+- `game02/godot_project/scripts/detail_modal.gd`:
+  - `summary_copy_requested` 시그널을 추가해 `ShareCardBtn` 우클릭(`MOUSE_BUTTON_RIGHT`) 및 모달 내 `Shift+C` 시 전체 서재 요약 리포트를 복사하도록 연결했습니다.
+  - `ModalWashiTape` 우클릭 시 `cycle_washi_tape(-1)` 역순환과 양방향 툴팁을 추가했습니다.
+- `game02/godot_project/scripts/main_view.gd`:
+  - `detail_modal.summary_copy_requested` 시그널을 `copy_summary_to_clipboard()`에 연결했습니다.
+- `game02/index.html`:
+  - `💌 감상 카드 공유` 버튼에 `oncontextmenu` 기반 `copyLibrarySummaryReport()` 전체 서재 리포트 복사와 툴팁을 동기화했습니다.
+- `game02/godot_project/tests/test_main_integration.gd`:
+  - `ShareCardBtn` 우클릭, `Shift+C`, `ModalWashiTape` 우클릭 역순환을 검증하는 Sprint 119 통합 테스트를 추가해 100% 통과했습니다.
+
+---
+
+## 📓 [Sprint 118] 메인·모달 `H` 단축키 치트시트 & 표지 커버 `Shift+Q/X` 툴팁 동기화
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A**: "모달에서 `H` 키를 눌러 단축키 안내를 띄웠을 때, 지난 스프린트에서 완성된 `[Shift+순환키] 역순환` 규칙이 모달 도움말 토스트에도 함께 보이면 새 사용자도 바로 알 수 있을 것 같아요."
+- **가챠러 B**: "모달 표지 커버(`CoverRect`) 툴팁에도 `Shift+X: 이전` / `Shift+Q: 이전` 안내가 함께 적혀 있으면 좋겠어요!"
+- **미니멀러 C**: "메인 화면 `H` 키 도움말에도 `[Space] 책장 · [우클릭] 역순환·백업` 안내를 보강하고 `index.html`의 `H` 키 치트시트(`alert`)와 똑같이 맞춰주세요."
+- **기획자 (PO)**: "`main_view.gd`의 메인/모달 `H` 치트시트 토스트와 `detail_modal.gd`의 `cover_rect.tooltip_text`, `index.html`의 `H` 키 안내를 모두 최신 양방향 조작 스펙에 맞춰 동기화합니다."
+
+### 2. 핵심 구현 및 변경 내역
+- `game02/godot_project/scripts/main_view.gd`:
+  - 메인 `KEY_H` 토스트에 `[Space] 책장 · [우클릭] 역순환·백업` 안내를, `_on_modal_help_requested()` 토스트에 `[Shift+순환키] 역순환` 안내를 추가했습니다.
+- `game02/godot_project/scripts/detail_modal.gd`:
+  - `cover_rect.tooltip_text`에 `Shift+X: 이전` / `Shift+Q: 이전` 힌트를 추가했습니다.
+- `game02/index.html`:
+  - `H` 키 단축키 `alert`에 `[Shift+순환키] 역순환 · [우클릭] 역순환/백업/필터`를 동기화했습니다.
+- `game02/godot_project/tests/test_main_integration.gd`:
+  - 메인·모달 `H` 치트시트 및 `CoverRect` 툴팁을 검증하는 Sprint 118 통합 테스트를 추가해 100% 통과했습니다.
+
+---
+
+## 📓 [Sprint 117] 모달 `Shift+I`/`Shift+Q`/`Shift+X` 역순환 추가 (모달 내 19/19 전 순환 단축키 양방향 완성)
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A**: "모달 내 16종 순환 단축키는 `Shift+키`로 역순환되는데, `I`(만년필 잉크 색), `Q`(표지 색상), `X`(표지 아이콘 이모지) 3가지도 `Shift+I`, `Shift+Q`, `Shift+X`로 바로 이전 색·아이콘으로 돌아가면 좋겠어요!"
+- **가챠러 B**: "표지 이모지나 색상이 프리셋이 여러 개라 넘기다 지나칠 때가 많은데, `Shift+Q`와 `Shift+X`로 바로 뒤로 갈 수 있어 정말 편합니다."
+- **기획자 (PO)**: "`cycle_fountain_pen_ink(step)`, `cycle_cover_icon(step)`, `cycle_cover_color(step)`을 양방향화하고 `step_cyclers` 테이블(`KEY_I`, `KEY_Q`, `KEY_X`)에 편입해 모달 내 **19종 순환 단축키 전부**를 `Shift+키` 역순환(`-1`)으로 완성합니다."
+
+### 2. 핵심 구현 및 변경 내역
+- `game02/godot_project/scripts/detail_modal.gd`:
+  - `cycle_fountain_pen_ink(step)`, `cycle_cover_icon(step)`, `cycle_cover_color(step)`을 양방향(`+1`/`-1`)으로 개선하고 `step_cyclers` 테이블(`KEY_I`, `KEY_Q`, `KEY_X`)로 통합했습니다.
+- `game02/index.html`:
+  - 모달 단축키 안내(`H` 키)에 `[Shift+순환키] 역순환` 안내를 동기화했습니다.
+- `game02/godot_project/tests/test_main_integration.gd`:
+  - `Shift+I`, `Shift+Q`, `Shift+X` 역순환을 검증하는 Sprint 117 통합 테스트를 추가해 100% 통과했습니다.
+
+---
+
+## 📓 [Sprint 116] 모달 내 16종 순환 단축키 `Shift+키` 역순환(`-1`) 통합 & 웹 목업 동기화
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A**: "모달 안의 모든 순환 버튼이 마우스 우클릭 역순환을 지원하는데, 키보드로 `W`/`P`/`S`/`R`/`O`/`M`/`G`/`T`/`F`/`A`/`N`/`B`/`K`/`U`/`J`/`Z`를 누를 때도 `Shift+키`로 이전 프리셋으로 돌아갈 수 있으면 키보드·마우스 조작감이 완전히 같아질 것 같아요."
+- **미니멀러 C**: "메인 화면과 모달 수치 증감(`Shift+V/D/Y`)처럼 모달 내 모든 순환 단축키에도 `Shift` 역순환 규칙을 통일합시다."
+- **기획자 (PO)**: "`detail_modal.gd`의 `_unhandled_input`에 `step_cyclers` 16종 디스패치 테이블을 도입해 `event.shift_pressed` 시 `-1`을 전달하고, `index.html`의 `W`/`S`/`R` 모달 키 핸들러도 `e.shiftKey`와 동기화합니다."
+
+### 2. 핵심 구현 및 변경 내역
+- `game02/godot_project/scripts/detail_modal.gd`:
+  - `KEY_W`, `KEY_P`, `KEY_S`, `KEY_R`, `KEY_O`, `KEY_M`, `KEY_G`, `KEY_T`, `KEY_F`, `KEY_A`, `KEY_N`, `KEY_B`, `KEY_K`, `KEY_U`, `KEY_J`, `KEY_Z` 16개 단축키를 `step_cyclers` 테이블로 분리해 `Shift` 조합 시 `-1` 역순환이 동작하도록 고도화했습니다.
+- `game02/index.html`:
+  - 모달 내 `R`/`S`/`W` 키 입력 시 `e.shiftKey ? -1 : 1`을 전달하도록 동기화했습니다.
+- `game02/godot_project/tests/test_main_integration.gd`:
+  - `Shift+W`, `Shift+R`, `Shift+M`, `Shift+F`, `Shift+Z` 역순환을 검증하는 Sprint 116 통합 테스트를 추가해 100% 통과했습니다.
+
+---
+
+## 🏆 [Sprint 115] 마일스톤 115: 모달 `InkRow` 8종 순환 버튼 우클릭 역순환 완성 (`StampRow`+`InkRow` 전 버튼 양방향화 달성)
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A**: "`StampRow`의 버튼들이 전부 우클릭 역순환이 되니 아래쪽 `✒️ 잉크:` 줄(`InkRow`)의 `펜촉`·`서명`·`해시태그`·`최애 캐릭터`·`컨디션`·`코팅`·`날씨`·`장소`도 우클릭으로 뒤로 돌아가면 모달 전체가 완벽하게 통일될 것 같아요!"
+- **가챠러 B**: "`S급(최상)` · `무광 매트` · `맑은 오후` · `이불 속`처럼 옵션이 여러 개인 버튼들을 지나쳤을 때 우클릭 한 번으로 바로 되돌릴 수 있어 쾌적합니다."
+- **기획자 (PO)**: "`collection_item.gd`의 `_step_preset()` 공용 헬퍼를 재사용해 `InkRow` 7종 프리셋 메서드에 `step: int = 1`을 적용하고, `detail_modal.gd`에서 `cycle_pen_nib_size(step)`까지 포함해 `InkRow` 8개 버튼 전체에 우클릭 역순환(`-1`)과 `· 우클릭: 이전` 툴팁을 완성했습니다."
+
+### 2. 핵심 구현 및 변경 내역
+- `game02/godot_project/scripts/collection_item.gd`:
+  - `cycle_diary_signature(step)`, `cycle_custom_tag(step)`, `cycle_favorite_character(step)`, `cycle_condition_grade(step)`, `cycle_cover_finish(step)`, `cycle_reading_weather(step)`, `cycle_reading_spot(step)` 7개 메서드에 `_step_preset()` 기반 `+1`/`-1` 양방향 순환을 적용했습니다.
+- `game02/godot_project/scripts/detail_modal.gd`:
+  - `cycle_pen_nib_size(step)`을 `[10, 12, 14]` 양방향 순환으로 개선하고, `NibBtn`, `SignatureBtn`, `CustomTagBtn`, `FavCharBtn`, `ConditionBtn`, `FinishBtn`, `WeatherBtn`, `SpotBtn` 8개 버튼에 `MOUSE_BUTTON_RIGHT` 역순환(`-1`)과 툴팁을 연결했습니다.
+- `game02/godot_project/tests/test_main_integration.gd`:
+  - `InkRow` 8개 버튼의 우클릭 역순환 및 툴팁을 검증하는 Sprint 115 통합 테스트를 추가해 100% 통과했습니다.
+
+---
+
+## 📓 [Sprint 114] `StampRow` 보관위치·입수경로·기분·소장상태 4종 우클릭 역순환 완성
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A**: "모달 `StampRow` 앞쪽 다꾸 5종(`띠지`/`마테`/`스티커`/`레어도`/`속지`)에 이어 나머지 순환 버튼(`보관위치`/`입수경로`/`기분`/`소장상태`)도 우클릭으로 뒤로 돌아가면 조작감이 완벽히 통일될 것 같아요."
+- **가챠러 B**: "`소장중 → 예약중 → 배송중 → 전시중`이나 보관 장소를 넘기다 지나쳤을 때 우클릭 한 번으로 바로 되돌릴 수 있으면 편하겠어요."
+- **기획자 (PO)**: "`collection_item.gd`의 `_step_preset()` 공용 헬퍼를 재사용해 `cycle_storage_location(step)`, `cycle_acquisition_source(step)`, `cycle_reading_mood(step)`, `cycle_possession_state(step)`를 양방향화하고, `detail_modal.gd`와 `index.html`에 우클릭 역순환 및 툴팁을 연결합니다."
+
+### 2. 핵심 구현 및 변경 내역
+- `game02/godot_project/scripts/collection_item.gd`:
+  - `cycle_storage_location(step)`, `cycle_acquisition_source(step)`, `cycle_reading_mood(step)`, `cycle_possession_state(step)`에 `_step_preset()` 공용 헬퍼를 적용해 `+1`/`-1` 양방향 순환을 지원했습니다.
+- `game02/godot_project/scripts/detail_modal.gd`:
+  - `StorageBtn`, `SourceBtn`, `MoodBtn`, `PossessionBtn` 4개 버튼에 `MOUSE_BUTTON_RIGHT` 역순환(`-1`)과 `(B)/(A)/(M)/(Z) · 우클릭: 이전` 툴팁을 연결해 `StampRow` 전체 순환 버튼의 양방향 조작을 완성했습니다.
+- `game02/index.html`:
+  - `source-cycle-btn`, `mood-cycle-btn`에 `step = 1` 지원과 `oncontextmenu` 우클릭 역순환(`-1`) 및 툴팁을 동기화했습니다.
+- `game02/godot_project/tests/test_main_integration.gd`:
+  - `StorageBtn`, `SourceBtn`, `MoodBtn`, `PossessionBtn` 우클릭 역순환 및 툴팁을 검증하는 Sprint 114 통합 테스트를 추가해 100% 통과했습니다.
+
+---
+
 ## 📓 [Sprint 113] 모달 다꾸 꾸미기 5대 버튼(`띠지`/`마테`/`스티커`/`레어도`/`속지`) 우클릭 역순환 & 툴팁 동기화
 
 ### 1. 14인 스쿼드 회의록 & VOC

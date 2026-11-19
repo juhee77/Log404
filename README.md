@@ -18,13 +18,35 @@ Godot 4+ 기반의 감성 게임 및 인터랙티브 아카이브 애플리케�
 > **Godot 4.6.2 모바일 기반 E-Book 리더기 서재(Apple Books · 리디북스) & 만년필 다꾸 독서노트(굿노트 · 몰스킨) 감성 아카이브 앱**  
 > 14인 가상 애자일 스쿼드가 20분 주기 자동 스프린트로 지속 개선 중입니다.
 
-### 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 113)
+### 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 135)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
 | ![Pocket Archive Main Screen](game02/godot_project/screenshots/godot_app_screen.png) | ![Pocket Archive Detail Modal](game02/godot_project/screenshots/godot_modal_screen.png) |
 
 ### ✨ 주요 핵심 기능
+- **🏆 Sprint 135 마일스톤 하이라이트**: 검색창 `Enter` 첫 번째 결과 일기장 즉시 열기(`_open_first_filtered_card`) 및 빈 검색 결과(`EmptyStateResetBtn`) 우클릭 전체 복원+랜덤 추천 미리보기(`main_view.gd` · `index.html`) 완성
+- **최신 Sprint 134 하이라이트**: `AddModal` 6종 표지 색상 스와치 우클릭 즉시 등록(`_submit_with_sample_fallback`) 및 `ESC` 2단계 입력 비우기·닫기 안전장치(`add_modal.gd` · `index.html`) 완성
+- **최신 Sprint 133 하이라이트**: 서재 카드 리치 툴팁 `Shift+우클릭: 감상 요약 복사` 동기화 및 `AddModal` `CatOption` 우클릭 이북 ↔ 가챠 즉시 전환(`card_item.gd` · `add_modal.gd` · `index.html`) 완성
+- **최신 Sprint 132 하이라이트**: 서재 카드 `Shift+우클릭` 즉시 감상 요약 클립보드 복사(`quote_copy_requested`) 및 `AddModal` 우클릭 입력 초기화·샘플 자동 채움 등록(`card_item.gd` · `add_modal.gd` · `index.html`) 완성
+- **최신 Sprint 131 하이라이트**: 메인 상단 `AppTitle` 좌·우클릭(전체 서재 복원/테마 순환) 및 하단 `StatusToast` 좌·우클릭(단축키 치트시트/랜덤 작품 미리보기) 완성(`main_view.gd` · `index.html`)
+- **🏆 Sprint 130 마일스톤 하이라이트**: 모달 `TagLabel` 좌·우클릭 띠지 문구 양방향 순환 및 `VolHeader` 좌·우클릭 권 추가·삭제 완성으로 모달 전 영역 100% 인터랙티브화 달성(`detail_modal.gd` · `index.html`)
+- **최신 Sprint 129 하이라이트**: 모달 `AuthorLabel` 우클릭/`Shift+우클릭` 소장 가치 `±5,000원` 증감 및 `MemoLabel` 좌클릭(편집 입력창 이동)·우클릭(형광펜 토글) 완성(`detail_modal.gd` · `index.html`)
+- **최신 Sprint 128 하이라이트**: 모달 `CatBadge` 클릭(이북/가챠 카테고리 필터링) 및 `AuthorLabel` 클릭(작가·시리즈명 즉시 검색) 탐색 동선 완성(`detail_modal.gd` · `main_view.gd` · `index.html`)
+- **최신 Sprint 127 하이라이트**: 모달 `📅 기념일` 우클릭 기본값 초기화(`reset_purchase_date`) 및 모달 제목(`TitleLabel`) 클릭 시 작품 제목 클립보드 복사 완성(`detail_modal.gd` · `index.html`)
+- **최신 Sprint 126 하이라이트**: 모달 `✕` 닫기 우클릭(닫기+즉시 JSON 백업 `close_and_backup_requested`) 및 권별 `📅` 날짜 버튼 우클릭(해당 권 대사 한 줄 복사) 완성(`detail_modal.gd` · `main_view.gd` · `index.html`)
+- **🏆 Sprint 125 마일스톤 하이라이트**: 모달 4대 인장 우클릭(인장+감상카드 복사 `STAMP_PRESET_MAP`) 및 권별 초판 배지 우클릭(초판+북마크 동시 토글) 완성(`detail_modal.gd` · `index.html`)
+- **최신 Sprint 124 하이라이트**: 모달 4대 잉크 스와치 우클릭(잉크+형광펜 동시 토글 `INK_SWATCH_MAP`) 및 권별 북마크 리본 우클릭 밑줄 편집 진입(`detail_modal.gd` · `index.html`) 완성
+- **최신 Sprint 123 하이라이트**: 모달 `AddVolBtn` 우클릭 새 권 추가+즉시 밑줄 편집 진입 및 `DeleteBtn` 우클릭 삭제 무장 안전 해제(`detail_modal.gd` · `index.html`) 완성
+- **최신 Sprint 122 하이라이트**: 모달 `밑줄 저장` 우클릭 원문 복원(`restoreDiaryQuoteInput`) 및 `형광펜` 우클릭 만년필 잉크색 순환(`detail_modal.gd` · `index.html`) 완성
+- **최신 Sprint 121 하이라이트**: 상단 5대 필터 탭 우클릭 파워 액션(`TabAll` 완전 초기화, `TabManga`/`TabGacha`/`TabComplete`/`TabFav` 즉시 `↕ 가치순` 정렬) 및 `index.html` 동기화 완성
+- **🏆 Sprint 120 마일스톤 하이라이트**: 상단 4대 통계 카드(`StatItems`/`StatVols`/`StatFirsts`/`StatGacha`) 우클릭 파워 액션(리포트 복사·이북 가치순 정렬·인포그래픽·즉시 JSON 백업) 및 모달 `[Shift+C] 리포트` 도움말 동기화(`main_view.gd` · `index.html`) 완성
+- **최신 Sprint 119 하이라이트**: 모달 `💌 공유` 우클릭·`Shift+C` 전체 서재 리포트 복사(`summary_copy_requested`) 및 표지 상단 `ModalWashiTape` 우클릭 역순환(`detail_modal.gd` · `main_view.gd` · `index.html`) 완성
+- **최신 Sprint 118 하이라이트**: 메인·모달 `H` 단축키 치트시트 및 `CoverRect` 툴팁에 `[Shift+순환키]`, `[Space]`, `[우클릭]` 최신 양방향 조작 안내 동기화(`main_view.gd` · `detail_modal.gd` · `index.html`)
+- **최신 Sprint 117 하이라이트**: 모달 `Shift+I/Q/X` 역순환(`-1`) 추가로 모달 내 19종 순환 단축키 전부 양방향화 완성 및 `index.html` 단축키 힌트 동기화
+- **최신 Sprint 116 하이라이트**: 모달 내 16종 순환 단축키(`W/P/S/R/O/M/G/T/F/A/N/B/K/U/J/Z`) `Shift+키` 역순환(`-1`) 통합 및 `index.html` 동기화 완성
+- **🏆 Sprint 115 마일스톤 하이라이트**: 모달 `InkRow` 8종 순환 버튼(`펜촉`·`서명`·`해시태그`·`최애`·`컨디션`·`코팅`·`날씨`·`장소`) 우클릭 역순환(`-1`) 완성으로 `StampRow`+`InkRow` 전 버튼 양방향화 달성
+- **최신 Sprint 114 하이라이트**: 모달 `StampRow` 보관위치·입수경로·기분·소장상태 4종 우클릭 역순환(`-1`) 및 `index.html` 동기화 완성
 - **최신 Sprint 113 하이라이트**: 모달 다꾸 꾸미기 5대 버튼(`띠지`·`마테`·`스티커`·`레어도`·`속지`) 우클릭 역순환(`-1`) 및 `index.html` 동기화 완성
 - **최신 Sprint 112 하이라이트**: 하단 독 바(`WebBtn`/`CamBtn`/`DiyBtn`) 우클릭 파워 액션(이북·단행본 필터, 가챠노트 필터, 즉시 JSON 백업 저장 `_trigger_instant_json_backup()`) 및 `index.html` 동기화 완성
 - **최신 Sprint 111 하이라이트**: 전체 필터 초기화(`0` 키) 토스트에 `_get_filtered_cards_summary()` ₩ 자산 요약을 통일 반영하고, 상단 `+ 일기 쓰기` 버튼 우클릭 즉시 로컬 JSON 백업 저장 및 ₩ 요약 토스트(`main_view.gd` · `index.html`) 완성

@@ -5,7 +5,7 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 
 ---
 
-## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 113)
+## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 135)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
@@ -14,6 +14,72 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 ---
 
 ## 🚀 최신 스프린트 업데이트 요약 ([전체 회의록 보기](SPRINT_LOG.md))
+
+### 🏆 [Sprint 135] 마일스톤 135: 검색창 `Enter` 첫 결과 즉시 열기 & 빈 결과(`EmptyState`) 우클릭 복원+랜덤 추천 미리보기
+- **검색·빈 상태 탐색 완결 (`main_view.gd` · `index.html`)**: 검색창에서 `Enter` 입력 시 첫 번째 필터링 작품 일기장을 즉시 열고(`_open_first_filtered_card`), 검색 결과 0건의 `EmptyStateResetBtn` 우클릭 시 전체 복원 후 랜덤 추천 미리보기를 표시합니다.
+
+### 📓 [Sprint 134] `AddModal` 표지 색상 스와치 우클릭 즉시 등록 & `ESC` 2단계 입력 비우기·닫기 안전장치
+- **`AddModal` 스와치 원클릭 등록 & `ESC` 안전장치 (`add_modal.gd` · `index.html`)**: 6종 표지 색상 스와치 우클릭 시 해당 색상으로 즉시 등록(`_submit_with_sample_fallback`)하며, 입력 중 `ESC`는 입력란을 먼저 비운 뒤 빈 상태에서 닫히도록 안전성을 강화했습니다.
+
+### 📓 [Sprint 133] 서재 카드 `Shift+우클릭` 툴팁 동기화 & `AddModal` 카테고리 드롭다운 우클릭 즉시 전환
+- **카드 툴팁 & `AddModal` 분류 전환 (`card_item.gd` · `add_modal.gd` · `index.html`)**: 카드 리치 툴팁에 `Shift+우클릭: 감상 요약 복사` 안내를 동기화하고, `AddModal`의 `CatOption` 우클릭 시 이북 ↔ 가챠 분류를 즉시 토글합니다.
+
+### 📓 [Sprint 132] 카드 `Shift+우클릭` 즉시 감상 요약 복사 & `AddModal` 우클릭 입력 초기화·샘플 자동 채움 등록
+- **카드 즉시 복사 & `AddModal` 우클릭 파워 액션 (`card_item.gd` · `add_modal.gd` · `index.html`)**: 서재 카드 `Shift+우클릭` 시 모달 미개봉 상태로 감상 요약을 클립보드에 복사하며, `AddModal`에서는 `CloseBtn` 우클릭 입력 초기화(`clear_inputs`) 및 `SubmitBtn` 우클릭 샘플 자동 채움 등록이 동작합니다.
+
+### 📓 [Sprint 131] 메인 `AppTitle` 좌·우클릭(전체 복원/테마 순환) & 하단 `StatusToast` 좌·우클릭(치트시트/랜덤 미리보기)
+- **메인 텍스트 라벨 100% 인터랙티브화 (`main_view.gd` · `index.html`)**: 상단 `AppTitle` 좌클릭 시 전체 서재 복원·우클릭 시 속지 테마 순환이 동작하며, 하단 `StatusToast` 좌클릭 시 단축키 치트시트(`_show_shortcut_cheatsheet`)·우클릭 시 랜덤 작품 미리보기가 실행됩니다.
+
+### 🏆 [Sprint 130] 마일스톤 130: 모달 `TagLabel` 좌·우클릭 띠지 순환 & `VolHeader` 좌·우클릭 권 추가·삭제
+- **모달 전 영역 100% 인터랙티브화 달성 (`detail_modal.gd` · `index.html`)**: `TagLabel` 좌·우클릭 시 띠지 문구를 양방향 순환하고, `VolHeader` 좌·우클릭 시 권 추가(`+`)·마지막 권 삭제(`-`)를 즉시 실행합니다.
+
+### 📓 [Sprint 129] 모달 `AuthorLabel` 우클릭 가치 증감 & `MemoLabel` 좌클릭(편집 이동)·우클릭(형광펜 토글)
+- **본문 감상평 & 작가란 인터랙션 강화 (`detail_modal.gd` · `index.html`)**: `AuthorLabel` 우클릭(`Shift+우클릭`)으로 소장 가치를 즉시 `±5,000원` 조정하고, `MemoLabel` 좌클릭 시 입력창 포커스·우클릭 시 형광펜 하이라이트를 토글합니다.
+
+### 📓 [Sprint 128] 모달 `CatBadge` 클릭(이북/가챠 카테고리 모아보기) & `AuthorLabel` 클릭(작가·시리즈 즉시 검색)
+- **모달 탐색 동선 연결 (`detail_modal.gd` · `main_view.gd` · `index.html`)**: 모달 헤더 `[이북·단행본 일기]`/`[가챠·소장 노트]` 배지 클릭 시 해당 카테고리 서재만 모아보고, `작가 · ...` 줄 클릭 시 해당 작가·시리즈명으로 서재 검색을 즉시 실행합니다.
+
+### 📓 [Sprint 127] 모달 `📅 기념일` 우클릭 기본값 초기화 & 모달 제목(`TitleLabel`) 클릭 클립보드 복사
+- **기념일 초기화 & 제목 클립보드 복사 (`detail_modal.gd` · `index.html`)**: `DateStampBtn` 우클릭 시 구매·기념일 스탬프를 `"📅 기념일"`로 초기화하고, 모달 제목(`TitleLabel`) 클릭 시 작품 제목을 클립보드에 복사합니다.
+
+### 📓 [Sprint 126] 모달 `✕` 닫기 우클릭(닫기+즉시 JSON 백업) & 권별 `📅` 날짜 버튼 우클릭(해당 권 대사 복사)
+- **모달 `CloseBtn` 백업 & 권별 대사 복사 (`detail_modal.gd` · `main_view.gd` · `index.html`)**: 모달 `✕` 버튼 우클릭 시 일기장을 닫고 즉시 JSON 백업을 저장하며, 권별 `📅` 날짜 버튼 우클릭 시 해당 권의 밑줄 대사를 클립보드에 복사합니다.
+
+### 🏆 [Sprint 125] 마일스톤 125: 모달 4대 인장 우클릭(인장+감상카드 복사) & 권별 초판 배지 우클릭(초판+북마크 동시 토글)
+- **인장·초판 배지 우클릭 콤보 액션 (`detail_modal.gd` · `index.html`)**: 4대 인장 버튼 우클릭 시 인장 적용과 동시에 감상 카드를 클립보드에 복사하며, 권별 `🔖초판특전`/`✓소장완료` 배지 우클릭 시 초판 상태와 북마크 리본을 동시에 토글합니다.
+
+### 📓 [Sprint 124] 모달 4대 잉크 스와치 우클릭(잉크+형광펜 동시 토글) & 권별 북마크 리본 우클릭 밑줄 편집
+- **잉크 스와치 & 북마크 리본 우클릭 파워 액션 (`detail_modal.gd` · `index.html`)**: `InkRow` 4대 잉크 스와치 우클릭 시 잉크 적용과 함께 형광펜을 토글하고, 권별 북마크 리본(`🏷️`/`🔖`) 우클릭 시 해당 권의 밑줄 문장 편집 모드로 즉시 진입합니다.
+
+### 📓 [Sprint 123] 모달 `AddVolBtn` 우클릭 권 추가+즉시 밑줄 편집 & `DeleteBtn` 우클릭 삭제 무장 안전 해제
+- **모달 `BtnRow` 우클릭 동선 & 안전성 강화 (`detail_modal.gd` · `index.html`)**: `AddVolBtn` 우클릭 시 새 권 추가 후 즉시 마지막 권 밑줄 편집 모드로 진입하고, `DeleteBtn` 우클릭 시 `delete_armed` 삭제 확인 상태를 안전하게 해제합니다.
+
+### 📓 [Sprint 122] 모달 `밑줄 저장` 우클릭 원문 복원 & `형광펜` 우클릭 잉크색 순환
+- **`QuoteEditRow` 우클릭 보조 액션 (`detail_modal.gd` · `index.html`)**: `SaveQuoteBtn` 우클릭 시 입력창을 저장된 원문(`current_item.memo`)으로 즉시 복원하고, `HighlightBtn` 우클릭 시 만년필 잉크 색상을 순환합니다.
+
+### 📓 [Sprint 121] 상단 5대 필터 탭 우클릭 가치순 보기 & 전체 초기화(`TabAll`) 원클릭 복원
+- **5대 필터 탭 우클릭 파워 액션 (`main_view.gd` · `index.html`)**: `TabAll` 우클릭 시 검색·필터·정렬을 기본값으로 완전 복원하고, `TabManga`·`TabGacha`·`TabComplete`·`TabFav` 우클릭 시 해당 탭 필터와 함께 `↕ 가치순` 정렬을 즉시 적용합니다.
+
+### 🏆 [Sprint 120] 마일스톤 120: 상단 4대 통계 카드 우클릭 파워 액션 & 모달 `[Shift+C] 리포트` 치트시트 동기화
+- **상단 4대 통계 카드 우클릭 파워 액션 (`main_view.gd` · `index.html`)**: `StatItems`(리포트 복사), `StatVols`(이북 가치순 정렬), `StatFirsts`(인포그래픽 요약), `StatGacha`(즉시 JSON 백업) 우클릭 액션을 연결하고 모달 `H` 도움말에 `Shift+C: 리포트`를 동기화했습니다.
+
+### 📓 [Sprint 119] 모달 `💌 공유` 우클릭·`Shift+C` 전체 서재 리포트 복사 & 상단 마스킹 테이프 우클릭 역순환
+- **모달 `💌 공유` 전체 서재 복사 & 마테 역순환 (`detail_modal.gd` · `main_view.gd` · `index.html`)**: `ShareCardBtn` 우클릭 또는 `Shift+C` 시 전체 서재 요약 리포트가 즉시 클립보드에 복사되며, `ModalWashiTape` 우클릭 시 이전 마스킹 테이프 색으로 되돌아갑니다.
+
+### 📓 [Sprint 118] 메인·모달 `H` 단축키 치트시트 & 표지 커버 `Shift+Q/X` 툴팁 동기화
+- **도움말 치트시트 & 툴팁 동기화 (`main_view.gd` · `detail_modal.gd` · `index.html`)**: 메인·모달 `H` 단축키 안내와 `CoverRect` 툴팁에 `[Space] 책장`, `[Shift+순환키] 역순환`, `[우클릭] 역순환·백업` 힌트를 최신 스펙으로 동기화했습니다.
+
+### 📓 [Sprint 117] 모달 `Shift+I`/`Shift+Q`/`Shift+X` 역순환 추가 (모달 내 19/19 전 순환 단축키 양방향 완성)
+- **19/19 전 순환 단축키 양방향 완성 (`detail_modal.gd` · `index.html`)**: `Shift+I`(잉크색), `Shift+Q`(표지색), `Shift+X`(표지아이콘)까지 `step_cyclers` 테이블에 통합해 모달 내 모든 순환 단축키가 `Shift+키` 역순환을 지원합니다.
+
+### 📓 [Sprint 116] 모달 내 16종 순환 단축키 `Shift+키` 역순환(`-1`) 통합 & 웹 목업 동기화
+- **모달 `Shift+키` 16종 역순환 통합 (`detail_modal.gd` · `index.html`)**: 모달 내 `W/P/S/R/O/M/G/T/F/A/N/B/K/U/J/Z` 16개 단축키에 `Shift` 조합 시 `-1` 역순환을 지원합니다.
+
+### 🏆 [Sprint 115] 마일스톤 115: 모달 `InkRow` 8종 순환 버튼 우클릭 역순환 완성 (`StampRow`+`InkRow` 전 버튼 양방향화)
+- **`InkRow` 8종 우클릭 역순환 완성 (`collection_item.gd` · `detail_modal.gd`)**: `NibBtn`, `SignatureBtn`, `CustomTagBtn`, `FavCharBtn`, `ConditionBtn`, `FinishBtn`, `WeatherBtn`, `SpotBtn` 우클릭 시 이전 프리셋으로 즉시 되돌아갑니다.
+
+### 📓 [Sprint 114] `StampRow` 보관위치·입수경로·기분·소장상태 4종 우클릭 역순환 완성
+- **`StampRow` 양방향 조작 완성 (`collection_item.gd` · `detail_modal.gd` · `index.html`)**: `StorageBtn`, `SourceBtn`, `MoodBtn`, `PossessionBtn` 우클릭 시 이전 프리셋으로 즉시 되돌아가며 툴팁에 `· 우클릭: 이전` 안내를 추가했습니다.
 
 ### 📓 [Sprint 113] 모달 다꾸 꾸미기 5대 버튼(`띠지`/`마테`/`스티커`/`레어도`/`속지`) 우클릭 역순환 & 툴팁 동기화
 - **모달 꾸미기 5종 우클릭 역순환 (`collection_item.gd` · `detail_modal.gd` · `index.html`)**: `ObiCycleBtn`, `TapeCycleBtn`, `DecoStickerBtn`, `RarityBtn`, `PaperBtn` 우클릭 시 이전 프리셋으로 즉시 되돌아가며 툴팁에도 `· 우클릭: 이전` 안내를 추가했습니다.
