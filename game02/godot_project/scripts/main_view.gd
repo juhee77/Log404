@@ -124,7 +124,8 @@ func _ready() -> void:
 
 	if search_input != null:
 		search_input.clear_button_enabled = true
-		search_input.tooltip_text = "작품명·작가·대사·태그·보관위치·날씨·장소·소장경로 통합 검색 (ESC로 지우기)"
+		search_input.tooltip_text = "작품명·작가·대사·태그·보관위치·날씨·장소·소장경로 통합 검색 (Enter: 첫 결과 열기 · ESC로 지우기)"
+		search_input.text_submitted.connect(func(_t: String) -> void: _open_first_filtered_card())
 		search_input.gui_input.connect(func(ev):
 			if ev is InputEventKey and ev.pressed and not ev.echo and ev.keycode == KEY_ESCAPE and search_input.text != "":
 				search_input.text = ""
@@ -515,6 +516,12 @@ func _render_cards() -> void:
 		reset_btn.add_theme_color_override("font_color", Color(0.28, 0.22, 0.18, 1.0))
 		reset_btn.add_theme_font_size_override("font_size", 12)
 		reset_btn.pressed.connect(_reset_all_filters)
+		reset_btn.tooltip_text = "좌클릭: 전체 서재 복원 · 우클릭: 복원 후 랜덤 추천 미리보기"
+		reset_btn.gui_input.connect(func(ev: InputEvent) -> void:
+			if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_RIGHT:
+				_reset_all_filters()
+				pick_random_item(false)
+		)
 		empty_box.add_child(empty_lbl)
 		empty_box.add_child(reset_btn)
 		card_grid.add_child(empty_box)
@@ -658,6 +665,14 @@ func _open_detail_modal(item) -> void:
 
 func _on_card_clicked(item) -> void:
 	_open_detail_modal(item)
+
+func _open_first_filtered_card() -> void:
+	if card_grid != null and card_grid.get_child_count() > 0:
+		var first_node = card_grid.get_child(0)
+		if first_node != null and first_node.get("current_item") != null:
+			_open_detail_modal(first_node.current_item)
+			return
+	_show_toast("📭 검색 결과가 없습니다. (ESC로 초기화)")
 
 func _trigger_instant_json_backup() -> void:
 	archive_state.save_to_file()

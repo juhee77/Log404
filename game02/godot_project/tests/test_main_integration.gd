@@ -2004,6 +2004,24 @@ func _init() -> void:
 	main_inst._render_cards()
 	print("✓ Sprint 134 Milestone: AddModal Swatch Right-Click Submit & ESC Clear/Close verified")
 
+	# Sprint 135 Milestone: SearchInput Enter Open First Result & EmptyStateResetBtn Right-Click Peek
+	assert("Enter: 첫 결과 열기" in main_inst.search_input.tooltip_text, "SearchInput tooltip should mention Enter to open first result")
+	main_inst.search_input.text = "프리렌"
+	main_inst._render_cards()
+	main_inst.search_input.text_submitted.emit("프리렌")
+	assert(main_inst.detail_modal.visible and "프리렌" in main_inst.detail_modal.current_item.title, "Pressing Enter in SearchInput should open first filtered item modal")
+	main_inst.detail_modal.close()
+	main_inst.search_input.text = "존재하지않는작품XYZ"
+	main_inst._render_cards()
+	var empty_reset_s135 = main_inst.card_grid.find_child("EmptyStateResetBtn", true, false)
+	assert(empty_reset_s135 != null and "랜덤 추천 미리보기" in empty_reset_s135.tooltip_text, "EmptyStateResetBtn tooltip should mention right-click random peek")
+	var rclick_s135 := InputEventMouseButton.new()
+	rclick_s135.pressed = true
+	rclick_s135.button_index = MOUSE_BUTTON_RIGHT
+	empty_reset_s135.gui_input.emit(rclick_s135)
+	assert(main_inst.search_input.text == "" and "오늘의 추천 미리보기" in main_inst.status_toast.text, "Right-clicking EmptyStateResetBtn should reset filters and peek random item")
+	print("✓ Sprint 135 Milestone: SearchInput Enter Open First & EmptyStateResetBtn Random Peek verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

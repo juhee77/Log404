@@ -18,13 +18,14 @@ Godot 4+ 기반의 감성 게임 및 인터랙티브 아카이브 애플리케�
 > **Godot 4.6.2 모바일 기반 E-Book 리더기 서재(Apple Books · 리디북스) & 만년필 다꾸 독서노트(굿노트 · 몰스킨) 감성 아카이브 앱**  
 > 14인 가상 애자일 스쿼드가 20분 주기 자동 스프린트로 지속 개선 중입니다.
 
-### 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 134)
+### 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 135)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
 | ![Pocket Archive Main Screen](game02/godot_project/screenshots/godot_app_screen.png) | ![Pocket Archive Detail Modal](game02/godot_project/screenshots/godot_modal_screen.png) |
 
 ### ✨ 주요 핵심 기능
+- **🏆 Sprint 135 마일스톤 하이라이트**: 검색창 `Enter` 첫 번째 결과 일기장 즉시 열기(`_open_first_filtered_card`) 및 빈 검색 결과(`EmptyStateResetBtn`) 우클릭 전체 복원+랜덤 추천 미리보기(`main_view.gd` · `index.html`) 완성
 - **최신 Sprint 134 하이라이트**: `AddModal` 6종 표지 색상 스와치 우클릭 즉시 등록(`_submit_with_sample_fallback`) 및 `ESC` 2단계 입력 비우기·닫기 안전장치(`add_modal.gd` · `index.html`) 완성
 - **최신 Sprint 133 하이라이트**: 서재 카드 리치 툴팁 `Shift+우클릭: 감상 요약 복사` 동기화 및 `AddModal` `CatOption` 우클릭 이북 ↔ 가챠 즉시 전환(`card_item.gd` · `add_modal.gd` · `index.html`) 완성
 - **최신 Sprint 132 하이라이트**: 서재 카드 `Shift+우클릭` 즉시 감상 요약 클립보드 복사(`quote_copy_requested`) 및 `AddModal` 우클릭 입력 초기화·샘플 자동 채움 등록(`card_item.gd` · `add_modal.gd` · `index.html`) 완성

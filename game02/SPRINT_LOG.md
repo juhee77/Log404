@@ -5,6 +5,24 @@
 
 ---
 
+## 🏆 [Sprint 135] 마일스톤 135: 검색창 `Enter` 첫 결과 즉시 열기 & 빈 결과(`EmptyState`) 우클릭 복원+랜덤 추천 미리보기
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A**: "검색창(`SearchInput`)에서 작품명을 입력한 뒤 `Enter`를 누르면 마우스로 카드를 클릭하지 않아도 첫 번째 검색 결과 일기장이 바로 열리면 정말 빠를 것 같아요!"
+- **가챠러 B**: "검색 결과가 0건일 때 뜨는 `🔄 전체 서재 보기` 버튼(`EmptyStateResetBtn`)을 우클릭하면 전체 서재가 복원됨과 동시에 오늘의 랜덤 추천 작품 미리보기까지 띄워주면 막다른 길 없이 바로 다음 작품을 발견할 수 있겠어요."
+- **기획자 (PO)**: "`main_view.gd`에 `_open_first_filtered_card()`를 추가해 `search_input.text_submitted`에 연결하고, `EmptyStateResetBtn` 우클릭 시 `_reset_all_filters()` + `pick_random_item(false)`를 실행하며 `index.html`의 `#search-box` 및 빈 상태 버튼과 동기화합니다."
+
+### 2. 핵심 구현 및 변경 내역
+- `game02/godot_project/scripts/main_view.gd`:
+  - `_open_first_filtered_card()`를 신설해 검색창에서 `Enter` 입력 시 필터링된 첫 번째 작품 일기장을 즉시 열어주며 툴팁을 동기화했습니다.
+  - `EmptyStateResetBtn` 우클릭 시 전체 필터 초기화 후 랜덤 추천 미리보기(`pick_random_item(false)`)를 실행하도록 연결했습니다.
+- `game02/index.html`:
+  - `#search-box` `Enter` 첫 결과 모달 열기·`Escape` 초기화와 빈 상태 버튼 우클릭 랜덤 추천 미리보기를 동기화했습니다.
+- `game02/godot_project/tests/test_main_integration.gd`:
+  - 검색창 `Enter` 첫 결과 열기와 `EmptyStateResetBtn` 우클릭 복원+랜덤 미리보기를 검증하는 Sprint 135 마일스톤 테스트를 추가해 100% 통과했습니다.
+
+---
+
 ## 📓 [Sprint 134] `AddModal` 표지 색상 스와치 우클릭 즉시 등록 & `ESC` 2단계 입력 비우기·닫기 안전장치
 
 ### 1. 14인 스쿼드 회의록 & VOC

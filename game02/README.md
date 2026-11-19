@@ -5,7 +5,7 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 
 ---
 
-## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 134)
+## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 135)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
@@ -14,6 +14,9 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 ---
 
 ## 🚀 최신 스프린트 업데이트 요약 ([전체 회의록 보기](SPRINT_LOG.md))
+
+### 🏆 [Sprint 135] 마일스톤 135: 검색창 `Enter` 첫 결과 즉시 열기 & 빈 결과(`EmptyState`) 우클릭 복원+랜덤 추천 미리보기
+- **검색·빈 상태 탐색 완결 (`main_view.gd` · `index.html`)**: 검색창에서 `Enter` 입력 시 첫 번째 필터링 작품 일기장을 즉시 열고(`_open_first_filtered_card`), 검색 결과 0건의 `EmptyStateResetBtn` 우클릭 시 전체 복원 후 랜덤 추천 미리보기를 표시합니다.
 
 ### 📓 [Sprint 134] `AddModal` 표지 색상 스와치 우클릭 즉시 등록 & `ESC` 2단계 입력 비우기·닫기 안전장치
 - **`AddModal` 스와치 원클릭 등록 & `ESC` 안전장치 (`add_modal.gd` · `index.html`)**: 6종 표지 색상 스와치 우클릭 시 해당 색상으로 즉시 등록(`_submit_with_sample_fallback`)하며, 입력 중 `ESC`는 입력란을 먼저 비운 뒤 빈 상태에서 닫히도록 안전성을 강화했습니다.
