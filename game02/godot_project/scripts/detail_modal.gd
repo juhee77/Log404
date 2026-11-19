@@ -102,12 +102,30 @@ func _ready() -> void:
 	if author_label != null:
 		author_label.mouse_filter = Control.MOUSE_FILTER_STOP
 		author_label.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
-		author_label.tooltip_text = "클릭하여 이 작가·시리즈의 다른 작품 검색하기"
+		author_label.tooltip_text = "좌클릭: 이 작가·시리즈의 다른 작품 검색하기 · 우클릭: 가치 +5,000원(Shift: -5,000원)"
 		author_label.gui_input.connect(func(ev: InputEvent) -> void:
-			if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_LEFT and current_item != null:
-				var author_q: String = current_item.author_or_series
-				close()
-				search_author_requested.emit(author_q)
+			if ev is InputEventMouseButton and ev.pressed and current_item != null:
+				if ev.button_index == MOUSE_BUTTON_LEFT:
+					var author_q: String = current_item.author_or_series
+					close()
+					search_author_requested.emit(author_q)
+				elif ev.button_index == MOUSE_BUTTON_RIGHT:
+					if ev.shift_pressed:
+						reduce_estimated_value()
+					else:
+						boost_estimated_value()
+		)
+	if memo_label != null:
+		memo_label.mouse_filter = Control.MOUSE_FILTER_STOP
+		memo_label.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+		memo_label.tooltip_text = "좌클릭: 밑줄 문장 편집 입력창 이동 (E) · 우클릭: 형광펜 토글 (L)"
+		memo_label.gui_input.connect(func(ev: InputEvent) -> void:
+			if ev is InputEventMouseButton and ev.pressed and current_item != null:
+				if ev.button_index == MOUSE_BUTTON_LEFT and quote_input != null:
+					quote_input.grab_focus()
+					quote_input.caret_column = quote_input.text.length()
+				elif ev.button_index == MOUSE_BUTTON_RIGHT:
+					toggle_quote_highlight()
 		)
 	cover_rect.gui_input.connect(func(ev):
 		if ev is InputEventMouseButton and ev.pressed:

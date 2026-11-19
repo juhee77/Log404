@@ -5,6 +5,24 @@
 
 ---
 
+## 📓 [Sprint 129] 모달 `AuthorLabel` 우클릭 가치 증감 & `MemoLabel` 좌클릭(편집 이동)·우클릭(형광펜 토글)
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A**: "모달 `AuthorLabel`(`작가 · ... · 💎 ₩21,000`)을 우클릭하면 바로 추정 가치를 `+5,000원`(`Shift+우클릭`: `-5,000원`) 조정할 수 있으면 아래쪽 `+5천원` 버튼을 찾지 않아도 되어 정말 편할 것 같아요!"
+- **가챠러 B**: "모달 중앙의 큰 감상평 문장(`MemoLabel`)을 좌클릭하면 바로 밑줄 문장 편집 입력창으로 포커스(`E` 키)되고, 우클릭하면 형광펜(`L` 키)이 토글되면 굿노트처럼 직관적이겠어요!"
+- **기획자 (PO)**: "`detail_modal.gd`의 `author_label`에 우클릭(`boost_estimated_value` / `Shift`: `reduce_estimated_value`)을, `memo_label`에 좌클릭(`quote_input` 포커스) · 우클릭(`toggle_quote_highlight`)을 연결하고 `index.html`의 `#diary-memo`와 동기화합니다."
+
+### 2. 핵심 구현 및 변경 내역
+- `game02/godot_project/scripts/detail_modal.gd`:
+  - `AuthorLabel` 우클릭 시 `boost_estimated_value()` (`Shift+우클릭` 시 `reduce_estimated_value()`) 호출 및 툴팁을 연결했습니다.
+  - `MemoLabel` 좌클릭 시 `quote_input`으로 포커스를 이동하고, 우클릭 시 `toggle_quote_highlight()`를 실행하며 툴팁을 추가했습니다.
+- `game02/index.html`:
+  - `#diary-memo` 클릭 시 `#diary-quote-input` 포커스, 우클릭 시 `toggleDiaryHighlighter()` 및 툴팁을 동기화했습니다.
+- `game02/godot_project/tests/test_main_integration.gd`:
+  - `AuthorLabel` 우클릭/`Shift+우클릭` 가치 증감 및 `MemoLabel` 우클릭 형광펜 토글을 검증하는 Sprint 129 통합 테스트를 추가해 100% 통과했습니다.
+
+---
+
 ## 📓 [Sprint 128] 모달 `CatBadge` 클릭(이북/가챠 카테고리 모아보기) & `AuthorLabel` 클릭(작가·시리즈 즉시 검색)
 
 ### 1. 14인 스쿼드 회의록 & VOC

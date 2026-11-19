@@ -1874,6 +1874,27 @@ func _init() -> void:
 	main_inst._reset_all_filters()
 	print("✓ Sprint 128 Milestone: CatBadge Click Category Filter & AuthorLabel Click Search verified")
 
+	# Sprint 129 Milestone: AuthorLabel Right-Click Value Adjust & MemoLabel Left-Focus / Right-Highlight
+	main_inst._on_card_clicked(main_inst.archive_state.items[0])
+	var item_s129 = main_inst.archive_state.items[0]
+	var orig_val_s129 = item_s129.get_item_value()
+	var rclick_s129 := InputEventMouseButton.new()
+	rclick_s129.pressed = true
+	rclick_s129.button_index = MOUSE_BUTTON_RIGHT
+	main_inst.detail_modal.author_label.gui_input.emit(rclick_s129)
+	assert(item_s129.get_item_value() > orig_val_s129, "Right-clicking AuthorLabel should boost estimated value")
+	var boosted_val_s129 = item_s129.get_item_value()
+	rclick_s129.shift_pressed = true
+	main_inst.detail_modal.author_label.gui_input.emit(rclick_s129)
+	assert(item_s129.get_item_value() < boosted_val_s129, "Shift+Right-clicking AuthorLabel should reduce estimated value")
+	rclick_s129.shift_pressed = false
+	var orig_hl_s129 = item_s129.highlight_enabled
+	assert("밑줄 문장 편집 입력창 이동" in main_inst.detail_modal.memo_label.tooltip_text and "형광펜 토글" in main_inst.detail_modal.memo_label.tooltip_text, "MemoLabel tooltip should mention edit focus and highlighter toggle")
+	main_inst.detail_modal.memo_label.gui_input.emit(rclick_s129)
+	assert(item_s129.highlight_enabled != orig_hl_s129, "Right-clicking MemoLabel should toggle highlighter")
+	main_inst.detail_modal.close()
+	print("✓ Sprint 129 Milestone: AuthorLabel Value Adjust & MemoLabel Focus/Highlight verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()
