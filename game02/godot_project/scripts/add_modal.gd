@@ -74,6 +74,12 @@ func _style_inputs() -> void:
 	for ctrl in [submit_btn, close_btn, cat_option]:
 		if ctrl != null:
 			ctrl.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	if cat_option != null:
+		cat_option.tooltip_text = "작품 분류 선택 (우클릭: 이북 ↔ 가챠 즉시 전환)"
+		cat_option.gui_input.connect(func(ev: InputEvent) -> void:
+			if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_RIGHT:
+				cat_option.select(1 if cat_option.selected == 0 else 0)
+		)
 
 	var ink_sb = StyleBoxFlat.new()
 	ink_sb.bg_color = Color(0.22, 0.16, 0.13, 1)

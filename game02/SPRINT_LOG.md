@@ -5,6 +5,25 @@
 
 ---
 
+## 📓 [Sprint 133] 서재 카드 `Shift+우클릭` 툴팁 동기화 & `AddModal` 카테고리 드롭다운 우클릭 즉시 전환
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A**: "서재 카드(`card_item.gd`)에 마우스를 올렸을 때 나오는 리치 툴팁에도 `Shift+우클릭: 감상 요약 복사` 안내가 적혀 있으면 새로운 기능을 바로 발견할 수 있을 것 같아요!"
+- **가챠러 B**: "`AddModal`에서 `이북 · 만화 단행본 일기` ↔ `가챠 · 굿즈 스크랩 노트` 드롭다운(`CatOption`)을 우클릭하면 드롭다운을 열지 않고도 즉시 이북 ↔ 가챠가 전환되면 정말 편하겠어요."
+- **기획자 (PO)**: "`card_item.gd`와 `index.html` 카드 툴팁에 `Shift+우클릭: 감상 요약 복사` 힌트를 동기화하고, `add_modal.gd`의 `CatOption` 우클릭 시 카테고리 즉시 토글 및 툴팁을 연결합니다."
+
+### 2. 핵심 구현 및 변경 내역
+- `game02/godot_project/scripts/card_item.gd`:
+  - 리치 툴팁 하단에 `(우클릭: +1권 빠른 기록 · Shift+우클릭: 감상 요약 복사)` 안내를 추가했습니다.
+- `game02/godot_project/scripts/add_modal.gd`:
+  - `CatOption` 우클릭 시 이북(`0`) ↔ 가챠(`1`) 즉시 전환 및 툴팁을 연결했습니다.
+- `game02/index.html`:
+  - 서재 카드 `title` 속성에 `Shift+우클릭: 감상 요약 복사` 툴팁을 동기화했습니다.
+- `game02/godot_project/tests/test_main_integration.gd`:
+  - 카드 툴팁 동기화와 `AddModal` `CatOption` 우클릭 카테고리 토글을 검증하는 Sprint 133 통합 테스트를 추가해 100% 통과했습니다.
+
+---
+
 ## 📓 [Sprint 132] 카드 `Shift+우클릭` 즉시 감상 요약 복사 & `AddModal` 우클릭 입력 초기화·샘플 자동 채움 등록
 
 ### 1. 14인 스쿼드 회의록 & VOC

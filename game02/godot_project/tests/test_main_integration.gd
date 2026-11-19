@@ -1963,6 +1963,23 @@ func _init() -> void:
 	main_inst._render_cards()
 	print("✓ Sprint 132 Milestone: Card Shift+Right-Click Copy & AddModal Right-Click Clear/Sample verified")
 
+	# Sprint 133 Milestone: Card Rich Tooltip Sync & AddModal CatOption Right-Click Category Toggle
+	var card_s133 = main_inst.card_grid.get_child(0)
+	assert("Shift+우클릭: 감상 요약 복사" in card_s133.tooltip_text, "CardItem tooltip should mention Shift+Right-Click quote copy")
+	main_inst.add_modal.open()
+	var cat_opt_s133 = main_inst.add_modal.cat_option
+	assert("이북 ↔ 가챠 즉시 전환" in cat_opt_s133.tooltip_text, "AddModal CatOption tooltip should mention right-click category toggle")
+	var orig_cat_idx = cat_opt_s133.selected
+	var rclick_s133 := InputEventMouseButton.new()
+	rclick_s133.pressed = true
+	rclick_s133.button_index = MOUSE_BUTTON_RIGHT
+	cat_opt_s133.gui_input.emit(rclick_s133)
+	assert(cat_opt_s133.selected != orig_cat_idx, "Right-clicking CatOption should toggle category immediately")
+	cat_opt_s133.gui_input.emit(rclick_s133)
+	assert(cat_opt_s133.selected == orig_cat_idx, "Second right-click on CatOption should toggle category back")
+	main_inst.add_modal.close()
+	print("✓ Sprint 133 Milestone: Card Tooltip Sync & AddModal CatOption Toggle verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

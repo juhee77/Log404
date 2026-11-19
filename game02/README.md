@@ -5,7 +5,7 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 
 ---
 
-## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 132)
+## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 133)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
@@ -14,6 +14,9 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 ---
 
 ## 🚀 최신 스프린트 업데이트 요약 ([전체 회의록 보기](SPRINT_LOG.md))
+
+### 📓 [Sprint 133] 서재 카드 `Shift+우클릭` 툴팁 동기화 & `AddModal` 카테고리 드롭다운 우클릭 즉시 전환
+- **카드 툴팁 & `AddModal` 분류 전환 (`card_item.gd` · `add_modal.gd` · `index.html`)**: 카드 리치 툴팁에 `Shift+우클릭: 감상 요약 복사` 안내를 동기화하고, `AddModal`의 `CatOption` 우클릭 시 이북 ↔ 가챠 분류를 즉시 토글합니다.
 
 ### 📓 [Sprint 132] 카드 `Shift+우클릭` 즉시 감상 요약 복사 & `AddModal` 우클릭 입력 초기화·샘플 자동 채움 등록
 - **카드 즉시 복사 & `AddModal` 우클릭 파워 액션 (`card_item.gd` · `add_modal.gd` · `index.html`)**: 서재 카드 `Shift+우클릭` 시 모달 미개봉 상태로 감상 요약을 클립보드에 복사하며, `AddModal`에서는 `CloseBtn` 우클릭 입력 초기화(`clear_inputs`) 및 `SubmitBtn` 우클릭 샘플 자동 채움 등록이 동작합니다.

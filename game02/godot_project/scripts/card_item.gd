@@ -139,7 +139,7 @@ func setup(item) -> void:
 		status_label.text = "🖋️ " + first_quote
 
 	var val_fmt = ArchiveStateClass.format_krw(est_val) if est_val > 0 else "₩0"
-	tooltip_text = "%s\n%s · %s · %s\n%s · %s · %s\n(우클릭: +1권 빠른 기록)" % [
+	tooltip_text = "%s\n%s · %s · %s\n%s · %s · %s\n(우클릭: +1권 빠른 기록 · Shift+우클릭: 감상 요약 복사)" % [
 		item.title,
 		item.storage_location,
 		item.reading_weather,
