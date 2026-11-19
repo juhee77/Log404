@@ -18,13 +18,14 @@ Godot 4+ 기반의 감성 게임 및 인터랙티브 아카이브 애플리케�
 > **Godot 4.6.2 모바일 기반 E-Book 리더기 서재(Apple Books · 리디북스) & 만년필 다꾸 독서노트(굿노트 · 몰스킨) 감성 아카이브 앱**  
 > 14인 가상 애자일 스쿼드가 20분 주기 자동 스프린트로 지속 개선 중입니다.
 
-### 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 130)
+### 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 131)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
 | ![Pocket Archive Main Screen](game02/godot_project/screenshots/godot_app_screen.png) | ![Pocket Archive Detail Modal](game02/godot_project/screenshots/godot_modal_screen.png) |
 
 ### ✨ 주요 핵심 기능
+- **최신 Sprint 131 하이라이트**: 메인 상단 `AppTitle` 좌·우클릭(전체 서재 복원/테마 순환) 및 하단 `StatusToast` 좌·우클릭(단축키 치트시트/랜덤 작품 미리보기) 완성(`main_view.gd` · `index.html`)
 - **🏆 Sprint 130 마일스톤 하이라이트**: 모달 `TagLabel` 좌·우클릭 띠지 문구 양방향 순환 및 `VolHeader` 좌·우클릭 권 추가·삭제 완성으로 모달 전 영역 100% 인터랙티브화 달성(`detail_modal.gd` · `index.html`)
 - **최신 Sprint 129 하이라이트**: 모달 `AuthorLabel` 우클릭/`Shift+우클릭` 소장 가치 `±5,000원` 증감 및 `MemoLabel` 좌클릭(편집 입력창 이동)·우클릭(형광펜 토글) 완성(`detail_modal.gd` · `index.html`)
 - **최신 Sprint 128 하이라이트**: 모달 `CatBadge` 클릭(이북/가챠 카테고리 필터링) 및 `AuthorLabel` 클릭(작가·시리즈명 즉시 검색) 탐색 동선 완성(`detail_modal.gd` · `main_view.gd` · `index.html`)

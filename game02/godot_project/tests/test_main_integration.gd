@@ -1918,6 +1918,27 @@ func _init() -> void:
 	main_inst.detail_modal.close()
 	print("✓ Sprint 130 Milestone: TagLabel Obi Cycle & VolHeader Add/Remove Volume verified")
 
+	# Sprint 131 Milestone: AppTitle Left-Reset / Right-Theme & StatusToast Left-Help / Right-RandomPeek
+	var app_title_s131 = main_inst.get_node("VBox/TopBar/TopMargin/StatsVBox/TitleRow/TitleCol/AppTitle")
+	var lclick_s131 := InputEventMouseButton.new()
+	lclick_s131.pressed = true
+	lclick_s131.button_index = MOUSE_BUTTON_LEFT
+	var rclick_s131 := InputEventMouseButton.new()
+	rclick_s131.pressed = true
+	rclick_s131.button_index = MOUSE_BUTTON_RIGHT
+	assert("전체 서재 복원" in app_title_s131.tooltip_text and "단축키 치트시트 보기" in main_inst.status_toast.tooltip_text, "AppTitle and StatusToast tooltips should mention click actions")
+	var orig_theme_s131 = main_inst.theme_cursor
+	app_title_s131.gui_input.emit(rclick_s131)
+	assert(main_inst.theme_cursor != orig_theme_s131, "Right-clicking AppTitle should cycle room theme")
+	app_title_s131.gui_input.emit(lclick_s131)
+	assert("전체 서재가 복원되었습니다" in main_inst.status_toast.text, "Left-clicking AppTitle should reset all filters")
+	main_inst.status_toast.gui_input.emit(lclick_s131)
+	assert("단축키:" in main_inst.status_toast.text, "Left-clicking StatusToast should show shortcut cheatsheet")
+	main_inst.status_toast.gui_input.emit(rclick_s131)
+	assert(not main_inst.detail_modal.visible and "오늘의 추천 미리보기" in main_inst.status_toast.text, "Right-clicking StatusToast should peek random item without opening modal")
+	main_inst._step_theme(-1)
+	print("✓ Sprint 131 Milestone: AppTitle & StatusToast Left/Right-Click Actions verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

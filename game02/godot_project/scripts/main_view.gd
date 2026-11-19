@@ -173,6 +173,29 @@ func _ready() -> void:
 				elif ev.button_index == MOUSE_BUTTON_RIGHT:
 					copy_summary_to_clipboard()
 		)
+	var app_title: Control = get_node_or_null("VBox/TopBar/TopMargin/StatsVBox/TitleRow/TitleCol/AppTitle")
+	if app_title != null:
+		app_title.mouse_filter = Control.MOUSE_FILTER_STOP
+		app_title.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+		app_title.tooltip_text = "좌클릭: 전체 서재 복원 (0) · 우클릭: 속지 테마 순환 (T)"
+		app_title.gui_input.connect(func(ev: InputEvent) -> void:
+			if ev is InputEventMouseButton and ev.pressed:
+				if ev.button_index == MOUSE_BUTTON_LEFT:
+					_reset_all_filters()
+				elif ev.button_index == MOUSE_BUTTON_RIGHT:
+					_step_theme(-1 if ev.shift_pressed else 1)
+		)
+	if status_toast != null:
+		status_toast.mouse_filter = Control.MOUSE_FILTER_STOP
+		status_toast.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+		status_toast.tooltip_text = "좌클릭: 단축키 치트시트 보기 (H) · 우클릭: 오늘의 랜덤 추천 미리보기 (Shift+R)"
+		status_toast.gui_input.connect(func(ev: InputEvent) -> void:
+			if ev is InputEventMouseButton and ev.pressed:
+				if ev.button_index == MOUSE_BUTTON_LEFT:
+					_show_shortcut_cheatsheet()
+				elif ev.button_index == MOUSE_BUTTON_RIGHT:
+					pick_random_item(false)
+		)
 	if next_quote_btn != null:
 		next_quote_btn.tooltip_text = "[Q] 서재 속 다음 밑줄 문장으로 넘기기"
 	if random_pick_btn != null:
@@ -835,8 +858,11 @@ func _unhandled_input(event: InputEvent) -> void:
 					copy_summary_to_clipboard()
 					get_viewport().set_input_as_handled()
 				KEY_H:
-					_show_toast("⌨️ 단축키: [0] 초기화 · [1~5] 탭 · [/] 검색 · [Space] 책장 · [S/T/M/Q] 순환(Shift+역순) · [R] 추천(Shift+미리보기) · [N] 새 일기 · [I] 요약 · [C] 복사 · [우클릭] 역순환·백업")
+					_show_shortcut_cheatsheet()
 					get_viewport().set_input_as_handled()
+
+func _show_shortcut_cheatsheet() -> void:
+	_show_toast("⌨️ 단축키: [0] 초기화 · [1~5] 탭 · [/] 검색 · [Space] 책장 · [S/T/M/Q] 순환(Shift+역순) · [R] 추천(Shift+미리보기) · [N] 새 일기 · [I] 요약 · [C] 복사 · [우클릭] 역순환·백업")
 
 func _on_modal_help_requested() -> void:
 	_show_toast("⌨️ 모달 단축키: [←/→] 넘김 · [Home/End] 처음·끝 · [1~4] 인장 · [+/-] 권 · [X] 아이콘 · [Q] 표지색 · [Y] 회독 · [Z] 상태 · [I] 잉크 · [N] 펜촉 · [W] 마테 · [S] 스티커 · [R] 레어도 · [P] 속지 · [O] 띠지 · [M] 기분 · [G] 등급 · [T] 태그 · [F] 마감 · [A] 경로 · [B] 보관 · [D] 복수 · [K] 최애캐 · [U] 날씨 · [J] 장소 · [V] 가치 · [Shift+순환키] 역순환 · [E] 문장 · [L] 형광펜 · [C] 복사(Shift+C: 리포트) · [Del] 삭제 · [ESC] 닫기")

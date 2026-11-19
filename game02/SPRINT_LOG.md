@@ -5,6 +5,24 @@
 
 ---
 
+## 📓 [Sprint 131] 메인 `AppTitle` 좌·우클릭(전체 복원/테마 순환) & 하단 `StatusToast` 좌·우클릭(치트시트/랜덤 미리보기)
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A**: "메인 화면 상단 큰 제목(`주희의 다꾸 서재 & 소장 일기장`)을 좌클릭하면 전체 서재가 복원(`0` 키)되고, 우클릭하면 속지 테마(`T` 키)가 순환되면 상단에서도 바로 서재 리셋과 분위기 전환이 가능해질 것 같아요!"
+- **미니멀러 C**: "하단 독 바 위의 안내 문구(`StatusToast`)를 좌클릭하면 단축키 치트시트(`H` 키)가 뜨고, 우클릭하면 오늘의 랜덤 작품 추천 미리보기(`Shift+R`)가 뜨면 메인 화면의 모든 텍스트 라벨까지 살아 숨 쉬는 UI가 되겠어요!"
+- **기획자 (PO)**: "`main_view.gd`에 `_show_shortcut_cheatsheet()` 공용 헬퍼를 추출해 `KEY_H`와 `status_toast` 좌클릭을 통합하고, `AppTitle`과 `status_toast`의 좌·우클릭 및 툴팁을 연결해 `index.html`의 `<h1>` 제목과 동기화합니다."
+
+### 2. 핵심 구현 및 변경 내역
+- `game02/godot_project/scripts/main_view.gd`:
+  - `AppTitle` 좌클릭 시 `_reset_all_filters()`, 우클릭 시 `_step_theme(1 / -1)`이 동작하도록 연결했습니다.
+  - `_show_shortcut_cheatsheet()` 헬퍼를 추출해 `KEY_H`와 `StatusToast` 좌클릭을 통합하고, `StatusToast` 우클릭 시 `pick_random_item(false)` 미리보기를 연결했습니다.
+- `game02/index.html`:
+  - 상단 `<h1>` 제목 클릭 시 전체 서재 복원, 우클릭 시 `toggleJournalTheme()` 테마 순환 및 툴팁을 동기화했습니다.
+- `game02/godot_project/tests/test_main_integration.gd`:
+  - `AppTitle` 좌·우클릭(전체 복원/테마 순환)과 `StatusToast` 좌·우클릭(치트시트/랜덤 미리보기)을 검증하는 Sprint 131 통합 테스트를 추가해 100% 통과했습니다.
+
+---
+
 ## 🏆 [Sprint 130] 마일스톤 130: 모달 `TagLabel` 좌·우클릭 띠지 순환 & `VolHeader` 좌·우클릭 권 추가·삭제 (모달 전 영역 100% 인터랙티브화 달성)
 
 ### 1. 14인 스쿼드 회의록 & VOC
