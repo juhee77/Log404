@@ -527,6 +527,16 @@ func _render_cards() -> void:
 		card.clicked.connect(_on_card_clicked)
 		if card.has_signal("quick_advanced"):
 			card.quick_advanced.connect(_on_card_quick_advanced)
+		if card.has_signal("quote_copy_requested"):
+			card.quote_copy_requested.connect(_on_card_quote_copy_requested)
+
+func _on_card_quote_copy_requested(it) -> void:
+	if it == null:
+		return
+	var q_txt: String = it.memo if it.memo != "" else "소장 기록"
+	var text := "📖 「%s」 — \"%s\" (%s · %s)" % [it.title, q_txt, it.author_or_series, ArchiveStateClass.format_krw(it.get_item_value())]
+	DisplayServer.clipboard_set(text)
+	_show_toast("📋 카드 감상 요약 클립보드 복사됨: 「%s」" % it.title)
 
 func _on_card_quick_advanced(it) -> void:
 	archive_state.save_to_file()

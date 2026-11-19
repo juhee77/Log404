@@ -3,6 +3,7 @@ extends PanelContainer
 
 signal clicked(item)
 signal quick_advanced(item)
+signal quote_copy_requested(item)
 
 @onready var masking_tape: ColorRect = $VBox/TopTapeRow/MaskingTape
 @onready var cover_rect: ColorRect = $VBox/CardMargin/InnerVBox/CoverContainer/CoverRect
@@ -26,7 +27,10 @@ func _gui_input(event: InputEvent) -> void:
 		if event.button_index == MOUSE_BUTTON_LEFT:
 			clicked.emit(current_item)
 		elif event.button_index == MOUSE_BUTTON_RIGHT:
-			quick_advance()
+			if event.shift_pressed:
+				quote_copy_requested.emit(current_item)
+			else:
+				quick_advance()
 
 func quick_advance() -> void:
 	if current_item != null:

@@ -5,7 +5,7 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 
 ---
 
-## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 131)
+## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 132)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
@@ -14,6 +14,9 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 ---
 
 ## 🚀 최신 스프린트 업데이트 요약 ([전체 회의록 보기](SPRINT_LOG.md))
+
+### 📓 [Sprint 132] 카드 `Shift+우클릭` 즉시 감상 요약 복사 & `AddModal` 우클릭 입력 초기화·샘플 자동 채움 등록
+- **카드 즉시 복사 & `AddModal` 우클릭 파워 액션 (`card_item.gd` · `add_modal.gd` · `index.html`)**: 서재 카드 `Shift+우클릭` 시 모달 미개봉 상태로 감상 요약을 클립보드에 복사하며, `AddModal`에서는 `CloseBtn` 우클릭 입력 초기화(`clear_inputs`) 및 `SubmitBtn` 우클릭 샘플 자동 채움 등록이 동작합니다.
 
 ### 📓 [Sprint 131] 메인 `AppTitle` 좌·우클릭(전체 복원/테마 순환) & 하단 `StatusToast` 좌·우클릭(치트시트/랜덤 미리보기)
 - **메인 텍스트 라벨 100% 인터랙티브화 (`main_view.gd` · `index.html`)**: 상단 `AppTitle` 좌클릭 시 전체 서재 복원·우클릭 시 속지 테마 순환이 동작하며, 하단 `StatusToast` 좌클릭 시 단축키 치트시트(`_show_shortcut_cheatsheet`)·우클릭 시 랜덤 작품 미리보기가 실행됩니다.

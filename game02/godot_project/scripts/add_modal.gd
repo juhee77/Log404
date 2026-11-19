@@ -92,6 +92,28 @@ func _style_inputs() -> void:
 	cream_btn.corner_radius_bottom_right = 6
 	close_btn.add_theme_stylebox_override("normal", cream_btn)
 	close_btn.add_theme_color_override("font_color", Color(0.32, 0.25, 0.20))
+	close_btn.tooltip_text = "닫기 (ESC · 우클릭: 입력란 모두 비우기)"
+	close_btn.gui_input.connect(func(ev: InputEvent) -> void:
+		if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_RIGHT:
+			clear_inputs()
+	)
+	submit_btn.tooltip_text = "서재에 등록 (Enter · 우클릭: 빈 제목 시 샘플 자동 채움 등록)"
+	submit_btn.gui_input.connect(func(ev: InputEvent) -> void:
+		if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_RIGHT:
+			if title_input.text.strip_edges() == "":
+				title_input.text = "오늘의 독서 스크랩"
+				if author_input.text.strip_edges() == "":
+					author_input.text = "주희의 다꾸 서재"
+				if quote_input.text.strip_edges() == "":
+					quote_input.text = "소중한 한 권의 기억을 담다."
+			_on_submit_btn_pressed()
+	)
+
+func clear_inputs() -> void:
+	title_input.text = ""
+	author_input.text = ""
+	quote_input.text = ""
+	title_input.grab_focus()
 
 func select_color(hex_code: String) -> void:
 	selected_color = hex_code

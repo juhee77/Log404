@@ -5,6 +5,25 @@
 
 ---
 
+## 📓 [Sprint 132] 카드 `Shift+우클릭` 즉시 감상 요약 복사 & `AddModal` 우클릭 입력 초기화·샘플 자동 채움 등록
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A**: "서재 그리드에서 카드를 보다가 모달을 열지 않고도 바로 감상 카드를 공유하고 싶을 때가 있어요! 카드를 `Shift+우클릭`하면 해당 작품의 감상 요약이 클립보드에 복사되면 정말 빠를 것 같아요."
+- **가챠러 B**: "`AddModal`을 열었을 때 `등록` 버튼을 우클릭하면 빈 제목일 때 오늘의 샘플을 자동 채움해 바로 등록하고, `닫기` 버튼을 우클릭하면 입력란만 모두 비워 재입력할 수 있으면 편리하겠어요!"
+- **기획자 (PO)**: "`card_item.gd`에 `quote_copy_requested` 시그널과 `Shift+우클릭` 핸들러를 추가해 `main_view.gd`의 `_on_card_quote_copy_requested`에 연결하고, `add_modal.gd`에 `clear_inputs()` 및 `SubmitBtn` 우클릭 샘플 등록을 구현해 `index.html`과 동기화합니다."
+
+### 2. 핵심 구현 및 변경 내역
+- `game02/godot_project/scripts/card_item.gd` · `main_view.gd`:
+  - `Shift+우클릭` 시 모달을 열지 않고 즉시 카드 감상 요약(`📖 「제목」 — "대사"`)을 클립보드에 복사하고 토스트를 출력합니다.
+- `game02/godot_project/scripts/add_modal.gd`:
+  - `CloseBtn` 우클릭 시 `clear_inputs()`로 모든 입력란을 비우고, `SubmitBtn` 우클릭 시 빈 제목이면 샘플 텍스트를 자동 채움해 등록합니다.
+- `game02/index.html`:
+  - 카드 `Shift+우클릭`(`oncontextmenu`) 시 감상 요약 클립보드 복사를 동기화했습니다.
+- `game02/godot_project/tests/test_main_integration.gd`:
+  - 카드 `Shift+우클릭` 복사와 `AddModal` 우클릭 입력 초기화·샘플 자동 등록을 검증하는 Sprint 132 통합 테스트를 추가해 100% 통과했습니다.
+
+---
+
 ## 📓 [Sprint 131] 메인 `AppTitle` 좌·우클릭(전체 복원/테마 순환) & 하단 `StatusToast` 좌·우클릭(치트시트/랜덤 미리보기)
 
 ### 1. 14인 스쿼드 회의록 & VOC

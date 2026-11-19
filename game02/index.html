@@ -564,6 +564,13 @@
                     card.className = 'bg-[#faf6f0] rounded-2xl p-4 border border-[#e5dac9] relative cursor-pointer hover:border-[#c85a32] transition flex flex-col';
                     card.title = `${item.title}\n${item.storage_location || '🗄️ 1층 장식장'} · ${item.reading_weather || '☀️ 맑은 오후'} · ${item.reading_spot || '🛋️ 이불 속'}\n${item.cover_finish || '📜 무광 매트'} · ${item.condition_grade || '✨ S급(최상)'} · ₩${(item.estimated_value || 5000).toLocaleString()}`;
                     card.onclick = () => openJournalModal(item.id);
+                    card.oncontextmenu = (ev) => {
+                        ev.preventDefault();
+                        if (ev.shiftKey) {
+                            const txt = `📖 「${item.title}」 — "${item.memo || '소장 기록'}" (${item.author})`;
+                            navigator.clipboard?.writeText(txt).catch(() => {});
+                        }
+                    };
 
                     const quotePreview = (item.volumes && item.volumes[0] && item.volumes[0].quote)
                         ? `"${item.volumes[0].quote}"`

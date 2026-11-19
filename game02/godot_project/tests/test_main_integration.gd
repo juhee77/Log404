@@ -1939,6 +1939,30 @@ func _init() -> void:
 	main_inst._step_theme(-1)
 	print("✓ Sprint 131 Milestone: AppTitle & StatusToast Left/Right-Click Actions verified")
 
+	# Sprint 132 Milestone: Card Shift+Right-Click Quote Copy & AddModal Right-Click Clear/Sample Submit
+	var card_s132 = main_inst.card_grid.get_child(0)
+	var srclick_s132 := InputEventMouseButton.new()
+	srclick_s132.pressed = true
+	srclick_s132.shift_pressed = true
+	srclick_s132.button_index = MOUSE_BUTTON_RIGHT
+	card_s132._gui_input(srclick_s132)
+	assert(not main_inst.detail_modal.visible and "카드 감상 요약 클립보드 복사됨" in main_inst.status_toast.text, "Shift+Right-clicking CardItem should copy summary without opening modal")
+	main_inst.add_modal.open()
+	main_inst.add_modal.title_input.text = "임시 제목"
+	main_inst.add_modal.author_input.text = "임시 작가"
+	var rclick_s132 := InputEventMouseButton.new()
+	rclick_s132.pressed = true
+	rclick_s132.button_index = MOUSE_BUTTON_RIGHT
+	assert("입력란 모두 비우기" in main_inst.add_modal.close_btn.tooltip_text and "샘플 자동 채움" in main_inst.add_modal.submit_btn.tooltip_text, "AddModal tooltips should mention right-click clear and sample submit")
+	main_inst.add_modal.close_btn.gui_input.emit(rclick_s132)
+	assert(main_inst.add_modal.visible and main_inst.add_modal.title_input.text == "" and main_inst.add_modal.author_input.text == "", "Right-clicking AddModal CloseBtn should clear inputs without closing")
+	var orig_count_s132 = main_inst.archive_state.items.size()
+	main_inst.add_modal.submit_btn.gui_input.emit(rclick_s132)
+	assert(not main_inst.add_modal.visible and main_inst.archive_state.items.size() == orig_count_s132 + 1, "Right-clicking AddModal SubmitBtn with empty title should auto-fill sample and submit")
+	main_inst.archive_state.items.remove_at(0)
+	main_inst._render_cards()
+	print("✓ Sprint 132 Milestone: Card Shift+Right-Click Copy & AddModal Right-Click Clear/Sample verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()
