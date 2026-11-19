@@ -5,6 +5,25 @@
 
 ---
 
+## 📓 [Sprint 128] 모달 `CatBadge` 클릭(이북/가챠 카테고리 모아보기) & `AuthorLabel` 클릭(작가·시리즈 즉시 검색)
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A**: "모달 상단 왼쪽 `[이북·단행본 일기]` / `[가챠·소장 노트]` 배지(`CatBadge`)를 클릭하면 모달이 닫히면서 바로 그 카테고리 탭만 모아볼 수 있으면 탐색 동선이 자연스러울 것 같아요."
+- **가챠러 B**: "모달의 `작가 · 이노우에 다케히코 · ★5.0 · 💎 ₩21,000` 줄(`AuthorLabel`)을 클릭하면 바로 그 작가명으로 서재 검색이 실행되어 같은 작가·시리즈의 다른 작품까지 한눈에 찾을 수 있으면 좋겠어요!"
+- **기획자 (PO)**: "`detail_modal.gd`에 `filter_category_requested`와 `search_author_requested` 시그널을 신설해 `main_view.gd`의 탭 전환 및 검색 핸들러에 연결하고, `index.html`의 `#diary-cover-cat` 및 `#diary-author`와 동기화합니다."
+
+### 2. 핵심 구현 및 변경 내역
+- `game02/godot_project/scripts/detail_modal.gd`:
+  - `CatBadge` 클릭 시 모달을 닫고 `filter_category_requested` 시그널을 발행하며, `AuthorLabel` 클릭 시 모달을 닫고 `search_author_requested` 시그널을 발행하도록 연결했습니다.
+- `game02/godot_project/scripts/main_view.gd`:
+  - `filter_category_requested` 수신 시 이북(`0`)·가챠(`1`) 탭으로 전환하고, `search_author_requested` 수신 시 `search_input.text`를 설정해 즉시 검색 및 토스트를 출력합니다.
+- `game02/index.html`:
+  - `#diary-cover-cat` 클릭(`filterModalCategory`)과 `#diary-author` 클릭(`searchModalAuthor`)을 동기화했습니다.
+- `game02/godot_project/tests/test_main_integration.gd`:
+  - `CatBadge` 클릭 카테고리 필터링과 `AuthorLabel` 클릭 작가 검색을 검증하는 Sprint 128 통합 테스트를 추가해 100% 통과했습니다.
+
+---
+
 ## 📓 [Sprint 127] 모달 `📅 기념일` 우클릭 기본값 초기화 & 모달 제목(`TitleLabel`) 클릭 클립보드 복사
 
 ### 1. 14인 스쿼드 회의록 & VOC

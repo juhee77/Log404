@@ -24,6 +24,8 @@ signal diary_updated(item)
 signal help_requested
 signal summary_copy_requested
 signal close_and_backup_requested
+signal filter_category_requested(cat: int)
+signal search_author_requested(author_name: String)
 
 @onready var title_label: Label = $Panel/VBox/Header/HBox/TitleLabel
 @onready var cat_badge: Label = $Panel/VBox/Header/HBox/CatBadge
@@ -86,6 +88,26 @@ func _ready() -> void:
 			if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_LEFT and current_item != null:
 				DisplayServer.clipboard_set(current_item.title)
 				title_label.tooltip_text = "✅ 복사됨: " + current_item.title
+		)
+	if cat_badge != null:
+		cat_badge.mouse_filter = Control.MOUSE_FILTER_STOP
+		cat_badge.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+		cat_badge.tooltip_text = "클릭하여 같은 카테고리(이북/가챠) 서재만 모아보기"
+		cat_badge.gui_input.connect(func(ev: InputEvent) -> void:
+			if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_LEFT and current_item != null:
+				var target_cat: int = current_item.category
+				close()
+				filter_category_requested.emit(target_cat)
+		)
+	if author_label != null:
+		author_label.mouse_filter = Control.MOUSE_FILTER_STOP
+		author_label.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+		author_label.tooltip_text = "클릭하여 이 작가·시리즈의 다른 작품 검색하기"
+		author_label.gui_input.connect(func(ev: InputEvent) -> void:
+			if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_LEFT and current_item != null:
+				var author_q: String = current_item.author_or_series
+				close()
+				search_author_requested.emit(author_q)
 		)
 	cover_rect.gui_input.connect(func(ev):
 		if ev is InputEventMouseButton and ev.pressed:

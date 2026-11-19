@@ -79,6 +79,18 @@ func _ready() -> void:
 	detail_modal.help_requested.connect(_on_modal_help_requested)
 	detail_modal.summary_copy_requested.connect(copy_summary_to_clipboard)
 	detail_modal.close_and_backup_requested.connect(_trigger_instant_json_backup)
+	detail_modal.filter_category_requested.connect(func(cat: int) -> void:
+		if cat == 1:
+			_on_tab_gacha_pressed()
+		else:
+			_on_tab_manga_pressed()
+	)
+	detail_modal.search_author_requested.connect(func(author_name: String) -> void:
+		if search_input != null:
+			search_input.text = author_name
+		_render_cards()
+		_show_toast("🔍 작가·시리즈 검색: %s (%s)" % [author_name, _get_filtered_cards_summary()])
+	)
 	add_modal.item_submitted.connect(_on_item_submitted)
 
 	var stat_configs := [

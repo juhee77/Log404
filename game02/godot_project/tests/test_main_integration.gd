@@ -1852,6 +1852,28 @@ func _init() -> void:
 	main_inst.detail_modal.close()
 	print("✓ Sprint 127 Milestone: DateStampBtn Right-Click Reset & TitleLabel Click Copy verified")
 
+	# Sprint 128 Milestone: CatBadge Click Filter Category & AuthorLabel Click Search Author
+	var gacha_item_s128 = null
+	for it in main_inst.archive_state.items:
+		if it.category == 1:
+			gacha_item_s128 = it
+			break
+	assert(gacha_item_s128 != null, "Should find a gacha item in archive_state")
+	main_inst._on_card_clicked(gacha_item_s128)
+	var lclick_s128 := InputEventMouseButton.new()
+	lclick_s128.pressed = true
+	lclick_s128.button_index = MOUSE_BUTTON_LEFT
+	assert("같은 카테고리" in main_inst.detail_modal.cat_badge.tooltip_text and "작가·시리즈의 다른 작품 검색" in main_inst.detail_modal.author_label.tooltip_text, "CatBadge and AuthorLabel tooltips should mention filter/search actions")
+	main_inst.detail_modal.cat_badge.gui_input.emit(lclick_s128)
+	assert(not main_inst.detail_modal.visible and main_inst.archive_state.current_filter == 1, "Clicking CatBadge on gacha item should close modal and filter to gacha (1)")
+	main_inst._on_tab_all_pressed()
+	main_inst._on_card_clicked(main_inst.archive_state.items[0])
+	var target_author = main_inst.archive_state.items[0].author_or_series
+	main_inst.detail_modal.author_label.gui_input.emit(lclick_s128)
+	assert(not main_inst.detail_modal.visible and main_inst.search_input.text == target_author and "작가·시리즈 검색" in main_inst.status_toast.text, "Clicking AuthorLabel should close modal, set search_input to author, and show toast")
+	main_inst._reset_all_filters()
+	print("✓ Sprint 128 Milestone: CatBadge Click Category Filter & AuthorLabel Click Search verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

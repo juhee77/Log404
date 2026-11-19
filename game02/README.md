@@ -5,7 +5,7 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 
 ---
 
-## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 127)
+## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 128)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
@@ -14,6 +14,9 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 ---
 
 ## 🚀 최신 스프린트 업데이트 요약 ([전체 회의록 보기](SPRINT_LOG.md))
+
+### 📓 [Sprint 128] 모달 `CatBadge` 클릭(이북/가챠 카테고리 모아보기) & `AuthorLabel` 클릭(작가·시리즈 즉시 검색)
+- **모달 탐색 동선 연결 (`detail_modal.gd` · `main_view.gd` · `index.html`)**: 모달 헤더 `[이북·단행본 일기]`/`[가챠·소장 노트]` 배지 클릭 시 해당 카테고리 서재만 모아보고, `작가 · ...` 줄 클릭 시 해당 작가·시리즈명으로 서재 검색을 즉시 실행합니다.
 
 ### 📓 [Sprint 127] 모달 `📅 기념일` 우클릭 기본값 초기화 & 모달 제목(`TitleLabel`) 클릭 클립보드 복사
 - **기념일 초기화 & 제목 클립보드 복사 (`detail_modal.gd` · `index.html`)**: `DateStampBtn` 우클릭 시 구매·기념일 스탬프를 `"📅 기념일"`로 초기화하고, 모달 제목(`TitleLabel`) 클릭 시 작품 제목을 클립보드에 복사합니다.
