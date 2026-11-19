@@ -127,6 +127,28 @@ func _ready() -> void:
 				elif ev.button_index == MOUSE_BUTTON_RIGHT:
 					toggle_quote_highlight()
 		)
+	if tag_label != null:
+		tag_label.mouse_filter = Control.MOUSE_FILTER_STOP
+		tag_label.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+		tag_label.tooltip_text = "좌클릭: 띠지 문구 다음 순환 (O) · 우클릭: 이전 순환 (Shift+O)"
+		tag_label.gui_input.connect(func(ev: InputEvent) -> void:
+			if ev is InputEventMouseButton and ev.pressed and current_item != null:
+				if ev.button_index == MOUSE_BUTTON_LEFT:
+					cycle_obi_preset(1)
+				elif ev.button_index == MOUSE_BUTTON_RIGHT:
+					cycle_obi_preset(-1)
+		)
+	if vol_header != null:
+		vol_header.mouse_filter = Control.MOUSE_FILTER_STOP
+		vol_header.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+		vol_header.tooltip_text = "좌클릭: 새 권·파츠 추가 (+) · 우클릭: 마지막 권 삭제 (-)"
+		vol_header.gui_input.connect(func(ev: InputEvent) -> void:
+			if ev is InputEventMouseButton and ev.pressed and current_item != null:
+				if ev.button_index == MOUSE_BUTTON_LEFT:
+					_on_add_vol_btn_pressed()
+				elif ev.button_index == MOUSE_BUTTON_RIGHT:
+					remove_last_volume()
+		)
 	cover_rect.gui_input.connect(func(ev):
 		if ev is InputEventMouseButton and ev.pressed:
 			if ev.button_index == MOUSE_BUTTON_LEFT:

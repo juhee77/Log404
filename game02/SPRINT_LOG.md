@@ -5,6 +5,24 @@
 
 ---
 
+## 🏆 [Sprint 130] 마일스톤 130: 모달 `TagLabel` 좌·우클릭 띠지 순환 & `VolHeader` 좌·우클릭 권 추가·삭제 (모달 전 영역 100% 인터랙티브화 달성)
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A**: "모달의 요약 태그줄(`TagLabel`)을 좌클릭하면 다음 띠지 문구로, 우클릭하면 이전 띠지 문구로 바뀌면 아래 `띠지` 버튼까지 마우스를 옮기지 않아도 바로 띠지를 갈아끼울 수 있을 것 같아요!"
+- **가챠러 B**: "`📌 권별 밑줄 노트 (소장 3/3권 · ...)` 헤더(`VolHeader`)를 좌클릭하면 다음 권 일기 추가(`+`), 우클릭하면 마지막 권 삭제(`-`)가 되면 마일스톤 130 기념으로 모달 내 **모든 텍스트·라벨 영역 100% 인터랙티브화**가 완성되겠어요!"
+- **기획자 (PO)**: "`detail_modal.gd`에서 `tag_label` 좌·우클릭(`cycle_obi_preset(1 / -1)`)과 `vol_header` 좌·우클릭(`_on_add_vol_btn_pressed` / `remove_last_volume`)을 연결해 모달 내 모든 영역의 양방향 상호작용을 완성하고 `index.html`과 동기화합니다."
+
+### 2. 핵심 구현 및 변경 내역
+- `game02/godot_project/scripts/detail_modal.gd`:
+  - `TagLabel` 좌클릭(`cycle_obi_preset(1)`) · 우클릭(`cycle_obi_preset(-1)`) 및 툴팁을 연결했습니다.
+  - `VolHeader` 좌클릭(`_on_add_vol_btn_pressed()`) · 우클릭(`remove_last_volume()`) 및 툴팁을 연결했습니다.
+- `game02/index.html`:
+  - `📌 권별 소장 스탬프 & 좋아하는 대사` 헤더 클릭 시 `addVolumeInDiary()`가 동작하도록 동기화했습니다.
+- `game02/godot_project/tests/test_main_integration.gd`:
+  - `TagLabel` 좌·우클릭 띠지 순환과 `VolHeader` 좌·우클릭 권 추가/삭제를 검증하는 Sprint 130 마일스톤 테스트를 추가해 100% 통과했습니다.
+
+---
+
 ## 📓 [Sprint 129] 모달 `AuthorLabel` 우클릭 가치 증감 & `MemoLabel` 좌클릭(편집 이동)·우클릭(형광펜 토글)
 
 ### 1. 14인 스쿼드 회의록 & VOC

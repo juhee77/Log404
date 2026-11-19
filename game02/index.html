@@ -372,7 +372,7 @@
                     <!-- Volume-by-Volume Entries -->
                     <div class="mt-5">
                         <div class="flex items-center justify-between mb-2">
-                            <span class="text-xs font-bold text-[#5c4938]">📌 권별 소장 스탬프 & 좋아하는 대사</span>
+                            <span onclick="addVolumeInDiary()" title="클릭하여 다음 권 기록 추가 (+)" class="text-xs font-bold text-[#5c4938] cursor-pointer hover:text-[#c85a32]">📌 권별 소장 스탬프 & 좋아하는 대사</span>
                             <button onclick="addVolumeInDiary()" oncontextmenu="event.preventDefault(); addVolumeInDiary(); const it = ITEMS.find(x => x.id === activeId); if (it && it.volumes && it.volumes.length) selectVolForEdit(it.volumes.length - 1);" title="새 권·파츠 일기 1개 추가 (+ · 우클릭: 추가 후 바로 밑줄 입력)"
                                 class="px-2.5 py-1 rounded-lg bg-[#c85a32] hover:bg-[#b04b25] text-white text-[11px] font-bold cursor-pointer">
                                 + 다음 권 기록 추가

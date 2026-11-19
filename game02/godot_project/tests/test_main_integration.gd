@@ -1895,6 +1895,29 @@ func _init() -> void:
 	main_inst.detail_modal.close()
 	print("✓ Sprint 129 Milestone: AuthorLabel Value Adjust & MemoLabel Focus/Highlight verified")
 
+	# Sprint 130 Milestone: TagLabel Left/Right Obi Cycle & VolHeader Left/Right Add/Remove Volume
+	main_inst._on_card_clicked(main_inst.archive_state.items[0])
+	var item_s130 = main_inst.archive_state.items[0]
+	var orig_obi_s130 = item_s130.obi_text
+	var lclick_s130 := InputEventMouseButton.new()
+	lclick_s130.pressed = true
+	lclick_s130.button_index = MOUSE_BUTTON_LEFT
+	var rclick_s130 := InputEventMouseButton.new()
+	rclick_s130.pressed = true
+	rclick_s130.button_index = MOUSE_BUTTON_RIGHT
+	assert("띠지 문구 다음 순환" in main_inst.detail_modal.tag_label.tooltip_text and "새 권·파츠 추가" in main_inst.detail_modal.vol_header.tooltip_text, "TagLabel and VolHeader tooltips should mention click actions")
+	main_inst.detail_modal.tag_label.gui_input.emit(lclick_s130)
+	assert(item_s130.obi_text != orig_obi_s130, "Left-clicking TagLabel should cycle obi preset forward")
+	main_inst.detail_modal.tag_label.gui_input.emit(rclick_s130)
+	assert(item_s130.obi_text == orig_obi_s130, "Right-clicking TagLabel should cycle obi preset backward")
+	var orig_vols_s130 = item_s130.volumes.size()
+	main_inst.detail_modal.vol_header.gui_input.emit(lclick_s130)
+	assert(item_s130.volumes.size() == orig_vols_s130 + 1, "Left-clicking VolHeader should add a volume")
+	main_inst.detail_modal.vol_header.gui_input.emit(rclick_s130)
+	assert(item_s130.volumes.size() == orig_vols_s130, "Right-clicking VolHeader should remove last volume")
+	main_inst.detail_modal.close()
+	print("✓ Sprint 130 Milestone: TagLabel Obi Cycle & VolHeader Add/Remove Volume verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

@@ -5,7 +5,7 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 
 ---
 
-## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 129)
+## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 130)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
@@ -14,6 +14,9 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 ---
 
 ## 🚀 최신 스프린트 업데이트 요약 ([전체 회의록 보기](SPRINT_LOG.md))
+
+### 🏆 [Sprint 130] 마일스톤 130: 모달 `TagLabel` 좌·우클릭 띠지 순환 & `VolHeader` 좌·우클릭 권 추가·삭제
+- **모달 전 영역 100% 인터랙티브화 달성 (`detail_modal.gd` · `index.html`)**: `TagLabel` 좌·우클릭 시 띠지 문구를 양방향 순환하고, `VolHeader` 좌·우클릭 시 권 추가(`+`)·마지막 권 삭제(`-`)를 즉시 실행합니다.
 
 ### 📓 [Sprint 129] 모달 `AuthorLabel` 우클릭 가치 증감 & `MemoLabel` 좌클릭(편집 이동)·우클릭(형광펜 토글)
 - **본문 감상평 & 작가란 인터랙션 강화 (`detail_modal.gd` · `index.html`)**: `AuthorLabel` 우클릭(`Shift+우클릭`)으로 소장 가치를 즉시 `±5,000원` 조정하고, `MemoLabel` 좌클릭 시 입력창 포커스·우클릭 시 형광펜 하이라이트를 토글합니다.
