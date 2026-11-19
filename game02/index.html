@@ -347,7 +347,7 @@
                         </div>
                         <div class="flex items-center gap-1.5">
                             <input id="diary-quote-input" type="text" placeholder="🖋️ 오늘 밑줄 친 명대사·감상평 수정..."
-                                onkeydown="if(event.key==='Enter'){saveDiaryQuote();}"
+                                onkeydown="if(event.key==='Enter'){saveDiaryQuote();}else if(event.key==='Escape'&&this.value){event.stopPropagation();this.value='';}"
                                 class="flex-1 px-2.5 py-1 rounded-lg bg-[#fffdf9] border border-[#d8cbb8] text-xs text-[#2c221e] focus:outline-none focus:border-[#c85a32]">
                             <button onclick="saveDiaryQuote()" oncontextmenu="event.preventDefault(); restoreDiaryQuoteInput();" title="작성한 밑줄·감상평 저장 (Enter · 우클릭: 원문 복원)"
                                 class="px-2.5 py-1 rounded-lg bg-[#2c221e] text-[#faf6f0] text-[11px] font-bold hover:bg-[#43352f] cursor-pointer">🖋️

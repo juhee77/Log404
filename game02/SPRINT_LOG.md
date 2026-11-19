@@ -5,6 +5,24 @@
 
 ---
 
+## 📓 [Sprint 134] `AddModal` 표지 색상 스와치 우클릭 즉시 등록 & `ESC` 2단계 입력 비우기·닫기 안전장치
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A**: "`AddModal`의 6개 표지 색상 스와치(`크림슨`, `코발트`, `테라코타`, `로즈`, `포레스트`, `바이올렛`)를 우클릭하면 그 색상을 선택함과 동시에 샘플 자동 채움으로 바로 등록되면 1초 만에 원하는 색 일기장을 만들 수 있을 것 같아요!"
+- **가챠러 B**: "`AddModal` 입력란에 글을 적다가 `ESC`를 눌렀을 때 바로 닫히지 않고, 먼저 입력 중인 텍스트를 비우고 빈 상태일 때 `ESC`를 누르면 모달이 닫히면 실수로 글을 날리지 않을 것 같아요."
+- **기획자 (PO)**: "`add_modal.gd`에 `_submit_with_sample_fallback()` 공용 헬퍼를 추출해 `SubmitBtn` 우클릭과 6개 스와치 우클릭을 통합하고, `KEY_ESCAPE` 시 포커스 입력란 우선 비우기 후 닫기 안전장치를 구현하며 `index.html` 인용문 입력란 `Escape` 동작도 동기화합니다."
+
+### 2. 핵심 구현 및 변경 내역
+- `game02/godot_project/scripts/add_modal.gd`:
+  - `_submit_with_sample_fallback()` 헬퍼를 추출해 `SubmitBtn` 우클릭과 표지 스와치 6종 우클릭 시 해당 색상으로 즉시 샘플 등록을 수행합니다.
+  - `_unhandled_input`에서 `KEY_ESCAPE` 시 포커스된 `LineEdit`에 텍스트가 있으면 먼저 비우고, 비어있을 때 모달을 닫도록 안전장치를 추가했습니다.
+- `game02/index.html`:
+  - `#diary-quote-input`에서 `Escape` 키 입력 시 작성 중인 텍스트가 있으면 먼저 비우도록 동기화했습니다.
+- `game02/godot_project/tests/test_main_integration.gd`:
+  - `AddModal` 스와치 우클릭 즉시 등록과 `ESC` 2단계 비우기/닫기를 검증하는 Sprint 134 통합 테스트를 추가해 100% 통과했습니다.
+
+---
+
 ## 📓 [Sprint 133] 서재 카드 `Shift+우클릭` 툴팁 동기화 & `AddModal` 카테고리 드롭다운 우클릭 즉시 전환
 
 ### 1. 14인 스쿼드 회의록 & VOC

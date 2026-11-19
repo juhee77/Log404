@@ -1980,6 +1980,30 @@ func _init() -> void:
 	main_inst.add_modal.close()
 	print("✓ Sprint 133 Milestone: Card Tooltip Sync & AddModal CatOption Toggle verified")
 
+	# Sprint 134 Milestone: AddModal Swatch Right-Click Instant Submit & ESC Two-Step Clear/Close
+	main_inst.add_modal.open()
+	main_inst.add_modal.title_input.text = "지워질 임시 제목"
+	var esc_s134 := InputEventKey.new()
+	esc_s134.pressed = true
+	esc_s134.keycode = KEY_ESCAPE
+	if main_inst.add_modal.title_input.has_focus():
+		main_inst.add_modal._unhandled_input(esc_s134)
+		assert(main_inst.add_modal.visible and main_inst.add_modal.title_input.text == "", "First ESC with non-empty focused input should clear text without closing")
+		main_inst.add_modal._unhandled_input(esc_s134)
+		assert(not main_inst.add_modal.visible, "Second ESC with empty input should close AddModal")
+		main_inst.add_modal.open()
+	var swatch_cobalt = main_inst.add_modal.color_row.get_child(1)
+	assert("이 색으로 즉시 등록" in swatch_cobalt.tooltip_text, "AddModal swatch tooltip should mention right-click instant submit")
+	var orig_cnt_s134 = main_inst.archive_state.items.size()
+	var rclick_s134 := InputEventMouseButton.new()
+	rclick_s134.pressed = true
+	rclick_s134.button_index = MOUSE_BUTTON_RIGHT
+	swatch_cobalt.gui_input.emit(rclick_s134)
+	assert(not main_inst.add_modal.visible and main_inst.archive_state.items.size() == orig_cnt_s134 + 1 and main_inst.archive_state.items[0].cover_color == "#1d4ed8", "Right-clicking Cobalt swatch should submit sample item with cobalt color")
+	main_inst.archive_state.items.remove_at(0)
+	main_inst._render_cards()
+	print("✓ Sprint 134 Milestone: AddModal Swatch Right-Click Submit & ESC Clear/Close verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

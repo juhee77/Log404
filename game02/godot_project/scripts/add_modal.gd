@@ -56,7 +56,14 @@ func _build_color_swatches() -> void:
 		btn.add_theme_stylebox_override("normal", sb)
 		btn.add_theme_color_override("font_color", Color(1, 1, 1))
 		var hex_val = sw["hex"]
+		btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+		btn.tooltip_text = "좌클릭: '%s' 표지색 선택 · 우클릭: 이 색으로 즉시 등록" % sw["name"]
 		btn.pressed.connect(func(): select_color(hex_val))
+		btn.gui_input.connect(func(ev: InputEvent) -> void:
+			if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_RIGHT:
+				select_color(hex_val)
+				_submit_with_sample_fallback()
+		)
 		color_row.add_child(btn)
 	_highlight_selected_swatch()
 
@@ -106,14 +113,17 @@ func _style_inputs() -> void:
 	submit_btn.tooltip_text = "서재에 등록 (Enter · 우클릭: 빈 제목 시 샘플 자동 채움 등록)"
 	submit_btn.gui_input.connect(func(ev: InputEvent) -> void:
 		if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_RIGHT:
-			if title_input.text.strip_edges() == "":
-				title_input.text = "오늘의 독서 스크랩"
-				if author_input.text.strip_edges() == "":
-					author_input.text = "주희의 다꾸 서재"
-				if quote_input.text.strip_edges() == "":
-					quote_input.text = "소중한 한 권의 기억을 담다."
-			_on_submit_btn_pressed()
+			_submit_with_sample_fallback()
 	)
+
+func _submit_with_sample_fallback() -> void:
+	if title_input.text.strip_edges() == "":
+		title_input.text = "오늘의 독서 스크랩"
+		if author_input.text.strip_edges() == "":
+			author_input.text = "주희의 다꾸 서재"
+		if quote_input.text.strip_edges() == "":
+			quote_input.text = "소중한 한 권의 기억을 담다."
+	_on_submit_btn_pressed()
 
 func clear_inputs() -> void:
 	title_input.text = ""
@@ -165,6 +175,11 @@ func close() -> void:
 
 func _unhandled_input(event: InputEvent) -> void:
 	if visible and event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_ESCAPE:
+		for le in [title_input, author_input, quote_input]:
+			if le != null and le.has_focus() and le.text != "":
+				le.text = ""
+				get_viewport().set_input_as_handled()
+				return
 		close()
 		get_viewport().set_input_as_handled()
 

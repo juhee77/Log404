@@ -5,7 +5,7 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 
 ---
 
-## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 133)
+## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 134)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
@@ -14,6 +14,9 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 ---
 
 ## 🚀 최신 스프린트 업데이트 요약 ([전체 회의록 보기](SPRINT_LOG.md))
+
+### 📓 [Sprint 134] `AddModal` 표지 색상 스와치 우클릭 즉시 등록 & `ESC` 2단계 입력 비우기·닫기 안전장치
+- **`AddModal` 스와치 원클릭 등록 & `ESC` 안전장치 (`add_modal.gd` · `index.html`)**: 6종 표지 색상 스와치 우클릭 시 해당 색상으로 즉시 등록(`_submit_with_sample_fallback`)하며, 입력 중 `ESC`는 입력란을 먼저 비운 뒤 빈 상태에서 닫히도록 안전성을 강화했습니다.
 
 ### 📓 [Sprint 133] 서재 카드 `Shift+우클릭` 툴팁 동기화 & `AddModal` 카테고리 드롭다운 우클릭 즉시 전환
 - **카드 툴팁 & `AddModal` 분류 전환 (`card_item.gd` · `add_modal.gd` · `index.html`)**: 카드 리치 툴팁에 `Shift+우클릭: 감상 요약 복사` 안내를 동기화하고, `AddModal`의 `CatOption` 우클릭 시 이북 ↔ 가챠 분류를 즉시 토글합니다.
