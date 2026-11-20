@@ -2816,6 +2816,41 @@ func _init() -> void:
 	assert(not main_inst.detail_modal.visible and main_inst.card_grid.get_child_count() == main_inst.archive_state.items.size(), "Shift+Left-Click on CatBadge should close modal and reset to all library")
 	print("✓ Sprint 169: AddModal Input Sample Fill & CatBadge All-Library Reset Shift+Left-Click verified")
 
+	# Sprint 170 Milestone: TitleLabel Shift+Left-Click Card Copy & StampLbl/InkLbl Shift+Left-Click Reverse
+	var item170 = main_inst.archive_state.items[0]
+	main_inst.detail_modal.open(item170)
+	var title_lbl170: Label = main_inst.detail_modal.title_label
+	var stamp_lbl170: Label = main_inst.detail_modal.find_child("StampLbl", true, false) as Label
+	var ink_lbl170: Label = main_inst.detail_modal.find_child("InkLbl", true, false) as Label
+	assert("우클릭·Shift+좌클릭: 감상 카드 전체 복사" in title_lbl170.tooltip_text, "TitleLabel tooltip should mention Shift+Left-Click card copy")
+	assert(stamp_lbl170 != null and "우클릭·Shift+좌클릭: 역순환" in stamp_lbl170.tooltip_text, "StampLbl tooltip should mention Shift+Left-Click reverse")
+	assert(ink_lbl170 != null and "우클릭·Shift+좌클릭: 역순환" in ink_lbl170.tooltip_text, "InkLbl tooltip should mention Shift+Left-Click reverse")
+	var shift_lclick170 := InputEventMouseButton.new()
+	shift_lclick170.button_index = MOUSE_BUTTON_LEFT
+	shift_lclick170.pressed = true
+	shift_lclick170.shift_pressed = true
+	var copied_cnt170: Array = [0]
+	var copy_cb170 := func(_it): copied_cnt170[0] += 1
+	main_inst.detail_modal.card_copied.connect(copy_cb170)
+	title_lbl170.gui_input.emit(shift_lclick170)
+	main_inst.detail_modal.card_copied.disconnect(copy_cb170)
+	assert(copied_cnt170[0] == 1, "Shift+Left-Click on TitleLabel should emit card_copied")
+	var lclick170 := InputEventMouseButton.new()
+	lclick170.button_index = MOUSE_BUTTON_LEFT
+	lclick170.pressed = true
+	stamp_lbl170.gui_input.emit(lclick170)
+	ink_lbl170.gui_input.emit(lclick170)
+	var fwd_stamp170: String = item170.status_tag
+	var fwd_ink170: String = item170.memo_ink_color
+	stamp_lbl170.gui_input.emit(lclick170)
+	ink_lbl170.gui_input.emit(lclick170)
+	assert(item170.status_tag != fwd_stamp170 and item170.memo_ink_color != fwd_ink170, "Left-click should advance stamp and ink")
+	stamp_lbl170.gui_input.emit(shift_lclick170)
+	ink_lbl170.gui_input.emit(shift_lclick170)
+	assert(item170.status_tag == fwd_stamp170 and item170.memo_ink_color == fwd_ink170, "Shift+Left-Click on StampLbl and InkLbl should step backward")
+	main_inst.detail_modal.close()
+	print("✓ Sprint 170 Milestone: TitleLabel Card Copy & StampLbl/InkLbl Shift+Left-Click Reverse verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

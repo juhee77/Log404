@@ -5,6 +5,19 @@
 
 ---
 
+## 🏆 [Sprint 170 Milestone] `TitleLabel` `Shift+좌클릭` 감상 카드 전체 복사 & `StampLbl`/`InkLbl` `Shift+좌클릭` 역순환 완결
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A (다꾸러):** "170회 마일스톤 스프린트! 일기장 모달의 작품 제목(`TitleLabel`)을 우클릭하면 감상 카드 전체가 복사되는데, 트랙패드에서 `Shift+좌클릭`으로도 똑같이 감상 카드를 복사할 수 있으면 좋겠어요."
+- **가챠러 B (잉크·인장 다꾸):** "`StampRow`의 `💮 인장:` 라벨(`StampLbl`)과 `InkRow`의 `🖋️ 잉크:` 라벨(`InkLbl`)도 우클릭 역순환뿐 아니라 `Shift+좌클릭`으로 이전 인장·이전 잉크색으로 돌아가면 모달 내 모든 라벨·버튼이 100% 통일되겠어요!"
+- **미니멀러 C (웹 동기화):** "웹 목업(`index.html`)의 `#diary-title` 제목 클릭에도 `Shift+좌클릭` 시 감상 카드 전체 복사를 연결해주세요."
+- **PO & UX/UI 확정:**
+  1. **`DetailModal` `TitleLabel` `Shift+좌클릭` 감상 카드 전체 복사 (`detail_modal.gd`)**: `TitleLabel` `gui_input`과 `open()` 툴팁에 `Shift+좌클릭` 시 `accept_event()` 및 `card_copied.emit(current_item)`을 연결했습니다.
+  2. **`DetailModal` `StampLbl`/`InkLbl` `Shift+좌클릭` 역순환 (`detail_modal.gd`)**: `StampLbl`과 `InkLbl` `gui_input`에서 `Shift+좌클릭` 시 `accept_event()` 처리 후 각각 이전 인장 프리셋(`-1`)과 이전 만년필 잉크(`cycle_fountain_pen_ink(-1)`)로 역순환합니다.
+  3. **웹 목업(`index.html`) 동기화 & TDD/QA 검증:** `#diary-title`에 `Shift+좌클릭` 감상 카드 복사를 동기화하고 `test_main_integration.gd`에 Sprint 170 마일스톤 검증을 추가해 3종 헤드리스 테스트 100% 통과 및 Metal 4.0 스크린샷을 갱신했습니다.
+
+---
+
 ## 📓 [Sprint 169] `AddModal` 입력 3종 `Shift+좌클릭` 개별 샘플 채움 & `DetailModal` `CatBadge` `Shift+좌클릭` 전체 서재 복원
 
 ### 1. 14인 스쿼드 회의록 & VOC

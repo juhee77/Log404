@@ -111,7 +111,7 @@ func _ready() -> void:
 	if title_label != null:
 		title_label.mouse_filter = Control.MOUSE_FILTER_STOP
 		title_label.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
-		title_label.tooltip_text = "좌클릭: 작품 제목 클립보드 복사 · 우클릭: 감상 카드 전체 복사 (C)"
+		title_label.tooltip_text = "좌클릭: 작품 제목 클립보드 복사 · 우클릭·Shift+좌클릭: 감상 카드 전체 복사 (C)"
 	if author_label != null:
 		author_label.tooltip_text = "좌클릭: 이 작가·시리즈의 다른 작품 검색하기 · Shift+좌클릭: 작가명 복사 · 우클릭: 가치 +5,000원(Shift: -5,000원)"
 	if tag_label != null:
@@ -120,7 +120,10 @@ func _ready() -> void:
 		memo_label.tooltip_text = "좌클릭: 밑줄 문장 편집 입력창 이동 (E) · 우클릭: 형광펜 토글 (L) · Shift+좌클릭: 감상평 복사"
 		title_label.gui_input.connect(func(ev: InputEvent) -> void:
 			if ev is InputEventMouseButton and ev.pressed and current_item != null:
-				if ev.button_index == MOUSE_BUTTON_LEFT:
+				if ev.button_index == MOUSE_BUTTON_LEFT and ev.shift_pressed:
+					title_label.accept_event()
+					card_copied.emit(current_item)
+				elif ev.button_index == MOUSE_BUTTON_LEFT:
 					DisplayServer.clipboard_set(current_item.title)
 					title_label.tooltip_text = "✅ 복사됨: " + current_item.title
 				elif ev.button_index == MOUSE_BUTTON_RIGHT:
@@ -285,13 +288,15 @@ func _style_diary_controls() -> void:
 	if stamp_lbl != null:
 		stamp_lbl.mouse_filter = Control.MOUSE_FILTER_STOP
 		stamp_lbl.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
-		stamp_lbl.tooltip_text = "좌클릭: 인장 프리셋 순환 (1~4) · 우클릭: 역순환"
+		stamp_lbl.tooltip_text = "좌클릭: 인장 프리셋 순환 (1~4) · 우클릭·Shift+좌클릭: 역순환"
 		stamp_lbl.gui_input.connect(func(ev: InputEvent) -> void:
 			if ev is InputEventMouseButton and ev.pressed and current_item != null:
 				if ev.button_index == MOUSE_BUTTON_LEFT or ev.button_index == MOUSE_BUTTON_RIGHT:
+					if ev.button_index == MOUSE_BUTTON_LEFT and ev.shift_pressed:
+						stamp_lbl.accept_event()
 					var presets: Array = STAMP_PRESET_MAP.values()
 					var cur_idx: int = presets.find(current_item.status_tag)
-					var step: int = -1 if ev.button_index == MOUSE_BUTTON_RIGHT else 1
+					var step: int = -1 if (ev.button_index == MOUSE_BUTTON_RIGHT or (ev.button_index == MOUSE_BUTTON_LEFT and ev.shift_pressed)) else 1
 					var next_idx: int = (cur_idx + step + presets.size()) % presets.size() if cur_idx != -1 else 0
 					apply_stamp(presets[next_idx])
 		)
@@ -299,10 +304,13 @@ func _style_diary_controls() -> void:
 	if ink_lbl != null:
 		ink_lbl.mouse_filter = Control.MOUSE_FILTER_STOP
 		ink_lbl.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
-		ink_lbl.tooltip_text = "좌클릭: 만년필 잉크 순환 (I) · 우클릭: 역순환 (Shift+I)"
+		ink_lbl.tooltip_text = "좌클릭: 만년필 잉크 순환 (I) · 우클릭·Shift+좌클릭: 역순환 (Shift+I)"
 		ink_lbl.gui_input.connect(func(ev: InputEvent) -> void:
 			if ev is InputEventMouseButton and ev.pressed and current_item != null:
-				if ev.button_index == MOUSE_BUTTON_LEFT:
+				if ev.button_index == MOUSE_BUTTON_LEFT and ev.shift_pressed:
+					ink_lbl.accept_event()
+					cycle_fountain_pen_ink(-1)
+				elif ev.button_index == MOUSE_BUTTON_LEFT:
 					cycle_fountain_pen_ink(1)
 				elif ev.button_index == MOUSE_BUTTON_RIGHT:
 					cycle_fountain_pen_ink(-1)
@@ -798,7 +806,7 @@ func open(item) -> void:
 		quote_input.release_focus()
 		quote_input.placeholder_text = "🖋️ 오늘 밑줄 친 명대사·감상평 수정..."
 	title_label.text = "📔 " + item.title
-	title_label.tooltip_text = "좌클릭: 작품 제목 클립보드 복사 · 우클릭: 감상 카드 전체 복사 (C)"
+	title_label.tooltip_text = "좌클릭: 작품 제목 클립보드 복사 · 우클릭·Shift+좌클릭: 감상 카드 전체 복사 (C)"
 	if author_label != null:
 		author_label.tooltip_text = "좌클릭: 이 작가·시리즈의 다른 작품 검색하기 · Shift+좌클릭: 작가명 복사 · 우클릭: 가치 +5,000원(Shift: -5,000원)"
 	if tag_label != null:
