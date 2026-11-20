@@ -5,6 +5,21 @@
 
 ---
 
+## 📓 [Sprint 173] `DetailModal` 키보드 `Shift+←/→` 처음·끝 점프 & `Shift++/-` 초판북마크 추가·전권 북마크 토글
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A (키보드 파워 유저):** "일기장 모달에서 `←`/`→` 키로 페이지를 넘길 때 `Shift+←`/`Shift+→`를 누르면 `Home`/`End` 키까지 손가락을 뻗지 않아도 첫 작품·마지막 작품으로 즉시 점프하면 좋겠어요!"
+- **가챠러 B (권별 빠른 기록러):** "모달에서 `+` 키로 새 권을 추가할 때 `Shift++`를 누르면 `초판특전+북마크 ON` 상태로 바로 추가되고, `Shift+-`를 누르면 마지막 권을 지우는 대신 전권 북마크를 일괄 토글해주면 키보드만으로 모든 권별 작업이 가능하겠어요!"
+- **미니멀러 C (웹 동기화):** "웹 목업(`index.html`)의 `ArrowLeft`/`ArrowRight` 키 리스너에도 `Shift+←/→` 처음·끝 작품 점프를 동일하게 반영해주세요."
+- **PO & UX/UI 확정:**
+  1. **`DetailModal` `_unhandled_input` `Shift+←/→` & `Shift++/-` (`detail_modal.gd`)**:
+     - `Shift+←` / `Shift+→`: `navigate_requested.emit(-9999)` / `navigate_requested.emit(9999)` 발행.
+     - `Shift++` (`KEY_EQUAL`/`KEY_PLUS`/`KEY_KP_ADD`): 새 권 추가 후 즉시 `status = "first"`, `bookmarked = true` 적용.
+     - `Shift+-` (`KEY_MINUS`/`KEY_KP_SUBTRACT`): 전권 북마크 일괄 온·오프 토글.
+  2. **웹 목업(`index.html`) 동기화 & TDD/QA 검증:** `ArrowLeft`/`ArrowRight` 키 핸들러에 `e.shiftKey` 처음·끝 작품 점프를 연결하고 `test_main_integration.gd`에 Sprint 173 통합 검증을 추가해 3종 헤드리스 테스트 100% 통과 및 Metal 4.0 스크린샷을 갱신했습니다.
+
+---
+
 ## 📓 [Sprint 172] 메인 키보드 `Shift+0` 스튜디오 완전 초기화 · `Shift+C` 오늘의 밑줄 복사 · `Shift+H` 단축키 치트시트 복사
 
 ### 1. 14인 스쿼드 회의록 & VOC

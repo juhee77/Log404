@@ -919,10 +919,10 @@ func _unhandled_input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 	elif quote_input == null or not quote_input.has_focus():
 		if event.keycode == KEY_LEFT:
-			navigate_requested.emit(-1)
+			navigate_requested.emit(-9999 if event.shift_pressed else -1)
 			get_viewport().set_input_as_handled()
 		elif event.keycode == KEY_RIGHT:
-			navigate_requested.emit(1)
+			navigate_requested.emit(9999 if event.shift_pressed else 1)
 			get_viewport().set_input_as_handled()
 		elif event.keycode == KEY_HOME:
 			navigate_requested.emit(-9999)
@@ -941,9 +941,29 @@ func _unhandled_input(event: InputEvent) -> void:
 			get_viewport().set_input_as_handled()
 		elif event.keycode in [KEY_EQUAL, KEY_PLUS, KEY_KP_ADD]:
 			_on_add_vol_btn_pressed()
+			if event.shift_pressed and current_item != null and not current_item.volumes.is_empty():
+				var last_v = current_item.volumes[current_item.volumes.size() - 1]
+				last_v["status"] = "first"
+				last_v["bookmarked"] = true
+				_render_volumes()
+				_refresh_vol_header()
+				diary_updated.emit(current_item)
 			get_viewport().set_input_as_handled()
 		elif event.keycode in [KEY_MINUS, KEY_KP_SUBTRACT]:
-			remove_last_volume()
+			if event.shift_pressed and current_item != null and not current_item.volumes.is_empty():
+				var all_bm: bool = true
+				for vol_d in current_item.volumes:
+					if not bool(vol_d.get("bookmarked", false)):
+						all_bm = false
+						break
+				var target_bm: bool = not all_bm
+				for vol_d in current_item.volumes:
+					vol_d["bookmarked"] = target_bm
+				_render_volumes()
+				_refresh_vol_header()
+				diary_updated.emit(current_item)
+			else:
+				remove_last_volume()
 			get_viewport().set_input_as_handled()
 		elif event.keycode == KEY_H:
 			help_requested.emit()

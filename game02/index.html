@@ -1197,6 +1197,8 @@
                         navigateJournalModal(-1);
                     } else if (e.key === 'PageDown' || e.key === ' ') {
                         navigateJournalModal(1);
+                    } else if (e.shiftKey && ITEMS.length > 0) {
+                        openJournalModal(e.key === 'ArrowLeft' ? ITEMS[0].id : ITEMS[ITEMS.length - 1].id);
                     } else {
                         navigateJournalModal(e.key === 'ArrowLeft' ? -1 : 1);
                     }

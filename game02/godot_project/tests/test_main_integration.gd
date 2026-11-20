@@ -2892,6 +2892,35 @@ func _init() -> void:
 	assert("단축키:" in main_inst.status_toast.text, "Shift+H should show and copy shortcut cheatsheet")
 	print("✓ Sprint 172: MainView Shift+0 Full Studio Reset, Shift+C Quote Copy & Shift+H Cheatsheet verified")
 
+	# Sprint 173: DetailModal Shift+Left/Right First/Last Jump & Shift+Plus/Minus Volume Power Keys
+	var item173 = main_inst.archive_state.items[1]
+	for v in item173.volumes:
+		v["bookmarked"] = false
+	var prev_vols173: int = item173.volumes.size()
+	main_inst.detail_modal.open(item173)
+	var nav_deltas173: Array = []
+	var nav_cb173 := func(d: int): nav_deltas173.append(d)
+	main_inst.detail_modal.navigate_requested.connect(nav_cb173)
+	var shift_k173 := InputEventKey.new()
+	shift_k173.pressed = true
+	shift_k173.shift_pressed = true
+	shift_k173.keycode = KEY_RIGHT
+	main_inst.detail_modal._unhandled_input(shift_k173)
+	shift_k173.keycode = KEY_LEFT
+	main_inst.detail_modal._unhandled_input(shift_k173)
+	main_inst.detail_modal.navigate_requested.disconnect(nav_cb173)
+	assert(nav_deltas173 == [9999, -9999], "Shift+Right/Left in DetailModal should emit 9999 and -9999")
+	main_inst.detail_modal.open(item173)
+	shift_k173.keycode = KEY_EQUAL
+	main_inst.detail_modal._unhandled_input(shift_k173)
+	assert(item173.volumes.size() == prev_vols173 + 1 and item173.volumes[-1].get("status", "") == "first" and bool(item173.volumes[-1].get("bookmarked", false)), "Shift+Plus should add first+bookmarked volume")
+	shift_k173.keycode = KEY_MINUS
+	main_inst.detail_modal._unhandled_input(shift_k173)
+	for v in item173.volumes:
+		assert(bool(v.get("bookmarked", false)), "Shift+Minus should batch-bookmark all volumes")
+	main_inst.detail_modal.close()
+	print("✓ Sprint 173: DetailModal Shift+Arrows First/Last & Shift++/- Vol Power Keys verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()
