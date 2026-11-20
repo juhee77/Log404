@@ -5,6 +5,25 @@
 
 ---
 
+## 🏆 [Sprint 145] 마일스톤 145: `TodayQuoteLabel` `Shift+좌클릭` 밑줄 즉시 복사 & `CoverRect` `Shift+좌/우클릭` 마감·상태등급 전환
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A**: "메인 상단 배너의 `TodayQuoteLabel`을 `Shift+좌클릭`하면 모달을 열지 않고도 지금 뜬 오늘의 밑줄 문장을 그대로 클립보드에 복사할 수 있으면 좋겠어요!"
+- **가챠러 B**: "`DetailModal` 속 책 표지(`CoverRect`)를 `Shift+좌클릭`하면 표지 마감(무광 매트/유광 코팅/홀로그램 등)이 바뀌고, `Shift+우클릭`하면 소장 상태등급(S급/A급 등)이 바뀌면 책 표지를 만지는 손맛이 훨씬 살아나겠어요."
+- **기획자 (PO)**: "`main_view.gd` `TodayQuoteLabel` `Shift+좌클릭` 복사와 `detail_modal.gd` `CoverRect` `Shift+좌/우클릭` 마감·상태등급 순환을 구현하고 `index.html` `#today-quote-banner`와 동기화합니다."
+
+### 2. 핵심 구현 및 변경 내역
+- `game02/godot_project/scripts/main_view.gd`:
+  - `TodayQuoteLabel` `Shift+좌클릭` 시 `DisplayServer.clipboard_set(today_quote_label.text)`로 복사하고 토스트 피드백(`📋 오늘의 밑줄 복사 완료`)을 표시하며 툴팁을 동기화했습니다.
+- `game02/godot_project/scripts/detail_modal.gd`:
+  - `CoverRect` `Shift+좌클릭` 시 `cycle_cover_finish(1)`, `Shift+우클릭` 시 `cycle_condition_grade(1)`을 호출하고 툴팁을 동기화했습니다.
+- `game02/index.html`:
+  - `#today-quote-banner` `onclick`에서 `event.shiftKey` 시 클립보드 복사 및 툴팁을 동기화했습니다.
+- `game02/godot_project/tests/test_main_integration.gd`:
+  - `TodayQuoteLabel` `Shift+좌클릭` 복사와 `CoverRect` `Shift+좌/우클릭` 마감·상태등급 전환을 검증하는 Sprint 145 마일스톤 테스트를 추가해 100% 통과했습니다.
+
+---
+
 ## 📓 [Sprint 144] `VolHeader` `Shift+좌클릭` 전권 북마크 일괄 토글 & `NextQuoteBtn` `Shift+좌클릭` 해당 작품 열기
 
 ### 1. 14인 스쿼드 회의록 & VOC

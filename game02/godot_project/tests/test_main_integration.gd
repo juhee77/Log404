@@ -2211,6 +2211,30 @@ func _init() -> void:
 	main_inst.detail_modal.close()
 	print("✓ Sprint 144 Milestone: VolHeader Batch Bookmark & NextQuoteBtn Open verified")
 
+	# Sprint 145 Milestone: TodayQuoteLabel Shift+Left-Click Copy & CoverRect Shift+Click Finish/Condition
+	assert("Shift+좌클릭: 복사" in main_inst.today_quote_label.tooltip_text, "TodayQuoteLabel tooltip should mention Shift+Left-Click copy")
+	var shift_lclick_s145 := InputEventMouseButton.new()
+	shift_lclick_s145.pressed = true
+	shift_lclick_s145.shift_pressed = true
+	shift_lclick_s145.button_index = MOUSE_BUTTON_LEFT
+	main_inst.today_quote_label.gui_input.emit(shift_lclick_s145)
+	assert("오늘의 밑줄 복사 완료" in main_inst.status_toast.text, "Shift+Left-clicking TodayQuoteLabel should copy quote and show toast")
+	var target_s145 = main_inst.archive_state.items[0]
+	var orig_fin_s145: String = target_s145.cover_finish
+	var orig_cond_s145: String = target_s145.condition_grade
+	main_inst._on_card_clicked(target_s145)
+	assert("Shift+좌/우클릭: 마감/상태등급" in main_inst.detail_modal.cover_rect.tooltip_text, "CoverRect tooltip should mention Shift+Left/Right-Click finish/condition")
+	main_inst.detail_modal.cover_rect.gui_input.emit(shift_lclick_s145)
+	assert(target_s145.cover_finish != orig_fin_s145, "Shift+Left-clicking CoverRect should cycle cover_finish")
+	var shift_rclick_s145 := InputEventMouseButton.new()
+	shift_rclick_s145.pressed = true
+	shift_rclick_s145.shift_pressed = true
+	shift_rclick_s145.button_index = MOUSE_BUTTON_RIGHT
+	main_inst.detail_modal.cover_rect.gui_input.emit(shift_rclick_s145)
+	assert(target_s145.condition_grade != orig_cond_s145, "Shift+Right-clicking CoverRect should cycle condition_grade")
+	main_inst.detail_modal.close()
+	print("✓ Sprint 145 Milestone: TodayQuoteLabel Copy & CoverRect Finish/Condition verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

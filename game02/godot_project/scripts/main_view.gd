@@ -119,7 +119,11 @@ func _ready() -> void:
 	today_quote_label.gui_input.connect(func(ev):
 		if ev is InputEventMouseButton and ev.pressed:
 			if ev.button_index == MOUSE_BUTTON_LEFT:
-				open_current_quote_item()
+				if ev.shift_pressed:
+					DisplayServer.clipboard_set(today_quote_label.text)
+					_show_toast("📋 오늘의 밑줄 복사 완료: %s" % today_quote_label.text)
+				else:
+					open_current_quote_item()
 			elif ev.button_index == MOUSE_BUTTON_RIGHT:
 				_step_today_quote(-1 if ev.shift_pressed else 1)
 	)
@@ -431,7 +435,7 @@ func _apply_today_quote(entry: Dictionary, total_count: int = 1) -> void:
 	today_quote_label.text = entry["text"]
 	var target_item = entry.get("item", null)
 	if target_item != null:
-		today_quote_label.tooltip_text = "좌클릭: 「%s」 독서 일기장 펼치기 · 우클릭: 다음 밑줄 (%d/%d)" % [target_item.title, quote_cursor + 1, maxi(1, total_count)]
+		today_quote_label.tooltip_text = "좌클릭: 「%s」 독서 일기장 펼치기 · 우클릭: 다음 밑줄 · Shift+좌클릭: 복사 (%d/%d)" % [target_item.title, quote_cursor + 1, maxi(1, total_count)]
 	else:
 		today_quote_label.tooltip_text = "나만의 첫 독서 일기를 시작해보세요"
 	if next_quote_btn != null:

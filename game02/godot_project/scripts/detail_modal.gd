@@ -94,7 +94,7 @@ func _ready() -> void:
 					close_and_backup_requested.emit()
 		)
 	cover_rect.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
-	cover_rect.tooltip_text = "좌클릭·X: 표지 아이콘 변경(Shift+X: 이전) · 우클릭·Q: 표지 색상 변경(Shift+Q: 이전)"
+	cover_rect.tooltip_text = "좌클릭·X: 표지 아이콘 변경(Shift+X: 이전) · 우클릭·Q: 표지 색상 변경(Shift+Q: 이전) · Shift+좌/우클릭: 마감/상태등급"
 	if title_label != null:
 		title_label.mouse_filter = Control.MOUSE_FILTER_STOP
 		title_label.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
@@ -186,9 +186,15 @@ func _ready() -> void:
 	cover_rect.gui_input.connect(func(ev):
 		if ev is InputEventMouseButton and ev.pressed:
 			if ev.button_index == MOUSE_BUTTON_LEFT:
-				cycle_cover_icon()
+				if ev.shift_pressed:
+					cycle_cover_finish(1)
+				else:
+					cycle_cover_icon()
 			elif ev.button_index == MOUSE_BUTTON_RIGHT:
-				cycle_cover_color()
+				if ev.shift_pressed:
+					cycle_condition_grade(1)
+				else:
+					cycle_cover_color()
 	)
 	var washi_node: ColorRect = get_node_or_null("Panel/VBox/BodyMargin/Body/TopInfo/CoverRect/ModalWashiTape")
 	if washi_node != null:
