@@ -5,6 +5,25 @@
 
 ---
 
+## 📓 [Sprint 156] `StatVols`/`StatFirsts` `Shift+좌클릭` 첫 작품·초판 가치순 & 권별 `StarBtn` `Shift+좌클릭` ★5+북마크
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A**: "상단 `단행본 기록`(`StatVols`)을 `Shift+좌클릭`하면 이북·단행본 첫 작품 일기장이 바로 열리고, `초판 스탬프`(`StatFirsts`)를 `Shift+좌클릭`하면 초판 보유작만 가치순으로 정렬되면 통계 카드 4종이 전부 완벽한 원클릭 단축키가 될 것 같아요!"
+- **가챠러 B**: "권별 리스트의 별점(`★★★★★`, `StarBtn`)을 `Shift+좌클릭`했을 때 별점 5점(`★5`)과 북마크를 한 번에 켜줄 수 있으면 최애 권을 표시할 때 정말 빠르겠어요."
+- **기획자 (PO)**: "`main_view.gd` `StatVols`/`StatFirsts` `Shift+좌클릭`과 `detail_modal.gd` 권별 `StarBtn` `Shift+좌클릭` `★5+북마크`를 구현하고 `index.html` 권별 별점 버튼과 동기화합니다."
+
+### 2. 핵심 구현 및 변경 내역
+- `game02/godot_project/scripts/main_view.gd`:
+  - `StatVols` `Shift+좌클릭` 시 `_on_tab_manga_pressed(); _open_first_filtered_card()`를, `StatFirsts` `Shift+좌클릭` 시 `_on_stat_firsts_clicked(); _set_sort_mode(3)`을 실행하고 `_update_stats()` 툴팁을 동기화했습니다.
+- `game02/godot_project/scripts/detail_modal.gd`:
+  - 권별 `star_btn` `Shift+좌클릭` 시 `rating = 5` 및 `bookmarked = true`를 즉시 적용하고 UI·헤더·시그널을 동기화했습니다.
+- `game02/index.html`:
+  - `renderDiaryVolumes()` 내 별점 버튼 `onclick`에 `event.shiftKey` 시 `★5+북마크` 동시 적용 및 툴팁을 동기화했습니다.
+- `game02/godot_project/tests/test_main_integration.gd`:
+  - `StatVols`/`StatFirsts` `Shift+좌클릭`과 권별 `StarBtn` `Shift+좌클릭` `★5+북마크`를 검증하는 Sprint 156 테스트를 추가해 100% 통과했습니다.
+
+---
+
 ## 🏆 [Sprint 155] 마일스톤 155: 필터 탭 5종 `Shift+좌클릭` 첫 작품·랜덤 즉시 열기 & 인장 4종 `Shift+좌클릭` 찍고 닫기
 
 ### 1. 14인 스쿼드 회의록 & VOC

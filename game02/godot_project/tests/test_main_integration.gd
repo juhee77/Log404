@@ -2451,6 +2451,37 @@ func _init() -> void:
 	assert(not main_inst.detail_modal.visible and target_s155.status_tag == "인생최애", "Shift+Left-clicking StampFav should apply stamp and close modal")
 	print("✓ Sprint 155 Milestone: Filter Tabs Open & Stamp Apply+Close verified")
 
+	# Sprint 156 Milestone: StatVols/StatFirsts Shift+Left-Click & Vol StarBtn Shift+Left-Click 5-Star+Bookmark
+	var stat_vols_s156: Control = main_inst.get_node("VBox/TopBar/TopMargin/StatsVBox/StatRow/StatVols")
+	var stat_firsts_s156: Control = main_inst.get_node("VBox/TopBar/TopMargin/StatsVBox/StatRow/StatFirsts")
+	assert("첫 작품 열기" in stat_vols_s156.tooltip_text and "초판 가치순" in stat_firsts_s156.tooltip_text, "StatVols and StatFirsts tooltips should mention Shift+Left-Click actions")
+	var shift_lclick_s156 := InputEventMouseButton.new()
+	shift_lclick_s156.pressed = true
+	shift_lclick_s156.shift_pressed = true
+	shift_lclick_s156.button_index = MOUSE_BUTTON_LEFT
+	stat_vols_s156.gui_input.emit(shift_lclick_s156)
+	assert(main_inst.detail_modal.visible and main_inst.detail_modal.current_item.category == 0, "Shift+Left-clicking StatVols should filter manga and open first manga modal")
+	main_inst.detail_modal.close()
+	main_inst._reset_all_filters()
+	stat_firsts_s156.gui_input.emit(shift_lclick_s156)
+	assert(main_inst.sort_mode == 3 and main_inst.filter_firsts_only, "Shift+Left-clicking StatFirsts should filter first editions and sort by value")
+	main_inst._reset_all_filters()
+	main_inst._set_sort_mode(0)
+	var target_s156 = main_inst.archive_state.items[0]
+	target_s156.volumes[0]["rating"] = 3
+	target_s156.volumes[0]["bookmarked"] = false
+	main_inst._on_card_clicked(target_s156)
+	var row_btns_s156 = main_inst.detail_modal.vol_list.get_child(0).find_children("*", "Button", true, false)
+	var star_btn_s156: Button = null
+	for rb in row_btns_s156:
+		if "★" in rb.text:
+			star_btn_s156 = rb
+	assert(star_btn_s156 != null and "★5+북마크" in star_btn_s156.tooltip_text, "StarBtn tooltip should mention Shift+Left-Click 5-star+bookmark")
+	star_btn_s156.gui_input.emit(shift_lclick_s156)
+	assert(int(target_s156.volumes[0].get("rating", 0)) == 5 and bool(target_s156.volumes[0].get("bookmarked", false)), "Shift+Left-clicking StarBtn should set 5 stars and bookmark")
+	main_inst.detail_modal.close()
+	print("✓ Sprint 156 Milestone: StatVols/StatFirsts & StarBtn Shift+Left-Click verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

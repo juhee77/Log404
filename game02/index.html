@@ -842,7 +842,7 @@
                         <button onclick="toggleVolBookmark(${idx})" oncontextmenu="event.preventDefault(); startEditVolQuote(${idx});" class="text-[12px] shrink-0 cursor-pointer hover:scale-110" title="북마크 토글 (우클릭: ${v.vol}권 밑줄 문장 편집)">${isBm ? '🔖' : '🏷️'}</button>
                         <span onclick="startEditVolQuote(${idx})" oncontextmenu="event.preventDefault(); const qText = this.textContent; navigator.clipboard?.writeText('${'${'}item.title.replace(/'/g, "\\'")${'}'} ${v.vol}권: ' + qText); this.title='✅ 복사됨: ' + qText;" class="serif-font text-[#5c4938] truncate cursor-pointer hover:text-[#c85a32]" title="클릭하여 ${v.vol}권 밑줄 문장 편집 · 우클릭: 밑줄 문장 복사">${v.quote ? `"${v.quote}"` : '메모 없음'}</span>
                     </div>
-                    <button onclick="cycleVolRating(${idx})" class="text-[#c85a32] font-bold shrink-0 ml-2 cursor-pointer hover:opacity-80" title="클릭하여 별점 변경">${'★'.repeat(v.rating || 5)}</button>
+                    <button onclick="if(event&&event.shiftKey){const it=ITEMS.find(x=>x.id===activeId);if(it&&it.volumes&&it.volumes[${idx}]){it.volumes[${idx}].rating=5;it.volumes[${idx}].bookmarked=true;renderDiaryVolumes(it);}}else{cycleVolRating(${idx});}" class="text-[#c85a32] font-bold shrink-0 ml-2 cursor-pointer hover:opacity-80" title="클릭하여 별점 변경 · Shift+좌클릭: ★5+북마크">${'★'.repeat(v.rating || 5)}</button>
                 `;
                 list.appendChild(row);
             });

@@ -97,8 +97,8 @@ func _ready() -> void:
 
 	var stat_configs := [
 		[$VBox/TopBar/TopMargin/StatsVBox/StatRow/StatItems, _on_tab_all_pressed, copy_summary_to_clipboard, "좌클릭: 전체 서재 · 우클릭: 서재 리포트 클립보드 복사 · Shift+좌클릭: 전체+기본순", func() -> void: _reset_all_filters(); _set_sort_mode(0)],
-		[$VBox/TopBar/TopMargin/StatsVBox/StatRow/StatVols, _on_tab_manga_pressed, func() -> void: _on_tab_manga_pressed(); _set_sort_mode(3), "좌클릭: 이북·단행본 · 우클릭: 이북 가치순 정렬", Callable()],
-		[$VBox/TopBar/TopMargin/StatsVBox/StatRow/StatFirsts, _on_stat_firsts_clicked, show_library_infographic, "좌클릭: 초판 특전 필터 · 우클릭: 서재 인포그래픽 요약", Callable()],
+		[$VBox/TopBar/TopMargin/StatsVBox/StatRow/StatVols, _on_tab_manga_pressed, func() -> void: _on_tab_manga_pressed(); _set_sort_mode(3), "좌클릭: 이북·단행본 · 우클릭: 이북 가치순 정렬 · Shift+좌클릭: 첫 작품 열기", func() -> void: _on_tab_manga_pressed(); _open_first_filtered_card()],
+		[$VBox/TopBar/TopMargin/StatsVBox/StatRow/StatFirsts, _on_stat_firsts_clicked, show_library_infographic, "좌클릭: 초판 특전 필터 · 우클릭: 서재 인포그래픽 요약 · Shift+좌클릭: 초판 가치순", func() -> void: _on_stat_firsts_clicked(); _set_sort_mode(3)],
 		[$VBox/TopBar/TopMargin/StatsVBox/StatRow/StatGacha, _on_tab_gacha_pressed, _trigger_instant_json_backup, "좌클릭: 가챠노트 필터 · 우클릭: 즉시 JSON 백업 저장 · Shift+좌클릭: 가챠 가치순", func() -> void: _on_tab_gacha_pressed(); _set_sort_mode(3)],
 	]
 	for cfg in stat_configs:
@@ -418,8 +418,8 @@ func _update_stats() -> void:
 			gacha_val += it.get_item_value()
 	var stat_tips = [
 		[stat_items, "클릭 시 전체 서재 보기 · 평균 ★%s · 총 자산 %s · Shift+좌클릭: 전체+기본순" % [String.num(avg_lib, 1), val_str]],
-		[stat_vols, "클릭 시 이북·단행본 필터 · 서재 완독률 %d%%" % int(prog)],
-		[stat_firsts, "클릭 시 초판본 현황 · 전체 단행본 중 %d%% 초판" % first_pct],
+		[stat_vols, "클릭 시 이북·단행본 필터 · 서재 완독률 %d%% · Shift+좌클릭: 첫 작품 열기" % int(prog)],
+		[stat_firsts, "클릭 시 초판본 현황 · 전체 단행본 중 %d%% 초판 · Shift+좌클릭: 초판 가치순" % first_pct],
 		[stat_gacha, "클릭 시 가챠·굿즈 필터 · 굿즈 자산 %s · Shift+좌클릭: 가챠 가치순" % archive_state.format_krw(gacha_val)],
 	]
 	for pair in stat_tips:

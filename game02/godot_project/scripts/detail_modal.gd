@@ -1565,11 +1565,20 @@ func _render_volumes() -> void:
 		star_btn.add_theme_font_size_override("font_size", 11)
 		star_btn.add_theme_color_override("font_color", Color(0.78, 0.35, 0.2))
 		star_btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
-		star_btn.tooltip_text = "클릭: 별점 순환 · 우클릭: 역순환 (★★★~★★★★★)"
+		star_btn.tooltip_text = "클릭: 별점 순환 · 우클릭: 역순환 (★★★~★★★★★) · Shift+좌클릭: ★5+북마크"
 		star_btn.pressed.connect(func(): cycle_volume_rating(capture_idx))
 		star_btn.gui_input.connect(func(ev):
-			if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_RIGHT:
-				reverse_cycle_volume_rating(capture_idx)
+			if ev is InputEventMouseButton and ev.pressed:
+				if ev.button_index == MOUSE_BUTTON_RIGHT:
+					reverse_cycle_volume_rating(capture_idx)
+				elif ev.button_index == MOUSE_BUTTON_LEFT and ev.shift_pressed and current_item != null and capture_idx < current_item.volumes.size():
+					star_btn.accept_event()
+					current_item.volumes[capture_idx]["rating"] = 5
+					current_item.volumes[capture_idx]["bookmarked"] = true
+					_render_volumes()
+					_refresh_author_label()
+					_refresh_vol_header()
+					diary_updated.emit(current_item)
 		)
 		
 		hbox.add_child(vol_lbl)
