@@ -3080,6 +3080,39 @@ func _init() -> void:
 	assert("[W/P] 스크랩·촬영" in main_inst.status_toast.text, "Cheatsheet toast should include [W/P] Scrape/Snap")
 	print("✓ Sprint 180 Milestone: MainView Keys W/P Scrape & Snap (Shift: Open) verified")
 
+	# Sprint 181: MainView Keys V (Value Sort Toggle) & L (Today Quote Open/Filter)
+	main_inst.search_input.release_focus()
+	main_inst._set_sort_mode(0)
+	var k_v181 := InputEventKey.new()
+	k_v181.pressed = true
+	k_v181.keycode = KEY_V
+	main_inst._unhandled_input(k_v181)
+	assert(main_inst.sort_mode == 3, "Key V in MainView should switch to value sort (3)")
+	var k_sv181 := InputEventKey.new()
+	k_sv181.pressed = true
+	k_sv181.shift_pressed = true
+	k_sv181.keycode = KEY_V
+	main_inst._unhandled_input(k_sv181)
+	assert(main_inst.sort_mode == 0, "Shift+V in MainView should reset sort to default (0)")
+	var k_l181 := InputEventKey.new()
+	k_l181.pressed = true
+	k_l181.keycode = KEY_L
+	main_inst._unhandled_input(k_l181)
+	assert(main_inst.detail_modal.visible, "Key L in MainView should open current quote item")
+	main_inst.detail_modal.close()
+	var k_sl181 := InputEventKey.new()
+	k_sl181.pressed = true
+	k_sl181.shift_pressed = true
+	k_sl181.keycode = KEY_L
+	main_inst._unhandled_input(k_sl181)
+	assert(main_inst.search_input.text != "" and "오늘의 밑줄 작품 필터:" in main_inst.status_toast.text, "Shift+L in MainView should filter by current quote item")
+	var k_h181 := InputEventKey.new()
+	k_h181.pressed = true
+	k_h181.keycode = KEY_H
+	main_inst._unhandled_input(k_h181)
+	assert("[V] 가치순 · [L] 오늘밑줄" in main_inst.status_toast.text, "Cheatsheet should include [V] and [L]")
+	print("✓ Sprint 181: MainView Keys V Value Sort & L Today Quote Open/Filter verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

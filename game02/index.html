@@ -1249,6 +1249,18 @@
                     openCameraModal();
                     if (e.shiftKey && ITEMS.length) openJournalModal(ITEMS[0].id);
                 }
+            } else if ((e.key === 'v' || e.key === 'V' || e.key === 'l' || e.key === 'L') && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
+                const jm = document.getElementById('journal-modal');
+                if (!jm || jm.classList.contains('hidden')) {
+                    if (e.key === 'v' || e.key === 'V') {
+                        sortMode = (e.shiftKey || sortMode === 3) ? 0 : 3;
+                        renderShelf();
+                    } else if (ITEMS.length > 0) {
+                        const qIt = ITEMS[quoteIdx % ITEMS.length];
+                        if (e.shiftKey) { const sb = document.getElementById('search-box'); if (sb) { sb.value = qIt.title; renderShelf(); } }
+                        else { openJournalModal(qIt.id); }
+                    }
+                }
             } else if ((e.key === 'i' || e.key === 'I') && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
                 const jm = document.getElementById('journal-modal');
                 if (jm && !jm.classList.contains('hidden') && activeId != null) {

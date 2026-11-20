@@ -5,6 +5,21 @@
 
 ---
 
+## 📓 [Sprint 181] 메인 키보드 `V` 가치순 정렬 토글(Shift: 기본순) · `L` 오늘의 밑줄 작품 열기(Shift: 작품 필터)
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A (자산 수집러):** "메인 서재에서 `V` 키 한 번만 누르면 `💎 가치순` 정렬로 바로 바뀌고, 다시 `V`나 `Shift+V`를 누르면 기본순으로 돌아오면 소장 가치 TOP 작품을 순식간에 확인할 수 있겠어요!"
+- **가챠러 B (밑줄 탐색러):** "배너의 오늘의 밑줄을 보다가 `L` 키를 누르면 그 작품의 일기장이 바로 열리고, `Shift+L`을 누르면 그 작품명으로 서재가 필터링되면 정말 직관적일 것 같아요."
+- **미니멀러 C (웹 동기화):** "웹 목업(`index.html`)의 전역 키보드 리스너에도 `V`/`Shift+V`와 `L`/`Shift+L`을 동일하게 반영해주세요."
+- **PO & UX/UI 확정:**
+  1. **`MainView` `_unhandled_input` `V` & `L` (`main_view.gd`)**:
+     - `V`: 가치순(`sort_mode = 3`) 토글(`Shift+V` 또는 이미 가치순일 때 기본순 `0` 복원).
+     - `L`: `open_current_quote_item()` 실행(`Shift+L`: 현재 오늘의 밑줄 작품명으로 `search_input` 필터링).
+     - `_show_shortcut_cheatsheet()` 안내에 `[V] 가치순 · [L] 오늘밑줄` 추가.
+  2. **웹 목업(`index.html`) 동기화 & TDD/QA 검증:** 전역 `keydown` 리스너에 `V`/`Shift+V`, `L`/`Shift+L`을 연결하고 `test_main_integration.gd`에 Sprint 181 통합 검증을 추가해 3종 헤드리스 테스트 100% 통과 및 Metal 4.0 스크린샷을 갱신했습니다.
+
+---
+
 ## 🏆 [Sprint 180 Milestone] 메인 키보드 `W` 웹표지 스크랩 · `P` 폴라로이드 촬영(Shift: 등록 후 즉시 열기)
 
 ### 1. 14인 스쿼드 회의록 & VOC
