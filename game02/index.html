@@ -1310,6 +1310,13 @@
                     switchCategory('all');
                     showToast(e.shiftKey ? '🧹 스튜디오 전체 초기화 완료!' : '🧹 검색/필터 초기화 완료!');
                 }
+            } else if ((!document.getElementById('journal-modal') || document.getElementById('journal-modal').classList.contains('hidden')) && ['k', 'K', 'z', 'Z'].includes(e.key) && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
+                const lk = e.key.toLowerCase();
+                if (lk === 'k') {
+                    showToast(e.shiftKey ? '📚 정렬 기준 변경: 기본 등록순' : '📚 정렬 기준 변경: 권수 많은 순(다독순)');
+                } else {
+                    showToast(e.shiftKey ? '📚 정렬 기준 변경: 기본 등록순' : '📚 정렬 기준 변경: 최근 기록순(최신순)');
+                }
             } else if ((e.key === 'i' || e.key === 'I') && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
                 const jm = document.getElementById('journal-modal');
                 if (jm && !jm.classList.contains('hidden') && activeId != null) {

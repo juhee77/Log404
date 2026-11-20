@@ -5,6 +5,19 @@
 
 ---
 
+## 📓 [Sprint 186] 메인 키보드 `K` 다독순 · `Z` 최신순 정렬 토글(Shift: 기본순 복귀) · 치트시트 Sync
+- **일시**: 2026-11-21
+- **14인 가상 애자일 스쿼드 회의록**:
+  - **다꾸러 VOC (지민·수빈·하연)**: "`V` 키로 가치순 정렬을 바로 전환하는 게 정말 편한데, 권수가 많은 `다독순`(`K`)과 최근에 기록한 `최신순`(`Z`)도 `S` 키로 여러 번 순환하지 않고 원키로 바로 토글되면 좋겠어요!"
+  - **PO & UX/UI**: `MainView` `_unhandled_input`에 `KEY_K`(`sort_mode = 1` 다독순 토글)와 `KEY_Z`(`sort_mode = 2` 최신순 토글)를 추가하고, 재입력 또는 `Shift` 조합 시 `sort_mode = 0`(기본 등록순)으로 복귀하도록 설계한다. `KEY_H` 치트시트에 `[K/Z] 다독·최신순`을 동기화한다.
+- **구현 내역**:
+  - [`main_view.gd`](godot_project/scripts/main_view.gd): `KEY_K`, `KEY_Z` 정렬 토글 분기 추가 및 `_show_shortcut_cheatsheet()`에 `[K/Z] 다독·최신순` 반영.
+  - [`index.html`](index.html): 웹 인터랙티브 목업에 `K`/`Z` 및 `Shift+K`/`Shift+Z` 정렬 피드백 동기화.
+  - [`test_main_integration.gd`](godot_project/tests/test_main_integration.gd): `KEY_K`, `KEY_Z`, `Shift+Z` 정렬 전환/복귀 및 `KEY_H` 치트시트 검증 추가.
+- **검증**: `test_archive.gd`, `test_persistence.gd`, `test_main_integration.gd` 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 갱신 완료.
+
+---
+
 ## 📓 [Sprint 185 Milestone] 메인 키보드 `O` 즉시 열기(Shift: 랜덤 오픈) · `X` 초기화(Shift: 스튜디오 리셋)
 - **일시**: 2026-11-21
 - **14인 가상 애자일 스쿼드 회의록**:

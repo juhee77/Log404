@@ -3282,6 +3282,33 @@ func _init() -> void:
 	assert("[O/X] 열기·초기화" in main_inst.status_toast.text, "Cheatsheet should include [O/X] 열기·초기화")
 	print("✓ Sprint 185 Milestone: MainView Keys O Open/Random & X Reset/Studio Reset verified")
 
+	# Sprint 186: MainView Keys K (Volume/Count Sort) & Z (Latest Sort)
+	main_inst.search_input.release_focus()
+	main_inst._set_sort_mode(0)
+	var ev_k = InputEventKey.new()
+	ev_k.pressed = true
+	ev_k.keycode = KEY_K
+	main_inst._unhandled_input(ev_k)
+	assert(main_inst.sort_mode == 1, "Key K should switch sort_mode to 1 (다독순)")
+	main_inst._unhandled_input(ev_k)
+	assert(main_inst.sort_mode == 0, "Pressing K again should toggle sort_mode back to 0")
+
+	var ev_z = InputEventKey.new()
+	ev_z.pressed = true
+	ev_z.keycode = KEY_Z
+	main_inst._unhandled_input(ev_z)
+	assert(main_inst.sort_mode == 2, "Key Z should switch sort_mode to 2 (최신순)")
+	var ev_shift_z = InputEventKey.new()
+	ev_shift_z.pressed = true
+	ev_shift_z.shift_pressed = true
+	ev_shift_z.keycode = KEY_Z
+	main_inst._unhandled_input(ev_shift_z)
+	assert(main_inst.sort_mode == 0, "Shift+Z should reset sort_mode to 0")
+
+	main_inst._unhandled_input(ev_h_183)
+	assert("[K/Z] 다독·최신순" in main_inst.status_toast.text, "Cheatsheet should include [K/Z] 다독·최신순")
+	print("✓ Sprint 186: MainView Keys K Volume Sort & Z Latest Sort verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()
