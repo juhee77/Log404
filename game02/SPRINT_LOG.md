@@ -5,6 +5,19 @@
 
 ---
 
+## 📓 [Sprint 162] `DateStampBtn` `Shift+좌클릭` 구매일+전권 오늘 날짜 동기화 & `DeleteBtn` `Shift+좌클릭` 삭제 확인 해제
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A (다꾸러):** "새 작품을 사서 한꺼번에 읽은 날에는 `InkRow`의 `📅 기념일`(`DateStampBtn`)과 각 권의 날짜 스탬프를 모두 오늘 날짜로 맞추고 싶어요. `DateStampBtn`을 `Shift+좌클릭`하면 구매일과 전권 날짜가 한 번에 오늘로 동기화되면 정말 편리하겠어요!"
+- **가챠러 B (안전 UX 유저):** "실수로 `일기 삭제`(`DeleteBtn`)를 한 번 눌러서 빨간 확인 대기 상태가 되었을 때, 우클릭뿐 아니라 트랙패드에서 `Shift+좌클릭`으로도 안전하게 삭제 확인 상태를 해제할 수 있으면 좋겠어요."
+- **미니멀러 C (웹 동기화):** "웹 목업(`index.html`)의 기록 시작일(`#diary-purchase-date`)과 `이 일기 삭제` 버튼에도 동일한 `Shift+좌클릭` 동작을 넣어주면 좋겠어요."
+- **PO & UX/UI 확정:**
+  1. **`DetailModal` `DateStampBtn` `Shift+좌클릭` 구매일+전권 날짜 동기화 (`detail_modal.gd`)**: `DateStampBtn` `gui_input`에서 `Shift+좌클릭` 시 `accept_event()` 처리 후 `stamp_purchase_date()`와 `stamp_all_volumes_date()`를 함께 호출해 구매·기념일 및 모든 권의 읽은 날을 오늘 날짜로 동기화합니다.
+  2. **`DetailModal` `DeleteBtn` `Shift+좌클릭` 삭제 확인 해제 (`detail_modal.gd`)**: `DeleteBtn` `gui_input`에서 `Shift+좌클릭` 시 `accept_event()` 처리 후 `delete_armed = false` 및 `_apply_delete_btn_style(false)`를 적용합니다.
+  3. **웹 목업(`index.html`) 동기화 & TDD/QA 검증:** `index.html`에 `#diary-purchase-date` 인터랙션 및 `#delete-diary-btn` `Shift+좌클릭` 삭제 확인 해제를 동기화했습니다. `test_main_integration.gd`에 Sprint 162 통합 검증을 추가해 3종 헤드리스 테스트 100% 통과 및 Metal 4.0 스크린샷을 갱신했습니다.
+
+---
+
 ## 📓 [Sprint 161] 권별 `vol_lbl` `Shift+좌클릭` 초판+북마크+★5 풀스탬프 & `quote_lbl` `Shift+좌클릭` 밑줄 복사+북마크
 
 ### 1. 14인 스쿼드 회의록 & VOC

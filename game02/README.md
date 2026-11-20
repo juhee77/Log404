@@ -5,7 +5,7 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 
 ---
 
-## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 161)
+## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 162)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
@@ -14,6 +14,9 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 ---
 
 ## 🚀 최신 스프린트 업데이트 요약 ([전체 회의록 보기](SPRINT_LOG.md))
+
+### 📓 [Sprint 162] `DateStampBtn` `Shift+좌클릭` 구매일+전권 오늘 날짜 동기화 & `DeleteBtn` `Shift+좌클릭` 삭제 확인 해제
+- **구매일·전권 날짜 동기화 & 안전 삭제 해제 (`detail_modal.gd` · `index.html`)**: `DateStampBtn` `Shift+좌클릭`으로 구매·기념일과 전권 날짜를 오늘 날짜로 일괄 동기화하며, `DeleteBtn` `Shift+좌클릭`으로 삭제 확인 대기(`delete_armed`)를 안전하게 해제합니다.
 
 ### 📓 [Sprint 161] 권별 `vol_lbl` `Shift+좌클릭` 초판+북마크+★5 풀스탬프 & `quote_lbl` `Shift+좌클릭` 밑줄 복사+북마크
 - **최애권 풀스탬프 & 밑줄 복사+북마크 (`detail_modal.gd` · `index.html`)**: 권별 `N권` 라벨 `Shift+좌클릭`으로 `초판특전+북마크+★5`를 한 번에 지정하며, 밑줄 문장 라벨 `Shift+좌클릭`으로 클립보드 복사와 북마크 ON을 동시에 실행합니다.

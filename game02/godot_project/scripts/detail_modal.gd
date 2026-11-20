@@ -421,12 +421,18 @@ func _style_diary_controls() -> void:
 	if share_btn != null:
 		share_btn.tooltip_text = "감상 카드 텍스트를 클립보드에 복사 (C · 우클릭·Shift+C: 전체 서재 리포트 복사 · Shift+좌클릭: 전체 서재 리포트 복사)"
 	if del_btn != null:
-		del_btn.tooltip_text = "이 작품의 일기장을 서재에서 삭제 (우클릭: 삭제 확인 해제)"
+		del_btn.tooltip_text = "이 작품의 일기장을 서재에서 삭제 (우클릭: 삭제 확인 해제 · Shift+좌클릭: 삭제 확인 해제)"
 		del_btn.gui_input.connect(func(ev: InputEvent) -> void:
-			if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_RIGHT:
-				if delete_armed:
-					delete_armed = false
-					_apply_delete_btn_style(false)
+			if ev is InputEventMouseButton and ev.pressed:
+				if ev.button_index == MOUSE_BUTTON_RIGHT:
+					if delete_armed:
+						delete_armed = false
+						_apply_delete_btn_style(false)
+				elif ev.button_index == MOUSE_BUTTON_LEFT and ev.shift_pressed:
+					del_btn.accept_event()
+					if delete_armed:
+						delete_armed = false
+						_apply_delete_btn_style(false)
 		)
 	if save_quote_btn != null:
 		save_quote_btn.tooltip_text = "작성한 밑줄·감상평 저장 (Enter · 우클릭: 원문 복원 · Shift+좌클릭: 저장+복사)"
@@ -539,7 +545,7 @@ func _style_diary_controls() -> void:
 		"Panel/VBox/BodyMargin/Body/StampRow/PossessionBtn": "소장 상태 순환 (Z: 소장중·예약중·배송중·전시중) · 우클릭: 이전",
 		"Panel/VBox/BodyMargin/Body/InkRow/NibBtn": "만년필 펜촉 굵기 순환 (N: EF·M·B) · 우클릭: 이전",
 		"Panel/VBox/BodyMargin/Body/InkRow/SignatureBtn": "다이어리 서명 스탬프 순환 · 우클릭: 이전",
-		"Panel/VBox/BodyMargin/Body/InkRow/DateStampBtn": "오늘 날짜로 구매·기념일 스탬프 갱신 · 우클릭: 기본값 초기화",
+		"Panel/VBox/BodyMargin/Body/InkRow/DateStampBtn": "오늘 날짜로 구매·기념일 스탬프 갱신 · 우클릭: 기본값 초기화 · Shift+좌클릭: 구매일+전권 오늘 날짜 동기화",
 		"Panel/VBox/BodyMargin/Body/InkRow/CustomTagBtn": "커스텀 해시태그 순환 (T) · 우클릭: 이전",
 		"Panel/VBox/BodyMargin/Body/InkRow/ValueBtn": "추정 소장 가치 +5,000원 (V / 우클릭·Shift+V: -5,000원)",
 		"Panel/VBox/BodyMargin/Body/InkRow/FavCharBtn": "최애 캐릭터 태그 순환 (K) · 우클릭: 이전",
@@ -580,6 +586,14 @@ func _style_diary_controls() -> void:
 				if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_RIGHT:
 					deco_cb.call()
 			)
+	var date_stamp_ctrl: Control = get_node_or_null("Panel/VBox/BodyMargin/Body/InkRow/DateStampBtn")
+	if date_stamp_ctrl != null:
+		date_stamp_ctrl.gui_input.connect(func(ev: InputEvent) -> void:
+			if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_LEFT and ev.shift_pressed:
+				date_stamp_ctrl.accept_event()
+				stamp_purchase_date()
+				stamp_all_volumes_date()
+		)
 	var rr_btn: Control = get_node_or_null("Panel/VBox/BodyMargin/Body/StampRow/RereadBtn")
 	if rr_btn != null:
 		rr_btn.gui_input.connect(func(ev):

@@ -2638,6 +2638,35 @@ func _init() -> void:
 	main_inst.detail_modal.close()
 	print("✓ Sprint 161: Volume Label First+Bookmark+5Star & Quote Label Copy+Bookmark verified")
 
+	# Sprint 162: DateStampBtn Shift+Left-Click (Purchase+AllVol Date Sync) & DeleteBtn Shift+Left-Click Disarm
+	var item162 = main_inst.archive_state.items[0]
+	item162.purchase_date = "2020.01.01"
+	for v in item162.volumes:
+		v["date"] = "2020.01.01"
+	main_inst.detail_modal.open(item162)
+	var date_stamp_btn162: Button = main_inst.detail_modal.find_child("DateStampBtn", true, false) as Button
+	var del_btn162: Button = main_inst.detail_modal.find_child("DeleteBtn", true, false) as Button
+	assert(date_stamp_btn162 != null and del_btn162 != null, "DateStampBtn and DeleteBtn should exist")
+	assert("Shift+좌클릭: 구매일+전권 오늘 날짜 동기화" in date_stamp_btn162.tooltip_text, "DateStampBtn tooltip should mention Shift+Left-Click sync")
+	assert("Shift+좌클릭: 삭제 확인 해제" in del_btn162.tooltip_text, "DeleteBtn tooltip should mention Shift+Left-Click disarm")
+	var shift_lclick162 := InputEventMouseButton.new()
+	shift_lclick162.button_index = MOUSE_BUTTON_LEFT
+	shift_lclick162.pressed = true
+	shift_lclick162.shift_pressed = true
+	date_stamp_btn162.gui_input.emit(shift_lclick162)
+	var today_d162 := Time.get_date_dict_from_system()
+	var today_str162 := "%04d.%02d.%02d" % [today_d162.year, today_d162.month, today_d162.day]
+	var short_today162 := "%02d.%02d" % [today_d162.month, today_d162.day]
+	assert(short_today162 in item162.purchase_date, "Shift+Left-Click on DateStampBtn should stamp today's purchase_date")
+	for v in item162.volumes:
+		assert(str(v.get("date", "")) == today_str162, "Shift+Left-Click on DateStampBtn should sync all volume dates to today")
+	del_btn162.pressed.emit()
+	assert(main_inst.detail_modal.delete_armed, "First DeleteBtn press should arm delete")
+	del_btn162.gui_input.emit(shift_lclick162)
+	assert(not main_inst.detail_modal.delete_armed, "Shift+Left-Click on DeleteBtn should disarm delete")
+	main_inst.detail_modal.close()
+	print("✓ Sprint 162: DateStampBtn Purchase+AllVol Sync & DeleteBtn Shift+Left-Click Disarm verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()
