@@ -2938,6 +2938,38 @@ func _init() -> void:
 	assert(item174.status_tag == "인생최애" and not main_inst.detail_modal.visible, "Shift+3 in DetailModal should apply stamp and close")
 	print("✓ Sprint 174: DetailModal Shift+E Sample Quote & Shift+1~4 Stamp+Close verified")
 
+	# Sprint 175 Milestone: DetailModal Shift+L Paper Pattern, Shift+Delete Disarm & Shift+PageUp/Down
+	var item175 = main_inst.archive_state.items[1]
+	main_inst.detail_modal.open(item175)
+	main_inst.detail_modal.quote_input.release_focus()
+	var nav_deltas175: Array = []
+	var nav_cb175 := func(d: int): nav_deltas175.append(d)
+	main_inst.detail_modal.navigate_requested.connect(nav_cb175)
+	var shift_k175 := InputEventKey.new()
+	shift_k175.pressed = true
+	shift_k175.shift_pressed = true
+	shift_k175.keycode = KEY_PAGEDOWN
+	main_inst.detail_modal._unhandled_input(shift_k175)
+	shift_k175.keycode = KEY_PAGEUP
+	main_inst.detail_modal._unhandled_input(shift_k175)
+	main_inst.detail_modal.navigate_requested.disconnect(nav_cb175)
+	assert(nav_deltas175 == [9999, -9999], "Shift+PageDown/PageUp should emit 9999 and -9999")
+	main_inst.detail_modal.open(item175)
+	var orig_paper175: String = item175.paper_pattern
+	shift_k175.keycode = KEY_L
+	main_inst.detail_modal._unhandled_input(shift_k175)
+	assert(item175.paper_pattern != orig_paper175, "Shift+L in DetailModal should cycle paper pattern")
+	var arm_k175 := InputEventKey.new()
+	arm_k175.pressed = true
+	arm_k175.keycode = KEY_DELETE
+	main_inst.detail_modal._unhandled_input(arm_k175)
+	assert(main_inst.detail_modal.delete_armed, "Delete key should arm delete")
+	shift_k175.keycode = KEY_DELETE
+	main_inst.detail_modal._unhandled_input(shift_k175)
+	assert(not main_inst.detail_modal.delete_armed, "Shift+Delete should disarm delete")
+	main_inst.detail_modal.close()
+	print("✓ Sprint 175 Milestone: DetailModal Shift+L Paper, Shift+Delete Disarm & Shift+PageUp/Down verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

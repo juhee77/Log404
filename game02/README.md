@@ -5,7 +5,7 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 
 ---
 
-## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 174)
+## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 175 Milestone)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
@@ -14,6 +14,9 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 ---
 
 ## 🚀 최신 스프린트 업데이트 요약 ([전체 회의록 보기](SPRINT_LOG.md))
+
+### 🏆 [Sprint 175 Milestone] `DetailModal` 키보드 `Shift+L` 속지 순환 · `Shift+Delete` 삭제 해제 · `Shift+PgUp/PgDn` 처음·끝 점프
+- **모달 키보드 `Shift` 파워 액션 완결 (`detail_modal.gd` · `index.html`)**: `Shift+L`로 속지 패턴 순환, `Shift+Delete`/`Backspace`로 삭제 확인 안전 해제, `Shift+PageUp`/`PageDown`으로 처음·끝 작품 점프를 지원합니다.
 
 ### 📓 [Sprint 174] `DetailModal` 키보드 `Shift+E` 샘플 밑줄 채움 & `Shift+1~4` 인장 찍고 닫기
 - **모달 키보드 `Shift+E`/`Shift+1~4` 확장 (`detail_modal.gd` · `index.html`)**: `Shift+E`로 샘플 밑줄 문장을 즉시 채워 입력창에 포커스하며, `Shift+1~4`로 4종 인장을 찍음과 동시에 모달을 닫습니다.

@@ -1193,6 +1193,10 @@
                         openJournalModal(ITEMS[0].id);
                     } else if (e.key === 'End' && ITEMS.length > 0) {
                         openJournalModal(ITEMS[ITEMS.length - 1].id);
+                    } else if (e.key === 'PageUp' && e.shiftKey && ITEMS.length > 0) {
+                        openJournalModal(ITEMS[0].id);
+                    } else if (e.key === 'PageDown' && e.shiftKey && ITEMS.length > 0) {
+                        openJournalModal(ITEMS[ITEMS.length - 1].id);
                     } else if (e.key === 'PageUp' || (e.key === ' ' && e.shiftKey)) {
                         navigateJournalModal(-1);
                     } else if (e.key === 'PageDown' || e.key === ' ') {
@@ -1277,6 +1281,15 @@
                     const smap = { '1': '전권완결', '2': '초판특전', '3': '인생최애', '4': '위시리스트' };
                     applyDiaryStamp(smap[e.key]);
                     closeJournalModal();
+                } else if (e.key === 'l' || e.key === 'L') {
+                    cyclePaperPattern();
+                }
+            } else if (e.shiftKey && (e.key === 'Delete' || e.key === 'Backspace') && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
+                const jm = document.getElementById('journal-modal');
+                if (jm && !jm.classList.contains('hidden')) {
+                    deleteArmed = false;
+                    const db = document.getElementById('delete-diary-btn');
+                    if (db) db.textContent = '이 일기 삭제';
                 }
             }
         });

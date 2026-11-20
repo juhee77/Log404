@@ -931,10 +931,10 @@ func _unhandled_input(event: InputEvent) -> void:
 			navigate_requested.emit(9999)
 			get_viewport().set_input_as_handled()
 		elif event.keycode == KEY_PAGEDOWN:
-			navigate_requested.emit(1)
+			navigate_requested.emit(9999 if event.shift_pressed else 1)
 			get_viewport().set_input_as_handled()
 		elif event.keycode == KEY_PAGEUP:
-			navigate_requested.emit(-1)
+			navigate_requested.emit(-9999 if event.shift_pressed else -1)
 			get_viewport().set_input_as_handled()
 		elif event.keycode == KEY_SPACE:
 			navigate_requested.emit(-1 if event.shift_pressed else 1)
@@ -1024,13 +1024,19 @@ func _unhandled_input(event: InputEvent) -> void:
 				step_cyclers[event.keycode].call(-1 if event.shift_pressed else 1)
 				get_viewport().set_input_as_handled()
 				return
-			var simple_actions := {
-				KEY_L: toggle_quote_highlight,
-				KEY_DELETE: _on_delete_btn_pressed,
-				KEY_BACKSPACE: _on_delete_btn_pressed,
-			}
-			if simple_actions.has(event.keycode):
-				simple_actions[event.keycode].call()
+			if event.keycode == KEY_L:
+				if event.shift_pressed:
+					cycle_paper_pattern(1)
+				else:
+					toggle_quote_highlight()
+				get_viewport().set_input_as_handled()
+			elif event.keycode in [KEY_DELETE, KEY_BACKSPACE]:
+				if event.shift_pressed:
+					if delete_armed:
+						delete_armed = false
+						_apply_delete_btn_style(false)
+				else:
+					_on_delete_btn_pressed()
 				get_viewport().set_input_as_handled()
 
 func apply_stamp(stamp_name: String) -> void:

@@ -5,6 +5,21 @@
 
 ---
 
+## 🏆 [Sprint 175 Milestone] `DetailModal` 키보드 `Shift+L` 속지 순환 · `Shift+Delete` 삭제 해제 · `Shift+PgUp/PgDn` 처음·끝 점프
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A (키보드 다꾸러):** "175회 마일스톤 스프린트! `L` 키로 형광펜을 토글할 때 `Shift+L`을 누르면 `HighlightBtn` `Shift+좌클릭`처럼 일기장 속지 패턴을 순환해주면 손이 정말 편할 것 같아요!"
+- **가챠러 B (안전 UX 유저):** "실수로 `Delete`나 `Backspace`를 눌러 삭제 확인 상태(`delete_armed`)가 되었을 때 `Shift+Delete`/`Shift+Backspace`로 즉시 삭제 확인을 해제할 수 있고, `Shift+PageUp`/`PageDown`으로도 첫 작품·마지막 작품에 점프할 수 있으면 완벽해요!"
+- **미니멀러 C (웹 동기화):** "웹 목업(`index.html`)의 모달 키보드 리스너에도 `Shift+L`, `Shift+Delete`/`Backspace`, `Shift+PageUp`/`PageDown`을 동일하게 반영해주세요."
+- **PO & UX/UI 확정:**
+  1. **`DetailModal` `_unhandled_input` `Shift+L` / `Shift+Delete` / `Shift+PgUp/PgDn` (`detail_modal.gd`)**:
+     - `Shift+L`: `cycle_paper_pattern(1)` 실행.
+     - `Shift+Delete` / `Shift+Backspace`: `delete_armed = false` 및 `_apply_delete_btn_style(false)`로 안전 해제.
+     - `Shift+PageUp` / `Shift+PageDown`: `navigate_requested.emit(-9999)` / `navigate_requested.emit(9999)` 발행.
+  2. **웹 목업(`index.html`) 동기화 & TDD/QA 검증:** 동일한 키보드 단축키를 `index.html`에 연결하고 `test_main_integration.gd`에 Sprint 175 마일스톤 검증을 추가해 3종 헤드리스 테스트 100% 통과 및 Metal 4.0 스크린샷을 갱신했습니다.
+
+---
+
 ## 📓 [Sprint 174] `DetailModal` 키보드 `Shift+E` 샘플 밑줄 채움 & `Shift+1~4` 인장 찍고 닫기
 
 ### 1. 14인 스쿼드 회의록 & VOC
