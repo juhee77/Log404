@@ -168,10 +168,16 @@ func _ready() -> void:
 			)
 	var top_add_btn: Control = get_node_or_null("VBox/TopBar/TopMargin/StatsVBox/TitleRow/AddBtn")
 	if top_add_btn != null:
-		top_add_btn.tooltip_text = "[N] 새 독서 일기·가챠 스크랩 직접 작성 (우클릭: 즉시 JSON 저장)"
+		top_add_btn.tooltip_text = "[N] 새 독서 일기·가챠 스크랩 직접 작성 (우클릭: 즉시 JSON 저장 · Shift+좌클릭: 샘플 채움 열기)"
 		top_add_btn.gui_input.connect(func(ev: InputEvent) -> void:
-			if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_RIGHT:
-				_trigger_instant_json_backup()
+			if ev is InputEventMouseButton and ev.pressed:
+				if ev.button_index == MOUSE_BUTTON_RIGHT:
+					_trigger_instant_json_backup()
+				elif ev.button_index == MOUSE_BUTTON_LEFT and ev.shift_pressed:
+					add_modal.open()
+					add_modal.title_input.text = "나의 비밀 독서 일기"
+					add_modal.author_input.text = "주희의 서재"
+					add_modal.quote_input.text = "오늘도 한 페이지의 여운을 남겼다."
 		)
 	var top_amb_btn: Control = get_node_or_null("VBox/TopBar/TopMargin/StatsVBox/TitleRow/AmbientBtn")
 	if top_amb_btn != null:

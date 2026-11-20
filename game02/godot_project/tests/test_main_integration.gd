@@ -2365,6 +2365,27 @@ func _init() -> void:
 	main_inst.detail_modal.close()
 	print("✓ Sprint 151 Milestone: RandomPickBtn Filter & Save/Highlight Shift+Click verified")
 
+	# Sprint 152 Milestone: AddBtn Shift+Left-Click Sample Modal & AddVolBtn Shift+Left-Click First+Bookmark
+	var add_btn_s152: Control = main_inst.get_node("VBox/TopBar/TopMargin/StatsVBox/TitleRow/AddBtn")
+	assert("샘플 채움 열기" in add_btn_s152.tooltip_text, "AddBtn tooltip should mention Shift+Left-Click sample modal")
+	var shift_lclick_s152 := InputEventMouseButton.new()
+	shift_lclick_s152.pressed = true
+	shift_lclick_s152.shift_pressed = true
+	shift_lclick_s152.button_index = MOUSE_BUTTON_LEFT
+	add_btn_s152.gui_input.emit(shift_lclick_s152)
+	assert(main_inst.add_modal.visible and main_inst.add_modal.title_input.text == "나의 비밀 독서 일기", "Shift+Left-clicking AddBtn should open AddModal pre-filled with sample")
+	main_inst.add_modal.close()
+	var target_s152 = main_inst.archive_state.items[0]
+	var orig_vols_s152: int = target_s152.volumes.size()
+	main_inst._on_card_clicked(target_s152)
+	assert("초판+북마크 추가" in main_inst.detail_modal.add_vol_btn.tooltip_text, "AddVolBtn tooltip should mention Shift+Left-Click first+bookmark add")
+	main_inst.detail_modal.add_vol_btn.gui_input.emit(shift_lclick_s152)
+	assert(target_s152.volumes.size() == orig_vols_s152 + 1, "Shift+Left-clicking AddVolBtn should add 1 volume")
+	var last_vol_s152 = target_s152.volumes[target_s152.volumes.size() - 1]
+	assert(last_vol_s152.get("status", "") == "first" and bool(last_vol_s152.get("bookmarked", false)), "Newly added volume via Shift+Left-Click should be first edition and bookmarked")
+	main_inst.detail_modal.close()
+	print("✓ Sprint 152 Milestone: AddBtn Sample Modal & AddVolBtn First+Bookmark verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

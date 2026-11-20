@@ -5,6 +5,25 @@
 
 ---
 
+## 📓 [Sprint 152] `AddBtn` `Shift+좌클릭` 샘플 채움 모달 열기 & `AddVolBtn` `Shift+좌클릭` 초판+북마크 즉시 추가
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A**: "상단 `+ 일기 쓰기`(`AddBtn`) 버튼을 `Shift+좌클릭`하면 빈 창이 아니라 제목·작가·문장이 미리 채워진 템플릿 상태로 열리면 1초 만에 수정해서 등록할 수 있을 것 같아요!"
+- **가챠러 B**: "일기장 안의 `+ 다음 권 일기 추가`(`AddVolBtn`) 버튼을 `Shift+좌클릭`하면 새 권이 추가됨과 동시에 `🔖초판특전` 스탬프와 `🔖 북마크`가 한 번에 켜져서 초판 수집 기록이 훨씬 빠르겠어요."
+- **기획자 (PO)**: "`main_view.gd` `AddBtn` `Shift+좌클릭` 샘플 채움 모달 열기와 `detail_modal.gd` `AddVolBtn` `Shift+좌클릭` 초판+북마크 추가를 구현하고 `index.html`과 동기화합니다."
+
+### 2. 핵심 구현 및 변경 내역
+- `game02/godot_project/scripts/main_view.gd`:
+  - `AddBtn` `Shift+좌클릭` 시 `add_modal.open()` 후 샘플 제목·작가·문장을 미리 채워 열어주도록 연결하고 툴팁을 동기화했습니다.
+- `game02/godot_project/scripts/detail_modal.gd`:
+  - `AddVolBtn` `Shift+좌클릭` 시 새 권을 추가한 뒤 `status = "first"` 및 `bookmarked = true`를 즉시 적용해 렌더링·시그널을 동기화했습니다.
+- `game02/index.html`:
+  - `+ 다음 권 기록 추가` 버튼 `onclick`에 `event.shiftKey` 시 초판+북마크 동시 추가 및 툴팁을 동기화했습니다.
+- `game02/godot_project/tests/test_main_integration.gd`:
+  - `AddBtn` `Shift+좌클릭` 샘플 모달 열기와 `AddVolBtn` `Shift+좌클릭` 초판+북마크 추가를 검증하는 Sprint 152 테스트를 추가해 100% 통과했습니다.
+
+---
+
 ## 📓 [Sprint 151] `RandomPickBtn` `Shift+좌클릭` 서재 필터 & `SaveQuoteBtn`/`HighlightBtn` `Shift+좌클릭`(저장+복사/속지 순환)
 
 ### 1. 14인 스쿼드 회의록 & VOC

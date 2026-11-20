@@ -5,7 +5,7 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 
 ---
 
-## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 151)
+## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 152)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
@@ -14,6 +14,9 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 ---
 
 ## 🚀 최신 스프린트 업데이트 요약 ([전체 회의록 보기](SPRINT_LOG.md))
+
+### 📓 [Sprint 152] `AddBtn` `Shift+좌클릭` 샘플 채움 모달 열기 & `AddVolBtn` `Shift+좌클릭` 초판+북마크 즉시 추가
+- **원클릭 샘플·초판 추가 (`main_view.gd` · `detail_modal.gd` · `index.html`)**: `AddBtn` `Shift+좌클릭`으로 샘플이 채워진 일기 작성 창을 열며, `AddVolBtn` `Shift+좌클릭`으로 `초판특전+북마크`가 적용된 새 권을 즉시 추가합니다.
 
 ### 📓 [Sprint 151] `RandomPickBtn` `Shift+좌클릭` 서재 필터 & `SaveQuoteBtn`/`HighlightBtn` `Shift+좌클릭`(저장+복사/속지 순환)
 - **랜덤 필터·저장+복사 (`main_view.gd` · `detail_modal.gd` · `index.html`)**: `RandomPickBtn` `Shift+좌클릭`으로 랜덤 추천 작품만 서재에 띄우며, `SaveQuoteBtn` `Shift+좌클릭`으로 저장+복사, `HighlightBtn` `Shift+좌클릭`으로 속지 패턴을 순환합니다.

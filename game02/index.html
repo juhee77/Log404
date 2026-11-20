@@ -378,7 +378,7 @@
                     <div class="mt-5">
                         <div class="flex items-center justify-between mb-2">
                             <span onclick="if(event&&event.shiftKey){const it=ITEMS.find(x=>x.id===activeId);if(it&&it.volumes){const allBm=it.volumes.every(v=>!!v.bookmarked);it.volumes.forEach(v=>v.bookmarked=!allBm);renderDiaryVolumes(it);}}else{addVolumeInDiary();}" title="클릭: 다음 권 기록 추가 (+) · Shift+좌클릭: 전권 북마크 일괄 토글" class="text-xs font-bold text-[#5c4938] cursor-pointer hover:text-[#c85a32]">📌 권별 소장 스탬프 & 좋아하는 대사</span>
-                            <button onclick="addVolumeInDiary()" oncontextmenu="event.preventDefault(); addVolumeInDiary(); const it = ITEMS.find(x => x.id === activeId); if (it && it.volumes && it.volumes.length) selectVolForEdit(it.volumes.length - 1);" title="새 권·파츠 일기 1개 추가 (+ · 우클릭: 추가 후 바로 밑줄 입력)"
+                            <button onclick="if(event&&event.shiftKey){addVolumeInDiary();const it=ITEMS.find(x=>x.id===activeId);if(it&&it.volumes&&it.volumes.length){const lv=it.volumes[it.volumes.length-1];lv.status='first';lv.bookmarked=true;renderDiaryVolumes(it);}}else{addVolumeInDiary();}" oncontextmenu="event.preventDefault(); addVolumeInDiary(); const it = ITEMS.find(x => x.id === activeId); if (it && it.volumes && it.volumes.length) selectVolForEdit(it.volumes.length - 1);" title="새 권·파츠 일기 1개 추가 (+ · 우클릭: 추가 후 바로 밑줄 입력 · Shift+좌클릭: 초판+북마크 추가)"
                                 class="px-2.5 py-1 rounded-lg bg-[#c85a32] hover:bg-[#b04b25] text-white text-[11px] font-bold cursor-pointer">
                                 + 다음 권 기록 추가
                             </button>

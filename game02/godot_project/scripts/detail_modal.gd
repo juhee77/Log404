@@ -368,12 +368,23 @@ func _style_diary_controls() -> void:
 		if ctrl != null:
 			ctrl.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	if add_vol_btn != null:
-		add_vol_btn.tooltip_text = "새 권·파츠 일기 1개 추가 (+) · 우클릭: 추가 후 바로 밑줄 입력"
+		add_vol_btn.tooltip_text = "새 권·파츠 일기 1개 추가 (+) · 우클릭: 추가 후 바로 밑줄 입력 · Shift+좌클릭: 초판+북마크 추가"
 		add_vol_btn.gui_input.connect(func(ev: InputEvent) -> void:
-			if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_RIGHT:
-				_on_add_vol_btn_pressed()
-				if current_item != null and not current_item.volumes.is_empty():
-					start_editing_volume_quote(current_item.volumes.size() - 1)
+			if ev is InputEventMouseButton and ev.pressed:
+				if ev.button_index == MOUSE_BUTTON_RIGHT:
+					_on_add_vol_btn_pressed()
+					if current_item != null and not current_item.volumes.is_empty():
+						start_editing_volume_quote(current_item.volumes.size() - 1)
+				elif ev.button_index == MOUSE_BUTTON_LEFT and ev.shift_pressed:
+					add_vol_btn.accept_event()
+					_on_add_vol_btn_pressed()
+					if current_item != null and not current_item.volumes.is_empty():
+						var last_v = current_item.volumes[current_item.volumes.size() - 1]
+						last_v["status"] = "first"
+						last_v["bookmarked"] = true
+						_render_volumes()
+						_refresh_vol_header()
+						diary_updated.emit(current_item)
 		)
 	if rem_btn != null:
 		rem_btn.tooltip_text = "마지막 권·파츠 기록 삭제 (- · 우클릭: 마지막 권 북마크 토글)"
