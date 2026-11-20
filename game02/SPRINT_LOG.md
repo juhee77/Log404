@@ -5,6 +5,21 @@
 
 ---
 
+## 📓 [Sprint 182] 메인 키보드 `B` 즉시 백업(Shift: 리포트 복사) · `F` 인생작 필터(Shift: 첫 작품 열기)
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A (안심 백업러):** "메인 서재에서 `B` 키만 누르면 바로 JSON 로컬 백업이 저장되고, `Shift+B`를 누르면 서재 요약 리포트가 클립보드에 복사되면 정말 안심될 것 같아요!"
+- **가챠러 B (최애작 탐색러):** "검색 단축키는 `Ctrl/Cmd+F`니까, 단독 `F` 키를 누르면 `★ 인생작` 탭으로 바로 필터링되고 `Shift+F`를 누르면 첫 인생작 모달이 즉시 열리면 손이 편하겠어요."
+- **미니멀러 C (웹 동기화):** "웹 목업(`index.html`)의 전역 키보드 리스너에도 `B`/`Shift+B`와 `F`/`Shift+F`를 동일하게 반영해주세요."
+- **PO & UX/UI 확정:**
+  1. **`MainView` `_unhandled_input` `B` & `F` (`main_view.gd`)**:
+     - `B`: `_trigger_instant_json_backup()` 실행(`Shift+B`: `copy_summary_to_clipboard()` 실행).
+     - `F` (단독): `_on_tab_fav_pressed()` 실행(`Shift+F`: 필터링 후 `_open_first_filtered_card()` 실행).
+     - `_show_shortcut_cheatsheet()` 안내에 `[F] 인생작 · [B] 백업` 추가.
+  2. **웹 목업(`index.html`) 동기화 & TDD/QA 검증:** 전역 `keydown` 리스너에 `B`/`Shift+B`, `F`/`Shift+F`를 연결하고 `test_main_integration.gd`에 Sprint 182 통합 검증을 추가해 3종 헤드리스 테스트 100% 통과 및 Metal 4.0 스크린샷을 갱신했습니다.
+
+---
+
 ## 📓 [Sprint 181] 메인 키보드 `V` 가치순 정렬 토글(Shift: 기본순) · `L` 오늘의 밑줄 작품 열기(Shift: 작품 필터)
 
 ### 1. 14인 스쿼드 회의록 & VOC

@@ -3113,6 +3113,39 @@ func _init() -> void:
 	assert("[V] 가치순 · [L] 오늘밑줄" in main_inst.status_toast.text, "Cheatsheet should include [V] and [L]")
 	print("✓ Sprint 181: MainView Keys V Value Sort & L Today Quote Open/Filter verified")
 
+	# Sprint 182: MainView Keys B (Backup/Report Copy) & F (Favorites Filter/Open)
+	main_inst.search_input.release_focus()
+	main_inst._reset_all_filters()
+	var k_b182 := InputEventKey.new()
+	k_b182.pressed = true
+	k_b182.keycode = KEY_B
+	main_inst._unhandled_input(k_b182)
+	assert("백업" in main_inst.status_toast.text or "JSON" in main_inst.status_toast.text, "Key B in MainView should trigger instant JSON backup")
+	var k_sb182 := InputEventKey.new()
+	k_sb182.pressed = true
+	k_sb182.shift_pressed = true
+	k_sb182.keycode = KEY_B
+	main_inst._unhandled_input(k_sb182)
+	assert("복사" in main_inst.status_toast.text, "Shift+B in MainView should copy library summary")
+	var k_f182 := InputEventKey.new()
+	k_f182.pressed = true
+	k_f182.keycode = KEY_F
+	main_inst._unhandled_input(k_f182)
+	assert(not main_inst.detail_modal.visible, "Plain Key F should filter favorites without opening modal")
+	var k_sf182 := InputEventKey.new()
+	k_sf182.pressed = true
+	k_sf182.shift_pressed = true
+	k_sf182.keycode = KEY_F
+	main_inst._unhandled_input(k_sf182)
+	assert(main_inst.detail_modal.visible, "Shift+F in MainView should filter favorites and open first item")
+	main_inst.detail_modal.close()
+	var k_h182 := InputEventKey.new()
+	k_h182.pressed = true
+	k_h182.keycode = KEY_H
+	main_inst._unhandled_input(k_h182)
+	assert("[F] 인생작 · [B] 백업" in main_inst.status_toast.text, "Cheatsheet should include [F] and [B]")
+	print("✓ Sprint 182: MainView Keys B Backup/Report & F Favorites Filter/Open verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

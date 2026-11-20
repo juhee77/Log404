@@ -18,13 +18,14 @@ Godot 4+ 기반의 감성 게임 및 인터랙티브 아카이브 애플리케�
 > **Godot 4.6.2 모바일 기반 E-Book 리더기 서재(Apple Books · 리디북스) & 만년필 다꾸 독서노트(굿노트 · 몰스킨) 감성 아카이브 앱**  
 > 14인 가상 애자일 스쿼드가 20분 주기 자동 스프린트로 지속 개선 중입니다.
 
-### 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 181)
+### 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 182)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
 | ![Pocket Archive Main Screen](game02/godot_project/screenshots/godot_app_screen.png) | ![Pocket Archive Detail Modal](game02/godot_project/screenshots/godot_modal_screen.png) |
 
 ### ✨ 주요 핵심 기능
+- **최신 Sprint 182 하이라이트**: 메인 키보드 `B` 즉시 백업(`Shift`: 리포트 복사) 및 `F` 인생작 필터(`Shift`: 첫 작품 열기)(`main_view.gd` · `index.html`) 완성
 - **최신 Sprint 181 하이라이트**: 메인 키보드 `V` 가치순 정렬 토글(`Shift`: 기본순) 및 `L` 오늘의 밑줄 작품 열기(`Shift`: 작품 필터)(`main_view.gd` · `index.html`) 완성
 - **🏆 Sprint 180 마일스톤 하이라이트**: 메인 키보드 `W` 웹표지 스크랩 및 `P` 폴라로이드 촬영(`Shift`: 등록 후 즉시 열기)(`main_view.gd` · `index.html`) 완결
 - **최신 Sprint 179 하이라이트**: `AddModal` 키보드 `1~5` 표지 스와치(`Shift`: 즉시 등록) 및 `C` 분류 전환(`Shift`: 즉시 등록)(`add_modal.gd` · `index.html`) 완성

@@ -5,7 +5,7 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 
 ---
 
-## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 181)
+## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 182)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
@@ -14,6 +14,9 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 ---
 
 ## 🚀 최신 스프린트 업데이트 요약 ([전체 회의록 보기](SPRINT_LOG.md))
+
+### 📓 [Sprint 182] 메인 키보드 `B` 즉시 백업(Shift: 리포트 복사) · `F` 인생작 필터(Shift: 첫 작품 열기)
+- **메인 키보드 백업·인생작 단축키 (`main_view.gd` · `index.html`)**: `B`로 즉시 JSON 백업(`Shift+B`: 리포트 복사)을 실행하며, 단독 `F`로 `★ 인생작` 필터(`Shift+F`: 첫 작품 열기)를 지원합니다.
 
 ### 📓 [Sprint 181] 메인 키보드 `V` 가치순 정렬 토글(Shift: 기본순) · `L` 오늘의 밑줄 작품 열기(Shift: 작품 필터)
 - **메인 키보드 가치순·오늘밑줄 단축키 (`main_view.gd` · `index.html`)**: `V`로 `💎 가치순` 정렬을 토글(`Shift+V`: 기본순)하며, `L`로 오늘의 밑줄 작품 모달을 즉시 엽니다(`Shift+L`: 작품명 필터링).
