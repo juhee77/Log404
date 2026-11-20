@@ -255,6 +255,25 @@ func _unhandled_input(event: InputEvent) -> void:
 				return
 		close()
 		get_viewport().set_input_as_handled()
+		return
+	var any_focused: bool = false
+	for le in [title_input, author_input, quote_input]:
+		if le != null and le.has_focus():
+			any_focused = true
+			break
+	if not any_focused:
+		if event.keycode in [KEY_1, KEY_2, KEY_3, KEY_4, KEY_5]:
+			var sw_idx: int = event.keycode - KEY_1
+			if sw_idx >= 0 and sw_idx < COVER_SWATCHES.size():
+				select_color(COVER_SWATCHES[sw_idx]["hex"])
+				if event.shift_pressed:
+					_submit_with_sample_fallback()
+			get_viewport().set_input_as_handled()
+		elif event.keycode == KEY_C and cat_option != null:
+			cat_option.select(1 if cat_option.selected == 0 else 0)
+			if event.shift_pressed:
+				_submit_with_sample_fallback()
+			get_viewport().set_input_as_handled()
 
 func _on_close_btn_pressed() -> void:
 	close()

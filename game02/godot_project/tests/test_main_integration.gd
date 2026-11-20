@@ -3032,6 +3032,32 @@ func _init() -> void:
 	assert(not main_inst.detail_modal.visible, "Shift+ESC in DetailModal should copy quote card and close")
 	print("✓ Sprint 178: DetailModal Shift+ESC Copy+Close, Shift+H Cheatsheet & Shift+/ Help verified")
 
+	# Sprint 179: AddModal Keys 1~5 Swatches (Shift: Instant Submit) & Key C Category Toggle (Shift: Instant Submit)
+	var prev_cnt179: int = main_inst.archive_state.items.size()
+	main_inst.add_modal.open()
+	main_inst.add_modal.title_input.release_focus()
+	var k179 := InputEventKey.new()
+	k179.pressed = true
+	k179.keycode = KEY_2
+	main_inst.add_modal._unhandled_input(k179)
+	assert(main_inst.add_modal.selected_color == main_inst.add_modal.COVER_SWATCHES[1]["hex"], "Key 2 in AddModal should select second swatch")
+	k179.keycode = KEY_C
+	main_inst.add_modal._unhandled_input(k179)
+	assert(main_inst.add_modal.cat_option.selected == 1, "Key C in AddModal should toggle category")
+	var shift_k179 := InputEventKey.new()
+	shift_k179.pressed = true
+	shift_k179.shift_pressed = true
+	shift_k179.keycode = KEY_3
+	main_inst.add_modal._unhandled_input(shift_k179)
+	assert(main_inst.archive_state.items.size() == prev_cnt179 + 1 and not main_inst.add_modal.visible and main_inst.archive_state.items[0].cover_color == main_inst.add_modal.COVER_SWATCHES[2]["hex"], "Shift+3 in AddModal should select swatch 3 and instant-submit")
+	main_inst.add_modal.open()
+	main_inst.add_modal.title_input.release_focus()
+	main_inst.add_modal.cat_option.select(0)
+	shift_k179.keycode = KEY_C
+	main_inst.add_modal._unhandled_input(shift_k179)
+	assert(main_inst.archive_state.items.size() == prev_cnt179 + 2 and main_inst.archive_state.items[0].category == 1, "Shift+C in AddModal should toggle category and instant-submit")
+	print("✓ Sprint 179: AddModal Keys 1~5 Swatches & C Category Toggle/Submit verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

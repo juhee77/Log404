@@ -5,6 +5,20 @@
 
 ---
 
+## 📓 [Sprint 179] `AddModal` 키보드 `1~5` 표지 스와치(Shift: 즉시 등록) & `C` 분류 전환(Shift: 즉시 등록)
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A (키보드 다꾸러):** "새 일기 작성 모달(`AddModal`)에서 입력창 포커스를 푼 뒤 `1~5` 키로 표지 스와치 5종을 고르고, `Shift+1~5`를 누르면 그 색 표지로 샘플을 즉시 등록할 수 있으면 정말 편할 것 같아요!"
+- **가챠러 B (빠른 분류 전환):** "`AddModal`에서도 `C` 키를 누르면 이북·단행본 ↔ 가챠·굿즈 분류가 전환되고, `Shift+C`를 누르면 분류 전환과 동시에 샘플을 즉시 등록해주면 마우스 없이도 모든 등록 흐름이 완결되겠어요!"
+- **미니멀러 C (웹 동기화):** "웹 목업(`index.html`)의 메인 서재에서도 `Shift+W`(웹 스크랩)와 `Shift+P`(폴라로이드 촬영) 단축키를 지원해 빠른 등록을 맞춰주세요."
+- **PO & UX/UI 확정:**
+  1. **`AddModal` `_unhandled_input` `1~5` & `C` (`add_modal.gd`)**:
+     - 입력란 비포커스 시 `1~5`: `COVER_SWATCHES[0..4]` 표지색 선택(`Shift+1~5`: 선택 후 `_submit_with_sample_fallback()` 즉시 등록).
+     - 입력란 비포커스 시 `C`: `cat_option` 이북 ↔ 가챠 전환(`Shift+C`: 전환 후 `_submit_with_sample_fallback()` 즉시 등록).
+  2. **웹 목업(`index.html`) 동기화 & TDD/QA 검증:** 메인 서재 `Shift+W`/`Shift+P` 빠른 등록 단축키를 연결하고 `test_main_integration.gd`에 Sprint 179 통합 검증을 추가해 3종 헤드리스 테스트 100% 통과 및 Metal 4.0 스크린샷을 갱신했습니다.
+
+---
+
 ## 📓 [Sprint 178] `DetailModal` 키보드 `Shift+ESC` 카드 복사+닫기 · `Shift+H` 치트시트 복사 · `Shift+/`(`?`) 도움말
 
 ### 1. 14인 스쿼드 회의록 & VOC
