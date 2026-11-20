@@ -328,8 +328,22 @@ func _style_diary_controls() -> void:
 	rem_btn.add_theme_stylebox_override("normal", cream_btn)
 	rem_btn.add_theme_color_override("font_color", Color(0.52, 0.36, 0.28))
 	rem_btn.gui_input.connect(func(ev: InputEvent) -> void:
-		if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_RIGHT and current_item != null and not current_item.volumes.is_empty():
-			toggle_volume_bookmark(current_item.volumes.size() - 1)
+		if ev is InputEventMouseButton and ev.pressed and current_item != null and not current_item.volumes.is_empty():
+			if ev.button_index == MOUSE_BUTTON_RIGHT:
+				toggle_volume_bookmark(current_item.volumes.size() - 1)
+			elif ev.button_index == MOUSE_BUTTON_LEFT and ev.shift_pressed:
+				rem_btn.accept_event()
+				var all_bm: bool = true
+				for vol_d in current_item.volumes:
+					if not bool(vol_d.get("bookmarked", false)):
+						all_bm = false
+						break
+				var target_bm: bool = not all_bm
+				for vol_d in current_item.volumes:
+					vol_d["bookmarked"] = target_bm
+				_render_volumes()
+				_refresh_vol_header()
+				diary_updated.emit(current_item)
 	)
 
 	var share_btn: Button = get_node_or_null("Panel/VBox/BodyMargin/Body/TopInfo/MetaVBox/BtnRow/ShareCardBtn")
@@ -337,8 +351,12 @@ func _style_diary_controls() -> void:
 		share_btn.add_theme_stylebox_override("normal", cream_btn)
 		share_btn.add_theme_color_override("font_color", Color(0.28, 0.45, 0.38))
 		share_btn.gui_input.connect(func(ev: InputEvent) -> void:
-			if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_RIGHT:
-				summary_copy_requested.emit()
+			if ev is InputEventMouseButton and ev.pressed:
+				if ev.button_index == MOUSE_BUTTON_RIGHT:
+					summary_copy_requested.emit()
+				elif ev.button_index == MOUSE_BUTTON_LEFT and ev.shift_pressed:
+					share_btn.accept_event()
+					summary_copy_requested.emit()
 		)
 
 	var del_btn: Button = $Panel/VBox/BodyMargin/Body/TopInfo/MetaVBox/BtnRow/DeleteBtn
@@ -399,9 +417,9 @@ func _style_diary_controls() -> void:
 						diary_updated.emit(current_item)
 		)
 	if rem_btn != null:
-		rem_btn.tooltip_text = "마지막 권·파츠 기록 삭제 (- · 우클릭: 마지막 권 북마크 토글)"
+		rem_btn.tooltip_text = "마지막 권·파츠 기록 삭제 (- · 우클릭: 마지막 권 북마크 토글 · Shift+좌클릭: 전권 북마크 일괄 토글)"
 	if share_btn != null:
-		share_btn.tooltip_text = "감상 카드 텍스트를 클립보드에 복사 (C · 우클릭·Shift+C: 전체 서재 리포트 복사)"
+		share_btn.tooltip_text = "감상 카드 텍스트를 클립보드에 복사 (C · 우클릭·Shift+C: 전체 서재 리포트 복사 · Shift+좌클릭: 전체 서재 리포트 복사)"
 	if del_btn != null:
 		del_btn.tooltip_text = "이 작품의 일기장을 서재에서 삭제 (우클릭: 삭제 확인 해제)"
 		del_btn.gui_input.connect(func(ev: InputEvent) -> void:

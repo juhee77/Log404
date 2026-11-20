@@ -2578,6 +2578,35 @@ func _init() -> void:
 	main_inst.detail_modal.close()
 	print("✓ Sprint 159: Volume Date Batch Stamp & Header Nav Shift+Left-Click verified")
 
+	# Sprint 160 Milestone: RemoveVolBtn Shift+Left-Click Batch Bookmark & ShareCardBtn Shift+Left-Click Summary Copy
+	var item160 = main_inst.archive_state.items[0]
+	for v in item160.volumes:
+		v["bookmarked"] = false
+	main_inst.detail_modal.open(item160)
+	var rem_btn160: Button = main_inst.detail_modal.find_child("RemoveVolBtn", true, false) as Button
+	var share_btn160: Button = main_inst.detail_modal.find_child("ShareCardBtn", true, false) as Button
+	assert(rem_btn160 != null and share_btn160 != null, "RemoveVolBtn and ShareCardBtn should exist")
+	assert("Shift+좌클릭: 전권 북마크 일괄 토글" in rem_btn160.tooltip_text, "RemoveVolBtn tooltip should mention Shift+Left-Click batch bookmark")
+	assert("Shift+좌클릭: 전체 서재 리포트 복사" in share_btn160.tooltip_text, "ShareCardBtn tooltip should mention Shift+Left-Click summary copy")
+	var shift_lclick160 := InputEventMouseButton.new()
+	shift_lclick160.button_index = MOUSE_BUTTON_LEFT
+	shift_lclick160.pressed = true
+	shift_lclick160.shift_pressed = true
+	rem_btn160.gui_input.emit(shift_lclick160)
+	for v in item160.volumes:
+		assert(bool(v.get("bookmarked", false)), "First Shift+Left-Click on RemoveVolBtn should bookmark all volumes")
+	rem_btn160.gui_input.emit(shift_lclick160)
+	for v in item160.volumes:
+		assert(not bool(v.get("bookmarked", false)), "Second Shift+Left-Click on RemoveVolBtn should unbookmark all volumes")
+	var summary_count160: Array = [0]
+	var summary_cb160 := func(): summary_count160[0] += 1
+	main_inst.detail_modal.summary_copy_requested.connect(summary_cb160)
+	share_btn160.gui_input.emit(shift_lclick160)
+	main_inst.detail_modal.summary_copy_requested.disconnect(summary_cb160)
+	assert(summary_count160[0] == 1, "Shift+Left-Click on ShareCardBtn should emit summary_copy_requested")
+	main_inst.detail_modal.close()
+	print("✓ Sprint 160 Milestone: RemoveVolBtn Batch Bookmark & ShareCardBtn Shift+Left-Click Report Copy verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()
