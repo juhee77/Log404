@@ -2085,6 +2085,27 @@ func _init() -> void:
 	main_inst.detail_modal.close()
 	print("✓ Sprint 138 Milestone: RemoveVolBtn Last Bookmark & QuoteInput Clear/Restore verified")
 
+	# Sprint 139 Milestone: SearchInput Right-Click Clear/Today-Quote & AddModal Inputs Right-Click Clear/Sample
+	main_inst.search_input.text = ""
+	main_inst._render_cards()
+	assert("지우기/추천 검색" in main_inst.search_input.tooltip_text, "SearchInput tooltip should mention right-click clear/recommended search")
+	var rclick_s139 := InputEventMouseButton.new()
+	rclick_s139.pressed = true
+	rclick_s139.button_index = MOUSE_BUTTON_RIGHT
+	main_inst.search_input.gui_input.emit(rclick_s139)
+	assert(main_inst.search_input.text != "" and "오늘의 밑줄 작품 검색" in main_inst.status_toast.text, "Right-clicking empty SearchInput should search current TodayQuote item")
+	main_inst.search_input.gui_input.emit(rclick_s139)
+	assert(main_inst.search_input.text == "" and "검색어 초기화" in main_inst.status_toast.text, "Right-clicking non-empty SearchInput should clear search text")
+	main_inst.add_modal.open()
+	main_inst.add_modal.clear_inputs()
+	assert("샘플 채움" in main_inst.add_modal.title_input.tooltip_text, "AddModal TitleInput tooltip should mention right-click clear/sample")
+	main_inst.add_modal.title_input.gui_input.emit(rclick_s139)
+	assert(main_inst.add_modal.title_input.text == "나의 비밀 독서 일기", "Right-clicking empty AddModal TitleInput should fill sample title")
+	main_inst.add_modal.title_input.gui_input.emit(rclick_s139)
+	assert(main_inst.add_modal.title_input.text == "", "Right-clicking non-empty AddModal TitleInput should clear title")
+	main_inst.add_modal.close()
+	print("✓ Sprint 139 Milestone: SearchInput & AddModal Inputs Right-Click Clear/Sample verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

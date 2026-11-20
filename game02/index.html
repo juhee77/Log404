@@ -228,7 +228,7 @@
                 <div class="relative w-full sm:w-64">
                     <i
                         class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-[#9c8c7c] text-xs"></i>
-                    <input type="search" id="search-box" oninput="renderShelf()" onkeydown="if(event.key==='Enter'){const first=document.querySelector('#collection-grid > div');if(first&&typeof first.onclick==='function')first.onclick();}else if(event.key==='Escape'&&this.value){this.value='';renderShelf();}" placeholder="일기장 속 작품·문장·날씨·장소 검색..." title="작품명·작가·대사·태그·보관위치·날씨·장소·소장경로 통합 검색 (Enter: 첫 결과 열기 · ESC: 지우기)"
+                    <input type="search" id="search-box" oninput="renderShelf()" onkeydown="if(event.key==='Enter'){const first=document.querySelector('#collection-grid > div');if(first&&typeof first.onclick==='function')first.onclick();}else if(event.key==='Escape'&&this.value){this.value='';renderShelf();}" oncontextmenu="event.preventDefault(); if(this.value){this.value='';renderShelf();}else if(ITEMS.length){this.value=ITEMS[quoteIdx%ITEMS.length].title;renderShelf();}" placeholder="일기장 속 작품·문장·날씨·장소 검색..." title="작품명·작가·대사·태그·보관위치·날씨·장소·소장경로 통합 검색 (Enter: 첫 결과 열기 · ESC·우클릭: 지우기/추천 검색)"
                         class="w-full pl-8 pr-3 py-1.5 rounded-xl bg-[#fffdf9] border border-[#d8cbb8] text-xs focus:outline-none focus:border-[#c85a32]">
                 </div>
             </div>

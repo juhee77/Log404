@@ -5,6 +5,25 @@
 
 ---
 
+## 📓 [Sprint 139] `SearchInput` 우클릭 검색어 비우기·오늘의 밑줄 작품 검색 & `AddModal` 입력창 우클릭 비우기·샘플 채움
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A**: "검색창(`SearchInput`)에 글자가 있을 때 우클릭하면 한 번에 비워지고, 비어 있을 때 우클릭하면 지금 배너에 뜬 '오늘의 밑줄' 작품명으로 바로 검색되면 정말 편리할 것 같아요!"
+- **가챠러 B**: "`AddModal`의 제목·작가·문장 입력란도 각각 우클릭으로 비우거나 기본 샘플을 채워 넣을 수 있으면 테스트나 빠른 메모 작성이 훨씬 수월해지겠어요."
+- **기획자 (PO)**: "`main_view.gd` `SearchInput` 우클릭 토글(비우기/오늘의 밑줄 검색)과 `add_modal.gd` 3종 입력창 우클릭 비우기/샘플 채움을 구현하고 `index.html` `#search-box`와 동기화합니다."
+
+### 2. 핵심 구현 및 변경 내역
+- `game02/godot_project/scripts/main_view.gd`:
+  - `SearchInput` 우클릭 시 검색어가 있으면 초기화하고, 비어 있으면 현재 `quote_cursor`에 해당하는 작품 제목으로 즉시 필터링하도록 구현했습니다.
+- `game02/godot_project/scripts/add_modal.gd`:
+  - `TitleInput`, `AuthorInput`, `QuoteInput` 우클릭 시 입력값이 있으면 비우고, 비어 있으면 각각 샘플 문구를 채우도록 연결했습니다.
+- `game02/index.html`:
+  - `#search-box` `oncontextmenu`에 검색어 초기화 / `quoteIdx` 작품 제목 검색 토글 및 툴팁을 동기화했습니다.
+- `game02/godot_project/tests/test_main_integration.gd`:
+  - `SearchInput` 우클릭 추천 검색·초기화와 `AddModal` 입력창 우클릭 샘플 채움·비우기 테스트를 추가해 100% 통과했습니다.
+
+---
+
 ## 📓 [Sprint 138] `RemoveVolBtn` 우클릭 마지막 권 북마크 토글 & `QuoteInput` 우클릭 입력 비우기·원문 복원
 
 ### 1. 14인 스쿼드 회의록 & VOC

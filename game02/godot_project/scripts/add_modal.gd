@@ -32,6 +32,20 @@ func _ready() -> void:
 	title_input.text_submitted.connect(func(_t): author_input.grab_focus())
 	author_input.text_submitted.connect(func(_t): _on_submit_btn_pressed())
 	quote_input.text_submitted.connect(func(_t): _on_submit_btn_pressed())
+	var input_samples := [
+		[title_input, "나의 비밀 독서 일기"],
+		[author_input, "주희의 서재"],
+		[quote_input, "오늘도 한 페이지의 여운을 남겼다."]
+	]
+	for pair in input_samples:
+		var fld: LineEdit = pair[0]
+		var smp: String = pair[1]
+		if fld != null:
+			fld.tooltip_text = "우클릭: 입력 비우기 / 샘플 채움"
+			fld.gui_input.connect(func(ev: InputEvent) -> void:
+				if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_RIGHT:
+					fld.text = "" if fld.text != "" else smp
+			)
 	var dimmer: Control = get_node_or_null("Dimmer")
 	if dimmer != null:
 		dimmer.tooltip_text = "좌클릭: 일기 작성 창 닫기 · 우클릭: 입력 내용만 비우기"

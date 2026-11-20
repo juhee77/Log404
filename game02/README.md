@@ -5,7 +5,7 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 
 ---
 
-## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 138)
+## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 139)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
@@ -14,6 +14,9 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 ---
 
 ## 🚀 최신 스프린트 업데이트 요약 ([전체 회의록 보기](SPRINT_LOG.md))
+
+### 📓 [Sprint 139] `SearchInput` 우클릭 검색어 비우기·오늘의 밑줄 작품 검색 & `AddModal` 입력창 우클릭 비우기·샘플 채움
+- **입력창 우클릭 제스처 (`main_view.gd` · `add_modal.gd` · `index.html`)**: `SearchInput` 우클릭 시 검색어 비우기 ↔ 오늘의 밑줄 작품 검색이 토글되며, `AddModal` 3종 입력창 우클릭 시 입력 비우기 ↔ 샘플 채움이 동작합니다.
 
 ### 📓 [Sprint 138] `RemoveVolBtn` 우클릭 마지막 권 북마크 토글 & `QuoteInput` 우클릭 입력 비우기·원문 복원
 - **모달 우클릭 편의 강화 (`detail_modal.gd` · `index.html`)**: `RemoveVolBtn` 우클릭 시 마지막 권 북마크를 토글하고, `QuoteInput` 우클릭 시 입력 비우기 ↔ 원문 감상평 복원을 전환합니다.
