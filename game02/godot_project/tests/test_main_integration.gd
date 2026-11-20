@@ -3242,6 +3242,46 @@ func _init() -> void:
 	assert("[A/U] 전체·초판" in main_inst.status_toast.text, "Cheatsheet should include [A/U] 전체·초판")
 	print("✓ Sprint 184: MainView Keys A All & U Firsts Filter + Shift Instant Open verified")
 
+	# Sprint 185 Milestone: MainView Keys O (Open/Random) & X (Reset/Full Studio Reset)
+	main_inst.search_input.release_focus()
+	main_inst._reset_all_filters()
+	var ev_o = InputEventKey.new()
+	ev_o.pressed = true
+	ev_o.keycode = KEY_O
+	main_inst._unhandled_input(ev_o)
+	assert(main_inst.detail_modal.visible == true, "Key O should open first filtered card in modal")
+	main_inst.detail_modal.close()
+
+	var ev_shift_o = InputEventKey.new()
+	ev_shift_o.pressed = true
+	ev_shift_o.shift_pressed = true
+	ev_shift_o.keycode = KEY_O
+	main_inst._unhandled_input(ev_shift_o)
+	assert(main_inst.detail_modal.visible == true, "Shift+O should open random item in modal")
+	main_inst.detail_modal.close()
+
+	main_inst._on_tab_manga_pressed()
+	main_inst.search_input.text = "슬램덩크"
+	main_inst._set_sort_mode(2)
+	var ev_x = InputEventKey.new()
+	ev_x.pressed = true
+	ev_x.keycode = KEY_X
+	main_inst._unhandled_input(ev_x)
+	assert(main_inst.archive_state.current_filter == -1 and main_inst.search_input.text == "", "Key X should reset all filters and search")
+
+	main_inst._on_tab_gacha_pressed()
+	main_inst._set_sort_mode(3)
+	var ev_shift_x = InputEventKey.new()
+	ev_shift_x.pressed = true
+	ev_shift_x.shift_pressed = true
+	ev_shift_x.keycode = KEY_X
+	main_inst._unhandled_input(ev_shift_x)
+	assert(main_inst.archive_state.current_filter == -1 and main_inst.sort_mode == 0, "Shift+X should reset filters, sort mode, and theme")
+
+	main_inst._unhandled_input(ev_h_183)
+	assert("[O/X] 열기·초기화" in main_inst.status_toast.text, "Cheatsheet should include [O/X] 열기·초기화")
+	print("✓ Sprint 185 Milestone: MainView Keys O Open/Random & X Reset/Studio Reset verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

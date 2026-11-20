@@ -1295,6 +1295,21 @@
                     if (e.shiftKey && firstIt) openJournalModal(firstIt.id);
                     else showToast('🔖 초판 스탬프 보유 작품만 모아봅니다.');
                 }
+            } else if ((!document.getElementById('journal-modal') || document.getElementById('journal-modal').classList.contains('hidden')) && ['o', 'O', 'x', 'X'].includes(e.key) && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
+                const lk = e.key.toLowerCase();
+                if (lk === 'o') {
+                    if (e.shiftKey && ITEMS.length > 0) {
+                        const rIt = ITEMS[Math.floor(Math.random() * ITEMS.length)];
+                        openJournalModal(rIt.id);
+                    } else if (ITEMS.length > 0) {
+                        openJournalModal(ITEMS[0].id);
+                    }
+                } else {
+                    const si = document.getElementById('search-input');
+                    if (si) si.value = '';
+                    switchCategory('all');
+                    showToast(e.shiftKey ? '🧹 스튜디오 전체 초기화 완료!' : '🧹 검색/필터 초기화 완료!');
+                }
             } else if ((e.key === 'i' || e.key === 'I') && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
                 const jm = document.getElementById('journal-modal');
                 if (jm && !jm.classList.contains('hidden') && activeId != null) {

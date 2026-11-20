@@ -5,6 +5,19 @@
 
 ---
 
+## 📓 [Sprint 185 Milestone] 메인 키보드 `O` 즉시 열기(Shift: 랜덤 오픈) · `X` 초기화(Shift: 스튜디오 리셋)
+- **일시**: 2026-11-21
+- **14인 가상 애자일 스쿼드 회의록**:
+  - **다꾸러 VOC (지민·수빈·하연)**: "`Space` 외에도 알파벳 `O`(Open) 키로 필터링된 첫 작품을 바로 펼치고 `Shift+O`로 랜덤 추천 일기를 모달로 열어보고 싶어요. 또 검색/필터가 걸렸을 때 `X`로 한 번에 비우고 `Shift+X`로 정렬과 테마까지 기본 스튜디오 상태로 초기화하고 싶습니다."
+  - **PO & UX/UI**: `MainView` `_unhandled_input`에 `KEY_O`(`_open_first_filtered_card()` / `Shift`: `pick_random_item(true)`) 및 `KEY_X`(`_reset_all_filters()` / `Shift`: `_set_sort_mode(0)` + `_reset_theme()`)를 추가하고, `KEY_H` 치트시트에 `[O/X] 열기·초기화`를 동기화한다.
+- **구현 내역**:
+  - [`main_view.gd`](godot_project/scripts/main_view.gd): `KEY_O`, `KEY_X` 분기 추가 및 `_show_shortcut_cheatsheet()`에 `[O/X] 열기·초기화` 반영.
+  - [`index.html`](index.html): 웹 인터랙티브 목업에 `O`/`X` 및 `Shift+O`/`Shift+X` 단축키 동기화.
+  - [`test_main_integration.gd`](godot_project/tests/test_main_integration.gd): `KEY_O`, `Shift+O`, `KEY_X`, `Shift+X`, `KEY_H` 치트시트 `[O/X] 열기·초기화` 검증 추가.
+- **검증**: `test_archive.gd`, `test_persistence.gd`, `test_main_integration.gd` 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 갱신 완료.
+
+---
+
 ## 📓 [Sprint 184] 메인 키보드 `A` 전체일기 · `U` 초판특전 필터(Shift: 첫 작품 열기) · 치트시트 Sync
 - **일시**: 2026-11-21
 - **14인 가상 애자일 스쿼드 회의록**:
