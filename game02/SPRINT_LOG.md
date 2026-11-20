@@ -5,6 +5,22 @@
 
 ---
 
+## 📓 [Sprint 171] 메인 키보드 `Shift+1~5` 탭 필터 후 즉시 열기 · `Shift+N` 샘플 모달 · `Shift+I` 즉시 백업
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A (키보드 파워 유저):** "메인 서재에서 `1~5` 키로 탭을 바꿀 수 있는데, 탭 버튼의 `Shift+좌클릭`처럼 키보드에서도 `Shift+1~5`를 누르면 탭 전환과 동시에 랜덤·첫 번째 작품 일기장이 바로 열리면 좋겠어요!"
+- **가챠러 B (빠른 입력 유저):** "`N` 키로 새 일기 창을 열 때 `Shift+N`을 누르면 샘플 제목·작가·문장이 미리 채워진 상태로 열리고, `Shift+I`를 누르면 인포그래픽 대신 즉시 JSON 백업이 실행되면 키보드만으로도 모든 파워 액션을 쓸 수 있겠어요!"
+- **미니멀러 C (웹 동기화):** "웹 목업(`index.html`)의 전역 키보드 리스너에도 `Shift+1~5`, `Shift+N`, `Shift+I` 단축키를 동일하게 추가해주세요."
+- **PO & UX/UI 확정:**
+  1. **`MainView` `_unhandled_input` `Shift+1~5` / `Shift+N` / `Shift+I` (`main_view.gd`)**:
+     - `Shift+1`: 전체 탭 복원 후 `pick_random_item(true)` 즉시 열기.
+     - `Shift+2~5`: 해당 카테고리/필터 전환 후 `_open_first_filtered_card()` 실행.
+     - `Shift+N`: `AddModal` 열기 + 샘플 텍스트 3종 자동 채움.
+     - `Shift+I`: `_trigger_instant_json_backup()` 즉시 백업 실행.
+  2. **웹 목업(`index.html`) 동기화 & TDD/QA 검증:** 전역 `keydown` 핸들러에 동일한 `Shift+1~5`, `Shift+N`, `Shift+I`를 연결하고 `test_main_integration.gd`에 Sprint 171 통합 검증을 추가해 3종 헤드리스 테스트 100% 통과 및 Metal 4.0 스크린샷을 갱신했습니다.
+
+---
+
 ## 🏆 [Sprint 170 Milestone] `TitleLabel` `Shift+좌클릭` 감상 카드 전체 복사 & `StampLbl`/`InkLbl` `Shift+좌클릭` 역순환 완결
 
 ### 1. 14인 스쿼드 회의록 & VOC

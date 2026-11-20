@@ -989,18 +989,28 @@ func _unhandled_input(event: InputEvent) -> void:
 					get_viewport().set_input_as_handled()
 				KEY_1:
 					_on_tab_all_pressed()
+					if event.shift_pressed:
+						pick_random_item(true)
 					get_viewport().set_input_as_handled()
 				KEY_2:
 					_on_tab_manga_pressed()
+					if event.shift_pressed:
+						_open_first_filtered_card()
 					get_viewport().set_input_as_handled()
 				KEY_3:
 					_on_tab_gacha_pressed()
+					if event.shift_pressed:
+						_open_first_filtered_card()
 					get_viewport().set_input_as_handled()
 				KEY_4:
 					_on_tab_complete_pressed()
+					if event.shift_pressed:
+						_open_first_filtered_card()
 					get_viewport().set_input_as_handled()
 				KEY_5:
 					_on_tab_fav_pressed()
+					if event.shift_pressed:
+						_open_first_filtered_card()
 					get_viewport().set_input_as_handled()
 				KEY_S:
 					_step_sort(-1 if event.shift_pressed else 1)
@@ -1010,6 +1020,10 @@ func _unhandled_input(event: InputEvent) -> void:
 					get_viewport().set_input_as_handled()
 				KEY_N:
 					_on_add_btn_pressed()
+					if event.shift_pressed and add_modal != null:
+						add_modal.title_input.text = "나의 비밀 독서 일기"
+						add_modal.author_input.text = "주희의 서재"
+						add_modal.quote_input.text = "오늘도 한 페이지의 여운을 남겼다."
 					get_viewport().set_input_as_handled()
 				KEY_T:
 					_step_theme(-1 if event.shift_pressed else 1)
@@ -1021,7 +1035,10 @@ func _unhandled_input(event: InputEvent) -> void:
 					_step_today_quote(-1 if event.shift_pressed else 1)
 					get_viewport().set_input_as_handled()
 				KEY_I:
-					show_library_infographic()
+					if event.shift_pressed:
+						_trigger_instant_json_backup()
+					else:
+						show_library_infographic()
 					get_viewport().set_input_as_handled()
 				KEY_C:
 					copy_summary_to_clipboard()

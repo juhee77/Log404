@@ -5,7 +5,7 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 
 ---
 
-## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 170 Milestone)
+## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 171)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
@@ -14,6 +14,9 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 ---
 
 ## 🚀 최신 스프린트 업데이트 요약 ([전체 회의록 보기](SPRINT_LOG.md))
+
+### 📓 [Sprint 171] 메인 키보드 `Shift+1~5` 탭 필터 후 즉시 열기 · `Shift+N` 샘플 모달 · `Shift+I` 즉시 백업
+- **키보드 `Shift` 파워 단축키 확장 (`main_view.gd` · `index.html`)**: `Shift+1~5`로 탭 전환과 동시에 랜덤/첫 작품 일기장을 열며, `Shift+N`으로 샘플 채움 일기 작성 창 열기, `Shift+I`로 즉시 JSON 백업을 실행합니다.
 
 ### 🏆 [Sprint 170 Milestone] `TitleLabel` `Shift+좌클릭` 감상 카드 전체 복사 & `StampLbl`/`InkLbl` `Shift+좌클릭` 역순환 완결
 - **제목 카드 복사 & 라벨 역순환 완결 (`detail_modal.gd` · `index.html`)**: `TitleLabel` `Shift+좌클릭`으로 감상 카드 전체를 복사하며, `StampLbl`·`InkLbl` `Shift+좌클릭`으로 인장·만년필 잉크 역순환을 실행해 모달 내 모든 트랙패드 파워 액션을 완결했습니다.

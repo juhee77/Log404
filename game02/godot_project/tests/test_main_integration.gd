@@ -2851,6 +2851,28 @@ func _init() -> void:
 	main_inst.detail_modal.close()
 	print("✓ Sprint 170 Milestone: TitleLabel Card Copy & StampLbl/InkLbl Shift+Left-Click Reverse verified")
 
+	# Sprint 171: MainView Shift+1~5 Tab Open, Shift+N Sample Modal & Shift+I Instant Backup
+	main_inst.search_input.release_focus()
+	var shift_k171 := InputEventKey.new()
+	shift_k171.pressed = true
+	shift_k171.shift_pressed = true
+	shift_k171.keycode = KEY_2
+	main_inst._unhandled_input(shift_k171)
+	assert(main_inst.detail_modal.visible and main_inst.detail_modal.current_item.category == 0, "Shift+2 should filter Manga and open first item")
+	main_inst.detail_modal.close()
+	shift_k171.keycode = KEY_3
+	main_inst._unhandled_input(shift_k171)
+	assert(main_inst.detail_modal.visible and main_inst.detail_modal.current_item.category == 1, "Shift+3 should filter Gacha and open first item")
+	main_inst.detail_modal.close()
+	shift_k171.keycode = KEY_N
+	main_inst._unhandled_input(shift_k171)
+	assert(main_inst.add_modal.visible and main_inst.add_modal.title_input.text == "나의 비밀 독서 일기", "Shift+N should open AddModal with sample filled")
+	main_inst.add_modal.close()
+	shift_k171.keycode = KEY_I
+	main_inst._unhandled_input(shift_k171)
+	assert("백업" in main_inst.status_toast.text or "JSON" in main_inst.status_toast.text, "Shift+I should trigger instant JSON backup")
+	print("✓ Sprint 171: MainView Shift+1~5 Tab Open, Shift+N Sample Modal & Shift+I Backup verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()
