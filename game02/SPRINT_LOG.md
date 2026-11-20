@@ -5,6 +5,25 @@
 
 ---
 
+## 📓 [Sprint 136] `DetailModal` 배경 딤머 우클릭 닫기+즉시 JSON 백업 & `AddModal` 배경 딤머 우클릭 입력 비우기
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A**: "`DetailModal`을 닫을 때 작은 `X` 버튼까지 마우스를 가져가지 않고 바깥 어두운 배경(`Dimmer`)을 우클릭해도 일기장이 닫히면서 즉시 JSON 백업까지 저장되면 훨씬 편할 것 같아요!"
+- **가챠러 B**: "`AddModal`에서도 바깥 어두운 배경(`Dimmer`)을 우클릭하면 창은 닫히지 않은 채 방금 적던 입력 내용만 깔끔하게 비워주면 다시 작성하기 좋을 것 같아요."
+- **기획자 (PO)**: "`detail_modal.gd` `Dimmer`에 우클릭 닫기+`close_and_backup_requested` 시그널 발행을, `add_modal.gd` `Dimmer`에 우클릭 `clear_inputs()`를 연결하고 `index.html` `#journal-modal` 배경과 동기화합니다."
+
+### 2. 핵심 구현 및 변경 내역
+- `game02/godot_project/scripts/detail_modal.gd`:
+  - `Dimmer` 우클릭 시 일기장 모달을 닫고 `close_and_backup_requested`를 발행해 즉시 JSON 백업 저장을 실행하며 툴팁을 추가했습니다.
+- `game02/godot_project/scripts/add_modal.gd`:
+  - `Dimmer` 우클릭 시 창을 유지한 채 `clear_inputs()`로 입력란을 초기화하며 툴팁을 추가했습니다.
+- `game02/index.html`:
+  - `#journal-modal` 배경 딤머 `oncontextmenu`에 닫기+`instantBackupArchive()` 및 안내 툴팁을 동기화했습니다.
+- `game02/godot_project/tests/test_main_integration.gd`:
+  - `DetailModal` `Dimmer` 우클릭 닫기+JSON 백업과 `AddModal` `Dimmer` 우클릭 입력 비우기를 검증하는 Sprint 136 테스트를 추가해 100% 통과했습니다.
+
+---
+
 ## 🏆 [Sprint 135] 마일스톤 135: 검색창 `Enter` 첫 결과 즉시 열기 & 빈 결과(`EmptyState`) 우클릭 복원+랜덤 추천 미리보기
 
 ### 1. 14인 스쿼드 회의록 & VOC

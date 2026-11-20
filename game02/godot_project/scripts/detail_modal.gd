@@ -74,9 +74,14 @@ func _ready() -> void:
 		quote_input.text_submitted.connect(func(_t): _on_save_quote_btn_pressed())
 	var dimmer: Control = get_node_or_null("Dimmer")
 	if dimmer != null:
+		dimmer.tooltip_text = "좌클릭: 일기장 닫기 · 우클릭: 닫고 즉시 JSON 백업"
 		dimmer.gui_input.connect(func(ev):
-			if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_LEFT:
-				close()
+			if ev is InputEventMouseButton and ev.pressed:
+				if ev.button_index == MOUSE_BUTTON_LEFT:
+					close()
+				elif ev.button_index == MOUSE_BUTTON_RIGHT:
+					close()
+					close_and_backup_requested.emit()
 		)
 	cover_rect.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	cover_rect.tooltip_text = "좌클릭·X: 표지 아이콘 변경(Shift+X: 이전) · 우클릭·Q: 표지 색상 변경(Shift+Q: 이전)"

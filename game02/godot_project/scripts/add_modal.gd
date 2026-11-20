@@ -34,9 +34,13 @@ func _ready() -> void:
 	quote_input.text_submitted.connect(func(_t): _on_submit_btn_pressed())
 	var dimmer: Control = get_node_or_null("Dimmer")
 	if dimmer != null:
+		dimmer.tooltip_text = "좌클릭: 일기 작성 창 닫기 · 우클릭: 입력 내용만 비우기"
 		dimmer.gui_input.connect(func(ev):
-			if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_LEFT:
-				close()
+			if ev is InputEventMouseButton and ev.pressed:
+				if ev.button_index == MOUSE_BUTTON_LEFT:
+					close()
+				elif ev.button_index == MOUSE_BUTTON_RIGHT:
+					clear_inputs()
 		)
 
 func _build_color_swatches() -> void:

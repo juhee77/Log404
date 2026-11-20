@@ -2022,6 +2022,24 @@ func _init() -> void:
 	assert(main_inst.search_input.text == "" and "오늘의 추천 미리보기" in main_inst.status_toast.text, "Right-clicking EmptyStateResetBtn should reset filters and peek random item")
 	print("✓ Sprint 135 Milestone: SearchInput Enter Open First & EmptyStateResetBtn Random Peek verified")
 
+	# Sprint 136 Milestone: DetailModal Dimmer Right-Click Close+Backup & AddModal Dimmer Right-Click Clear
+	main_inst._on_card_clicked(main_inst.archive_state.items[0])
+	var detail_dimmer_s136: Control = main_inst.detail_modal.get_node("Dimmer")
+	assert("닫고 즉시 JSON 백업" in detail_dimmer_s136.tooltip_text, "DetailModal Dimmer tooltip should mention right-click close and backup")
+	var rclick_s136 := InputEventMouseButton.new()
+	rclick_s136.pressed = true
+	rclick_s136.button_index = MOUSE_BUTTON_RIGHT
+	detail_dimmer_s136.gui_input.emit(rclick_s136)
+	assert(not main_inst.detail_modal.visible and "로컬 JSON 서재 백업 저장 완료" in main_inst.status_toast.text, "Right-clicking DetailModal Dimmer should close modal and trigger instant JSON backup")
+	main_inst.add_modal.open()
+	main_inst.add_modal.title_input.text = "임시 작성중"
+	var add_dimmer_s136: Control = main_inst.add_modal.get_node("Dimmer")
+	assert("입력 내용만 비우기" in add_dimmer_s136.tooltip_text, "AddModal Dimmer tooltip should mention right-click clear inputs")
+	add_dimmer_s136.gui_input.emit(rclick_s136)
+	assert(main_inst.add_modal.visible and main_inst.add_modal.title_input.text == "", "Right-clicking AddModal Dimmer should clear inputs without closing")
+	main_inst.add_modal.close()
+	print("✓ Sprint 136 Milestone: DetailModal Dimmer Close+Backup & AddModal Dimmer Clear verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

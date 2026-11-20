@@ -5,7 +5,7 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 
 ---
 
-## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 135)
+## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 136)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
@@ -14,6 +14,9 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 ---
 
 ## 🚀 최신 스프린트 업데이트 요약 ([전체 회의록 보기](SPRINT_LOG.md))
+
+### 📓 [Sprint 136] `DetailModal` 배경 딤머 우클릭 닫기+즉시 JSON 백업 & `AddModal` 배경 딤머 우클릭 입력 비우기
+- **모달 배경(`Dimmer`) 우클릭 제스처 (`detail_modal.gd` · `add_modal.gd` · `index.html`)**: `DetailModal` 바깥 배경 우클릭 시 모달을 닫고 즉시 JSON 백업을 저장하며, `AddModal` 바깥 배경 우클릭 시 창을 닫지 않고 입력 내용만 비웁니다.
 
 ### 🏆 [Sprint 135] 마일스톤 135: 검색창 `Enter` 첫 결과 즉시 열기 & 빈 결과(`EmptyState`) 우클릭 복원+랜덤 추천 미리보기
 - **검색·빈 상태 탐색 완결 (`main_view.gd` · `index.html`)**: 검색창에서 `Enter` 입력 시 첫 번째 필터링 작품 일기장을 즉시 열고(`_open_first_filtered_card`), 검색 결과 0건의 `EmptyStateResetBtn` 우클릭 시 전체 복원 후 랜덤 추천 미리보기를 표시합니다.
