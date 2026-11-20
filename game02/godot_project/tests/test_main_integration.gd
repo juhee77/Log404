@@ -2760,6 +2760,25 @@ func _init() -> void:
 	assert(not main_inst.detail_modal.visible, "Shift+Left-Click on DetailModal Dimmer should copy card and close modal")
 	print("✓ Sprint 166: EmptyStateResetBtn Random Open & DetailModal Dimmer Copy+Close verified")
 
+	# Sprint 167: AddModal Dimmer Shift+Left-Click Clear & TitleLabel Shift+Left-Click Sample Submit
+	var prev_cnt167: int = main_inst.archive_state.items.size()
+	main_inst.add_modal.open()
+	var am_dimmer167: Control = main_inst.add_modal.get_node_or_null("Dimmer")
+	var am_title167: Label = main_inst.add_modal.get_node_or_null("Panel/VBox/Header/HBox/TitleLabel")
+	assert(am_dimmer167 != null and am_title167 != null, "AddModal Dimmer and TitleLabel should exist")
+	assert("Shift+좌클릭: 입력 내용만 비우기" in am_dimmer167.tooltip_text, "AddModal Dimmer tooltip should mention Shift+Left-Click clear")
+	assert("Shift+좌클릭: 샘플 즉시 등록" in am_title167.tooltip_text, "AddModal TitleLabel tooltip should mention Shift+Left-Click sample submit")
+	var shift_lclick167 := InputEventMouseButton.new()
+	shift_lclick167.button_index = MOUSE_BUTTON_LEFT
+	shift_lclick167.pressed = true
+	shift_lclick167.shift_pressed = true
+	main_inst.add_modal.title_input.text = "임시167"
+	am_dimmer167.gui_input.emit(shift_lclick167)
+	assert(main_inst.add_modal.title_input.text == "" and main_inst.add_modal.visible, "Shift+Left-Click on AddModal Dimmer should clear inputs without closing")
+	am_title167.gui_input.emit(shift_lclick167)
+	assert(main_inst.archive_state.items.size() == prev_cnt167 + 1 and not main_inst.add_modal.visible, "Shift+Left-Click on AddModal TitleLabel should fill sample and submit")
+	print("✓ Sprint 167: AddModal Dimmer Clear & TitleLabel Shift+Left-Click Sample Submit verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

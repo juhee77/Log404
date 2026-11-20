@@ -5,6 +5,19 @@
 
 ---
 
+## 📓 [Sprint 167] `AddModal` `Dimmer` `Shift+좌클릭` 입력 비우기 & `TitleLabel` `Shift+좌클릭` 샘플 즉시 등록
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A (다꾸러):** "새 일기 작성 모달(`AddModal`)에서 어두운 배경(`Dimmer`)을 우클릭하면 창을 닫지 않고 입력 내용만 비우는데, 트랙패드에서 `Shift+좌클릭`으로도 똑같이 입력 내용만 깔끔히 비울 수 있으면 좋겠어요."
+- **가챠러 B (원클릭 등록):** "`AddModal` 상단 제목(`TitleLabel`)을 좌클릭하면 샘플 일기를 채워주는데, `Shift+좌클릭`하면 샘플을 채우면서 동시에 바로 서재에 등록까지 끝낼 수 있으면 테스트나 빠른 스크랩 시 최고일 거예요!"
+- **미니멀러 C (웹 동기화):** "웹 목업(`index.html`)의 모달 노트 헤더(`🖋️ 나만의 독서 노트 & 권별 밑줄`)에서도 `Shift+좌클릭` 시 샘플 밑줄을 채우면서 바로 저장되도록 맞춰주세요."
+- **PO & UX/UI 확정:**
+  1. **`AddModal` `Dimmer` `Shift+좌클릭` 입력 내용만 비우기 (`add_modal.gd`)**: `Dimmer` `gui_input`에서 `Shift+좌클릭` 시 `accept_event()` 처리 후 `clear_inputs()`를 호출해 모달을 닫지 않고 입력란을 초기화합니다.
+  2. **`AddModal` `TitleLabel` `Shift+좌클릭` 샘플 즉시 등록 (`add_modal.gd`)**: 상단 제목 라벨 `Shift+좌클릭` 시 `accept_event()` 처리 후 `_submit_with_sample_fallback()`를 실행해 샘플 일기를 즉시 서재에 등록합니다.
+  3. **웹 목업(`index.html`) 동기화 & TDD/QA 검증:** 모달 노트 헤더에 `Shift+좌클릭` 샘플 밑줄 채움+저장을 연결하고 `test_main_integration.gd`에 Sprint 167 통합 검증을 추가해 3종 헤드리스 테스트 100% 통과 및 Metal 4.0 스크린샷을 갱신했습니다.
+
+---
+
 ## 📓 [Sprint 166] `EmptyStateResetBtn` `Shift+좌클릭` 복원 후 랜덤 일기장 열기 & `DetailModal` `Dimmer` `Shift+좌클릭` 카드 복사+닫기
 
 ### 1. 14인 스쿼드 회의록 & VOC

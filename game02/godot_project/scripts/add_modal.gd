@@ -48,10 +48,13 @@ func _ready() -> void:
 			)
 	var dimmer: Control = get_node_or_null("Dimmer")
 	if dimmer != null:
-		dimmer.tooltip_text = "좌클릭: 일기 작성 창 닫기 · 우클릭: 입력 내용만 비우기"
+		dimmer.tooltip_text = "좌클릭: 일기 작성 창 닫기 · 우클릭·Shift+좌클릭: 입력 내용만 비우기"
 		dimmer.gui_input.connect(func(ev):
 			if ev is InputEventMouseButton and ev.pressed:
-				if ev.button_index == MOUSE_BUTTON_LEFT:
+				if ev.button_index == MOUSE_BUTTON_LEFT and ev.shift_pressed:
+					dimmer.accept_event()
+					clear_inputs()
+				elif ev.button_index == MOUSE_BUTTON_LEFT:
 					close()
 				elif ev.button_index == MOUSE_BUTTON_RIGHT:
 					clear_inputs()
@@ -60,10 +63,13 @@ func _ready() -> void:
 	if header_title != null:
 		header_title.mouse_filter = Control.MOUSE_FILTER_STOP
 		header_title.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
-		header_title.tooltip_text = "좌클릭: 샘플 일기 일괄 채움 · 우클릭: 입력 전체 비우기"
+		header_title.tooltip_text = "좌클릭: 샘플 일기 일괄 채움 · 우클릭: 입력 전체 비우기 · Shift+좌클릭: 샘플 즉시 등록"
 		header_title.gui_input.connect(func(ev: InputEvent) -> void:
 			if ev is InputEventMouseButton and ev.pressed:
-				if ev.button_index == MOUSE_BUTTON_LEFT:
+				if ev.button_index == MOUSE_BUTTON_LEFT and ev.shift_pressed:
+					header_title.accept_event()
+					_submit_with_sample_fallback()
+				elif ev.button_index == MOUSE_BUTTON_LEFT:
 					title_input.text = "나의 비밀 독서 일기"
 					author_input.text = "주희의 서재"
 					quote_input.text = "오늘도 한 페이지의 여운을 남겼다."
