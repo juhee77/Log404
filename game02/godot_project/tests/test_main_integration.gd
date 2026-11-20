@@ -3012,6 +3012,26 @@ func _init() -> void:
 	main_inst.detail_modal.close()
 	print("✓ Sprint 177: MainView Shift+/ Cheatsheet, Shift+ESC Reset & Space/Shift+Space Open verified")
 
+	# Sprint 178: DetailModal Shift+ESC Copy+Close, Shift+H Cheatsheet Copy & Shift+/ (?) Help
+	main_inst.detail_modal.open(main_inst.archive_state.items[0])
+	main_inst.detail_modal.quote_input.release_focus()
+	var help_cnt178: Array = [0]
+	var help_cb178 := func(): help_cnt178[0] += 1
+	main_inst.detail_modal.help_requested.connect(help_cb178)
+	var shift_k178 := InputEventKey.new()
+	shift_k178.pressed = true
+	shift_k178.shift_pressed = true
+	shift_k178.keycode = KEY_SLASH
+	main_inst.detail_modal._unhandled_input(shift_k178)
+	shift_k178.keycode = KEY_H
+	main_inst.detail_modal._unhandled_input(shift_k178)
+	main_inst.detail_modal.help_requested.disconnect(help_cb178)
+	assert(help_cnt178[0] == 2 and "모달 단축키:" in main_inst.status_toast.text, "Shift+/ and Shift+H in DetailModal should emit help_requested")
+	shift_k178.keycode = KEY_ESCAPE
+	main_inst.detail_modal._unhandled_input(shift_k178)
+	assert(not main_inst.detail_modal.visible, "Shift+ESC in DetailModal should copy quote card and close")
+	print("✓ Sprint 178: DetailModal Shift+ESC Copy+Close, Shift+H Cheatsheet & Shift+/ Help verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

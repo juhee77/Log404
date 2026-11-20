@@ -5,6 +5,21 @@
 
 ---
 
+## 📓 [Sprint 178] `DetailModal` 키보드 `Shift+ESC` 카드 복사+닫기 · `Shift+H` 치트시트 복사 · `Shift+/`(`?`) 도움말
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A (키보드 파워 유저):** "일기장 모달을 닫을 때 `Shift+ESC`를 누르면 `CloseBtn`/`Dimmer` `Shift+좌클릭`처럼 감상 카드를 클립보드에 복사하면서 바로 닫아주면 마우스 없이도 완벽할 거예요!"
+- **가챠러 B (단축키 레퍼런스):** "일기장 모달 안에서도 메인 서재처럼 `?` (`Shift+/`) 키로 단축키 도움말을 띄우고, `Shift+H` 키를 누르면 모달 단축키 치트시트 문자열까지 클립보드에 복사되면 좋겠어요."
+- **미니멀러 C (웹 동기화):** "웹 목업(`index.html`)의 `#journal-modal` 열린 상태에서도 `Shift+ESC` 카드 복사+닫기와 `Shift+H` 치트시트 복사를 동일하게 반영해주세요."
+- **PO & UX/UI 확정:**
+  1. **`DetailModal` `_unhandled_input` `Shift+ESC` · `Shift+H` · `Shift+/` (`detail_modal.gd`)**:
+     - `Shift+ESC`: `copy_book_quote_card()` 실행 후 `close()` 즉시 호출.
+     - `Shift+/` (`?`): `help_requested.emit()` 발행.
+     - `Shift+H`: `help_requested.emit()` 발행과 함께 모달 단축키 치트시트 텍스트를 클립보드에 복사.
+  2. **웹 목업(`index.html`) 동기화 & TDD/QA 검증:** `#journal-modal` `Shift+Escape` 및 `Shift+H`를 동기화하고 `test_main_integration.gd`에 Sprint 178 통합 검증을 추가해 3종 헤드리스 테스트 100% 통과 및 Metal 4.0 스크린샷을 갱신했습니다.
+
+---
+
 ## 📓 [Sprint 177] 메인 키보드 `Shift+/`(`?`) 단축키 치트시트 · `Shift+ESC` 필터 초기화 · `Space`/`Shift+Space` 서재·랜덤 열기
 
 ### 1. 14인 스쿼드 회의록 & VOC

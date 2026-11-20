@@ -18,13 +18,14 @@ Godot 4+ 기반의 감성 게임 및 인터랙티브 아카이브 애플리케�
 > **Godot 4.6.2 모바일 기반 E-Book 리더기 서재(Apple Books · 리디북스) & 만년필 다꾸 독서노트(굿노트 · 몰스킨) 감성 아카이브 앱**  
 > 14인 가상 애자일 스쿼드가 20분 주기 자동 스프린트로 지속 개선 중입니다.
 
-### 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 177)
+### 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 178)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
 | ![Pocket Archive Main Screen](game02/godot_project/screenshots/godot_app_screen.png) | ![Pocket Archive Detail Modal](game02/godot_project/screenshots/godot_modal_screen.png) |
 
 ### ✨ 주요 핵심 기능
+- **최신 Sprint 178 하이라이트**: `DetailModal` 키보드 `Shift+ESC` 카드 복사+닫기, `Shift+H` 치트시트 복사 및 `Shift+/`(`?`) 도움말(`detail_modal.gd` · `index.html`) 완성
 - **최신 Sprint 177 하이라이트**: 메인 키보드 `Shift+/`(`?`) 치트시트, `Shift+ESC` 필터 초기화 및 `Space`/`Shift+Space` 서재·랜덤 열기(`main_view.gd` · `index.html`) 완성
 - **최신 Sprint 176 하이라이트**: `AddModal` 키보드 `Shift+ESC` 입력 전체 비우기 및 `Shift+Enter` 샘플 자동 채움 등록(`add_modal.gd` · `index.html`) 완성
 - **🏆 Sprint 175 마일스톤 하이라이트**: `DetailModal` 키보드 `Shift+L` 속지 순환, `Shift+Delete` 삭제 해제 및 `Shift+PgUp/PgDn` 처음·끝 점프(`detail_modal.gd` · `index.html`) 완결

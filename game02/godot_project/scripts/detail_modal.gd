@@ -909,7 +909,10 @@ func _unhandled_input(event: InputEvent) -> void:
 	if not visible or not (event is InputEventKey) or not event.pressed or event.echo:
 		return
 	if event.keycode == KEY_ESCAPE:
-		if quote_input != null and quote_input.has_focus():
+		if event.shift_pressed:
+			copy_book_quote_card()
+			close()
+		elif quote_input != null and quote_input.has_focus():
 			quote_input.release_focus()
 		elif delete_armed:
 			delete_armed = false
@@ -965,8 +968,10 @@ func _unhandled_input(event: InputEvent) -> void:
 			else:
 				remove_last_volume()
 			get_viewport().set_input_as_handled()
-		elif event.keycode == KEY_H:
+		elif event.keycode == KEY_H or (event.keycode == KEY_SLASH and event.shift_pressed):
 			help_requested.emit()
+			if event.keycode == KEY_H and event.shift_pressed:
+				DisplayServer.clipboard_set("⌨️ 모달 단축키: [←/→] 넘김(Shift: 처음·끝) · [+/-] 권(Shift: 초판·북마크) · [1~4] 인장(Shift: 찍고닫기) · [E] 문장(Shift: 샘플) · [L] 형광펜(Shift: 속지) · [C] 복사(Shift: 리포트) · [ESC] 닫기(Shift: 카드복사+닫기)")
 			get_viewport().set_input_as_handled()
 		elif event.keycode == KEY_E:
 			if quote_input != null:

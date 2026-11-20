@@ -5,7 +5,7 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 
 ---
 
-## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 177)
+## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 178)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
@@ -14,6 +14,9 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 ---
 
 ## 🚀 최신 스프린트 업데이트 요약 ([전체 회의록 보기](SPRINT_LOG.md))
+
+### 📓 [Sprint 178] `DetailModal` 키보드 `Shift+ESC` 카드 복사+닫기 · `Shift+H` 치트시트 복사 · `Shift+/`(`?`) 도움말
+- **모달 키보드 완결 (`detail_modal.gd` · `index.html`)**: `Shift+ESC`로 감상 카드를 복사하며 닫고, `?`(`Shift+/`)로 모달 단축키 도움말 표시, `Shift+H`로 모달 단축키 치트시트 복사를 지원합니다.
 
 ### 📓 [Sprint 177] 메인 키보드 `Shift+/`(`?`) 단축키 치트시트 · `Shift+ESC` 필터 초기화 · `Space`/`Shift+Space` 서재·랜덤 열기
 - **메인 키보드 탐색 완성 (`main_view.gd` · `index.html`)**: `?`(`Shift+/`)로 단축키 치트시트 표시, `Shift+ESC`로 검색·필터 전체 초기화, `Space`/`Shift+Space`로 첫 작품·랜덤 일기장 열기를 지원합니다.
