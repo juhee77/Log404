@@ -1497,10 +1497,21 @@ func _render_volumes() -> void:
 		vol_lbl.custom_minimum_size = Vector2(28, 0)
 		vol_lbl.mouse_filter = Control.MOUSE_FILTER_STOP
 		vol_lbl.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
-		vol_lbl.tooltip_text = "좌클릭: %d권 밑줄 문장 편집 · 우클릭: 북마크 토글" % int(v.get("vol", idx + 1))
+		vol_lbl.tooltip_text = "좌클릭: %d권 밑줄 문장 편집 · 우클릭: 북마크 토글 · Shift+좌클릭: 초판+북마크+★5" % int(v.get("vol", idx + 1))
 		vol_lbl.gui_input.connect(func(ev: InputEvent) -> void:
 			if ev is InputEventMouseButton and ev.pressed:
-				if ev.button_index == MOUSE_BUTTON_LEFT:
+				if ev.button_index == MOUSE_BUTTON_LEFT and ev.shift_pressed:
+					vol_lbl.accept_event()
+					if current_item != null and capture_idx >= 0 and capture_idx < current_item.volumes.size():
+						var target_v = current_item.volumes[capture_idx]
+						target_v["status"] = "first"
+						target_v["bookmarked"] = true
+						target_v["rating"] = 5
+						_render_volumes()
+						_refresh_vol_header()
+						_refresh_author_label()
+						diary_updated.emit(current_item)
+				elif ev.button_index == MOUSE_BUTTON_LEFT:
 					start_editing_volume_quote(capture_idx)
 				elif ev.button_index == MOUSE_BUTTON_RIGHT:
 					toggle_volume_bookmark(capture_idx)
@@ -1604,10 +1615,20 @@ func _render_volumes() -> void:
 		quote_lbl.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 		quote_lbl.mouse_filter = Control.MOUSE_FILTER_STOP
 		quote_lbl.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
-		quote_lbl.tooltip_text = "클릭하여 %d권 밑줄 문장 편집 · 우클릭: 밑줄 문장 복사" % int(v.get("vol", idx + 1))
+		quote_lbl.tooltip_text = "클릭하여 %d권 밑줄 문장 편집 · 우클릭: 밑줄 문장 복사 · Shift+좌클릭: 복사+북마크" % int(v.get("vol", idx + 1))
 		quote_lbl.gui_input.connect(func(ev):
 			if ev is InputEventMouseButton and ev.pressed:
-				if ev.button_index == MOUSE_BUTTON_LEFT:
+				if ev.button_index == MOUSE_BUTTON_LEFT and ev.shift_pressed and current_item != null:
+					quote_lbl.accept_event()
+					if capture_idx >= 0 and capture_idx < current_item.volumes.size():
+						var target_v = current_item.volumes[capture_idx]
+						var v_quote_str: String = str(target_v.get("quote", ""))
+						DisplayServer.clipboard_set("%s %d권: \"%s\"" % [current_item.title, int(target_v.get("vol", capture_idx + 1)), v_quote_str])
+						target_v["bookmarked"] = true
+						_render_volumes()
+						_refresh_vol_header()
+						diary_updated.emit(current_item)
+				elif ev.button_index == MOUSE_BUTTON_LEFT:
 					start_editing_volume_quote(capture_idx)
 				elif ev.button_index == MOUSE_BUTTON_RIGHT and current_item != null:
 					var v_quote_str: String = str(v.get("quote", ""))

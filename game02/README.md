@@ -5,7 +5,7 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 
 ---
 
-## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 160 Milestone)
+## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 161)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
@@ -14,6 +14,9 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 ---
 
 ## 🚀 최신 스프린트 업데이트 요약 ([전체 회의록 보기](SPRINT_LOG.md))
+
+### 📓 [Sprint 161] 권별 `vol_lbl` `Shift+좌클릭` 초판+북마크+★5 풀스탬프 & `quote_lbl` `Shift+좌클릭` 밑줄 복사+북마크
+- **최애권 풀스탬프 & 밑줄 복사+북마크 (`detail_modal.gd` · `index.html`)**: 권별 `N권` 라벨 `Shift+좌클릭`으로 `초판특전+북마크+★5`를 한 번에 지정하며, 밑줄 문장 라벨 `Shift+좌클릭`으로 클립보드 복사와 북마크 ON을 동시에 실행합니다.
 
 ### 🏆 [Sprint 160 Milestone] `RemoveVolBtn` `Shift+좌클릭` 전권 북마크 일괄 토글 & `ShareCardBtn` `Shift+좌클릭` 전체 서재 리포트 복사
 - **전권 북마크 일괄 토글 & 리포트 원클릭 복사 (`detail_modal.gd` · `index.html`)**: `- 권 삭제` 버튼 `Shift+좌클릭`으로 전권 북마크를 일괄 온·오프하며, `💌 공유` 버튼 `Shift+좌클릭`으로 전체 서재 리포트를 즉시 클립보드에 복사합니다.

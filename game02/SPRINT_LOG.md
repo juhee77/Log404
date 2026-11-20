@@ -5,6 +5,19 @@
 
 ---
 
+## 📓 [Sprint 161] 권별 `vol_lbl` `Shift+좌클릭` 초판+북마크+★5 풀스탬프 & `quote_lbl` `Shift+좌클릭` 밑줄 복사+북마크
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A (다꾸러):** "권별 리스트의 `1권`·`2권` 라벨(`vol_lbl`)을 `Shift+좌클릭`했을 때 해당 권을 단번에 `초판특전 + 북마크 ON + ★5` 최애권 풀스탬프로 지정할 수 있으면 정주행 마무리가 훨씬 상쾌할 것 같아요!"
+- **가챠러 B (대사 수집러):** "권별 밑줄 문장 라벨(`quote_lbl`)도 우클릭은 단순 복사지만, `Shift+좌클릭`하면 대사를 클립보드에 복사하면서 동시에 해당 권 북마크까지 자동으로 켜지면 좋겠어요."
+- **미니멀러 C (웹 동기화):** "웹 목업(`index.html`)의 권 번호 스팬과 대사 스팬에도 동일한 `Shift+좌클릭` 콤보를 넣어주면 Godot 앱과 100% 일치하겠어요."
+- **PO & UX/UI 확정:**
+  1. **`DetailModal` 권별 `vol_lbl` `Shift+좌클릭` 초판+북마크+★5 (`detail_modal.gd`)**: `vol_lbl.gui_input`에서 `Shift+좌클릭` 시 `accept_event()` 처리 후 해당 권의 `status = "first"`, `bookmarked = true`, `rating = 5`를 일괄 적용하고 `_render_volumes()`, `_refresh_vol_header()`, `_refresh_author_label()`, `diary_updated` 시그널을 발행합니다.
+  2. **`DetailModal` 권별 `quote_lbl` `Shift+좌클릭` 복사+북마크 (`detail_modal.gd`)**: `quote_lbl.gui_input`에서 `Shift+좌클릭` 시 `accept_event()` 처리 후 `"제목 N권: \"밑줄\""`을 클립보드에 복사하고 `bookmarked = true`를 함께 설정합니다.
+  3. **웹 목업(`index.html`) 동기화 & TDD/QA 검증:** `renderDiaryVolumes` 내 권 번호 및 대사 스팬에 동일한 `Shift+좌클릭` 동작 및 툴팁을 동기화했습니다. `test_main_integration.gd`에 Sprint 161 통합 테스트를 추가해 3종 헤드리스 테스트 100% 통과 및 Metal 4.0 스크린샷을 갱신했습니다.
+
+---
+
 ## 🏆 [Sprint 160 Milestone] `RemoveVolBtn` `Shift+좌클릭` 전권 북마크 일괄 토글 & `ShareCardBtn` `Shift+좌클릭` 전체 서재 리포트 복사
 
 ### 1. 14인 스쿼드 회의록 & VOC

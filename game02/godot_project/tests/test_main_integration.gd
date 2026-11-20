@@ -2607,6 +2607,37 @@ func _init() -> void:
 	main_inst.detail_modal.close()
 	print("✓ Sprint 160 Milestone: RemoveVolBtn Batch Bookmark & ShareCardBtn Shift+Left-Click Report Copy verified")
 
+	# Sprint 161: Volume vol_lbl Shift+Left-Click (First+Bookmark+5Star) & quote_lbl Shift+Left-Click (Copy+Bookmark)
+	var item161 = main_inst.archive_state.items[0]
+	item161.volumes[0]["bookmarked"] = false
+	item161.volumes[1]["status"] = "owned"
+	item161.volumes[1]["bookmarked"] = false
+	item161.volumes[1]["rating"] = 3
+	main_inst.detail_modal.open(item161)
+	var row0_161 = main_inst.detail_modal.vol_list.get_child(0)
+	var row1_161 = main_inst.detail_modal.vol_list.get_child(1)
+	var vol_lbl161: Label = null
+	for child in row1_161.find_children("", "Label", true, false):
+		if child is Label and "Shift+좌클릭: 초판+북마크+★5" in child.tooltip_text:
+			vol_lbl161 = child
+			break
+	var quote_lbl161: Label = null
+	for child in row0_161.find_children("", "Label", true, false):
+		if child is Label and "Shift+좌클릭: 복사+북마크" in child.tooltip_text:
+			quote_lbl161 = child
+			break
+	assert(vol_lbl161 != null and quote_lbl161 != null, "vol_lbl and quote_lbl should have Sprint 161 tooltips")
+	var shift_lclick161 := InputEventMouseButton.new()
+	shift_lclick161.button_index = MOUSE_BUTTON_LEFT
+	shift_lclick161.pressed = true
+	shift_lclick161.shift_pressed = true
+	vol_lbl161.gui_input.emit(shift_lclick161)
+	assert(item161.volumes[1].get("status", "") == "first" and bool(item161.volumes[1].get("bookmarked", false)) and int(item161.volumes[1].get("rating", 0)) == 5, "Shift+Left-Click on vol_lbl should set first+bookmark+5star")
+	quote_lbl161.gui_input.emit(shift_lclick161)
+	assert(bool(item161.volumes[0].get("bookmarked", false)), "Shift+Left-Click on quote_lbl should bookmark the volume")
+	main_inst.detail_modal.close()
+	print("✓ Sprint 161: Volume Label First+Bookmark+5Star & Quote Label Copy+Bookmark verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()
