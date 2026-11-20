@@ -3204,6 +3204,44 @@ func _init() -> void:
 	assert("[E/G/D] 분류" in main_inst.status_toast.text, "Cheatsheet should include [E/G/D] 분류")
 	print("✓ Sprint 183: MainView Keys E/G/D Category Filter & Shift Instant Open verified")
 
+	# Sprint 184: MainView Keys A (All) & U (Firsts) Filter + Shift Instant Open
+	main_inst.search_input.release_focus()
+	var ev_u = InputEventKey.new()
+	ev_u.pressed = true
+	ev_u.keycode = KEY_U
+	main_inst._unhandled_input(ev_u)
+	assert(main_inst.filter_firsts_only == true, "Key U should enable filter_firsts_only")
+	assert(not main_inst.detail_modal.visible, "Plain Key U should not open modal")
+
+	var ev_a = InputEventKey.new()
+	ev_a.pressed = true
+	ev_a.keycode = KEY_A
+	main_inst._unhandled_input(ev_a)
+	assert(main_inst.archive_state.current_filter == -1 and not main_inst.filter_firsts_only, "Key A should switch back to all library")
+	assert(not main_inst.detail_modal.visible, "Plain Key A should not open modal")
+
+	var ev_shift_u = InputEventKey.new()
+	ev_shift_u.pressed = true
+	ev_shift_u.shift_pressed = true
+	ev_shift_u.keycode = KEY_U
+	main_inst._unhandled_input(ev_shift_u)
+	assert(main_inst.filter_firsts_only == true, "Shift+U should filter firsts")
+	assert(main_inst.detail_modal.visible == true, "Shift+U should open first matching card in modal")
+	main_inst.detail_modal.close()
+
+	var ev_shift_a = InputEventKey.new()
+	ev_shift_a.pressed = true
+	ev_shift_a.shift_pressed = true
+	ev_shift_a.keycode = KEY_A
+	main_inst._unhandled_input(ev_shift_a)
+	assert(main_inst.archive_state.current_filter == -1 and not main_inst.filter_firsts_only, "Shift+A should switch to all library")
+	assert(main_inst.detail_modal.visible == true, "Shift+A should open first card in modal")
+	main_inst.detail_modal.close()
+
+	main_inst._unhandled_input(ev_h_183)
+	assert("[A/U] 전체·초판" in main_inst.status_toast.text, "Cheatsheet should include [A/U] 전체·초판")
+	print("✓ Sprint 184: MainView Keys A All & U Firsts Filter + Shift Instant Open verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

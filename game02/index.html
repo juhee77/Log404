@@ -1284,6 +1284,17 @@
                     switchCategory('complete');
                     if (e.shiftKey) { const cIt = ITEMS.find(x => (x.volumes || []).length >= 2); if (cIt) openJournalModal(cIt.id); }
                 }
+            } else if ((!document.getElementById('journal-modal') || document.getElementById('journal-modal').classList.contains('hidden')) && ['a', 'A', 'u', 'U'].includes(e.key) && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
+                const lk = e.key.toLowerCase();
+                if (lk === 'a') {
+                    switchCategory('all');
+                    if (e.shiftKey && ITEMS.length > 0) openJournalModal(ITEMS[0].id);
+                } else {
+                    switchCategory('all');
+                    const firstIt = ITEMS.find(x => (x.volumes || []).some(v => v.isFirst)) || ITEMS[0];
+                    if (e.shiftKey && firstIt) openJournalModal(firstIt.id);
+                    else showToast('🔖 초판 스탬프 보유 작품만 모아봅니다.');
+                }
             } else if ((e.key === 'i' || e.key === 'I') && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
                 const jm = document.getElementById('journal-modal');
                 if (jm && !jm.classList.contains('hidden') && activeId != null) {
