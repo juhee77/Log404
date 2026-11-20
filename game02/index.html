@@ -1317,6 +1317,13 @@
                 } else {
                     showToast(e.shiftKey ? '📚 정렬 기준 변경: 기본 등록순' : '📚 정렬 기준 변경: 최근 기록순(최신순)');
                 }
+            } else if ((!document.getElementById('journal-modal') || document.getElementById('journal-modal').classList.contains('hidden')) && ['j', 'J', 'y', 'Y'].includes(e.key) && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
+                const lk = e.key.toLowerCase();
+                if (lk === 'j') {
+                    if (ITEMS.length > 0) openJournalModal(e.shiftKey ? ITEMS[0].id : ITEMS[ITEMS.length - 1].id);
+                } else {
+                    showToast(e.shiftKey ? '🎧 앰비언트 사운드 이전 프리셋' : '🔇 앰비언트 사운드 음소거/재생 토글');
+                }
             } else if ((e.key === 'i' || e.key === 'I') && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
                 const jm = document.getElementById('journal-modal');
                 if (jm && !jm.classList.contains('hidden') && activeId != null) {

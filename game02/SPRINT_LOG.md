@@ -5,6 +5,19 @@
 
 ---
 
+## 📓 [Sprint 187] 메인 키보드 `J` 마지막 작품 열기(Shift: 첫 작품) · `Y` 앰비언트 음소거 토글 — A~Z 26/26 완전 매핑
+- **일시**: 2026-11-21
+- **14인 가상 애자일 스쿼드 회의록**:
+  - **다꾸러 VOC (지민·수빈·하연)**: "방금 추가한 최신 일기나 서재 맨 끝 작품을 바로 펼쳐보는 `J`(Jump to End) 키와, `M` 키로 배경음을 여러 번 넘기지 않고 원탭으로 음소거/재생을 전환하는 `Y` 키가 있으면 알파벳 A~Z 26키가 빈틈없이 완성될 것 같아요!"
+  - **PO & UX/UI**: `MainView` `_unhandled_input`에 `KEY_J`(`_open_last_filtered_card()` / `Shift+J`: `_open_first_filtered_card()`)와 `KEY_Y`(`ambient_sound_index` 0↔1 음소거/재생 토글 / `Shift+Y`: 역순환)를 추가해 A~Z 26개 알파벳 단축키 100% 커버리지를 달성한다. `KEY_H` 치트시트에 `[J/Y] 끝열기·음소거`를 동기화한다.
+- **구현 내역**:
+  - [`main_view.gd`](godot_project/scripts/main_view.gd): `_open_last_filtered_card()` 헬퍼 및 `KEY_J`/`KEY_Y` 분기 추가, `_show_shortcut_cheatsheet()`에 `[J/Y] 끝열기·음소거` 반영.
+  - [`index.html`](index.html): 웹 인터랙티브 목업에 `J`/`Y` 및 `Shift+J`/`Shift+Y` 단축키 동기화.
+  - [`test_main_integration.gd`](godot_project/tests/test_main_integration.gd): `KEY_J`, `Shift+J`, `KEY_Y` 음소거 토글 및 `KEY_H` 치트시트 검증 추가.
+- **검증**: `test_archive.gd`, `test_persistence.gd`, `test_main_integration.gd` 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 갱신 완료.
+
+---
+
 ## 📓 [Sprint 186] 메인 키보드 `K` 다독순 · `Z` 최신순 정렬 토글(Shift: 기본순 복귀) · 치트시트 Sync
 - **일시**: 2026-11-21
 - **14인 가상 애자일 스쿼드 회의록**:

@@ -3309,6 +3309,38 @@ func _init() -> void:
 	assert("[K/Z] 다독·최신순" in main_inst.status_toast.text, "Cheatsheet should include [K/Z] 다독·최신순")
 	print("✓ Sprint 186: MainView Keys K Volume Sort & Z Latest Sort verified")
 
+	# Sprint 187: MainView Keys J (Last/First Jump) & Y (Ambient Mute Toggle) — 26/26 A-Z Complete
+	main_inst.search_input.release_focus()
+	main_inst._reset_all_filters()
+	var ev_j = InputEventKey.new()
+	ev_j.pressed = true
+	ev_j.keycode = KEY_J
+	main_inst._unhandled_input(ev_j)
+	assert(main_inst.detail_modal.visible == true, "Key J should open last filtered card in modal")
+	var last_card_title = main_inst.detail_modal.current_item.title
+	main_inst.detail_modal.close()
+
+	var ev_shift_j = InputEventKey.new()
+	ev_shift_j.pressed = true
+	ev_shift_j.shift_pressed = true
+	ev_shift_j.keycode = KEY_J
+	main_inst._unhandled_input(ev_shift_j)
+	assert(main_inst.detail_modal.visible == true and main_inst.detail_modal.current_item.title != last_card_title, "Shift+J should open first filtered card")
+	main_inst.detail_modal.close()
+
+	var ev_y = InputEventKey.new()
+	ev_y.pressed = true
+	ev_y.keycode = KEY_Y
+	main_inst.ambient_sound_index = 2
+	main_inst._unhandled_input(ev_y)
+	assert(main_inst.ambient_sound_index == 0, "Key Y should mute ambient sound (index 0)")
+	main_inst._unhandled_input(ev_y)
+	assert(main_inst.ambient_sound_index == 1, "Key Y again should unmute ambient sound to index 1")
+
+	main_inst._unhandled_input(ev_h_183)
+	assert("[J/Y] 끝열기·음소거" in main_inst.status_toast.text, "Cheatsheet should include [J/Y] 끝열기·음소거")
+	print("✓ Sprint 187: MainView Keys J Last/First Jump & Y Ambient Mute Toggle (26/26 A-Z) verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()
