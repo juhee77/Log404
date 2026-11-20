@@ -18,13 +18,14 @@ Godot 4+ 기반의 감성 게임 및 인터랙티브 아카이브 애플리케�
 > **Godot 4.6.2 모바일 기반 E-Book 리더기 서재(Apple Books · 리디북스) & 만년필 다꾸 독서노트(굿노트 · 몰스킨) 감성 아카이브 앱**  
 > 14인 가상 애자일 스쿼드가 20분 주기 자동 스프린트로 지속 개선 중입니다.
 
-### 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 158)
+### 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 159)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
 | ![Pocket Archive Main Screen](game02/godot_project/screenshots/godot_app_screen.png) | ![Pocket Archive Detail Modal](game02/godot_project/screenshots/godot_modal_screen.png) |
 
 ### ✨ 주요 핵심 기능
+- **최신 Sprint 159 하이라이트**: 권별 `date_btn` `Shift+좌클릭` 전권 오늘 날짜 일괄 스탬프(`stamp_all_volumes_date`) 및 `PrevItemBtn`/`NextItemBtn` `Shift+좌클릭` 처음·끝 작품 점프(`detail_modal.gd` · `main_view.gd` · `index.html`) 완성
 - **최신 Sprint 158 하이라이트**: `DiyBtn` `Shift+좌클릭` 샘플 채움 모달 열기 및 권별 `StatusBtn` `Shift+좌클릭` 전권 초판·소장 일괄 전환(`main_view.gd` · `detail_modal.gd` · `index.html`) 완성
 - **최신 Sprint 157 하이라이트**: `WebBtn`/`CamBtn` `Shift+좌클릭` 스크랩·촬영 후 즉시 열기 및 권별 `BmBtn` `Shift+좌클릭` `초판+북마크`(`main_view.gd` · `detail_modal.gd` · `index.html`) 완성
 - **최신 Sprint 156 하이라이트**: `StatVols`/`StatFirsts` `Shift+좌클릭` 첫 작품 열기·초판 가치순 정렬 및 권별 `StarBtn` `Shift+좌클릭` `★5+북마크`(`main_view.gd` · `detail_modal.gd` · `index.html`) 완성

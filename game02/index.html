@@ -290,11 +290,11 @@
                     <div class="flex items-center justify-between pb-3 border-b border-[#e2d6c5]">
                         <span onclick="const i=document.getElementById('diary-quote-input');if(i){i.value='오늘도 한 페이지의 여운을 남겼다.';i.focus();}" oncontextmenu="event.preventDefault();const i=document.getElementById('diary-quote-input');if(i){i.value='';}" title="좌클릭: 샘플 밑줄 채움 · 우클릭: 밑줄 입력 비우기" class="serif-font text-sm font-bold text-[#2c221e] cursor-pointer hover:text-[#c85a32]">🖋️ 나만의 독서 노트 & 권별 밑줄</span>
                         <div class="flex items-center gap-1.5">
-                            <button id="prev-page-btn" onclick="navigateJournalModal(-1)" oncontextmenu="event.preventDefault(); if (ITEMS.length) openJournalModal(ITEMS[0].id);" title="이전 작품 (← · 우클릭: 처음)"
+                            <button id="prev-page-btn" onclick="if(event&&event.shiftKey){if(ITEMS.length)openJournalModal(ITEMS[0].id);}else{navigateJournalModal(-1);}" oncontextmenu="event.preventDefault(); if (ITEMS.length) openJournalModal(ITEMS[0].id);" title="이전 작품 (← · 우클릭/Shift+좌클릭: 처음)"
                                 class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">◀</button>
                             <span id="header-page-badge" onclick="navigateJournalModal(1)" title="클릭하여 다음 일기장 보기"
                                 class="text-[10px] font-bold text-[#8c7a6b] hover:text-[#2c221e] px-1 cursor-pointer select-none">1/6</span>
-                            <button id="next-page-btn" onclick="navigateJournalModal(1)" oncontextmenu="event.preventDefault(); if (ITEMS.length) openJournalModal(ITEMS[ITEMS.length - 1].id);" title="다음 작품 (→ · 우클릭: 끝)"
+                            <button id="next-page-btn" onclick="if(event&&event.shiftKey){if(ITEMS.length)openJournalModal(ITEMS[ITEMS.length-1].id);}else{navigateJournalModal(1);}" oncontextmenu="event.preventDefault(); if (ITEMS.length) openJournalModal(ITEMS[ITEMS.length - 1].id);" title="다음 작품 (→ · 우클릭/Shift+좌클릭: 끝)"
                                 class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">▶</button>
                             <button id="tape-cycle-btn" onclick="cycleWashiTape(1)" oncontextmenu="event.preventDefault(); cycleWashiTape(-1);" title="상단 마스킹 테이프 컬러 순환 (W / 우클릭: 이전)"
                                 class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">🎨
@@ -672,8 +672,8 @@
                 const nextIdx = (idx + 1) % ITEMS.length;
                 const prevBtn = document.getElementById('prev-page-btn');
                 const nextBtn = document.getElementById('next-page-btn');
-                if (prevBtn) prevBtn.title = `◀ 이전 일기 (${prevIdx + 1}/${ITEMS.length}): ${ITEMS[prevIdx].title} (← · 우클릭: 처음)`;
-                if (nextBtn) nextBtn.title = `▶ 다음 일기 (${nextIdx + 1}/${ITEMS.length}): ${ITEMS[nextIdx].title} (→ · 우클릭: 끝)`;
+                if (prevBtn) prevBtn.title = `◀ 이전 일기 (${prevIdx + 1}/${ITEMS.length}): ${ITEMS[prevIdx].title} (← · 우클릭/Shift+좌클릭: 처음)`;
+                if (nextBtn) nextBtn.title = `▶ 다음 일기 (${nextIdx + 1}/${ITEMS.length}): ${ITEMS[nextIdx].title} (→ · 우클릭/Shift+좌클릭: 끝)`;
                 const headerPageBadge = document.getElementById('header-page-badge');
                 if (headerPageBadge) headerPageBadge.textContent = `${idx + 1}/${ITEMS.length}`;
             }
@@ -842,7 +842,10 @@
                         <button onclick="if(event&&event.shiftKey){const it=ITEMS.find(x=>x.id===activeId);if(it&&it.volumes&&it.volumes[${idx}]){it.volumes[${idx}].status='first';it.volumes[${idx}].bookmarked=true;renderDiaryVolumes(it);}}else{toggleVolBookmark(${idx});}" oncontextmenu="event.preventDefault(); startEditVolQuote(${idx});" class="text-[12px] shrink-0 cursor-pointer hover:scale-110" title="북마크 토글 (우클릭: ${v.vol}권 밑줄 문장 편집 · Shift+좌클릭: 초판+북마크)">${isBm ? '🔖' : '🏷️'}</button>
                         <span onclick="startEditVolQuote(${idx})" oncontextmenu="event.preventDefault(); const qText = this.textContent; navigator.clipboard?.writeText('${'${'}item.title.replace(/'/g, "\\'")${'}'} ${v.vol}권: ' + qText); this.title='✅ 복사됨: ' + qText;" class="serif-font text-[#5c4938] truncate cursor-pointer hover:text-[#c85a32]" title="클릭하여 ${v.vol}권 밑줄 문장 편집 · 우클릭: 밑줄 문장 복사">${v.quote ? `"${v.quote}"` : '메모 없음'}</span>
                     </div>
-                    <button onclick="if(event&&event.shiftKey){const it=ITEMS.find(x=>x.id===activeId);if(it&&it.volumes&&it.volumes[${idx}]){it.volumes[${idx}].rating=5;it.volumes[${idx}].bookmarked=true;renderDiaryVolumes(it);}}else{cycleVolRating(${idx});}" class="text-[#c85a32] font-bold shrink-0 ml-2 cursor-pointer hover:opacity-80" title="클릭하여 별점 변경 · Shift+좌클릭: ★5+북마크">${'★'.repeat(v.rating || 5)}</button>
+                    <div class="flex items-center gap-1.5 shrink-0 ml-2">
+                        <button onclick="const d=new Date();const ds=`${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')}`;const it=ITEMS.find(x=>x.id===activeId);if(it&&it.volumes){if(event&&event.shiftKey){it.volumes.forEach(vv=>vv.date=ds);}else if(it.volumes[${idx}]){it.volumes[${idx}].date=ds;}renderDiaryVolumes(it);}" oncontextmenu="event.preventDefault();const it=ITEMS.find(x=>x.id===activeId);if(it&&it.volumes&&it.volumes[${idx}]){const vv=it.volumes[${idx}];navigator.clipboard?.writeText(`${it.title} ${vv.vol}권: '${vv.quote||it.memo}'`);this.textContent='✅ 복사됨';}" title="클릭하여 오늘 날짜로 읽은 날 스탬프 갱신 · 우클릭: 이 권 대사 복사 · Shift+좌클릭: 전권 오늘 날짜 일괄 스탬프" class="px-1.5 py-0.5 rounded bg-[#f4ece0] hover:bg-[#e8dccb] text-[#6b5a4e] text-[10px] font-bold cursor-pointer">${v.date ? '📅 ' + v.date : '📅 날짜'}</button>
+                        <button onclick="if(event&&event.shiftKey){const it=ITEMS.find(x=>x.id===activeId);if(it&&it.volumes&&it.volumes[${idx}]){it.volumes[${idx}].rating=5;it.volumes[${idx}].bookmarked=true;renderDiaryVolumes(it);}}else{cycleVolRating(${idx});}" class="text-[#c85a32] font-bold cursor-pointer hover:opacity-80" title="클릭하여 별점 변경 · Shift+좌클릭: ★5+북마크">${'★'.repeat(v.rating || 5)}</button>
+                    </div>
                 `;
                 list.appendChild(row);
             });

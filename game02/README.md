@@ -5,7 +5,7 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 
 ---
 
-## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 158)
+## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 159)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
@@ -14,6 +14,9 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 ---
 
 ## 🚀 최신 스프린트 업데이트 요약 ([전체 회의록 보기](SPRINT_LOG.md))
+
+### 📓 [Sprint 159] 권별 `date_btn` `Shift+좌클릭` 전권 오늘 날짜 일괄 스탬프 & `PrevItemBtn`/`NextItemBtn` `Shift+좌클릭` 처음·끝 작품 점프
+- **전권 날짜 일괄 스탬프 & 모달 처음·끝 점프 (`detail_modal.gd` · `main_view.gd` · `index.html`)**: 권별 날짜 스탬프 버튼 `Shift+좌클릭`으로 전권 `date`를 오늘 날짜(`YYYY.MM.DD`)로 일괄 갱신하며, 모달 상단 `◀`/`▶` 버튼 `Shift+좌클릭`으로 첫 작품·마지막 작품으로 즉시 점프합니다.
 
 ### 📓 [Sprint 158] `DiyBtn` `Shift+좌클릭` 샘플 채움 모달 열기 & 권별 `StatusBtn` `Shift+좌클릭` 전권 초판·소장 일괄 전환
 - **샘플 일괄 채움 & 전권 초판 전환 (`main_view.gd` · `detail_modal.gd` · `index.html`)**: `DiyBtn` `Shift+좌클릭`으로 샘플 채움 모달을 열며, 권별 `StatusBtn` `Shift+좌클릭`으로 전권 초판·소장 상태를 일괄 전환합니다.

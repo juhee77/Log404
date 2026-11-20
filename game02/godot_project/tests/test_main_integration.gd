@@ -2540,6 +2540,44 @@ func _init() -> void:
 	main_inst.detail_modal.close()
 	print("✓ Sprint 158 Milestone: DiyBtn Sample Modal & StatusBtn Batch Toggle verified")
 
+	# Sprint 159: Volume date_btn Shift+Left-Click batch date stamp & PrevItemBtn/NextItemBtn Shift+Left-Click
+	var item159 = main_inst.archive_state.items[0]
+	for v in item159.volumes:
+		v["date"] = "2020.01.01"
+	main_inst.detail_modal.open(item159)
+	var vol_list159: VBoxContainer = main_inst.detail_modal.vol_list
+	assert(vol_list159 != null and vol_list159.get_child_count() > 0, "Vol list should have volume rows")
+	var first_row159 = vol_list159.get_child(0)
+	var date_btn159: Button = null
+	for child in first_row159.find_children("", "Button", true, false):
+		if child is Button and "스탬프" in child.tooltip_text:
+			date_btn159 = child
+			break
+	assert(date_btn159 != null, "Volume row should have date stamp button")
+	assert("Shift+좌클릭: 전권 오늘 날짜 일괄 스탬프" in date_btn159.tooltip_text, "date_btn tooltip should mention Shift+Left-Click batch date stamp")
+	var shift_lclick159 := InputEventMouseButton.new()
+	shift_lclick159.button_index = MOUSE_BUTTON_LEFT
+	shift_lclick159.pressed = true
+	shift_lclick159.shift_pressed = true
+	date_btn159.gui_input.emit(shift_lclick159)
+	var today_d159 := Time.get_date_dict_from_system()
+	var today_str159 := "%04d.%02d.%02d" % [today_d159.year, today_d159.month, today_d159.day]
+	for v in item159.volumes:
+		assert(str(v.get("date", "")) == today_str159, "Shift+Left-Click on date_btn should stamp today's date on all volumes")
+	var prev_btn159: Button = main_inst.detail_modal.find_child("PrevItemBtn", true, false) as Button
+	var next_btn159: Button = main_inst.detail_modal.find_child("NextItemBtn", true, false) as Button
+	assert(prev_btn159 != null and next_btn159 != null, "PrevItemBtn and NextItemBtn should exist")
+	assert("Shift+좌클릭" in prev_btn159.tooltip_text and "Shift+좌클릭" in next_btn159.tooltip_text, "Header nav tooltips should mention Shift+Left-Click")
+	var nav_deltas159: Array = []
+	var nav_cb159 := func(delta: int): nav_deltas159.append(delta)
+	main_inst.detail_modal.navigate_requested.connect(nav_cb159)
+	next_btn159.gui_input.emit(shift_lclick159)
+	prev_btn159.gui_input.emit(shift_lclick159)
+	main_inst.detail_modal.navigate_requested.disconnect(nav_cb159)
+	assert(nav_deltas159 == [9999, -9999], "Shift+Left-Click on Next/PrevItemBtn should emit 9999 and -9999")
+	main_inst.detail_modal.close()
+	print("✓ Sprint 159: Volume Date Batch Stamp & Header Nav Shift+Left-Click verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

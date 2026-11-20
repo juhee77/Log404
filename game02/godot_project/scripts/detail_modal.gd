@@ -454,27 +454,35 @@ func _style_diary_controls() -> void:
 			prev_btn.name = "PrevItemBtn"
 			prev_btn.text = "◀"
 			prev_btn.custom_minimum_size = Vector2(26, 26)
-			prev_btn.tooltip_text = "이전 작품 일기장 (←)"
+			prev_btn.tooltip_text = "이전 작품 일기장 (← · 우클릭: 처음 · Shift+좌클릭: 처음)"
 			prev_btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 			prev_btn.add_theme_stylebox_override("normal", cream_btn)
 			prev_btn.add_theme_color_override("font_color", Color(0.32, 0.25, 0.20))
 			prev_btn.pressed.connect(func(): navigate_requested.emit(-1))
 			prev_btn.gui_input.connect(func(ev: InputEvent):
-				if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_RIGHT:
-					navigate_requested.emit(-9999)
+				if ev is InputEventMouseButton and ev.pressed:
+					if ev.button_index == MOUSE_BUTTON_RIGHT:
+						navigate_requested.emit(-9999)
+					elif ev.button_index == MOUSE_BUTTON_LEFT and ev.shift_pressed:
+						navigate_requested.emit(-9999)
+						prev_btn.accept_event()
 			)
 			var next_btn := Button.new()
 			next_btn.name = "NextItemBtn"
 			next_btn.text = "▶"
 			next_btn.custom_minimum_size = Vector2(26, 26)
-			next_btn.tooltip_text = "다음 작품 일기장 (→)"
+			next_btn.tooltip_text = "다음 작품 일기장 (→ · 우클릭: 끝 · Shift+좌클릭: 끝)"
 			next_btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 			next_btn.add_theme_stylebox_override("normal", cream_btn)
 			next_btn.add_theme_color_override("font_color", Color(0.32, 0.25, 0.20))
 			next_btn.pressed.connect(func(): navigate_requested.emit(1))
 			next_btn.gui_input.connect(func(ev: InputEvent):
-				if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_RIGHT:
-					navigate_requested.emit(9999)
+				if ev is InputEventMouseButton and ev.pressed:
+					if ev.button_index == MOUSE_BUTTON_RIGHT:
+						navigate_requested.emit(9999)
+					elif ev.button_index == MOUSE_BUTTON_LEFT and ev.shift_pressed:
+						navigate_requested.emit(9999)
+						next_btn.accept_event()
 			)
 			var close_idx := close_btn.get_index()
 			var page_lbl := Label.new()
@@ -1377,6 +1385,16 @@ func stamp_volume_date(vol_idx: int) -> void:
 	_render_volumes()
 	diary_updated.emit(current_item)
 
+func stamp_all_volumes_date() -> void:
+	if current_item == null or current_item.volumes.is_empty():
+		return
+	var d = Time.get_date_dict_from_system()
+	var today_str = "%04d.%02d.%02d" % [d.year, d.month, d.day]
+	for v in current_item.volumes:
+		v["date"] = today_str
+	_render_volumes()
+	diary_updated.emit(current_item)
+
 func _refresh_vol_header() -> void:
 	if current_item == null or vol_header == null:
 		return
@@ -1521,16 +1539,20 @@ func _render_volumes() -> void:
 		date_btn.add_theme_stylebox_override("normal", date_sb)
 		date_btn.add_theme_color_override("font_color", Color(0.48, 0.38, 0.3))
 		date_btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
-		date_btn.tooltip_text = "클릭하여 오늘 날짜로 읽은 날 스탬프 갱신 · 우클릭: 이 권 대사 복사"
+		date_btn.tooltip_text = "클릭하여 오늘 날짜로 읽은 날 스탬프 갱신 · 우클릭: 이 권 대사 복사 · Shift+좌클릭: 전권 오늘 날짜 일괄 스탬프"
 		date_btn.pressed.connect(func(): stamp_volume_date(capture_idx))
 		date_btn.gui_input.connect(func(ev: InputEvent) -> void:
-			if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_RIGHT:
-				if current_item != null and capture_idx >= 0 and capture_idx < current_item.volumes.size():
-					var v_data = current_item.volumes[capture_idx]
-					var q_str = str(v_data.get("quote", ""))
-					var copy_str = "%s %d권: \"%s\"" % [current_item.title, int(v_data.get("vol", capture_idx + 1)), q_str if q_str != "" else current_item.memo]
-					DisplayServer.clipboard_set(copy_str)
-					date_btn.text = "✅ 복사됨"
+			if ev is InputEventMouseButton and ev.pressed:
+				if ev.button_index == MOUSE_BUTTON_RIGHT:
+					if current_item != null and capture_idx >= 0 and capture_idx < current_item.volumes.size():
+						var v_data = current_item.volumes[capture_idx]
+						var q_str = str(v_data.get("quote", ""))
+						var copy_str = "%s %d권: \"%s\"" % [current_item.title, int(v_data.get("vol", capture_idx + 1)), q_str if q_str != "" else current_item.memo]
+						DisplayServer.clipboard_set(copy_str)
+						date_btn.text = "✅ 복사됨"
+				elif ev.button_index == MOUSE_BUTTON_LEFT and ev.shift_pressed:
+					stamp_all_volumes_date()
+					date_btn.accept_event()
 		)
 
 		var bm_btn = Button.new()

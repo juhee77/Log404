@@ -5,6 +5,19 @@
 
 ---
 
+## 📓 [Sprint 159] 권별 `date_btn` `Shift+좌클릭` 전권 오늘 날짜 일괄 스탬프 & `PrevItemBtn`/`NextItemBtn` `Shift+좌클릭` 처음·끝 작품 점프
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A (다꾸러):** "시리즈 전권을 하루에 몰아 읽었을 때 권별 `📅` 날짜 스탬프를 매 권마다 눌러 갱신하는 게 번거로워요. `Shift+좌클릭` 한 번으로 전권 날짜를 오늘 날짜로 맞춰줄 수 있으면 좋겠어요."
+- **가챠러 B (모달 네비게이션):** "일기장 모달 상단 `◀`/`▶` 버튼에서 우클릭으로 처음·끝 작품으로 이동할 수 있는데, 트랙패드나 원버튼 환경에서도 `Shift+좌클릭`으로 똑같이 첫 작품·마지막 작품으로 점프할 수 있으면 직관적일 것 같아요."
+- **미니멀러 C (웹 동기화):** "웹 목업(`index.html`) 권별 리스트에도 날짜 스탬프 버튼이 함께 표시되어 `Shift+좌클릭` 일괄 날짜 스탬프가 동작하면 Godot 앱과 동일한 손맛이 날 거예요."
+- **PO & UX/UI 확정:**
+  1. **`DetailModal` 권별 `date_btn` `Shift+좌클릭` 전권 오늘 날짜 일괄 스탬프 (`detail_modal.gd`)**: `stamp_all_volumes_date()` 헬퍼를 추가해 `current_item.volumes` 전권 `date`를 오늘 날짜(`YYYY.MM.DD`)로 일괄 갱신하고 `_render_volumes()` 및 `diary_updated` 시그널을 발행합니다. `date_btn.gui_input`에서 `Shift+좌클릭` 시 `accept_event()`와 함께 호출합니다.
+  2. **`DetailModal` `PrevItemBtn`/`NextItemBtn` `Shift+좌클릭` 처음·끝 점프 (`detail_modal.gd` · `main_view.gd`)**: `PrevItemBtn`/`NextItemBtn` `gui_input`에서 `Shift+좌클릭` 시 각각 `navigate_requested.emit(-9999)` / `navigate_requested.emit(9999)`를 발행(`accept_event()` 포함)하고, `main_view.gd` 동적 툴팁에 기존 `"우클릭: 처음/끝"`과 함께 `"· Shift+좌클릭: 처음/끝"`을 병기합니다.
+  3. **웹 목업(`index.html`) 동기화 & TDD/QA 검증:** `renderDiaryVolumes`에 권별 `📅` 날짜 스탬프 버튼(클릭: 오늘 날짜, 우클릭: 대사 복사, `Shift+좌클릭`: 전권 오늘 날짜 일괄 스탬프)을 추가하고 `#prev-page-btn`/`#next-page-btn`에 `Shift+좌클릭` 처음·끝 점프를 동기화했습니다. `test_main_integration.gd`에 Sprint 159 통합 검증을 추가해 3종 헤드리스 테스트 100% 통과 및 Metal 4.0 스크린샷을 갱신했습니다.
+
+---
+
 ## 📓 [Sprint 158] `DiyBtn` `Shift+좌클릭` 샘플 채움 모달 열기 & 권별 `StatusBtn` `Shift+좌클릭` 전권 초판·소장 일괄 전환
 
 ### 1. 14인 스쿼드 회의록 & VOC
