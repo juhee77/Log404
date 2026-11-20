@@ -2040,6 +2040,31 @@ func _init() -> void:
 	main_inst.add_modal.close()
 	print("✓ Sprint 136 Milestone: DetailModal Dimmer Close+Backup & AddModal Dimmer Clear verified")
 
+	# Sprint 137 Milestone: Volume Row vol_lbl Edit/Bookmark & quote_lbl Right-Click Copy
+	var target_s137 = main_inst.archive_state.items[0]
+	main_inst._on_card_clicked(target_s137)
+	var labels_s137 = main_inst.detail_modal.vol_list.get_child(0).find_children("*", "Label", true, false)
+	var vol_lbl_s137: Label = labels_s137[0]
+	assert("밑줄 문장 편집" in vol_lbl_s137.tooltip_text and "북마크 토글" in vol_lbl_s137.tooltip_text, "vol_lbl tooltip should mention edit and bookmark toggle")
+	var lclick_s137 := InputEventMouseButton.new()
+	lclick_s137.pressed = true
+	lclick_s137.button_index = MOUSE_BUTTON_LEFT
+	vol_lbl_s137.gui_input.emit(lclick_s137)
+	assert(main_inst.detail_modal.editing_vol_index == 0, "Left-clicking vol_lbl should enter quote edit mode for volume 0")
+	var orig_bm_s137: bool = bool(target_s137.volumes[0].get("bookmarked", false))
+	var rclick_s137 := InputEventMouseButton.new()
+	rclick_s137.pressed = true
+	rclick_s137.button_index = MOUSE_BUTTON_RIGHT
+	vol_lbl_s137.gui_input.emit(rclick_s137)
+	assert(bool(target_s137.volumes[0].get("bookmarked", false)) != orig_bm_s137, "Right-clicking vol_lbl should toggle volume bookmark")
+	var labels_after_s137 = main_inst.detail_modal.vol_list.get_child(0).find_children("*", "Label", true, false)
+	var quote_lbl_s137: Label = labels_after_s137[1]
+	assert("밑줄 문장 복사" in quote_lbl_s137.tooltip_text, "quote_lbl tooltip should mention right-click quote copy")
+	quote_lbl_s137.gui_input.emit(rclick_s137)
+	assert("✅ 복사됨:" in quote_lbl_s137.tooltip_text, "Right-clicking quote_lbl should copy volume quote and update tooltip")
+	main_inst.detail_modal.close()
+	print("✓ Sprint 137 Milestone: Volume Row vol_lbl Edit/Bookmark & quote_lbl Copy verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

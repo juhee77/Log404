@@ -827,10 +827,10 @@
                 const isBm = !!v.bookmarked;
                 row.innerHTML = `
                     <div class="flex items-center gap-2 min-w-0">
-                        <span class="serif-font font-bold text-[#2c221e] shrink-0">${v.vol}권</span>
+                        <span onclick="startEditVolQuote(${idx})" oncontextmenu="event.preventDefault(); toggleVolBookmark(${idx});" title="좌클릭: ${v.vol}권 밑줄 문장 편집 · 우클릭: 북마크 토글" class="serif-font font-bold text-[#2c221e] shrink-0 cursor-pointer hover:text-[#c85a32]">${v.vol}권</span>
                         <button onclick="toggleVolStatus(${idx})" oncontextmenu="event.preventDefault(); toggleVolStatus(${idx}); toggleVolBookmark(${idx});" title="클릭: 초판/소장 전환 · 우클릭: 초판+북마크 동시 토글" class="px-1.5 py-0.5 rounded border ${isFirst ? 'bg-[#fff8f5] border-[#c85a32]/50 text-[#c85a32]' : 'bg-[#eef5f0] border-[#4a6b5d]/50 text-[#4a6b5d]'} text-[10px] font-bold shrink-0 cursor-pointer">${isFirst ? '🔖 초판특전' : '✓ 소장완료'}</button>
                         <button onclick="toggleVolBookmark(${idx})" oncontextmenu="event.preventDefault(); startEditVolQuote(${idx});" class="text-[12px] shrink-0 cursor-pointer hover:scale-110" title="북마크 토글 (우클릭: ${v.vol}권 밑줄 문장 편집)">${isBm ? '🔖' : '🏷️'}</button>
-                        <span onclick="startEditVolQuote(${idx})" class="serif-font text-[#5c4938] truncate cursor-pointer hover:text-[#c85a32]" title="클릭하여 ${v.vol}권 밑줄 문장 편집">${v.quote ? `"${v.quote}"` : '메모 없음'}</span>
+                        <span onclick="startEditVolQuote(${idx})" oncontextmenu="event.preventDefault(); const qText = this.textContent; navigator.clipboard?.writeText('${'${'}item.title.replace(/'/g, "\\'")${'}'} ${v.vol}권: ' + qText); this.title='✅ 복사됨: ' + qText;" class="serif-font text-[#5c4938] truncate cursor-pointer hover:text-[#c85a32]" title="클릭하여 ${v.vol}권 밑줄 문장 편집 · 우클릭: 밑줄 문장 복사">${v.quote ? `"${v.quote}"` : '메모 없음'}</span>
                     </div>
                     <button onclick="cycleVolRating(${idx})" class="text-[#c85a32] font-bold shrink-0 ml-2 cursor-pointer hover:opacity-80" title="클릭하여 별점 변경">${'★'.repeat(v.rating || 5)}</button>
                 `;

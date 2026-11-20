@@ -5,6 +5,24 @@
 
 ---
 
+## 📓 [Sprint 137] 권별 리스트 `vol_lbl` 좌·우클릭(편집/북마크) & `quote_lbl` 우클릭 밑줄 문장 즉시 복사
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A**: "권별 일기 리스트에서 `1권`, `2권` 번호 라벨(`vol_lbl`)을 좌클릭하면 바로 그 권의 밑줄 문장 편집으로 들어가고, 우클릭하면 북마크를 바로 켜고 끌 수 있으면 좋겠어요!"
+- **가챠러 B**: "권별 밑줄 문장(`quote_lbl`)을 우클릭했을 때 그 권의 명대사만 깔끔하게 클립보드에 복사되면 친구에게 공유할 때 훨씬 빠를 것 같아요."
+- **기획자 (PO)**: "`detail_modal.gd` 권별 행의 `vol_lbl`에 좌클릭 편집·우클릭 북마크 토글을, `quote_lbl`에 우클릭 클립보드 복사를 연결하고 `index.html` 권별 리스트와 동기화합니다."
+
+### 2. 핵심 구현 및 변경 내역
+- `game02/godot_project/scripts/detail_modal.gd`:
+  - 권별 행 `vol_lbl` 좌클릭 시 `start_editing_volume_quote(idx)`, 우클릭 시 `toggle_volume_bookmark(idx)`를 실행하고 커서·툴팁을 추가했습니다.
+  - 권별 행 `quote_lbl` 우클릭 시 `"작품명 N권: \"문장\""` 형식으로 클립보드에 복사하고 툴팁 피드백(`✅ 복사됨: ...`)을 표시하도록 구현했습니다.
+- `game02/index.html`:
+  - `renderDiaryVolumes()` 내 권 번호 라벨 및 밑줄 문장 스팬에 동일한 좌·우클릭 제스처와 툴팁을 동기화했습니다.
+- `game02/godot_project/tests/test_main_integration.gd`:
+  - `vol_lbl` 좌클릭 편집·우클릭 북마크 토글과 `quote_lbl` 우클릭 복사를 검증하는 Sprint 137 테스트를 추가해 100% 통과했습니다.
+
+---
+
 ## 📓 [Sprint 136] `DetailModal` 배경 딤머 우클릭 닫기+즉시 JSON 백업 & `AddModal` 배경 딤머 우클릭 입력 비우기
 
 ### 1. 14인 스쿼드 회의록 & VOC

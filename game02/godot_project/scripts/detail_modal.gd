@@ -1319,11 +1319,22 @@ func _render_volumes() -> void:
 		var hbox = HBoxContainer.new()
 		hbox.add_theme_constant_override("separation", 8)
 		
+		var capture_idx = idx
 		var vol_lbl = Label.new()
 		vol_lbl.text = str(int(v.get("vol", 1))) + "권"
 		vol_lbl.add_theme_font_size_override("font_size", 12)
 		vol_lbl.add_theme_color_override("font_color", Color(0.17, 0.13, 0.11))
 		vol_lbl.custom_minimum_size = Vector2(28, 0)
+		vol_lbl.mouse_filter = Control.MOUSE_FILTER_STOP
+		vol_lbl.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+		vol_lbl.tooltip_text = "좌클릭: %d권 밑줄 문장 편집 · 우클릭: 북마크 토글" % int(v.get("vol", idx + 1))
+		vol_lbl.gui_input.connect(func(ev: InputEvent) -> void:
+			if ev is InputEventMouseButton and ev.pressed:
+				if ev.button_index == MOUSE_BUTTON_LEFT:
+					start_editing_volume_quote(capture_idx)
+				elif ev.button_index == MOUSE_BUTTON_RIGHT:
+					toggle_volume_bookmark(capture_idx)
+		)
 		
 		var status_btn = Button.new()
 		var is_first = v.get("status", "") == "first"
@@ -1344,7 +1355,6 @@ func _render_volumes() -> void:
 		status_btn.add_theme_color_override("font_color", Color(0.78, 0.35, 0.2) if is_first else Color(0.29, 0.45, 0.36))
 		status_btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 		status_btn.tooltip_text = "클릭하여 초판특전 / 소장완료 전환 (우클릭: 초판+북마크 동시 토글)"
-		var capture_idx = idx
 		status_btn.pressed.connect(func(): toggle_volume_status(capture_idx))
 		status_btn.gui_input.connect(func(ev: InputEvent) -> void:
 			if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_RIGHT:
@@ -1403,8 +1413,16 @@ func _render_volumes() -> void:
 		quote_lbl.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 		quote_lbl.mouse_filter = Control.MOUSE_FILTER_STOP
 		quote_lbl.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
-		quote_lbl.tooltip_text = "클릭하여 %d권 밑줄 문장 편집" % int(v.get("vol", idx + 1))
-		quote_lbl.gui_input.connect(func(ev): if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_LEFT: start_editing_volume_quote(capture_idx))
+		quote_lbl.tooltip_text = "클릭하여 %d권 밑줄 문장 편집 · 우클릭: 밑줄 문장 복사" % int(v.get("vol", idx + 1))
+		quote_lbl.gui_input.connect(func(ev):
+			if ev is InputEventMouseButton and ev.pressed:
+				if ev.button_index == MOUSE_BUTTON_LEFT:
+					start_editing_volume_quote(capture_idx)
+				elif ev.button_index == MOUSE_BUTTON_RIGHT and current_item != null:
+					var v_quote_str: String = str(v.get("quote", ""))
+					DisplayServer.clipboard_set("%s %d권: \"%s\"" % [current_item.title, int(v.get("vol", idx + 1)), v_quote_str])
+					quote_lbl.tooltip_text = "✅ 복사됨: " + v_quote_str
+		)
 		
 		var star_btn = Button.new()
 		var r = int(v.get("rating", 5))
