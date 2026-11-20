@@ -2386,6 +2386,24 @@ func _init() -> void:
 	main_inst.detail_modal.close()
 	print("✓ Sprint 152 Milestone: AddBtn Sample Modal & AddVolBtn First+Bookmark verified")
 
+	# Sprint 153 Milestone: ThemeBtn Shift+Left-Click Default Reset & CloseBtn Shift+Left-Click Copy+Close
+	main_inst._step_theme(1)
+	assert(main_inst.theme_cursor != 0, "Setup: theme_cursor should be non-zero before Shift+Left-Click reset")
+	var theme_btn_s153: Control = main_inst.get_node("VBox/BottomBar/Margin/VBox/NavRow").get_child(3)
+	assert("기본 테마" in theme_btn_s153.tooltip_text, "ThemeBtn tooltip should mention Shift+Left-Click default theme reset")
+	var shift_lclick_s153 := InputEventMouseButton.new()
+	shift_lclick_s153.pressed = true
+	shift_lclick_s153.shift_pressed = true
+	shift_lclick_s153.button_index = MOUSE_BUTTON_LEFT
+	theme_btn_s153.gui_input.emit(shift_lclick_s153)
+	assert(main_inst.theme_cursor == 0 and "기본 속지 테마 복원" in main_inst.status_toast.text, "Shift+Left-clicking ThemeBtn should reset theme to default")
+	main_inst._on_card_clicked(main_inst.archive_state.items[0])
+	var close_btn_s153: Button = main_inst.detail_modal.get_node("Panel/VBox/Header/HBox/CloseBtn")
+	assert("카드 복사+닫기" in close_btn_s153.tooltip_text, "CloseBtn tooltip should mention Shift+Left-Click copy+close")
+	close_btn_s153.gui_input.emit(shift_lclick_s153)
+	assert(not main_inst.detail_modal.visible and "복사" in main_inst.status_toast.text, "Shift+Left-clicking CloseBtn should copy share card and close modal")
+	print("✓ Sprint 153 Milestone: ThemeBtn Default Reset & CloseBtn Copy+Close verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

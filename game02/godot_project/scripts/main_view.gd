@@ -273,7 +273,7 @@ func _ready() -> void:
 			"웹에서 작품 표지와 기본 정보 자동 스크랩 추가 (우클릭: 이북·단행본 필터)",
 			"실물 굿즈·단행본 폴라로이드 촬영 기록 추가 (우클릭: 가챠노트 필터)",
 			"[N] 새 독서 일기·가챠 스크랩 직접 작성 (우클릭: 즉시 JSON 저장)",
-			"[T] 다꾸 다이어리 속지 테마 순환 (우클릭·Shift+T: 이전)"
+			"[T] 다꾸 다이어리 속지 테마 순환 (우클릭·Shift+T: 이전 · Shift+좌클릭: 기본 테마)"
 		]
 		var nav_rclicks: Array[Callable] = [
 			_on_tab_manga_pressed,
@@ -286,9 +286,14 @@ func _ready() -> void:
 			if children[i] is Control:
 				children[i].tooltip_text = nav_tips[i]
 				var cb: Callable = nav_rclicks[i]
+				var idx_cap: int = i
 				children[i].gui_input.connect(func(ev: InputEvent) -> void:
-					if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_RIGHT:
-						cb.call()
+					if ev is InputEventMouseButton and ev.pressed:
+						if ev.button_index == MOUSE_BUTTON_RIGHT:
+							cb.call()
+						elif idx_cap == 3 and ev.button_index == MOUSE_BUTTON_LEFT and ev.shift_pressed:
+							children[idx_cap].accept_event()
+							_reset_theme()
 				)
 	
 	_apply_journal_button_theme()
@@ -885,7 +890,16 @@ func _step_theme(delta: int) -> void:
 	bg_rect.color = t["bg"]
 	_show_toast("🎨 진열장 배경 테마 변경: " + t["name"])
 
+func _reset_theme() -> void:
+	theme_cursor = 0
+	var t = ROOM_THEMES[0]
+	bg_rect.color = t["bg"]
+	_show_toast("🎨 기본 속지 테마 복원: " + t["name"])
+
 func _on_theme_btn_pressed() -> void:
+	if Input.is_key_pressed(KEY_SHIFT):
+		_reset_theme()
+		return
 	_step_theme(1)
 
 func _on_item_submitted(p_title: String, p_cat: int, p_author: String, p_color: String = "#b91c1c", p_quote: String = "") -> void:

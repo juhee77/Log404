@@ -5,6 +5,25 @@
 
 ---
 
+## 📓 [Sprint 153] `ThemeBtn` `Shift+좌클릭` 기본 속지 테마 복원 & `CloseBtn` `Shift+좌클릭` 감상 카드 복사+닫기
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A**: "하단 `속지 테마`(`ThemeBtn`) 버튼으로 여러 배경 테마를 구경하다가 기본 미색 노트로 돌아오고 싶을 때 `Shift+좌클릭` 한 번으로 기본 테마가 복원되면 좋겠어요!"
+- **가챠러 B**: "일기장 모달을 닫을 때 `✕`(`CloseBtn`)를 `Shift+좌클릭`하면 감상 카드를 클립보드에 복사하면서 동시에 모달이 닫히면 공유 후 바로 서재로 돌아갈 수 있어 편하겠어요."
+- **기획자 (PO)**: "`main_view.gd` `ThemeBtn` `Shift+좌클릭` 기본 테마 복원과 `detail_modal.gd` `CloseBtn` `Shift+좌클릭` 복사+닫기를 구현하고 `index.html` 닫기 버튼과 동기화합니다."
+
+### 2. 핵심 구현 및 변경 내역
+- `game02/godot_project/scripts/main_view.gd`:
+  - `_reset_theme()`를 추가해 `ThemeBtn` `Shift+좌클릭` 시 기본 속지 테마(`theme_cursor = 0`)로 즉시 복원하고 툴팁을 동기화했습니다.
+- `game02/godot_project/scripts/detail_modal.gd`:
+  - `CloseBtn` `Shift+좌클릭` 시 `copy_book_quote_card()` 실행 후 `close()`를 호출하도록 연결하고 툴팁을 동기화했습니다.
+- `game02/index.html`:
+  - 일기장 닫기 버튼 `onclick`에 `event.shiftKey` 시 `copyBookQuoteCard(); closeJournalModal();` 및 툴팁을 동기화했습니다.
+- `game02/godot_project/tests/test_main_integration.gd`:
+  - `ThemeBtn` `Shift+좌클릭` 기본 테마 복원과 `CloseBtn` `Shift+좌클릭` 복사+닫기를 검증하는 Sprint 153 테스트를 추가해 100% 통과했습니다.
+
+---
+
 ## 📓 [Sprint 152] `AddBtn` `Shift+좌클릭` 샘플 채움 모달 열기 & `AddVolBtn` `Shift+좌클릭` 초판+북마크 즉시 추가
 
 ### 1. 14인 스쿼드 회의록 & VOC

@@ -425,11 +425,16 @@ func _style_diary_controls() -> void:
 					cycle_paper_pattern(1)
 		)
 	if close_btn != null:
-		close_btn.tooltip_text = "일기장 닫기 (ESC · 우클릭: 닫고 즉시 JSON 백업)"
+		close_btn.tooltip_text = "일기장 닫기 (ESC · 우클릭: 닫고 즉시 JSON 백업 · Shift+좌클릭: 카드 복사+닫기)"
 		close_btn.gui_input.connect(func(ev: InputEvent) -> void:
-			if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_RIGHT:
-				close()
-				close_and_backup_requested.emit()
+			if ev is InputEventMouseButton and ev.pressed:
+				if ev.button_index == MOUSE_BUTTON_RIGHT:
+					close()
+					close_and_backup_requested.emit()
+				elif ev.button_index == MOUSE_BUTTON_LEFT and ev.shift_pressed:
+					close_btn.accept_event()
+					copy_book_quote_card()
+					close()
 		)
 		var header_hbox: HBoxContainer = close_btn.get_parent() as HBoxContainer
 		if header_hbox != null and header_hbox.get_node_or_null("PrevItemBtn") == null:
