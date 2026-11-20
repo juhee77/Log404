@@ -5,6 +5,26 @@
 
 ---
 
+## 🏆 [Sprint 140] 마일스톤 140: `DetailModal` `TitleLabel` 우클릭 감상 카드 복사 & `CatBadge` 우클릭 전체 서재 복원
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A**: "모달 상단 작품 제목(`TitleLabel`)을 좌클릭하면 제목만 복사되는데, 우클릭하면 바로 감상 카드 전체를 클립보드로 복사해주면 공유하기가 훨씬 편할 것 같아요!"
+- **가챠러 B**: "카테고리 배지(`CatBadge`)를 좌클릭해 이북이나 가챠만 모아본 뒤, 우클릭했을 때 모달이 닫히면서 전체 서재(6종)로 바로 복원되면 탐색 동선이 완벽해지겠어요."
+- **기획자 (PO)**: "`detail_modal.gd` `TitleLabel` 우클릭 `card_copied` 발행 + `open()` 시 툴팁 초기화 보완, `CatBadge` 우클릭 `filter_category_requested(-1)` 전체 서재 복원을 구현하고 `index.html` `#diary-title`과 동기화합니다."
+
+### 2. 핵심 구현 및 변경 내역
+- `game02/godot_project/scripts/detail_modal.gd`:
+  - `TitleLabel` 우클릭 시 `card_copied.emit(current_item)`으로 감상 카드 전체를 복사하며, `open()` 호출 시 제목 툴팁을 기본 안내 문구로 복원하도록 개선했습니다.
+  - `CatBadge` 우클릭 시 모달을 닫고 `filter_category_requested.emit(-1)`을 발행해 전체 서재 필터로 복원하도록 구현했습니다.
+- `game02/godot_project/scripts/main_view.gd`:
+  - `filter_category_requested` 핸들러에서 `cat == -1`일 때 `_on_tab_all_pressed()`를 호출하도록 연결했습니다.
+- `game02/index.html`:
+  - `#diary-title` `oncontextmenu`에 `copyBookQuoteCard()` 및 툴팁을 동기화했습니다.
+- `game02/godot_project/tests/test_main_integration.gd`:
+  - `TitleLabel` 우클릭 감상 카드 복사와 `CatBadge` 우클릭 전체 서재 복원을 검증하는 Sprint 140 마일스톤 테스트를 추가해 100% 통과했습니다.
+
+---
+
 ## 📓 [Sprint 139] `SearchInput` 우클릭 검색어 비우기·오늘의 밑줄 작품 검색 & `AddModal` 입력창 우클릭 비우기·샘플 채움
 
 ### 1. 14인 스쿼드 회의록 & VOC

@@ -98,21 +98,28 @@ func _ready() -> void:
 	if title_label != null:
 		title_label.mouse_filter = Control.MOUSE_FILTER_STOP
 		title_label.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
-		title_label.tooltip_text = "클릭하여 작품 제목 클립보드 복사"
+		title_label.tooltip_text = "좌클릭: 작품 제목 클립보드 복사 · 우클릭: 감상 카드 전체 복사 (C)"
 		title_label.gui_input.connect(func(ev: InputEvent) -> void:
-			if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_LEFT and current_item != null:
-				DisplayServer.clipboard_set(current_item.title)
-				title_label.tooltip_text = "✅ 복사됨: " + current_item.title
+			if ev is InputEventMouseButton and ev.pressed and current_item != null:
+				if ev.button_index == MOUSE_BUTTON_LEFT:
+					DisplayServer.clipboard_set(current_item.title)
+					title_label.tooltip_text = "✅ 복사됨: " + current_item.title
+				elif ev.button_index == MOUSE_BUTTON_RIGHT:
+					card_copied.emit(current_item)
 		)
 	if cat_badge != null:
 		cat_badge.mouse_filter = Control.MOUSE_FILTER_STOP
 		cat_badge.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
-		cat_badge.tooltip_text = "클릭하여 같은 카테고리(이북/가챠) 서재만 모아보기"
+		cat_badge.tooltip_text = "좌클릭: 같은 카테고리(이북/가챠) 서재만 모아보기 · 우클릭: 전체 서재 보기"
 		cat_badge.gui_input.connect(func(ev: InputEvent) -> void:
-			if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_LEFT and current_item != null:
-				var target_cat: int = current_item.category
-				close()
-				filter_category_requested.emit(target_cat)
+			if ev is InputEventMouseButton and ev.pressed and current_item != null:
+				if ev.button_index == MOUSE_BUTTON_LEFT:
+					var target_cat: int = current_item.category
+					close()
+					filter_category_requested.emit(target_cat)
+				elif ev.button_index == MOUSE_BUTTON_RIGHT:
+					close()
+					filter_category_requested.emit(-1)
 		)
 	if author_label != null:
 		author_label.mouse_filter = Control.MOUSE_FILTER_STOP
@@ -611,6 +618,7 @@ func open(item) -> void:
 		quote_input.release_focus()
 		quote_input.placeholder_text = "🖋️ 오늘 밑줄 친 명대사·감상평 수정..."
 	title_label.text = "📔 " + item.title
+	title_label.tooltip_text = "좌클릭: 작품 제목 클립보드 복사 · 우클릭: 감상 카드 전체 복사 (C)"
 	_refresh_author_label()
 	var sticker = current_item.get("deco_sticker") if current_item.get("deco_sticker") != null else "✨"
 	var r_tier = current_item.get("rarity_tier") if current_item.get("rarity_tier") != null else "🌟노말"

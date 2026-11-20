@@ -80,7 +80,9 @@ func _ready() -> void:
 	detail_modal.summary_copy_requested.connect(copy_summary_to_clipboard)
 	detail_modal.close_and_backup_requested.connect(_trigger_instant_json_backup)
 	detail_modal.filter_category_requested.connect(func(cat: int) -> void:
-		if cat == 1:
+		if cat == -1:
+			_on_tab_all_pressed()
+		elif cat == 1:
 			_on_tab_gacha_pressed()
 		else:
 			_on_tab_manga_pressed()

@@ -2106,6 +2106,23 @@ func _init() -> void:
 	main_inst.add_modal.close()
 	print("✓ Sprint 139 Milestone: SearchInput & AddModal Inputs Right-Click Clear/Sample verified")
 
+	# Sprint 140 Milestone: DetailModal TitleLabel Right-Click Share Copy & CatBadge Right-Click All Reset
+	main_inst.archive_state.reset_to_rich_defaults()
+	main_inst._reset_all_filters()
+	main_inst._on_tab_manga_pressed()
+	assert(main_inst.card_grid.get_child_count() == 4, "Setup: manga filter should show 4 cards")
+	main_inst._on_card_clicked(main_inst.archive_state.items[0])
+	assert("감상 카드 전체 복사" in main_inst.detail_modal.title_label.tooltip_text, "TitleLabel tooltip should mention right-click share card copy")
+	var rclick_s140 := InputEventMouseButton.new()
+	rclick_s140.pressed = true
+	rclick_s140.button_index = MOUSE_BUTTON_RIGHT
+	main_inst.detail_modal.title_label.gui_input.emit(rclick_s140)
+	assert("복사" in main_inst.status_toast.text, "Right-clicking TitleLabel should copy share card to clipboard")
+	assert("전체 서재 보기" in main_inst.detail_modal.cat_badge.tooltip_text, "CatBadge tooltip should mention right-click all library reset")
+	main_inst.detail_modal.cat_badge.gui_input.emit(rclick_s140)
+	assert(not main_inst.detail_modal.visible and main_inst.card_grid.get_child_count() == 6, "Right-clicking CatBadge should close modal and reset to all 6 cards")
+	print("✓ Sprint 140 Milestone: TitleLabel Share Copy & CatBadge All Library Reset verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()
