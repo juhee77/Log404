@@ -286,8 +286,8 @@ func _ready() -> void:
 	var nav_row = get_node_or_null("VBox/BottomBar/Margin/VBox/NavRow")
 	if nav_row != null:
 		var nav_tips = [
-			"웹에서 작품 표지와 기본 정보 자동 스크랩 추가 (우클릭: 이북·단행본 필터)",
-			"실물 굿즈·단행본 폴라로이드 촬영 기록 추가 (우클릭: 가챠노트 필터)",
+			"웹에서 작품 표지와 기본 정보 자동 스크랩 추가 (우클릭: 이북·단행본 필터 · Shift+좌클릭: 스크랩 후 열기)",
+			"실물 굿즈·단행본 폴라로이드 촬영 기록 추가 (우클릭: 가챠노트 필터 · Shift+좌클릭: 촬영 후 열기)",
 			"[N] 새 독서 일기·가챠 스크랩 직접 작성 (우클릭: 즉시 JSON 저장)",
 			"[T] 다꾸 다이어리 속지 테마 순환 (우클릭·Shift+T: 이전 · Shift+좌클릭: 기본 테마)"
 		]
@@ -307,9 +307,20 @@ func _ready() -> void:
 					if ev is InputEventMouseButton and ev.pressed:
 						if ev.button_index == MOUSE_BUTTON_RIGHT:
 							cb.call()
-						elif idx_cap == 3 and ev.button_index == MOUSE_BUTTON_LEFT and ev.shift_pressed:
-							children[idx_cap].accept_event()
-							_reset_theme()
+						elif ev.button_index == MOUSE_BUTTON_LEFT and ev.shift_pressed:
+							if idx_cap == 0:
+								children[idx_cap].accept_event()
+								_on_web_scrape_btn_pressed()
+								if archive_state != null and not archive_state.items.is_empty():
+									_open_detail_modal(archive_state.items[0])
+							elif idx_cap == 1:
+								children[idx_cap].accept_event()
+								_on_camera_snap_btn_pressed()
+								if archive_state != null and not archive_state.items.is_empty():
+									_open_detail_modal(archive_state.items[0])
+							elif idx_cap == 3:
+								children[idx_cap].accept_event()
+								_reset_theme()
 				)
 	
 	_apply_journal_button_theme()

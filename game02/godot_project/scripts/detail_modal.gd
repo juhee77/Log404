@@ -1530,12 +1530,20 @@ func _render_volumes() -> void:
 		bm_btn.flat = true
 		bm_btn.add_theme_font_size_override("font_size", 10)
 		bm_btn.add_theme_color_override("font_color", Color(0.85, 0.55, 0.15) if is_bm else Color(0.65, 0.58, 0.50))
-		bm_btn.tooltip_text = "이 권을 북마크에 추가/해제합니다 (우클릭: 이 권 밑줄 편집)"
+		bm_btn.tooltip_text = "이 권을 북마크에 추가/해제합니다 (우클릭: 이 권 밑줄 편집 · Shift+좌클릭: 초판+북마크)"
 		bm_btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 		bm_btn.pressed.connect(func(): toggle_volume_bookmark(capture_idx))
 		bm_btn.gui_input.connect(func(ev: InputEvent) -> void:
-			if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_RIGHT:
-				start_editing_volume_quote(capture_idx)
+			if ev is InputEventMouseButton and ev.pressed:
+				if ev.button_index == MOUSE_BUTTON_RIGHT:
+					start_editing_volume_quote(capture_idx)
+				elif ev.button_index == MOUSE_BUTTON_LEFT and ev.shift_pressed and current_item != null and capture_idx < current_item.volumes.size():
+					bm_btn.accept_event()
+					current_item.volumes[capture_idx]["status"] = "first"
+					current_item.volumes[capture_idx]["bookmarked"] = true
+					_render_volumes()
+					_refresh_vol_header()
+					diary_updated.emit(current_item)
 		)
 
 		var quote_lbl = Label.new()

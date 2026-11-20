@@ -5,6 +5,25 @@
 
 ---
 
+## 📓 [Sprint 157] `WebBtn`/`CamBtn` `Shift+좌클릭` 스크랩·촬영 후 즉시 열기 & 권별 `BmBtn` `Shift+좌클릭` 초판+북마크
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A**: "하단 `웹표지 스크랩`(`WebBtn`)이나 `폴라로이드 촬영`(`CamBtn`)을 `Shift+좌클릭`하면 새 작품을 추가함과 동시에 그 일기장 모달이 바로 펼쳐져 곧바로 감상평을 적을 수 있으면 좋겠어요!"
+- **가챠러 B**: "권별 리스트의 북마크 아이콘(`🏷️`/`🔖`, `BmBtn`)도 `Shift+좌클릭` 한 번으로 `🔖초판특전`과 `🔖북마크`를 동시에 켜주면 초판 찜하기가 훨씬 빨라지겠어요."
+- **기획자 (PO)**: "`main_view.gd` `WebBtn`/`CamBtn` `Shift+좌클릭` 스크랩·촬영 후 즉시 열기와 `detail_modal.gd` 권별 `BmBtn` `Shift+좌클릭` 초판+북마크를 구현하고 `index.html` 권별 북마크 버튼과 동기화합니다."
+
+### 2. 핵심 구현 및 변경 내역
+- `game02/godot_project/scripts/main_view.gd`:
+  - `NavRow`의 `WebBtn` 및 `CamBtn` `Shift+좌클릭` 시 `_on_web_scrape_btn_pressed()` / `_on_camera_snap_btn_pressed()` 실행 후 새로 추가된 `items[0]` 일기장 모달을 즉시 열도록 연결하고 툴팁을 동기화했습니다.
+- `game02/godot_project/scripts/detail_modal.gd`:
+  - 권별 `bm_btn` `Shift+좌클릭` 시 `status = "first"` 및 `bookmarked = true`를 즉시 적용하고 UI·헤더·시그널을 동기화했습니다.
+- `game02/index.html`:
+  - `renderDiaryVolumes()` 내 북마크 버튼 `onclick`에 `event.shiftKey` 시 `초판+북마크` 동시 적용 및 툴팁을 동기화했습니다.
+- `game02/godot_project/tests/test_main_integration.gd`:
+  - `WebBtn`/`CamBtn` `Shift+좌클릭` 즉시 열기와 권별 `BmBtn` `Shift+좌클릭` `초판+북마크`를 검증하는 Sprint 157 테스트를 추가해 100% 통과했습니다.
+
+---
+
 ## 📓 [Sprint 156] `StatVols`/`StatFirsts` `Shift+좌클릭` 첫 작품·초판 가치순 & 권별 `StarBtn` `Shift+좌클릭` ★5+북마크
 
 ### 1. 14인 스쿼드 회의록 & VOC

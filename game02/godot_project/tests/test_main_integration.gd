@@ -2482,6 +2482,36 @@ func _init() -> void:
 	main_inst.detail_modal.close()
 	print("✓ Sprint 156 Milestone: StatVols/StatFirsts & StarBtn Shift+Left-Click verified")
 
+	# Sprint 157 Milestone: WebBtn/CamBtn Shift+Left-Click Scrape+Open & Vol BmBtn Shift+Left-Click First+Bookmark
+	var orig_cnt_s157: int = main_inst.archive_state.items.size()
+	var nav_row_s157 = main_inst.get_node("VBox/BottomBar/Margin/VBox/NavRow")
+	var web_btn_s157: Control = nav_row_s157.get_child(0)
+	var cam_btn_s157: Control = nav_row_s157.get_child(1)
+	assert("스크랩 후 열기" in web_btn_s157.tooltip_text and "촬영 후 열기" in cam_btn_s157.tooltip_text, "WebBtn and CamBtn tooltips should mention Shift+Left-Click open")
+	var shift_lclick_s157 := InputEventMouseButton.new()
+	shift_lclick_s157.pressed = true
+	shift_lclick_s157.shift_pressed = true
+	shift_lclick_s157.button_index = MOUSE_BUTTON_LEFT
+	web_btn_s157.gui_input.emit(shift_lclick_s157)
+	assert(main_inst.archive_state.items.size() == orig_cnt_s157 + 1 and main_inst.detail_modal.visible, "Shift+Left-clicking WebBtn should scrape and open modal")
+	main_inst.detail_modal.close()
+	main_inst.archive_state.items.remove_at(0)
+	main_inst._render_cards()
+	var target_s157 = main_inst.archive_state.items[0]
+	target_s157.volumes[0]["status"] = "owned"
+	target_s157.volumes[0]["bookmarked"] = false
+	main_inst._on_card_clicked(target_s157)
+	var row_btns_s157 = main_inst.detail_modal.vol_list.get_child(0).find_children("*", "Button", true, false)
+	var bm_btn_s157: Button = null
+	for rb in row_btns_s157:
+		if rb.text == "🏷️" or rb.text == "🔖":
+			bm_btn_s157 = rb
+	assert(bm_btn_s157 != null and "초판+북마크" in bm_btn_s157.tooltip_text, "BmBtn tooltip should mention Shift+Left-Click first+bookmark")
+	bm_btn_s157.gui_input.emit(shift_lclick_s157)
+	assert(target_s157.volumes[0].get("status", "") == "first" and bool(target_s157.volumes[0].get("bookmarked", false)), "Shift+Left-clicking BmBtn should set first edition and bookmark")
+	main_inst.detail_modal.close()
+	print("✓ Sprint 157 Milestone: WebBtn/CamBtn Open & BmBtn First+Bookmark verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

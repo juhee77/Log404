@@ -5,7 +5,7 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 
 ---
 
-## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 156)
+## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 157)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
@@ -14,6 +14,9 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 ---
 
 ## 🚀 최신 스프린트 업데이트 요약 ([전체 회의록 보기](SPRINT_LOG.md))
+
+### 📓 [Sprint 157] `WebBtn`/`CamBtn` `Shift+좌클릭` 스크랩·촬영 후 즉시 열기 & 권별 `BmBtn` `Shift+좌클릭` 초판+북마크
+- **등록 후 즉시 열기 & 초판 북마크 (`main_view.gd` · `detail_modal.gd` · `index.html`)**: `WebBtn`/`CamBtn` `Shift+좌클릭`으로 스크랩·촬영 후 모달을 즉시 열며, 권별 `BmBtn` `Shift+좌클릭`으로 `초판+북마크`를 동시 적용합니다.
 
 ### 📓 [Sprint 156] `StatVols`/`StatFirsts` `Shift+좌클릭` 첫 작품·초판 가치순 & 권별 `StarBtn` `Shift+좌클릭` ★5+북마크
 - **통계 완결 & 최애권 원클릭 (`main_view.gd` · `detail_modal.gd` · `index.html`)**: `StatVols`/`StatFirsts` `Shift+좌클릭`으로 이북 첫 작품 열기 및 초판 가치순 정렬을 실행하며, 권별 `StarBtn` `Shift+좌클릭`으로 `★5+북마크`를 즉시 적용합니다.
