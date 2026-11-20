@@ -624,11 +624,16 @@ func _render_cards() -> void:
 		reset_btn.add_theme_color_override("font_color", Color(0.28, 0.22, 0.18, 1.0))
 		reset_btn.add_theme_font_size_override("font_size", 12)
 		reset_btn.pressed.connect(_reset_all_filters)
-		reset_btn.tooltip_text = "좌클릭: 전체 서재 복원 · 우클릭: 복원 후 랜덤 추천 미리보기"
+		reset_btn.tooltip_text = "좌클릭: 전체 서재 복원 · 우클릭: 복원 후 랜덤 추천 미리보기 · Shift+좌클릭: 복원 후 랜덤 일기장 열기"
 		reset_btn.gui_input.connect(func(ev: InputEvent) -> void:
-			if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_RIGHT:
-				_reset_all_filters()
-				pick_random_item(false)
+			if ev is InputEventMouseButton and ev.pressed:
+				if ev.button_index == MOUSE_BUTTON_RIGHT:
+					_reset_all_filters()
+					pick_random_item(false)
+				elif ev.button_index == MOUSE_BUTTON_LEFT and ev.shift_pressed:
+					reset_btn.accept_event()
+					_reset_all_filters()
+					pick_random_item(true)
 		)
 		empty_box.add_child(empty_lbl)
 		empty_box.add_child(reset_btn)

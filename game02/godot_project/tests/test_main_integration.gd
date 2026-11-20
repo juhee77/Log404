@@ -2741,6 +2741,25 @@ func _init() -> void:
 	assert(main_inst.archive_state.items.size() == prev_cnt165 + 2 and not am165.visible, "Shift+Left-Click on SubmitBtn should auto-fill sample and submit")
 	print("✓ Sprint 165 Milestone: AddModal Swatches/CatOption/CloseBtn/SubmitBtn Shift+Left-Click verified")
 
+	# Sprint 166: EmptyStateResetBtn Shift+Left-Click (Reset+Open Random) & DetailModal Dimmer Shift+Left-Click (Copy+Close)
+	main_inst.search_input.text = "__NONE_SPRINT166__"
+	main_inst._render_cards()
+	var reset_btn166: Button = main_inst.find_child("EmptyStateResetBtn", true, false) as Button
+	assert(reset_btn166 != null and "Shift+좌클릭: 복원 후 랜덤 일기장 열기" in reset_btn166.tooltip_text, "EmptyStateResetBtn tooltip should mention Shift+Left-Click random open")
+	var shift_lclick166 := InputEventMouseButton.new()
+	shift_lclick166.button_index = MOUSE_BUTTON_LEFT
+	shift_lclick166.pressed = true
+	shift_lclick166.shift_pressed = true
+	reset_btn166.gui_input.emit(shift_lclick166)
+	assert(main_inst.search_input.text == "" and main_inst.detail_modal.visible, "Shift+Left-Click on EmptyStateResetBtn should reset filters and open random modal")
+	main_inst.detail_modal.close()
+	main_inst.detail_modal.open(main_inst.archive_state.items[0])
+	var dimmer166: Control = main_inst.detail_modal.get_node_or_null("Dimmer")
+	assert(dimmer166 != null and "Shift+좌클릭: 카드 복사+닫기" in dimmer166.tooltip_text, "DetailModal Dimmer tooltip should mention Shift+Left-Click copy+close")
+	dimmer166.gui_input.emit(shift_lclick166)
+	assert(not main_inst.detail_modal.visible, "Shift+Left-Click on DetailModal Dimmer should copy card and close modal")
+	print("✓ Sprint 166: EmptyStateResetBtn Random Open & DetailModal Dimmer Copy+Close verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

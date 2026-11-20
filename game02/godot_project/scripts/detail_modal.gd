@@ -84,10 +84,14 @@ func _ready() -> void:
 		)
 	var dimmer: Control = get_node_or_null("Dimmer")
 	if dimmer != null:
-		dimmer.tooltip_text = "좌클릭: 일기장 닫기 · 우클릭: 닫고 즉시 JSON 백업"
+		dimmer.tooltip_text = "좌클릭: 일기장 닫기 · 우클릭: 닫고 즉시 JSON 백업 · Shift+좌클릭: 카드 복사+닫기"
 		dimmer.gui_input.connect(func(ev):
 			if ev is InputEventMouseButton and ev.pressed:
-				if ev.button_index == MOUSE_BUTTON_LEFT:
+				if ev.button_index == MOUSE_BUTTON_LEFT and ev.shift_pressed:
+					dimmer.accept_event()
+					copy_book_quote_card()
+					close()
+				elif ev.button_index == MOUSE_BUTTON_LEFT:
 					close()
 				elif ev.button_index == MOUSE_BUTTON_RIGHT:
 					close()

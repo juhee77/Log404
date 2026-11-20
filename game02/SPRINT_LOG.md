@@ -5,6 +5,19 @@
 
 ---
 
+## 📓 [Sprint 166] `EmptyStateResetBtn` `Shift+좌클릭` 복원 후 랜덤 일기장 열기 & `DetailModal` `Dimmer` `Shift+좌클릭` 카드 복사+닫기
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A (다꾸러):** "검색 결과가 없을 때 나오는 `🔄 전체 서재 보기`(`EmptyStateResetBtn`) 버튼에서 우클릭하면 복원 후 미리보기 토스트가 뜨는데, `Shift+좌클릭`으로 누르면 전체 서재를 복원하면서 곧바로 랜덤 일기장 모달을 열어주면 좋겠어요!"
+- **가챠러 B (모달 퀵액션):** "`DetailModal` 바깥 어두운 배경(`Dimmer`)을 `Shift+좌클릭`했을 때도 `CloseBtn`처럼 감상 카드를 클립보드에 복사하면서 일기장을 닫아주면 마우스를 모달 밖으로 빼는 손맛이 딱 맞을 거예요."
+- **미니멀러 C (웹 동기화):** "웹 목업(`index.html`)의 빈 상태 복원 버튼과 `#journal-modal` 배경 클릭 핸들러에도 동일한 `Shift+좌클릭` 동작을 넣어주세요."
+- **PO & UX/UI 확정:**
+  1. **`MainView` `EmptyStateResetBtn` `Shift+좌클릭` 복원 후 랜덤 열기 (`main_view.gd`)**: `Shift+좌클릭` 시 `accept_event()` 처리 후 `_reset_all_filters()`와 `pick_random_item(true)`를 연속 호출해 전체 서재 복원과 동시에 랜덤 일기장 모달을 엽니다.
+  2. **`DetailModal` `Dimmer` `Shift+좌클릭` 카드 복사+닫기 (`detail_modal.gd`)**: `Dimmer` `gui_input`에서 `Shift+좌클릭` 시 `accept_event()`, `copy_book_quote_card()`, `close()`를 순차 실행합니다.
+  3. **웹 목업(`index.html`) 동기화 & TDD/QA 검증:** 빈 상태 복원 버튼과 `#journal-modal` 배경 클릭에 `Shift+좌클릭` 랜덤 열기·카드 복사+닫기를 동기화했습니다. `test_main_integration.gd`에 Sprint 166 통합 검증을 추가해 3종 헤드리스 테스트 100% 통과 및 Metal 4.0 스크린샷을 갱신했습니다.
+
+---
+
 ## 🏆 [Sprint 165 Milestone] `AddModal` 스와치 5종·`CatOption`·`CloseBtn`·`SubmitBtn` `Shift+좌클릭` 파워 액션 완결
 
 ### 1. 14인 스쿼드 회의록 & VOC

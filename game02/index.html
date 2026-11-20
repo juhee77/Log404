@@ -243,7 +243,7 @@
     </main>
 
     <!-- MODAL: 📖 Open Two-Page Reading Diary (펼친 일기장 뷰) -->
-    <div id="journal-modal" onclick="if(event.target===this) closeJournalModal();"
+    <div id="journal-modal" onclick="if(event.target===this){if(event.shiftKey){copyBookQuoteCard();}closeJournalModal();}"
         oncontextmenu="if(event.target===this){event.preventDefault(); closeJournalModal(); instantBackupArchive();}"
         title="좌클릭: 일기장 닫기 · 우클릭: 닫고 즉시 JSON 백업"
         class="fixed inset-0 bg-[#1e1612]/65 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
@@ -557,7 +557,7 @@
             container.innerHTML = '';
 
             if (filtered.length === 0) {
-                container.innerHTML = `<div class="bg-[#faf6f0] border border-dashed border-[#d6c9b8] rounded-2xl p-8 text-center text-[#786a5e] text-sm space-y-3"><div>📭 조건에 맞는 서재 기록이 없습니다.<br/>검색어를 비우거나 '+ 일기 쓰기'로 새 추억을 남겨보세요!</div><button onclick="document.getElementById('search-box').value=''; setFilter('all');" oncontextmenu="event.preventDefault(); document.getElementById('search-box').value=''; setFilter('all'); peekRandomItem();" title="좌클릭: 전체 서재 보기 · 우클릭: 복원 후 랜덤 추천 미리보기" class="px-3 py-1.5 rounded-lg bg-[#efe7da] border border-[#d8cbb8] text-[#2c221e] text-xs font-bold hover:bg-[#e5dac9] cursor-pointer">🔄 전체 서재 보기</button></div>`;
+                container.innerHTML = `<div class="bg-[#faf6f0] border border-dashed border-[#d6c9b8] rounded-2xl p-8 text-center text-[#786a5e] text-sm space-y-3"><div>📭 조건에 맞는 서재 기록이 없습니다.<br/>검색어를 비우거나 '+ 일기 쓰기'로 새 추억을 남겨보세요!</div><button onclick="document.getElementById('search-box').value=''; setFilter('all'); if(event&&event.shiftKey&&ITEMS.length){openJournalModal(ITEMS[Math.floor(Math.random()*ITEMS.length)].id);}" oncontextmenu="event.preventDefault(); document.getElementById('search-box').value=''; setFilter('all'); peekRandomItem();" title="좌클릭: 전체 서재 복원 · 우클릭: 복원 후 랜덤 추천 미리보기 · Shift+좌클릭: 복원 후 랜덤 일기장 열기" class="px-3 py-1.5 rounded-lg bg-[#efe7da] border border-[#d8cbb8] text-[#2c221e] text-xs font-bold hover:bg-[#e5dac9] cursor-pointer">🔄 전체 서재 보기</button></div>`;
                 return;
             }
 
