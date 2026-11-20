@@ -5,6 +5,19 @@
 
 ---
 
+## 🏆 [Sprint 165 Milestone] `AddModal` 스와치 5종·`CatOption`·`CloseBtn`·`SubmitBtn` `Shift+좌클릭` 파워 액션 완결
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A (다꾸러):** "165회 마일스톤 스프린트! `AddModal`의 표지 컬러 스와치 5종을 우클릭하면 그 색으로 즉시 샘플 등록이 되는데, 트랙패드에서 `Shift+좌클릭`으로도 똑같이 그 색 표지로 즉시 등록할 수 있으면 좋겠어요."
+- **가챠러 B (빠른 등록러):** "`AddModal`의 작품 분류(`CatOption`) 이북↔가챠 전환, `CloseBtn` 입력란 비우기, `SubmitBtn` 빈 제목 시 샘플 자동 채움 등록도 `Shift+좌클릭`을 모두 지원하면 `DetailModal`과 `AddModal` 전체가 완벽한 트랙패드 친화 UX로 통일되겠어요!"
+- **미니멀러 C (웹 동기화):** "웹 목업(`index.html`) 상단 `+ 새 일기 쓰기` 버튼에서도 `Shift+좌클릭` 시 프롬프트 없이 샘플 일기가 즉시 등록되도록 맞춰주세요."
+- **PO & UX/UI 확정:**
+  1. **`AddModal` 표지 스와치 5종 `Shift+좌클릭` 즉시 등록 (`add_modal.gd`)**: `_build_color_swatches` 내 각 스와치 버튼 `gui_input`에서 `Shift+좌클릭` 시 `accept_event()`, `select_color(hex_val)`, `_submit_with_sample_fallback()`를 실행합니다.
+  2. **`AddModal` `CatOption`/`CloseBtn`/`SubmitBtn` `Shift+좌클릭` (`add_modal.gd`)**: `CatOption` `Shift+좌클릭`으로 이북↔가챠 즉시 전환, `CloseBtn` `Shift+좌클릭`으로 입력란 비우기(`clear_inputs()`), `SubmitBtn` `Shift+좌클릭`으로 샘플 자동 채움 등록(`_submit_with_sample_fallback()`)을 연결하고 툴팁에 안내를 병기했습니다.
+  3. **웹 목업(`index.html`) 동기화 & TDD/QA 검증:** `openNewDiaryModal(instantSample)`을 확장해 `+ 새 일기 쓰기` 버튼 `Shift+좌클릭` 시 샘플 즉시 등록을 지원하고, `test_main_integration.gd`에 Sprint 165 마일스톤 검증을 추가해 3종 헤드리스 테스트 100% 통과 및 Metal 4.0 스크린샷을 갱신했습니다.
+
+---
+
 ## 📓 [Sprint 164] `StampRow`·`InkRow` 17종 데코레이터 순환 버튼 `Shift+좌클릭` 역순환 일괄 지원
 
 ### 1. 14인 스쿼드 회의록 & VOC

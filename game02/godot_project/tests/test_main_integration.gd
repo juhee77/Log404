@@ -2714,6 +2714,33 @@ func _init() -> void:
 	main_inst.detail_modal.close()
 	print("✓ Sprint 164: StampRow & InkRow 17-Cycler Shift+Left-Click Reverse verified")
 
+	# Sprint 165 Milestone: AddModal Swatches, CatOption, CloseBtn & SubmitBtn Shift+Left-Click
+	var prev_cnt165: int = main_inst.archive_state.items.size()
+	main_inst.add_modal.open()
+	var am165 = main_inst.add_modal
+	var swatch0_165: Button = am165.color_row.get_child(0) as Button
+	assert(swatch0_165 != null and "Shift+좌클릭: 이 색으로 즉시 등록" in swatch0_165.tooltip_text, "AddModal swatch tooltip should mention Shift+Left-Click")
+	assert("Shift+좌클릭: 이북 ↔ 가챠 즉시 전환" in am165.cat_option.tooltip_text, "AddModal CatOption tooltip should mention Shift+Left-Click")
+	assert("Shift+좌클릭: 입력란 모두 비우기" in am165.close_btn.tooltip_text, "AddModal CloseBtn tooltip should mention Shift+Left-Click")
+	assert("Shift+좌클릭: 샘플 자동 채움 등록" in am165.submit_btn.tooltip_text, "AddModal SubmitBtn tooltip should mention Shift+Left-Click")
+	var shift_lclick165 := InputEventMouseButton.new()
+	shift_lclick165.button_index = MOUSE_BUTTON_LEFT
+	shift_lclick165.pressed = true
+	shift_lclick165.shift_pressed = true
+	am165.cat_option.select(0)
+	am165.cat_option.gui_input.emit(shift_lclick165)
+	assert(am165.cat_option.selected == 1, "Shift+Left-Click on CatOption should toggle category")
+	am165.title_input.text = "임시 제목"
+	am165.close_btn.gui_input.emit(shift_lclick165)
+	assert(am165.title_input.text == "" and am165.visible, "Shift+Left-Click on CloseBtn should clear inputs without closing")
+	swatch0_165.gui_input.emit(shift_lclick165)
+	assert(main_inst.archive_state.items.size() == prev_cnt165 + 1 and not am165.visible, "Shift+Left-Click on swatch should instant-submit sample item")
+	main_inst.add_modal.open()
+	am165.clear_inputs()
+	am165.submit_btn.gui_input.emit(shift_lclick165)
+	assert(main_inst.archive_state.items.size() == prev_cnt165 + 2 and not am165.visible, "Shift+Left-Click on SubmitBtn should auto-fill sample and submit")
+	print("✓ Sprint 165 Milestone: AddModal Swatches/CatOption/CloseBtn/SubmitBtn Shift+Left-Click verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

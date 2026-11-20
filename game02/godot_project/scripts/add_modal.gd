@@ -89,12 +89,17 @@ func _build_color_swatches() -> void:
 		btn.add_theme_color_override("font_color", Color(1, 1, 1))
 		var hex_val = sw["hex"]
 		btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
-		btn.tooltip_text = "좌클릭: '%s' 표지색 선택 · 우클릭: 이 색으로 즉시 등록" % sw["name"]
+		btn.tooltip_text = "좌클릭: '%s' 표지색 선택 · 우클릭: 이 색으로 즉시 등록 · Shift+좌클릭: 이 색으로 즉시 등록" % sw["name"]
 		btn.pressed.connect(func(): select_color(hex_val))
 		btn.gui_input.connect(func(ev: InputEvent) -> void:
-			if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_RIGHT:
-				select_color(hex_val)
-				_submit_with_sample_fallback()
+			if ev is InputEventMouseButton and ev.pressed:
+				if ev.button_index == MOUSE_BUTTON_RIGHT:
+					select_color(hex_val)
+					_submit_with_sample_fallback()
+				elif ev.button_index == MOUSE_BUTTON_LEFT and ev.shift_pressed:
+					btn.accept_event()
+					select_color(hex_val)
+					_submit_with_sample_fallback()
 		)
 		color_row.add_child(btn)
 	_highlight_selected_swatch()
@@ -114,10 +119,14 @@ func _style_inputs() -> void:
 		if ctrl != null:
 			ctrl.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	if cat_option != null:
-		cat_option.tooltip_text = "작품 분류 선택 (우클릭: 이북 ↔ 가챠 즉시 전환)"
+		cat_option.tooltip_text = "작품 분류 선택 (우클릭·Shift+좌클릭: 이북 ↔ 가챠 즉시 전환)"
 		cat_option.gui_input.connect(func(ev: InputEvent) -> void:
-			if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_RIGHT:
-				cat_option.select(1 if cat_option.selected == 0 else 0)
+			if ev is InputEventMouseButton and ev.pressed:
+				if ev.button_index == MOUSE_BUTTON_RIGHT:
+					cat_option.select(1 if cat_option.selected == 0 else 0)
+				elif ev.button_index == MOUSE_BUTTON_LEFT and ev.shift_pressed:
+					cat_option.accept_event()
+					cat_option.select(1 if cat_option.selected == 0 else 0)
 		)
 
 	var ink_sb = StyleBoxFlat.new()
@@ -137,15 +146,23 @@ func _style_inputs() -> void:
 	cream_btn.corner_radius_bottom_right = 6
 	close_btn.add_theme_stylebox_override("normal", cream_btn)
 	close_btn.add_theme_color_override("font_color", Color(0.32, 0.25, 0.20))
-	close_btn.tooltip_text = "닫기 (ESC · 우클릭: 입력란 모두 비우기)"
+	close_btn.tooltip_text = "닫기 (ESC · 우클릭: 입력란 모두 비우기 · Shift+좌클릭: 입력란 모두 비우기)"
 	close_btn.gui_input.connect(func(ev: InputEvent) -> void:
-		if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_RIGHT:
-			clear_inputs()
+		if ev is InputEventMouseButton and ev.pressed:
+			if ev.button_index == MOUSE_BUTTON_RIGHT:
+				clear_inputs()
+			elif ev.button_index == MOUSE_BUTTON_LEFT and ev.shift_pressed:
+				close_btn.accept_event()
+				clear_inputs()
 	)
-	submit_btn.tooltip_text = "서재에 등록 (Enter · 우클릭: 빈 제목 시 샘플 자동 채움 등록)"
+	submit_btn.tooltip_text = "서재에 등록 (Enter · 우클릭: 빈 제목 시 샘플 자동 채움 등록 · Shift+좌클릭: 샘플 자동 채움 등록)"
 	submit_btn.gui_input.connect(func(ev: InputEvent) -> void:
-		if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_RIGHT:
-			_submit_with_sample_fallback()
+		if ev is InputEventMouseButton and ev.pressed:
+			if ev.button_index == MOUSE_BUTTON_RIGHT:
+				_submit_with_sample_fallback()
+			elif ev.button_index == MOUSE_BUTTON_LEFT and ev.shift_pressed:
+				submit_btn.accept_event()
+				_submit_with_sample_fallback()
 	)
 
 func _submit_with_sample_fallback() -> void:

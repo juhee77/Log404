@@ -5,7 +5,7 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 
 ---
 
-## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 164)
+## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 165 Milestone)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
@@ -14,6 +14,9 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 ---
 
 ## 🚀 최신 스프린트 업데이트 요약 ([전체 회의록 보기](SPRINT_LOG.md))
+
+### 🏆 [Sprint 165 Milestone] `AddModal` 스와치 5종·`CatOption`·`CloseBtn`·`SubmitBtn` `Shift+좌클릭` 파워 액션 완결
+- **`AddModal` 트랙패드 파워 액션 완결 (`add_modal.gd` · `index.html`)**: 표지 컬러 스와치 5종·`SubmitBtn` `Shift+좌클릭`으로 즉시 샘플 등록, `CatOption` `Shift+좌클릭`으로 이북↔가챠 전환, `CloseBtn` `Shift+좌클릭`으로 입력란 비우기를 모두 지원합니다.
 
 ### 📓 [Sprint 164] `StampRow`·`InkRow` 17종 데코레이터 순환 버튼 `Shift+좌클릭` 역순환 일괄 지원
 - **17종 데코레이터 역순환 완결 (`detail_modal.gd` · `index.html`)**: 띠지·테이프·스티커·레어도·속지·보관위치·입수경로·기분·소장상태·펜촉·서명·태그·최애캐릭터·컨디션·마감·날씨·장소 17종 순환 버튼에 `Shift+좌클릭` 역순환(`-1`)을 일괄 적용했습니다.
