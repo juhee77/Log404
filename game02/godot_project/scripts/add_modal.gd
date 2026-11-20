@@ -56,6 +56,20 @@ func _ready() -> void:
 				elif ev.button_index == MOUSE_BUTTON_RIGHT:
 					clear_inputs()
 		)
+	var header_title: Label = get_node_or_null("Panel/VBox/Header/HBox/TitleLabel")
+	if header_title != null:
+		header_title.mouse_filter = Control.MOUSE_FILTER_STOP
+		header_title.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+		header_title.tooltip_text = "좌클릭: 샘플 일기 일괄 채움 · 우클릭: 입력 전체 비우기"
+		header_title.gui_input.connect(func(ev: InputEvent) -> void:
+			if ev is InputEventMouseButton and ev.pressed:
+				if ev.button_index == MOUSE_BUTTON_LEFT:
+					title_input.text = "나의 비밀 독서 일기"
+					author_input.text = "주희의 서재"
+					quote_input.text = "오늘도 한 페이지의 여운을 남겼다."
+				elif ev.button_index == MOUSE_BUTTON_RIGHT:
+					clear_inputs()
+		)
 
 func _build_color_swatches() -> void:
 	for child in color_row.get_children():
@@ -192,7 +206,13 @@ func close() -> void:
 	visible = false
 
 func _unhandled_input(event: InputEvent) -> void:
-	if visible and event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_ESCAPE:
+	if not visible or not (event is InputEventKey) or not event.pressed or event.echo:
+		return
+	if (event.ctrl_pressed or event.meta_pressed) and (event.keycode == KEY_ENTER or event.keycode == KEY_KP_ENTER):
+		_on_submit_btn_pressed()
+		get_viewport().set_input_as_handled()
+		return
+	if event.keycode == KEY_ESCAPE:
 		for le in [title_input, author_input, quote_input]:
 			if le != null and le.has_focus() and le.text != "":
 				le.text = ""

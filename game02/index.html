@@ -287,7 +287,7 @@
             <div class="w-full md:w-7/12 p-6 flex flex-col justify-between overflow-y-auto">
                 <div>
                     <div class="flex items-center justify-between pb-3 border-b border-[#e2d6c5]">
-                        <span class="serif-font text-sm font-bold text-[#2c221e]">🖋️ 나만의 독서 노트 & 권별 밑줄</span>
+                        <span onclick="const i=document.getElementById('diary-quote-input');if(i){i.value='오늘도 한 페이지의 여운을 남겼다.';i.focus();}" oncontextmenu="event.preventDefault();const i=document.getElementById('diary-quote-input');if(i){i.value='';}" title="좌클릭: 샘플 밑줄 채움 · 우클릭: 밑줄 입력 비우기" class="serif-font text-sm font-bold text-[#2c221e] cursor-pointer hover:text-[#c85a32]">🖋️ 나만의 독서 노트 & 권별 밑줄</span>
                         <div class="flex items-center gap-1.5">
                             <button id="prev-page-btn" onclick="navigateJournalModal(-1)" oncontextmenu="event.preventDefault(); if (ITEMS.length) openJournalModal(ITEMS[0].id);" title="이전 작품 (← · 우클릭: 처음)"
                                 class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">◀</button>

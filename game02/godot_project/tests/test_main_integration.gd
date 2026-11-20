@@ -2149,6 +2149,32 @@ func _init() -> void:
 	main_inst.detail_modal.close()
 	print("✓ Sprint 141 Milestone: StampLbl & InkLbl Bidirectional Cyclers verified")
 
+	# Sprint 142 Milestone: AddModal Header TitleLabel Sample Fill/Clear & Ctrl+Enter Submit
+	var orig_cnt_s142: int = main_inst.archive_state.items.size()
+	main_inst.add_modal.open()
+	var add_title_s142: Label = main_inst.add_modal.get_node("Panel/VBox/Header/HBox/TitleLabel")
+	assert("샘플 일기 일괄 채움" in add_title_s142.tooltip_text, "AddModal TitleLabel tooltip should mention sample fill and clear")
+	var lclick_s142 := InputEventMouseButton.new()
+	lclick_s142.pressed = true
+	lclick_s142.button_index = MOUSE_BUTTON_LEFT
+	var rclick_s142 := InputEventMouseButton.new()
+	rclick_s142.pressed = true
+	rclick_s142.button_index = MOUSE_BUTTON_RIGHT
+	add_title_s142.gui_input.emit(lclick_s142)
+	assert(main_inst.add_modal.title_input.text == "나의 비밀 독서 일기" and main_inst.add_modal.author_input.text == "주희의 서재", "Left-clicking AddModal TitleLabel should fill sample diary fields")
+	add_title_s142.gui_input.emit(rclick_s142)
+	assert(main_inst.add_modal.title_input.text == "" and main_inst.add_modal.author_input.text == "", "Right-clicking AddModal TitleLabel should clear all fields")
+	add_title_s142.gui_input.emit(lclick_s142)
+	var ctrl_enter_s142 := InputEventKey.new()
+	ctrl_enter_s142.pressed = true
+	ctrl_enter_s142.ctrl_pressed = true
+	ctrl_enter_s142.keycode = KEY_ENTER
+	main_inst.add_modal._unhandled_input(ctrl_enter_s142)
+	assert(not main_inst.add_modal.visible and main_inst.archive_state.items.size() == orig_cnt_s142 + 1, "Ctrl+Enter in AddModal should submit and close")
+	main_inst.archive_state.items.remove_at(0)
+	main_inst._render_cards()
+	print("✓ Sprint 142 Milestone: AddModal TitleLabel Fill/Clear & Ctrl+Enter Submit verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

@@ -5,6 +5,24 @@
 
 ---
 
+## 📓 [Sprint 142] `AddModal` 헤더 `TitleLabel` 좌·우클릭(샘플 일괄 채움/비우기) & `Ctrl/Cmd+Enter` 즉시 등록
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A**: "`AddModal` 상단 제목(`🖋️ 새 독서 · 다꾸 일기장 쓰기`)을 좌클릭하면 제목·작가·밑줄 3칸에 샘플 일기가 한 번에 채워지고, 우클릭하면 전부 비워지면 등록 테스트나 빠른 템플릿 작성이 훨씬 편할 것 같아요!"
+- **가챠러 B**: "입력창 어디에 포커스가 있든 `Ctrl+Enter`나 `Cmd+Enter`를 누르면 바로 일기가 등록되면 마우스 이동 없이 키보드만으로 작성이 끝나겠어요."
+- **기획자 (PO)**: "`add_modal.gd` `TitleLabel` 좌·우클릭 일괄 채움/비우기와 `_unhandled_input()` `Ctrl/Cmd+Enter` 즉시 등록을 구현하고 `index.html` 노트 헤더와 동기화합니다."
+
+### 2. 핵심 구현 및 변경 내역
+- `game02/godot_project/scripts/add_modal.gd`:
+  - `Panel/VBox/Header/HBox/TitleLabel` 좌클릭 시 샘플 일기 3종 필드를 일괄 채우고, 우클릭 시 `clear_inputs()`를 호출하도록 연결했습니다.
+  - `_unhandled_input()`에 `Ctrl+Enter` / `Cmd+Enter` 입력 시 `_on_submit_btn_pressed()`를 실행하는 단축키를 추가했습니다.
+- `game02/index.html`:
+  - `🖋️ 나만의 독서 노트 & 권별 밑줄` 헤더 스팬에 좌클릭 샘플 밑줄 채움·우클릭 입력 비우기 및 툴팁을 동기화했습니다.
+- `game02/godot_project/tests/test_main_integration.gd`:
+  - `AddModal` `TitleLabel` 좌클릭 샘플 채움·우클릭 비우기와 `Ctrl+Enter` 즉시 등록을 검증하는 Sprint 142 테스트를 추가해 100% 통과했습니다.
+
+---
+
 ## 📓 [Sprint 141] `DetailModal` `StampLbl`·`InkLbl` 라벨 좌·우클릭 양방향 인장/잉크 순환
 
 ### 1. 14인 스쿼드 회의록 & VOC
