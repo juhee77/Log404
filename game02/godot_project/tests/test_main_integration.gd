@@ -2921,6 +2921,23 @@ func _init() -> void:
 	main_inst.detail_modal.close()
 	print("✓ Sprint 173: DetailModal Shift+Arrows First/Last & Shift++/- Vol Power Keys verified")
 
+	# Sprint 174: DetailModal Shift+E Sample Quote & Shift+1~4 Stamp+Close
+	var item174 = main_inst.archive_state.items[0]
+	main_inst.detail_modal.open(item174)
+	main_inst.detail_modal.quote_input.text = ""
+	main_inst.detail_modal.quote_input.release_focus()
+	var shift_k174 := InputEventKey.new()
+	shift_k174.pressed = true
+	shift_k174.shift_pressed = true
+	shift_k174.keycode = KEY_E
+	main_inst.detail_modal._unhandled_input(shift_k174)
+	assert(main_inst.detail_modal.quote_input.text == "오늘도 한 페이지의 여운을 남겼다.", "Shift+E in DetailModal should fill sample quote")
+	main_inst.detail_modal.quote_input.release_focus()
+	shift_k174.keycode = KEY_3
+	main_inst.detail_modal._unhandled_input(shift_k174)
+	assert(item174.status_tag == "인생최애" and not main_inst.detail_modal.visible, "Shift+3 in DetailModal should apply stamp and close")
+	print("✓ Sprint 174: DetailModal Shift+E Sample Quote & Shift+1~4 Stamp+Close verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

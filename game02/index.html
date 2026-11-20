@@ -1242,7 +1242,11 @@
                 const jm = document.getElementById('journal-modal');
                 if (jm && !jm.classList.contains('hidden')) {
                     e.preventDefault();
-                    document.getElementById('diary-quote-input')?.focus();
+                    const qi = document.getElementById('diary-quote-input');
+                    if (qi) {
+                        if (e.shiftKey) qi.value = '오늘도 한 페이지의 여운을 남겼다.';
+                        qi.focus();
+                    }
                 }
             } else if ((e.key === 'h' || e.key === '?') && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
                 const jm = document.getElementById('journal-modal');
@@ -1269,6 +1273,10 @@
                     else if (e.key === 'i' || e.key === 'I') { instantBackupArchive(); }
                     else if (e.key === 'c' || e.key === 'C') { const tq = document.getElementById('today-quote-text')?.textContent || ''; if (tq) navigator.clipboard?.writeText(tq); }
                     else if (e.key === 'h' || e.key === 'H') { navigator.clipboard?.writeText('⌨️ [1~5] 탭 · [/] 검색 · [R] 추천 · [N] 새 일기 · [M] 소음 · [ESC] 닫기'); }
+                } else if (['1', '2', '3', '4'].includes(e.key)) {
+                    const smap = { '1': '전권완결', '2': '초판특전', '3': '인생최애', '4': '위시리스트' };
+                    applyDiaryStamp(smap[e.key]);
+                    closeJournalModal();
                 }
             }
         });

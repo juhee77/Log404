@@ -970,6 +970,8 @@ func _unhandled_input(event: InputEvent) -> void:
 			get_viewport().set_input_as_handled()
 		elif event.keycode == KEY_E:
 			if quote_input != null:
+				if event.shift_pressed:
+					quote_input.text = "오늘도 한 페이지의 여운을 남겼다."
 				quote_input.grab_focus()
 				quote_input.caret_column = quote_input.text.length()
 			get_viewport().set_input_as_handled()
@@ -981,6 +983,8 @@ func _unhandled_input(event: InputEvent) -> void:
 				KEY_4: "위시리스트",
 			}
 			apply_stamp(stamp_map[event.keycode])
+			if event.shift_pressed:
+				close()
 			get_viewport().set_input_as_handled()
 		else:
 			var shift_pairs := {
