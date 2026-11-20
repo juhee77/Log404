@@ -317,7 +317,7 @@
                             <button id="mood-cycle-btn" onclick="cycleReadingMood(1)" oncontextmenu="event.preventDefault(); cycleReadingMood(-1);" title="독서·수집 기분 태그 순환 (M) · 우클릭: 이전"
                                 class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">🥰
                                 힐링</button>
-                            <button id="reread-cycle-btn" onclick="incrementRereadCount()" oncontextmenu="event.preventDefault(); decrementRereadCount();" title="클릭: +1회독 · 우클릭: -1회독"
+                            <button id="reread-cycle-btn" onclick="if(event&&event.shiftKey){decrementRereadCount();}else{incrementRereadCount();}" oncontextmenu="event.preventDefault(); decrementRereadCount();" title="클릭: +1회독 · 우클릭·Shift+좌클릭: -1회독"
                                 class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">🔁
                                 1회독</button>
                             <button onclick="if(event&&event.shiftKey){copyLibrarySummaryReport(this);}else{copyBookQuoteCard();}" oncontextmenu="event.preventDefault(); copyLibrarySummaryReport(this);" title="이 작품의 감상 카드 클립보드 복사 (C · 우클릭·Shift+좌클릭: 전체 서재 리포트 복사)"

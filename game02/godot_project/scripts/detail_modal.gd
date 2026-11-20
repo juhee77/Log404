@@ -540,14 +540,14 @@ func _style_diary_controls() -> void:
 		"Panel/VBox/BodyMargin/Body/StampRow/StorageBtn": "실물 보관 위치 순환 (B) · 우클릭: 이전",
 		"Panel/VBox/BodyMargin/Body/StampRow/SourceBtn": "소장·입수 경로 순환 (A) · 우클릭: 이전",
 		"Panel/VBox/BodyMargin/Body/StampRow/MoodBtn": "독서·수집 기분 태그 순환 (M) · 우클릭: 이전",
-		"Panel/VBox/BodyMargin/Body/StampRow/RereadBtn": "재독 횟수 +1 (Y / 우클릭·Shift+Y: -1)",
-		"Panel/VBox/BodyMargin/Body/StampRow/DuplicateBtn": "복수 소장 수량 +1 (D / 우클릭·Shift+D: -1)",
+		"Panel/VBox/BodyMargin/Body/StampRow/RereadBtn": "재독 횟수 +1 (Y / 우클릭·Shift+Y: -1 · Shift+좌클릭: -1)",
+		"Panel/VBox/BodyMargin/Body/StampRow/DuplicateBtn": "복수 소장 수량 +1 (D / 우클릭·Shift+D: -1 · Shift+좌클릭: -1)",
 		"Panel/VBox/BodyMargin/Body/StampRow/PossessionBtn": "소장 상태 순환 (Z: 소장중·예약중·배송중·전시중) · 우클릭: 이전",
 		"Panel/VBox/BodyMargin/Body/InkRow/NibBtn": "만년필 펜촉 굵기 순환 (N: EF·M·B) · 우클릭: 이전",
 		"Panel/VBox/BodyMargin/Body/InkRow/SignatureBtn": "다이어리 서명 스탬프 순환 · 우클릭: 이전",
 		"Panel/VBox/BodyMargin/Body/InkRow/DateStampBtn": "오늘 날짜로 구매·기념일 스탬프 갱신 · 우클릭: 기본값 초기화 · Shift+좌클릭: 구매일+전권 오늘 날짜 동기화",
 		"Panel/VBox/BodyMargin/Body/InkRow/CustomTagBtn": "커스텀 해시태그 순환 (T) · 우클릭: 이전",
-		"Panel/VBox/BodyMargin/Body/InkRow/ValueBtn": "추정 소장 가치 +5,000원 (V / 우클릭·Shift+V: -5,000원)",
+		"Panel/VBox/BodyMargin/Body/InkRow/ValueBtn": "추정 소장 가치 +5,000원 (V / 우클릭·Shift+V: -5,000원 · Shift+좌클릭: -5,000원)",
 		"Panel/VBox/BodyMargin/Body/InkRow/FavCharBtn": "최애 캐릭터 태그 순환 (K) · 우클릭: 이전",
 		"Panel/VBox/BodyMargin/Body/InkRow/ConditionBtn": "실물 컨디션 등급 순환 (G) · 우클릭: 이전",
 		"Panel/VBox/BodyMargin/Body/InkRow/FinishBtn": "표지 코팅 마감 순환 (F: 무광·유광·홀로그램·양장) · 우클릭: 이전",
@@ -597,20 +597,32 @@ func _style_diary_controls() -> void:
 	var rr_btn: Control = get_node_or_null("Panel/VBox/BodyMargin/Body/StampRow/RereadBtn")
 	if rr_btn != null:
 		rr_btn.gui_input.connect(func(ev):
-			if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_RIGHT:
-				decrement_reread_count()
+			if ev is InputEventMouseButton and ev.pressed:
+				if ev.button_index == MOUSE_BUTTON_RIGHT:
+					decrement_reread_count()
+				elif ev.button_index == MOUSE_BUTTON_LEFT and ev.shift_pressed:
+					rr_btn.accept_event()
+					decrement_reread_count()
 		)
 	var dup_btn_ctrl: Control = get_node_or_null("Panel/VBox/BodyMargin/Body/StampRow/DuplicateBtn")
 	if dup_btn_ctrl != null:
 		dup_btn_ctrl.gui_input.connect(func(ev):
-			if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_RIGHT:
-				decrement_duplicate_count()
+			if ev is InputEventMouseButton and ev.pressed:
+				if ev.button_index == MOUSE_BUTTON_RIGHT:
+					decrement_duplicate_count()
+				elif ev.button_index == MOUSE_BUTTON_LEFT and ev.shift_pressed:
+					dup_btn_ctrl.accept_event()
+					decrement_duplicate_count()
 		)
 	var val_btn_ctrl: Control = get_node_or_null("Panel/VBox/BodyMargin/Body/InkRow/ValueBtn")
 	if val_btn_ctrl != null:
 		val_btn_ctrl.gui_input.connect(func(ev):
-			if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_RIGHT:
-				reduce_estimated_value()
+			if ev is InputEventMouseButton and ev.pressed:
+				if ev.button_index == MOUSE_BUTTON_RIGHT:
+					reduce_estimated_value()
+				elif ev.button_index == MOUSE_BUTTON_LEFT and ev.shift_pressed:
+					val_btn_ctrl.accept_event()
+					reduce_estimated_value()
 		)
 
 func set_fountain_pen_ink(ink_hex: String) -> void:

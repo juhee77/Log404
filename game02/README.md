@@ -5,7 +5,7 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 
 ---
 
-## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 162)
+## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 163)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
@@ -14,6 +14,9 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 ---
 
 ## 🚀 최신 스프린트 업데이트 요약 ([전체 회의록 보기](SPRINT_LOG.md))
+
+### 📓 [Sprint 163] `RereadBtn`/`DuplicateBtn`/`ValueBtn` `Shift+좌클릭` -1·-5,000원 역감소 지원
+- **수치 3종 역감소 통일 (`detail_modal.gd` · `index.html`)**: `RereadBtn`, `DuplicateBtn`, `ValueBtn` `Shift+좌클릭`으로 각각 재독 횟수 `-1`, 복수 소장 수량 `-1`, 추정 소장 가치 `-5,000원`을 즉시 감소시킵니다.
 
 ### 📓 [Sprint 162] `DateStampBtn` `Shift+좌클릭` 구매일+전권 오늘 날짜 동기화 & `DeleteBtn` `Shift+좌클릭` 삭제 확인 해제
 - **구매일·전권 날짜 동기화 & 안전 삭제 해제 (`detail_modal.gd` · `index.html`)**: `DateStampBtn` `Shift+좌클릭`으로 구매·기념일과 전권 날짜를 오늘 날짜로 일괄 동기화하며, `DeleteBtn` `Shift+좌클릭`으로 삭제 확인 대기(`delete_armed`)를 안전하게 해제합니다.

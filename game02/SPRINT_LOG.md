@@ -5,6 +5,18 @@
 
 ---
 
+## 📓 [Sprint 163] `RereadBtn`/`DuplicateBtn`/`ValueBtn` `Shift+좌클릭` -1·-5,000원 역감소 지원
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A (다꾸러):** "일기장 모달의 `🔁 1회독`(`RereadBtn`) 버튼에서 우클릭이나 `Shift+Y`로 회독을 -1 줄일 수 있는데, 트랙패드에서 `Shift+좌클릭`으로도 바로 -1 줄일 수 있으면 훨씬 손에 익을 것 같아요."
+- **가챠러 B (중복·자산 관리):** "`👯 ×1`(`DuplicateBtn`) 복수 소장 수량과 `💎 +5천원`(`ValueBtn`) 추정 소장 가치 버튼도 `Shift+좌클릭` 시 각각 -1, -5,000원 감소가 동작하면 수치 조정 3종 세트가 완벽하게 통일되겠어요!"
+- **미니멀러 C (웹 동기화):** "웹 목업(`index.html`)의 `#reread-cycle-btn` 버튼에도 `Shift+좌클릭` 시 `-1회독`이 동작하도록 동기화해주세요."
+- **PO & UX/UI 확정:**
+  1. **`DetailModal` `RereadBtn`/`DuplicateBtn`/`ValueBtn` `Shift+좌클릭` 역감소 (`detail_modal.gd`)**: 세 버튼의 `gui_input`에서 `Shift+좌클릭` 감지 시 `accept_event()` 처리 후 각각 `decrement_reread_count()`, `decrement_duplicate_count()`, `reduce_estimated_value()`를 호출하고 툴팁에 `· Shift+좌클릭: -1` / `· Shift+좌클릭: -5,000원` 안내를 추가했습니다.
+  2. **웹 목업(`index.html`) 동기화 & TDD/QA 검증:** `#reread-cycle-btn`에 `Shift+좌클릭` 시 `decrementRereadCount()`를 연결하고 `test_main_integration.gd`에 Sprint 163 통합 검증을 추가해 3종 헤드리스 테스트 100% 통과 및 Metal 4.0 스크린샷을 갱신했습니다.
+
+---
+
 ## 📓 [Sprint 162] `DateStampBtn` `Shift+좌클릭` 구매일+전권 오늘 날짜 동기화 & `DeleteBtn` `Shift+좌클릭` 삭제 확인 해제
 
 ### 1. 14인 스쿼드 회의록 & VOC

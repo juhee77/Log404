@@ -2667,6 +2667,28 @@ func _init() -> void:
 	main_inst.detail_modal.close()
 	print("✓ Sprint 162: DateStampBtn Purchase+AllVol Sync & DeleteBtn Shift+Left-Click Disarm verified")
 
+	# Sprint 163: RereadBtn/DuplicateBtn/ValueBtn Shift+Left-Click Decrement
+	var item163 = main_inst.archive_state.items[0]
+	item163.reread_count = 3
+	item163.duplicate_count = 3
+	item163.estimated_value = 25000
+	main_inst.detail_modal.open(item163)
+	var rr_btn163: Button = main_inst.detail_modal.find_child("RereadBtn", true, false) as Button
+	var dup_btn163: Button = main_inst.detail_modal.find_child("DuplicateBtn", true, false) as Button
+	var val_btn163: Button = main_inst.detail_modal.find_child("ValueBtn", true, false) as Button
+	assert(rr_btn163 != null and dup_btn163 != null and val_btn163 != null, "RereadBtn, DuplicateBtn, ValueBtn should exist")
+	assert("Shift+좌클릭: -1" in rr_btn163.tooltip_text and "Shift+좌클릭: -1" in dup_btn163.tooltip_text and "Shift+좌클릭: -5,000원" in val_btn163.tooltip_text, "Tooltips should mention Shift+Left-Click decrement")
+	var shift_lclick163 := InputEventMouseButton.new()
+	shift_lclick163.button_index = MOUSE_BUTTON_LEFT
+	shift_lclick163.pressed = true
+	shift_lclick163.shift_pressed = true
+	rr_btn163.gui_input.emit(shift_lclick163)
+	dup_btn163.gui_input.emit(shift_lclick163)
+	val_btn163.gui_input.emit(shift_lclick163)
+	assert(item163.reread_count == 2 and item163.duplicate_count == 2 and item163.estimated_value == 20000, "Shift+Left-Click should decrement reread, duplicate, and value")
+	main_inst.detail_modal.close()
+	print("✓ Sprint 163: RereadBtn/DuplicateBtn/ValueBtn Shift+Left-Click Decrement verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()
