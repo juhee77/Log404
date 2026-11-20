@@ -5,6 +5,19 @@
 
 ---
 
+## 📓 [Sprint 169] `AddModal` 입력 3종 `Shift+좌클릭` 개별 샘플 채움 & `DetailModal` `CatBadge` `Shift+좌클릭` 전체 서재 복원
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A (다꾸러):** "`AddModal`의 제목·작가·첫 밑줄 입력란 3곳에서 우클릭하면 비우기/샘플 전환이 되는데, `Shift+좌클릭`하면 언제든 해당 입력란에 기본 샘플 문장을 깔끔하게 채워주면 좋겠어요."
+- **가챠러 B (필터 복원러):** "`DetailModal` 왼쪽 표지 위 카테고리 배지(`CatBadge`)를 우클릭하면 전체 서재로 돌아가는데, 트랙패드에서 `Shift+좌클릭`으로도 모달을 닫으며 전체 서재를 복원할 수 있으면 편리하겠어요!"
+- **미니멀러 C (웹 동기화):** "웹 목업(`index.html`)의 `#diary-cover-cat` 배지에도 `Shift+좌클릭` 시 전체 서재 복원 후 모달 닫기를 동기화해주세요."
+- **PO & UX/UI 확정:**
+  1. **`AddModal` 입력란 3종 `Shift+좌클릭` 샘플 채움 (`add_modal.gd`)**: `TitleInput`, `AuthorInput`, `QuoteInput`의 `gui_input`에서 `Shift+좌클릭` 시 `accept_event()` 처리 후 해당 필드의 샘플 텍스트를 즉시 채웁니다.
+  2. **`DetailModal` `CatBadge` `Shift+좌클릭` 전체 서재 복원 (`detail_modal.gd`)**: `CatBadge` `gui_input`에서 `Shift+좌클릭` 시 `accept_event()` 처리 후 `close()` 및 `filter_category_requested.emit(-1)`을 발행해 전체 서재로 복원합니다.
+  3. **웹 목업(`index.html`) 동기화 & TDD/QA 검증:** `#diary-cover-cat`에 `Shift+좌클릭` 전체 서재 복원을 동기화하고 `test_main_integration.gd`에 Sprint 169 통합 검증을 추가해 3종 헤드리스 테스트 100% 통과 및 Metal 4.0 스크린샷을 갱신했습니다.
+
+---
+
 ## 📓 [Sprint 168] `SearchInput` `Shift+좌클릭` 첫 결과 열기 & `QuoteInput` `Shift+좌클릭` 밑줄 저장+복사
 
 ### 1. 14인 스쿼드 회의록 & VOC

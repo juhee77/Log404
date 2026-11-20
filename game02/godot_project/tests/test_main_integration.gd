@@ -2796,6 +2796,26 @@ func _init() -> void:
 	main_inst.detail_modal.close()
 	print("✓ Sprint 168: SearchInput Open First & QuoteInput Save+Copy Shift+Left-Click verified")
 
+	# Sprint 169: AddModal Input Fields Shift+Left-Click Sample Fill & DetailModal CatBadge Shift+Left-Click All Library Reset
+	main_inst.add_modal.open()
+	main_inst.add_modal.clear_inputs()
+	assert("Shift+좌클릭: 샘플 채움" in main_inst.add_modal.title_input.tooltip_text, "AddModal input tooltip should mention Shift+Left-Click sample fill")
+	var shift_lclick169 := InputEventMouseButton.new()
+	shift_lclick169.button_index = MOUSE_BUTTON_LEFT
+	shift_lclick169.pressed = true
+	shift_lclick169.shift_pressed = true
+	main_inst.add_modal.title_input.gui_input.emit(shift_lclick169)
+	main_inst.add_modal.author_input.gui_input.emit(shift_lclick169)
+	main_inst.add_modal.quote_input.gui_input.emit(shift_lclick169)
+	assert(main_inst.add_modal.title_input.text == "나의 비밀 독서 일기" and main_inst.add_modal.author_input.text == "주희의 서재" and main_inst.add_modal.quote_input.text == "오늘도 한 페이지의 여운을 남겼다.", "Shift+Left-Click on AddModal inputs should fill sample texts")
+	main_inst.add_modal.close()
+	main_inst._on_tab_manga_pressed()
+	main_inst.detail_modal.open(main_inst.archive_state.items[0])
+	assert("Shift+좌클릭: 전체 서재 보기" in main_inst.detail_modal.cat_badge.tooltip_text, "CatBadge tooltip should mention Shift+Left-Click all library reset")
+	main_inst.detail_modal.cat_badge.gui_input.emit(shift_lclick169)
+	assert(not main_inst.detail_modal.visible and main_inst.card_grid.get_child_count() == main_inst.archive_state.items.size(), "Shift+Left-Click on CatBadge should close modal and reset to all library")
+	print("✓ Sprint 169: AddModal Input Sample Fill & CatBadge All-Library Reset Shift+Left-Click verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

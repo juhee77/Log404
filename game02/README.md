@@ -5,7 +5,7 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 
 ---
 
-## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 168)
+## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 169)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
@@ -14,6 +14,9 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 ---
 
 ## 🚀 최신 스프린트 업데이트 요약 ([전체 회의록 보기](SPRINT_LOG.md))
+
+### 📓 [Sprint 169] `AddModal` 입력 3종 `Shift+좌클릭` 개별 샘플 채움 & `DetailModal` `CatBadge` `Shift+좌클릭` 전체 서재 복원
+- **개별 샘플 채움 & 카테고리 전체 복원 (`add_modal.gd` · `detail_modal.gd` · `index.html`)**: `AddModal` 입력란 3종 `Shift+좌클릭`으로 해당 칸의 샘플을 즉시 채우며, `DetailModal` `CatBadge` `Shift+좌클릭`으로 모달을 닫고 전체 서재를 복원합니다.
 
 ### 📓 [Sprint 168] `SearchInput` `Shift+좌클릭` 첫 결과 열기 & `QuoteInput` `Shift+좌클릭` 밑줄 저장+복사
 - **입력창 원클릭 숏컷 (`main_view.gd` · `detail_modal.gd` · `index.html`)**: `SearchInput` `Shift+좌클릭`으로 첫 검색 결과 일기장을 즉시 열며, `QuoteInput` `Shift+좌클릭`으로 작성 중인 밑줄·감상평을 저장과 동시에 클립보드에 복사합니다.

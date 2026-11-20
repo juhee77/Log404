@@ -41,10 +41,14 @@ func _ready() -> void:
 		var fld: LineEdit = pair[0]
 		var smp: String = pair[1]
 		if fld != null:
-			fld.tooltip_text = "우클릭: 입력 비우기 / 샘플 채움"
+			fld.tooltip_text = "우클릭: 입력 비우기 / 샘플 채움 · Shift+좌클릭: 샘플 채움"
 			fld.gui_input.connect(func(ev: InputEvent) -> void:
-				if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_RIGHT:
-					fld.text = "" if fld.text != "" else smp
+				if ev is InputEventMouseButton and ev.pressed:
+					if ev.button_index == MOUSE_BUTTON_RIGHT:
+						fld.text = "" if fld.text != "" else smp
+					elif ev.button_index == MOUSE_BUTTON_LEFT and ev.shift_pressed:
+						fld.accept_event()
+						fld.text = smp
 			)
 	var dimmer: Control = get_node_or_null("Dimmer")
 	if dimmer != null:

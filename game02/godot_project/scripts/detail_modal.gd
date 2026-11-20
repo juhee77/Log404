@@ -129,10 +129,14 @@ func _ready() -> void:
 	if cat_badge != null:
 		cat_badge.mouse_filter = Control.MOUSE_FILTER_STOP
 		cat_badge.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
-		cat_badge.tooltip_text = "좌클릭: 같은 카테고리(이북/가챠) 서재만 모아보기 · 우클릭: 전체 서재 보기"
+		cat_badge.tooltip_text = "좌클릭: 같은 카테고리(이북/가챠) 서재만 모아보기 · 우클릭: 전체 서재 보기 · Shift+좌클릭: 전체 서재 보기"
 		cat_badge.gui_input.connect(func(ev: InputEvent) -> void:
 			if ev is InputEventMouseButton and ev.pressed and current_item != null:
-				if ev.button_index == MOUSE_BUTTON_LEFT:
+				if ev.button_index == MOUSE_BUTTON_LEFT and ev.shift_pressed:
+					cat_badge.accept_event()
+					close()
+					filter_category_requested.emit(-1)
+				elif ev.button_index == MOUSE_BUTTON_LEFT:
 					var target_cat: int = current_item.category
 					close()
 					filter_category_requested.emit(target_cat)
