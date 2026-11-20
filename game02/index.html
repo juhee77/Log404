@@ -351,7 +351,7 @@
                         <div class="flex items-center gap-1.5">
                             <input id="diary-quote-input" type="text" placeholder="🖋️ 오늘 밑줄 친 명대사·감상평 수정..."
                                 onclick="if(event&&event.shiftKey){const qt=this.value.trim();saveDiaryQuote();if(qt){navigator.clipboard?.writeText(qt);this.title='✅ 저장·복사됨: '+qt;}}"
-                                onkeydown="if(event.key==='Enter'){saveDiaryQuote();}else if(event.key==='Escape'&&this.value){event.stopPropagation();this.value='';}"
+                                onkeydown="if(event.key==='Enter'){const qt=this.value.trim();saveDiaryQuote();if(event.shiftKey&&qt){navigator.clipboard?.writeText(qt);this.title='✅ 저장·복사됨: '+qt;}}else if(event.key==='Escape'&&(this.value||event.shiftKey)){event.stopPropagation();this.value='';}"
                                 oncontextmenu="event.preventDefault(); if(this.value){this.value='';}else{restoreDiaryQuoteInput();}"
                                 title="밑줄 문장·감상평 입력 (Enter: 저장 · 우클릭: 입력 비우기/원문 복원 · Shift+좌클릭: 저장+복사)"
                                 class="flex-1 px-2.5 py-1 rounded-lg bg-[#fffdf9] border border-[#d8cbb8] text-xs text-[#2c221e] focus:outline-none focus:border-[#c85a32]">

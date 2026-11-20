@@ -5,6 +5,20 @@
 
 ---
 
+## 📓 [Sprint 176] `AddModal` 키보드 `Shift+ESC` 입력 전체 비우기 & `Shift+Enter` 샘플 자동 채움 등록
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A (키보드 다꾸러):** "새 일기 작성 모달(`AddModal`)에서 `ESC`를 누르면 창이 닫히거나 포커스된 칸 하나만 지워지는데, `Shift+ESC`를 누르면 창을 닫지 않고 제목·작가·밑줄 3칸을 모두 한꺼번에 비워주면 좋겠어요."
+- **가챠러 B (원키 등록러):** "`Ctrl/Cmd+Enter`는 제목이 비어있으면 경고가 뜨는데, `Shift+Enter`를 누르면 `SubmitBtn` `Shift+좌클릭`처럼 빈 제목일 때도 샘플을 자동 채워서 즉시 등록까지 완료되면 정말 빠를 거예요!"
+- **미니멀러 C (웹 동기화):** "웹 목업(`index.html`)의 `#diary-quote-input`에서도 `Shift+Enter` 시 저장+복사, `Shift+ESC` 시 입력란 초기화를 동기화해주세요."
+- **PO & UX/UI 확정:**
+  1. **`AddModal` `_unhandled_input` `Shift+ESC` & `Shift+Enter` (`add_modal.gd`)**:
+     - `Shift+ESC`: `clear_inputs()` 호출로 모달을 닫지 않고 입력란 3종을 일괄 비웁니다.
+     - `Shift+Enter`: `_submit_with_sample_fallback()` 호출로 빈 제목 시 샘플 자동 채움 후 즉시 서재에 등록합니다.
+  2. **웹 목업(`index.html`) 동기화 & TDD/QA 검증:** `#diary-quote-input`에 `Shift+Enter` 저장+복사 및 `Shift+Escape` 초기화를 연결하고 `test_main_integration.gd`에 Sprint 176 통합 검증을 추가해 3종 헤드리스 테스트 100% 통과 및 Metal 4.0 스크린샷을 갱신했습니다.
+
+---
+
 ## 🏆 [Sprint 175 Milestone] `DetailModal` 키보드 `Shift+L` 속지 순환 · `Shift+Delete` 삭제 해제 · `Shift+PgUp/PgDn` 처음·끝 점프
 
 ### 1. 14인 스쿼드 회의록 & VOC

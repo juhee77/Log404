@@ -2970,6 +2970,23 @@ func _init() -> void:
 	main_inst.detail_modal.close()
 	print("✓ Sprint 175 Milestone: DetailModal Shift+L Paper, Shift+Delete Disarm & Shift+PageUp/Down verified")
 
+	# Sprint 176: AddModal Shift+ESC Clear All & Shift+Enter Sample Submit
+	var prev_cnt176: int = main_inst.archive_state.items.size()
+	main_inst.add_modal.open()
+	main_inst.add_modal.title_input.text = "임시176"
+	main_inst.add_modal.author_input.text = "임시작가"
+	main_inst.add_modal.title_input.release_focus()
+	var shift_k176 := InputEventKey.new()
+	shift_k176.pressed = true
+	shift_k176.shift_pressed = true
+	shift_k176.keycode = KEY_ESCAPE
+	main_inst.add_modal._unhandled_input(shift_k176)
+	assert(main_inst.add_modal.title_input.text == "" and main_inst.add_modal.author_input.text == "" and main_inst.add_modal.visible, "Shift+ESC in AddModal should clear all inputs without closing")
+	shift_k176.keycode = KEY_ENTER
+	main_inst.add_modal._unhandled_input(shift_k176)
+	assert(main_inst.archive_state.items.size() == prev_cnt176 + 1 and not main_inst.add_modal.visible, "Shift+Enter in AddModal should auto-fill sample and submit")
+	print("✓ Sprint 176: AddModal Shift+ESC Clear All & Shift+Enter Sample Submit verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

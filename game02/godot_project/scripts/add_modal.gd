@@ -239,7 +239,15 @@ func _unhandled_input(event: InputEvent) -> void:
 		_on_submit_btn_pressed()
 		get_viewport().set_input_as_handled()
 		return
+	if event.shift_pressed and (event.keycode == KEY_ENTER or event.keycode == KEY_KP_ENTER):
+		_submit_with_sample_fallback()
+		get_viewport().set_input_as_handled()
+		return
 	if event.keycode == KEY_ESCAPE:
+		if event.shift_pressed:
+			clear_inputs()
+			get_viewport().set_input_as_handled()
+			return
 		for le in [title_input, author_input, quote_input]:
 			if le != null and le.has_focus() and le.text != "":
 				le.text = ""
