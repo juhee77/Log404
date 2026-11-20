@@ -358,11 +358,18 @@ func _style_diary_controls() -> void:
 				btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 				if INK_SWATCH_MAP.has(btn.name):
 					var sw_hex: String = INK_SWATCH_MAP[btn.name]
-					btn.tooltip_text = "좌클릭: 잉크색 적용 · 우클릭: 잉크 적용+형광펜 토글"
+					btn.tooltip_text = "좌클릭: 잉크색 적용 · 우클릭: 잉크 적용+형광펜 토글 · Shift+좌클릭: 잉크 적용+입력창"
 					btn.gui_input.connect(func(ev: InputEvent) -> void:
-						if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_RIGHT:
-							set_fountain_pen_ink(sw_hex)
-							toggle_quote_highlight()
+						if ev is InputEventMouseButton and ev.pressed:
+							if ev.button_index == MOUSE_BUTTON_RIGHT:
+								set_fountain_pen_ink(sw_hex)
+								toggle_quote_highlight()
+							elif ev.button_index == MOUSE_BUTTON_LEFT and ev.shift_pressed:
+								btn.accept_event()
+								set_fountain_pen_ink(sw_hex)
+								if quote_input != null:
+									quote_input.grab_focus()
+									quote_input.caret_column = quote_input.text.length()
 					)
 	for ctrl in [save_quote_btn, add_vol_btn, rem_btn, share_btn, del_btn, close_btn, hl_btn]:
 		if ctrl != null:

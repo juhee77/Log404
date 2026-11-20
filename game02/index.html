@@ -147,7 +147,7 @@
                     </p>
                 </div>
                 <div class="flex items-center gap-4 border-t sm:border-t-0 pt-3 sm:pt-0 border-[#eee5d8] shrink-0">
-                    <div onclick="setFilter('all')" oncontextmenu="event.preventDefault(); copyLibrarySummaryReport();" class="text-center px-2 cursor-pointer hover:opacity-80" title="좌클릭: 전체 서재 보기 · 우클릭: 서재 리포트 클립보드 복사">
+                    <div onclick="if(event&&event.shiftKey){document.getElementById('search-box').value='';setFilter('all');}else{setFilter('all');}" oncontextmenu="event.preventDefault(); copyLibrarySummaryReport();" class="text-center px-2 cursor-pointer hover:opacity-80" title="좌클릭: 전체 서재 보기 · 우클릭: 서재 리포트 클립보드 복사 · Shift+좌클릭: 전체+기본순">
                         <div class="text-[11px] text-[#8c7a6b]">서재 작품</div>
                         <div class="serif-font text-lg font-bold text-[#2c221e]" id="stat-books">6권</div>
                     </div>
@@ -363,13 +363,13 @@
                         </div>
                         <div class="flex items-center gap-1.5 text-[10px] text-[#786b63] pt-1">
                             <span onclick="const k=['#2c221e','#7f1d1d','#78350f','#14532d'];const q=document.getElementById('diary-memo');const c=q&&q.dataset.ink?k.indexOf(q.dataset.ink):0;const nx=k[(c+1)%k.length];if(q)q.dataset.ink=nx;setDiaryInk(nx);" oncontextmenu="event.preventDefault();const k=['#2c221e','#7f1d1d','#78350f','#14532d'];const q=document.getElementById('diary-memo');const c=q&&q.dataset.ink?k.indexOf(q.dataset.ink):0;const nx=k[(c+k.length-1)%k.length];if(q)q.dataset.ink=nx;setDiaryInk(nx);" title="좌클릭: 만년필 잉크 순환 (I) · 우클릭: 역순환 (Shift+I)" class="font-bold cursor-pointer hover:text-[#c85a32]">🖋️ 잉크:</span>
-                            <button onclick="setDiaryInk('#2c221e')"
+                            <button onclick="setDiaryInk('#2c221e');if(event&&event.shiftKey){const i=document.getElementById('diary-quote-input');if(i)i.focus();}" title="좌클릭: 잉크색 적용 · Shift+좌클릭: 잉크 적용+입력창"
                                 class="px-2 py-0.5 rounded bg-[#f3ece1] border border-[#d6c7b2] text-[#2c221e] font-semibold cursor-pointer">☕에스프레소</button>
-                            <button onclick="setDiaryInk('#7f1d1d')"
+                            <button onclick="setDiaryInk('#7f1d1d');if(event&&event.shiftKey){const i=document.getElementById('diary-quote-input');if(i)i.focus();}" title="좌클릭: 잉크색 적용 · Shift+좌클릭: 잉크 적용+입력창"
                                 class="px-2 py-0.5 rounded bg-[#f3ece1] border border-[#d6c7b2] text-[#7f1d1d] font-semibold cursor-pointer">🍷버건디</button>
-                            <button onclick="setDiaryInk('#78350f')"
+                            <button onclick="setDiaryInk('#78350f');if(event&&event.shiftKey){const i=document.getElementById('diary-quote-input');if(i)i.focus();}" title="좌클릭: 잉크색 적용 · Shift+좌클릭: 잉크 적용+입력창"
                                 class="px-2 py-0.5 rounded bg-[#f3ece1] border border-[#d6c7b2] text-[#78350f] font-semibold cursor-pointer">🍂세피아</button>
-                            <button onclick="setDiaryInk('#14532d')"
+                            <button onclick="setDiaryInk('#14532d');if(event&&event.shiftKey){const i=document.getElementById('diary-quote-input');if(i)i.focus();}" title="좌클릭: 잉크색 적용 · Shift+좌클릭: 잉크 적용+입력창"
                                 class="px-2 py-0.5 rounded bg-[#f3ece1] border border-[#d6c7b2] text-[#14532d] font-semibold cursor-pointer">🌲포레스트</button>
                         </div>
                     </div>

@@ -2404,6 +2404,32 @@ func _init() -> void:
 	assert(not main_inst.detail_modal.visible and "복사" in main_inst.status_toast.text, "Shift+Left-clicking CloseBtn should copy share card and close modal")
 	print("✓ Sprint 153 Milestone: ThemeBtn Default Reset & CloseBtn Copy+Close verified")
 
+	# Sprint 154 Milestone: StatItems/StatGacha Shift+Left-Click & InkSwatch Shift+Left-Click Apply+Focus
+	main_inst._set_sort_mode(2)
+	main_inst.search_input.text = "프리렌"
+	main_inst._render_cards()
+	var stat_items_s154: Control = main_inst.get_node("VBox/TopBar/TopMargin/StatsVBox/StatRow/StatItems")
+	var stat_gacha_s154: Control = main_inst.get_node("VBox/TopBar/TopMargin/StatsVBox/StatRow/StatGacha")
+	assert("전체+기본순" in stat_items_s154.tooltip_text and "가챠 가치순" in stat_gacha_s154.tooltip_text, "StatItems and StatGacha tooltips should mention Shift+Left-Click actions")
+	var shift_lclick_s154 := InputEventMouseButton.new()
+	shift_lclick_s154.pressed = true
+	shift_lclick_s154.shift_pressed = true
+	shift_lclick_s154.button_index = MOUSE_BUTTON_LEFT
+	stat_items_s154.gui_input.emit(shift_lclick_s154)
+	assert(main_inst.sort_mode == 0 and main_inst.search_input.text == "" and main_inst.card_grid.get_child_count() == 6, "Shift+Left-clicking StatItems should reset all filters and sort mode")
+	stat_gacha_s154.gui_input.emit(shift_lclick_s154)
+	assert(main_inst.sort_mode == 3 and main_inst.card_grid.get_child_count() == 2, "Shift+Left-clicking StatGacha should filter gacha and sort by value")
+	main_inst._reset_all_filters()
+	main_inst._set_sort_mode(0)
+	var target_s154 = main_inst.archive_state.items[0]
+	main_inst._on_card_clicked(target_s154)
+	var ink_burg_s154: Button = main_inst.detail_modal.get_node("Panel/VBox/BodyMargin/Body/InkRow/InkBurgundy")
+	assert("잉크 적용+입력창" in ink_burg_s154.tooltip_text, "Ink swatch tooltip should mention Shift+Left-Click apply+focus")
+	ink_burg_s154.gui_input.emit(shift_lclick_s154)
+	assert(target_s154.memo_ink_color == "#7f1d1d", "Shift+Left-clicking InkBurgundy should apply burgundy ink")
+	main_inst.detail_modal.close()
+	print("✓ Sprint 154 Milestone: StatItems/StatGacha & InkSwatch Shift+Left-Click verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

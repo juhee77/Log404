@@ -96,21 +96,25 @@ func _ready() -> void:
 	add_modal.item_submitted.connect(_on_item_submitted)
 
 	var stat_configs := [
-		[$VBox/TopBar/TopMargin/StatsVBox/StatRow/StatItems, _on_tab_all_pressed, copy_summary_to_clipboard, "좌클릭: 전체 서재 · 우클릭: 서재 리포트 클립보드 복사"],
-		[$VBox/TopBar/TopMargin/StatsVBox/StatRow/StatVols, _on_tab_manga_pressed, func() -> void: _on_tab_manga_pressed(); _set_sort_mode(3), "좌클릭: 이북·단행본 · 우클릭: 이북 가치순 정렬"],
-		[$VBox/TopBar/TopMargin/StatsVBox/StatRow/StatFirsts, _on_stat_firsts_clicked, show_library_infographic, "좌클릭: 초판 특전 필터 · 우클릭: 서재 인포그래픽 요약"],
-		[$VBox/TopBar/TopMargin/StatsVBox/StatRow/StatGacha, _on_tab_gacha_pressed, _trigger_instant_json_backup, "좌클릭: 가챠노트 필터 · 우클릭: 즉시 JSON 백업 저장"],
+		[$VBox/TopBar/TopMargin/StatsVBox/StatRow/StatItems, _on_tab_all_pressed, copy_summary_to_clipboard, "좌클릭: 전체 서재 · 우클릭: 서재 리포트 클립보드 복사 · Shift+좌클릭: 전체+기본순", func() -> void: _reset_all_filters(); _set_sort_mode(0)],
+		[$VBox/TopBar/TopMargin/StatsVBox/StatRow/StatVols, _on_tab_manga_pressed, func() -> void: _on_tab_manga_pressed(); _set_sort_mode(3), "좌클릭: 이북·단행본 · 우클릭: 이북 가치순 정렬", Callable()],
+		[$VBox/TopBar/TopMargin/StatsVBox/StatRow/StatFirsts, _on_stat_firsts_clicked, show_library_infographic, "좌클릭: 초판 특전 필터 · 우클릭: 서재 인포그래픽 요약", Callable()],
+		[$VBox/TopBar/TopMargin/StatsVBox/StatRow/StatGacha, _on_tab_gacha_pressed, _trigger_instant_json_backup, "좌클릭: 가챠노트 필터 · 우클릭: 즉시 JSON 백업 저장 · Shift+좌클릭: 가챠 가치순", func() -> void: _on_tab_gacha_pressed(); _set_sort_mode(3)],
 	]
 	for cfg in stat_configs:
 		var panel: Control = cfg[0]
 		var lcb: Callable = cfg[1]
 		var rcb: Callable = cfg[2]
+		var slcb: Callable = cfg[4]
 		panel.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 		panel.tooltip_text = cfg[3]
 		panel.gui_input.connect(func(ev: InputEvent) -> void:
 			if ev is InputEventMouseButton and ev.pressed:
 				if ev.button_index == MOUSE_BUTTON_LEFT:
-					lcb.call()
+					if ev.shift_pressed and slcb.is_valid():
+						slcb.call()
+					else:
+						lcb.call()
 				elif ev.button_index == MOUSE_BUTTON_RIGHT:
 					rcb.call()
 		)
@@ -401,10 +405,10 @@ func _update_stats() -> void:
 		if it.category == 1:
 			gacha_val += it.get_item_value()
 	var stat_tips = [
-		[stat_items, "클릭 시 전체 서재 보기 · 평균 ★%s · 총 자산 %s" % [String.num(avg_lib, 1), val_str]],
+		[stat_items, "클릭 시 전체 서재 보기 · 평균 ★%s · 총 자산 %s · Shift+좌클릭: 전체+기본순" % [String.num(avg_lib, 1), val_str]],
 		[stat_vols, "클릭 시 이북·단행본 필터 · 서재 완독률 %d%%" % int(prog)],
 		[stat_firsts, "클릭 시 초판본 현황 · 전체 단행본 중 %d%% 초판" % first_pct],
-		[stat_gacha, "클릭 시 가챠·굿즈 필터 · 굿즈 자산 %s" % archive_state.format_krw(gacha_val)],
+		[stat_gacha, "클릭 시 가챠·굿즈 필터 · 굿즈 자산 %s · Shift+좌클릭: 가챠 가치순" % archive_state.format_krw(gacha_val)],
 	]
 	for pair in stat_tips:
 		var card_node = pair[0].get_parent().get_parent() if pair[0] != null and pair[0].get_parent() != null else null

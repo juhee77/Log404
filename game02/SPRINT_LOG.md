@@ -5,6 +5,25 @@
 
 ---
 
+## 📓 [Sprint 154] 통계 카드(`StatItems`/`StatGacha`) `Shift+좌클릭` 정렬 초기화·가치순 & 만년필 잉크 4종 `Shift+좌클릭` 적용+입력창 이동
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A**: "상단 `서재 작품`(`StatItems`) 카드를 `Shift+좌클릭`하면 검색어와 정렬까지 전부 기본 상태로 돌아가고, `가챠 스크랩`(`StatGacha`)을 `Shift+좌클릭`하면 가챠 노트만 가치순으로 바로 정렬되면 좋겠어요!"
+- **가챠러 B**: "`DetailModal` 속 만년필 잉크 4종(`☕에스프레소`·`🍷버건디`·`🍂세피아`·`🌲포레스트`)을 `Shift+좌클릭`하면 잉크색이 바뀜과 동시에 커서가 바로 밑줄 입력창으로 이동해 곧바로 글을 쓸 수 있으면 자연스러울 것 같아요."
+- **기획자 (PO)**: "`main_view.gd` `StatItems`/`StatGacha` `Shift+좌클릭` 파워 액션과 `detail_modal.gd` 잉크 스와치 4종 `Shift+좌클릭` 잉크 적용+입력창 포커스를 구현하고 `index.html`과 동기화합니다."
+
+### 2. 핵심 구현 및 변경 내역
+- `game02/godot_project/scripts/main_view.gd`:
+  - `StatItems` `Shift+좌클릭` 시 `_reset_all_filters(); _set_sort_mode(0)`를, `StatGacha` `Shift+좌클릭` 시 `_on_tab_gacha_pressed(); _set_sort_mode(3)`을 실행하고 `_update_stats()` 툴팁을 동기화했습니다.
+- `game02/godot_project/scripts/detail_modal.gd`:
+  - `INK_SWATCH_MAP` 4종 잉크 버튼 `Shift+좌클릭` 시 `set_fountain_pen_ink(sw_hex)` 적용 후 `quote_input.grab_focus()`로 즉시 이동하도록 연결했습니다.
+- `game02/index.html`:
+  - 상단 전체 통계 카드 및 만년필 잉크 4종 버튼 `onclick`에 `event.shiftKey` 분기 동작과 툴팁을 동기화했습니다.
+- `game02/godot_project/tests/test_main_integration.gd`:
+  - `StatItems`/`StatGacha` `Shift+좌클릭`과 `InkBurgundy` `Shift+좌클릭` 잉크 적용을 검증하는 Sprint 154 테스트를 추가해 100% 통과했습니다.
+
+---
+
 ## 📓 [Sprint 153] `ThemeBtn` `Shift+좌클릭` 기본 속지 테마 복원 & `CloseBtn` `Shift+좌클릭` 감상 카드 복사+닫기
 
 ### 1. 14인 스쿼드 회의록 & VOC
