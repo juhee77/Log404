@@ -2065,6 +2065,26 @@ func _init() -> void:
 	main_inst.detail_modal.close()
 	print("✓ Sprint 137 Milestone: Volume Row vol_lbl Edit/Bookmark & quote_lbl Copy verified")
 
+	# Sprint 138 Milestone: RemoveVolBtn Right-Click Last Bookmark & QuoteInput Right-Click Clear/Restore
+	var target_s138 = main_inst.archive_state.items[0]
+	main_inst._on_card_clicked(target_s138)
+	var rem_btn_s138: Button = main_inst.detail_modal.get_node("Panel/VBox/BodyMargin/Body/TopInfo/MetaVBox/BtnRow/RemoveVolBtn")
+	assert("마지막 권 북마크 토글" in rem_btn_s138.tooltip_text, "RemoveVolBtn tooltip should mention right-click last volume bookmark toggle")
+	var last_idx_s138: int = target_s138.volumes.size() - 1
+	var orig_last_bm_s138: bool = bool(target_s138.volumes[last_idx_s138].get("bookmarked", false))
+	var rclick_s138 := InputEventMouseButton.new()
+	rclick_s138.pressed = true
+	rclick_s138.button_index = MOUSE_BUTTON_RIGHT
+	rem_btn_s138.gui_input.emit(rclick_s138)
+	assert(bool(target_s138.volumes[last_idx_s138].get("bookmarked", false)) != orig_last_bm_s138, "Right-clicking RemoveVolBtn should toggle last volume bookmark")
+	assert("입력 비우기/원문 복원" in main_inst.detail_modal.quote_input.tooltip_text, "QuoteInput tooltip should mention right-click clear/restore")
+	main_inst.detail_modal.quote_input.gui_input.emit(rclick_s138)
+	assert(main_inst.detail_modal.quote_input.text == "", "First right-click on non-empty QuoteInput should clear text")
+	main_inst.detail_modal.quote_input.gui_input.emit(rclick_s138)
+	assert(main_inst.detail_modal.quote_input.text == target_s138.memo, "Second right-click on empty QuoteInput should restore item memo")
+	main_inst.detail_modal.close()
+	print("✓ Sprint 138 Milestone: RemoveVolBtn Last Bookmark & QuoteInput Clear/Restore verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

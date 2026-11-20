@@ -5,7 +5,7 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 
 ---
 
-## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 137)
+## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 138)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
@@ -14,6 +14,9 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 ---
 
 ## 🚀 최신 스프린트 업데이트 요약 ([전체 회의록 보기](SPRINT_LOG.md))
+
+### 📓 [Sprint 138] `RemoveVolBtn` 우클릭 마지막 권 북마크 토글 & `QuoteInput` 우클릭 입력 비우기·원문 복원
+- **모달 우클릭 편의 강화 (`detail_modal.gd` · `index.html`)**: `RemoveVolBtn` 우클릭 시 마지막 권 북마크를 토글하고, `QuoteInput` 우클릭 시 입력 비우기 ↔ 원문 감상평 복원을 전환합니다.
 
 ### 📓 [Sprint 137] 권별 리스트 `vol_lbl` 좌·우클릭(편집/북마크) & `quote_lbl` 우클릭 밑줄 문장 즉시 복사
 - **권별 행 라벨 인터랙션 (`detail_modal.gd` · `index.html`)**: `1권`/`2권` 라벨(`vol_lbl`) 좌클릭 시 해당 권 밑줄 편집, 우클릭 시 북마크 토글이 동작하며, 밑줄 문장(`quote_lbl`) 우클릭 시 클립보드에 즉시 복사됩니다.

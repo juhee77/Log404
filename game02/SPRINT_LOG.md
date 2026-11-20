@@ -5,6 +5,24 @@
 
 ---
 
+## 📓 [Sprint 138] `RemoveVolBtn` 우클릭 마지막 권 북마크 토글 & `QuoteInput` 우클릭 입력 비우기·원문 복원
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A**: "`DetailModal`의 `- 권 삭제`(`RemoveVolBtn`) 버튼을 우클릭하면 마지막 권을 삭제하는 대신 마지막 권의 북마크를 바로 토글해 소중한 최신 권을 찜할 수 있으면 좋겠어요!"
+- **가챠러 B**: "밑줄·감상평 입력창(`QuoteInput`)을 우클릭했을 때 글이 적혀 있으면 한 번에 비우고, 비어 있을 때 다시 우클릭하면 원문 감상평을 복원해주면 수정하기 훨씬 편할 것 같아요."
+- **기획자 (PO)**: "`detail_modal.gd` `RemoveVolBtn` 우클릭 마지막 권 북마크 토글과 `QuoteInput` 우클릭 비우기/원문 복원을 구현하고 `index.html` `#diary-quote-input`과 동기화합니다."
+
+### 2. 핵심 구현 및 변경 내역
+- `game02/godot_project/scripts/detail_modal.gd`:
+  - `RemoveVolBtn` 우클릭 시 마지막 권(`volumes.size() - 1`)의 북마크(`toggle_volume_bookmark`)를 토글하고 툴팁을 동기화했습니다.
+  - `QuoteInput` 우클릭 시 입력값이 있으면 비우고(`""`), 비어 있으면 원문 `current_item.memo`를 복원하며 툴팁을 추가했습니다.
+- `game02/index.html`:
+  - `#diary-quote-input` `oncontextmenu`에 입력 비우기/원문 복원 토글 및 툴팁을 동기화했습니다.
+- `game02/godot_project/tests/test_main_integration.gd`:
+  - `RemoveVolBtn` 우클릭 마지막 권 북마크 토글 및 `QuoteInput` 우클릭 비우기·원문 복원 테스트를 추가해 100% 통과했습니다.
+
+---
+
 ## 📓 [Sprint 137] 권별 리스트 `vol_lbl` 좌·우클릭(편집/북마크) & `quote_lbl` 우클릭 밑줄 문장 즉시 복사
 
 ### 1. 14인 스쿼드 회의록 & VOC

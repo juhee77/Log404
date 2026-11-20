@@ -18,13 +18,14 @@ Godot 4+ 기반의 감성 게임 및 인터랙티브 아카이브 애플리케�
 > **Godot 4.6.2 모바일 기반 E-Book 리더기 서재(Apple Books · 리디북스) & 만년필 다꾸 독서노트(굿노트 · 몰스킨) 감성 아카이브 앱**  
 > 14인 가상 애자일 스쿼드가 20분 주기 자동 스프린트로 지속 개선 중입니다.
 
-### 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 137)
+### 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 138)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
 | ![Pocket Archive Main Screen](game02/godot_project/screenshots/godot_app_screen.png) | ![Pocket Archive Detail Modal](game02/godot_project/screenshots/godot_modal_screen.png) |
 
 ### ✨ 주요 핵심 기능
+- **최신 Sprint 138 하이라이트**: `RemoveVolBtn` 우클릭 마지막 권 북마크 토글 및 `QuoteInput` 우클릭 입력 비우기 ↔ 원문 복원(`detail_modal.gd` · `index.html`) 완성
 - **최신 Sprint 137 하이라이트**: 권별 리스트 `vol_lbl` 좌클릭 밑줄 편집·우클릭 북마크 토글 및 `quote_lbl` 우클릭 밑줄 문장 클립보드 복사(`detail_modal.gd` · `index.html`) 완성
 - **최신 Sprint 136 하이라이트**: `DetailModal` 배경 딤머(`Dimmer`) 우클릭 닫기+즉시 JSON 백업 저장 및 `AddModal` 배경 딤머 우클릭 입력 내용 비우기(`detail_modal.gd` · `add_modal.gd` · `index.html`) 완성
 - **🏆 Sprint 135 마일스톤 하이라이트**: 검색창 `Enter` 첫 번째 결과 일기장 즉시 열기(`_open_first_filtered_card`) 및 빈 검색 결과(`EmptyStateResetBtn`) 우클릭 전체 복원+랜덤 추천 미리보기(`main_view.gd` · `index.html`) 완성

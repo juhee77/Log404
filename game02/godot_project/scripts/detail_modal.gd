@@ -72,6 +72,16 @@ func _ready() -> void:
 	_style_diary_controls()
 	if quote_input != null:
 		quote_input.text_submitted.connect(func(_t): _on_save_quote_btn_pressed())
+		quote_input.tooltip_text = "밑줄 문장·감상평 입력 (Enter: 저장 · 우클릭: 입력 비우기/원문 복원)"
+		quote_input.gui_input.connect(func(ev: InputEvent) -> void:
+			if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_RIGHT and current_item != null:
+				if quote_input.text != "":
+					quote_input.text = ""
+				else:
+					editing_vol_index = -1
+					quote_input.text = current_item.memo
+					quote_input.placeholder_text = "🖋️ 오늘 밑줄 친 명대사·감상평 수정..."
+		)
 	var dimmer: Control = get_node_or_null("Dimmer")
 	if dimmer != null:
 		dimmer.tooltip_text = "좌클릭: 일기장 닫기 · 우클릭: 닫고 즉시 JSON 백업"
@@ -237,6 +247,10 @@ func _style_diary_controls() -> void:
 	var rem_btn: Button = $Panel/VBox/BodyMargin/Body/TopInfo/MetaVBox/BtnRow/RemoveVolBtn
 	rem_btn.add_theme_stylebox_override("normal", cream_btn)
 	rem_btn.add_theme_color_override("font_color", Color(0.52, 0.36, 0.28))
+	rem_btn.gui_input.connect(func(ev: InputEvent) -> void:
+		if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_RIGHT and current_item != null and not current_item.volumes.is_empty():
+			toggle_volume_bookmark(current_item.volumes.size() - 1)
+	)
 
 	var share_btn: Button = get_node_or_null("Panel/VBox/BodyMargin/Body/TopInfo/MetaVBox/BtnRow/ShareCardBtn")
 	if share_btn != null:
@@ -287,7 +301,7 @@ func _style_diary_controls() -> void:
 					start_editing_volume_quote(current_item.volumes.size() - 1)
 		)
 	if rem_btn != null:
-		rem_btn.tooltip_text = "마지막 권·파츠 기록 삭제 (-)"
+		rem_btn.tooltip_text = "마지막 권·파츠 기록 삭제 (- · 우클릭: 마지막 권 북마크 토글)"
 	if share_btn != null:
 		share_btn.tooltip_text = "감상 카드 텍스트를 클립보드에 복사 (C · 우클릭·Shift+C: 전체 서재 리포트 복사)"
 	if del_btn != null:
