@@ -2987,6 +2987,31 @@ func _init() -> void:
 	assert(main_inst.archive_state.items.size() == prev_cnt176 + 1 and not main_inst.add_modal.visible, "Shift+Enter in AddModal should auto-fill sample and submit")
 	print("✓ Sprint 176: AddModal Shift+ESC Clear All & Shift+Enter Sample Submit verified")
 
+	# Sprint 177: MainView Shift+/ Cheatsheet, Shift+ESC Filter Reset & Space/Shift+Space Open
+	main_inst.search_input.release_focus()
+	main_inst.search_input.text = "프리렌"
+	main_inst._render_cards()
+	var shift_k177 := InputEventKey.new()
+	shift_k177.pressed = true
+	shift_k177.shift_pressed = true
+	shift_k177.keycode = KEY_ESCAPE
+	main_inst._unhandled_input(shift_k177)
+	assert(main_inst.search_input.text == "" and main_inst.card_grid.get_child_count() == main_inst.archive_state.items.size(), "Shift+ESC in MainView should reset all filters")
+	shift_k177.keycode = KEY_SLASH
+	main_inst._unhandled_input(shift_k177)
+	assert("단축키:" in main_inst.status_toast.text, "Shift+/ (?) should show shortcut cheatsheet")
+	var space_k177 := InputEventKey.new()
+	space_k177.pressed = true
+	space_k177.keycode = KEY_SPACE
+	main_inst._unhandled_input(space_k177)
+	assert(main_inst.detail_modal.visible, "Space in MainView should open first filtered card")
+	main_inst.detail_modal.close()
+	shift_k177.keycode = KEY_SPACE
+	main_inst._unhandled_input(shift_k177)
+	assert(main_inst.detail_modal.visible, "Shift+Space in MainView should open random diary modal")
+	main_inst.detail_modal.close()
+	print("✓ Sprint 177: MainView Shift+/ Cheatsheet, Shift+ESC Reset & Space/Shift+Space Open verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

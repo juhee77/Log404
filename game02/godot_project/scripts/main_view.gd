@@ -977,13 +977,26 @@ func _unhandled_input(event: InputEvent) -> void:
 	if (detail_modal != null and detail_modal.visible) or (add_modal != null and add_modal.visible):
 		return
 	if event is InputEventKey and event.pressed and not event.echo:
-		var is_find: bool = (event.keycode == KEY_F and (event.ctrl_pressed or event.meta_pressed)) or (event.keycode == KEY_SLASH and not event.ctrl_pressed and not event.meta_pressed)
-		if is_find and search_input != null:
+		var is_find: bool = (event.keycode == KEY_F and (event.ctrl_pressed or event.meta_pressed)) or (event.keycode == KEY_SLASH and not event.shift_pressed and not event.ctrl_pressed and not event.meta_pressed)
+		if event.keycode == KEY_SLASH and event.shift_pressed and (search_input == null or not search_input.has_focus()):
+			_show_shortcut_cheatsheet()
+			get_viewport().set_input_as_handled()
+		elif is_find and search_input != null:
 			search_input.grab_focus()
 			search_input.select_all()
 			get_viewport().set_input_as_handled()
+		elif event.keycode == KEY_ESCAPE and (search_input == null or not search_input.has_focus()):
+			if event.shift_pressed or (search_input != null and search_input.text != ""):
+				_reset_all_filters()
+				get_viewport().set_input_as_handled()
 		elif search_input == null or not search_input.has_focus():
 			match event.keycode:
+				KEY_SPACE:
+					if event.shift_pressed:
+						pick_random_item(true)
+					else:
+						_open_first_filtered_card()
+					get_viewport().set_input_as_handled()
 				KEY_0:
 					_reset_all_filters()
 					if event.shift_pressed:

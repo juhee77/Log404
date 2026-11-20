@@ -5,6 +5,21 @@
 
 ---
 
+## 📓 [Sprint 177] 메인 키보드 `Shift+/`(`?`) 단축키 치트시트 · `Shift+ESC` 필터 초기화 · `Space`/`Shift+Space` 서재·랜덤 열기
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A (키보드 파워 유저):** "메인 서재에서 `?` (`Shift+/`) 키를 눌렀을 때 검색창으로 포커스가 이동하는 대신 단축키 치트시트가 바로 뜨면 직관적일 것 같아요!"
+- **가챠러 B (원키 서재 탐색):** "검색창에 포커스가 없을 때 `Space`를 누르면 첫 번째 서재 카드를, `Shift+Space`를 누르면 랜덤 일기장을 열어주고, `Shift+ESC`를 누르면 검색어·필터를 전체 초기화해주면 키보드 탐색이 완벽해질 거예요!"
+- **미니멀러 C (웹 동기화):** "웹 목업(`index.html`)의 전역 키보드 리스너에도 `Space`/`Shift+Space`와 `Shift+ESC`를 동일하게 반영해주세요."
+- **PO & UX/UI 확정:**
+  1. **`MainView` `_unhandled_input` `Shift+/` · `Shift+ESC` · `Space`/`Shift+Space` (`main_view.gd`)**:
+     - `Shift+/` (`?`): `_show_shortcut_cheatsheet()` 표시.
+     - `Shift+ESC` (또는 검색어 존재 시 `ESC`): `_reset_all_filters()` 실행.
+     - `Space` / `Shift+Space`: `_open_first_filtered_card()` / `pick_random_item(true)` 실행.
+  2. **웹 목업(`index.html`) 동기화 & TDD/QA 검증:** 전역 `keydown` 핸들러에 `Space`/`Shift+Space`와 `Shift+Escape`를 추가하고 `test_main_integration.gd`에 Sprint 177 통합 검증을 추가해 3종 헤드리스 테스트 100% 통과 및 Metal 4.0 스크린샷을 갱신했습니다.
+
+---
+
 ## 📓 [Sprint 176] `AddModal` 키보드 `Shift+ESC` 입력 전체 비우기 & `Shift+Enter` 샘플 자동 채움 등록
 
 ### 1. 14인 스쿼드 회의록 & VOC

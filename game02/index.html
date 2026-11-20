@@ -977,16 +977,24 @@
                     }
                 } else {
                     const sb = document.getElementById('search-box');
-                    if (sb && sb.value !== '') {
+                    if (sb && (sb.value !== '' || e.shiftKey)) {
                         sb.value = '';
-                        renderShelf();
+                        if (e.shiftKey) switchCategory('all');
+                        else renderShelf();
                     }
                 }
-            } else if (e.key === '/' && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
+            } else if (e.key === '/' && !e.shiftKey && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
                 const jm = document.getElementById('journal-modal');
                 if (!jm || jm.classList.contains('hidden')) {
                     e.preventDefault();
                     document.getElementById('search-box')?.focus();
+                }
+            } else if (e.key === ' ' && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
+                const jm = document.getElementById('journal-modal');
+                if (!jm || jm.classList.contains('hidden')) {
+                    e.preventDefault();
+                    if (e.shiftKey && ITEMS.length) openJournalModal(ITEMS[Math.floor(Math.random() * ITEMS.length)].id);
+                    else { const first = document.querySelector('#collection-grid > div'); if (first && typeof first.onclick === 'function') first.onclick(); }
                 }
             } else if (['0', '1', '2', '3', '4', '5'].includes(e.key) && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
                 const jm = document.getElementById('journal-modal');
