@@ -5,6 +5,19 @@
 
 ---
 
+## 📓 [Sprint 190 Milestone] 메인 키보드 `Enter` 열기(Shift: 새 일기 모달) · `Backspace` 초기화(Shift: 스튜디오 리셋)
+- **일시**: 2026-11-21
+- **14인 가상 애자일 스쿼드 회의록**:
+  - **다꾸러 VOC (지민·수빈·하연)**: "검색창이 아닌 서재 화면에서 `Enter`만 누르면 첫 번째 일기 모달이 바로 열리고(`Shift+Enter`: 새 일기 쓰기 모달 열기), `Backspace`를 누르면 뒤로가듯 검색과 필터가 초기화(`Shift+Backspace`: 정렬·테마까지 스튜디오 리셋)되면 키보드 조작이 완벽히 자연스러울 것 같아요!"
+  - **PO & UX/UI**: `MainView` `_unhandled_input`에 `KEY_ENTER, KEY_KP_ENTER`(`_open_first_filtered_card()` / `Shift`: `_on_add_btn_pressed()`)와 `KEY_BACKSPACE`(`_reset_all_filters()` / `Shift`: `_set_sort_mode(0)` + `_reset_theme()`)를 추가하고 `KEY_H` 치트시트에 `[Enter] 열기 · [Bksp] 초기화`를 동기화한다.
+- **구현 내역**:
+  - [`main_view.gd`](godot_project/scripts/main_view.gd): `KEY_ENTER, KEY_KP_ENTER`, `KEY_BACKSPACE` 분기 및 `_show_shortcut_cheatsheet()` 업데이트.
+  - [`index.html`](index.html): 웹 인터랙티브 목업에 `Enter`/`Backspace` 및 `Shift` 조합 단축키 동기화.
+  - [`test_main_integration.gd`](godot_project/tests/test_main_integration.gd): `Enter`, `Shift+Enter`, `Backspace`, `Shift+Backspace`, `KEY_H` 치트시트 검증 추가.
+- **검증**: `test_archive.gd`, `test_persistence.gd`, `test_main_integration.gd` 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 갱신 완료.
+
+---
+
 ## 📓 [Sprint 189] 메인 키보드 `↑/↓` 정렬·사운드 순환 · `PageUp/PageDown` 필터 탭 순환
 - **일시**: 2026-11-21
 - **14인 가상 애자일 스쿼드 회의록**:

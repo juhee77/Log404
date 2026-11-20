@@ -5,7 +5,7 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 
 ---
 
-## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 189)
+## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 190 Milestone)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
@@ -14,6 +14,10 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 ---
 
 ## 🚀 최신 스프린트 업데이트 요약 ([전체 회의록 보기](SPRINT_LOG.md))
+
+### 📓 [Sprint 190 Milestone] 메인 키보드 `Enter` 열기(Shift: 새 일기 모달) · `Backspace` 초기화(Shift: 스튜디오 리셋)
+- **메인 키보드 `Enter` & `Backspace` 파워 액션**: 검색창 포커스 해제 상태에서 `Enter`로 첫 필터 작품을 즉시 열고(`Shift+Enter`: `+ 일기 쓰기` 모달 열기), `Backspace`로 검색/필터를 일괄 초기화(`Shift+Backspace`: 정렬·테마까지 스튜디오 리셋)합니다.
+- **치트시트 동기화 & 웹 목업**: `H` 단축키 치트시트에 `[Enter] 열기 · [Bksp] 초기화` 안내를 반영하고 `index.html` 웹 목업과도 100% 동기화했습니다.
 
 ### 📓 [Sprint 189] 메인 키보드 `↑/↓` 정렬·사운드 순환 · `PageUp/PageDown` 필터 탭 순환
 - **메인 키보드 `↑/↓` & `PageUp/PageDown` 내비게이션**: `↑/↓`로 정렬 기준을 순환하고(`Shift+↑/↓`: 앰비언트 사운드 변경), `PageUp`/`PageDown` 키로 5개 필터 탭(`전체·이북·가챠·완독·인생작`)을 순서대로 탐색합니다(`Shift`: 첫 작품 바로 열기).

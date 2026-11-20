@@ -1342,6 +1342,16 @@
                     const nextCat = cats[(curIdx + (e.key === 'PageUp' ? -1 : 1) + cats.length) % cats.length];
                     switchCategory(nextCat);
                 }
+            } else if ((!document.getElementById('journal-modal') || document.getElementById('journal-modal').classList.contains('hidden')) && (e.key === 'Enter' || e.key === 'Backspace') && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
+                if (e.key === 'Enter') {
+                    if (e.shiftKey) openAddModal();
+                    else if (ITEMS.length > 0) openJournalModal(ITEMS[0].id);
+                } else {
+                    const si = document.getElementById('search-input');
+                    if (si) si.value = '';
+                    switchCategory('all');
+                    showToast(e.shiftKey ? '🧹 스튜디오 전체 초기화 완료!' : '🧹 검색/필터 초기화 완료!');
+                }
             } else if ((e.key === 'i' || e.key === 'I') && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
                 const jm = document.getElementById('journal-modal');
                 if (jm && !jm.classList.contains('hidden') && activeId != null) {

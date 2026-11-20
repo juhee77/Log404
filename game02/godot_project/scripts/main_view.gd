@@ -1225,6 +1225,18 @@ func _unhandled_input(event: InputEvent) -> void:
 					if event.shift_pressed:
 						_open_first_filtered_card()
 					get_viewport().set_input_as_handled()
+				KEY_ENTER, KEY_KP_ENTER:
+					if event.shift_pressed:
+						_on_add_btn_pressed()
+					else:
+						_open_first_filtered_card()
+					get_viewport().set_input_as_handled()
+				KEY_BACKSPACE:
+					_reset_all_filters()
+					if event.shift_pressed:
+						_set_sort_mode(0)
+						_reset_theme()
+					get_viewport().set_input_as_handled()
 				KEY_H:
 					_show_shortcut_cheatsheet()
 					if event.shift_pressed and status_toast != null:
@@ -1232,7 +1244,7 @@ func _unhandled_input(event: InputEvent) -> void:
 					get_viewport().set_input_as_handled()
 
 func _show_shortcut_cheatsheet() -> void:
-	_show_toast("⌨️ 단축키: [0] 초기화 · [1~5] 탭 · [/] 검색 · [Space] 책장 · [←/→] 문장·테마 · [Home/End] 처음·끝 · [↑/↓] 정렬·사운드 · [PgUp/Dn] 탭순환 · [W/P] 스크랩·촬영 · [V] 가치순 · [L] 오늘밑줄 · [F] 인생작 · [B] 백업 · [E/G/D] 분류 · [A/U] 전체·초판 · [O/X] 열기·초기화 · [K/Z] 다독·최신순 · [J/Y] 끝열기·음소거 · [S/T/M/Q] 순환(Shift+역순) · [R] 추천 · [N] 새 일기 · [I] 요약 · [C] 복사 · [우클릭] 역순환·백업")
+	_show_toast("⌨️ 단축키: [0] 초기화 · [1~5] 탭 · [/] 검색 · [Space] 책장 · [←/→] 문장·테마 · [Home/End] 처음·끝 · [↑/↓] 정렬·사운드 · [PgUp/Dn] 탭순환 · [Enter] 열기 · [Bksp] 초기화 · [W/P] 스크랩·촬영 · [V] 가치순 · [L] 오늘밑줄 · [F] 인생작 · [B] 백업 · [E/G/D] 분류 · [A/U] 전체·초판 · [O/X] 열기·초기화 · [K/Z] 다독·최신순 · [J/Y] 끝열기·음소거 · [S/T/M/Q] 순환(Shift+역순) · [R] 추천 · [N] 새 일기 · [I] 요약 · [C] 복사 · [우클릭] 역순환·백업")
 
 func _on_modal_help_requested() -> void:
 	_show_toast("⌨️ 모달 단축키: [←/→] 넘김 · [Home/End] 처음·끝 · [1~4] 인장 · [+/-] 권 · [X] 아이콘 · [Q] 표지색 · [Y] 회독 · [Z] 상태 · [I] 잉크 · [N] 펜촉 · [W] 마테 · [S] 스티커 · [R] 레어도 · [P] 속지 · [O] 띠지 · [M] 기분 · [G] 등급 · [T] 태그 · [F] 마감 · [A] 경로 · [B] 보관 · [D] 복수 · [K] 최애캐 · [U] 날씨 · [J] 장소 · [V] 가치 · [Shift+순환키] 역순환 · [E] 문장 · [L] 형광펜 · [C] 복사(Shift+C: 리포트) · [Del] 삭제 · [ESC] 닫기")

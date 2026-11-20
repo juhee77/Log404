@@ -3431,6 +3431,45 @@ func _init() -> void:
 	assert("[↑/↓] 정렬·사운드 · [PgUp/Dn] 탭순환" in main_inst.status_toast.text, "Cheatsheet should include Up/Down and PageUp/Down hints")
 	print("✓ Sprint 189: MainView Up/Down Sort/Sound & PageUp/Down Tab Cycle verified")
 
+	# Sprint 190 Milestone: MainView Enter (Open/AddModal) & Backspace (Reset/Studio Reset)
+	main_inst.search_input.release_focus()
+	main_inst._reset_all_filters()
+	var ev_enter_190 = InputEventKey.new()
+	ev_enter_190.pressed = true
+	ev_enter_190.keycode = KEY_ENTER
+	main_inst._unhandled_input(ev_enter_190)
+	assert(main_inst.detail_modal.visible == true, "Enter in MainView should open first filtered card")
+	main_inst.detail_modal.close()
+
+	var ev_shift_enter_190 = InputEventKey.new()
+	ev_shift_enter_190.pressed = true
+	ev_shift_enter_190.shift_pressed = true
+	ev_shift_enter_190.keycode = KEY_ENTER
+	main_inst._unhandled_input(ev_shift_enter_190)
+	assert(main_inst.add_modal.visible == true, "Shift+Enter in MainView should open AddModal")
+	main_inst.add_modal.close()
+
+	main_inst._on_tab_gacha_pressed()
+	main_inst.search_input.text = "치이카와"
+	var ev_bksp_190 = InputEventKey.new()
+	ev_bksp_190.pressed = true
+	ev_bksp_190.keycode = KEY_BACKSPACE
+	main_inst._unhandled_input(ev_bksp_190)
+	assert(main_inst.archive_state.current_filter == -1 and main_inst.search_input.text == "", "Backspace should reset all filters and search")
+
+	main_inst._on_tab_manga_pressed()
+	main_inst._set_sort_mode(3)
+	var ev_shift_bksp_190 = InputEventKey.new()
+	ev_shift_bksp_190.pressed = true
+	ev_shift_bksp_190.shift_pressed = true
+	ev_shift_bksp_190.keycode = KEY_BACKSPACE
+	main_inst._unhandled_input(ev_shift_bksp_190)
+	assert(main_inst.archive_state.current_filter == -1 and main_inst.sort_mode == 0, "Shift+Backspace should perform full studio reset")
+
+	main_inst._unhandled_input(ev_h_183)
+	assert("[Enter] 열기 · [Bksp] 초기화" in main_inst.status_toast.text, "Cheatsheet should include Enter and Backspace hints")
+	print("✓ Sprint 190 Milestone: MainView Enter Open/AddModal & Backspace Reset/Studio Reset verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()
