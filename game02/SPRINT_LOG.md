@@ -5,6 +5,19 @@
 
 ---
 
+## 📓 [Sprint 183] 메인 키보드 `E/G/D` 분류 필터(Shift: 첫 작품 열기) · 치트시트 Sync
+- **일시**: 2026-11-21
+- **14인 가상 애자일 스쿼드 회의록**:
+  - **다꾸러 VOC (지민·수빈·하연)**: "서재에서 `1~5` 숫자키 외에도 손이 자주 가는 왼손 알파벳 영역에서 이북/만화(`E`), 가챠(`G`), 완독(`D`) 탭을 바로 전환하고, `Shift`와 함께 누르면 해당 카테고리의 첫 번째 작품을 즉시 펼쳐보고 싶어요."
+  - **PO & UX/UI**: `MainView` `_unhandled_input`에 직관적인 이니셜 니모닉 키(`E`: E-Book/만화, `G`: Gacha/굿즈, `D`: Done/완독)를 배치하고 `Shift+E/G/D` 시 `_open_first_filtered_card()`로 모달까지 한 번에 연결한다. `KEY_H` 단축키 치트시트(`_show_shortcut_cheatsheet`)에도 `[E/G/D] 분류`를 동기화하며 기존 `[우클릭] 역순환·백업` 안내를 복원한다.
+- **구현 내역**:
+  - [`main_view.gd`](godot_project/scripts/main_view.gd): `KEY_E`, `KEY_G`, `KEY_D` 분기 추가(`_on_tab_manga_pressed()`, `_on_tab_gacha_pressed()`, `_on_tab_complete_pressed()` 및 `Shift` 시 `_open_first_filtered_card()`), `_show_shortcut_cheatsheet()`에 `[E/G/D] 분류` 및 `[우클릭] 역순환·백업` 포함.
+  - [`index.html`](index.html): 웹 인터랙티브 목업에 메인 화면 `E/G/D` 및 `Shift+E/G/D` 키보드 단축키 동기화.
+  - [`test_main_integration.gd`](godot_project/tests/test_main_integration.gd): `KEY_E`, `KEY_G`, `KEY_D` 필터 전환, `Shift+E/G/D` 첫 작품 모달 오픈, `KEY_H` 치트시트 `[E/G/D] 분류` 검증 추가.
+- **검증**: `test_archive.gd`, `test_persistence.gd`, `test_main_integration.gd` 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 갱신 완료.
+
+---
+
 ## 📓 [Sprint 182] 메인 키보드 `B` 즉시 백업(Shift: 리포트 복사) · `F` 인생작 필터(Shift: 첫 작품 열기)
 
 ### 1. 14인 스쿼드 회의록 & VOC

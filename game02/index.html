@@ -1272,6 +1272,18 @@
                         if (e.shiftKey) { const favIt = ITEMS.find(x => x.stamp === '인생최애'); if (favIt) openJournalModal(favIt.id); }
                     }
                 }
+            } else if ((!document.getElementById('journal-modal') || document.getElementById('journal-modal').classList.contains('hidden')) && ['e', 'E', 'g', 'G', 'd', 'D'].includes(e.key) && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
+                const lk = e.key.toLowerCase();
+                if (lk === 'e') {
+                    switchCategory('manga');
+                    if (e.shiftKey) { const mIt = ITEMS.find(x => x.category === 'manga'); if (mIt) openJournalModal(mIt.id); }
+                } else if (lk === 'g') {
+                    switchCategory('gacha');
+                    if (e.shiftKey) { const gIt = ITEMS.find(x => x.category === 'gacha'); if (gIt) openJournalModal(gIt.id); }
+                } else {
+                    switchCategory('complete');
+                    if (e.shiftKey) { const cIt = ITEMS.find(x => (x.volumes || []).length >= 2); if (cIt) openJournalModal(cIt.id); }
+                }
             } else if ((e.key === 'i' || e.key === 'I') && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
                 const jm = document.getElementById('journal-modal');
                 if (jm && !jm.classList.contains('hidden') && activeId != null) {

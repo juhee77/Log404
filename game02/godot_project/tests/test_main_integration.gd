@@ -3146,6 +3146,64 @@ func _init() -> void:
 	assert("[F] 인생작 · [B] 백업" in main_inst.status_toast.text, "Cheatsheet should include [F] and [B]")
 	print("✓ Sprint 182: MainView Keys B Backup/Report & F Favorites Filter/Open verified")
 
+	# Sprint 183: MainView Keys E/G/D category filter & Shift instant open
+	main_inst.search_input.release_focus()
+	main_inst._reset_all_filters()
+	var ev_e = InputEventKey.new()
+	ev_e.pressed = true
+	ev_e.keycode = KEY_E
+	main_inst._unhandled_input(ev_e)
+	assert(main_inst.archive_state.current_filter == 0 and not main_inst.filter_completed_only, "Key E should switch filter to manga (0)")
+	assert(not main_inst.detail_modal.visible, "Plain Key E should not open modal")
+
+	var ev_g = InputEventKey.new()
+	ev_g.pressed = true
+	ev_g.keycode = KEY_G
+	main_inst._unhandled_input(ev_g)
+	assert(main_inst.archive_state.current_filter == 1 and not main_inst.filter_completed_only, "Key G should switch filter to gacha (1)")
+	assert(not main_inst.detail_modal.visible, "Plain Key G should not open modal")
+
+	var ev_d = InputEventKey.new()
+	ev_d.pressed = true
+	ev_d.keycode = KEY_D
+	main_inst._unhandled_input(ev_d)
+	assert(main_inst.filter_completed_only == true, "Key D should switch filter to complete")
+	assert(not main_inst.detail_modal.visible, "Plain Key D should not open modal")
+
+	var ev_shift_e = InputEventKey.new()
+	ev_shift_e.pressed = true
+	ev_shift_e.shift_pressed = true
+	ev_shift_e.keycode = KEY_E
+	main_inst._unhandled_input(ev_shift_e)
+	assert(main_inst.archive_state.current_filter == 0, "Shift+E should switch filter to manga")
+	assert(main_inst.detail_modal.visible == true, "Shift+E should open first filtered manga card in modal")
+	main_inst.detail_modal.close()
+
+	var ev_shift_g = InputEventKey.new()
+	ev_shift_g.pressed = true
+	ev_shift_g.shift_pressed = true
+	ev_shift_g.keycode = KEY_G
+	main_inst._unhandled_input(ev_shift_g)
+	assert(main_inst.archive_state.current_filter == 1, "Shift+G should switch filter to gacha")
+	assert(main_inst.detail_modal.visible == true, "Shift+G should open first filtered gacha card in modal")
+	main_inst.detail_modal.close()
+
+	var ev_shift_d = InputEventKey.new()
+	ev_shift_d.pressed = true
+	ev_shift_d.shift_pressed = true
+	ev_shift_d.keycode = KEY_D
+	main_inst._unhandled_input(ev_shift_d)
+	assert(main_inst.filter_completed_only == true, "Shift+D should switch filter to complete")
+	assert(main_inst.detail_modal.visible == true, "Shift+D should open first filtered complete card in modal")
+	main_inst.detail_modal.close()
+
+	var ev_h_183 = InputEventKey.new()
+	ev_h_183.pressed = true
+	ev_h_183.keycode = KEY_H
+	main_inst._unhandled_input(ev_h_183)
+	assert("[E/G/D] 분류" in main_inst.status_toast.text, "Cheatsheet should include [E/G/D] 분류")
+	print("✓ Sprint 183: MainView Keys E/G/D Category Filter & Shift Instant Open verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()
