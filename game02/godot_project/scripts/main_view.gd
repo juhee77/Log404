@@ -435,12 +435,15 @@ func _apply_today_quote(entry: Dictionary, total_count: int = 1) -> void:
 	else:
 		today_quote_label.tooltip_text = "나만의 첫 독서 일기를 시작해보세요"
 	if next_quote_btn != null:
-		next_quote_btn.tooltip_text = "[Q] 다음 밑줄 (우클릭·Shift+Q: 이전) (%d/%d)" % [quote_cursor + 1, maxi(1, total_count)]
+		next_quote_btn.tooltip_text = "[Q] 다음 밑줄 (우클릭·Shift+Q: 이전 · Shift+좌클릭: 작품 열기) (%d/%d)" % [quote_cursor + 1, maxi(1, total_count)]
 		if not next_quote_btn.has_meta("rclick_wired"):
 			next_quote_btn.set_meta("rclick_wired", true)
 			next_quote_btn.gui_input.connect(func(ev: InputEvent):
-				if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_RIGHT:
-					_step_today_quote(-1)
+				if ev is InputEventMouseButton and ev.pressed:
+					if ev.button_index == MOUSE_BUTTON_RIGHT:
+						_step_today_quote(-1)
+					elif ev.button_index == MOUSE_BUTTON_LEFT and ev.shift_pressed:
+						open_current_quote_item()
 			)
 
 func _step_today_quote(delta: int) -> void:
@@ -458,6 +461,9 @@ func _refresh_today_quote() -> void:
 	_apply_today_quote(quotes[quote_cursor], quotes.size())
 
 func _on_next_quote_btn_pressed() -> void:
+	if Input.is_key_pressed(KEY_SHIFT):
+		open_current_quote_item()
+		return
 	_step_today_quote(1)
 
 func open_current_quote_item() -> void:

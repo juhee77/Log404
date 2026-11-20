@@ -2194,6 +2194,23 @@ func _init() -> void:
 	main_inst._reset_all_filters()
 	print("✓ Sprint 143 Milestone: CardItem Shift+Left-Click Author & Spine Shift+Click Search verified")
 
+	# Sprint 144 Milestone: VolHeader Shift+Left-Click Batch Bookmark & NextQuoteBtn Shift+Left-Click Open
+	assert("Shift+좌클릭: 작품 열기" in main_inst.next_quote_btn.tooltip_text, "NextQuoteBtn tooltip should mention Shift+Left-Click open item")
+	var shift_lclick_s144 := InputEventMouseButton.new()
+	shift_lclick_s144.pressed = true
+	shift_lclick_s144.shift_pressed = true
+	shift_lclick_s144.button_index = MOUSE_BUTTON_LEFT
+	main_inst.next_quote_btn.gui_input.emit(shift_lclick_s144)
+	assert(main_inst.detail_modal.visible, "Shift+Left-clicking NextQuoteBtn should open current quote item modal")
+	var item_s144 = main_inst.detail_modal.current_item
+	assert("전권 북마크 일괄 토글" in main_inst.detail_modal.vol_header.tooltip_text, "VolHeader tooltip should mention batch bookmark toggle")
+	main_inst.detail_modal.vol_header.gui_input.emit(shift_lclick_s144)
+	assert(item_s144.get_bookmarked_volumes_count() == item_s144.volumes.size(), "First Shift+Left-click on VolHeader should bookmark all volumes")
+	main_inst.detail_modal.vol_header.gui_input.emit(shift_lclick_s144)
+	assert(item_s144.get_bookmarked_volumes_count() == 0, "Second Shift+Left-click on VolHeader should unbookmark all volumes")
+	main_inst.detail_modal.close()
+	print("✓ Sprint 144 Milestone: VolHeader Batch Bookmark & NextQuoteBtn Open verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

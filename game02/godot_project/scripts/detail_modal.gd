@@ -163,11 +163,23 @@ func _ready() -> void:
 	if vol_header != null:
 		vol_header.mouse_filter = Control.MOUSE_FILTER_STOP
 		vol_header.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
-		vol_header.tooltip_text = "좌클릭: 새 권·파츠 추가 (+) · 우클릭: 마지막 권 삭제 (-)"
+		vol_header.tooltip_text = "좌클릭: 새 권·파츠 추가 (+) · 우클릭: 마지막 권 삭제 (-) · Shift+좌클릭: 전권 북마크 일괄 토글"
 		vol_header.gui_input.connect(func(ev: InputEvent) -> void:
 			if ev is InputEventMouseButton and ev.pressed and current_item != null:
 				if ev.button_index == MOUSE_BUTTON_LEFT:
-					_on_add_vol_btn_pressed()
+					if ev.shift_pressed:
+						var all_bm: bool = not current_item.volumes.is_empty()
+						for v in current_item.volumes:
+							if not bool(v.get("bookmarked", false)):
+								all_bm = false
+								break
+						for v in current_item.volumes:
+							v["bookmarked"] = not all_bm
+						_render_volumes()
+						_refresh_vol_header()
+						diary_updated.emit(current_item)
+					else:
+						_on_add_vol_btn_pressed()
 				elif ev.button_index == MOUSE_BUTTON_RIGHT:
 					remove_last_volume()
 		)
