@@ -267,7 +267,7 @@
                     <h2 onclick="copyDiaryTitle()" oncontextmenu="event.preventDefault(); copyBookQuoteCard();" title="좌클릭: 작품 제목 복사 · 우클릭: 감상 카드 전체 복사 (C)" class="serif-font text-lg font-bold text-[#2c221e] mt-4 cursor-pointer hover:text-[#c85a32]" id="diary-title">슬램덩크 신장재편판</h2>
                     <p onclick="searchModalAuthor()" title="클릭하여 이 작가·시리즈의 다른 작품 검색하기" class="text-xs text-[#786b63] mt-0.5 cursor-pointer hover:text-[#c85a32]" id="diary-author">이노우에 다케히코</p>
                     <div class="mt-2">
-                        <span class="rubber-stamp text-xs px-2.5 py-0.5 rounded inline-block" id="diary-stamp">💮 전권완결
+                        <span onclick="if(event&&event.shiftKey){navigator.clipboard?.writeText(this.textContent.trim());this.title='✅ 태그 복사됨';}" title="Shift+좌클릭: 스탬프/태그 복사" class="rubber-stamp text-xs px-2.5 py-0.5 rounded inline-block cursor-pointer" id="diary-stamp">💮 전권완결
                             소장</span>
                     </div>
                 </div>

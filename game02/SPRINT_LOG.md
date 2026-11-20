@@ -5,6 +5,25 @@
 
 ---
 
+## 📓 [Sprint 149] `SortBtn` `Shift+좌클릭` 기본순 정렬 복원 & `TagLabel` `Shift+좌클릭` 태그·띠지 문구 클립보드 복사
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A**: "가치순이나 다독순으로 정렬해보다가 다시 원래대로 돌리고 싶을 때 `SortBtn`을 `Shift+좌클릭`하면 한 번에 `↕ 기본순`으로 복원되면 정말 편할 것 같아요!"
+- **가챠러 B**: "`DetailModal` 속 태그·기분·띠지 요약 줄(`TagLabel`)을 `Shift+좌클릭`했을 때 그 작품의 전체 상태·띠지 태그 문구가 클립보드에 복사되면 기록 공유에 유용하겠어요."
+- **기획자 (PO)**: "`main_view.gd` `SortBtn` `Shift+좌클릭` 기본순 복원과 `detail_modal.gd` `TagLabel` `Shift+좌클릭` 태그 복사를 구현하고 `index.html` `#diary-stamp`와 동기화합니다."
+
+### 2. 핵심 구현 및 변경 내역
+- `game02/godot_project/scripts/main_view.gd`:
+  - `SortBtn` `Shift+좌클릭` 시 `_set_sort_mode(0)`(`↕ 기본순`)으로 즉시 복원하고 툴팁을 동기화했습니다.
+- `game02/godot_project/scripts/detail_modal.gd`:
+  - `TagLabel` `Shift+좌클릭` 시 `tag_label.text`를 클립보드에 복사하고 툴팁 피드백(`✅ 태그 복사됨`)을 표시하며 `open()` 시 기본 툴팁으로 복원하도록 구현했습니다.
+- `game02/index.html`:
+  - `#diary-stamp` `onclick`에서 `event.shiftKey` 시 스탬프·태그 텍스트를 복사하도록 동기화했습니다.
+- `game02/godot_project/tests/test_main_integration.gd`:
+  - `SortBtn` `Shift+좌클릭` 기본순 복원과 `TagLabel` `Shift+좌클릭` 태그 복사를 검증하는 Sprint 149 테스트를 추가해 100% 통과했습니다.
+
+---
+
 ## 📓 [Sprint 148] `AmbientBtn` `Shift+좌클릭` 즉시 음소거 & `AuthorLabel` `Shift+좌클릭` 작가명 클립보드 복사
 
 ### 1. 14인 스쿼드 회의록 & VOC

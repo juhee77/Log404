@@ -101,6 +101,8 @@ func _ready() -> void:
 		title_label.tooltip_text = "좌클릭: 작품 제목 클립보드 복사 · 우클릭: 감상 카드 전체 복사 (C)"
 	if author_label != null:
 		author_label.tooltip_text = "좌클릭: 이 작가·시리즈의 다른 작품 검색하기 · Shift+좌클릭: 작가명 복사 · 우클릭: 가치 +5,000원(Shift: -5,000원)"
+	if tag_label != null:
+		tag_label.tooltip_text = "좌클릭: 띠지 문구 다음 순환 (O) · 우클릭: 이전 순환 (Shift+O) · Shift+좌클릭: 태그 복사"
 		title_label.gui_input.connect(func(ev: InputEvent) -> void:
 			if ev is InputEventMouseButton and ev.pressed and current_item != null:
 				if ev.button_index == MOUSE_BUTTON_LEFT:
@@ -158,11 +160,15 @@ func _ready() -> void:
 	if tag_label != null:
 		tag_label.mouse_filter = Control.MOUSE_FILTER_STOP
 		tag_label.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
-		tag_label.tooltip_text = "좌클릭: 띠지 문구 다음 순환 (O) · 우클릭: 이전 순환 (Shift+O)"
+		tag_label.tooltip_text = "좌클릭: 띠지 문구 다음 순환 (O) · 우클릭: 이전 순환 (Shift+O) · Shift+좌클릭: 태그 복사"
 		tag_label.gui_input.connect(func(ev: InputEvent) -> void:
 			if ev is InputEventMouseButton and ev.pressed and current_item != null:
 				if ev.button_index == MOUSE_BUTTON_LEFT:
-					cycle_obi_preset(1)
+					if ev.shift_pressed:
+						DisplayServer.clipboard_set(tag_label.text)
+						tag_label.tooltip_text = "✅ 태그 복사됨: " + tag_label.text
+					else:
+						cycle_obi_preset(1)
 				elif ev.button_index == MOUSE_BUTTON_RIGHT:
 					cycle_obi_preset(-1)
 		)
@@ -677,6 +683,8 @@ func open(item) -> void:
 	title_label.tooltip_text = "좌클릭: 작품 제목 클립보드 복사 · 우클릭: 감상 카드 전체 복사 (C)"
 	if author_label != null:
 		author_label.tooltip_text = "좌클릭: 이 작가·시리즈의 다른 작품 검색하기 · Shift+좌클릭: 작가명 복사 · 우클릭: 가치 +5,000원(Shift: -5,000원)"
+	if tag_label != null:
+		tag_label.tooltip_text = "좌클릭: 띠지 문구 다음 순환 (O) · 우클릭: 이전 순환 (Shift+O) · Shift+좌클릭: 태그 복사"
 	_refresh_author_label()
 	var sticker = current_item.get("deco_sticker") if current_item.get("deco_sticker") != null else "✨"
 	var r_tier = current_item.get("rarity_tier") if current_item.get("rarity_tier") != null else "🌟노말"

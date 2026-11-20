@@ -2304,6 +2304,23 @@ func _init() -> void:
 	main_inst.detail_modal.close()
 	print("✓ Sprint 148 Milestone: AmbientBtn Mute & AuthorLabel Copy verified")
 
+	# Sprint 149 Milestone: SortBtn Shift+Left-Click Default Reset & TagLabel Shift+Left-Click Copy
+	main_inst._step_sort(1)
+	assert(main_inst.sort_mode != 0, "Setup: sort_mode should be non-zero before Shift+Left-Click reset")
+	assert("Shift+좌클릭: 기본순" in main_inst.sort_btn.tooltip_text, "SortBtn tooltip should mention Shift+Left-Click default reset")
+	var shift_lclick_s149 := InputEventMouseButton.new()
+	shift_lclick_s149.pressed = true
+	shift_lclick_s149.shift_pressed = true
+	shift_lclick_s149.button_index = MOUSE_BUTTON_LEFT
+	main_inst.sort_btn.gui_input.emit(shift_lclick_s149)
+	assert(main_inst.sort_mode == 0 and main_inst.sort_btn.text == "↕ 기본순", "Shift+Left-clicking SortBtn should reset sort mode to default")
+	main_inst._on_card_clicked(main_inst.archive_state.items[0])
+	assert("태그 복사" in main_inst.detail_modal.tag_label.tooltip_text, "TagLabel tooltip should mention Shift+Left-Click tag copy")
+	main_inst.detail_modal.tag_label.gui_input.emit(shift_lclick_s149)
+	assert("✅ 태그 복사됨:" in main_inst.detail_modal.tag_label.tooltip_text, "Shift+Left-clicking TagLabel should copy tag text and update tooltip")
+	main_inst.detail_modal.close()
+	print("✓ Sprint 149 Milestone: SortBtn Default Reset & TagLabel Copy verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

@@ -239,10 +239,13 @@ func _ready() -> void:
 				pick_random_item(false)
 		)
 	if sort_btn != null:
-		sort_btn.tooltip_text = "[S] 정렬 순환 (우클릭·Shift+S: 이전): 기본순 → 권수순 → 최신순 → 가치순"
+		sort_btn.tooltip_text = "[S] 정렬 순환 (우클릭·Shift+S: 이전 · Shift+좌클릭: 기본순): 기본순 → 권수순 → 최신순 → 가치순"
 		sort_btn.gui_input.connect(func(ev: InputEvent):
-			if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_RIGHT:
-				_step_sort(-1)
+			if ev is InputEventMouseButton and ev.pressed:
+				if ev.button_index == MOUSE_BUTTON_RIGHT:
+					_step_sort(-1)
+				elif ev.button_index == MOUSE_BUTTON_LEFT and ev.shift_pressed:
+					_set_sort_mode(0)
 		)
 	var nav_row = get_node_or_null("VBox/BottomBar/Margin/VBox/NavRow")
 	if nav_row != null:
@@ -656,6 +659,9 @@ func _step_sort(delta: int) -> void:
 	_set_sort_mode(sort_mode + delta)
 
 func _on_sort_btn_pressed() -> void:
+	if Input.is_key_pressed(KEY_SHIFT):
+		_set_sort_mode(0)
+		return
 	_step_sort(1)
 
 func _show_toast(msg: String) -> void:
