@@ -134,13 +134,16 @@ func _ready() -> void:
 
 	if search_input != null:
 		search_input.clear_button_enabled = true
-		search_input.tooltip_text = "작품명·작가·대사·태그·보관위치·날씨·장소·소장경로 통합 검색 (Enter: 첫 결과 열기 · ESC·우클릭: 지우기/추천 검색)"
+		search_input.tooltip_text = "작품명·작가·대사·태그·보관위치·날씨·장소·소장경로 통합 검색 (Enter: 첫 결과 열기 · ESC·우클릭: 지우기/추천 검색 · Shift+좌클릭: 첫 결과 열기)"
 		search_input.text_submitted.connect(func(_t: String) -> void: _open_first_filtered_card())
 		search_input.gui_input.connect(func(ev):
 			if ev is InputEventKey and ev.pressed and not ev.echo and ev.keycode == KEY_ESCAPE and search_input.text != "":
 				search_input.text = ""
 				_render_cards()
 				_show_toast("🔍 검색어 초기화 (%s)" % _get_filtered_cards_summary())
+			elif ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_LEFT and ev.shift_pressed:
+				search_input.accept_event()
+				_open_first_filtered_card()
 			elif ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_RIGHT:
 				if search_input.text != "":
 					search_input.text = ""

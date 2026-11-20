@@ -2779,6 +2779,23 @@ func _init() -> void:
 	assert(main_inst.archive_state.items.size() == prev_cnt167 + 1 and not main_inst.add_modal.visible, "Shift+Left-Click on AddModal TitleLabel should fill sample and submit")
 	print("✓ Sprint 167: AddModal Dimmer Clear & TitleLabel Shift+Left-Click Sample Submit verified")
 
+	# Sprint 168: SearchInput Shift+Left-Click Open First & QuoteInput Shift+Left-Click Save+Copy
+	main_inst.search_input.text = ""
+	main_inst._render_cards()
+	assert("Shift+좌클릭: 첫 결과 열기" in main_inst.search_input.tooltip_text, "SearchInput tooltip should mention Shift+Left-Click open first")
+	var shift_lclick168 := InputEventMouseButton.new()
+	shift_lclick168.button_index = MOUSE_BUTTON_LEFT
+	shift_lclick168.pressed = true
+	shift_lclick168.shift_pressed = true
+	main_inst.search_input.gui_input.emit(shift_lclick168)
+	assert(main_inst.detail_modal.visible, "Shift+Left-Click on SearchInput should open first filtered card")
+	assert("Shift+좌클릭: 저장+복사" in main_inst.detail_modal.quote_input.tooltip_text, "QuoteInput tooltip should mention Shift+Left-Click save+copy")
+	main_inst.detail_modal.quote_input.text = "스쿼드 168 테스트 밑줄"
+	main_inst.detail_modal.quote_input.gui_input.emit(shift_lclick168)
+	assert(main_inst.detail_modal.current_item.memo == "스쿼드 168 테스트 밑줄" and main_inst.detail_modal.quote_input.tooltip_text == "✅ 저장·복사됨: 스쿼드 168 테스트 밑줄", "Shift+Left-Click on QuoteInput should save and copy")
+	main_inst.detail_modal.close()
+	print("✓ Sprint 168: SearchInput Open First & QuoteInput Save+Copy Shift+Left-Click verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

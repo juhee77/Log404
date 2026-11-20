@@ -72,15 +72,24 @@ func _ready() -> void:
 	_style_diary_controls()
 	if quote_input != null:
 		quote_input.text_submitted.connect(func(_t): _on_save_quote_btn_pressed())
-		quote_input.tooltip_text = "밑줄 문장·감상평 입력 (Enter: 저장 · 우클릭: 입력 비우기/원문 복원)"
+		quote_input.tooltip_text = "밑줄 문장·감상평 입력 (Enter: 저장 · 우클릭: 입력 비우기/원문 복원 · Shift+좌클릭: 저장+복사)"
 		quote_input.gui_input.connect(func(ev: InputEvent) -> void:
-			if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_RIGHT and current_item != null:
-				if quote_input.text != "":
-					quote_input.text = ""
-				else:
-					editing_vol_index = -1
-					quote_input.text = current_item.memo
-					quote_input.placeholder_text = "🖋️ 오늘 밑줄 친 명대사·감상평 수정..."
+			if ev is InputEventMouseButton and ev.pressed:
+				if ev.button_index == MOUSE_BUTTON_LEFT and ev.shift_pressed:
+					quote_input.accept_event()
+					var q_copy: String = quote_input.text.strip_edges()
+					_on_save_quote_btn_pressed()
+					if q_copy != "":
+						DisplayServer.clipboard_set(q_copy)
+						quote_input.tooltip_text = "✅ 저장·복사됨: " + q_copy
+				elif ev.button_index == MOUSE_BUTTON_RIGHT and current_item != null:
+					if quote_input.text != "":
+						quote_input.text = ""
+					else:
+						editing_vol_index = -1
+						quote_input.text = current_item.memo
+						quote_input.placeholder_text = "🖋️ 오늘 밑줄 친 명대사·감상평 수정..."
+						_render_volumes()
 		)
 	var dimmer: Control = get_node_or_null("Dimmer")
 	if dimmer != null:

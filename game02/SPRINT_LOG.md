@@ -5,6 +5,19 @@
 
 ---
 
+## 📓 [Sprint 168] `SearchInput` `Shift+좌클릭` 첫 결과 열기 & `QuoteInput` `Shift+좌클릭` 밑줄 저장+복사
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A (다꾸러):** "통합 검색창(`SearchInput`)에 검색어를 입력한 뒤 마우스로 `Shift+좌클릭`만 해도 엔터 키처럼 첫 번째 필터링된 작품 일기장이 바로 열리면 한 손 마우스 조작이 훨씬 편할 것 같아요."
+- **가챠러 B (대사 입력러):** "`DetailModal` 밑줄 입력창(`QuoteInput`)에 감상평을 적은 뒤, 저장 버튼까지 마우스를 옮기지 않고 입력창 자체에서 `Shift+좌클릭`만 해도 저장과 동시에 클립보드 복사가 완료되면 좋겠어요!"
+- **미니멀러 C (웹 동기화):** "웹 목업(`index.html`)의 `#search-box`와 `#diary-quote-input`에도 동일한 `Shift+좌클릭` 동작을 연결해주세요."
+- **PO & UX/UI 확정:**
+  1. **`MainView` `SearchInput` `Shift+좌클릭` 첫 결과 열기 (`main_view.gd`)**: `SearchInput` `gui_input`에서 `Shift+좌클릭` 시 `accept_event()` 처리 후 `_open_first_filtered_card()`를 호출해 첫 번째 필터링 카드를 즉시 엽니다.
+  2. **`DetailModal` `QuoteInput` `Shift+좌클릭` 저장+복사 (`detail_modal.gd`)**: `QuoteInput` `gui_input`에서 `Shift+좌클릭` 시 `accept_event()` 처리 후 `_on_save_quote_btn_pressed()`로 저장하고 입력 텍스트를 클립보드에 복사합니다.
+  3. **웹 목업(`index.html`) 동기화 & TDD/QA 검증:** `#search-box`와 `#diary-quote-input`에 `Shift+좌클릭` 핸들러를 추가하고 `test_main_integration.gd`에 Sprint 168 통합 검증을 추가해 3종 헤드리스 테스트 100% 통과 및 Metal 4.0 스크린샷을 갱신했습니다.
+
+---
+
 ## 📓 [Sprint 167] `AddModal` `Dimmer` `Shift+좌클릭` 입력 비우기 & `TitleLabel` `Shift+좌클릭` 샘플 즉시 등록
 
 ### 1. 14인 스쿼드 회의록 & VOC
