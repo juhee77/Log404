@@ -3470,6 +3470,47 @@ func _init() -> void:
 	assert("[Enter] 열기 · [Bksp] 초기화" in main_inst.status_toast.text, "Cheatsheet should include Enter and Backspace hints")
 	print("✓ Sprint 190 Milestone: MainView Enter Open/AddModal & Backspace Reset/Studio Reset verified")
 
+	# Sprint 191: AddModal Keys F (Sample Fill), X (Clear/Close) & Left/Right (Swatch Cycle)
+	main_inst._on_add_btn_pressed()
+	assert(main_inst.add_modal.visible == true, "AddModal should be open")
+	main_inst.add_modal.title_input.release_focus()
+	main_inst.add_modal.author_input.release_focus()
+	main_inst.add_modal.quote_input.release_focus()
+
+	var am_color_before = main_inst.add_modal.selected_color
+	var ev_am_right = InputEventKey.new()
+	ev_am_right.pressed = true
+	ev_am_right.keycode = KEY_RIGHT
+	main_inst.add_modal._unhandled_input(ev_am_right)
+	assert(main_inst.add_modal.selected_color != am_color_before, "Right arrow in AddModal should cycle cover swatch forward")
+
+	var ev_am_left = InputEventKey.new()
+	ev_am_left.pressed = true
+	ev_am_left.keycode = KEY_LEFT
+	main_inst.add_modal._unhandled_input(ev_am_left)
+	assert(main_inst.add_modal.selected_color == am_color_before, "Left arrow in AddModal should cycle cover swatch backward")
+
+	var ev_am_f = InputEventKey.new()
+	ev_am_f.pressed = true
+	ev_am_f.keycode = KEY_F
+	main_inst.add_modal._unhandled_input(ev_am_f)
+	assert(main_inst.add_modal.title_input.text == "오늘의 독서 스크랩", "Key F in AddModal should fill sample inputs")
+
+	var ev_am_x = InputEventKey.new()
+	ev_am_x.pressed = true
+	ev_am_x.keycode = KEY_X
+	main_inst.add_modal._unhandled_input(ev_am_x)
+	assert(main_inst.add_modal.title_input.text == "" and main_inst.add_modal.visible == true, "Key X in AddModal should clear inputs while staying open")
+
+	main_inst.add_modal.title_input.release_focus()
+	var ev_am_shift_x = InputEventKey.new()
+	ev_am_shift_x.pressed = true
+	ev_am_shift_x.shift_pressed = true
+	ev_am_shift_x.keycode = KEY_X
+	main_inst.add_modal._unhandled_input(ev_am_shift_x)
+	assert(main_inst.add_modal.visible == false, "Shift+X in AddModal should clear inputs and close modal")
+	print("✓ Sprint 191: AddModal Keys F Sample Fill, X Clear/Close & Left/Right Swatch Cycle verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

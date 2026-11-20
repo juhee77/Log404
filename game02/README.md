@@ -5,7 +5,7 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 
 ---
 
-## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 190 Milestone)
+## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 191)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
@@ -14,6 +14,10 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 ---
 
 ## 🚀 최신 스프린트 업데이트 요약 ([전체 회의록 보기](SPRINT_LOG.md))
+
+### 📓 [Sprint 191] `AddModal` 키보드 `F` 샘플 채움 · `X` 입력 초기화(Shift: 닫기) · `←/→` 표지 컬러 순환
+- **`AddModal` 파워 키보드 워크플로우**: 새 일기 쓰기 모달에서 입력창 포커스 해제 시 `←/→`로 표지 스와치 컬러를 순환하고, `F`로 샘플 일기 자동 채움(`Shift+F`: 즉시 등록), `X`로 입력란 비우기(`Shift+X`: 비우고 닫기)를 지원합니다.
+- **웹 목업 동기화**: `index.html` 웹 목업에도 `AddModal` `F`/`X`/`←`/`→` 단축키 피드백을 동일하게 반영했습니다.
 
 ### 📓 [Sprint 190 Milestone] 메인 키보드 `Enter` 열기(Shift: 새 일기 모달) · `Backspace` 초기화(Shift: 스튜디오 리셋)
 - **메인 키보드 `Enter` & `Backspace` 파워 액션**: 검색창 포커스 해제 상태에서 `Enter`로 첫 필터 작품을 즉시 열고(`Shift+Enter`: `+ 일기 쓰기` 모달 열기), `Backspace`로 검색/필터를 일괄 초기화(`Shift+Backspace`: 정렬·테마까지 스튜디오 리셋)합니다.

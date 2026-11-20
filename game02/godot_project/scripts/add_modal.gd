@@ -184,6 +184,25 @@ func _submit_with_sample_fallback() -> void:
 			quote_input.text = "소중한 한 권의 기억을 담다."
 	_on_submit_btn_pressed()
 
+func fill_sample_inputs() -> void:
+	if title_input != null and title_input.text.strip_edges() == "":
+		title_input.text = "오늘의 독서 스크랩"
+	if author_input != null and author_input.text.strip_edges() == "":
+		author_input.text = "주희의 다꾸 서재"
+	if quote_input != null and quote_input.text.strip_edges() == "":
+		quote_input.text = "소중한 한 권의 기억을 담다."
+
+func _step_color(delta: int) -> void:
+	if COVER_SWATCHES.is_empty():
+		return
+	var cur_idx: int = 0
+	for i in range(COVER_SWATCHES.size()):
+		if COVER_SWATCHES[i]["hex"].to_lower() == selected_color.to_lower():
+			cur_idx = i
+			break
+	var next_idx: int = (cur_idx + delta + COVER_SWATCHES.size()) % COVER_SWATCHES.size()
+	select_color(COVER_SWATCHES[next_idx]["hex"])
+
 func clear_inputs() -> void:
 	title_input.text = ""
 	author_input.text = ""
@@ -273,6 +292,22 @@ func _unhandled_input(event: InputEvent) -> void:
 			cat_option.select(1 if cat_option.selected == 0 else 0)
 			if event.shift_pressed:
 				_submit_with_sample_fallback()
+			get_viewport().set_input_as_handled()
+		elif event.keycode == KEY_F:
+			fill_sample_inputs()
+			if event.shift_pressed:
+				_submit_with_sample_fallback()
+			get_viewport().set_input_as_handled()
+		elif event.keycode == KEY_X:
+			clear_inputs()
+			if event.shift_pressed:
+				close()
+			get_viewport().set_input_as_handled()
+		elif event.keycode == KEY_LEFT:
+			_step_color(-1)
+			get_viewport().set_input_as_handled()
+		elif event.keycode == KEY_RIGHT:
+			_step_color(1)
 			get_viewport().set_input_as_handled()
 
 func _on_close_btn_pressed() -> void:

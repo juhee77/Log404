@@ -5,6 +5,19 @@
 
 ---
 
+## 📓 [Sprint 191] `AddModal` 키보드 `F` 샘플 채움 · `X` 입력 초기화(Shift: 닫기) · `←/→` 표지 컬러 순환
+- **일시**: 2026-11-21
+- **14인 가상 애자일 스쿼드 회의록**:
+  - **다꾸러 VOC (지민·수빈·하연)**: "새 일기 쓰기(`AddModal`) 모달에서 입력창에 포커스가 없을 때 `1~5` 숫자키 대신 `←/→` 방향키로 표지 컬러를 부드럽게 넘기고, `F`(Fill)로 샘플 일기를 채워보거나 `X`로 입력란을 한 번에 비우고(`Shift+X`: 모달 닫기) 싶어요!"
+  - **PO & UX/UI**: `AddModal`에 `fill_sample_inputs()`와 `_step_color(delta)` 헬퍼를 추가하고 `_unhandled_input`에 `KEY_F`(`fill_sample_inputs()` / `Shift+F`: `_submit_with_sample_fallback()`), `KEY_X`(`clear_inputs()` / `Shift+X`: `close()`), `KEY_LEFT`/`KEY_RIGHT`(`_step_color(±1)`)를 연결한다.
+- **구현 내역**:
+  - [`add_modal.gd`](godot_project/scripts/add_modal.gd): `fill_sample_inputs()`, `_step_color(delta)`, 및 `KEY_F`/`KEY_X`/`KEY_LEFT`/`KEY_RIGHT` 분기 추가.
+  - [`index.html`](index.html): 웹 인터랙티브 목업에 `AddModal` `F`/`X`/`ArrowLeft`/`ArrowRight` 단축키 피드백 동기화.
+  - [`test_main_integration.gd`](godot_project/tests/test_main_integration.gd): `AddModal` `←/→` 컬러 순환, `F` 샘플 채움, `X` 비우기, `Shift+X` 닫기 검증 추가.
+- **검증**: `test_archive.gd`, `test_persistence.gd`, `test_main_integration.gd` 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 갱신 완료.
+
+---
+
 ## 📓 [Sprint 190 Milestone] 메인 키보드 `Enter` 열기(Shift: 새 일기 모달) · `Backspace` 초기화(Shift: 스튜디오 리셋)
 - **일시**: 2026-11-21
 - **14인 가상 애자일 스쿼드 회의록**:

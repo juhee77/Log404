@@ -1310,6 +1310,11 @@
                     switchCategory('all');
                     showToast(e.shiftKey ? '🧹 스튜디오 전체 초기화 완료!' : '🧹 검색/필터 초기화 완료!');
                 }
+            } else if (document.getElementById('add-modal') && !document.getElementById('add-modal').classList.contains('hidden') && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
+                const lk = e.key.toLowerCase();
+                if (lk === 'f') showToast(e.shiftKey ? '📝 샘플 일기 자동 채움 및 등록!' : '📝 샘플 일기 자동 채움!');
+                else if (lk === 'x') showToast(e.shiftKey ? '🧹 입력 초기화 및 모달 닫기' : '🧹 입력란 전체 비우기');
+                else if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') showToast(e.key === 'ArrowLeft' ? '🎨 이전 표지 컬러 선택' : '🎨 다음 표지 컬러 선택');
             } else if ((!document.getElementById('journal-modal') || document.getElementById('journal-modal').classList.contains('hidden')) && ['k', 'K', 'z', 'Z'].includes(e.key) && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
                 const lk = e.key.toLowerCase();
                 if (lk === 'k') {
@@ -1352,6 +1357,11 @@
                     switchCategory('all');
                     showToast(e.shiftKey ? '🧹 스튜디오 전체 초기화 완료!' : '🧹 검색/필터 초기화 완료!');
                 }
+            } else if (document.getElementById('add-modal') && !document.getElementById('add-modal').classList.contains('hidden') && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
+                const lk = e.key.toLowerCase();
+                if (lk === 'f') showToast(e.shiftKey ? '📝 샘플 일기 자동 채움 및 등록!' : '📝 샘플 일기 자동 채움!');
+                else if (lk === 'x') showToast(e.shiftKey ? '🧹 입력 초기화 및 모달 닫기' : '🧹 입력란 전체 비우기');
+                else if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') showToast(e.key === 'ArrowLeft' ? '🎨 이전 표지 컬러 선택' : '🎨 다음 표지 컬러 선택');
             } else if ((e.key === 'i' || e.key === 'I') && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
                 const jm = document.getElementById('journal-modal');
                 if (jm && !jm.classList.contains('hidden') && activeId != null) {
