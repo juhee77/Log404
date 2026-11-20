@@ -3058,6 +3058,28 @@ func _init() -> void:
 	assert(main_inst.archive_state.items.size() == prev_cnt179 + 2 and main_inst.archive_state.items[0].category == 1, "Shift+C in AddModal should toggle category and instant-submit")
 	print("✓ Sprint 179: AddModal Keys 1~5 Swatches & C Category Toggle/Submit verified")
 
+	# Sprint 180 Milestone: MainView Keys W (Web Scrape) & P (Camera Snap) with Shift Instant Open
+	main_inst.search_input.release_focus()
+	var prev_cnt180: int = main_inst.archive_state.items.size()
+	var k_w180 := InputEventKey.new()
+	k_w180.pressed = true
+	k_w180.keycode = KEY_W
+	main_inst._unhandled_input(k_w180)
+	assert(main_inst.archive_state.items.size() == prev_cnt180 + 1 and not main_inst.detail_modal.visible, "Key W in MainView should web-scrape item")
+	var k_sp180 := InputEventKey.new()
+	k_sp180.pressed = true
+	k_sp180.shift_pressed = true
+	k_sp180.keycode = KEY_P
+	main_inst._unhandled_input(k_sp180)
+	assert(main_inst.archive_state.items.size() == prev_cnt180 + 2 and main_inst.detail_modal.visible, "Shift+P in MainView should camera-snap item and open modal")
+	main_inst.detail_modal.close()
+	var k_h180 := InputEventKey.new()
+	k_h180.pressed = true
+	k_h180.keycode = KEY_H
+	main_inst._unhandled_input(k_h180)
+	assert("[W/P] 스크랩·촬영" in main_inst.status_toast.text, "Cheatsheet toast should include [W/P] Scrape/Snap")
+	print("✓ Sprint 180 Milestone: MainView Keys W/P Scrape & Snap (Shift: Open) verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

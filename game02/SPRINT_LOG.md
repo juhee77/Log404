@@ -5,6 +5,21 @@
 
 ---
 
+## 🏆 [Sprint 180 Milestone] 메인 키보드 `W` 웹표지 스크랩 · `P` 폴라로이드 촬영(Shift: 등록 후 즉시 열기)
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A (키보드 파워 유저):** "180회 마일스톤 스프린트! 하단 도크의 `웹표지 스크랩`(`WebBtn`)과 `폴라로이드 촬영`(`CamBtn`)도 키보드에서 `W`와 `P` 키 한 번으로 바로 등록할 수 있으면 마우스를 아래까지 내릴 필요가 없겠어요!"
+- **가챠러 B (원키 등록+열기):** "`Shift+W`, `Shift+P`를 누르면 스크랩·촬영 등록과 동시에 방금 만든 일기장 모달을 곧바로 열어줘서 바로 다꾸를 시작할 수 있으면 완벽해요!"
+- **미니멀러 C (웹 동기화):** "웹 목업(`index.html`)의 전역 키보드 리스너에도 `W`/`P`와 `Shift+W`/`Shift+P`를 동일하게 연결해주세요."
+- **PO & UX/UI 확정:**
+  1. **`MainView` `_unhandled_input` `W` & `P` (`main_view.gd`)**:
+     - `W`: `_on_web_scrape_btn_pressed()` 실행(`Shift+W`: 등록 후 `items[0]` 모달 즉시 열기).
+     - `P`: `_on_camera_snap_btn_pressed()` 실행(`Shift+P`: 등록 후 `items[0]` 모달 즉시 열기).
+     - `_show_shortcut_cheatsheet()` 안내에 `[W/P] 스크랩·촬영` 추가.
+  2. **웹 목업(`index.html`) 동기화 & TDD/QA 검증:** 전역 `keydown` 리스너에 `W`/`P` 및 `Shift+W`/`Shift+P`를 동기화하고 `test_main_integration.gd`에 Sprint 180 마일스톤 검증을 추가해 3종 헤드리스 테스트 100% 통과 및 Metal 4.0 스크린샷을 갱신했습니다.
+
+---
+
 ## 📓 [Sprint 179] `AddModal` 키보드 `1~5` 표지 스와치(Shift: 즉시 등록) & `C` 분류 전환(Shift: 즉시 등록)
 
 ### 1. 14인 스쿼드 회의록 & VOC
