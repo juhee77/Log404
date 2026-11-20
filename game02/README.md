@@ -5,7 +5,7 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 
 ---
 
-## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 157)
+## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 158)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
@@ -14,6 +14,9 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 ---
 
 ## 🚀 최신 스프린트 업데이트 요약 ([전체 회의록 보기](SPRINT_LOG.md))
+
+### 📓 [Sprint 158] `DiyBtn` `Shift+좌클릭` 샘플 채움 모달 열기 & 권별 `StatusBtn` `Shift+좌클릭` 전권 초판·소장 일괄 전환
+- **샘플 일괄 채움 & 전권 초판 전환 (`main_view.gd` · `detail_modal.gd` · `index.html`)**: `DiyBtn` `Shift+좌클릭`으로 샘플 채움 모달을 열며, 권별 `StatusBtn` `Shift+좌클릭`으로 전권 초판·소장 상태를 일괄 전환합니다.
 
 ### 📓 [Sprint 157] `WebBtn`/`CamBtn` `Shift+좌클릭` 스크랩·촬영 후 즉시 열기 & 권별 `BmBtn` `Shift+좌클릭` 초판+북마크
 - **등록 후 즉시 열기 & 초판 북마크 (`main_view.gd` · `detail_modal.gd` · `index.html`)**: `WebBtn`/`CamBtn` `Shift+좌클릭`으로 스크랩·촬영 후 모달을 즉시 열며, 권별 `BmBtn` `Shift+좌클릭`으로 `초판+북마크`를 동시 적용합니다.

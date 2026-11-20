@@ -2512,6 +2512,34 @@ func _init() -> void:
 	main_inst.detail_modal.close()
 	print("✓ Sprint 157 Milestone: WebBtn/CamBtn Open & BmBtn First+Bookmark verified")
 
+	# Sprint 158 Milestone: DiyBtn Shift+Left-Click Sample Modal & Vol StatusBtn Shift+Left-Click Batch Toggle
+	var diy_btn_s158: Control = main_inst.get_node("VBox/BottomBar/Margin/VBox/NavRow").get_child(2)
+	assert("샘플 채움 열기" in diy_btn_s158.tooltip_text, "DiyBtn tooltip should mention Shift+Left-Click sample modal")
+	var shift_lclick_s158 := InputEventMouseButton.new()
+	shift_lclick_s158.pressed = true
+	shift_lclick_s158.shift_pressed = true
+	shift_lclick_s158.button_index = MOUSE_BUTTON_LEFT
+	diy_btn_s158.gui_input.emit(shift_lclick_s158)
+	assert(main_inst.add_modal.visible and main_inst.add_modal.title_input.text == "나의 비밀 독서 일기", "Shift+Left-clicking DiyBtn should open AddModal pre-filled with sample")
+	main_inst.add_modal.close()
+	var target_s158 = main_inst.archive_state.items[0]
+	target_s158.volumes[0]["status"] = "owned"
+	main_inst._on_card_clicked(target_s158)
+	var row_btns_s158 = main_inst.detail_modal.vol_list.get_child(0).find_children("*", "Button", true, false)
+	var st_btn_s158: Button = null
+	for rb in row_btns_s158:
+		if "소장완료" in rb.text or "초판특전" in rb.text:
+			st_btn_s158 = rb
+	assert(st_btn_s158 != null and "전권 일괄 전환" in st_btn_s158.tooltip_text, "StatusBtn tooltip should mention Shift+Left-Click batch toggle")
+	st_btn_s158.gui_input.emit(shift_lclick_s158)
+	var all_first_s158: bool = true
+	for vv in target_s158.volumes:
+		if vv.get("status", "") != "first":
+			all_first_s158 = false
+	assert(all_first_s158, "Shift+Left-clicking StatusBtn should set all volumes to first edition")
+	main_inst.detail_modal.close()
+	print("✓ Sprint 158 Milestone: DiyBtn Sample Modal & StatusBtn Batch Toggle verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

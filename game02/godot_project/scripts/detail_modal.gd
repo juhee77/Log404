@@ -1488,12 +1488,21 @@ func _render_volumes() -> void:
 		status_btn.add_theme_stylebox_override("normal", btn_sb)
 		status_btn.add_theme_color_override("font_color", Color(0.78, 0.35, 0.2) if is_first else Color(0.29, 0.45, 0.36))
 		status_btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
-		status_btn.tooltip_text = "클릭하여 초판특전 / 소장완료 전환 (우클릭: 초판+북마크 동시 토글)"
+		status_btn.tooltip_text = "클릭하여 초판특전 / 소장완료 전환 (우클릭: 초판+북마크 동시 토글 · Shift+좌클릭: 전권 일괄 전환)"
 		status_btn.pressed.connect(func(): toggle_volume_status(capture_idx))
 		status_btn.gui_input.connect(func(ev: InputEvent) -> void:
-			if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_RIGHT:
-				toggle_volume_status(capture_idx)
-				toggle_volume_bookmark(capture_idx)
+			if ev is InputEventMouseButton and ev.pressed:
+				if ev.button_index == MOUSE_BUTTON_RIGHT:
+					toggle_volume_status(capture_idx)
+					toggle_volume_bookmark(capture_idx)
+				elif ev.button_index == MOUSE_BUTTON_LEFT and ev.shift_pressed and current_item != null and capture_idx < current_item.volumes.size():
+					status_btn.accept_event()
+					var next_st: String = "owned" if current_item.volumes[capture_idx].get("status", "") == "first" else "first"
+					for vol_d in current_item.volumes:
+						vol_d["status"] = next_st
+					_render_volumes()
+					_refresh_vol_header()
+					diary_updated.emit(current_item)
 		)
 		
 		var date_btn = Button.new()

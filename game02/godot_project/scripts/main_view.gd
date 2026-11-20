@@ -288,7 +288,7 @@ func _ready() -> void:
 		var nav_tips = [
 			"웹에서 작품 표지와 기본 정보 자동 스크랩 추가 (우클릭: 이북·단행본 필터 · Shift+좌클릭: 스크랩 후 열기)",
 			"실물 굿즈·단행본 폴라로이드 촬영 기록 추가 (우클릭: 가챠노트 필터 · Shift+좌클릭: 촬영 후 열기)",
-			"[N] 새 독서 일기·가챠 스크랩 직접 작성 (우클릭: 즉시 JSON 저장)",
+			"[N] 새 독서 일기·가챠 스크랩 직접 작성 (우클릭: 즉시 JSON 저장 · Shift+좌클릭: 샘플 채움 열기)",
 			"[T] 다꾸 다이어리 속지 테마 순환 (우클릭·Shift+T: 이전 · Shift+좌클릭: 기본 테마)"
 		]
 		var nav_rclicks: Array[Callable] = [
@@ -318,6 +318,12 @@ func _ready() -> void:
 								_on_camera_snap_btn_pressed()
 								if archive_state != null and not archive_state.items.is_empty():
 									_open_detail_modal(archive_state.items[0])
+							elif idx_cap == 2:
+								children[idx_cap].accept_event()
+								add_modal.open()
+								add_modal.title_input.text = "나의 비밀 독서 일기"
+								add_modal.author_input.text = "주희의 서재"
+								add_modal.quote_input.text = "오늘도 한 페이지의 여운을 남겼다."
 							elif idx_cap == 3:
 								children[idx_cap].accept_event()
 								_reset_theme()

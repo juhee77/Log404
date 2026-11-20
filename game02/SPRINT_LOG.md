@@ -5,6 +5,25 @@
 
 ---
 
+## 📓 [Sprint 158] `DiyBtn` `Shift+좌클릭` 샘플 채움 모달 열기 & 권별 `StatusBtn` `Shift+좌클릭` 전권 초판·소장 일괄 전환
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A**: "하단 `새 일기 쓰기`(`DiyBtn`) 버튼도 상단 `AddBtn`처럼 `Shift+좌클릭`했을 때 샘플 제목·작가·문장이 미리 채워진 상태로 열리면 어느 곳에서든 똑같이 빠르게 쓸 수 있을 것 같아요!"
+- **가챠러 B**: "권별 리스트의 `🔖초판특전` / `✓소장완료` 버튼(`StatusBtn`)을 `Shift+좌클릭`하면 해당 작품의 모든 권을 한 번에 초판특전 또는 소장완료로 일괄 전환할 수 있으면 전권 초판 세트 정리가 정말 빠르겠어요."
+- **기획자 (PO)**: "`main_view.gd` `DiyBtn` `Shift+좌클릭` 샘플 채움 모달 열기와 `detail_modal.gd` 권별 `StatusBtn` `Shift+좌클릭` 전권 일괄 전환을 구현하고 `index.html` 권별 상태 버튼과 동기화합니다."
+
+### 2. 핵심 구현 및 변경 내역
+- `game02/godot_project/scripts/main_view.gd`:
+  - `NavRow` `DiyBtn` `Shift+좌클릭` 시 `add_modal.open()` 후 샘플 제목·작가·문장을 미리 채워 열어주도록 연결하고 툴팁을 동기화했습니다.
+- `game02/godot_project/scripts/detail_modal.gd`:
+  - 권별 `status_btn` `Shift+좌클릭` 시 전권 `volumes`의 `status`를 `"first"` 또는 `"owned"`로 일괄 전환하고 UI·헤더·시그널을 동기화했습니다.
+- `game02/index.html`:
+  - `renderDiaryVolumes()` 내 상태 버튼 `onclick`에 `event.shiftKey` 시 전권 상태 일괄 전환 및 툴팁을 동기화했습니다.
+- `game02/godot_project/tests/test_main_integration.gd`:
+  - `DiyBtn` `Shift+좌클릭` 샘플 모달 열기와 권별 `StatusBtn` `Shift+좌클릭` 전권 일괄 전환을 검증하는 Sprint 158 테스트를 추가해 100% 통과했습니다.
+
+---
+
 ## 📓 [Sprint 157] `WebBtn`/`CamBtn` `Shift+좌클릭` 스크랩·촬영 후 즉시 열기 & 권별 `BmBtn` `Shift+좌클릭` 초판+북마크
 
 ### 1. 14인 스쿼드 회의록 & VOC
