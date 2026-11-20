@@ -5,6 +5,25 @@
 
 ---
 
+## 📓 [Sprint 146] `AppTitle` `Shift+좌클릭` 새 일기 쓰기 & `ModalWashiTape` `Shift+좌/우클릭` 스티커·속지 순환
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A**: "메인 타이틀(`주희의 다꾸 서재 & 소장 일기장`)을 `Shift+좌클릭`하면 바로 `AddModal` 새 일기 작성 창이 열리면 상단 버튼을 누르지 않아도 1초 만에 일기를 쓸 수 있을 것 같아요!"
+- **가챠러 B**: "`DetailModal` 책 표지 위의 마스킹 테이프(`ModalWashiTape`)를 `Shift+좌클릭`하면 데코 스티커가 바뀌고, `Shift+우클릭`하면 속지 패턴(노말/모눈/줄노트 등)이 바뀌면 다꾸 꾸미기 손맛이 한층 더 살아나겠어요."
+- **기획자 (PO)**: "`main_view.gd` `AppTitle` `Shift+좌클릭` `AddModal` 열기와 `detail_modal.gd` `ModalWashiTape` `Shift+좌/우클릭` 스티커·속지 순환을 구현하고 `index.html` 타이틀과 동기화합니다."
+
+### 2. 핵심 구현 및 변경 내역
+- `game02/godot_project/scripts/main_view.gd`:
+  - `AppTitle` `Shift+좌클릭` 시 `add_modal.open()`을 호출해 새 일기 작성 모달을 즉시 열도록 연결하고 툴팁을 동기화했습니다.
+- `game02/godot_project/scripts/detail_modal.gd`:
+  - `ModalWashiTape` `Shift+좌클릭` 시 `cycle_deco_sticker(1)`, `Shift+우클릭` 시 `cycle_paper_pattern(1)`을 호출하고 툴팁을 동기화했습니다.
+- `game02/index.html`:
+  - 상단 `<h1>` 타이틀 `onclick`에서 `event.shiftKey` 시 `openNewDiaryModal()`을 호출하도록 동기화했습니다.
+- `game02/godot_project/tests/test_main_integration.gd`:
+  - `AppTitle` `Shift+좌클릭` 새 일기 모달 열기와 `ModalWashiTape` `Shift+좌/우클릭` 스티커·속지 순환을 검증하는 Sprint 146 테스트를 추가해 100% 통과했습니다.
+
+---
+
 ## 🏆 [Sprint 145] 마일스톤 145: `TodayQuoteLabel` `Shift+좌클릭` 밑줄 즉시 복사 & `CoverRect` `Shift+좌/우클릭` 마감·상태등급 전환
 
 ### 1. 14인 스쿼드 회의록 & VOC

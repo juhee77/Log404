@@ -2235,6 +2235,33 @@ func _init() -> void:
 	main_inst.detail_modal.close()
 	print("✓ Sprint 145 Milestone: TodayQuoteLabel Copy & CoverRect Finish/Condition verified")
 
+	# Sprint 146 Milestone: AppTitle Shift+Left-Click AddModal & ModalWashiTape Shift+Click Sticker/Paper
+	var app_title_s146: Control = main_inst.get_node("VBox/TopBar/TopMargin/StatsVBox/TitleRow/TitleCol/AppTitle")
+	assert("새 일기 쓰기 (N)" in app_title_s146.tooltip_text, "AppTitle tooltip should mention Shift+Left-Click AddModal")
+	var shift_lclick_s146 := InputEventMouseButton.new()
+	shift_lclick_s146.pressed = true
+	shift_lclick_s146.shift_pressed = true
+	shift_lclick_s146.button_index = MOUSE_BUTTON_LEFT
+	app_title_s146.gui_input.emit(shift_lclick_s146)
+	assert(main_inst.add_modal.visible, "Shift+Left-clicking AppTitle should open AddModal")
+	main_inst.add_modal.close()
+	var target_s146 = main_inst.archive_state.items[0]
+	var orig_stk_s146: String = target_s146.deco_sticker
+	var orig_pat_s146: String = target_s146.paper_pattern
+	main_inst._on_card_clicked(target_s146)
+	var washi_s146: ColorRect = main_inst.detail_modal.get_node("Panel/VBox/BodyMargin/Body/TopInfo/CoverRect/ModalWashiTape")
+	assert("스티커/속지" in washi_s146.tooltip_text, "ModalWashiTape tooltip should mention Shift+Left/Right-Click sticker/paper")
+	washi_s146.gui_input.emit(shift_lclick_s146)
+	assert(target_s146.deco_sticker != orig_stk_s146, "Shift+Left-clicking ModalWashiTape should cycle deco_sticker")
+	var shift_rclick_s146 := InputEventMouseButton.new()
+	shift_rclick_s146.pressed = true
+	shift_rclick_s146.shift_pressed = true
+	shift_rclick_s146.button_index = MOUSE_BUTTON_RIGHT
+	washi_s146.gui_input.emit(shift_rclick_s146)
+	assert(target_s146.paper_pattern != orig_pat_s146, "Shift+Right-clicking ModalWashiTape should cycle paper_pattern")
+	main_inst.detail_modal.close()
+	print("✓ Sprint 146 Milestone: AppTitle AddModal & ModalWashiTape Sticker/Paper verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

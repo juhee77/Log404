@@ -200,13 +200,19 @@ func _ready() -> void:
 	if washi_node != null:
 		washi_node.mouse_filter = Control.MOUSE_FILTER_STOP
 		washi_node.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
-		washi_node.tooltip_text = "좌클릭: 마스킹 테이프 다음 색 · 우클릭: 이전 색"
+		washi_node.tooltip_text = "좌클릭: 마스킹 테이프 다음 색 · 우클릭: 이전 색 · Shift+좌/우클릭: 스티커/속지"
 		washi_node.gui_input.connect(func(ev):
 			if ev is InputEventMouseButton and ev.pressed:
 				if ev.button_index == MOUSE_BUTTON_LEFT:
-					cycle_washi_tape(1)
+					if ev.shift_pressed:
+						cycle_deco_sticker(1)
+					else:
+						cycle_washi_tape(1)
 				elif ev.button_index == MOUSE_BUTTON_RIGHT:
-					cycle_washi_tape(-1)
+					if ev.shift_pressed:
+						cycle_paper_pattern(1)
+					else:
+						cycle_washi_tape(-1)
 		)
 
 func _style_diary_controls() -> void:

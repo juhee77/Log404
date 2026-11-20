@@ -195,11 +195,14 @@ func _ready() -> void:
 	if app_title != null:
 		app_title.mouse_filter = Control.MOUSE_FILTER_STOP
 		app_title.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
-		app_title.tooltip_text = "좌클릭: 전체 서재 복원 (0) · 우클릭: 속지 테마 순환 (T)"
+		app_title.tooltip_text = "좌클릭: 전체 서재 복원 (0) · 우클릭: 속지 테마 순환 (T) · Shift+좌클릭: 새 일기 쓰기 (N)"
 		app_title.gui_input.connect(func(ev: InputEvent) -> void:
 			if ev is InputEventMouseButton and ev.pressed:
 				if ev.button_index == MOUSE_BUTTON_LEFT:
-					_reset_all_filters()
+					if ev.shift_pressed:
+						add_modal.open()
+					else:
+						_reset_all_filters()
 				elif ev.button_index == MOUSE_BUTTON_RIGHT:
 					_step_theme(-1 if ev.shift_pressed else 1)
 		)

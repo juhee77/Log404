@@ -107,7 +107,7 @@
                     <span>·</span>
                     <span id="today-date">2026. 11. 11. WED</span>
                 </div>
-                <h1 onclick="document.getElementById('search-box').value=''; switchCategory('all');" oncontextmenu="event.preventDefault(); toggleJournalTheme();" title="좌클릭: 전체 서재 복원 (0) · 우클릭: 속지 테마 순환 (T)" class="serif-font text-2xl sm:text-3xl font-bold text-[#2c221e] mt-1 flex items-center gap-2 cursor-pointer hover:opacity-85">
+                <h1 onclick="if(event&&event.shiftKey){openNewDiaryModal();}else{document.getElementById('search-box').value=''; switchCategory('all');}" oncontextmenu="event.preventDefault(); toggleJournalTheme();" title="좌클릭: 전체 서재 복원 (0) · 우클릭: 속지 테마 순환 (T) · Shift+좌클릭: 새 일기 쓰기 (N)" class="serif-font text-2xl sm:text-3xl font-bold text-[#2c221e] mt-1 flex items-center gap-2 cursor-pointer hover:opacity-85">
                     <span>주희의 다꾸 서재 & 소장 일기장</span>
                     <span class="rubber-stamp text-[11px] px-2 py-0.5 rounded">소장기록장</span>
                 </h1>

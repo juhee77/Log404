@@ -18,13 +18,14 @@ Godot 4+ 기반의 감성 게임 및 인터랙티브 아카이브 애플리케�
 > **Godot 4.6.2 모바일 기반 E-Book 리더기 서재(Apple Books · 리디북스) & 만년필 다꾸 독서노트(굿노트 · 몰스킨) 감성 아카이브 앱**  
 > 14인 가상 애자일 스쿼드가 20분 주기 자동 스프린트로 지속 개선 중입니다.
 
-### 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 145)
+### 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 146)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
 | ![Pocket Archive Main Screen](game02/godot_project/screenshots/godot_app_screen.png) | ![Pocket Archive Detail Modal](game02/godot_project/screenshots/godot_modal_screen.png) |
 
 ### ✨ 주요 핵심 기능
+- **최신 Sprint 146 하이라이트**: `AppTitle` `Shift+좌클릭` 새 일기 쓰기 모달 열기 및 `ModalWashiTape` `Shift+좌/우클릭` 데코 스티커·속지 패턴 순환(`main_view.gd` · `detail_modal.gd` · `index.html`) 완성
 - **🏆 Sprint 145 마일스톤 하이라이트**: `TodayQuoteLabel` `Shift+좌클릭` 밑줄 즉시 복사 및 `DetailModal` `CoverRect` `Shift+좌/우클릭` 마감·상태등급 전환(`main_view.gd` · `detail_modal.gd` · `index.html`) 완성
 - **최신 Sprint 144 하이라이트**: `VolHeader` `Shift+좌클릭` 전권 북마크 일괄 토글 및 `NextQuoteBtn` `Shift+좌클릭` 현재 밑줄 작품 열기(`detail_modal.gd` · `main_view.gd` · `index.html`) 완성
 - **최신 Sprint 143 하이라이트**: 서재 카드 `Shift+좌클릭` 작가·시리즈 즉시 검색 및 책등 선반(`SpineShelf`) `Shift+좌/우클릭` 필터·복사(`card_item.gd` · `main_view.gd` · `index.html`) 완성

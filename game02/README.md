@@ -5,7 +5,7 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 
 ---
 
-## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 145)
+## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 146)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
@@ -14,6 +14,9 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 ---
 
 ## 🚀 최신 스프린트 업데이트 요약 ([전체 회의록 보기](SPRINT_LOG.md))
+
+### 📓 [Sprint 146] `AppTitle` `Shift+좌클릭` 새 일기 쓰기 & `ModalWashiTape` `Shift+좌/우클릭` 스티커·속지 순환
+- **타이틀·테이프 다꾸 제스처 (`main_view.gd` · `detail_modal.gd` · `index.html`)**: `AppTitle` `Shift+좌클릭` 시 새 일기 작성 모달을 즉시 열며, `ModalWashiTape` `Shift+좌/우클릭` 시 데코 스티커와 속지 패턴을 순환합니다.
 
 ### 🏆 [Sprint 145] 마일스톤 145: `TodayQuoteLabel` `Shift+좌클릭` 밑줄 즉시 복사 & `CoverRect` `Shift+좌/우클릭` 마감·상태등급 전환
 - **배너 복사 & 표지 촉각 제스처 (`main_view.gd` · `detail_modal.gd` · `index.html`)**: `TodayQuoteLabel` `Shift+좌클릭`으로 오늘의 밑줄 문장을 즉시 복사하며, 모달 `CoverRect` `Shift+좌/우클릭`으로 표지 마감과 상태등급을 전환합니다.
