@@ -18,13 +18,14 @@ Godot 4+ 기반의 감성 게임 및 인터랙티브 아카이브 애플리케�
 > **Godot 4.6.2 모바일 기반 E-Book 리더기 서재(Apple Books · 리디북스) & 만년필 다꾸 독서노트(굿노트 · 몰스킨) 감성 아카이브 앱**  
 > 14인 가상 애자일 스쿼드가 20분 주기 자동 스프린트로 지속 개선 중입니다.
 
-### 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 163)
+### 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 164)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
 | ![Pocket Archive Main Screen](game02/godot_project/screenshots/godot_app_screen.png) | ![Pocket Archive Detail Modal](game02/godot_project/screenshots/godot_modal_screen.png) |
 
 ### ✨ 주요 핵심 기능
+- **최신 Sprint 164 하이라이트**: `StampRow`·`InkRow` 17종 데코레이터 순환 버튼 `Shift+좌클릭` 역순환(`detail_modal.gd` · `index.html`) 일괄 완성
 - **최신 Sprint 163 하이라이트**: `RereadBtn`/`DuplicateBtn`/`ValueBtn` `Shift+좌클릭` -1·-5,000원 역감소(`detail_modal.gd` · `index.html`) 완성
 - **최신 Sprint 162 하이라이트**: `DateStampBtn` `Shift+좌클릭` 구매일+전권 오늘 날짜 동기화 및 `DeleteBtn` `Shift+좌클릭` 삭제 확인 해제(`detail_modal.gd` · `index.html`) 완성
 - **최신 Sprint 161 하이라이트**: 권별 `vol_lbl` `Shift+좌클릭` `초판+북마크+★5` 풀스탬프 및 `quote_lbl` `Shift+좌클릭` 밑줄 복사+북마크(`detail_modal.gd` · `index.html`) 완성

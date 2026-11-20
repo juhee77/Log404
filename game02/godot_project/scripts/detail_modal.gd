@@ -532,27 +532,27 @@ func _style_diary_controls() -> void:
 			header_hbox.add_child(next_btn)
 			header_hbox.move_child(next_btn, close_idx + 2)
 	var row_tips := {
-		"Panel/VBox/BodyMargin/Body/StampRow/ObiCycleBtn": "띠지 문구 프리셋 순환 (O) · 우클릭: 이전",
-		"Panel/VBox/BodyMargin/Body/StampRow/TapeCycleBtn": "상단 마스킹 테이프 컬러 순환 (W) · 우클릭: 이전",
-		"Panel/VBox/BodyMargin/Body/StampRow/DecoStickerBtn": "다꾸 데코 스티커 팩 순환 (S) · 우클릭: 이전",
-		"Panel/VBox/BodyMargin/Body/StampRow/RarityBtn": "수집 레어도 등급 순환 (R) · 우클릭: 이전",
-		"Panel/VBox/BodyMargin/Body/StampRow/PaperBtn": "일기장 속지 패턴 순환 (P) · 우클릭: 이전",
-		"Panel/VBox/BodyMargin/Body/StampRow/StorageBtn": "실물 보관 위치 순환 (B) · 우클릭: 이전",
-		"Panel/VBox/BodyMargin/Body/StampRow/SourceBtn": "소장·입수 경로 순환 (A) · 우클릭: 이전",
-		"Panel/VBox/BodyMargin/Body/StampRow/MoodBtn": "독서·수집 기분 태그 순환 (M) · 우클릭: 이전",
+		"Panel/VBox/BodyMargin/Body/StampRow/ObiCycleBtn": "띠지 문구 프리셋 순환 (O) · 우클릭: 이전 · Shift+좌클릭: 이전",
+		"Panel/VBox/BodyMargin/Body/StampRow/TapeCycleBtn": "상단 마스킹 테이프 컬러 순환 (W) · 우클릭: 이전 · Shift+좌클릭: 이전",
+		"Panel/VBox/BodyMargin/Body/StampRow/DecoStickerBtn": "다꾸 데코 스티커 팩 순환 (S) · 우클릭: 이전 · Shift+좌클릭: 이전",
+		"Panel/VBox/BodyMargin/Body/StampRow/RarityBtn": "수집 레어도 등급 순환 (R) · 우클릭: 이전 · Shift+좌클릭: 이전",
+		"Panel/VBox/BodyMargin/Body/StampRow/PaperBtn": "일기장 속지 패턴 순환 (P) · 우클릭: 이전 · Shift+좌클릭: 이전",
+		"Panel/VBox/BodyMargin/Body/StampRow/StorageBtn": "실물 보관 위치 순환 (B) · 우클릭: 이전 · Shift+좌클릭: 이전",
+		"Panel/VBox/BodyMargin/Body/StampRow/SourceBtn": "소장·입수 경로 순환 (A) · 우클릭: 이전 · Shift+좌클릭: 이전",
+		"Panel/VBox/BodyMargin/Body/StampRow/MoodBtn": "독서·수집 기분 태그 순환 (M) · 우클릭: 이전 · Shift+좌클릭: 이전",
 		"Panel/VBox/BodyMargin/Body/StampRow/RereadBtn": "재독 횟수 +1 (Y / 우클릭·Shift+Y: -1 · Shift+좌클릭: -1)",
 		"Panel/VBox/BodyMargin/Body/StampRow/DuplicateBtn": "복수 소장 수량 +1 (D / 우클릭·Shift+D: -1 · Shift+좌클릭: -1)",
-		"Panel/VBox/BodyMargin/Body/StampRow/PossessionBtn": "소장 상태 순환 (Z: 소장중·예약중·배송중·전시중) · 우클릭: 이전",
-		"Panel/VBox/BodyMargin/Body/InkRow/NibBtn": "만년필 펜촉 굵기 순환 (N: EF·M·B) · 우클릭: 이전",
-		"Panel/VBox/BodyMargin/Body/InkRow/SignatureBtn": "다이어리 서명 스탬프 순환 · 우클릭: 이전",
+		"Panel/VBox/BodyMargin/Body/StampRow/PossessionBtn": "소장 상태 순환 (Z: 소장중·예약중·배송중·전시중) · 우클릭: 이전 · Shift+좌클릭: 이전",
+		"Panel/VBox/BodyMargin/Body/InkRow/NibBtn": "만년필 펜촉 굵기 순환 (N: EF·M·B) · 우클릭: 이전 · Shift+좌클릭: 이전",
+		"Panel/VBox/BodyMargin/Body/InkRow/SignatureBtn": "다이어리 서명 스탬프 순환 · 우클릭: 이전 · Shift+좌클릭: 이전",
 		"Panel/VBox/BodyMargin/Body/InkRow/DateStampBtn": "오늘 날짜로 구매·기념일 스탬프 갱신 · 우클릭: 기본값 초기화 · Shift+좌클릭: 구매일+전권 오늘 날짜 동기화",
-		"Panel/VBox/BodyMargin/Body/InkRow/CustomTagBtn": "커스텀 해시태그 순환 (T) · 우클릭: 이전",
+		"Panel/VBox/BodyMargin/Body/InkRow/CustomTagBtn": "커스텀 해시태그 순환 (T) · 우클릭: 이전 · Shift+좌클릭: 이전",
 		"Panel/VBox/BodyMargin/Body/InkRow/ValueBtn": "추정 소장 가치 +5,000원 (V / 우클릭·Shift+V: -5,000원 · Shift+좌클릭: -5,000원)",
-		"Panel/VBox/BodyMargin/Body/InkRow/FavCharBtn": "최애 캐릭터 태그 순환 (K) · 우클릭: 이전",
-		"Panel/VBox/BodyMargin/Body/InkRow/ConditionBtn": "실물 컨디션 등급 순환 (G) · 우클릭: 이전",
-		"Panel/VBox/BodyMargin/Body/InkRow/FinishBtn": "표지 코팅 마감 순환 (F: 무광·유광·홀로그램·양장) · 우클릭: 이전",
-		"Panel/VBox/BodyMargin/Body/InkRow/WeatherBtn": "독서·수집 날씨 스탬프 순환 (U) · 우클릭: 이전",
-		"Panel/VBox/BodyMargin/Body/InkRow/SpotBtn": "독서·수집 장소 스탬프 순환 (J) · 우클릭: 이전"
+		"Panel/VBox/BodyMargin/Body/InkRow/FavCharBtn": "최애 캐릭터 태그 순환 (K) · 우클릭: 이전 · Shift+좌클릭: 이전",
+		"Panel/VBox/BodyMargin/Body/InkRow/ConditionBtn": "실물 컨디션 등급 순환 (G) · 우클릭: 이전 · Shift+좌클릭: 이전",
+		"Panel/VBox/BodyMargin/Body/InkRow/FinishBtn": "표지 코팅 마감 순환 (F: 무광·유광·홀로그램·양장) · 우클릭: 이전 · Shift+좌클릭: 이전",
+		"Panel/VBox/BodyMargin/Body/InkRow/WeatherBtn": "독서·수집 날씨 스탬프 순환 (U) · 우클릭: 이전 · Shift+좌클릭: 이전",
+		"Panel/VBox/BodyMargin/Body/InkRow/SpotBtn": "독서·수집 장소 스탬프 순환 (J) · 우클릭: 이전 · Shift+좌클릭: 이전"
 	}
 	for path in row_tips.keys():
 		var tip_btn: Control = get_node_or_null(path)
@@ -582,9 +582,14 @@ func _style_diary_controls() -> void:
 		var deco_ctrl: Control = get_node_or_null(deco_path)
 		if deco_ctrl != null:
 			var deco_cb: Callable = deco_rclick_map[deco_path]
+			var allow_shift_rev: bool = (deco_path != "Panel/VBox/BodyMargin/Body/InkRow/DateStampBtn")
 			deco_ctrl.gui_input.connect(func(ev: InputEvent) -> void:
-				if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_RIGHT:
-					deco_cb.call()
+				if ev is InputEventMouseButton and ev.pressed:
+					if ev.button_index == MOUSE_BUTTON_RIGHT:
+						deco_cb.call()
+					elif allow_shift_rev and ev.button_index == MOUSE_BUTTON_LEFT and ev.shift_pressed:
+						deco_ctrl.accept_event()
+						deco_cb.call()
 			)
 	var date_stamp_ctrl: Control = get_node_or_null("Panel/VBox/BodyMargin/Body/InkRow/DateStampBtn")
 	if date_stamp_ctrl != null:

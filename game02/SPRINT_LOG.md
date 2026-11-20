@@ -5,6 +5,18 @@
 
 ---
 
+## 📓 [Sprint 164] `StampRow`·`InkRow` 17종 데코레이터 순환 버튼 `Shift+좌클릭` 역순환 일괄 지원
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A (다꾸러):** "`StampRow`와 `InkRow`에 있는 띠지·테이프·스티커·레어도·속지·보관위치·입수경로·기분·소장상태·펜촉·서명·태그·최애캐릭터·컨디션·마감·날씨·장소 등 17종 순환 버튼이 우클릭 역순환은 되는데, 트랙패드에서 `Shift+좌클릭`으로도 똑같이 이전 프리셋으로 돌아가면 좋겠어요!"
+- **가챠러 B (원버튼 유저):** "이제 모달 내 수치 버튼과 네비게이션이 전부 `Shift+좌클릭`을 지원하는데, 17종 데코레이터 버튼만 `Shift+좌클릭` 시 앞으로 넘어가서 일관성이 완성되면 좋겠어요."
+- **미니멀러 C (웹 동기화):** "웹 목업(`index.html`) 상단 데코레이터 버튼(`#tape-cycle-btn`, `#deco-sticker-btn`, `#rarity-cycle-btn`, `#source-cycle-btn`, `#mood-cycle-btn`)도 `Shift+좌클릭`으로 역순환되도록 맞춰주세요."
+- **PO & UX/UI 확정:**
+  1. **`DetailModal` `deco_rclick_map` 17종 데코레이터 `Shift+좌클릭` 역순환 (`detail_modal.gd`)**: `DateStampBtn`을 제외한 17종 순환 버튼(`ObiCycleBtn`~`SpotBtn`)의 `gui_input`에서 `Shift+좌클릭` 시 `accept_event()` 처리와 함께 `-1` 역순환 콜백을 실행하고, 기존 `"우클릭: 이전"` 툴팁 문자열을 유지한 채 `"· Shift+좌클릭: 이전"`을 병기했습니다.
+  2. **웹 목업(`index.html`) 동기화 & TDD/QA 검증:** 웹 목업 데코레이터 5종 버튼에 `event && event.shiftKey ? -1 : 1` 역순환을 연결하고 `test_main_integration.gd`에 Sprint 164 통합 검증을 추가해 3종 헤드리스 테스트 100% 통과 및 Metal 4.0 스크린샷을 갱신했습니다.
+
+---
+
 ## 📓 [Sprint 163] `RereadBtn`/`DuplicateBtn`/`ValueBtn` `Shift+좌클릭` -1·-5,000원 역감소 지원
 
 ### 1. 14인 스쿼드 회의록 & VOC

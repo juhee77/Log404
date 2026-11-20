@@ -2689,6 +2689,31 @@ func _init() -> void:
 	main_inst.detail_modal.close()
 	print("✓ Sprint 163: RereadBtn/DuplicateBtn/ValueBtn Shift+Left-Click Decrement verified")
 
+	# Sprint 164: StampRow & InkRow 17-Cycler Shift+Left-Click Reverse Navigation
+	var item164 = main_inst.archive_state.items[0]
+	main_inst.detail_modal.open(item164)
+	var obi_btn164: Button = main_inst.detail_modal.find_child("ObiCycleBtn", true, false) as Button
+	var weather_btn164: Button = main_inst.detail_modal.find_child("WeatherBtn", true, false) as Button
+	assert(obi_btn164 != null and weather_btn164 != null, "ObiCycleBtn and WeatherBtn should exist")
+	assert("Shift+좌클릭: 이전" in obi_btn164.tooltip_text and "Shift+좌클릭: 이전" in weather_btn164.tooltip_text, "Decorator tooltips should mention Shift+Left-Click reverse")
+	obi_btn164.pressed.emit()
+	weather_btn164.pressed.emit()
+	var orig_obi164: String = item164.obi_text
+	var orig_weather164: String = item164.reading_weather
+	obi_btn164.pressed.emit()
+	assert(item164.obi_text != orig_obi164, "ObiCycleBtn press should advance forward")
+	weather_btn164.pressed.emit()
+	assert(item164.reading_weather != orig_weather164, "WeatherBtn press should advance forward")
+	var shift_lclick164 := InputEventMouseButton.new()
+	shift_lclick164.button_index = MOUSE_BUTTON_LEFT
+	shift_lclick164.pressed = true
+	shift_lclick164.shift_pressed = true
+	obi_btn164.gui_input.emit(shift_lclick164)
+	weather_btn164.gui_input.emit(shift_lclick164)
+	assert(item164.obi_text == orig_obi164 and item164.reading_weather == orig_weather164, "Shift+Left-Click on decorator cyclers should step backward")
+	main_inst.detail_modal.close()
+	print("✓ Sprint 164: StampRow & InkRow 17-Cycler Shift+Left-Click Reverse verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

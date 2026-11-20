@@ -5,7 +5,7 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 
 ---
 
-## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 163)
+## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 164)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
@@ -14,6 +14,9 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 ---
 
 ## 🚀 최신 스프린트 업데이트 요약 ([전체 회의록 보기](SPRINT_LOG.md))
+
+### 📓 [Sprint 164] `StampRow`·`InkRow` 17종 데코레이터 순환 버튼 `Shift+좌클릭` 역순환 일괄 지원
+- **17종 데코레이터 역순환 완결 (`detail_modal.gd` · `index.html`)**: 띠지·테이프·스티커·레어도·속지·보관위치·입수경로·기분·소장상태·펜촉·서명·태그·최애캐릭터·컨디션·마감·날씨·장소 17종 순환 버튼에 `Shift+좌클릭` 역순환(`-1`)을 일괄 적용했습니다.
 
 ### 📓 [Sprint 163] `RereadBtn`/`DuplicateBtn`/`ValueBtn` `Shift+좌클릭` -1·-5,000원 역감소 지원
 - **수치 3종 역감소 통일 (`detail_modal.gd` · `index.html`)**: `RereadBtn`, `DuplicateBtn`, `ValueBtn` `Shift+좌클릭`으로 각각 재독 횟수 `-1`, 복수 소장 수량 `-1`, 추정 소장 가치 `-5,000원`을 즉시 감소시킵니다.
