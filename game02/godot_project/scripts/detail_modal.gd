@@ -429,13 +429,13 @@ func _style_diary_controls() -> void:
 			page_lbl.add_theme_color_override("font_color", Color(0.48, 0.38, 0.31))
 			page_lbl.mouse_filter = Control.MOUSE_FILTER_STOP
 			page_lbl.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
-			page_lbl.tooltip_text = "현재 일기장 순번 (클릭: 다음 · 우클릭: 이전 · Home/End: 처음·끝)"
+			page_lbl.tooltip_text = "현재 일기장 순번 (클릭: 다음 · 우클릭: 이전 · Shift+좌/우클릭·Home/End: 처음·끝)"
 			page_lbl.gui_input.connect(func(ev: InputEvent):
 				if ev is InputEventMouseButton and ev.pressed:
 					if ev.button_index == MOUSE_BUTTON_LEFT:
-						navigate_requested.emit(1)
+						navigate_requested.emit(-9999 if ev.shift_pressed else 1)
 					elif ev.button_index == MOUSE_BUTTON_RIGHT:
-						navigate_requested.emit(-1)
+						navigate_requested.emit(9999 if ev.shift_pressed else -1)
 			)
 			header_hbox.add_child(prev_btn)
 			header_hbox.move_child(prev_btn, close_idx)

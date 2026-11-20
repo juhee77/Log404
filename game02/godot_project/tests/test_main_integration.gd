@@ -2262,6 +2262,30 @@ func _init() -> void:
 	main_inst.detail_modal.close()
 	print("✓ Sprint 146 Milestone: AppTitle AddModal & ModalWashiTape Sticker/Paper verified")
 
+	# Sprint 147 Milestone: SubTitle Shift+Click Backup/Cheatsheet & PageBadgeLabel Shift+Click First/Last
+	assert("백업/단축키" in main_inst.sub_title.tooltip_text, "SubTitle tooltip should mention Shift+Left/Right-Click backup/cheatsheet")
+	var shift_lclick_s147 := InputEventMouseButton.new()
+	shift_lclick_s147.pressed = true
+	shift_lclick_s147.shift_pressed = true
+	shift_lclick_s147.button_index = MOUSE_BUTTON_LEFT
+	var shift_rclick_s147 := InputEventMouseButton.new()
+	shift_rclick_s147.pressed = true
+	shift_rclick_s147.shift_pressed = true
+	shift_rclick_s147.button_index = MOUSE_BUTTON_RIGHT
+	main_inst.sub_title.gui_input.emit(shift_lclick_s147)
+	assert("로컬 JSON 서재 백업 저장 완료" in main_inst.status_toast.text, "Shift+Left-clicking SubTitle should trigger instant JSON backup")
+	main_inst.sub_title.gui_input.emit(shift_rclick_s147)
+	assert("단축키" in main_inst.status_toast.text, "Shift+Right-clicking SubTitle should show shortcut cheatsheet")
+	main_inst._on_card_clicked(main_inst.archive_state.items[0])
+	var page_lbl_s147: Label = main_inst.detail_modal.get_node("Panel/VBox/Header/HBox/PageBadgeLabel")
+	assert("Shift+좌/우클릭" in page_lbl_s147.tooltip_text, "PageBadgeLabel tooltip should mention Shift+Left/Right-Click first/last")
+	page_lbl_s147.gui_input.emit(shift_rclick_s147)
+	assert(page_lbl_s147.text == "6/6", "Shift+Right-clicking PageBadgeLabel should jump to last item (6/6)")
+	page_lbl_s147.gui_input.emit(shift_lclick_s147)
+	assert(page_lbl_s147.text == "1/6", "Shift+Left-clicking PageBadgeLabel should jump to first item (1/6)")
+	main_inst.detail_modal.close()
+	print("✓ Sprint 147 Milestone: SubTitle Backup/Cheatsheet & PageBadgeLabel First/Last verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

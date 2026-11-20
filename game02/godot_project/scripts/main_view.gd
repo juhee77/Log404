@@ -183,13 +183,19 @@ func _ready() -> void:
 	if sub_title != null:
 		sub_title.mouse_filter = Control.MOUSE_FILTER_STOP
 		sub_title.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
-		sub_title.tooltip_text = "좌클릭: 서재 인포그래픽 요약 · 우클릭: 서재 리포트 클립보드 복사"
+		sub_title.tooltip_text = "좌클릭: 서재 인포그래픽 요약 · 우클릭: 서재 리포트 클립보드 복사 · Shift+좌/우클릭: 백업/단축키"
 		sub_title.gui_input.connect(func(ev):
 			if ev is InputEventMouseButton and ev.pressed:
 				if ev.button_index == MOUSE_BUTTON_LEFT:
-					show_library_infographic()
+					if ev.shift_pressed:
+						_trigger_instant_json_backup()
+					else:
+						show_library_infographic()
 				elif ev.button_index == MOUSE_BUTTON_RIGHT:
-					copy_summary_to_clipboard()
+					if ev.shift_pressed:
+						_show_shortcut_cheatsheet()
+					else:
+						copy_summary_to_clipboard()
 		)
 	var app_title: Control = get_node_or_null("VBox/TopBar/TopMargin/StatsVBox/TitleRow/TitleCol/AppTitle")
 	if app_title != null:

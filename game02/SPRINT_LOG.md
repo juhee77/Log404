@@ -5,6 +5,25 @@
 
 ---
 
+## 📓 [Sprint 147] `SubTitle` `Shift+좌/우클릭`(즉시 백업/단축키 치트시트) & `PageBadgeLabel` `Shift+좌/우클릭`(처음·끝 이동)
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A**: "상단 날짜·KPI 요약 줄(`SubTitle`)을 `Shift+좌클릭`하면 즉시 JSON 백업이 저장되고, `Shift+우클릭`하면 단축키 치트시트(`H`)가 뜨면 상단 바만으로도 핵심 유틸을 바로 쓸 수 있겠어요!"
+- **가챠러 B**: "모달 헤더의 페이지 배지(`1/6`, `PageBadgeLabel`)를 `Shift+좌클릭`하면 첫 번째 작품으로, `Shift+우클릭`하면 마지막 작품으로 바로 점프하면 긴 서재도 순식간에 탐색할 수 있을 것 같아요."
+- **기획자 (PO)**: "`main_view.gd` `SubTitle` `Shift+좌/우클릭` 백업·치트시트와 `detail_modal.gd` `PageBadgeLabel` `Shift+좌/우클릭` 처음·끝 이동을 구현하고 `index.html` 상단 서브타이틀과 동기화합니다."
+
+### 2. 핵심 구현 및 변경 내역
+- `game02/godot_project/scripts/main_view.gd`:
+  - `SubTitle` `Shift+좌클릭` 시 `_trigger_instant_json_backup()`, `Shift+우클릭` 시 `_show_shortcut_cheatsheet()`를 호출하고 툴팁을 동기화했습니다.
+- `game02/godot_project/scripts/detail_modal.gd`:
+  - `PageBadgeLabel` `Shift+좌클릭` 시 `navigate_requested(-9999)`(처음), `Shift+우클릭` 시 `navigate_requested(9999)`(끝)를 발행하고 툴팁을 동기화했습니다.
+- `game02/index.html`:
+  - 상단 날짜·저널 서브타이틀 바에 `Shift+좌클릭` 즉시 백업 및 툴팁을 동기화했습니다.
+- `game02/godot_project/tests/test_main_integration.gd`:
+  - `SubTitle` `Shift+좌/우클릭` 백업·치트시트와 `PageBadgeLabel` `Shift+좌/우클릭` 처음·끝 이동을 검증하는 Sprint 147 테스트를 추가해 100% 통과했습니다.
+
+---
+
 ## 📓 [Sprint 146] `AppTitle` `Shift+좌클릭` 새 일기 쓰기 & `ModalWashiTape` `Shift+좌/우클릭` 스티커·속지 순환
 
 ### 1. 14인 스쿼드 회의록 & VOC
