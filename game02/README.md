@@ -5,7 +5,7 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 
 ---
 
-## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 140)
+## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 141)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
@@ -14,6 +14,9 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 ---
 
 ## 🚀 최신 스프린트 업데이트 요약 ([전체 회의록 보기](SPRINT_LOG.md))
+
+### 📓 [Sprint 141] `DetailModal` `StampLbl`·`InkLbl` 라벨 좌·우클릭 양방향 인장/잉크 순환
+- **인장·잉크 헤더 라벨 순환 (`detail_modal.gd` · `index.html`)**: `💮 인장:`(`StampLbl`) 및 `🖋️ 잉크:`(`InkLbl`) 라벨 좌·우클릭 시 4종 인장 프리셋과 4종 만년필 잉크를 양방향으로 순환합니다.
 
 ### 🏆 [Sprint 140] 마일스톤 140: `DetailModal` `TitleLabel` 우클릭 감상 카드 복사 & `CatBadge` 우클릭 전체 서재 복원
 - **모달 헤더 배지·제목 우클릭 완성 (`detail_modal.gd` · `main_view.gd` · `index.html`)**: `TitleLabel` 우클릭 시 감상 카드 전체를 클립보드에 복사하며, `CatBadge` 우클릭 시 모달을 닫고 전체 서재로 즉시 복원합니다.

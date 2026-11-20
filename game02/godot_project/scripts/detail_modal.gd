@@ -217,6 +217,32 @@ func _style_diary_controls() -> void:
 						apply_stamp(st_name)
 						copy_book_quote_card()
 				)
+	var stamp_lbl: Label = get_node_or_null("Panel/VBox/BodyMargin/Body/StampRow/StampLbl")
+	if stamp_lbl != null:
+		stamp_lbl.mouse_filter = Control.MOUSE_FILTER_STOP
+		stamp_lbl.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+		stamp_lbl.tooltip_text = "좌클릭: 인장 프리셋 순환 (1~4) · 우클릭: 역순환"
+		stamp_lbl.gui_input.connect(func(ev: InputEvent) -> void:
+			if ev is InputEventMouseButton and ev.pressed and current_item != null:
+				if ev.button_index == MOUSE_BUTTON_LEFT or ev.button_index == MOUSE_BUTTON_RIGHT:
+					var presets: Array = STAMP_PRESET_MAP.values()
+					var cur_idx: int = presets.find(current_item.status_tag)
+					var step: int = -1 if ev.button_index == MOUSE_BUTTON_RIGHT else 1
+					var next_idx: int = (cur_idx + step + presets.size()) % presets.size() if cur_idx != -1 else 0
+					apply_stamp(presets[next_idx])
+		)
+	var ink_lbl: Label = get_node_or_null("Panel/VBox/BodyMargin/Body/InkRow/InkLbl")
+	if ink_lbl != null:
+		ink_lbl.mouse_filter = Control.MOUSE_FILTER_STOP
+		ink_lbl.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+		ink_lbl.tooltip_text = "좌클릭: 만년필 잉크 순환 (I) · 우클릭: 역순환 (Shift+I)"
+		ink_lbl.gui_input.connect(func(ev: InputEvent) -> void:
+			if ev is InputEventMouseButton and ev.pressed and current_item != null:
+				if ev.button_index == MOUSE_BUTTON_LEFT:
+					cycle_fountain_pen_ink(1)
+				elif ev.button_index == MOUSE_BUTTON_RIGHT:
+					cycle_fountain_pen_ink(-1)
+		)
 
 	var input_sb = StyleBoxFlat.new()
 	input_sb.bg_color = Color(0.98, 0.96, 0.92, 1)

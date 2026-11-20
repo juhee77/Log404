@@ -2123,6 +2123,32 @@ func _init() -> void:
 	assert(not main_inst.detail_modal.visible and main_inst.card_grid.get_child_count() == 6, "Right-clicking CatBadge should close modal and reset to all 6 cards")
 	print("✓ Sprint 140 Milestone: TitleLabel Share Copy & CatBadge All Library Reset verified")
 
+	# Sprint 141 Milestone: StampLbl & InkLbl Bidirectional Left/Right-Click Cyclers
+	var target_s141 = main_inst.archive_state.items[0]
+	main_inst._on_card_clicked(target_s141)
+	var stamp_lbl_s141: Label = main_inst.detail_modal.get_node("Panel/VBox/BodyMargin/Body/StampRow/StampLbl")
+	var ink_lbl_s141: Label = main_inst.detail_modal.get_node("Panel/VBox/BodyMargin/Body/InkRow/InkLbl")
+	assert("인장 프리셋 순환" in stamp_lbl_s141.tooltip_text, "StampLbl tooltip should mention stamp preset cycle")
+	assert("만년필 잉크 순환" in ink_lbl_s141.tooltip_text, "InkLbl tooltip should mention fountain-pen ink cycle")
+	var orig_stamp_s141: String = target_s141.status_tag
+	var orig_ink_s141: String = target_s141.memo_ink_color
+	var lclick_s141 := InputEventMouseButton.new()
+	lclick_s141.pressed = true
+	lclick_s141.button_index = MOUSE_BUTTON_LEFT
+	var rclick_s141 := InputEventMouseButton.new()
+	rclick_s141.pressed = true
+	rclick_s141.button_index = MOUSE_BUTTON_RIGHT
+	stamp_lbl_s141.gui_input.emit(lclick_s141)
+	assert(target_s141.status_tag != orig_stamp_s141, "Left-clicking StampLbl should cycle stamp forward")
+	stamp_lbl_s141.gui_input.emit(rclick_s141)
+	assert(target_s141.status_tag == orig_stamp_s141, "Right-clicking StampLbl should reverse-cycle stamp")
+	ink_lbl_s141.gui_input.emit(lclick_s141)
+	assert(target_s141.memo_ink_color != orig_ink_s141, "Left-clicking InkLbl should cycle ink forward")
+	ink_lbl_s141.gui_input.emit(rclick_s141)
+	assert(target_s141.memo_ink_color == orig_ink_s141, "Right-clicking InkLbl should reverse-cycle ink")
+	main_inst.detail_modal.close()
+	print("✓ Sprint 141 Milestone: StampLbl & InkLbl Bidirectional Cyclers verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

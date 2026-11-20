@@ -5,6 +5,24 @@
 
 ---
 
+## 📓 [Sprint 141] `DetailModal` `StampLbl`·`InkLbl` 라벨 좌·우클릭 양방향 인장/잉크 순환
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A**: "`💮 인장:` 라벨(`StampLbl`)을 클릭·우클릭해서 4종 인장 프리셋(`전권완결`·`초판특전`·`인생최애`·`위시`)을 순서대로 또는 역순으로 바로 넘겨볼 수 있으면 좋겠어요!"
+- **가챠러 B**: "`🖋️ 잉크:` 라벨(`InkLbl`)도 좌클릭·우클릭으로 만년필 잉크 4종을 양방향으로 순환시킬 수 있으면 작은 버튼을 일일이 고르지 않아도 느낌을 바로 비교할 수 있겠어요."
+- **기획자 (PO)**: "`detail_modal.gd` `StampLbl`과 `InkLbl`에 양방향 순환 클릭 핸들러와 툴팁을 추가하고 `index.html` 인장·잉크 라벨 스팬과 동기화합니다."
+
+### 2. 핵심 구현 및 변경 내역
+- `game02/godot_project/scripts/detail_modal.gd`:
+  - `StampLbl` 좌·우클릭 시 `STAMP_PRESET_MAP` 4종 인장 프리셋을 정방향/역방향으로 순환 적용(`apply_stamp`)하도록 연결했습니다.
+  - `InkLbl` 좌·우클릭 시 `cycle_fountain_pen_ink(1)` / `cycle_fountain_pen_ink(-1)`을 호출하도록 연결했습니다.
+- `game02/index.html`:
+  - `💮 인장 찍기:`와 `🖋️ 잉크:` 라벨 스팬에 동일한 좌·우클릭 양방향 순환 및 툴팁을 동기화했습니다.
+- `game02/godot_project/tests/test_main_integration.gd`:
+  - `StampLbl`과 `InkLbl`의 좌클릭 정방향 순환 및 우클릭 역방향 복원을 검증하는 Sprint 141 테스트를 추가해 100% 통과했습니다.
+
+---
+
 ## 🏆 [Sprint 140] 마일스톤 140: `DetailModal` `TitleLabel` 우클릭 감상 카드 복사 & `CatBadge` 우클릭 전체 서재 복원
 
 ### 1. 14인 스쿼드 회의록 & VOC

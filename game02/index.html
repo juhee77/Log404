@@ -337,7 +337,7 @@
                     <!-- Sprint 8: Interactive Rubber Stamp Selector & Fountain-Pen Quote Editor -->
                     <div class="mt-3 p-2.5 rounded-xl bg-[#faf5ed] border border-[#e6dccd] space-y-2">
                         <div class="flex items-center gap-1.5 flex-wrap">
-                            <span class="text-[11px] font-bold text-[#786b63] mr-1">💮 인장 찍기:</span>
+                            <span onclick="const s=['전권완결','초판특전','인생최애','위시리스트'];const it=ITEMS.find(x=>x.id===activeId);const i=it?s.indexOf(it.stamp):-1;applyDiaryStamp(s[(i+1)%s.length]);" oncontextmenu="event.preventDefault();const s=['전권완결','초판특전','인생최애','위시리스트'];const it=ITEMS.find(x=>x.id===activeId);const i=it?s.indexOf(it.stamp):-1;applyDiaryStamp(s[(i+s.length-1)%s.length]);" title="좌클릭: 인장 프리셋 순환 (1~4) · 우클릭: 역순환" class="text-[11px] font-bold text-[#786b63] mr-1 cursor-pointer hover:text-[#c85a32]">💮 인장 찍기:</span>
                             <button data-stamp-btn="전권완결" onclick="applyDiaryStamp('전권완결')" oncontextmenu="event.preventDefault(); applyDiaryStamp('전권완결'); copyBookQuoteCard();" title="좌클릭: 인장 찍기 · 우클릭: 인장+감상카드 복사"
                                 class="px-2 py-0.5 rounded border border-[#c85a32]/50 bg-[#fff8f5] text-[#c85a32] text-[10px] font-bold hover:bg-[#c85a32] hover:text-white cursor-pointer">💮전권완결</button>
                             <button data-stamp-btn="초판특전" onclick="applyDiaryStamp('초판특전')" oncontextmenu="event.preventDefault(); applyDiaryStamp('초판특전'); copyBookQuoteCard();" title="좌클릭: 인장 찍기 · 우클릭: 인장+감상카드 복사"
@@ -361,7 +361,7 @@
                                 형광펜</button>
                         </div>
                         <div class="flex items-center gap-1.5 text-[10px] text-[#786b63] pt-1">
-                            <span class="font-bold">🖋️ 잉크:</span>
+                            <span onclick="const k=['#2c221e','#7f1d1d','#78350f','#14532d'];const q=document.getElementById('diary-memo');const c=q&&q.dataset.ink?k.indexOf(q.dataset.ink):0;const nx=k[(c+1)%k.length];if(q)q.dataset.ink=nx;setDiaryInk(nx);" oncontextmenu="event.preventDefault();const k=['#2c221e','#7f1d1d','#78350f','#14532d'];const q=document.getElementById('diary-memo');const c=q&&q.dataset.ink?k.indexOf(q.dataset.ink):0;const nx=k[(c+k.length-1)%k.length];if(q)q.dataset.ink=nx;setDiaryInk(nx);" title="좌클릭: 만년필 잉크 순환 (I) · 우클릭: 역순환 (Shift+I)" class="font-bold cursor-pointer hover:text-[#c85a32]">🖋️ 잉크:</span>
                             <button onclick="setDiaryInk('#2c221e')"
                                 class="px-2 py-0.5 rounded bg-[#f3ece1] border border-[#d6c7b2] text-[#2c221e] font-semibold cursor-pointer">☕에스프레소</button>
                             <button onclick="setDiaryInk('#7f1d1d')"
