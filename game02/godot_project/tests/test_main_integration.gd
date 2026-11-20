@@ -2342,6 +2342,29 @@ func _init() -> void:
 	main_inst.detail_modal.close()
 	print("✓ Sprint 150 Milestone: StatusToast Briefing/Copy & MemoLabel Copy verified")
 
+	# Sprint 151 Milestone: RandomPickBtn Shift+Left-Click Filter & SaveQuoteBtn/HighlightBtn Shift+Left-Click
+	assert("Shift+좌클릭: 서재 필터" in main_inst.random_pick_btn.tooltip_text, "RandomPickBtn tooltip should mention Shift+Left-Click filter")
+	var shift_lclick_s151 := InputEventMouseButton.new()
+	shift_lclick_s151.pressed = true
+	shift_lclick_s151.shift_pressed = true
+	shift_lclick_s151.button_index = MOUSE_BUTTON_LEFT
+	main_inst.random_pick_btn.gui_input.emit(shift_lclick_s151)
+	assert(main_inst.search_input.text != "" and "랜덤 추천 서재 필터" in main_inst.status_toast.text, "Shift+Left-clicking RandomPickBtn should filter shelf to picked item")
+	main_inst._reset_all_filters()
+	var target_s151 = main_inst.archive_state.items[0]
+	var orig_pat_s151: String = target_s151.paper_pattern
+	main_inst._on_card_clicked(target_s151)
+	var save_btn_s151: Button = main_inst.detail_modal.save_quote_btn
+	var hl_btn_s151: Button = main_inst.detail_modal.get_node("Panel/VBox/BodyMargin/Body/QuoteEditRow/HighlightBtn")
+	assert("저장+복사" in save_btn_s151.tooltip_text and "속지" in hl_btn_s151.tooltip_text, "SaveQuoteBtn and HighlightBtn tooltips should mention Shift+Left-Click actions")
+	main_inst.detail_modal.quote_input.text = "테스트 밑줄 복사"
+	save_btn_s151.gui_input.emit(shift_lclick_s151)
+	assert("✅ 저장·복사됨:" in save_btn_s151.tooltip_text and target_s151.memo == "테스트 밑줄 복사", "Shift+Left-clicking SaveQuoteBtn should save and copy quote")
+	hl_btn_s151.gui_input.emit(shift_lclick_s151)
+	assert(target_s151.paper_pattern != orig_pat_s151, "Shift+Left-clicking HighlightBtn should cycle paper_pattern")
+	main_inst.detail_modal.close()
+	print("✓ Sprint 151 Milestone: RandomPickBtn Filter & Save/Highlight Shift+Click verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

@@ -388,20 +388,30 @@ func _style_diary_controls() -> void:
 					_apply_delete_btn_style(false)
 		)
 	if save_quote_btn != null:
-		save_quote_btn.tooltip_text = "작성한 밑줄·감상평 저장 (Enter · 우클릭: 원문 복원)"
+		save_quote_btn.tooltip_text = "작성한 밑줄·감상평 저장 (Enter · 우클릭: 원문 복원 · Shift+좌클릭: 저장+복사)"
 		save_quote_btn.gui_input.connect(func(ev: InputEvent) -> void:
-			if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_RIGHT:
-				if current_item != null and quote_input != null:
-					editing_vol_index = -1
-					quote_input.text = current_item.memo
-					quote_input.placeholder_text = "🖋️ 오늘 밑줄 친 감상평 수정..."
-					_render_volumes()
+			if ev is InputEventMouseButton and ev.pressed:
+				if ev.button_index == MOUSE_BUTTON_RIGHT:
+					if current_item != null and quote_input != null:
+						editing_vol_index = -1
+						quote_input.text = current_item.memo
+						quote_input.placeholder_text = "🖋️ 오늘 밑줄 친 감상평 수정..."
+						_render_volumes()
+				elif ev.button_index == MOUSE_BUTTON_LEFT and ev.shift_pressed and quote_input != null:
+					var q_copy: String = quote_input.text.strip_edges()
+					_on_save_quote_btn_pressed()
+					if q_copy != "":
+						DisplayServer.clipboard_set(q_copy)
+						save_quote_btn.tooltip_text = "✅ 저장·복사됨: " + q_copy
 		)
 	if hl_btn != null:
-		hl_btn.tooltip_text = "밑줄 문장 형광펜 하이라이트 켜기/끄기 (L · 우클릭: 잉크색 변경)"
+		hl_btn.tooltip_text = "밑줄 문장 형광펜 하이라이트 켜기/끄기 (L · 우클릭: 잉크색 변경 · Shift+좌클릭: 속지)"
 		hl_btn.gui_input.connect(func(ev: InputEvent) -> void:
-			if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_RIGHT:
-				cycle_fountain_pen_ink(1)
+			if ev is InputEventMouseButton and ev.pressed:
+				if ev.button_index == MOUSE_BUTTON_RIGHT:
+					cycle_fountain_pen_ink(1)
+				elif ev.button_index == MOUSE_BUTTON_LEFT and ev.shift_pressed:
+					cycle_paper_pattern(1)
 		)
 	if close_btn != null:
 		close_btn.tooltip_text = "일기장 닫기 (ESC · 우클릭: 닫고 즉시 JSON 백업)"

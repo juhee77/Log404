@@ -5,7 +5,7 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 
 ---
 
-## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 150)
+## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 151)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
@@ -14,6 +14,9 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 ---
 
 ## 🚀 최신 스프린트 업데이트 요약 ([전체 회의록 보기](SPRINT_LOG.md))
+
+### 📓 [Sprint 151] `RandomPickBtn` `Shift+좌클릭` 서재 필터 & `SaveQuoteBtn`/`HighlightBtn` `Shift+좌클릭`(저장+복사/속지 순환)
+- **랜덤 필터·저장+복사 (`main_view.gd` · `detail_modal.gd` · `index.html`)**: `RandomPickBtn` `Shift+좌클릭`으로 랜덤 추천 작품만 서재에 띄우며, `SaveQuoteBtn` `Shift+좌클릭`으로 저장+복사, `HighlightBtn` `Shift+좌클릭`으로 속지 패턴을 순환합니다.
 
 ### 🏆 [Sprint 150] 마일스톤 150: `StatusToast` `Shift+좌/우클릭`(서재 브리핑/복사) & `MemoLabel` `Shift+좌클릭` 감상평 복사
 - **하단 브리핑·감상평 복사 (`main_view.gd` · `detail_modal.gd` · `index.html`)**: `StatusToast` `Shift+좌/우클릭`으로 서재 인포그래픽 브리핑 및 메시지 복사를 실행하며, `MemoLabel` `Shift+좌클릭`으로 감상평 원문을 복사합니다.

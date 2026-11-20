@@ -18,13 +18,14 @@ Godot 4+ 기반의 감성 게임 및 인터랙티브 아카이브 애플리케�
 > **Godot 4.6.2 모바일 기반 E-Book 리더기 서재(Apple Books · 리디북스) & 만년필 다꾸 독서노트(굿노트 · 몰스킨) 감성 아카이브 앱**  
 > 14인 가상 애자일 스쿼드가 20분 주기 자동 스프린트로 지속 개선 중입니다.
 
-### 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 150)
+### 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 151)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
 | ![Pocket Archive Main Screen](game02/godot_project/screenshots/godot_app_screen.png) | ![Pocket Archive Detail Modal](game02/godot_project/screenshots/godot_modal_screen.png) |
 
 ### ✨ 주요 핵심 기능
+- **최신 Sprint 151 하이라이트**: `RandomPickBtn` `Shift+좌클릭` 랜덤 서재 필터, `SaveQuoteBtn` `Shift+좌클릭` 저장+복사 및 `HighlightBtn` `Shift+좌클릭` 속지 순환(`main_view.gd` · `detail_modal.gd` · `index.html`) 완성
 - **🏆 Sprint 150 마일스톤 하이라이트**: `StatusToast` `Shift+좌/우클릭` 서재 브리핑·메시지 복사 및 `MemoLabel` `Shift+좌클릭` 감상평 복사(`main_view.gd` · `detail_modal.gd` · `index.html`) 완성
 - **최신 Sprint 149 하이라이트**: `SortBtn` `Shift+좌클릭` 기본순 정렬 복원 및 `TagLabel` `Shift+좌클릭` 태그·띠지 문구 클립보드 복사(`main_view.gd` · `detail_modal.gd` · `index.html`) 완성
 - **최신 Sprint 148 하이라이트**: `AmbientBtn` `Shift+좌클릭` 즉시 음소거 및 `AuthorLabel` `Shift+좌클릭` 작가명 클립보드 복사(`main_view.gd` · `detail_modal.gd` · `index.html`) 완성

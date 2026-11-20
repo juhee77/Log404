@@ -5,6 +5,26 @@
 
 ---
 
+## 📓 [Sprint 151] `RandomPickBtn` `Shift+좌클릭` 서재 필터 & `SaveQuoteBtn`/`HighlightBtn` `Shift+좌클릭`(저장+복사/속지 순환)
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A**: "`🎲 추천`(`RandomPickBtn`) 버튼을 `Shift+좌클릭`하면 모달을 띄우지 않고 서재 선반에 랜덤 추천 작품 카드 1장만 딱 띄워서 집중 감상할 수 있으면 좋겠어요!"
+- **가챠러 B**: "`🖋️ 밑줄 저장` 버튼을 `Shift+좌클릭`하면 저장과 동시에 문장이 클립보드에 복사되고, `🖍️ 형광펜` 버튼을 `Shift+좌클릭`하면 바로 옆 속지 패턴(노말/모눈/줄노트 등)을 함께 전환할 수 있으면 다꾸가 더 즐거워지겠어요."
+- **기획자 (PO)**: "`main_view.gd` `RandomPickBtn` `Shift+좌클릭` 서재 필터와 `detail_modal.gd` `SaveQuoteBtn`/`HighlightBtn` `Shift+좌클릭` 저장+복사·속지 순환을 구현하고 `index.html`과 동기화합니다."
+
+### 2. 핵심 구현 및 변경 내역
+- `game02/godot_project/scripts/main_view.gd`:
+  - `RandomPickBtn` `Shift+좌클릭` 시 랜덤 작품을 뽑아 `search_input.text`에 설정하고 서재를 해당 작품 1건으로 필터링하도록 구현했습니다.
+- `game02/godot_project/scripts/detail_modal.gd`:
+  - `SaveQuoteBtn` `Shift+좌클릭` 시 밑줄·감상평 저장과 동시에 클립보드에 복사하고 툴팁 피드백(`✅ 저장·복사됨`)을 표시하도록 연결했습니다.
+  - `HighlightBtn` `Shift+좌클릭` 시 `cycle_paper_pattern(1)`을 호출해 속지 패턴을 순환하도록 연결했습니다.
+- `game02/index.html`:
+  - 랜덤 추천 버튼 및 `🖋️ 밑줄 저장` 버튼 `onclick`에 `event.shiftKey` 분기 동작과 툴팁을 동기화했습니다.
+- `game02/godot_project/tests/test_main_integration.gd`:
+  - `RandomPickBtn` `Shift+좌클릭` 서재 필터와 `SaveQuoteBtn`/`HighlightBtn` `Shift+좌클릭` 저장+복사·속지 순환을 검증하는 Sprint 151 테스트를 추가해 100% 통과했습니다.
+
+---
+
 ## 🏆 [Sprint 150] 마일스톤 150: `StatusToast` `Shift+좌/우클릭`(서재 브리핑/복사) & `MemoLabel` `Shift+좌클릭` 감상평 복사
 
 ### 1. 14인 스쿼드 회의록 & VOC

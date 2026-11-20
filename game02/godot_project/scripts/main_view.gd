@@ -240,10 +240,17 @@ func _ready() -> void:
 	if next_quote_btn != null:
 		next_quote_btn.tooltip_text = "[Q] 서재 속 다음 밑줄 문장으로 넘기기"
 	if random_pick_btn != null:
-		random_pick_btn.tooltip_text = "[R] 오늘의 랜덤 작품 추천 열기 (우클릭·Shift+R: 미리보기)"
+		random_pick_btn.tooltip_text = "[R] 오늘의 랜덤 작품 추천 열기 (우클릭·Shift+R: 미리보기 · Shift+좌클릭: 서재 필터)"
 		random_pick_btn.gui_input.connect(func(ev: InputEvent):
-			if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_RIGHT:
-				pick_random_item(false)
+			if ev is InputEventMouseButton and ev.pressed:
+				if ev.button_index == MOUSE_BUTTON_RIGHT:
+					pick_random_item(false)
+				elif ev.button_index == MOUSE_BUTTON_LEFT and ev.shift_pressed:
+					var picked = pick_random_item(false)
+					if picked != null and search_input != null:
+						search_input.text = picked.title
+						_render_cards()
+						_show_toast("🎲 랜덤 추천 서재 필터: %s" % picked.title)
 		)
 	if sort_btn != null:
 		sort_btn.tooltip_text = "[S] 정렬 순환 (우클릭·Shift+S: 이전 · Shift+좌클릭: 기본순): 기본순 → 권수순 → 최신순 → 가치순"
@@ -825,6 +832,13 @@ func pick_random_item(open_modal: bool = true):
 	return picked
 
 func _on_random_pick_btn_pressed() -> void:
+	if Input.is_key_pressed(KEY_SHIFT):
+		var picked = pick_random_item(false)
+		if picked != null and search_input != null:
+			search_input.text = picked.title
+			_render_cards()
+			_show_toast("🎲 랜덤 추천 서재 필터: %s" % picked.title)
+		return
 	pick_random_item()
 
 func _on_search_text_changed(new_text: String) -> void:
