@@ -3341,6 +3341,56 @@ func _init() -> void:
 	assert("[J/Y] 끝열기·음소거" in main_inst.status_toast.text, "Cheatsheet should include [J/Y] 끝열기·음소거")
 	print("✓ Sprint 187: MainView Keys J Last/First Jump & Y Ambient Mute Toggle (26/26 A-Z) verified")
 
+	# Sprint 188: MainView Arrow (Quote/Theme) & Home/End (First/Last Card) Navigation
+	main_inst.search_input.release_focus()
+	main_inst._reset_all_filters()
+	var q_before_188 = main_inst.quote_cursor
+	var ev_right = InputEventKey.new()
+	ev_right.pressed = true
+	ev_right.keycode = KEY_RIGHT
+	main_inst._unhandled_input(ev_right)
+	assert(main_inst.quote_cursor != q_before_188, "Right arrow should step today's quote forward")
+
+	var ev_left = InputEventKey.new()
+	ev_left.pressed = true
+	ev_left.keycode = KEY_LEFT
+	main_inst._unhandled_input(ev_left)
+	assert(main_inst.quote_cursor == q_before_188, "Left arrow should step today's quote backward")
+
+	var t_before_188 = main_inst.theme_cursor
+	var ev_shift_right = InputEventKey.new()
+	ev_shift_right.pressed = true
+	ev_shift_right.shift_pressed = true
+	ev_shift_right.keycode = KEY_RIGHT
+	main_inst._unhandled_input(ev_shift_right)
+	assert(main_inst.theme_cursor != t_before_188, "Shift+Right should step theme forward")
+
+	var ev_shift_left = InputEventKey.new()
+	ev_shift_left.pressed = true
+	ev_shift_left.shift_pressed = true
+	ev_shift_left.keycode = KEY_LEFT
+	main_inst._unhandled_input(ev_shift_left)
+	assert(main_inst.theme_cursor == t_before_188, "Shift+Left should step theme backward")
+
+	var ev_home = InputEventKey.new()
+	ev_home.pressed = true
+	ev_home.keycode = KEY_HOME
+	main_inst._unhandled_input(ev_home)
+	assert(main_inst.detail_modal.visible == true, "Home key should open first filtered card")
+	var home_title = main_inst.detail_modal.current_item.title
+	main_inst.detail_modal.close()
+
+	var ev_end = InputEventKey.new()
+	ev_end.pressed = true
+	ev_end.keycode = KEY_END
+	main_inst._unhandled_input(ev_end)
+	assert(main_inst.detail_modal.visible == true and main_inst.detail_modal.current_item.title != home_title, "End key should open last filtered card")
+	main_inst.detail_modal.close()
+
+	main_inst._unhandled_input(ev_h_183)
+	assert("[←/→] 문장·테마 · [Home/End] 처음·끝" in main_inst.status_toast.text, "Cheatsheet should include Arrow and Home/End hints")
+	print("✓ Sprint 188: MainView Arrow Quote/Theme & Home/End First/Last Navigation verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()
