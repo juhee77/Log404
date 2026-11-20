@@ -2873,6 +2873,25 @@ func _init() -> void:
 	assert("백업" in main_inst.status_toast.text or "JSON" in main_inst.status_toast.text, "Shift+I should trigger instant JSON backup")
 	print("✓ Sprint 171: MainView Shift+1~5 Tab Open, Shift+N Sample Modal & Shift+I Backup verified")
 
+	# Sprint 172: MainView Shift+0 Full Studio Reset, Shift+C Today Quote Copy & Shift+H Cheatsheet Copy
+	main_inst.search_input.release_focus()
+	main_inst.search_input.text = "슬램덩크"
+	main_inst._step_sort(1)
+	main_inst._step_theme(1)
+	var shift_k172 := InputEventKey.new()
+	shift_k172.pressed = true
+	shift_k172.shift_pressed = true
+	shift_k172.keycode = KEY_0
+	main_inst._unhandled_input(shift_k172)
+	assert(main_inst.search_input.text == "" and main_inst.sort_mode == 0 and main_inst.theme_cursor == 0, "Shift+0 should reset search, sort, and theme to default")
+	shift_k172.keycode = KEY_C
+	main_inst._unhandled_input(shift_k172)
+	assert("오늘의 밑줄 복사 완료" in main_inst.status_toast.text, "Shift+C should copy today's quote")
+	shift_k172.keycode = KEY_H
+	main_inst._unhandled_input(shift_k172)
+	assert("단축키:" in main_inst.status_toast.text, "Shift+H should show and copy shortcut cheatsheet")
+	print("✓ Sprint 172: MainView Shift+0 Full Studio Reset, Shift+C Quote Copy & Shift+H Cheatsheet verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

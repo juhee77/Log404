@@ -5,6 +5,21 @@
 
 ---
 
+## 📓 [Sprint 172] 메인 키보드 `Shift+0` 스튜디오 완전 초기화 · `Shift+C` 오늘의 밑줄 복사 · `Shift+H` 단축키 치트시트 복사
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A (키보드 파워 유저):** "`0` 키를 누르면 검색·필터가 초기화되는데, `Shift+0`을 누르면 정렬 기준과 속지 테마까지 한꺼번에 기본값으로 되돌리는 완전 초기화가 되면 좋겠어요!"
+- **가챠러 B (밑줄 공유러):** "메인 서재에서 `C` 키는 전체 서재 요약을 복사하는데, `Shift+C`를 누르면 배너에 떠 있는 오늘의 밑줄 문장만 깔끔하게 복사할 수 있으면 편리할 것 같아요."
+- **미니멀러 C (단축키 레퍼런스):** "`H` 키로 단축키 치트시트를 띄울 때 `Shift+H`를 누르면 치트시트 텍스트까지 클립보드에 함께 복사해주고 웹 목업(`index.html`)에도 동일하게 동기화해주세요."
+- **PO & UX/UI 확정:**
+  1. **`MainView` `_unhandled_input` `Shift+0` / `Shift+C` / `Shift+H` (`main_view.gd`)**:
+     - `Shift+0`: `_reset_all_filters()` + `_set_sort_mode(0)` + `_reset_theme()` 실행.
+     - `Shift+C`: `today_quote_label.text`를 클립보드에 복사하고 토스트 안내 표시.
+     - `Shift+H`: `_show_shortcut_cheatsheet()` 실행 후 `status_toast.text`를 클립보드에 복사.
+  2. **웹 목업(`index.html`) 동기화 & TDD/QA 검증:** 전역 `keydown` 리스너에 `Shift+0`, `Shift+C`, `Shift+H`를 추가하고 `test_main_integration.gd`에 Sprint 172 통합 검증을 추가해 3종 헤드리스 테스트 100% 통과 및 Metal 4.0 스크린샷을 갱신했습니다.
+
+---
+
 ## 📓 [Sprint 171] 메인 키보드 `Shift+1~5` 탭 필터 후 즉시 열기 · `Shift+N` 샘플 모달 · `Shift+I` 즉시 백업
 
 ### 1. 14인 스쿼드 회의록 & VOC

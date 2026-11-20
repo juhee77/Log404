@@ -5,7 +5,7 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 
 ---
 
-## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 171)
+## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 172)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
@@ -14,6 +14,9 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 ---
 
 ## 🚀 최신 스프린트 업데이트 요약 ([전체 회의록 보기](SPRINT_LOG.md))
+
+### 📓 [Sprint 172] 메인 키보드 `Shift+0` 스튜디오 완전 초기화 · `Shift+C` 오늘의 밑줄 복사 · `Shift+H` 단축키 치트시트 복사
+- **키보드 `Shift` 스튜디오 초기화·복사 확장 (`main_view.gd` · `index.html`)**: `Shift+0`으로 필터·정렬·테마를 한 번에 초기화하며, `Shift+C`로 오늘의 밑줄 문장 복사, `Shift+H`로 단축키 치트시트 복사까지 지원합니다.
 
 ### 📓 [Sprint 171] 메인 키보드 `Shift+1~5` 탭 필터 후 즉시 열기 · `Shift+N` 샘플 모달 · `Shift+I` 즉시 백업
 - **키보드 `Shift` 파워 단축키 확장 (`main_view.gd` · `index.html`)**: `Shift+1~5`로 탭 전환과 동시에 랜덤/첫 작품 일기장을 열며, `Shift+N`으로 샘플 채움 일기 작성 창 열기, `Shift+I`로 즉시 JSON 백업을 실행합니다.

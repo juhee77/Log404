@@ -1254,16 +1254,19 @@
                 } else {
                     alert('⌨️ 단축키 안내\n[1~5] 서재 탭 전환(Shift: 즉시 열기) · [/] 검색 · [R] 랜덤 추천 · [N] 새 일기(Shift: 샘플 등록) · [M] 백색소음 · [←/→] 모달 책장 넘김 · [Shift+순환키] 역순환 · [우클릭] 역순환/백업/필터 · [ESC] 닫기/초기화');
                 }
-            } else if (e.shiftKey && ['1', '2', '3', '4', '5', 'N', 'n', 'I', 'i'].includes(e.key) && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
+            } else if (e.shiftKey && ['0', '1', '2', '3', '4', '5', 'N', 'n', 'I', 'i', 'C', 'c', 'H', 'h'].includes(e.key) && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
                 const jm = document.getElementById('journal-modal');
                 if (!jm || jm.classList.contains('hidden')) {
-                    if (e.key === '1') { switchCategory('all'); if (ITEMS.length) openJournalModal(ITEMS[Math.floor(Math.random() * ITEMS.length)].id); }
+                    if (e.key === '0') { document.getElementById('search-box').value = ''; switchCategory('all'); themeIdx = 0; applyJournalTheme(0); }
+                    else if (e.key === '1') { switchCategory('all'); if (ITEMS.length) openJournalModal(ITEMS[Math.floor(Math.random() * ITEMS.length)].id); }
                     else if (e.key === '2') { switchCategory('manga'); const f = ITEMS.find(x => x.category === 'manga'); if (f) openJournalModal(f.id); }
                     else if (e.key === '3') { switchCategory('gacha'); const f = ITEMS.find(x => x.category === 'gacha'); if (f) openJournalModal(f.id); }
                     else if (e.key === '4') { switchCategory('complete'); const f = ITEMS.find(x => (x.volumes || []).length >= 2); if (f) openJournalModal(f.id); }
                     else if (e.key === '5') { switchCategory('fav'); const f = ITEMS.find(x => x.stamp === '인생최애'); if (f) openJournalModal(f.id); }
                     else if (e.key === 'n' || e.key === 'N') { openNewDiaryModal(true); }
                     else if (e.key === 'i' || e.key === 'I') { instantBackupArchive(); }
+                    else if (e.key === 'c' || e.key === 'C') { const tq = document.getElementById('today-quote-text')?.textContent || ''; if (tq) navigator.clipboard?.writeText(tq); }
+                    else if (e.key === 'h' || e.key === 'H') { navigator.clipboard?.writeText('⌨️ [1~5] 탭 · [/] 검색 · [R] 추천 · [N] 새 일기 · [M] 소음 · [ESC] 닫기'); }
                 }
             }
         });

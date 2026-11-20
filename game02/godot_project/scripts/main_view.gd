@@ -986,6 +986,9 @@ func _unhandled_input(event: InputEvent) -> void:
 			match event.keycode:
 				KEY_0:
 					_reset_all_filters()
+					if event.shift_pressed:
+						_set_sort_mode(0)
+						_reset_theme()
 					get_viewport().set_input_as_handled()
 				KEY_1:
 					_on_tab_all_pressed()
@@ -1041,10 +1044,16 @@ func _unhandled_input(event: InputEvent) -> void:
 						show_library_infographic()
 					get_viewport().set_input_as_handled()
 				KEY_C:
-					copy_summary_to_clipboard()
+					if event.shift_pressed and today_quote_label != null:
+						DisplayServer.clipboard_set(today_quote_label.text)
+						_show_toast("📋 오늘의 밑줄 복사 완료: " + today_quote_label.text)
+					else:
+						copy_summary_to_clipboard()
 					get_viewport().set_input_as_handled()
 				KEY_H:
 					_show_shortcut_cheatsheet()
+					if event.shift_pressed and status_toast != null:
+						DisplayServer.clipboard_set(status_toast.text)
 					get_viewport().set_input_as_handled()
 
 func _show_shortcut_cheatsheet() -> void:
