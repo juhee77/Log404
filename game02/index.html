@@ -1332,6 +1332,16 @@
                 } else if (ITEMS.length > 0) {
                     openJournalModal(e.key === 'Home' ? ITEMS[0].id : ITEMS[ITEMS.length - 1].id);
                 }
+            } else if ((!document.getElementById('journal-modal') || document.getElementById('journal-modal').classList.contains('hidden')) && ['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown'].includes(e.key) && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
+                if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+                    const dir = e.key === 'ArrowUp' ? -1 : 1;
+                    showToast(e.shiftKey ? (dir < 0 ? '🎧 이전 앰비언트 사운드' : '🎧 다음 앰비언트 사운드') : (dir < 0 ? '📚 이전 정렬 기준 전환' : '📚 다음 정렬 기준 전환'));
+                } else {
+                    const cats = ['all', 'manga', 'gacha', 'complete', 'fav'];
+                    const curIdx = Math.max(0, cats.indexOf(currentCategory));
+                    const nextCat = cats[(curIdx + (e.key === 'PageUp' ? -1 : 1) + cats.length) % cats.length];
+                    switchCategory(nextCat);
+                }
             } else if ((e.key === 'i' || e.key === 'I') && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
                 const jm = document.getElementById('journal-modal');
                 if (jm && !jm.classList.contains('hidden') && activeId != null) {

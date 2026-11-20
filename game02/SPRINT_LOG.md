@@ -5,6 +5,19 @@
 
 ---
 
+## 📓 [Sprint 189] 메인 키보드 `↑/↓` 정렬·사운드 순환 · `PageUp/PageDown` 필터 탭 순환
+- **일시**: 2026-11-21
+- **14인 가상 애자일 스쿼드 회의록**:
+  - **다꾸러 VOC (지민·수빈·하연)**: "`←/→`로 문장과 테마를 넘길 수 있게 되니, 상하 방향키 `↑/↓`로 정렬 기준(`기본·다독·최신·가치순`)이나 앰비언트 사운드(`Shift+↑/↓`)를 넘기고 `PageUp/PageDown`으로 `전체·이북·가챠·완독·인생작` 탭을 순서대로 순환하고 싶어요!"
+  - **PO & UX/UI**: `MainView`에 `_step_filter_tab(delta)` 헬퍼를 추가하고, `KEY_UP`/`KEY_DOWN`(`_step_sort(±1)` / `Shift`: `cycle_ambient_sound(±1)`)과 `KEY_PAGEUP`/`KEY_PAGEDOWN`(`_step_filter_tab(±1)` / `Shift`: `_open_first_filtered_card()`)를 연결한다. `KEY_H` 치트시트에 `[↑/↓] 정렬·사운드 · [PgUp/Dn] 탭순환`을 동기화한다.
+- **구현 내역**:
+  - [`main_view.gd`](godot_project/scripts/main_view.gd): `_step_filter_tab()`, `KEY_UP`/`KEY_DOWN`/`KEY_PAGEUP`/`KEY_PAGEDOWN` 분기 및 `_show_shortcut_cheatsheet()` 업데이트.
+  - [`index.html`](index.html): 웹 인터랙티브 목업에 `ArrowUp`/`ArrowDown`/`PageUp`/`PageDown` 단축키 동기화.
+  - [`test_main_integration.gd`](godot_project/tests/test_main_integration.gd): `↑/↓` 정렬·사운드 순환, `PageUp/PageDown` 탭 순환 및 `KEY_H` 치트시트 검증 추가.
+- **검증**: `test_archive.gd`, `test_persistence.gd`, `test_main_integration.gd` 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 갱신 완료.
+
+---
+
 ## 📓 [Sprint 188] 메인 키보드 `←/→` 오늘의 밑줄·테마 탐색 · `Home/End` 처음·끝 작품 즉시 열기
 - **일시**: 2026-11-21
 - **14인 가상 애자일 스쿼드 회의록**:

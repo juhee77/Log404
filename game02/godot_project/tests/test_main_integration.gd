@@ -3391,6 +3391,46 @@ func _init() -> void:
 	assert("[←/→] 문장·테마 · [Home/End] 처음·끝" in main_inst.status_toast.text, "Cheatsheet should include Arrow and Home/End hints")
 	print("✓ Sprint 188: MainView Arrow Quote/Theme & Home/End First/Last Navigation verified")
 
+	# Sprint 189: MainView Up/Down (Sort/Sound) & PageUp/PageDown (Tab Cycle)
+	main_inst.search_input.release_focus()
+	main_inst._reset_all_filters()
+	main_inst._set_sort_mode(0)
+	var ev_down = InputEventKey.new()
+	ev_down.pressed = true
+	ev_down.keycode = KEY_DOWN
+	main_inst._unhandled_input(ev_down)
+	assert(main_inst.sort_mode == 1, "Down arrow should step sort_mode forward to 1")
+
+	var ev_up = InputEventKey.new()
+	ev_up.pressed = true
+	ev_up.keycode = KEY_UP
+	main_inst._unhandled_input(ev_up)
+	assert(main_inst.sort_mode == 0, "Up arrow should step sort_mode backward to 0")
+
+	var snd_before_189 = main_inst.ambient_sound_index
+	var ev_shift_down = InputEventKey.new()
+	ev_shift_down.pressed = true
+	ev_shift_down.shift_pressed = true
+	ev_shift_down.keycode = KEY_DOWN
+	main_inst._unhandled_input(ev_shift_down)
+	assert(main_inst.ambient_sound_index != snd_before_189, "Shift+Down should cycle ambient sound forward")
+
+	var ev_pgdn = InputEventKey.new()
+	ev_pgdn.pressed = true
+	ev_pgdn.keycode = KEY_PAGEDOWN
+	main_inst._unhandled_input(ev_pgdn)
+	assert(main_inst.archive_state.current_filter == 0, "PageDown from All should cycle to Manga (0)")
+
+	var ev_pgup = InputEventKey.new()
+	ev_pgup.pressed = true
+	ev_pgup.keycode = KEY_PAGEUP
+	main_inst._unhandled_input(ev_pgup)
+	assert(main_inst.archive_state.current_filter == -1, "PageUp from Manga should cycle back to All (-1)")
+
+	main_inst._unhandled_input(ev_h_183)
+	assert("[↑/↓] 정렬·사운드 · [PgUp/Dn] 탭순환" in main_inst.status_toast.text, "Cheatsheet should include Up/Down and PageUp/Down hints")
+	print("✓ Sprint 189: MainView Up/Down Sort/Sound & PageUp/Down Tab Cycle verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()
