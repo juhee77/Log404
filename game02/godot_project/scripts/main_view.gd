@@ -163,12 +163,24 @@ func _ready() -> void:
 		tab_complete: func() -> void: _on_tab_complete_pressed(); _set_sort_mode(3),
 		tab_fav: func() -> void: _on_tab_fav_pressed(); _set_sort_mode(3),
 	}
+	var tab_lclick_map := {
+		tab_all: func() -> void: _reset_all_filters(); pick_random_item(true),
+		tab_manga: func() -> void: _on_tab_manga_pressed(); _open_first_filtered_card(),
+		tab_gacha: func() -> void: _on_tab_gacha_pressed(); _open_first_filtered_card(),
+		tab_complete: func() -> void: _on_tab_complete_pressed(); _open_first_filtered_card(),
+		tab_fav: func() -> void: _on_tab_fav_pressed(); _open_first_filtered_card(),
+	}
 	for t_btn in tab_rclick_map.keys():
 		if t_btn != null:
 			var t_cb: Callable = tab_rclick_map[t_btn]
+			var t_scb: Callable = tab_lclick_map[t_btn]
 			t_btn.gui_input.connect(func(ev: InputEvent) -> void:
-				if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_RIGHT:
-					t_cb.call()
+				if ev is InputEventMouseButton and ev.pressed:
+					if ev.button_index == MOUSE_BUTTON_RIGHT:
+						t_cb.call()
+					elif ev.button_index == MOUSE_BUTTON_LEFT and ev.shift_pressed:
+						t_btn.accept_event()
+						t_scb.call()
 			)
 	var top_add_btn: Control = get_node_or_null("VBox/TopBar/TopMargin/StatsVBox/TitleRow/AddBtn")
 	if top_add_btn != null:
@@ -415,15 +427,15 @@ func _update_stats() -> void:
 		if card_node is Control:
 			card_node.tooltip_text = pair[1]
 	if tab_all != null:
-		tab_all.tooltip_text = "[1] 전체 일기 (%d종) · 우클릭: 완전 초기화" % archive_state.items.size()
+		tab_all.tooltip_text = "[1] 전체 일기 (%d종) · 우클릭: 완전 초기화 · Shift+좌클릭: 랜덤 열기" % archive_state.items.size()
 	if tab_manga != null:
-		tab_manga.tooltip_text = "[2] 이북·단행본 (%d종) · 우클릭: 가치순 보기" % (archive_state.items.size() - g_count)
+		tab_manga.tooltip_text = "[2] 이북·단행본 (%d종) · 우클릭: 가치순 보기 · Shift+좌클릭: 첫 작품 열기" % (archive_state.items.size() - g_count)
 	if tab_gacha != null:
-		tab_gacha.tooltip_text = "[3] 가챠·굿즈 (%d종) · 우클릭: 가치순 보기" % g_count
+		tab_gacha.tooltip_text = "[3] 가챠·굿즈 (%d종) · 우클릭: 가치순 보기 · Shift+좌클릭: 첫 작품 열기" % g_count
 	if tab_complete != null:
-		tab_complete.tooltip_text = "[4] 완독·2권 이상 작품 보기 · 우클릭: 가치순 보기"
+		tab_complete.tooltip_text = "[4] 완독·2권 이상 작품 보기 · 우클릭: 가치순 보기 · Shift+좌클릭: 첫 작품 열기"
 	if tab_fav != null:
-		tab_fav.tooltip_text = "[5] 인생최애·★5.0 만점작 보기 · 우클릭: 가치순 보기"
+		tab_fav.tooltip_text = "[5] 인생최애·★5.0 만점작 보기 · 우클릭: 가치순 보기 · Shift+좌클릭: 첫 작품 열기"
 	
 	_render_spine_shelf()
 	_refresh_today_quote()

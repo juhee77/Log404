@@ -2430,6 +2430,27 @@ func _init() -> void:
 	main_inst.detail_modal.close()
 	print("✓ Sprint 154 Milestone: StatItems/StatGacha & InkSwatch Shift+Left-Click verified")
 
+	# Sprint 155 Milestone: Filter Tabs Shift+Left-Click Quick Open & Stamp Shift+Left-Click Apply+Close
+	assert("랜덤 열기" in main_inst.tab_all.tooltip_text and "첫 작품 열기" in main_inst.tab_gacha.tooltip_text, "Filter tabs tooltips should mention Shift+Left-Click open")
+	var shift_lclick_s155 := InputEventMouseButton.new()
+	shift_lclick_s155.pressed = true
+	shift_lclick_s155.shift_pressed = true
+	shift_lclick_s155.button_index = MOUSE_BUTTON_LEFT
+	main_inst.tab_gacha.gui_input.emit(shift_lclick_s155)
+	assert(main_inst.detail_modal.visible and main_inst.detail_modal.current_item.category == 1, "Shift+Left-clicking tab_gacha should filter gacha and open first gacha modal")
+	main_inst.detail_modal.close()
+	main_inst._reset_all_filters()
+	main_inst.tab_all.gui_input.emit(shift_lclick_s155)
+	assert(main_inst.detail_modal.visible, "Shift+Left-clicking tab_all should reset filters and open random modal")
+	main_inst.detail_modal.close()
+	var target_s155 = main_inst.archive_state.items[0]
+	main_inst._on_card_clicked(target_s155)
+	var stamp_fav_s155: Button = main_inst.detail_modal.get_node("Panel/VBox/BodyMargin/Body/StampRow/StampFav")
+	assert("찍고 닫기" in stamp_fav_s155.tooltip_text, "Stamp button tooltip should mention Shift+Left-Click apply+close")
+	stamp_fav_s155.gui_input.emit(shift_lclick_s155)
+	assert(not main_inst.detail_modal.visible and target_s155.status_tag == "인생최애", "Shift+Left-clicking StampFav should apply stamp and close modal")
+	print("✓ Sprint 155 Milestone: Filter Tabs Open & Stamp Apply+Close verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

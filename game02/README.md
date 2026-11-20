@@ -5,7 +5,7 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 
 ---
 
-## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 154)
+## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 155)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
@@ -14,6 +14,9 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 ---
 
 ## 🚀 최신 스프린트 업데이트 요약 ([전체 회의록 보기](SPRINT_LOG.md))
+
+### 🏆 [Sprint 155] 마일스톤 155: 필터 탭 5종 `Shift+좌클릭` 첫 작품·랜덤 즉시 열기 & 인장 4종 `Shift+좌클릭` 찍고 닫기
+- **원클릭 탐색·도장 마감 (`main_view.gd` · `detail_modal.gd` · `index.html`)**: 필터 탭 5종 `Shift+좌클릭`으로 랜덤/첫 작품을 즉시 열며, 인장 4종 `Shift+좌클릭`으로 인장 적용과 동시에 모달을 닫습니다.
 
 ### 📓 [Sprint 154] 통계 카드(`StatItems`/`StatGacha`) `Shift+좌클릭` 정렬 초기화·가치순 & 만년필 잉크 4종 `Shift+좌클릭` 적용+입력창 이동
 - **통계·잉크 원클릭 워크플로우 (`main_view.gd` · `detail_modal.gd` · `index.html`)**: `StatItems`/`StatGacha` `Shift+좌클릭`으로 전체+기본순 복원 및 가챠 가치순 정렬을 실행하며, 만년필 잉크 4종 `Shift+좌클릭`으로 잉크 적용과 동시에 입력창으로 이동합니다.

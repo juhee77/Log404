@@ -5,6 +5,25 @@
 
 ---
 
+## 🏆 [Sprint 155] 마일스톤 155: 필터 탭 5종 `Shift+좌클릭` 첫 작품·랜덤 즉시 열기 & 인장 4종 `Shift+좌클릭` 찍고 닫기
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A**: "상단 필터 탭(`이북·단행본`·`가챠노트`·`완독작`·`인생작`)을 `Shift+좌클릭`하면 필터링과 동시에 첫 번째 작품 일기장이 바로 펼쳐지고, `전체일기`를 `Shift+좌클릭`하면 랜덤 작품이 열리면 탐색 속도가 엄청 빨라질 것 같아요!"
+- **가챠러 B**: "`DetailModal` 인장 4종(`전권완결`·`초판특전`·`인생최애`·`위시`)을 `Shift+좌클릭`하면 인장을 찍자마자 일기장 모달이 깔끔하게 닫히면 도장만 빠르게 찍고 나올 때 정말 편하겠어요."
+- **기획자 (PO)**: "`main_view.gd` 필터 탭 5종 `Shift+좌클릭` 즉시 열기와 `detail_modal.gd` 인장 4종 `Shift+좌클릭` 찍고 닫기를 구현하고 `index.html` 인장 버튼들과 동기화합니다."
+
+### 2. 핵심 구현 및 변경 내역
+- `game02/godot_project/scripts/main_view.gd`:
+  - `tab_all` `Shift+좌클릭` 시 `_reset_all_filters(); pick_random_item(true)`를, `tab_manga`/`tab_gacha`/`tab_complete`/`tab_fav` `Shift+좌클릭` 시 필터 적용 후 `_open_first_filtered_card()`를 실행하고 `_update_stats()` 툴팁을 동기화했습니다.
+- `game02/godot_project/scripts/detail_modal.gd`:
+  - `STAMP_PRESET_MAP` 4종 인장 버튼 `Shift+좌클릭` 시 `apply_stamp(st_name)` 실행 후 `close()`를 호출하도록 연결하고 툴팁을 동기화했습니다.
+- `game02/index.html`:
+  - 4종 인장 버튼 `onclick`에 `event.shiftKey` 시 `closeJournalModal()` 및 툴팁을 동기화했습니다.
+- `game02/godot_project/tests/test_main_integration.gd`:
+  - 필터 탭 5종 `Shift+좌클릭` 즉시 열기와 인장 버튼 `Shift+좌클릭` 찍고 닫기를 검증하는 Sprint 155 마일스톤 테스트를 추가해 100% 통과했습니다.
+
+---
+
 ## 📓 [Sprint 154] 통계 카드(`StatItems`/`StatGacha`) `Shift+좌클릭` 정렬 초기화·가치순 & 만년필 잉크 4종 `Shift+좌클릭` 적용+입력창 이동
 
 ### 1. 14인 스쿼드 회의록 & VOC

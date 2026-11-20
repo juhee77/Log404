@@ -253,11 +253,16 @@ func _style_diary_controls() -> void:
 			child.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 			if STAMP_PRESET_MAP.has(child.name):
 				var st_name: String = STAMP_PRESET_MAP[child.name]
-				child.tooltip_text = "좌클릭: '%s' 인장 찍기 ([1]~[4]) · 우클릭: 인장+감상카드 복사" % st_name
+				child.tooltip_text = "좌클릭: '%s' 인장 찍기 ([1]~[4]) · 우클릭: 인장+감상카드 복사 · Shift+좌클릭: 찍고 닫기" % st_name
 				child.gui_input.connect(func(ev: InputEvent) -> void:
-					if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_RIGHT:
-						apply_stamp(st_name)
-						copy_book_quote_card()
+					if ev is InputEventMouseButton and ev.pressed:
+						if ev.button_index == MOUSE_BUTTON_RIGHT:
+							apply_stamp(st_name)
+							copy_book_quote_card()
+						elif ev.button_index == MOUSE_BUTTON_LEFT and ev.shift_pressed:
+							child.accept_event()
+							apply_stamp(st_name)
+							close()
 				)
 	var stamp_lbl: Label = get_node_or_null("Panel/VBox/BodyMargin/Body/StampRow/StampLbl")
 	if stamp_lbl != null:
