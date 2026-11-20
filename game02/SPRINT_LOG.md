@@ -5,6 +5,25 @@
 
 ---
 
+## 🏆 [Sprint 150] 마일스톤 150: `StatusToast` `Shift+좌/우클릭`(서재 브리핑/복사) & `MemoLabel` `Shift+좌클릭` 감상평 복사
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A**: "하단 상태바(`StatusToast`)를 `Shift+좌클릭`하면 서재 전체 자산·완독률 인포그래픽 브리핑이 뜨고, `Shift+우클릭`하면 지금 뜬 상태 메시지가 바로 복사되면 정말 실용적일 것 같아요!"
+- **가챠러 B**: "`DetailModal` 속 한 줄 감상평(`MemoLabel`)을 `Shift+좌클릭`하면 편집 입력창으로 가지 않고 원문 감상평만 깔끔하게 클립보드에 복사되면 리뷰 공유할 때 편하겠어요."
+- **기획자 (PO)**: "`main_view.gd` `StatusToast` `Shift+좌/우클릭` 브리핑·복사와 `detail_modal.gd` `MemoLabel` `Shift+좌클릭` 감상평 복사를 구현하고 `index.html` `#diary-memo`와 동기화합니다."
+
+### 2. 핵심 구현 및 변경 내역
+- `game02/godot_project/scripts/main_view.gd`:
+  - `StatusToast` `Shift+좌클릭` 시 `show_library_infographic()`를, `Shift+우클릭` 시 `status_toast.text` 클립보드 복사 및 토스트(`📋 상태 메시지 복사 완료!`)를 표시하도록 구현했습니다.
+- `game02/godot_project/scripts/detail_modal.gd`:
+  - `MemoLabel` `Shift+좌클릭` 시 `current_item.memo`를 클립보드에 복사하고 툴팁 피드백(`✅ 감상평 복사됨`)을 표시하며 `open()` 시 기본 툴팁으로 복원하도록 구현했습니다.
+- `game02/index.html`:
+  - `#diary-memo` `onclick`에서 `event.shiftKey` 시 감상평 텍스트를 클립보드에 복사하도록 동기화했습니다.
+- `game02/godot_project/tests/test_main_integration.gd`:
+  - `StatusToast` `Shift+좌/우클릭` 브리핑·복사와 `MemoLabel` `Shift+좌클릭` 감상평 복사를 검증하는 Sprint 150 마일스톤 테스트를 추가해 100% 통과했습니다.
+
+---
+
 ## 📓 [Sprint 149] `SortBtn` `Shift+좌클릭` 기본순 정렬 복원 & `TagLabel` `Shift+좌클릭` 태그·띠지 문구 클립보드 복사
 
 ### 1. 14인 스쿼드 회의록 & VOC

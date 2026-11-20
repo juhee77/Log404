@@ -222,13 +222,20 @@ func _ready() -> void:
 	if status_toast != null:
 		status_toast.mouse_filter = Control.MOUSE_FILTER_STOP
 		status_toast.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
-		status_toast.tooltip_text = "좌클릭: 단축키 치트시트 보기 (H) · 우클릭: 오늘의 랜덤 추천 미리보기 (Shift+R)"
+		status_toast.tooltip_text = "좌클릭: 단축키 치트시트 보기 (H) · 우클릭: 오늘의 랜덤 추천 미리보기 (Shift+R) · Shift+좌/우클릭: 브리핑/복사"
 		status_toast.gui_input.connect(func(ev: InputEvent) -> void:
 			if ev is InputEventMouseButton and ev.pressed:
 				if ev.button_index == MOUSE_BUTTON_LEFT:
-					_show_shortcut_cheatsheet()
+					if ev.shift_pressed:
+						show_library_infographic()
+					else:
+						_show_shortcut_cheatsheet()
 				elif ev.button_index == MOUSE_BUTTON_RIGHT:
-					pick_random_item(false)
+					if ev.shift_pressed:
+						DisplayServer.clipboard_set(status_toast.text)
+						_show_toast("📋 상태 메시지 복사 완료!")
+					else:
+						pick_random_item(false)
 		)
 	if next_quote_btn != null:
 		next_quote_btn.tooltip_text = "[Q] 서재 속 다음 밑줄 문장으로 넘기기"

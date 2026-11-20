@@ -2321,6 +2321,27 @@ func _init() -> void:
 	main_inst.detail_modal.close()
 	print("✓ Sprint 149 Milestone: SortBtn Default Reset & TagLabel Copy verified")
 
+	# Sprint 150 Milestone: StatusToast Shift+Click Briefing/Copy & MemoLabel Shift+Left-Click Copy
+	assert("브리핑/복사" in main_inst.status_toast.tooltip_text, "StatusToast tooltip should mention Shift+Left/Right-Click briefing/copy")
+	var shift_lclick_s150 := InputEventMouseButton.new()
+	shift_lclick_s150.pressed = true
+	shift_lclick_s150.shift_pressed = true
+	shift_lclick_s150.button_index = MOUSE_BUTTON_LEFT
+	var shift_rclick_s150 := InputEventMouseButton.new()
+	shift_rclick_s150.pressed = true
+	shift_rclick_s150.shift_pressed = true
+	shift_rclick_s150.button_index = MOUSE_BUTTON_RIGHT
+	main_inst.status_toast.gui_input.emit(shift_lclick_s150)
+	assert("₩" in main_inst.status_toast.text, "Shift+Left-clicking StatusToast should show library infographic briefing")
+	main_inst.status_toast.gui_input.emit(shift_rclick_s150)
+	assert("상태 메시지 복사 완료" in main_inst.status_toast.text, "Shift+Right-clicking StatusToast should copy toast text")
+	main_inst._on_card_clicked(main_inst.archive_state.items[0])
+	assert("감상평 복사" in main_inst.detail_modal.memo_label.tooltip_text, "MemoLabel tooltip should mention Shift+Left-Click memo copy")
+	main_inst.detail_modal.memo_label.gui_input.emit(shift_lclick_s150)
+	assert("✅ 감상평 복사됨:" in main_inst.detail_modal.memo_label.tooltip_text, "Shift+Left-clicking MemoLabel should copy memo and update tooltip")
+	main_inst.detail_modal.close()
+	print("✓ Sprint 150 Milestone: StatusToast Briefing/Copy & MemoLabel Copy verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

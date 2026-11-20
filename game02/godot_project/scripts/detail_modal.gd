@@ -103,6 +103,8 @@ func _ready() -> void:
 		author_label.tooltip_text = "좌클릭: 이 작가·시리즈의 다른 작품 검색하기 · Shift+좌클릭: 작가명 복사 · 우클릭: 가치 +5,000원(Shift: -5,000원)"
 	if tag_label != null:
 		tag_label.tooltip_text = "좌클릭: 띠지 문구 다음 순환 (O) · 우클릭: 이전 순환 (Shift+O) · Shift+좌클릭: 태그 복사"
+	if memo_label != null:
+		memo_label.tooltip_text = "좌클릭: 밑줄 문장 편집 입력창 이동 (E) · 우클릭: 형광펜 토글 (L) · Shift+좌클릭: 감상평 복사"
 		title_label.gui_input.connect(func(ev: InputEvent) -> void:
 			if ev is InputEventMouseButton and ev.pressed and current_item != null:
 				if ev.button_index == MOUSE_BUTTON_LEFT:
@@ -148,12 +150,16 @@ func _ready() -> void:
 	if memo_label != null:
 		memo_label.mouse_filter = Control.MOUSE_FILTER_STOP
 		memo_label.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
-		memo_label.tooltip_text = "좌클릭: 밑줄 문장 편집 입력창 이동 (E) · 우클릭: 형광펜 토글 (L)"
+		memo_label.tooltip_text = "좌클릭: 밑줄 문장 편집 입력창 이동 (E) · 우클릭: 형광펜 토글 (L) · Shift+좌클릭: 감상평 복사"
 		memo_label.gui_input.connect(func(ev: InputEvent) -> void:
 			if ev is InputEventMouseButton and ev.pressed and current_item != null:
-				if ev.button_index == MOUSE_BUTTON_LEFT and quote_input != null:
-					quote_input.grab_focus()
-					quote_input.caret_column = quote_input.text.length()
+				if ev.button_index == MOUSE_BUTTON_LEFT:
+					if ev.shift_pressed:
+						DisplayServer.clipboard_set(current_item.memo)
+						memo_label.tooltip_text = "✅ 감상평 복사됨: " + current_item.memo
+					elif quote_input != null:
+						quote_input.grab_focus()
+						quote_input.caret_column = quote_input.text.length()
 				elif ev.button_index == MOUSE_BUTTON_RIGHT:
 					toggle_quote_highlight()
 		)
@@ -685,6 +691,8 @@ func open(item) -> void:
 		author_label.tooltip_text = "좌클릭: 이 작가·시리즈의 다른 작품 검색하기 · Shift+좌클릭: 작가명 복사 · 우클릭: 가치 +5,000원(Shift: -5,000원)"
 	if tag_label != null:
 		tag_label.tooltip_text = "좌클릭: 띠지 문구 다음 순환 (O) · 우클릭: 이전 순환 (Shift+O) · Shift+좌클릭: 태그 복사"
+	if memo_label != null:
+		memo_label.tooltip_text = "좌클릭: 밑줄 문장 편집 입력창 이동 (E) · 우클릭: 형광펜 토글 (L) · Shift+좌클릭: 감상평 복사"
 	_refresh_author_label()
 	var sticker = current_item.get("deco_sticker") if current_item.get("deco_sticker") != null else "✨"
 	var r_tier = current_item.get("rarity_tier") if current_item.get("rarity_tier") != null else "🌟노말"

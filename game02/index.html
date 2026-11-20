@@ -330,7 +330,7 @@
 
                     <!-- Overall Diary Thought -->
                     <div class="journal-lined-paper px-3 py-2 mt-3 rounded-xl border border-[#ece3d5]">
-                        <p onclick="const i=document.getElementById('diary-quote-input'); if(i){i.focus();}" oncontextmenu="event.preventDefault(); toggleDiaryHighlighter();" title="좌클릭: 밑줄 문장 편집 입력창 이동 (E) · 우클릭: 형광펜 토글 (L)" class="serif-font text-xs text-[#2c221e] cursor-pointer hover:text-[#c85a32]" id="diary-memo">
+                        <p onclick="if(event&&event.shiftKey){navigator.clipboard?.writeText(this.textContent.trim());this.title='✅ 감상평 복사됨';}else{const i=document.getElementById('diary-quote-input'); if(i){i.focus();}}" oncontextmenu="event.preventDefault(); toggleDiaryHighlighter();" title="좌클릭: 밑줄 문장 편집 입력창 이동 (E) · 우클릭: 형광펜 토글 (L) · Shift+좌클릭: 감상평 복사" class="serif-font text-xs text-[#2c221e] cursor-pointer hover:text-[#c85a32]" id="diary-memo">
                             학창시절부터 소중히 모아온 인생 만화. 마지막 페이지를 덮을 때마다 가슴이 벅차오른다.
                         </p>
                     </div>

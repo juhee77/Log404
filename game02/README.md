@@ -5,7 +5,7 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 
 ---
 
-## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 149)
+## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 150)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
@@ -14,6 +14,9 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 ---
 
 ## 🚀 최신 스프린트 업데이트 요약 ([전체 회의록 보기](SPRINT_LOG.md))
+
+### 🏆 [Sprint 150] 마일스톤 150: `StatusToast` `Shift+좌/우클릭`(서재 브리핑/복사) & `MemoLabel` `Shift+좌클릭` 감상평 복사
+- **하단 브리핑·감상평 복사 (`main_view.gd` · `detail_modal.gd` · `index.html`)**: `StatusToast` `Shift+좌/우클릭`으로 서재 인포그래픽 브리핑 및 메시지 복사를 실행하며, `MemoLabel` `Shift+좌클릭`으로 감상평 원문을 복사합니다.
 
 ### 📓 [Sprint 149] `SortBtn` `Shift+좌클릭` 기본순 정렬 복원 & `TagLabel` `Shift+좌클릭` 태그·띠지 문구 클립보드 복사
 - **정렬 초기화 & 태그 복사 (`main_view.gd` · `detail_modal.gd` · `index.html`)**: `SortBtn` `Shift+좌클릭`으로 `↕ 기본순` 정렬로 즉시 복원하며, `TagLabel` `Shift+좌클릭`으로 태그·띠지 문구를 클립보드에 복사합니다.
