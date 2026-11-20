@@ -4,6 +4,7 @@ extends PanelContainer
 signal clicked(item)
 signal quick_advanced(item)
 signal quote_copy_requested(item)
+signal author_filter_requested(item)
 
 @onready var masking_tape: ColorRect = $VBox/TopTapeRow/MaskingTape
 @onready var cover_rect: ColorRect = $VBox/CardMargin/InnerVBox/CoverContainer/CoverRect
@@ -25,7 +26,10 @@ var current_item = null
 func _gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.pressed:
 		if event.button_index == MOUSE_BUTTON_LEFT:
-			clicked.emit(current_item)
+			if event.shift_pressed:
+				author_filter_requested.emit(current_item)
+			else:
+				clicked.emit(current_item)
 		elif event.button_index == MOUSE_BUTTON_RIGHT:
 			if event.shift_pressed:
 				quote_copy_requested.emit(current_item)
@@ -139,7 +143,7 @@ func setup(item) -> void:
 		status_label.text = "🖋️ " + first_quote
 
 	var val_fmt = ArchiveStateClass.format_krw(est_val) if est_val > 0 else "₩0"
-	tooltip_text = "%s\n%s · %s · %s\n%s · %s · %s\n(우클릭: +1권 빠른 기록 · Shift+우클릭: 감상 요약 복사)" % [
+	tooltip_text = "%s\n%s · %s · %s\n%s · %s · %s\n(Shift+좌클릭: 작가 검색 · 우클릭: +1권 빠른 기록 · Shift+우클릭: 감상 요약 복사)" % [
 		item.title,
 		item.storage_location,
 		item.reading_weather,

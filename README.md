@@ -18,13 +18,42 @@ Godot 4+ 기반의 감성 게임 및 인터랙티브 아카이브 애플리케�
 > **Godot 4.6.2 모바일 기반 E-Book 리더기 서재(Apple Books · 리디북스) & 만년필 다꾸 독서노트(굿노트 · 몰스킨) 감성 아카이브 앱**  
 > 14인 가상 애자일 스쿼드가 20분 주기 자동 스프린트로 지속 개선 중입니다.
 
-### 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 135)
+### 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 164)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
 | ![Pocket Archive Main Screen](game02/godot_project/screenshots/godot_app_screen.png) | ![Pocket Archive Detail Modal](game02/godot_project/screenshots/godot_modal_screen.png) |
 
 ### ✨ 주요 핵심 기능
+- **최신 Sprint 164 하이라이트**: `StampRow`·`InkRow` 17종 데코레이터 순환 버튼 `Shift+좌클릭` 역순환(`detail_modal.gd` · `index.html`) 일괄 완성
+- **최신 Sprint 163 하이라이트**: `RereadBtn`/`DuplicateBtn`/`ValueBtn` `Shift+좌클릭` -1·-5,000원 역감소(`detail_modal.gd` · `index.html`) 완성
+- **최신 Sprint 162 하이라이트**: `DateStampBtn` `Shift+좌클릭` 구매일+전권 오늘 날짜 동기화 및 `DeleteBtn` `Shift+좌클릭` 삭제 확인 해제(`detail_modal.gd` · `index.html`) 완성
+- **최신 Sprint 161 하이라이트**: 권별 `vol_lbl` `Shift+좌클릭` `초판+북마크+★5` 풀스탬프 및 `quote_lbl` `Shift+좌클릭` 밑줄 복사+북마크(`detail_modal.gd` · `index.html`) 완성
+- **🏆 Sprint 160 마일스톤 하이라이트**: `RemoveVolBtn` `Shift+좌클릭` 전권 북마크 일괄 토글 및 `ShareCardBtn` `Shift+좌클릭` 전체 서재 리포트 복사(`detail_modal.gd` · `index.html`) 완성
+- **최신 Sprint 159 하이라이트**: 권별 `date_btn` `Shift+좌클릭` 전권 오늘 날짜 일괄 스탬프(`stamp_all_volumes_date`) 및 `PrevItemBtn`/`NextItemBtn` `Shift+좌클릭` 처음·끝 작품 점프(`detail_modal.gd` · `main_view.gd` · `index.html`) 완성
+- **최신 Sprint 158 하이라이트**: `DiyBtn` `Shift+좌클릭` 샘플 채움 모달 열기 및 권별 `StatusBtn` `Shift+좌클릭` 전권 초판·소장 일괄 전환(`main_view.gd` · `detail_modal.gd` · `index.html`) 완성
+- **최신 Sprint 157 하이라이트**: `WebBtn`/`CamBtn` `Shift+좌클릭` 스크랩·촬영 후 즉시 열기 및 권별 `BmBtn` `Shift+좌클릭` `초판+북마크`(`main_view.gd` · `detail_modal.gd` · `index.html`) 완성
+- **최신 Sprint 156 하이라이트**: `StatVols`/`StatFirsts` `Shift+좌클릭` 첫 작품 열기·초판 가치순 정렬 및 권별 `StarBtn` `Shift+좌클릭` `★5+북마크`(`main_view.gd` · `detail_modal.gd` · `index.html`) 완성
+- **🏆 Sprint 155 마일스톤 하이라이트**: 필터 탭 5종 `Shift+좌클릭` 첫 작품·랜덤 즉시 열기 및 인장 4종 `Shift+좌클릭` 찍고 닫기(`main_view.gd` · `detail_modal.gd` · `index.html`) 완성
+- **최신 Sprint 154 하이라이트**: `StatItems`/`StatGacha` `Shift+좌클릭` 전체+기본순·가챠 가치순 정렬 및 만년필 잉크 4종 `Shift+좌클릭` 잉크 적용+입력창 포커스(`main_view.gd` · `detail_modal.gd` · `index.html`) 완성
+- **최신 Sprint 153 하이라이트**: `ThemeBtn` `Shift+좌클릭` 기본 속지 테마 복원 및 `CloseBtn` `Shift+좌클릭` 감상 카드 복사+닫기(`main_view.gd` · `detail_modal.gd` · `index.html`) 완성
+- **최신 Sprint 152 하이라이트**: `AddBtn` `Shift+좌클릭` 샘플 채움 모달 열기 및 `AddVolBtn` `Shift+좌클릭` 초판특전+북마크 즉시 추가(`main_view.gd` · `detail_modal.gd` · `index.html`) 완성
+- **최신 Sprint 151 하이라이트**: `RandomPickBtn` `Shift+좌클릭` 랜덤 서재 필터, `SaveQuoteBtn` `Shift+좌클릭` 저장+복사 및 `HighlightBtn` `Shift+좌클릭` 속지 순환(`main_view.gd` · `detail_modal.gd` · `index.html`) 완성
+- **🏆 Sprint 150 마일스톤 하이라이트**: `StatusToast` `Shift+좌/우클릭` 서재 브리핑·메시지 복사 및 `MemoLabel` `Shift+좌클릭` 감상평 복사(`main_view.gd` · `detail_modal.gd` · `index.html`) 완성
+- **최신 Sprint 149 하이라이트**: `SortBtn` `Shift+좌클릭` 기본순 정렬 복원 및 `TagLabel` `Shift+좌클릭` 태그·띠지 문구 클립보드 복사(`main_view.gd` · `detail_modal.gd` · `index.html`) 완성
+- **최신 Sprint 148 하이라이트**: `AmbientBtn` `Shift+좌클릭` 즉시 음소거 및 `AuthorLabel` `Shift+좌클릭` 작가명 클립보드 복사(`main_view.gd` · `detail_modal.gd` · `index.html`) 완성
+- **최신 Sprint 147 하이라이트**: `SubTitle` `Shift+좌/우클릭` 즉시 백업·단축키 치트시트 및 `PageBadgeLabel` `Shift+좌/우클릭` 처음·끝 작품 점프(`main_view.gd` · `detail_modal.gd` · `index.html`) 완성
+- **최신 Sprint 146 하이라이트**: `AppTitle` `Shift+좌클릭` 새 일기 쓰기 모달 열기 및 `ModalWashiTape` `Shift+좌/우클릭` 데코 스티커·속지 패턴 순환(`main_view.gd` · `detail_modal.gd` · `index.html`) 완성
+- **🏆 Sprint 145 마일스톤 하이라이트**: `TodayQuoteLabel` `Shift+좌클릭` 밑줄 즉시 복사 및 `DetailModal` `CoverRect` `Shift+좌/우클릭` 마감·상태등급 전환(`main_view.gd` · `detail_modal.gd` · `index.html`) 완성
+- **최신 Sprint 144 하이라이트**: `VolHeader` `Shift+좌클릭` 전권 북마크 일괄 토글 및 `NextQuoteBtn` `Shift+좌클릭` 현재 밑줄 작품 열기(`detail_modal.gd` · `main_view.gd` · `index.html`) 완성
+- **최신 Sprint 143 하이라이트**: 서재 카드 `Shift+좌클릭` 작가·시리즈 즉시 검색 및 책등 선반(`SpineShelf`) `Shift+좌/우클릭` 필터·복사(`card_item.gd` · `main_view.gd` · `index.html`) 완성
+- **최신 Sprint 142 하이라이트**: `AddModal` 헤더 `TitleLabel` 좌·우클릭(샘플 일괄 채움/비우기) 및 `Ctrl/Cmd+Enter` 즉시 등록(`add_modal.gd` · `index.html`) 완성
+- **최신 Sprint 141 하이라이트**: `DetailModal` `StampLbl`·`InkLbl` 라벨 좌·우클릭 양방향 인장/만년필 잉크 순환(`detail_modal.gd` · `index.html`) 완성
+- **🏆 Sprint 140 마일스톤 하이라이트**: `DetailModal` `TitleLabel` 우클릭 감상 카드 전체 복사 및 `CatBadge` 우클릭 전체 서재 복원(`detail_modal.gd` · `main_view.gd` · `index.html`) 완성
+- **최신 Sprint 139 하이라이트**: `SearchInput` 우클릭 검색어 비우기 ↔ 오늘의 밑줄 작품 검색 및 `AddModal` 입력창 우클릭 비우기 ↔ 샘플 채움(`main_view.gd` · `add_modal.gd` · `index.html`) 완성
+- **최신 Sprint 138 하이라이트**: `RemoveVolBtn` 우클릭 마지막 권 북마크 토글 및 `QuoteInput` 우클릭 입력 비우기 ↔ 원문 복원(`detail_modal.gd` · `index.html`) 완성
+- **최신 Sprint 137 하이라이트**: 권별 리스트 `vol_lbl` 좌클릭 밑줄 편집·우클릭 북마크 토글 및 `quote_lbl` 우클릭 밑줄 문장 클립보드 복사(`detail_modal.gd` · `index.html`) 완성
+- **최신 Sprint 136 하이라이트**: `DetailModal` 배경 딤머(`Dimmer`) 우클릭 닫기+즉시 JSON 백업 저장 및 `AddModal` 배경 딤머 우클릭 입력 내용 비우기(`detail_modal.gd` · `add_modal.gd` · `index.html`) 완성
 - **🏆 Sprint 135 마일스톤 하이라이트**: 검색창 `Enter` 첫 번째 결과 일기장 즉시 열기(`_open_first_filtered_card`) 및 빈 검색 결과(`EmptyStateResetBtn`) 우클릭 전체 복원+랜덤 추천 미리보기(`main_view.gd` · `index.html`) 완성
 - **최신 Sprint 134 하이라이트**: `AddModal` 6종 표지 색상 스와치 우클릭 즉시 등록(`_submit_with_sample_fallback`) 및 `ESC` 2단계 입력 비우기·닫기 안전장치(`add_modal.gd` · `index.html`) 완성
 - **최신 Sprint 133 하이라이트**: 서재 카드 리치 툴팁 `Shift+우클릭: 감상 요약 복사` 동기화 및 `AddModal` `CatOption` 우클릭 이북 ↔ 가챠 즉시 전환(`card_item.gd` · `add_modal.gd` · `index.html`) 완성

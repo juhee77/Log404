@@ -2022,6 +2022,698 @@ func _init() -> void:
 	assert(main_inst.search_input.text == "" and "오늘의 추천 미리보기" in main_inst.status_toast.text, "Right-clicking EmptyStateResetBtn should reset filters and peek random item")
 	print("✓ Sprint 135 Milestone: SearchInput Enter Open First & EmptyStateResetBtn Random Peek verified")
 
+	# Sprint 136 Milestone: DetailModal Dimmer Right-Click Close+Backup & AddModal Dimmer Right-Click Clear
+	main_inst._on_card_clicked(main_inst.archive_state.items[0])
+	var detail_dimmer_s136: Control = main_inst.detail_modal.get_node("Dimmer")
+	assert("닫고 즉시 JSON 백업" in detail_dimmer_s136.tooltip_text, "DetailModal Dimmer tooltip should mention right-click close and backup")
+	var rclick_s136 := InputEventMouseButton.new()
+	rclick_s136.pressed = true
+	rclick_s136.button_index = MOUSE_BUTTON_RIGHT
+	detail_dimmer_s136.gui_input.emit(rclick_s136)
+	assert(not main_inst.detail_modal.visible and "로컬 JSON 서재 백업 저장 완료" in main_inst.status_toast.text, "Right-clicking DetailModal Dimmer should close modal and trigger instant JSON backup")
+	main_inst.add_modal.open()
+	main_inst.add_modal.title_input.text = "임시 작성중"
+	var add_dimmer_s136: Control = main_inst.add_modal.get_node("Dimmer")
+	assert("입력 내용만 비우기" in add_dimmer_s136.tooltip_text, "AddModal Dimmer tooltip should mention right-click clear inputs")
+	add_dimmer_s136.gui_input.emit(rclick_s136)
+	assert(main_inst.add_modal.visible and main_inst.add_modal.title_input.text == "", "Right-clicking AddModal Dimmer should clear inputs without closing")
+	main_inst.add_modal.close()
+	print("✓ Sprint 136 Milestone: DetailModal Dimmer Close+Backup & AddModal Dimmer Clear verified")
+
+	# Sprint 137 Milestone: Volume Row vol_lbl Edit/Bookmark & quote_lbl Right-Click Copy
+	var target_s137 = main_inst.archive_state.items[0]
+	main_inst._on_card_clicked(target_s137)
+	var labels_s137 = main_inst.detail_modal.vol_list.get_child(0).find_children("*", "Label", true, false)
+	var vol_lbl_s137: Label = labels_s137[0]
+	assert("밑줄 문장 편집" in vol_lbl_s137.tooltip_text and "북마크 토글" in vol_lbl_s137.tooltip_text, "vol_lbl tooltip should mention edit and bookmark toggle")
+	var lclick_s137 := InputEventMouseButton.new()
+	lclick_s137.pressed = true
+	lclick_s137.button_index = MOUSE_BUTTON_LEFT
+	vol_lbl_s137.gui_input.emit(lclick_s137)
+	assert(main_inst.detail_modal.editing_vol_index == 0, "Left-clicking vol_lbl should enter quote edit mode for volume 0")
+	var orig_bm_s137: bool = bool(target_s137.volumes[0].get("bookmarked", false))
+	var rclick_s137 := InputEventMouseButton.new()
+	rclick_s137.pressed = true
+	rclick_s137.button_index = MOUSE_BUTTON_RIGHT
+	vol_lbl_s137.gui_input.emit(rclick_s137)
+	assert(bool(target_s137.volumes[0].get("bookmarked", false)) != orig_bm_s137, "Right-clicking vol_lbl should toggle volume bookmark")
+	var labels_after_s137 = main_inst.detail_modal.vol_list.get_child(0).find_children("*", "Label", true, false)
+	var quote_lbl_s137: Label = labels_after_s137[1]
+	assert("밑줄 문장 복사" in quote_lbl_s137.tooltip_text, "quote_lbl tooltip should mention right-click quote copy")
+	quote_lbl_s137.gui_input.emit(rclick_s137)
+	assert("✅ 복사됨:" in quote_lbl_s137.tooltip_text, "Right-clicking quote_lbl should copy volume quote and update tooltip")
+	main_inst.detail_modal.close()
+	print("✓ Sprint 137 Milestone: Volume Row vol_lbl Edit/Bookmark & quote_lbl Copy verified")
+
+	# Sprint 138 Milestone: RemoveVolBtn Right-Click Last Bookmark & QuoteInput Right-Click Clear/Restore
+	var target_s138 = main_inst.archive_state.items[0]
+	main_inst._on_card_clicked(target_s138)
+	var rem_btn_s138: Button = main_inst.detail_modal.get_node("Panel/VBox/BodyMargin/Body/TopInfo/MetaVBox/BtnRow/RemoveVolBtn")
+	assert("마지막 권 북마크 토글" in rem_btn_s138.tooltip_text, "RemoveVolBtn tooltip should mention right-click last volume bookmark toggle")
+	var last_idx_s138: int = target_s138.volumes.size() - 1
+	var orig_last_bm_s138: bool = bool(target_s138.volumes[last_idx_s138].get("bookmarked", false))
+	var rclick_s138 := InputEventMouseButton.new()
+	rclick_s138.pressed = true
+	rclick_s138.button_index = MOUSE_BUTTON_RIGHT
+	rem_btn_s138.gui_input.emit(rclick_s138)
+	assert(bool(target_s138.volumes[last_idx_s138].get("bookmarked", false)) != orig_last_bm_s138, "Right-clicking RemoveVolBtn should toggle last volume bookmark")
+	assert("입력 비우기/원문 복원" in main_inst.detail_modal.quote_input.tooltip_text, "QuoteInput tooltip should mention right-click clear/restore")
+	main_inst.detail_modal.quote_input.gui_input.emit(rclick_s138)
+	assert(main_inst.detail_modal.quote_input.text == "", "First right-click on non-empty QuoteInput should clear text")
+	main_inst.detail_modal.quote_input.gui_input.emit(rclick_s138)
+	assert(main_inst.detail_modal.quote_input.text == target_s138.memo, "Second right-click on empty QuoteInput should restore item memo")
+	main_inst.detail_modal.close()
+	print("✓ Sprint 138 Milestone: RemoveVolBtn Last Bookmark & QuoteInput Clear/Restore verified")
+
+	# Sprint 139 Milestone: SearchInput Right-Click Clear/Today-Quote & AddModal Inputs Right-Click Clear/Sample
+	main_inst.search_input.text = ""
+	main_inst._render_cards()
+	assert("지우기/추천 검색" in main_inst.search_input.tooltip_text, "SearchInput tooltip should mention right-click clear/recommended search")
+	var rclick_s139 := InputEventMouseButton.new()
+	rclick_s139.pressed = true
+	rclick_s139.button_index = MOUSE_BUTTON_RIGHT
+	main_inst.search_input.gui_input.emit(rclick_s139)
+	assert(main_inst.search_input.text != "" and "오늘의 밑줄 작품 검색" in main_inst.status_toast.text, "Right-clicking empty SearchInput should search current TodayQuote item")
+	main_inst.search_input.gui_input.emit(rclick_s139)
+	assert(main_inst.search_input.text == "" and "검색어 초기화" in main_inst.status_toast.text, "Right-clicking non-empty SearchInput should clear search text")
+	main_inst.add_modal.open()
+	main_inst.add_modal.clear_inputs()
+	assert("샘플 채움" in main_inst.add_modal.title_input.tooltip_text, "AddModal TitleInput tooltip should mention right-click clear/sample")
+	main_inst.add_modal.title_input.gui_input.emit(rclick_s139)
+	assert(main_inst.add_modal.title_input.text == "나의 비밀 독서 일기", "Right-clicking empty AddModal TitleInput should fill sample title")
+	main_inst.add_modal.title_input.gui_input.emit(rclick_s139)
+	assert(main_inst.add_modal.title_input.text == "", "Right-clicking non-empty AddModal TitleInput should clear title")
+	main_inst.add_modal.close()
+	print("✓ Sprint 139 Milestone: SearchInput & AddModal Inputs Right-Click Clear/Sample verified")
+
+	# Sprint 140 Milestone: DetailModal TitleLabel Right-Click Share Copy & CatBadge Right-Click All Reset
+	main_inst.archive_state.reset_to_rich_defaults()
+	main_inst._reset_all_filters()
+	main_inst._on_tab_manga_pressed()
+	assert(main_inst.card_grid.get_child_count() == 4, "Setup: manga filter should show 4 cards")
+	main_inst._on_card_clicked(main_inst.archive_state.items[0])
+	assert("감상 카드 전체 복사" in main_inst.detail_modal.title_label.tooltip_text, "TitleLabel tooltip should mention right-click share card copy")
+	var rclick_s140 := InputEventMouseButton.new()
+	rclick_s140.pressed = true
+	rclick_s140.button_index = MOUSE_BUTTON_RIGHT
+	main_inst.detail_modal.title_label.gui_input.emit(rclick_s140)
+	assert("복사" in main_inst.status_toast.text, "Right-clicking TitleLabel should copy share card to clipboard")
+	assert("전체 서재 보기" in main_inst.detail_modal.cat_badge.tooltip_text, "CatBadge tooltip should mention right-click all library reset")
+	main_inst.detail_modal.cat_badge.gui_input.emit(rclick_s140)
+	assert(not main_inst.detail_modal.visible and main_inst.card_grid.get_child_count() == 6, "Right-clicking CatBadge should close modal and reset to all 6 cards")
+	print("✓ Sprint 140 Milestone: TitleLabel Share Copy & CatBadge All Library Reset verified")
+
+	# Sprint 141 Milestone: StampLbl & InkLbl Bidirectional Left/Right-Click Cyclers
+	var target_s141 = main_inst.archive_state.items[0]
+	main_inst._on_card_clicked(target_s141)
+	var stamp_lbl_s141: Label = main_inst.detail_modal.get_node("Panel/VBox/BodyMargin/Body/StampRow/StampLbl")
+	var ink_lbl_s141: Label = main_inst.detail_modal.get_node("Panel/VBox/BodyMargin/Body/InkRow/InkLbl")
+	assert("인장 프리셋 순환" in stamp_lbl_s141.tooltip_text, "StampLbl tooltip should mention stamp preset cycle")
+	assert("만년필 잉크 순환" in ink_lbl_s141.tooltip_text, "InkLbl tooltip should mention fountain-pen ink cycle")
+	var orig_stamp_s141: String = target_s141.status_tag
+	var orig_ink_s141: String = target_s141.memo_ink_color
+	var lclick_s141 := InputEventMouseButton.new()
+	lclick_s141.pressed = true
+	lclick_s141.button_index = MOUSE_BUTTON_LEFT
+	var rclick_s141 := InputEventMouseButton.new()
+	rclick_s141.pressed = true
+	rclick_s141.button_index = MOUSE_BUTTON_RIGHT
+	stamp_lbl_s141.gui_input.emit(lclick_s141)
+	assert(target_s141.status_tag != orig_stamp_s141, "Left-clicking StampLbl should cycle stamp forward")
+	stamp_lbl_s141.gui_input.emit(rclick_s141)
+	assert(target_s141.status_tag == orig_stamp_s141, "Right-clicking StampLbl should reverse-cycle stamp")
+	ink_lbl_s141.gui_input.emit(lclick_s141)
+	assert(target_s141.memo_ink_color != orig_ink_s141, "Left-clicking InkLbl should cycle ink forward")
+	ink_lbl_s141.gui_input.emit(rclick_s141)
+	assert(target_s141.memo_ink_color == orig_ink_s141, "Right-clicking InkLbl should reverse-cycle ink")
+	main_inst.detail_modal.close()
+	print("✓ Sprint 141 Milestone: StampLbl & InkLbl Bidirectional Cyclers verified")
+
+	# Sprint 142 Milestone: AddModal Header TitleLabel Sample Fill/Clear & Ctrl+Enter Submit
+	var orig_cnt_s142: int = main_inst.archive_state.items.size()
+	main_inst.add_modal.open()
+	var add_title_s142: Label = main_inst.add_modal.get_node("Panel/VBox/Header/HBox/TitleLabel")
+	assert("샘플 일기 일괄 채움" in add_title_s142.tooltip_text, "AddModal TitleLabel tooltip should mention sample fill and clear")
+	var lclick_s142 := InputEventMouseButton.new()
+	lclick_s142.pressed = true
+	lclick_s142.button_index = MOUSE_BUTTON_LEFT
+	var rclick_s142 := InputEventMouseButton.new()
+	rclick_s142.pressed = true
+	rclick_s142.button_index = MOUSE_BUTTON_RIGHT
+	add_title_s142.gui_input.emit(lclick_s142)
+	assert(main_inst.add_modal.title_input.text == "나의 비밀 독서 일기" and main_inst.add_modal.author_input.text == "주희의 서재", "Left-clicking AddModal TitleLabel should fill sample diary fields")
+	add_title_s142.gui_input.emit(rclick_s142)
+	assert(main_inst.add_modal.title_input.text == "" and main_inst.add_modal.author_input.text == "", "Right-clicking AddModal TitleLabel should clear all fields")
+	add_title_s142.gui_input.emit(lclick_s142)
+	var ctrl_enter_s142 := InputEventKey.new()
+	ctrl_enter_s142.pressed = true
+	ctrl_enter_s142.ctrl_pressed = true
+	ctrl_enter_s142.keycode = KEY_ENTER
+	main_inst.add_modal._unhandled_input(ctrl_enter_s142)
+	assert(not main_inst.add_modal.visible and main_inst.archive_state.items.size() == orig_cnt_s142 + 1, "Ctrl+Enter in AddModal should submit and close")
+	main_inst.archive_state.items.remove_at(0)
+	main_inst._render_cards()
+	print("✓ Sprint 142 Milestone: AddModal TitleLabel Fill/Clear & Ctrl+Enter Submit verified")
+
+	# Sprint 143 Milestone: CardItem Shift+Left-Click Author Filter & SpineShelf Shift+Click Search/Copy
+	main_inst._reset_all_filters()
+	var card0_s143 = main_inst.card_grid.get_child(0)
+	assert("Shift+좌클릭: 작가 검색" in card0_s143.tooltip_text, "CardItem tooltip should mention Shift+Left-Click author filter")
+	var shift_lclick_s143 := InputEventMouseButton.new()
+	shift_lclick_s143.pressed = true
+	shift_lclick_s143.shift_pressed = true
+	shift_lclick_s143.button_index = MOUSE_BUTTON_LEFT
+	card0_s143._gui_input(shift_lclick_s143)
+	assert(main_inst.search_input.text == main_inst.archive_state.items[0].author_or_series and "작가·시리즈 검색" in main_inst.status_toast.text, "Shift+Left-clicking CardItem should filter by author_or_series")
+	main_inst._reset_all_filters()
+	main_inst._render_spine_shelf()
+	var spine0_s143 = main_inst.spine_shelf_row.get_child(0)
+	assert("Shift+좌/우클릭: 검색/복사" in spine0_s143.tooltip_text, "Spine tooltip should mention Shift+Left/Right-Click search/copy")
+	spine0_s143.gui_input.emit(shift_lclick_s143)
+	assert(main_inst.search_input.text == main_inst.archive_state.items[0].title and "책등 작품 필터" in main_inst.status_toast.text, "Shift+Left-clicking spine should filter by item title")
+	main_inst._reset_all_filters()
+	print("✓ Sprint 143 Milestone: CardItem Shift+Left-Click Author & Spine Shift+Click Search verified")
+
+	# Sprint 144 Milestone: VolHeader Shift+Left-Click Batch Bookmark & NextQuoteBtn Shift+Left-Click Open
+	assert("Shift+좌클릭: 작품 열기" in main_inst.next_quote_btn.tooltip_text, "NextQuoteBtn tooltip should mention Shift+Left-Click open item")
+	var shift_lclick_s144 := InputEventMouseButton.new()
+	shift_lclick_s144.pressed = true
+	shift_lclick_s144.shift_pressed = true
+	shift_lclick_s144.button_index = MOUSE_BUTTON_LEFT
+	main_inst.next_quote_btn.gui_input.emit(shift_lclick_s144)
+	assert(main_inst.detail_modal.visible, "Shift+Left-clicking NextQuoteBtn should open current quote item modal")
+	var item_s144 = main_inst.detail_modal.current_item
+	assert("전권 북마크 일괄 토글" in main_inst.detail_modal.vol_header.tooltip_text, "VolHeader tooltip should mention batch bookmark toggle")
+	main_inst.detail_modal.vol_header.gui_input.emit(shift_lclick_s144)
+	assert(item_s144.get_bookmarked_volumes_count() == item_s144.volumes.size(), "First Shift+Left-click on VolHeader should bookmark all volumes")
+	main_inst.detail_modal.vol_header.gui_input.emit(shift_lclick_s144)
+	assert(item_s144.get_bookmarked_volumes_count() == 0, "Second Shift+Left-click on VolHeader should unbookmark all volumes")
+	main_inst.detail_modal.close()
+	print("✓ Sprint 144 Milestone: VolHeader Batch Bookmark & NextQuoteBtn Open verified")
+
+	# Sprint 145 Milestone: TodayQuoteLabel Shift+Left-Click Copy & CoverRect Shift+Click Finish/Condition
+	assert("Shift+좌클릭: 복사" in main_inst.today_quote_label.tooltip_text, "TodayQuoteLabel tooltip should mention Shift+Left-Click copy")
+	var shift_lclick_s145 := InputEventMouseButton.new()
+	shift_lclick_s145.pressed = true
+	shift_lclick_s145.shift_pressed = true
+	shift_lclick_s145.button_index = MOUSE_BUTTON_LEFT
+	main_inst.today_quote_label.gui_input.emit(shift_lclick_s145)
+	assert("오늘의 밑줄 복사 완료" in main_inst.status_toast.text, "Shift+Left-clicking TodayQuoteLabel should copy quote and show toast")
+	var target_s145 = main_inst.archive_state.items[0]
+	var orig_fin_s145: String = target_s145.cover_finish
+	var orig_cond_s145: String = target_s145.condition_grade
+	main_inst._on_card_clicked(target_s145)
+	assert("Shift+좌/우클릭: 마감/상태등급" in main_inst.detail_modal.cover_rect.tooltip_text, "CoverRect tooltip should mention Shift+Left/Right-Click finish/condition")
+	main_inst.detail_modal.cover_rect.gui_input.emit(shift_lclick_s145)
+	assert(target_s145.cover_finish != orig_fin_s145, "Shift+Left-clicking CoverRect should cycle cover_finish")
+	var shift_rclick_s145 := InputEventMouseButton.new()
+	shift_rclick_s145.pressed = true
+	shift_rclick_s145.shift_pressed = true
+	shift_rclick_s145.button_index = MOUSE_BUTTON_RIGHT
+	main_inst.detail_modal.cover_rect.gui_input.emit(shift_rclick_s145)
+	assert(target_s145.condition_grade != orig_cond_s145, "Shift+Right-clicking CoverRect should cycle condition_grade")
+	main_inst.detail_modal.close()
+	print("✓ Sprint 145 Milestone: TodayQuoteLabel Copy & CoverRect Finish/Condition verified")
+
+	# Sprint 146 Milestone: AppTitle Shift+Left-Click AddModal & ModalWashiTape Shift+Click Sticker/Paper
+	var app_title_s146: Control = main_inst.get_node("VBox/TopBar/TopMargin/StatsVBox/TitleRow/TitleCol/AppTitle")
+	assert("새 일기 쓰기 (N)" in app_title_s146.tooltip_text, "AppTitle tooltip should mention Shift+Left-Click AddModal")
+	var shift_lclick_s146 := InputEventMouseButton.new()
+	shift_lclick_s146.pressed = true
+	shift_lclick_s146.shift_pressed = true
+	shift_lclick_s146.button_index = MOUSE_BUTTON_LEFT
+	app_title_s146.gui_input.emit(shift_lclick_s146)
+	assert(main_inst.add_modal.visible, "Shift+Left-clicking AppTitle should open AddModal")
+	main_inst.add_modal.close()
+	var target_s146 = main_inst.archive_state.items[0]
+	var orig_stk_s146: String = target_s146.deco_sticker
+	var orig_pat_s146: String = target_s146.paper_pattern
+	main_inst._on_card_clicked(target_s146)
+	var washi_s146: ColorRect = main_inst.detail_modal.get_node("Panel/VBox/BodyMargin/Body/TopInfo/CoverRect/ModalWashiTape")
+	assert("스티커/속지" in washi_s146.tooltip_text, "ModalWashiTape tooltip should mention Shift+Left/Right-Click sticker/paper")
+	washi_s146.gui_input.emit(shift_lclick_s146)
+	assert(target_s146.deco_sticker != orig_stk_s146, "Shift+Left-clicking ModalWashiTape should cycle deco_sticker")
+	var shift_rclick_s146 := InputEventMouseButton.new()
+	shift_rclick_s146.pressed = true
+	shift_rclick_s146.shift_pressed = true
+	shift_rclick_s146.button_index = MOUSE_BUTTON_RIGHT
+	washi_s146.gui_input.emit(shift_rclick_s146)
+	assert(target_s146.paper_pattern != orig_pat_s146, "Shift+Right-clicking ModalWashiTape should cycle paper_pattern")
+	main_inst.detail_modal.close()
+	print("✓ Sprint 146 Milestone: AppTitle AddModal & ModalWashiTape Sticker/Paper verified")
+
+	# Sprint 147 Milestone: SubTitle Shift+Click Backup/Cheatsheet & PageBadgeLabel Shift+Click First/Last
+	assert("백업/단축키" in main_inst.sub_title.tooltip_text, "SubTitle tooltip should mention Shift+Left/Right-Click backup/cheatsheet")
+	var shift_lclick_s147 := InputEventMouseButton.new()
+	shift_lclick_s147.pressed = true
+	shift_lclick_s147.shift_pressed = true
+	shift_lclick_s147.button_index = MOUSE_BUTTON_LEFT
+	var shift_rclick_s147 := InputEventMouseButton.new()
+	shift_rclick_s147.pressed = true
+	shift_rclick_s147.shift_pressed = true
+	shift_rclick_s147.button_index = MOUSE_BUTTON_RIGHT
+	main_inst.sub_title.gui_input.emit(shift_lclick_s147)
+	assert("로컬 JSON 서재 백업 저장 완료" in main_inst.status_toast.text, "Shift+Left-clicking SubTitle should trigger instant JSON backup")
+	main_inst.sub_title.gui_input.emit(shift_rclick_s147)
+	assert("단축키" in main_inst.status_toast.text, "Shift+Right-clicking SubTitle should show shortcut cheatsheet")
+	main_inst._on_card_clicked(main_inst.archive_state.items[0])
+	var page_lbl_s147: Label = main_inst.detail_modal.get_node("Panel/VBox/Header/HBox/PageBadgeLabel")
+	assert("Shift+좌/우클릭" in page_lbl_s147.tooltip_text, "PageBadgeLabel tooltip should mention Shift+Left/Right-Click first/last")
+	page_lbl_s147.gui_input.emit(shift_rclick_s147)
+	assert(page_lbl_s147.text == "6/6", "Shift+Right-clicking PageBadgeLabel should jump to last item (6/6)")
+	page_lbl_s147.gui_input.emit(shift_lclick_s147)
+	assert(page_lbl_s147.text == "1/6", "Shift+Left-clicking PageBadgeLabel should jump to first item (1/6)")
+	main_inst.detail_modal.close()
+	print("✓ Sprint 147 Milestone: SubTitle Backup/Cheatsheet & PageBadgeLabel First/Last verified")
+
+	# Sprint 148 Milestone: AmbientBtn Shift+Left-Click Mute & AuthorLabel Shift+Left-Click Copy
+	main_inst.cycle_ambient_sound(1)
+	assert(main_inst.ambient_sound_index != 0, "Setup: ambient sound should be active before Shift+Left-Click mute")
+	var amb_btn_s148: Button = main_inst.get_node("VBox/TopBar/TopMargin/StatsVBox/TitleRow/AmbientBtn")
+	assert("즉시 무음" in amb_btn_s148.tooltip_text, "AmbientBtn tooltip should mention Shift+Left-Click mute")
+	var shift_lclick_s148 := InputEventMouseButton.new()
+	shift_lclick_s148.pressed = true
+	shift_lclick_s148.shift_pressed = true
+	shift_lclick_s148.button_index = MOUSE_BUTTON_LEFT
+	amb_btn_s148.gui_input.emit(shift_lclick_s148)
+	assert(main_inst.ambient_sound_index == 0 and amb_btn_s148.text == "🔕 무음", "Shift+Left-clicking AmbientBtn should mute ambient sound immediately")
+	main_inst._on_card_clicked(main_inst.archive_state.items[0])
+	assert("작가명 복사" in main_inst.detail_modal.author_label.tooltip_text, "AuthorLabel tooltip should mention Shift+Left-Click copy")
+	main_inst.detail_modal.author_label.gui_input.emit(shift_lclick_s148)
+	assert("✅ 작가 복사됨:" in main_inst.detail_modal.author_label.tooltip_text, "Shift+Left-clicking AuthorLabel should copy author name and update tooltip")
+	main_inst.detail_modal.close()
+	print("✓ Sprint 148 Milestone: AmbientBtn Mute & AuthorLabel Copy verified")
+
+	# Sprint 149 Milestone: SortBtn Shift+Left-Click Default Reset & TagLabel Shift+Left-Click Copy
+	main_inst._step_sort(1)
+	assert(main_inst.sort_mode != 0, "Setup: sort_mode should be non-zero before Shift+Left-Click reset")
+	assert("Shift+좌클릭: 기본순" in main_inst.sort_btn.tooltip_text, "SortBtn tooltip should mention Shift+Left-Click default reset")
+	var shift_lclick_s149 := InputEventMouseButton.new()
+	shift_lclick_s149.pressed = true
+	shift_lclick_s149.shift_pressed = true
+	shift_lclick_s149.button_index = MOUSE_BUTTON_LEFT
+	main_inst.sort_btn.gui_input.emit(shift_lclick_s149)
+	assert(main_inst.sort_mode == 0 and main_inst.sort_btn.text == "↕ 기본순", "Shift+Left-clicking SortBtn should reset sort mode to default")
+	main_inst._on_card_clicked(main_inst.archive_state.items[0])
+	assert("태그 복사" in main_inst.detail_modal.tag_label.tooltip_text, "TagLabel tooltip should mention Shift+Left-Click tag copy")
+	main_inst.detail_modal.tag_label.gui_input.emit(shift_lclick_s149)
+	assert("✅ 태그 복사됨:" in main_inst.detail_modal.tag_label.tooltip_text, "Shift+Left-clicking TagLabel should copy tag text and update tooltip")
+	main_inst.detail_modal.close()
+	print("✓ Sprint 149 Milestone: SortBtn Default Reset & TagLabel Copy verified")
+
+	# Sprint 150 Milestone: StatusToast Shift+Click Briefing/Copy & MemoLabel Shift+Left-Click Copy
+	assert("브리핑/복사" in main_inst.status_toast.tooltip_text, "StatusToast tooltip should mention Shift+Left/Right-Click briefing/copy")
+	var shift_lclick_s150 := InputEventMouseButton.new()
+	shift_lclick_s150.pressed = true
+	shift_lclick_s150.shift_pressed = true
+	shift_lclick_s150.button_index = MOUSE_BUTTON_LEFT
+	var shift_rclick_s150 := InputEventMouseButton.new()
+	shift_rclick_s150.pressed = true
+	shift_rclick_s150.shift_pressed = true
+	shift_rclick_s150.button_index = MOUSE_BUTTON_RIGHT
+	main_inst.status_toast.gui_input.emit(shift_lclick_s150)
+	assert("₩" in main_inst.status_toast.text, "Shift+Left-clicking StatusToast should show library infographic briefing")
+	main_inst.status_toast.gui_input.emit(shift_rclick_s150)
+	assert("상태 메시지 복사 완료" in main_inst.status_toast.text, "Shift+Right-clicking StatusToast should copy toast text")
+	main_inst._on_card_clicked(main_inst.archive_state.items[0])
+	assert("감상평 복사" in main_inst.detail_modal.memo_label.tooltip_text, "MemoLabel tooltip should mention Shift+Left-Click memo copy")
+	main_inst.detail_modal.memo_label.gui_input.emit(shift_lclick_s150)
+	assert("✅ 감상평 복사됨:" in main_inst.detail_modal.memo_label.tooltip_text, "Shift+Left-clicking MemoLabel should copy memo and update tooltip")
+	main_inst.detail_modal.close()
+	print("✓ Sprint 150 Milestone: StatusToast Briefing/Copy & MemoLabel Copy verified")
+
+	# Sprint 151 Milestone: RandomPickBtn Shift+Left-Click Filter & SaveQuoteBtn/HighlightBtn Shift+Left-Click
+	assert("Shift+좌클릭: 서재 필터" in main_inst.random_pick_btn.tooltip_text, "RandomPickBtn tooltip should mention Shift+Left-Click filter")
+	var shift_lclick_s151 := InputEventMouseButton.new()
+	shift_lclick_s151.pressed = true
+	shift_lclick_s151.shift_pressed = true
+	shift_lclick_s151.button_index = MOUSE_BUTTON_LEFT
+	main_inst.random_pick_btn.gui_input.emit(shift_lclick_s151)
+	assert(main_inst.search_input.text != "" and "랜덤 추천 서재 필터" in main_inst.status_toast.text, "Shift+Left-clicking RandomPickBtn should filter shelf to picked item")
+	main_inst._reset_all_filters()
+	var target_s151 = main_inst.archive_state.items[0]
+	var orig_pat_s151: String = target_s151.paper_pattern
+	main_inst._on_card_clicked(target_s151)
+	var save_btn_s151: Button = main_inst.detail_modal.save_quote_btn
+	var hl_btn_s151: Button = main_inst.detail_modal.get_node("Panel/VBox/BodyMargin/Body/QuoteEditRow/HighlightBtn")
+	assert("저장+복사" in save_btn_s151.tooltip_text and "속지" in hl_btn_s151.tooltip_text, "SaveQuoteBtn and HighlightBtn tooltips should mention Shift+Left-Click actions")
+	main_inst.detail_modal.quote_input.text = "테스트 밑줄 복사"
+	save_btn_s151.gui_input.emit(shift_lclick_s151)
+	assert("✅ 저장·복사됨:" in save_btn_s151.tooltip_text and target_s151.memo == "테스트 밑줄 복사", "Shift+Left-clicking SaveQuoteBtn should save and copy quote")
+	hl_btn_s151.gui_input.emit(shift_lclick_s151)
+	assert(target_s151.paper_pattern != orig_pat_s151, "Shift+Left-clicking HighlightBtn should cycle paper_pattern")
+	main_inst.detail_modal.close()
+	print("✓ Sprint 151 Milestone: RandomPickBtn Filter & Save/Highlight Shift+Click verified")
+
+	# Sprint 152 Milestone: AddBtn Shift+Left-Click Sample Modal & AddVolBtn Shift+Left-Click First+Bookmark
+	var add_btn_s152: Control = main_inst.get_node("VBox/TopBar/TopMargin/StatsVBox/TitleRow/AddBtn")
+	assert("샘플 채움 열기" in add_btn_s152.tooltip_text, "AddBtn tooltip should mention Shift+Left-Click sample modal")
+	var shift_lclick_s152 := InputEventMouseButton.new()
+	shift_lclick_s152.pressed = true
+	shift_lclick_s152.shift_pressed = true
+	shift_lclick_s152.button_index = MOUSE_BUTTON_LEFT
+	add_btn_s152.gui_input.emit(shift_lclick_s152)
+	assert(main_inst.add_modal.visible and main_inst.add_modal.title_input.text == "나의 비밀 독서 일기", "Shift+Left-clicking AddBtn should open AddModal pre-filled with sample")
+	main_inst.add_modal.close()
+	var target_s152 = main_inst.archive_state.items[0]
+	var orig_vols_s152: int = target_s152.volumes.size()
+	main_inst._on_card_clicked(target_s152)
+	assert("초판+북마크 추가" in main_inst.detail_modal.add_vol_btn.tooltip_text, "AddVolBtn tooltip should mention Shift+Left-Click first+bookmark add")
+	main_inst.detail_modal.add_vol_btn.gui_input.emit(shift_lclick_s152)
+	assert(target_s152.volumes.size() == orig_vols_s152 + 1, "Shift+Left-clicking AddVolBtn should add 1 volume")
+	var last_vol_s152 = target_s152.volumes[target_s152.volumes.size() - 1]
+	assert(last_vol_s152.get("status", "") == "first" and bool(last_vol_s152.get("bookmarked", false)), "Newly added volume via Shift+Left-Click should be first edition and bookmarked")
+	main_inst.detail_modal.close()
+	print("✓ Sprint 152 Milestone: AddBtn Sample Modal & AddVolBtn First+Bookmark verified")
+
+	# Sprint 153 Milestone: ThemeBtn Shift+Left-Click Default Reset & CloseBtn Shift+Left-Click Copy+Close
+	main_inst._step_theme(1)
+	assert(main_inst.theme_cursor != 0, "Setup: theme_cursor should be non-zero before Shift+Left-Click reset")
+	var theme_btn_s153: Control = main_inst.get_node("VBox/BottomBar/Margin/VBox/NavRow").get_child(3)
+	assert("기본 테마" in theme_btn_s153.tooltip_text, "ThemeBtn tooltip should mention Shift+Left-Click default theme reset")
+	var shift_lclick_s153 := InputEventMouseButton.new()
+	shift_lclick_s153.pressed = true
+	shift_lclick_s153.shift_pressed = true
+	shift_lclick_s153.button_index = MOUSE_BUTTON_LEFT
+	theme_btn_s153.gui_input.emit(shift_lclick_s153)
+	assert(main_inst.theme_cursor == 0 and "기본 속지 테마 복원" in main_inst.status_toast.text, "Shift+Left-clicking ThemeBtn should reset theme to default")
+	main_inst._on_card_clicked(main_inst.archive_state.items[0])
+	var close_btn_s153: Button = main_inst.detail_modal.get_node("Panel/VBox/Header/HBox/CloseBtn")
+	assert("카드 복사+닫기" in close_btn_s153.tooltip_text, "CloseBtn tooltip should mention Shift+Left-Click copy+close")
+	close_btn_s153.gui_input.emit(shift_lclick_s153)
+	assert(not main_inst.detail_modal.visible and "복사" in main_inst.status_toast.text, "Shift+Left-clicking CloseBtn should copy share card and close modal")
+	print("✓ Sprint 153 Milestone: ThemeBtn Default Reset & CloseBtn Copy+Close verified")
+
+	# Sprint 154 Milestone: StatItems/StatGacha Shift+Left-Click & InkSwatch Shift+Left-Click Apply+Focus
+	main_inst._set_sort_mode(2)
+	main_inst.search_input.text = "프리렌"
+	main_inst._render_cards()
+	var stat_items_s154: Control = main_inst.get_node("VBox/TopBar/TopMargin/StatsVBox/StatRow/StatItems")
+	var stat_gacha_s154: Control = main_inst.get_node("VBox/TopBar/TopMargin/StatsVBox/StatRow/StatGacha")
+	assert("전체+기본순" in stat_items_s154.tooltip_text and "가챠 가치순" in stat_gacha_s154.tooltip_text, "StatItems and StatGacha tooltips should mention Shift+Left-Click actions")
+	var shift_lclick_s154 := InputEventMouseButton.new()
+	shift_lclick_s154.pressed = true
+	shift_lclick_s154.shift_pressed = true
+	shift_lclick_s154.button_index = MOUSE_BUTTON_LEFT
+	stat_items_s154.gui_input.emit(shift_lclick_s154)
+	assert(main_inst.sort_mode == 0 and main_inst.search_input.text == "" and main_inst.card_grid.get_child_count() == 6, "Shift+Left-clicking StatItems should reset all filters and sort mode")
+	stat_gacha_s154.gui_input.emit(shift_lclick_s154)
+	assert(main_inst.sort_mode == 3 and main_inst.card_grid.get_child_count() == 2, "Shift+Left-clicking StatGacha should filter gacha and sort by value")
+	main_inst._reset_all_filters()
+	main_inst._set_sort_mode(0)
+	var target_s154 = main_inst.archive_state.items[0]
+	main_inst._on_card_clicked(target_s154)
+	var ink_burg_s154: Button = main_inst.detail_modal.get_node("Panel/VBox/BodyMargin/Body/InkRow/InkBurgundy")
+	assert("잉크 적용+입력창" in ink_burg_s154.tooltip_text, "Ink swatch tooltip should mention Shift+Left-Click apply+focus")
+	ink_burg_s154.gui_input.emit(shift_lclick_s154)
+	assert(target_s154.memo_ink_color == "#7f1d1d", "Shift+Left-clicking InkBurgundy should apply burgundy ink")
+	main_inst.detail_modal.close()
+	print("✓ Sprint 154 Milestone: StatItems/StatGacha & InkSwatch Shift+Left-Click verified")
+
+	# Sprint 155 Milestone: Filter Tabs Shift+Left-Click Quick Open & Stamp Shift+Left-Click Apply+Close
+	assert("랜덤 열기" in main_inst.tab_all.tooltip_text and "첫 작품 열기" in main_inst.tab_gacha.tooltip_text, "Filter tabs tooltips should mention Shift+Left-Click open")
+	var shift_lclick_s155 := InputEventMouseButton.new()
+	shift_lclick_s155.pressed = true
+	shift_lclick_s155.shift_pressed = true
+	shift_lclick_s155.button_index = MOUSE_BUTTON_LEFT
+	main_inst.tab_gacha.gui_input.emit(shift_lclick_s155)
+	assert(main_inst.detail_modal.visible and main_inst.detail_modal.current_item.category == 1, "Shift+Left-clicking tab_gacha should filter gacha and open first gacha modal")
+	main_inst.detail_modal.close()
+	main_inst._reset_all_filters()
+	main_inst.tab_all.gui_input.emit(shift_lclick_s155)
+	assert(main_inst.detail_modal.visible, "Shift+Left-clicking tab_all should reset filters and open random modal")
+	main_inst.detail_modal.close()
+	var target_s155 = main_inst.archive_state.items[0]
+	main_inst._on_card_clicked(target_s155)
+	var stamp_fav_s155: Button = main_inst.detail_modal.get_node("Panel/VBox/BodyMargin/Body/StampRow/StampFav")
+	assert("찍고 닫기" in stamp_fav_s155.tooltip_text, "Stamp button tooltip should mention Shift+Left-Click apply+close")
+	stamp_fav_s155.gui_input.emit(shift_lclick_s155)
+	assert(not main_inst.detail_modal.visible and target_s155.status_tag == "인생최애", "Shift+Left-clicking StampFav should apply stamp and close modal")
+	print("✓ Sprint 155 Milestone: Filter Tabs Open & Stamp Apply+Close verified")
+
+	# Sprint 156 Milestone: StatVols/StatFirsts Shift+Left-Click & Vol StarBtn Shift+Left-Click 5-Star+Bookmark
+	var stat_vols_s156: Control = main_inst.get_node("VBox/TopBar/TopMargin/StatsVBox/StatRow/StatVols")
+	var stat_firsts_s156: Control = main_inst.get_node("VBox/TopBar/TopMargin/StatsVBox/StatRow/StatFirsts")
+	assert("첫 작품 열기" in stat_vols_s156.tooltip_text and "초판 가치순" in stat_firsts_s156.tooltip_text, "StatVols and StatFirsts tooltips should mention Shift+Left-Click actions")
+	var shift_lclick_s156 := InputEventMouseButton.new()
+	shift_lclick_s156.pressed = true
+	shift_lclick_s156.shift_pressed = true
+	shift_lclick_s156.button_index = MOUSE_BUTTON_LEFT
+	stat_vols_s156.gui_input.emit(shift_lclick_s156)
+	assert(main_inst.detail_modal.visible and main_inst.detail_modal.current_item.category == 0, "Shift+Left-clicking StatVols should filter manga and open first manga modal")
+	main_inst.detail_modal.close()
+	main_inst._reset_all_filters()
+	stat_firsts_s156.gui_input.emit(shift_lclick_s156)
+	assert(main_inst.sort_mode == 3 and main_inst.filter_firsts_only, "Shift+Left-clicking StatFirsts should filter first editions and sort by value")
+	main_inst._reset_all_filters()
+	main_inst._set_sort_mode(0)
+	var target_s156 = main_inst.archive_state.items[0]
+	target_s156.volumes[0]["rating"] = 3
+	target_s156.volumes[0]["bookmarked"] = false
+	main_inst._on_card_clicked(target_s156)
+	var row_btns_s156 = main_inst.detail_modal.vol_list.get_child(0).find_children("*", "Button", true, false)
+	var star_btn_s156: Button = null
+	for rb in row_btns_s156:
+		if "★" in rb.text:
+			star_btn_s156 = rb
+	assert(star_btn_s156 != null and "★5+북마크" in star_btn_s156.tooltip_text, "StarBtn tooltip should mention Shift+Left-Click 5-star+bookmark")
+	star_btn_s156.gui_input.emit(shift_lclick_s156)
+	assert(int(target_s156.volumes[0].get("rating", 0)) == 5 and bool(target_s156.volumes[0].get("bookmarked", false)), "Shift+Left-clicking StarBtn should set 5 stars and bookmark")
+	main_inst.detail_modal.close()
+	print("✓ Sprint 156 Milestone: StatVols/StatFirsts & StarBtn Shift+Left-Click verified")
+
+	# Sprint 157 Milestone: WebBtn/CamBtn Shift+Left-Click Scrape+Open & Vol BmBtn Shift+Left-Click First+Bookmark
+	var orig_cnt_s157: int = main_inst.archive_state.items.size()
+	var nav_row_s157 = main_inst.get_node("VBox/BottomBar/Margin/VBox/NavRow")
+	var web_btn_s157: Control = nav_row_s157.get_child(0)
+	var cam_btn_s157: Control = nav_row_s157.get_child(1)
+	assert("스크랩 후 열기" in web_btn_s157.tooltip_text and "촬영 후 열기" in cam_btn_s157.tooltip_text, "WebBtn and CamBtn tooltips should mention Shift+Left-Click open")
+	var shift_lclick_s157 := InputEventMouseButton.new()
+	shift_lclick_s157.pressed = true
+	shift_lclick_s157.shift_pressed = true
+	shift_lclick_s157.button_index = MOUSE_BUTTON_LEFT
+	web_btn_s157.gui_input.emit(shift_lclick_s157)
+	assert(main_inst.archive_state.items.size() == orig_cnt_s157 + 1 and main_inst.detail_modal.visible, "Shift+Left-clicking WebBtn should scrape and open modal")
+	main_inst.detail_modal.close()
+	main_inst.archive_state.items.remove_at(0)
+	main_inst._render_cards()
+	var target_s157 = main_inst.archive_state.items[0]
+	target_s157.volumes[0]["status"] = "owned"
+	target_s157.volumes[0]["bookmarked"] = false
+	main_inst._on_card_clicked(target_s157)
+	var row_btns_s157 = main_inst.detail_modal.vol_list.get_child(0).find_children("*", "Button", true, false)
+	var bm_btn_s157: Button = null
+	for rb in row_btns_s157:
+		if rb.text == "🏷️" or rb.text == "🔖":
+			bm_btn_s157 = rb
+	assert(bm_btn_s157 != null and "초판+북마크" in bm_btn_s157.tooltip_text, "BmBtn tooltip should mention Shift+Left-Click first+bookmark")
+	bm_btn_s157.gui_input.emit(shift_lclick_s157)
+	assert(target_s157.volumes[0].get("status", "") == "first" and bool(target_s157.volumes[0].get("bookmarked", false)), "Shift+Left-clicking BmBtn should set first edition and bookmark")
+	main_inst.detail_modal.close()
+	print("✓ Sprint 157 Milestone: WebBtn/CamBtn Open & BmBtn First+Bookmark verified")
+
+	# Sprint 158 Milestone: DiyBtn Shift+Left-Click Sample Modal & Vol StatusBtn Shift+Left-Click Batch Toggle
+	var diy_btn_s158: Control = main_inst.get_node("VBox/BottomBar/Margin/VBox/NavRow").get_child(2)
+	assert("샘플 채움 열기" in diy_btn_s158.tooltip_text, "DiyBtn tooltip should mention Shift+Left-Click sample modal")
+	var shift_lclick_s158 := InputEventMouseButton.new()
+	shift_lclick_s158.pressed = true
+	shift_lclick_s158.shift_pressed = true
+	shift_lclick_s158.button_index = MOUSE_BUTTON_LEFT
+	diy_btn_s158.gui_input.emit(shift_lclick_s158)
+	assert(main_inst.add_modal.visible and main_inst.add_modal.title_input.text == "나의 비밀 독서 일기", "Shift+Left-clicking DiyBtn should open AddModal pre-filled with sample")
+	main_inst.add_modal.close()
+	var target_s158 = main_inst.archive_state.items[0]
+	target_s158.volumes[0]["status"] = "owned"
+	main_inst._on_card_clicked(target_s158)
+	var row_btns_s158 = main_inst.detail_modal.vol_list.get_child(0).find_children("*", "Button", true, false)
+	var st_btn_s158: Button = null
+	for rb in row_btns_s158:
+		if "소장완료" in rb.text or "초판특전" in rb.text:
+			st_btn_s158 = rb
+	assert(st_btn_s158 != null and "전권 일괄 전환" in st_btn_s158.tooltip_text, "StatusBtn tooltip should mention Shift+Left-Click batch toggle")
+	st_btn_s158.gui_input.emit(shift_lclick_s158)
+	var all_first_s158: bool = true
+	for vv in target_s158.volumes:
+		if vv.get("status", "") != "first":
+			all_first_s158 = false
+	assert(all_first_s158, "Shift+Left-clicking StatusBtn should set all volumes to first edition")
+	main_inst.detail_modal.close()
+	print("✓ Sprint 158 Milestone: DiyBtn Sample Modal & StatusBtn Batch Toggle verified")
+
+	# Sprint 159: Volume date_btn Shift+Left-Click batch date stamp & PrevItemBtn/NextItemBtn Shift+Left-Click
+	var item159 = main_inst.archive_state.items[0]
+	for v in item159.volumes:
+		v["date"] = "2020.01.01"
+	main_inst.detail_modal.open(item159)
+	var vol_list159: VBoxContainer = main_inst.detail_modal.vol_list
+	assert(vol_list159 != null and vol_list159.get_child_count() > 0, "Vol list should have volume rows")
+	var first_row159 = vol_list159.get_child(0)
+	var date_btn159: Button = null
+	for child in first_row159.find_children("", "Button", true, false):
+		if child is Button and "스탬프" in child.tooltip_text:
+			date_btn159 = child
+			break
+	assert(date_btn159 != null, "Volume row should have date stamp button")
+	assert("Shift+좌클릭: 전권 오늘 날짜 일괄 스탬프" in date_btn159.tooltip_text, "date_btn tooltip should mention Shift+Left-Click batch date stamp")
+	var shift_lclick159 := InputEventMouseButton.new()
+	shift_lclick159.button_index = MOUSE_BUTTON_LEFT
+	shift_lclick159.pressed = true
+	shift_lclick159.shift_pressed = true
+	date_btn159.gui_input.emit(shift_lclick159)
+	var today_d159 := Time.get_date_dict_from_system()
+	var today_str159 := "%04d.%02d.%02d" % [today_d159.year, today_d159.month, today_d159.day]
+	for v in item159.volumes:
+		assert(str(v.get("date", "")) == today_str159, "Shift+Left-Click on date_btn should stamp today's date on all volumes")
+	var prev_btn159: Button = main_inst.detail_modal.find_child("PrevItemBtn", true, false) as Button
+	var next_btn159: Button = main_inst.detail_modal.find_child("NextItemBtn", true, false) as Button
+	assert(prev_btn159 != null and next_btn159 != null, "PrevItemBtn and NextItemBtn should exist")
+	assert("Shift+좌클릭" in prev_btn159.tooltip_text and "Shift+좌클릭" in next_btn159.tooltip_text, "Header nav tooltips should mention Shift+Left-Click")
+	var nav_deltas159: Array = []
+	var nav_cb159 := func(delta: int): nav_deltas159.append(delta)
+	main_inst.detail_modal.navigate_requested.connect(nav_cb159)
+	next_btn159.gui_input.emit(shift_lclick159)
+	prev_btn159.gui_input.emit(shift_lclick159)
+	main_inst.detail_modal.navigate_requested.disconnect(nav_cb159)
+	assert(nav_deltas159 == [9999, -9999], "Shift+Left-Click on Next/PrevItemBtn should emit 9999 and -9999")
+	main_inst.detail_modal.close()
+	print("✓ Sprint 159: Volume Date Batch Stamp & Header Nav Shift+Left-Click verified")
+
+	# Sprint 160 Milestone: RemoveVolBtn Shift+Left-Click Batch Bookmark & ShareCardBtn Shift+Left-Click Summary Copy
+	var item160 = main_inst.archive_state.items[0]
+	for v in item160.volumes:
+		v["bookmarked"] = false
+	main_inst.detail_modal.open(item160)
+	var rem_btn160: Button = main_inst.detail_modal.find_child("RemoveVolBtn", true, false) as Button
+	var share_btn160: Button = main_inst.detail_modal.find_child("ShareCardBtn", true, false) as Button
+	assert(rem_btn160 != null and share_btn160 != null, "RemoveVolBtn and ShareCardBtn should exist")
+	assert("Shift+좌클릭: 전권 북마크 일괄 토글" in rem_btn160.tooltip_text, "RemoveVolBtn tooltip should mention Shift+Left-Click batch bookmark")
+	assert("Shift+좌클릭: 전체 서재 리포트 복사" in share_btn160.tooltip_text, "ShareCardBtn tooltip should mention Shift+Left-Click summary copy")
+	var shift_lclick160 := InputEventMouseButton.new()
+	shift_lclick160.button_index = MOUSE_BUTTON_LEFT
+	shift_lclick160.pressed = true
+	shift_lclick160.shift_pressed = true
+	rem_btn160.gui_input.emit(shift_lclick160)
+	for v in item160.volumes:
+		assert(bool(v.get("bookmarked", false)), "First Shift+Left-Click on RemoveVolBtn should bookmark all volumes")
+	rem_btn160.gui_input.emit(shift_lclick160)
+	for v in item160.volumes:
+		assert(not bool(v.get("bookmarked", false)), "Second Shift+Left-Click on RemoveVolBtn should unbookmark all volumes")
+	var summary_count160: Array = [0]
+	var summary_cb160 := func(): summary_count160[0] += 1
+	main_inst.detail_modal.summary_copy_requested.connect(summary_cb160)
+	share_btn160.gui_input.emit(shift_lclick160)
+	main_inst.detail_modal.summary_copy_requested.disconnect(summary_cb160)
+	assert(summary_count160[0] == 1, "Shift+Left-Click on ShareCardBtn should emit summary_copy_requested")
+	main_inst.detail_modal.close()
+	print("✓ Sprint 160 Milestone: RemoveVolBtn Batch Bookmark & ShareCardBtn Shift+Left-Click Report Copy verified")
+
+	# Sprint 161: Volume vol_lbl Shift+Left-Click (First+Bookmark+5Star) & quote_lbl Shift+Left-Click (Copy+Bookmark)
+	var item161 = main_inst.archive_state.items[0]
+	item161.volumes[0]["bookmarked"] = false
+	item161.volumes[1]["status"] = "owned"
+	item161.volumes[1]["bookmarked"] = false
+	item161.volumes[1]["rating"] = 3
+	main_inst.detail_modal.open(item161)
+	var row0_161 = main_inst.detail_modal.vol_list.get_child(0)
+	var row1_161 = main_inst.detail_modal.vol_list.get_child(1)
+	var vol_lbl161: Label = null
+	for child in row1_161.find_children("", "Label", true, false):
+		if child is Label and "Shift+좌클릭: 초판+북마크+★5" in child.tooltip_text:
+			vol_lbl161 = child
+			break
+	var quote_lbl161: Label = null
+	for child in row0_161.find_children("", "Label", true, false):
+		if child is Label and "Shift+좌클릭: 복사+북마크" in child.tooltip_text:
+			quote_lbl161 = child
+			break
+	assert(vol_lbl161 != null and quote_lbl161 != null, "vol_lbl and quote_lbl should have Sprint 161 tooltips")
+	var shift_lclick161 := InputEventMouseButton.new()
+	shift_lclick161.button_index = MOUSE_BUTTON_LEFT
+	shift_lclick161.pressed = true
+	shift_lclick161.shift_pressed = true
+	vol_lbl161.gui_input.emit(shift_lclick161)
+	assert(item161.volumes[1].get("status", "") == "first" and bool(item161.volumes[1].get("bookmarked", false)) and int(item161.volumes[1].get("rating", 0)) == 5, "Shift+Left-Click on vol_lbl should set first+bookmark+5star")
+	quote_lbl161.gui_input.emit(shift_lclick161)
+	assert(bool(item161.volumes[0].get("bookmarked", false)), "Shift+Left-Click on quote_lbl should bookmark the volume")
+	main_inst.detail_modal.close()
+	print("✓ Sprint 161: Volume Label First+Bookmark+5Star & Quote Label Copy+Bookmark verified")
+
+	# Sprint 162: DateStampBtn Shift+Left-Click (Purchase+AllVol Date Sync) & DeleteBtn Shift+Left-Click Disarm
+	var item162 = main_inst.archive_state.items[0]
+	item162.purchase_date = "2020.01.01"
+	for v in item162.volumes:
+		v["date"] = "2020.01.01"
+	main_inst.detail_modal.open(item162)
+	var date_stamp_btn162: Button = main_inst.detail_modal.find_child("DateStampBtn", true, false) as Button
+	var del_btn162: Button = main_inst.detail_modal.find_child("DeleteBtn", true, false) as Button
+	assert(date_stamp_btn162 != null and del_btn162 != null, "DateStampBtn and DeleteBtn should exist")
+	assert("Shift+좌클릭: 구매일+전권 오늘 날짜 동기화" in date_stamp_btn162.tooltip_text, "DateStampBtn tooltip should mention Shift+Left-Click sync")
+	assert("Shift+좌클릭: 삭제 확인 해제" in del_btn162.tooltip_text, "DeleteBtn tooltip should mention Shift+Left-Click disarm")
+	var shift_lclick162 := InputEventMouseButton.new()
+	shift_lclick162.button_index = MOUSE_BUTTON_LEFT
+	shift_lclick162.pressed = true
+	shift_lclick162.shift_pressed = true
+	date_stamp_btn162.gui_input.emit(shift_lclick162)
+	var today_d162 := Time.get_date_dict_from_system()
+	var today_str162 := "%04d.%02d.%02d" % [today_d162.year, today_d162.month, today_d162.day]
+	var short_today162 := "%02d.%02d" % [today_d162.month, today_d162.day]
+	assert(short_today162 in item162.purchase_date, "Shift+Left-Click on DateStampBtn should stamp today's purchase_date")
+	for v in item162.volumes:
+		assert(str(v.get("date", "")) == today_str162, "Shift+Left-Click on DateStampBtn should sync all volume dates to today")
+	del_btn162.pressed.emit()
+	assert(main_inst.detail_modal.delete_armed, "First DeleteBtn press should arm delete")
+	del_btn162.gui_input.emit(shift_lclick162)
+	assert(not main_inst.detail_modal.delete_armed, "Shift+Left-Click on DeleteBtn should disarm delete")
+	main_inst.detail_modal.close()
+	print("✓ Sprint 162: DateStampBtn Purchase+AllVol Sync & DeleteBtn Shift+Left-Click Disarm verified")
+
+	# Sprint 163: RereadBtn/DuplicateBtn/ValueBtn Shift+Left-Click Decrement
+	var item163 = main_inst.archive_state.items[0]
+	item163.reread_count = 3
+	item163.duplicate_count = 3
+	item163.estimated_value = 25000
+	main_inst.detail_modal.open(item163)
+	var rr_btn163: Button = main_inst.detail_modal.find_child("RereadBtn", true, false) as Button
+	var dup_btn163: Button = main_inst.detail_modal.find_child("DuplicateBtn", true, false) as Button
+	var val_btn163: Button = main_inst.detail_modal.find_child("ValueBtn", true, false) as Button
+	assert(rr_btn163 != null and dup_btn163 != null and val_btn163 != null, "RereadBtn, DuplicateBtn, ValueBtn should exist")
+	assert("Shift+좌클릭: -1" in rr_btn163.tooltip_text and "Shift+좌클릭: -1" in dup_btn163.tooltip_text and "Shift+좌클릭: -5,000원" in val_btn163.tooltip_text, "Tooltips should mention Shift+Left-Click decrement")
+	var shift_lclick163 := InputEventMouseButton.new()
+	shift_lclick163.button_index = MOUSE_BUTTON_LEFT
+	shift_lclick163.pressed = true
+	shift_lclick163.shift_pressed = true
+	rr_btn163.gui_input.emit(shift_lclick163)
+	dup_btn163.gui_input.emit(shift_lclick163)
+	val_btn163.gui_input.emit(shift_lclick163)
+	assert(item163.reread_count == 2 and item163.duplicate_count == 2 and item163.estimated_value == 20000, "Shift+Left-Click should decrement reread, duplicate, and value")
+	main_inst.detail_modal.close()
+	print("✓ Sprint 163: RereadBtn/DuplicateBtn/ValueBtn Shift+Left-Click Decrement verified")
+
+	# Sprint 164: StampRow & InkRow 17-Cycler Shift+Left-Click Reverse Navigation
+	var item164 = main_inst.archive_state.items[0]
+	main_inst.detail_modal.open(item164)
+	var obi_btn164: Button = main_inst.detail_modal.find_child("ObiCycleBtn", true, false) as Button
+	var weather_btn164: Button = main_inst.detail_modal.find_child("WeatherBtn", true, false) as Button
+	assert(obi_btn164 != null and weather_btn164 != null, "ObiCycleBtn and WeatherBtn should exist")
+	assert("Shift+좌클릭: 이전" in obi_btn164.tooltip_text and "Shift+좌클릭: 이전" in weather_btn164.tooltip_text, "Decorator tooltips should mention Shift+Left-Click reverse")
+	obi_btn164.pressed.emit()
+	weather_btn164.pressed.emit()
+	var orig_obi164: String = item164.obi_text
+	var orig_weather164: String = item164.reading_weather
+	obi_btn164.pressed.emit()
+	assert(item164.obi_text != orig_obi164, "ObiCycleBtn press should advance forward")
+	weather_btn164.pressed.emit()
+	assert(item164.reading_weather != orig_weather164, "WeatherBtn press should advance forward")
+	var shift_lclick164 := InputEventMouseButton.new()
+	shift_lclick164.button_index = MOUSE_BUTTON_LEFT
+	shift_lclick164.pressed = true
+	shift_lclick164.shift_pressed = true
+	obi_btn164.gui_input.emit(shift_lclick164)
+	weather_btn164.gui_input.emit(shift_lclick164)
+	assert(item164.obi_text == orig_obi164 and item164.reading_weather == orig_weather164, "Shift+Left-Click on decorator cyclers should step backward")
+	main_inst.detail_modal.close()
+	print("✓ Sprint 164: StampRow & InkRow 17-Cycler Shift+Left-Click Reverse verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

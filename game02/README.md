@@ -5,7 +5,7 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 
 ---
 
-## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 135)
+## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 164)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
@@ -14,6 +14,93 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 ---
 
 ## 🚀 최신 스프린트 업데이트 요약 ([전체 회의록 보기](SPRINT_LOG.md))
+
+### 📓 [Sprint 164] `StampRow`·`InkRow` 17종 데코레이터 순환 버튼 `Shift+좌클릭` 역순환 일괄 지원
+- **17종 데코레이터 역순환 완결 (`detail_modal.gd` · `index.html`)**: 띠지·테이프·스티커·레어도·속지·보관위치·입수경로·기분·소장상태·펜촉·서명·태그·최애캐릭터·컨디션·마감·날씨·장소 17종 순환 버튼에 `Shift+좌클릭` 역순환(`-1`)을 일괄 적용했습니다.
+
+### 📓 [Sprint 163] `RereadBtn`/`DuplicateBtn`/`ValueBtn` `Shift+좌클릭` -1·-5,000원 역감소 지원
+- **수치 3종 역감소 통일 (`detail_modal.gd` · `index.html`)**: `RereadBtn`, `DuplicateBtn`, `ValueBtn` `Shift+좌클릭`으로 각각 재독 횟수 `-1`, 복수 소장 수량 `-1`, 추정 소장 가치 `-5,000원`을 즉시 감소시킵니다.
+
+### 📓 [Sprint 162] `DateStampBtn` `Shift+좌클릭` 구매일+전권 오늘 날짜 동기화 & `DeleteBtn` `Shift+좌클릭` 삭제 확인 해제
+- **구매일·전권 날짜 동기화 & 안전 삭제 해제 (`detail_modal.gd` · `index.html`)**: `DateStampBtn` `Shift+좌클릭`으로 구매·기념일과 전권 날짜를 오늘 날짜로 일괄 동기화하며, `DeleteBtn` `Shift+좌클릭`으로 삭제 확인 대기(`delete_armed`)를 안전하게 해제합니다.
+
+### 📓 [Sprint 161] 권별 `vol_lbl` `Shift+좌클릭` 초판+북마크+★5 풀스탬프 & `quote_lbl` `Shift+좌클릭` 밑줄 복사+북마크
+- **최애권 풀스탬프 & 밑줄 복사+북마크 (`detail_modal.gd` · `index.html`)**: 권별 `N권` 라벨 `Shift+좌클릭`으로 `초판특전+북마크+★5`를 한 번에 지정하며, 밑줄 문장 라벨 `Shift+좌클릭`으로 클립보드 복사와 북마크 ON을 동시에 실행합니다.
+
+### 🏆 [Sprint 160 Milestone] `RemoveVolBtn` `Shift+좌클릭` 전권 북마크 일괄 토글 & `ShareCardBtn` `Shift+좌클릭` 전체 서재 리포트 복사
+- **전권 북마크 일괄 토글 & 리포트 원클릭 복사 (`detail_modal.gd` · `index.html`)**: `- 권 삭제` 버튼 `Shift+좌클릭`으로 전권 북마크를 일괄 온·오프하며, `💌 공유` 버튼 `Shift+좌클릭`으로 전체 서재 리포트를 즉시 클립보드에 복사합니다.
+
+### 📓 [Sprint 159] 권별 `date_btn` `Shift+좌클릭` 전권 오늘 날짜 일괄 스탬프 & `PrevItemBtn`/`NextItemBtn` `Shift+좌클릭` 처음·끝 작품 점프
+- **전권 날짜 일괄 스탬프 & 모달 처음·끝 점프 (`detail_modal.gd` · `main_view.gd` · `index.html`)**: 권별 날짜 스탬프 버튼 `Shift+좌클릭`으로 전권 `date`를 오늘 날짜(`YYYY.MM.DD`)로 일괄 갱신하며, 모달 상단 `◀`/`▶` 버튼 `Shift+좌클릭`으로 첫 작품·마지막 작품으로 즉시 점프합니다.
+
+### 📓 [Sprint 158] `DiyBtn` `Shift+좌클릭` 샘플 채움 모달 열기 & 권별 `StatusBtn` `Shift+좌클릭` 전권 초판·소장 일괄 전환
+- **샘플 일괄 채움 & 전권 초판 전환 (`main_view.gd` · `detail_modal.gd` · `index.html`)**: `DiyBtn` `Shift+좌클릭`으로 샘플 채움 모달을 열며, 권별 `StatusBtn` `Shift+좌클릭`으로 전권 초판·소장 상태를 일괄 전환합니다.
+
+### 📓 [Sprint 157] `WebBtn`/`CamBtn` `Shift+좌클릭` 스크랩·촬영 후 즉시 열기 & 권별 `BmBtn` `Shift+좌클릭` 초판+북마크
+- **등록 후 즉시 열기 & 초판 북마크 (`main_view.gd` · `detail_modal.gd` · `index.html`)**: `WebBtn`/`CamBtn` `Shift+좌클릭`으로 스크랩·촬영 후 모달을 즉시 열며, 권별 `BmBtn` `Shift+좌클릭`으로 `초판+북마크`를 동시 적용합니다.
+
+### 📓 [Sprint 156] `StatVols`/`StatFirsts` `Shift+좌클릭` 첫 작품·초판 가치순 & 권별 `StarBtn` `Shift+좌클릭` ★5+북마크
+- **통계 완결 & 최애권 원클릭 (`main_view.gd` · `detail_modal.gd` · `index.html`)**: `StatVols`/`StatFirsts` `Shift+좌클릭`으로 이북 첫 작품 열기 및 초판 가치순 정렬을 실행하며, 권별 `StarBtn` `Shift+좌클릭`으로 `★5+북마크`를 즉시 적용합니다.
+
+### 🏆 [Sprint 155] 마일스톤 155: 필터 탭 5종 `Shift+좌클릭` 첫 작품·랜덤 즉시 열기 & 인장 4종 `Shift+좌클릭` 찍고 닫기
+- **원클릭 탐색·도장 마감 (`main_view.gd` · `detail_modal.gd` · `index.html`)**: 필터 탭 5종 `Shift+좌클릭`으로 랜덤/첫 작품을 즉시 열며, 인장 4종 `Shift+좌클릭`으로 인장 적용과 동시에 모달을 닫습니다.
+
+### 📓 [Sprint 154] 통계 카드(`StatItems`/`StatGacha`) `Shift+좌클릭` 정렬 초기화·가치순 & 만년필 잉크 4종 `Shift+좌클릭` 적용+입력창 이동
+- **통계·잉크 원클릭 워크플로우 (`main_view.gd` · `detail_modal.gd` · `index.html`)**: `StatItems`/`StatGacha` `Shift+좌클릭`으로 전체+기본순 복원 및 가챠 가치순 정렬을 실행하며, 만년필 잉크 4종 `Shift+좌클릭`으로 잉크 적용과 동시에 입력창으로 이동합니다.
+
+### 📓 [Sprint 153] `ThemeBtn` `Shift+좌클릭` 기본 속지 테마 복원 & `CloseBtn` `Shift+좌클릭` 감상 카드 복사+닫기
+- **테마 초기화 & 복사+닫기 (`main_view.gd` · `detail_modal.gd` · `index.html`)**: `ThemeBtn` `Shift+좌클릭`으로 기본 속지 테마를 복원하며, `CloseBtn` `Shift+좌클릭`으로 감상 카드를 복사한 뒤 모달을 닫습니다.
+
+### 📓 [Sprint 152] `AddBtn` `Shift+좌클릭` 샘플 채움 모달 열기 & `AddVolBtn` `Shift+좌클릭` 초판+북마크 즉시 추가
+- **원클릭 샘플·초판 추가 (`main_view.gd` · `detail_modal.gd` · `index.html`)**: `AddBtn` `Shift+좌클릭`으로 샘플이 채워진 일기 작성 창을 열며, `AddVolBtn` `Shift+좌클릭`으로 `초판특전+북마크`가 적용된 새 권을 즉시 추가합니다.
+
+### 📓 [Sprint 151] `RandomPickBtn` `Shift+좌클릭` 서재 필터 & `SaveQuoteBtn`/`HighlightBtn` `Shift+좌클릭`(저장+복사/속지 순환)
+- **랜덤 필터·저장+복사 (`main_view.gd` · `detail_modal.gd` · `index.html`)**: `RandomPickBtn` `Shift+좌클릭`으로 랜덤 추천 작품만 서재에 띄우며, `SaveQuoteBtn` `Shift+좌클릭`으로 저장+복사, `HighlightBtn` `Shift+좌클릭`으로 속지 패턴을 순환합니다.
+
+### 🏆 [Sprint 150] 마일스톤 150: `StatusToast` `Shift+좌/우클릭`(서재 브리핑/복사) & `MemoLabel` `Shift+좌클릭` 감상평 복사
+- **하단 브리핑·감상평 복사 (`main_view.gd` · `detail_modal.gd` · `index.html`)**: `StatusToast` `Shift+좌/우클릭`으로 서재 인포그래픽 브리핑 및 메시지 복사를 실행하며, `MemoLabel` `Shift+좌클릭`으로 감상평 원문을 복사합니다.
+
+### 📓 [Sprint 149] `SortBtn` `Shift+좌클릭` 기본순 정렬 복원 & `TagLabel` `Shift+좌클릭` 태그·띠지 문구 클립보드 복사
+- **정렬 초기화 & 태그 복사 (`main_view.gd` · `detail_modal.gd` · `index.html`)**: `SortBtn` `Shift+좌클릭`으로 `↕ 기본순` 정렬로 즉시 복원하며, `TagLabel` `Shift+좌클릭`으로 태그·띠지 문구를 클립보드에 복사합니다.
+
+### 📓 [Sprint 148] `AmbientBtn` `Shift+좌클릭` 즉시 음소거 & `AuthorLabel` `Shift+좌클릭` 작가명 클립보드 복사
+- **원클릭 음소거 & 작가 복사 (`main_view.gd` · `detail_modal.gd` · `index.html`)**: `AmbientBtn` `Shift+좌클릭`으로 백색소음을 즉시 무음 처리하며, `AuthorLabel` `Shift+좌클릭`으로 작가·시리즈명을 클립보드에 복사합니다.
+
+### 📓 [Sprint 147] `SubTitle` `Shift+좌/우클릭`(즉시 백업/단축키 치트시트) & `PageBadgeLabel` `Shift+좌/우클릭`(처음·끝 이동)
+- **상단 요약·페이지 배지 점프 (`main_view.gd` · `detail_modal.gd` · `index.html`)**: `SubTitle` `Shift+좌/우클릭`으로 즉시 JSON 백업·단축키 치트시트를 호출하며, `PageBadgeLabel` `Shift+좌/우클릭`으로 처음·끝 작품으로 즉시 이동합니다.
+
+### 📓 [Sprint 146] `AppTitle` `Shift+좌클릭` 새 일기 쓰기 & `ModalWashiTape` `Shift+좌/우클릭` 스티커·속지 순환
+- **타이틀·테이프 다꾸 제스처 (`main_view.gd` · `detail_modal.gd` · `index.html`)**: `AppTitle` `Shift+좌클릭` 시 새 일기 작성 모달을 즉시 열며, `ModalWashiTape` `Shift+좌/우클릭` 시 데코 스티커와 속지 패턴을 순환합니다.
+
+### 🏆 [Sprint 145] 마일스톤 145: `TodayQuoteLabel` `Shift+좌클릭` 밑줄 즉시 복사 & `CoverRect` `Shift+좌/우클릭` 마감·상태등급 전환
+- **배너 복사 & 표지 촉각 제스처 (`main_view.gd` · `detail_modal.gd` · `index.html`)**: `TodayQuoteLabel` `Shift+좌클릭`으로 오늘의 밑줄 문장을 즉시 복사하며, 모달 `CoverRect` `Shift+좌/우클릭`으로 표지 마감과 상태등급을 전환합니다.
+
+### 📓 [Sprint 144] `VolHeader` `Shift+좌클릭` 전권 북마크 일괄 토글 & `NextQuoteBtn` `Shift+좌클릭` 해당 작품 열기
+- **일괄 북마크 & 명대사 점프 (`detail_modal.gd` · `main_view.gd` · `index.html`)**: `VolHeader` `Shift+좌클릭` 시 전권 북마크를 일괄 토글하며, `NextQuoteBtn` `Shift+좌클릭` 시 현재 오늘의 밑줄 작품 일기장을 바로 엽니다.
+
+### 📓 [Sprint 143] 서재 카드 `Shift+좌클릭` 작가·시리즈 즉시 검색 & 책등 선반(`SpineShelf`) `Shift+좌/우클릭` 필터·복사
+- **카드·책등 Shift 단축 제스처 (`card_item.gd` · `main_view.gd` · `index.html`)**: 서재 카드 `Shift+좌클릭` 시 작가·시리즈명으로 즉시 검색하며, 미니 책등 선반 `Shift+좌/우클릭` 시 작품 필터링 및 감상 요약 복사를 지원합니다.
+
+### 📓 [Sprint 142] `AddModal` 헤더 `TitleLabel` 좌·우클릭(샘플 일괄 채움/비우기) & `Ctrl/Cmd+Enter` 즉시 등록
+- **새 일기 작성 가속화 (`add_modal.gd` · `index.html`)**: `AddModal` 상단 `TitleLabel` 좌·우클릭으로 샘플 일기 일괄 채움 및 비우기가 가능하며, `Ctrl/Cmd+Enter` 단축키로 즉시 등록합니다.
+
+### 📓 [Sprint 141] `DetailModal` `StampLbl`·`InkLbl` 라벨 좌·우클릭 양방향 인장/잉크 순환
+- **인장·잉크 헤더 라벨 순환 (`detail_modal.gd` · `index.html`)**: `💮 인장:`(`StampLbl`) 및 `🖋️ 잉크:`(`InkLbl`) 라벨 좌·우클릭 시 4종 인장 프리셋과 4종 만년필 잉크를 양방향으로 순환합니다.
+
+### 🏆 [Sprint 140] 마일스톤 140: `DetailModal` `TitleLabel` 우클릭 감상 카드 복사 & `CatBadge` 우클릭 전체 서재 복원
+- **모달 헤더 배지·제목 우클릭 완성 (`detail_modal.gd` · `main_view.gd` · `index.html`)**: `TitleLabel` 우클릭 시 감상 카드 전체를 클립보드에 복사하며, `CatBadge` 우클릭 시 모달을 닫고 전체 서재로 즉시 복원합니다.
+
+### 📓 [Sprint 139] `SearchInput` 우클릭 검색어 비우기·오늘의 밑줄 작품 검색 & `AddModal` 입력창 우클릭 비우기·샘플 채움
+- **입력창 우클릭 제스처 (`main_view.gd` · `add_modal.gd` · `index.html`)**: `SearchInput` 우클릭 시 검색어 비우기 ↔ 오늘의 밑줄 작품 검색이 토글되며, `AddModal` 3종 입력창 우클릭 시 입력 비우기 ↔ 샘플 채움이 동작합니다.
+
+### 📓 [Sprint 138] `RemoveVolBtn` 우클릭 마지막 권 북마크 토글 & `QuoteInput` 우클릭 입력 비우기·원문 복원
+- **모달 우클릭 편의 강화 (`detail_modal.gd` · `index.html`)**: `RemoveVolBtn` 우클릭 시 마지막 권 북마크를 토글하고, `QuoteInput` 우클릭 시 입력 비우기 ↔ 원문 감상평 복원을 전환합니다.
+
+### 📓 [Sprint 137] 권별 리스트 `vol_lbl` 좌·우클릭(편집/북마크) & `quote_lbl` 우클릭 밑줄 문장 즉시 복사
+- **권별 행 라벨 인터랙션 (`detail_modal.gd` · `index.html`)**: `1권`/`2권` 라벨(`vol_lbl`) 좌클릭 시 해당 권 밑줄 편집, 우클릭 시 북마크 토글이 동작하며, 밑줄 문장(`quote_lbl`) 우클릭 시 클립보드에 즉시 복사됩니다.
+
+### 📓 [Sprint 136] `DetailModal` 배경 딤머 우클릭 닫기+즉시 JSON 백업 & `AddModal` 배경 딤머 우클릭 입력 비우기
+- **모달 배경(`Dimmer`) 우클릭 제스처 (`detail_modal.gd` · `add_modal.gd` · `index.html`)**: `DetailModal` 바깥 배경 우클릭 시 모달을 닫고 즉시 JSON 백업을 저장하며, `AddModal` 바깥 배경 우클릭 시 창을 닫지 않고 입력 내용만 비웁니다.
 
 ### 🏆 [Sprint 135] 마일스톤 135: 검색창 `Enter` 첫 결과 즉시 열기 & 빈 결과(`EmptyState`) 우클릭 복원+랜덤 추천 미리보기
 - **검색·빈 상태 탐색 완결 (`main_view.gd` · `index.html`)**: 검색창에서 `Enter` 입력 시 첫 번째 필터링 작품 일기장을 즉시 열고(`_open_first_filtered_card`), 검색 결과 0건의 `EmptyStateResetBtn` 우클릭 시 전체 복원 후 랜덤 추천 미리보기를 표시합니다.
