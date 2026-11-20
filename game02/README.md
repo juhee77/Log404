@@ -5,7 +5,7 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 
 ---
 
-## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 147)
+## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 148)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
@@ -14,6 +14,9 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 ---
 
 ## 🚀 최신 스프린트 업데이트 요약 ([전체 회의록 보기](SPRINT_LOG.md))
+
+### 📓 [Sprint 148] `AmbientBtn` `Shift+좌클릭` 즉시 음소거 & `AuthorLabel` `Shift+좌클릭` 작가명 클립보드 복사
+- **원클릭 음소거 & 작가 복사 (`main_view.gd` · `detail_modal.gd` · `index.html`)**: `AmbientBtn` `Shift+좌클릭`으로 백색소음을 즉시 무음 처리하며, `AuthorLabel` `Shift+좌클릭`으로 작가·시리즈명을 클립보드에 복사합니다.
 
 ### 📓 [Sprint 147] `SubTitle` `Shift+좌/우클릭`(즉시 백업/단축키 치트시트) & `PageBadgeLabel` `Shift+좌/우클릭`(처음·끝 이동)
 - **상단 요약·페이지 배지 점프 (`main_view.gd` · `detail_modal.gd` · `index.html`)**: `SubTitle` `Shift+좌/우클릭`으로 즉시 JSON 백업·단축키 치트시트를 호출하며, `PageBadgeLabel` `Shift+좌/우클릭`으로 처음·끝 작품으로 즉시 이동합니다.

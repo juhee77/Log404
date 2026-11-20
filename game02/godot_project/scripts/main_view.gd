@@ -175,10 +175,17 @@ func _ready() -> void:
 		)
 	var top_amb_btn: Control = get_node_or_null("VBox/TopBar/TopMargin/StatsVBox/TitleRow/AmbientBtn")
 	if top_amb_btn != null:
-		top_amb_btn.tooltip_text = "[M] 독서 몰입 백색소음 전환 (우클릭·Shift+M: 이전)"
+		top_amb_btn.tooltip_text = "[M] 독서 몰입 백색소음 전환 (우클릭·Shift+M: 이전 · Shift+좌클릭: 즉시 무음)"
 		top_amb_btn.gui_input.connect(func(ev: InputEvent):
-			if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_RIGHT:
-				cycle_ambient_sound(-1)
+			if ev is InputEventMouseButton and ev.pressed:
+				if ev.button_index == MOUSE_BUTTON_RIGHT:
+					cycle_ambient_sound(-1)
+				elif ev.button_index == MOUSE_BUTTON_LEFT and ev.shift_pressed:
+					ambient_sound_index = 0
+					var snd_mute: String = AMBIENT_SOUND_PRESETS[0]
+					if top_amb_btn is Button:
+						top_amb_btn.text = snd_mute
+					_show_toast("🔕 백색소음 음소거 완료 (%s)" % snd_mute)
 		)
 	if sub_title != null:
 		sub_title.mouse_filter = Control.MOUSE_FILTER_STOP

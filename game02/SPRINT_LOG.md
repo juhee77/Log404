@@ -5,6 +5,25 @@
 
 ---
 
+## 📓 [Sprint 148] `AmbientBtn` `Shift+좌클릭` 즉시 음소거 & `AuthorLabel` `Shift+좌클릭` 작가명 클립보드 복사
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A**: "백색소음(`AmbientBtn`)을 켜고 독서하다가 전화가 오거나 조용히 해야 할 때, 여러 소리를 계속 눌러서 넘기지 않고 `Shift+좌클릭` 한 번으로 즉시 `🔕 무음`으로 돌아가면 좋겠어요!"
+- **가챠러 B**: "`DetailModal` 속 작가·시리즈 라벨(`AuthorLabel`)을 `Shift+좌클릭`하면 검색으로 이동하지 않고 작가명만 깔끔하게 클립보드에 복사되면 외부 검색이나 메모할 때 편하겠어요."
+- **기획자 (PO)**: "`main_view.gd` `AmbientBtn` `Shift+좌클릭` 즉시 음소거와 `detail_modal.gd` `AuthorLabel` `Shift+좌클릭` 작가명 복사를 구현하고 `index.html` `#ambient-sound-btn`과 동기화합니다."
+
+### 2. 핵심 구현 및 변경 내역
+- `game02/godot_project/scripts/main_view.gd`:
+  - `AmbientBtn` `Shift+좌클릭` 시 `ambient_sound_index = 0`(`🔕 무음`)으로 즉시 전환하고 토스트(`🔕 백색소음 음소거 완료`)를 표시하며 툴팁을 동기화했습니다.
+- `game02/godot_project/scripts/detail_modal.gd`:
+  - `AuthorLabel` `Shift+좌클릭` 시 `current_item.author_or_series`를 클립보드에 복사하고 툴팁 피드백(`✅ 작가 복사됨`)을 표시하며 `open()` 시 기본 툴팁으로 복원하도록 구현했습니다.
+- `game02/index.html`:
+  - `#ambient-sound-btn` `onclick`에서 `event.shiftKey` 시 즉시 무음 전환 및 툴팁을 동기화했습니다.
+- `game02/godot_project/tests/test_main_integration.gd`:
+  - `AmbientBtn` `Shift+좌클릭` 즉시 음소거와 `AuthorLabel` `Shift+좌클릭` 작가명 복사를 검증하는 Sprint 148 테스트를 추가해 100% 통과했습니다.
+
+---
+
 ## 📓 [Sprint 147] `SubTitle` `Shift+좌/우클릭`(즉시 백업/단축키 치트시트) & `PageBadgeLabel` `Shift+좌/우클릭`(처음·끝 이동)
 
 ### 1. 14인 스쿼드 회의록 & VOC

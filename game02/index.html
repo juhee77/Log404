@@ -189,7 +189,7 @@
                         class="px-2.5 py-1 rounded-lg bg-[#c85a32] hover:bg-[#b04b25] text-white text-[11px] font-bold shrink-0 cursor-pointer">
                         🎲 추천
                     </button>
-                    <button id="ambient-sound-btn" onclick="cycleAmbientSound(1)" oncontextmenu="event.preventDefault(); cycleAmbientSound(-1);" title="[M] 독서 몰입 백색소음 전환 (우클릭·Shift+M: 이전)"
+                    <button id="ambient-sound-btn" onclick="if(event&&event.shiftKey){ambientIdx=-1;cycleAmbientSound(1);}else{cycleAmbientSound(1);}" oncontextmenu="event.preventDefault(); cycleAmbientSound(-1);" title="[M] 독서 몰입 백색소음 전환 (우클릭·Shift+M: 이전 · Shift+좌클릭: 즉시 무음)"
                         class="px-2.5 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] border border-[#d6c7b2] text-[#2c221e] text-[11px] font-bold shrink-0 cursor-pointer">
                         🔕 무음
                     </button>

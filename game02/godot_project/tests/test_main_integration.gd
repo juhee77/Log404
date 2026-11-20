@@ -2286,6 +2286,24 @@ func _init() -> void:
 	main_inst.detail_modal.close()
 	print("✓ Sprint 147 Milestone: SubTitle Backup/Cheatsheet & PageBadgeLabel First/Last verified")
 
+	# Sprint 148 Milestone: AmbientBtn Shift+Left-Click Mute & AuthorLabel Shift+Left-Click Copy
+	main_inst.cycle_ambient_sound(1)
+	assert(main_inst.ambient_sound_index != 0, "Setup: ambient sound should be active before Shift+Left-Click mute")
+	var amb_btn_s148: Button = main_inst.get_node("VBox/TopBar/TopMargin/StatsVBox/TitleRow/AmbientBtn")
+	assert("즉시 무음" in amb_btn_s148.tooltip_text, "AmbientBtn tooltip should mention Shift+Left-Click mute")
+	var shift_lclick_s148 := InputEventMouseButton.new()
+	shift_lclick_s148.pressed = true
+	shift_lclick_s148.shift_pressed = true
+	shift_lclick_s148.button_index = MOUSE_BUTTON_LEFT
+	amb_btn_s148.gui_input.emit(shift_lclick_s148)
+	assert(main_inst.ambient_sound_index == 0 and amb_btn_s148.text == "🔕 무음", "Shift+Left-clicking AmbientBtn should mute ambient sound immediately")
+	main_inst._on_card_clicked(main_inst.archive_state.items[0])
+	assert("작가명 복사" in main_inst.detail_modal.author_label.tooltip_text, "AuthorLabel tooltip should mention Shift+Left-Click copy")
+	main_inst.detail_modal.author_label.gui_input.emit(shift_lclick_s148)
+	assert("✅ 작가 복사됨:" in main_inst.detail_modal.author_label.tooltip_text, "Shift+Left-clicking AuthorLabel should copy author name and update tooltip")
+	main_inst.detail_modal.close()
+	print("✓ Sprint 148 Milestone: AmbientBtn Mute & AuthorLabel Copy verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()
