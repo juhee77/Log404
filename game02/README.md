@@ -5,7 +5,7 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 
 ---
 
-## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 142)
+## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 143)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
@@ -14,6 +14,9 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 ---
 
 ## 🚀 최신 스프린트 업데이트 요약 ([전체 회의록 보기](SPRINT_LOG.md))
+
+### 📓 [Sprint 143] 서재 카드 `Shift+좌클릭` 작가·시리즈 즉시 검색 & 책등 선반(`SpineShelf`) `Shift+좌/우클릭` 필터·복사
+- **카드·책등 Shift 단축 제스처 (`card_item.gd` · `main_view.gd` · `index.html`)**: 서재 카드 `Shift+좌클릭` 시 작가·시리즈명으로 즉시 검색하며, 미니 책등 선반 `Shift+좌/우클릭` 시 작품 필터링 및 감상 요약 복사를 지원합니다.
 
 ### 📓 [Sprint 142] `AddModal` 헤더 `TitleLabel` 좌·우클릭(샘플 일괄 채움/비우기) & `Ctrl/Cmd+Enter` 즉시 등록
 - **새 일기 작성 가속화 (`add_modal.gd` · `index.html`)**: `AddModal` 상단 `TitleLabel` 좌·우클릭으로 샘플 일기 일괄 채움 및 비우기가 가능하며, `Ctrl/Cmd+Enter` 단축키로 즉시 등록합니다.

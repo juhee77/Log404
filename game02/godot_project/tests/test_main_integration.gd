@@ -2175,6 +2175,25 @@ func _init() -> void:
 	main_inst._render_cards()
 	print("✓ Sprint 142 Milestone: AddModal TitleLabel Fill/Clear & Ctrl+Enter Submit verified")
 
+	# Sprint 143 Milestone: CardItem Shift+Left-Click Author Filter & SpineShelf Shift+Click Search/Copy
+	main_inst._reset_all_filters()
+	var card0_s143 = main_inst.card_grid.get_child(0)
+	assert("Shift+좌클릭: 작가 검색" in card0_s143.tooltip_text, "CardItem tooltip should mention Shift+Left-Click author filter")
+	var shift_lclick_s143 := InputEventMouseButton.new()
+	shift_lclick_s143.pressed = true
+	shift_lclick_s143.shift_pressed = true
+	shift_lclick_s143.button_index = MOUSE_BUTTON_LEFT
+	card0_s143._gui_input(shift_lclick_s143)
+	assert(main_inst.search_input.text == main_inst.archive_state.items[0].author_or_series and "작가·시리즈 검색" in main_inst.status_toast.text, "Shift+Left-clicking CardItem should filter by author_or_series")
+	main_inst._reset_all_filters()
+	main_inst._render_spine_shelf()
+	var spine0_s143 = main_inst.spine_shelf_row.get_child(0)
+	assert("Shift+좌/우클릭: 검색/복사" in spine0_s143.tooltip_text, "Spine tooltip should mention Shift+Left/Right-Click search/copy")
+	spine0_s143.gui_input.emit(shift_lclick_s143)
+	assert(main_inst.search_input.text == main_inst.archive_state.items[0].title and "책등 작품 필터" in main_inst.status_toast.text, "Shift+Left-clicking spine should filter by item title")
+	main_inst._reset_all_filters()
+	print("✓ Sprint 143 Milestone: CardItem Shift+Left-Click Author & Spine Shift+Click Search verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

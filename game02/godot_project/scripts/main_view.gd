@@ -393,14 +393,22 @@ func _render_spine_shelf() -> void:
 		ribbon.size = Vector2(w, 3)
 		spine.add_child(ribbon)
 		var capture_item = it
-		spine.tooltip_text = "%s (%d권 소장 · 좌클릭: 열기 · 우클릭: 미리보기)" % [it.title, it.volumes.size()]
+		spine.tooltip_text = "%s (%d권 소장 · 좌클릭: 열기 · 우클릭: 미리보기 · Shift+좌/우클릭: 검색/복사)" % [it.title, it.volumes.size()]
 		spine.mouse_entered.connect(func(): _show_toast("📚 책등 엿보기: " + capture_item.title + " (" + str(capture_item.volumes.size()) + "권)"))
 		spine.gui_input.connect(func(ev: InputEvent):
 			if ev is InputEventMouseButton and ev.pressed:
 				if ev.button_index == MOUSE_BUTTON_LEFT:
-					_open_detail_modal(capture_item)
+					if ev.shift_pressed and search_input != null:
+						search_input.text = capture_item.title
+						_render_cards()
+						_show_toast("🔍 책등 작품 필터: %s (%s)" % [capture_item.title, _get_filtered_cards_summary()])
+					else:
+						_open_detail_modal(capture_item)
 				elif ev.button_index == MOUSE_BUTTON_RIGHT:
-					_show_toast("📚 책등 상세 미리보기: 「%s」 · %d권 · %d%% · %s" % [capture_item.title, capture_item.volumes.size(), int(capture_item.get_completion_percentage()), ArchiveStateClass.format_krw(capture_item.get_item_value())])
+					if ev.shift_pressed:
+						_on_card_quote_copy_requested(capture_item)
+					else:
+						_show_toast("📚 책등 상세 미리보기: 「%s」 · %d권 · %d%% · %s" % [capture_item.title, capture_item.volumes.size(), int(capture_item.get_completion_percentage()), ArchiveStateClass.format_krw(capture_item.get_item_value())])
 		)
 		spine_shelf_row.add_child(spine)
 
@@ -549,6 +557,15 @@ func _render_cards() -> void:
 			card.quick_advanced.connect(_on_card_quick_advanced)
 		if card.has_signal("quote_copy_requested"):
 			card.quote_copy_requested.connect(_on_card_quote_copy_requested)
+		if card.has_signal("author_filter_requested"):
+			card.author_filter_requested.connect(_on_card_author_filter_requested)
+
+func _on_card_author_filter_requested(it) -> void:
+	if it == null or search_input == null:
+		return
+	search_input.text = it.author_or_series
+	_render_cards()
+	_show_toast("🔍 작가·시리즈 검색: %s (%s)" % [it.author_or_series, _get_filtered_cards_summary()])
 
 func _on_card_quote_copy_requested(it) -> void:
 	if it == null:

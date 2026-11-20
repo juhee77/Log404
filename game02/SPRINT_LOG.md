@@ -5,6 +5,26 @@
 
 ---
 
+## 📓 [Sprint 143] 서재 카드 `Shift+좌클릭` 작가·시리즈 즉시 검색 & 책등 선반(`SpineShelf`) `Shift+좌/우클릭` 필터·복사
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A**: "서재 카드를 `Shift+좌클릭`하면 상세 모달을 열지 않고도 그 카드의 작가나 시리즈명으로 바로 서재 검색이 걸리면 같은 작가 작품들을 1초 만에 모아볼 수 있을 것 같아요!"
+- **가챠러 B**: "상단 미니 책등 선반(`SpineShelf`)에서도 `Shift+좌클릭`으로 해당 작품만 필터링하거나 `Shift+우클릭`으로 감상 요약 카드를 바로 복사하면 미니 서재가 훨씬 실용적이겠어요."
+- **기획자 (PO)**: "`card_item.gd` `author_filter_requested` 시그널과 `main_view.gd` 작가 검색·책등 `Shift+클릭` 핸들러를 구현하고 `index.html` 카드 클릭 이벤트와 동기화합니다."
+
+### 2. 핵심 구현 및 변경 내역
+- `game02/godot_project/scripts/card_item.gd`:
+  - `author_filter_requested(item)` 시그널을 신설하고 `Shift+좌클릭` 시 발행하며 카드 리치 툴팁에 안내를 추가했습니다.
+- `game02/godot_project/scripts/main_view.gd`:
+  - `_on_card_author_filter_requested()`로 카드 `Shift+좌클릭` 시 해당 작가·시리즈명으로 즉시 검색을 적용했습니다.
+  - `_render_spine_shelf()`의 책등(`ColorRect`)에 `Shift+좌클릭` 작품 필터링 및 `Shift+우클릭` 감상 요약 복사를 추가했습니다.
+- `game02/index.html`:
+  - 서재 카드 `onclick`에서 `ev.shiftKey` 시 `#search-box`에 작가명을 채워 필터링하도록 동기화했습니다.
+- `game02/godot_project/tests/test_main_integration.gd`:
+  - 카드 `Shift+좌클릭` 작가 검색과 책등 `Shift+좌클릭` 작품 필터를 검증하는 Sprint 143 테스트를 추가해 100% 통과했습니다.
+
+---
+
 ## 📓 [Sprint 142] `AddModal` 헤더 `TitleLabel` 좌·우클릭(샘플 일괄 채움/비우기) & `Ctrl/Cmd+Enter` 즉시 등록
 
 ### 1. 14인 스쿼드 회의록 & VOC

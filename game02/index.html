@@ -567,8 +567,15 @@
                     const card = document.createElement('div');
                     card.className = 'bg-[#faf6f0] rounded-2xl p-4 border border-[#e5dac9] relative cursor-pointer hover:border-[#c85a32] transition flex flex-col';
                     card.title = `${item.title}\n${item.storage_location || '🗄️ 1층 장식장'} · ${item.reading_weather || '☀️ 맑은 오후'} · ${item.reading_spot || '🛋️ 이불 속'}\n${item.cover_finish || '📜 무광 매트'} · ${item.condition_grade || '✨ S급(최상)'} · ₩${(item.estimated_value || 5000).toLocaleString()}`;
-                    card.onclick = () => openJournalModal(item.id);
-                    card.title = `${item.title} · 좌클릭: 열기 · Shift+우클릭: 감상 요약 복사`;
+                    card.onclick = (ev) => {
+                        if (ev && ev.shiftKey) {
+                            const sb = document.getElementById('search-box');
+                            if (sb) { sb.value = item.author; renderShelf(); }
+                        } else {
+                            openJournalModal(item.id);
+                        }
+                    };
+                    card.title = `${item.title} · 좌클릭: 열기 · Shift+좌클릭: 작가 검색 · Shift+우클릭: 감상 요약 복사`;
                     card.oncontextmenu = (ev) => {
                         ev.preventDefault();
                         if (ev.shiftKey) {
