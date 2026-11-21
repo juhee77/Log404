@@ -1394,6 +1394,12 @@
                     const nextCat = cats[(curIdx + (e.key === 'PageUp' ? -1 : 1) + cats.length) % cats.length];
                     switchCategory(nextCat);
                 }
+            } else if ((!document.getElementById('journal-modal') || document.getElementById('journal-modal').classList.contains('hidden')) && (!document.getElementById('add-modal') || document.getElementById('add-modal').classList.contains('hidden')) && e.key === 'Tab' && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
+                e.preventDefault();
+                const cats = ['all', 'manga', 'gacha', 'complete', 'fav'];
+                const curIdx = Math.max(0, cats.indexOf(currentCategory));
+                const nextCat = cats[(curIdx + (e.shiftKey ? -1 : 1) + cats.length) % cats.length];
+                switchCategory(nextCat);
             } else if ((!document.getElementById('journal-modal') || document.getElementById('journal-modal').classList.contains('hidden')) && (!document.getElementById('add-modal') || document.getElementById('add-modal').classList.contains('hidden')) && ['6', '7', '8', '9'].includes(e.key) && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
                 const modeNames = { '6': '기본 등록순', '7': '권수 많은 순(다독순)', '8': '최근 기록순(최신순)', '9': '소장 가치순(고액순)' };
                 showToast('📚 정렬 기준 변경: ' + modeNames[e.key]);

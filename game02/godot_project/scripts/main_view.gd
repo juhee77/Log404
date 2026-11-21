@@ -1017,6 +1017,12 @@ func _unhandled_input(event: InputEvent) -> void:
 			if event.shift_pressed or (search_input != null and search_input.text != ""):
 				_reset_all_filters()
 				get_viewport().set_input_as_handled()
+		elif event.keycode == KEY_TAB:
+			if search_input != null and search_input.has_focus():
+				search_input.release_focus()
+			else:
+				_step_filter_tab(-1 if event.shift_pressed else 1)
+			get_viewport().set_input_as_handled()
 		elif search_input == null or not search_input.has_focus():
 			match event.keycode:
 				KEY_SPACE:

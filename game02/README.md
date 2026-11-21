@@ -5,7 +5,7 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 
 ---
 
-## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 201)
+## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 202)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
@@ -14,6 +14,10 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 ---
 
 ## 🚀 최신 스프린트 업데이트 요약 ([전체 회의록 보기](SPRINT_LOG.md))
+
+### 📓 [Sprint 202] `MainView` & `AddModal` `Tab`/`Shift+Tab` 필터 탭 순환 · 입력칸 포커스 이동
+- **`Tab`/`Shift+Tab` 내비게이션**: `MainView` 검색창 포커스 중 `Tab` 시 즉시 포커스를 해제해 단축키 모드로 복귀하고, 비포커스 시 `Tab`/`Shift+Tab`으로 5대 필터 탭을 순환합니다. `AddModal`에서도 제목·작가·한줄 밑줄 입력칸을 `Tab`/`Shift+Tab`으로 부드럽게 이동합니다.
+- **웹 목업 동기화**: `index.html` 웹 목업에도 `MainView` `Tab`/`Shift+Tab` 필터 탭 순환을 동기화했습니다.
 
 ### 📓 [Sprint 201] `AddModal` 숫자키 `6` 바이올렛 컬러 · `7/8` 분류 · `9` 샘플 채움 (`0~9` 완성)
 - **`AddModal` `0~9` 숫자키 완성**: `1~6`(표지 스와치 6종), `7/8`(이북·만화/가챠·굿즈 분류), `9`(샘플 자동 채움 / `Shift+9`: 즉시 등록), `0`(초기화)으로 3대 뷰 모두 `0~9` 숫자키를 100% 완성하고 `H` 치트시트와 `index.html` 웹 목업을 동기화했습니다.

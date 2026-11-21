@@ -3794,6 +3794,32 @@ func _init() -> void:
 	main_inst.add_modal.close()
 	print("✓ Sprint 201: AddModal Keys 6 Violet Swatch, 7/8 Category & 9 Sample (0~9 Complete) verified")
 
+	# Sprint 202: MainView & AddModal Tab / Shift+Tab Smooth Tab & Input Focus Navigation
+	main_inst._reset_all_filters()
+	main_inst.search_input.release_focus()
+	var ev_tab_202 = InputEventKey.new()
+	ev_tab_202.pressed = true
+	ev_tab_202.keycode = KEY_TAB
+	main_inst._unhandled_input(ev_tab_202)
+	assert(main_inst.archive_state.current_filter == 0, "Tab in MainView (unfocused) should cycle to Manga tab (0)")
+
+	var ev_shift_tab_202 = InputEventKey.new()
+	ev_shift_tab_202.pressed = true
+	ev_shift_tab_202.shift_pressed = true
+	ev_shift_tab_202.keycode = KEY_TAB
+	main_inst._unhandled_input(ev_shift_tab_202)
+	assert(main_inst.archive_state.current_filter == -1, "Shift+Tab in MainView should cycle back to All tab (-1)")
+
+	main_inst._on_add_btn_pressed()
+	main_inst.add_modal.title_input.release_focus()
+	main_inst.add_modal.author_input.release_focus()
+	main_inst.add_modal.quote_input.release_focus()
+	main_inst.add_modal._unhandled_input(ev_tab_202)
+	main_inst.add_modal._unhandled_input(ev_tab_202)
+	main_inst.add_modal._unhandled_input(ev_tab_202)
+	main_inst.add_modal.close()
+	print("✓ Sprint 202: MainView & AddModal Tab / Shift+Tab Navigation verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

@@ -276,6 +276,29 @@ func _unhandled_input(event: InputEvent) -> void:
 		close()
 		get_viewport().set_input_as_handled()
 		return
+	if event.keycode == KEY_TAB:
+		var fields := [title_input, author_input, quote_input]
+		var f_idx: int = -1
+		for i in range(fields.size()):
+			if fields[i] != null and fields[i].has_focus():
+				f_idx = i
+				break
+		if event.shift_pressed:
+			if f_idx > 0 and fields[f_idx - 1] != null:
+				fields[f_idx - 1].grab_focus()
+			elif f_idx == 0 and fields[0] != null:
+				fields[0].release_focus()
+			elif fields[fields.size() - 1] != null:
+				fields[fields.size() - 1].grab_focus()
+		else:
+			if f_idx == -1 and fields[0] != null:
+				fields[0].grab_focus()
+			elif f_idx >= 0 and f_idx < fields.size() - 1 and fields[f_idx + 1] != null:
+				fields[f_idx + 1].grab_focus()
+			elif f_idx == fields.size() - 1 and fields[f_idx] != null:
+				fields[f_idx].release_focus()
+		get_viewport().set_input_as_handled()
+		return
 	var any_focused: bool = false
 	for le in [title_input, author_input, quote_input]:
 		if le != null and le.has_focus():

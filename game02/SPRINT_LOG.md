@@ -5,6 +5,20 @@
 
 ---
 
+## 📓 [Sprint 202] `MainView` & `AddModal` `Tab`/`Shift+Tab` 필터 탭 순환 · 입력칸 포커스 이동
+- **일시**: 2026-11-21
+- **14인 가상 애자일 스쿼드 회의록**:
+  - **다꾸러 VOC (지민·수빈·하연)**: "검색창에서 검색어를 치고 난 뒤 `Tab`을 누르면 바로 포커스가 해제되어 서재 단축키를 쓸 수 있고, 서재 메인에서는 `Tab`/`Shift+Tab`으로 5개 필터 탭을 오갈 수 있으면 정말 편하겠어요! `AddModal`에서도 `Tab`/`Shift+Tab`으로 제목·작가·밑줄 입력칸을 깔끔하게 순환하고 싶습니다."
+  - **PO & UX/UI**: `MainView` `_unhandled_input`에 `KEY_TAB`(`search_input.has_focus()` 시 `release_focus()`, 비포커스 시 `_step_filter_tab(±1)`)을 추가하고, `AddModal` `_unhandled_input`에도 `KEY_TAB`으로 `title_input` ↔ `author_input` ↔ `quote_input` ↔ 포커스 해제 순환 로직을 구현한다.
+- **구현 내역**:
+  - [`main_view.gd`](godot_project/scripts/main_view.gd): `KEY_TAB` 검색 포커스 해제 및 5대 필터 탭 순환 분기 추가.
+  - [`add_modal.gd`](godot_project/scripts/add_modal.gd): `KEY_TAB` 3단 입력칸 포커스 순환 분기 추가.
+  - [`index.html`](index.html): 웹 인터랙티브 목업에 `MainView` `Tab`/`Shift+Tab` 필터 탭 순환 동기화.
+  - [`test_main_integration.gd`](godot_project/tests/test_main_integration.gd): `MainView` `Tab`/`Shift+Tab` 탭 순환 및 `AddModal` `Tab` 입력칸 순환 검증 추가.
+- **검증**: `test_archive.gd`, `test_persistence.gd`, `test_main_integration.gd` 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 갱신 완료.
+
+---
+
 ## 📓 [Sprint 201] `AddModal` 숫자키 `6` 바이올렛 컬러 · `7/8` 분류 · `9` 샘플 채움 — 새 일기 모달 `0~9` 완성
 - **일시**: 2026-11-21
 - **14인 가상 애자일 스쿼드 회의록**:
