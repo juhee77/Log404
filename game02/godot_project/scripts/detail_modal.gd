@@ -1014,6 +1014,20 @@ func _unhandled_input(event: InputEvent) -> void:
 			close()
 		get_viewport().set_input_as_handled()
 		return
+	if (event.ctrl_pressed or event.meta_pressed) and event.keycode in [KEY_6, KEY_7, KEY_8]:
+		var ink_map := {KEY_6: "#7f1d1d", KEY_7: "#78350f", KEY_8: "#14532d"}
+		set_fountain_pen_ink(ink_map[event.keycode])
+		if event.shift_pressed:
+			close()
+		get_viewport().set_input_as_handled()
+		return
+	if (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_9:
+		toggle_quote_highlight()
+		if event.shift_pressed:
+			copy_book_quote_card()
+			close()
+		get_viewport().set_input_as_handled()
+		return
 	if (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_H:
 		help_requested.emit()
 		if event.shift_pressed:

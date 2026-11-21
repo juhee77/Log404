@@ -5,7 +5,7 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 
 ---
 
-## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 215 Milestone)
+## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 216)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
@@ -14,6 +14,10 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 ---
 
 ## 🚀 최신 스프린트 업데이트 요약 ([전체 회의록 보기](SPRINT_LOG.md))
+
+### 📓 [Sprint 216] 3대 뷰 전역 `Ctrl/Cmd+6~9` 정렬·잉크·형광펜·스와치·샘플 완전 통일
+- **전역 `Ctrl/Cmd+6~9`**: 입력창 포커스 중에도 `Ctrl/Cmd+6~9`로 4종 정렬(`MainView`)·만년필 잉크 6~8 및 형광펜 9(`DetailModal`)·6번 바이올렛/분류 7~8/샘플 9(`AddModal`)까지 전역 숫자 단축키 `0~9`를 완성했습니다.
+- **웹 목업 동기화**: `index.html` 웹 목업에도 `Ctrl/Cmd+6~9` 단축키를 동기화했습니다.
 
 ### 📓 [Sprint 215 Milestone] 3대 뷰 전역 `Ctrl/Cmd+1~5` 탭·인장·잉크·스와치 · `Ctrl/Cmd+H` 치트시트
 - **전역 `Ctrl/Cmd+1~5` & `Ctrl/Cmd+H`**: 입력창 포커스 중에도 `Ctrl/Cmd+1~5`로 서재 탭(`MainView`)·인장/잉크(`DetailModal`)·컬러스와치(`AddModal`)를 전환하고, `Ctrl/Cmd+H`로 단축키 치트시트를 즉시 호출합니다.

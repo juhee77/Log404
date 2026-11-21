@@ -5,6 +5,21 @@
 
 ---
 
+## 📓 [Sprint 216] 3대 뷰 전역 `Ctrl/Cmd+6~9` 정렬·잉크·형광펜·스와치·샘플 완전 통일
+- **일시**: 2026-11-21
+- **14인 가상 애자일 스쿼드 회의록**:
+  - **다꾸러 VOC (지민·수빈·하연)**: "입력창 포커스 중에도 `Ctrl/Cmd+6~9`로 4종 정렬(`MainView`)·버건디/세피아/포레스트 잉크 및 형광펜 토글(`DetailModal`)·6번 바이올렛 스와치/이북·가챠 분류/샘플 채움(`AddModal`)까지 숫자키 `0~9` 전 구간을 완성하고 싶어요!"
+  - **PO & UX/UI**: `MainView`, `DetailModal`, `AddModal`의 `_unhandled_input` 최상단에 `ctrl_pressed or meta_pressed` + `KEY_6~KEY_9` 분기를 추가한다.
+- **구현 내역**:
+  - [`main_view.gd`](godot_project/scripts/main_view.gd): `Ctrl/Cmd+6~9`(기본/다독/최신/자산가치순 정렬 / `Shift`: 첫 작품 열기) 추가.
+  - [`detail_modal.gd`](godot_project/scripts/detail_modal.gd): `Ctrl/Cmd+6~8`(버건디·세피아·포레스트 잉크) 및 `Ctrl/Cmd+9`(형광펜 토글 / `Shift`: 복사+닫기) 추가.
+  - [`add_modal.gd`](godot_project/scripts/add_modal.gd): `Ctrl/Cmd+6`(6번 바이올렛 스와치), `Ctrl/Cmd+7/8`(이북·가챠 분류), `Ctrl/Cmd+9`(샘플 채움 / `Shift`: 등록) 추가.
+  - [`index.html`](index.html): 웹 인터랙티브 목업에 `Ctrl/Cmd+6~9` 전역 단축키 동기화.
+  - [`test_main_integration.gd`](godot_project/tests/test_main_integration.gd): 포커스 상태 `Ctrl+6~9` 3대 뷰 검증 추가.
+- **검증**: `test_archive.gd`, `test_persistence.gd`, `test_main_integration.gd` 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 갱신 완료.
+
+---
+
 ## 📓 [Sprint 215 Milestone] 3대 뷰 전역 `Ctrl/Cmd+1~5` 탭·인장·잉크·스와치 · `Ctrl/Cmd+H` 치트시트
 - **일시**: 2026-11-21
 - **14인 가상 애자일 스쿼드 회의록**:

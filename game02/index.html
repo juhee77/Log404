@@ -1518,6 +1518,22 @@
                     switchCategory(tabs[e.key]);
                     showToast('🔖 빠른 탭 전환 (' + e.key + ')');
                 }
+            } else if ((e.ctrlKey || e.metaKey) && ['6', '7', '8', '9'].includes(e.key)) {
+                e.preventDefault();
+                const jm = document.getElementById('journal-modal');
+                if (jm && !jm.classList.contains('hidden')) {
+                    if (e.key === '9') {
+                        showToast(e.shiftKey ? '🖍️ 형광펜 토글 · 독서 카드 복사 및 닫기' : '🖍️ 형광펜 하이라이트 토글');
+                    } else {
+                        const inks = { '6': '#7f1d1d', '7': '#78350f', '8': '#14532d' };
+                        setDiaryInk(inks[e.key]);
+                        showToast('🖋️ 만년필 잉크 전환 (' + e.key + ')');
+                    }
+                    if (e.shiftKey) closeJournalModal();
+                } else {
+                    const sorts = { '6': '기본순', '7': '다독순', '8': '최신순', '9': '자산가치순' };
+                    showToast('↕️ 정렬 전환: ' + sorts[e.key]);
+                }
             } else if ((e.ctrlKey || e.metaKey) && (e.key === 'h' || e.key === 'H')) {
                 e.preventDefault();
                 showToast('⌨️ 전역 단축키: [Ctrl/Cmd+1~5] 탭·인장 · [Ctrl/Cmd+H] 도움말 · [Ctrl/Cmd+S] 저장 · [Ctrl/Cmd+W] 닫기');
@@ -1819,6 +1835,22 @@
                     const tabs = { '1': 'all', '2': 'manga', '3': 'gacha', '4': 'completed', '5': 'favorites' };
                     switchCategory(tabs[e.key]);
                     showToast('🔖 빠른 탭 전환 (' + e.key + ')');
+                }
+            } else if ((e.ctrlKey || e.metaKey) && ['6', '7', '8', '9'].includes(e.key)) {
+                e.preventDefault();
+                const jm = document.getElementById('journal-modal');
+                if (jm && !jm.classList.contains('hidden')) {
+                    if (e.key === '9') {
+                        showToast(e.shiftKey ? '🖍️ 형광펜 토글 · 독서 카드 복사 및 닫기' : '🖍️ 형광펜 하이라이트 토글');
+                    } else {
+                        const inks = { '6': '#7f1d1d', '7': '#78350f', '8': '#14532d' };
+                        setDiaryInk(inks[e.key]);
+                        showToast('🖋️ 만년필 잉크 전환 (' + e.key + ')');
+                    }
+                    if (e.shiftKey) closeJournalModal();
+                } else {
+                    const sorts = { '6': '기본순', '7': '다독순', '8': '최신순', '9': '자산가치순' };
+                    showToast('↕️ 정렬 전환: ' + sorts[e.key]);
                 }
             } else if ((e.ctrlKey || e.metaKey) && (e.key === 'h' || e.key === 'H')) {
                 e.preventDefault();

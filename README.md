@@ -18,14 +18,15 @@ Godot 4+ 기반의 감성 게임 및 인터랙티브 아카이브 애플리케�
 > **Godot 4.6.2 모바일 기반 E-Book 리더기 서재(Apple Books · 리디북스) & 만년필 다꾸 독서노트(굿노트 · 몰스킨) 감성 아카이브 앱**  
 > 14인 가상 애자일 스쿼드가 20분 주기 자동 스프린트로 지속 개선 중입니다.
 
-### 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 215 Milestone)
+### 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 216)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
 | ![Pocket Archive Main Screen](game02/godot_project/screenshots/godot_app_screen.png) | ![Pocket Archive Detail Modal](game02/godot_project/screenshots/godot_modal_screen.png) |
 
 ### ✨ 주요 핵심 기능
-- **최신 Sprint 215 Milestone 하이라이트**: 3대 뷰 전역 `Ctrl/Cmd+1~5` 탭·인장·잉크·스와치 · `Ctrl/Cmd+H` 치트시트(`main_view.gd` · `detail_modal.gd` · `add_modal.gd` · `index.html`) 완성
+- **최신 Sprint 216 하이라이트**: 3대 뷰 전역 `Ctrl/Cmd+6~9` 정렬·잉크·형광펜·스와치·샘플(`main_view.gd` · `detail_modal.gd` · `add_modal.gd` · `index.html`) 완성
+- **Sprint 215 Milestone 하이라이트**: 3대 뷰 전역 `Ctrl/Cmd+1~5` 탭·인장·잉크·스와치 · `Ctrl/Cmd+H` 치트시트(`main_view.gd` · `detail_modal.gd` · `add_modal.gd` · `index.html`) 완성
 - **Sprint 214 하이라이트**: 3대 뷰 전역 `Ctrl/Cmd+O` 작품열기·띠지·일기등록 · `Ctrl/Cmd+Y` 음소거·회독·샘플채움(`main_view.gd` · `detail_modal.gd` · `add_modal.gd` · `index.html`) 완성
 - **Sprint 213 하이라이트**: 3대 뷰 전역 `Ctrl/Cmd+U` 초판필터·날씨·작가포커스 · `Ctrl/Cmd+J` 마지막점프·장소·분류전환(`main_view.gd` · `detail_modal.gd` · `add_modal.gd` · `index.html`) 완성
 - **Sprint 212 하이라이트**: 3대 뷰 전역 `Ctrl/Cmd+P` 촬영·속지패턴·컬러스와치 · `Ctrl/Cmd+M` 사운드·독서무드·감상포커스(`main_view.gd` · `detail_modal.gd` · `add_modal.gd` · `index.html`) 완성

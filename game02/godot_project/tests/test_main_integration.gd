@@ -4214,6 +4214,45 @@ func _init() -> void:
 	main_inst.add_modal.close()
 	print("✓ Sprint 215 Milestone: Global Ctrl/Cmd+1~5 Tabs/Stamps/Swatches & Ctrl/Cmd+H Cheatsheet verified")
 
+	# Sprint 216: Global Ctrl/Cmd+6~9 (Sort/Ink+Highlight/Violet+Cat+Sample)
+	main_inst.search_input.grab_focus()
+	var ev_ctrl_8 = InputEventKey.new()
+	ev_ctrl_8.pressed = true
+	ev_ctrl_8.ctrl_pressed = true
+	ev_ctrl_8.keycode = KEY_8
+	main_inst._unhandled_input(ev_ctrl_8)
+	assert(main_inst.sort_mode == 2, "Ctrl+8 in MainView (even focused) should set sort_mode=2 (Latest)")
+	main_inst._set_sort_mode(0)
+
+	main_inst._on_card_clicked(main_inst.archive_state.items[0])
+	main_inst.detail_modal.quote_input.grab_focus()
+	var ev_ctrl_6 = InputEventKey.new()
+	ev_ctrl_6.pressed = true
+	ev_ctrl_6.ctrl_pressed = true
+	ev_ctrl_6.keycode = KEY_6
+	main_inst.detail_modal._unhandled_input(ev_ctrl_6)
+	assert(main_inst.detail_modal.current_item.memo_ink_color == "#7f1d1d", "Ctrl+6 in DetailModal (even focused) should set burgundy ink")
+	var hl_before_216 = main_inst.detail_modal.current_item.highlight_enabled
+	var ev_ctrl_9 = InputEventKey.new()
+	ev_ctrl_9.pressed = true
+	ev_ctrl_9.ctrl_pressed = true
+	ev_ctrl_9.keycode = KEY_9
+	main_inst.detail_modal._unhandled_input(ev_ctrl_9)
+	assert(main_inst.detail_modal.current_item.highlight_enabled != hl_before_216, "Ctrl+9 in DetailModal (even focused) should toggle highlight_enabled")
+	main_inst.detail_modal.close()
+
+	main_inst._on_add_btn_pressed()
+	main_inst.add_modal._unhandled_input(ev_ctrl_6)
+	assert(main_inst.add_modal.selected_color == main_inst.add_modal.COVER_SWATCHES[5]["hex"], "Ctrl+6 in AddModal should select 6th Violet swatch")
+	main_inst.add_modal.cat_option.select(0)
+	main_inst.add_modal._unhandled_input(ev_ctrl_8)
+	assert(main_inst.add_modal.cat_option.selected == 1, "Ctrl+8 in AddModal should select Gacha category (1)")
+	main_inst.add_modal.clear_inputs()
+	main_inst.add_modal._unhandled_input(ev_ctrl_9)
+	assert(main_inst.add_modal.title_input.text != "", "Ctrl+9 in AddModal should fill sample inputs")
+	main_inst.add_modal.close()
+	print("✓ Sprint 216: Global Ctrl/Cmd+6~9 Sort/Ink+Highlight/Violet+Cat+Sample verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

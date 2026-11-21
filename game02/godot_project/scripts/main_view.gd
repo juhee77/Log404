@@ -1107,6 +1107,14 @@ func _unhandled_input(event: InputEvent) -> void:
 			if event.shift_pressed:
 				_open_first_filtered_card()
 			get_viewport().set_input_as_handled()
+		elif (event.ctrl_pressed or event.meta_pressed) and event.keycode in [KEY_6, KEY_7, KEY_8, KEY_9]:
+			_set_sort_mode(event.keycode - KEY_6)
+			if event.shift_pressed:
+				if event.keycode == KEY_6:
+					_set_sort_mode(0)
+				else:
+					_open_first_filtered_card()
+			get_viewport().set_input_as_handled()
 		elif (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_H:
 			_show_shortcut_cheatsheet()
 			if event.shift_pressed and status_toast != null:
