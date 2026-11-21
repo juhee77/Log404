@@ -309,6 +309,27 @@ func _unhandled_input(event: InputEvent) -> void:
 		elif event.keycode == KEY_RIGHT:
 			_step_color(1)
 			get_viewport().set_input_as_handled()
+		elif event.keycode == KEY_S:
+			if event.shift_pressed:
+				_submit_with_sample_fallback()
+			else:
+				_on_submit_btn_pressed()
+			get_viewport().set_input_as_handled()
+		elif event.keycode == KEY_E and cat_option != null:
+			cat_option.select(0)
+			if event.shift_pressed:
+				_submit_with_sample_fallback()
+			get_viewport().set_input_as_handled()
+		elif event.keycode == KEY_G and cat_option != null:
+			cat_option.select(1)
+			if event.shift_pressed:
+				_submit_with_sample_fallback()
+			get_viewport().set_input_as_handled()
+		elif event.keycode == KEY_T and title_input != null:
+			if event.shift_pressed:
+				title_input.text = ""
+			title_input.grab_focus()
+			get_viewport().set_input_as_handled()
 
 func _on_close_btn_pressed() -> void:
 	close()

@@ -5,6 +5,19 @@
 
 ---
 
+## 📓 [Sprint 192] `AddModal` 키보드 `E/G` 카테고리 직접 선택 · `T` 제목 포커스 · `S` 등록 제출
+- **일시**: 2026-11-21
+- **14인 가상 애자일 스쿼드 회의록**:
+  - **다꾸러 VOC (지민·수빈·하연)**: "`AddModal`에서 `C`로 카테고리를 토글하는 것도 좋지만 `E`(이북·만화), `G`(가챠·굿즈)로 바로 고르고, `T`로 제목 입력칸에 포커스를 주거나, `S`(Submit)로 바로 등록(`Shift+S`: 샘플 폴백 등록)할 수 있으면 완벽할 것 같아요!"
+  - **PO & UX/UI**: `AddModal` `_unhandled_input`에 `KEY_E`(`cat_option.select(0)`), `KEY_G`(`cat_option.select(1)`), `KEY_T`(`title_input.grab_focus()` / `Shift+T`: 비우고 포커스), `KEY_S`(`_on_submit_btn_pressed()` / `Shift+S`: `_submit_with_sample_fallback()`)를 연결한다.
+- **구현 내역**:
+  - [`add_modal.gd`](godot_project/scripts/add_modal.gd): `KEY_S`, `KEY_E`, `KEY_G`, `KEY_T` 단축키 분기 추가.
+  - [`index.html`](index.html): 웹 인터랙티브 목업에 `AddModal` `S`/`E`/`G`/`T` 단축키 피드백 동기화.
+  - [`test_main_integration.gd`](godot_project/tests/test_main_integration.gd): `KEY_G`, `KEY_E`, `Shift+S` 샘플 폴백 등록 및 모달 닫힘 검증 추가.
+- **검증**: `test_archive.gd`, `test_persistence.gd`, `test_main_integration.gd` 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 갱신 완료.
+
+---
+
 ## 📓 [Sprint 191] `AddModal` 키보드 `F` 샘플 채움 · `X` 입력 초기화(Shift: 닫기) · `←/→` 표지 컬러 순환
 - **일시**: 2026-11-21
 - **14인 가상 애자일 스쿼드 회의록**:

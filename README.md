@@ -18,14 +18,15 @@ Godot 4+ 기반의 감성 게임 및 인터랙티브 아카이브 애플리케�
 > **Godot 4.6.2 모바일 기반 E-Book 리더기 서재(Apple Books · 리디북스) & 만년필 다꾸 독서노트(굿노트 · 몰스킨) 감성 아카이브 앱**  
 > 14인 가상 애자일 스쿼드가 20분 주기 자동 스프린트로 지속 개선 중입니다.
 
-### 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 191)
+### 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 192)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
 | ![Pocket Archive Main Screen](game02/godot_project/screenshots/godot_app_screen.png) | ![Pocket Archive Detail Modal](game02/godot_project/screenshots/godot_modal_screen.png) |
 
 ### ✨ 주요 핵심 기능
-- **최신 Sprint 191 하이라이트**: `AddModal` 키보드 `F` 샘플 채움 · `X` 입력 초기화(`Shift`: 닫기) · `←/→` 표지 컬러 순환(`add_modal.gd` · `index.html`) 완성
+- **최신 Sprint 192 하이라이트**: `AddModal` 키보드 `E/G` 카테고리 직접 선택 · `T` 제목 포커스 · `S` 등록 제출(`add_modal.gd` · `index.html`) 완성
+- **Sprint 191 하이라이트**: `AddModal` 키보드 `F` 샘플 채움 · `X` 입력 초기화(`Shift`: 닫기) · `←/→` 표지 컬러 순환(`add_modal.gd` · `index.html`) 완성
 - **Sprint 190 Milestone 하이라이트**: 메인 키보드 `Enter` 열기(`Shift`: 새 일기 모달) · `Backspace` 초기화(`Shift`: 스튜디오 리셋) 및 치트시트(`H`) 동기화(`main_view.gd` · `index.html`) 완성
 - **Sprint 189 하이라이트**: 메인 키보드 `↑/↓` 정렬·사운드 순환 · `PageUp/PageDown` 필터 탭 순환 및 치트시트(`H`) 동기화(`main_view.gd` · `index.html`) 완성
 - **Sprint 188 하이라이트**: 메인 키보드 `←/→` 문장·테마 탐색 · `Home/End` 처음·끝 작품 즉시 열기 및 치트시트(`H`) 동기화(`main_view.gd` · `index.html`) 완성

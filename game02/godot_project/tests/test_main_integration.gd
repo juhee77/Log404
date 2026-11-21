@@ -3511,6 +3511,35 @@ func _init() -> void:
 	assert(main_inst.add_modal.visible == false, "Shift+X in AddModal should clear inputs and close modal")
 	print("✓ Sprint 191: AddModal Keys F Sample Fill, X Clear/Close & Left/Right Swatch Cycle verified")
 
+	# Sprint 192: AddModal Keys E/G Category, T Focus & S Submit
+	main_inst._on_add_btn_pressed()
+	main_inst.add_modal.title_input.release_focus()
+	main_inst.add_modal.author_input.release_focus()
+	main_inst.add_modal.quote_input.release_focus()
+
+	var ev_am_g = InputEventKey.new()
+	ev_am_g.pressed = true
+	ev_am_g.keycode = KEY_G
+	main_inst.add_modal._unhandled_input(ev_am_g)
+	assert(main_inst.add_modal.cat_option.selected == 1, "Key G in AddModal should select Gacha (1)")
+
+	var ev_am_e = InputEventKey.new()
+	ev_am_e.pressed = true
+	ev_am_e.keycode = KEY_E
+	main_inst.add_modal._unhandled_input(ev_am_e)
+	assert(main_inst.add_modal.cat_option.selected == 0, "Key E in AddModal should select Manga/E-Book (0)")
+
+	var count_before_192 = main_inst.archive_state.items.size()
+	var ev_am_shift_s = InputEventKey.new()
+	ev_am_shift_s.pressed = true
+	ev_am_shift_s.shift_pressed = true
+	ev_am_shift_s.keycode = KEY_S
+	main_inst.add_modal._unhandled_input(ev_am_shift_s)
+	assert(main_inst.archive_state.items.size() == count_before_192 + 1 and main_inst.add_modal.visible == false, "Shift+S in AddModal should submit with sample fallback and close")
+	main_inst.archive_state.remove_item(main_inst.archive_state.items[main_inst.archive_state.items.size() - 1].id)
+	main_inst._render_cards()
+	print("✓ Sprint 192: AddModal Keys E/G Category, T Focus & S Submit verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()
