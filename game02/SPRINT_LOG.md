@@ -5,6 +5,21 @@
 
 ---
 
+## 📓 [Sprint 207] 3대 뷰 전역 `Ctrl/Cmd+R` 랜덤·회독·컬러 · `Ctrl/Cmd+B` 백업·리포트
+- **일시**: 2026-11-21
+- **14인 가상 애자일 스쿼드 회의록**:
+  - **다꾸러 VOC (지민·수빈·하연)**: "`Ctrl/Cmd+S`, `Ctrl/Cmd+N`, `Ctrl/Cmd+K`처럼 입력칸 포커스 중에도 `Ctrl/Cmd+R`로 랜덤 작품 추천(`MainView`)·회독 수 증가(`DetailModal`)·랜덤 표지 컬러(`AddModal`)를 바로 실행하고, `Ctrl/Cmd+B`로 즉시 JSON 백업(`Shift`: 요약 리포트 복사)을 하고 싶어요!"
+  - **PO & UX/UI**: `MainView`, `DetailModal`, `AddModal`의 `_unhandled_input` 최상단에 `ctrl_pressed or meta_pressed` + `KEY_R` 분기를 추가하고, `MainView`에 `Ctrl/Cmd+B` 백업/리포트 분기를 추가한다.
+- **구현 내역**:
+  - [`main_view.gd`](godot_project/scripts/main_view.gd): `Ctrl/Cmd+R`(랜덤 추천 / `Shift`: 필터만) 및 `Ctrl/Cmd+B`(즉시 JSON 백업 / `Shift`: 리포트 복사) 추가.
+  - [`detail_modal.gd`](godot_project/scripts/detail_modal.gd): `Ctrl/Cmd+R`(회독 수 증가 / `Shift`: 감소) 추가.
+  - [`add_modal.gd`](godot_project/scripts/add_modal.gd): `Ctrl/Cmd+R`(랜덤 표지 컬러) 추가.
+  - [`index.html`](index.html): 웹 인터랙티브 목업에 `Ctrl/Cmd+R`, `Ctrl/Cmd+B` 전역 단축키 동기화.
+  - [`test_main_integration.gd`](godot_project/tests/test_main_integration.gd): 포커스 상태 `Ctrl+B` 백업 및 3대 뷰 `Ctrl+R` 검증 추가.
+- **검증**: `test_archive.gd`, `test_persistence.gd`, `test_main_integration.gd` 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 갱신 완료.
+
+---
+
 ## 📓 [Sprint 206] 3대 뷰 전역 `F1` 단축키 치트시트(Shift: 복사) · `Ctrl/Cmd+K` 검색창 포커스
 - **일시**: 2026-11-21
 - **14인 가상 애자일 스쿼드 회의록**:

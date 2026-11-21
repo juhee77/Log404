@@ -1358,6 +1358,19 @@
             } else if ((e.ctrlKey || e.metaKey) && (e.key === 'n' || e.key === 'N')) {
                 e.preventDefault();
                 openAddModal();
+            } else if ((e.ctrlKey || e.metaKey) && (e.key === 'r' || e.key === 'R')) {
+                e.preventDefault();
+                const jm = document.getElementById('journal-modal');
+                if (jm && !jm.classList.contains('hidden')) {
+                    showToast(e.shiftKey ? '📖 회독 수 감소 (-1회독)' : '📖 회독 수 증가 (+1회독)');
+                } else if (ITEMS.length > 0) {
+                    const rIt = ITEMS[Math.floor(Math.random() * ITEMS.length)];
+                    openJournalModal(rIt.id);
+                }
+            } else if ((e.ctrlKey || e.metaKey) && (e.key === 'b' || e.key === 'B')) {
+                e.preventDefault();
+                if (e.shiftKey) copyLibrarySummaryReport();
+                else instantBackupArchive();
             } else if (document.getElementById('journal-modal') && !document.getElementById('journal-modal').classList.contains('hidden') && (e.key === '/' || e.key === 'Tab' || e.key === 'Enter' || e.key === 'Backspace' || e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === '0' || e.key === '9' || ['5', '6', '7', '8'].includes(e.key)) && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
                 if (e.key === 'Tab') {
                     e.preventDefault();
@@ -1497,6 +1510,19 @@
             } else if ((e.ctrlKey || e.metaKey) && (e.key === 'n' || e.key === 'N')) {
                 e.preventDefault();
                 openAddModal();
+            } else if ((e.ctrlKey || e.metaKey) && (e.key === 'r' || e.key === 'R')) {
+                e.preventDefault();
+                const jm = document.getElementById('journal-modal');
+                if (jm && !jm.classList.contains('hidden')) {
+                    showToast(e.shiftKey ? '📖 회독 수 감소 (-1회독)' : '📖 회독 수 증가 (+1회독)');
+                } else if (ITEMS.length > 0) {
+                    const rIt = ITEMS[Math.floor(Math.random() * ITEMS.length)];
+                    openJournalModal(rIt.id);
+                }
+            } else if ((e.ctrlKey || e.metaKey) && (e.key === 'b' || e.key === 'B')) {
+                e.preventDefault();
+                if (e.shiftKey) copyLibrarySummaryReport();
+                else instantBackupArchive();
             } else if (document.getElementById('journal-modal') && !document.getElementById('journal-modal').classList.contains('hidden') && (e.key === '/' || e.key === 'Tab' || e.key === 'Enter' || e.key === 'Backspace' || e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === '0' || e.key === '9' || ['5', '6', '7', '8'].includes(e.key)) && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
                 if (e.key === 'Tab') {
                     e.preventDefault();

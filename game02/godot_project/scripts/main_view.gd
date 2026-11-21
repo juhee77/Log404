@@ -1019,6 +1019,15 @@ func _unhandled_input(event: InputEvent) -> void:
 			if event.shift_pressed and add_modal != null and add_modal.has_method("fill_sample_inputs"):
 				add_modal.fill_sample_inputs()
 			get_viewport().set_input_as_handled()
+		elif (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_R:
+			pick_random_item(not event.shift_pressed)
+			get_viewport().set_input_as_handled()
+		elif (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_B:
+			if event.shift_pressed:
+				copy_summary_to_clipboard()
+			else:
+				_trigger_instant_json_backup()
+			get_viewport().set_input_as_handled()
 		elif event.keycode == KEY_SLASH and event.shift_pressed and (search_input == null or not search_input.has_focus()):
 			_show_shortcut_cheatsheet()
 			get_viewport().set_input_as_handled()

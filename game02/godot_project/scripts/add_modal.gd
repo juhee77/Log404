@@ -270,6 +270,13 @@ func _unhandled_input(event: InputEvent) -> void:
 			_on_submit_btn_pressed()
 		get_viewport().set_input_as_handled()
 		return
+	if (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_R and not COVER_SWATCHES.is_empty():
+		var next_r_idx: int = randi() % COVER_SWATCHES.size()
+		if COVER_SWATCHES.size() > 1 and COVER_SWATCHES[next_r_idx]["hex"].to_lower() == selected_color.to_lower():
+			next_r_idx = (next_r_idx + 1) % COVER_SWATCHES.size()
+		select_color(COVER_SWATCHES[next_r_idx]["hex"])
+		get_viewport().set_input_as_handled()
+		return
 	if event.shift_pressed and (event.keycode == KEY_ENTER or event.keycode == KEY_KP_ENTER):
 		_submit_with_sample_fallback()
 		get_viewport().set_input_as_handled()

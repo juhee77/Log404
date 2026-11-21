@@ -3907,6 +3907,35 @@ func _init() -> void:
 	main_inst.add_modal.close()
 	print("✓ Sprint 206: Global F1 Help Cheatsheet (3 Views) & Ctrl/Cmd+K Search Focus verified")
 
+	# Sprint 207: Global Ctrl/Cmd+R (Random/Reread/Color) & Ctrl/Cmd+B (Backup/Report)
+	main_inst.search_input.grab_focus()
+	var ev_ctrl_b = InputEventKey.new()
+	ev_ctrl_b.pressed = true
+	ev_ctrl_b.ctrl_pressed = true
+	ev_ctrl_b.keycode = KEY_B
+	main_inst._unhandled_input(ev_ctrl_b)
+	assert("백업" in main_inst.status_toast.text or "JSON" in main_inst.status_toast.text, "Ctrl+B in MainView (even focused) should trigger instant JSON backup")
+
+	var ev_ctrl_r = InputEventKey.new()
+	ev_ctrl_r.pressed = true
+	ev_ctrl_r.ctrl_pressed = true
+	ev_ctrl_r.keycode = KEY_R
+	main_inst._unhandled_input(ev_ctrl_r)
+	assert(main_inst.detail_modal.visible == true, "Ctrl+R in MainView should pick and open random item")
+
+	var rr_before_207 = main_inst.detail_modal.current_item.reread_count
+	main_inst.detail_modal._unhandled_input(ev_ctrl_r)
+	assert(main_inst.detail_modal.current_item.reread_count == rr_before_207 + 1, "Ctrl+R in DetailModal should increment reread_count")
+	main_inst.detail_modal.decrement_reread_count()
+	main_inst.detail_modal.close()
+
+	main_inst._on_add_btn_pressed()
+	var am_color_207 = main_inst.add_modal.selected_color
+	main_inst.add_modal._unhandled_input(ev_ctrl_r)
+	assert(main_inst.add_modal.selected_color != am_color_207, "Ctrl+R in AddModal (even focused) should pick random cover swatch")
+	main_inst.add_modal.close()
+	print("✓ Sprint 207: Global Ctrl/Cmd+R Random/Reread/Color & Ctrl/Cmd+B Backup verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

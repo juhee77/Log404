@@ -918,6 +918,13 @@ func _unhandled_input(event: InputEvent) -> void:
 		_on_save_quote_btn_pressed()
 		get_viewport().set_input_as_handled()
 		return
+	if (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_R:
+		if event.shift_pressed:
+			decrement_reread_count()
+		else:
+			increment_reread_count()
+		get_viewport().set_input_as_handled()
+		return
 	if event.keycode == KEY_ESCAPE:
 		if event.shift_pressed:
 			copy_book_quote_card()
