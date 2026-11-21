@@ -4286,6 +4286,41 @@ func _init() -> void:
 	main_inst.add_modal.close()
 	print("✓ Sprint 217: Global Ctrl/Cmd+Up/Down & PageUp/PageDown Sort/Tab/Nav/Swatch verified")
 
+	# Sprint 218: Global Ctrl/Cmd+Space (Open/Nav/Swatch) & Ctrl/Cmd+Backspace (Reset/Close/Clear)
+	main_inst._on_tab_manga_pressed()
+	main_inst.search_input.text = "슬램덩크"
+	main_inst.search_input.grab_focus()
+	var ev_ctrl_bksp = InputEventKey.new()
+	ev_ctrl_bksp.pressed = true
+	ev_ctrl_bksp.ctrl_pressed = true
+	ev_ctrl_bksp.keycode = KEY_BACKSPACE
+	main_inst._unhandled_input(ev_ctrl_bksp)
+	assert(main_inst.archive_state.current_filter == -1 and main_inst.search_input.text == "", "Ctrl+Backspace in MainView (even focused) should reset filters and search")
+
+	var ev_ctrl_space = InputEventKey.new()
+	ev_ctrl_space.pressed = true
+	ev_ctrl_space.ctrl_pressed = true
+	ev_ctrl_space.keycode = KEY_SPACE
+	main_inst._unhandled_input(ev_ctrl_space)
+	assert(main_inst.detail_modal.visible == true, "Ctrl+Space in MainView (even focused) should open first filtered item")
+
+	var id_before_218 = main_inst.detail_modal.current_item.id
+	main_inst.detail_modal.quote_input.grab_focus()
+	main_inst.detail_modal._unhandled_input(ev_ctrl_space)
+	assert(main_inst.detail_modal.current_item.id != id_before_218, "Ctrl+Space in DetailModal (even focused) should navigate to next item")
+	main_inst.detail_modal._unhandled_input(ev_ctrl_bksp)
+	assert(main_inst.detail_modal.visible == false, "Ctrl+Backspace in DetailModal should close modal")
+
+	main_inst._on_add_btn_pressed()
+	var color_before_218 = main_inst.add_modal.selected_color
+	main_inst.add_modal._unhandled_input(ev_ctrl_space)
+	assert(main_inst.add_modal.selected_color != color_before_218, "Ctrl+Space in AddModal should step cover swatch")
+	main_inst.add_modal.title_input.text = "임시 제목"
+	main_inst.add_modal._unhandled_input(ev_ctrl_bksp)
+	assert(main_inst.add_modal.title_input.text == "", "Ctrl+Backspace in AddModal should clear inputs")
+	main_inst.add_modal.close()
+	print("✓ Sprint 218: Global Ctrl/Cmd+Space Open/Nav/Swatch & Ctrl/Cmd+Backspace Reset/Close/Clear verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

@@ -1555,6 +1555,29 @@
                 } else {
                     showToast(e.shiftKey ? '🎧 앰비언트 사운드 순환' : (isPrev ? '↕️ 이전 정렬' : '↕️ 다음 정렬'));
                 }
+            } else if ((e.ctrlKey || e.metaKey) && e.key === ' ') {
+                e.preventDefault();
+                const jm = document.getElementById('journal-modal');
+                if (jm && !jm.classList.contains('hidden')) {
+                    const dir = e.shiftKey ? -1 : 1;
+                    const idx = ITEMS.findIndex(x => x.id === activeId);
+                    if (idx !== -1 && ITEMS.length > 0) openJournalModal(ITEMS[(idx + dir + ITEMS.length) % ITEMS.length].id);
+                } else if (ITEMS.length > 0) {
+                    const target = e.shiftKey ? ITEMS[Math.floor(Math.random() * ITEMS.length)] : ITEMS[0];
+                    if (target) openJournalModal(target.id);
+                }
+            } else if ((e.ctrlKey || e.metaKey) && e.key === 'Backspace') {
+                e.preventDefault();
+                const jm = document.getElementById('journal-modal');
+                if (jm && !jm.classList.contains('hidden')) {
+                    if (e.shiftKey) showToast('📋 독서 카드 복사 및 일기장 닫기');
+                    closeJournalModal();
+                } else {
+                    const si = document.getElementById('search-input');
+                    if (si) si.value = '';
+                    switchCategory('all');
+                    showToast(e.shiftKey ? '🧹 스튜디오 전체 초기화 완료!' : '🧹 검색/필터 초기화 완료!');
+                }
             } else if (document.getElementById('journal-modal') && !document.getElementById('journal-modal').classList.contains('hidden') && (e.key === '/' || e.key === 'Tab' || e.key === 'Enter' || e.key === 'Backspace' || e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === '0' || e.key === '9' || ['5', '6', '7', '8'].includes(e.key)) && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
                 if (e.key === 'Tab') {
                     e.preventDefault();
@@ -1890,6 +1913,29 @@
                     switchCategory(nxt);
                 } else {
                     showToast(e.shiftKey ? '🎧 앰비언트 사운드 순환' : (isPrev ? '↕️ 이전 정렬' : '↕️ 다음 정렬'));
+                }
+            } else if ((e.ctrlKey || e.metaKey) && e.key === ' ') {
+                e.preventDefault();
+                const jm = document.getElementById('journal-modal');
+                if (jm && !jm.classList.contains('hidden')) {
+                    const dir = e.shiftKey ? -1 : 1;
+                    const idx = ITEMS.findIndex(x => x.id === activeId);
+                    if (idx !== -1 && ITEMS.length > 0) openJournalModal(ITEMS[(idx + dir + ITEMS.length) % ITEMS.length].id);
+                } else if (ITEMS.length > 0) {
+                    const target = e.shiftKey ? ITEMS[Math.floor(Math.random() * ITEMS.length)] : ITEMS[0];
+                    if (target) openJournalModal(target.id);
+                }
+            } else if ((e.ctrlKey || e.metaKey) && e.key === 'Backspace') {
+                e.preventDefault();
+                const jm = document.getElementById('journal-modal');
+                if (jm && !jm.classList.contains('hidden')) {
+                    if (e.shiftKey) showToast('📋 독서 카드 복사 및 일기장 닫기');
+                    closeJournalModal();
+                } else {
+                    const si = document.getElementById('search-input');
+                    if (si) si.value = '';
+                    switchCategory('all');
+                    showToast(e.shiftKey ? '🧹 스튜디오 전체 초기화 완료!' : '🧹 검색/필터 초기화 완료!');
                 }
             } else if (document.getElementById('journal-modal') && !document.getElementById('journal-modal').classList.contains('hidden') && (e.key === '/' || e.key === 'Tab' || e.key === 'Enter' || e.key === 'Backspace' || e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === '0' || e.key === '9' || ['5', '6', '7', '8'].includes(e.key)) && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
                 if (e.key === 'Tab') {

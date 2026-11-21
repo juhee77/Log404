@@ -1040,6 +1040,16 @@ func _unhandled_input(event: InputEvent) -> void:
 		navigate_requested.emit(step_val)
 		get_viewport().set_input_as_handled()
 		return
+	if (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_SPACE:
+		navigate_requested.emit(-1 if event.shift_pressed else 1)
+		get_viewport().set_input_as_handled()
+		return
+	if (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_BACKSPACE:
+		if event.shift_pressed:
+			copy_book_quote_card()
+		close()
+		get_viewport().set_input_as_handled()
+		return
 	if event.keycode == KEY_ESCAPE:
 		if event.shift_pressed:
 			copy_book_quote_card()

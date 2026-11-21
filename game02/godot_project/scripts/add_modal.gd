@@ -410,6 +410,16 @@ func _unhandled_input(event: InputEvent) -> void:
 			cat_option.select(1 - cat_option.selected)
 		get_viewport().set_input_as_handled()
 		return
+	if (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_SPACE:
+		_step_color(-1 if event.shift_pressed else 1)
+		get_viewport().set_input_as_handled()
+		return
+	if (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_BACKSPACE:
+		clear_inputs()
+		if event.shift_pressed:
+			close()
+		get_viewport().set_input_as_handled()
+		return
 	if event.shift_pressed and (event.keycode == KEY_ENTER or event.keycode == KEY_KP_ENTER):
 		_submit_with_sample_fallback()
 		get_viewport().set_input_as_handled()
