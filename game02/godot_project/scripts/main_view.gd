@@ -1005,8 +1005,13 @@ func _unhandled_input(event: InputEvent) -> void:
 	if (detail_modal != null and detail_modal.visible) or (add_modal != null and add_modal.visible):
 		return
 	if event is InputEventKey and event.pressed and not event.echo:
-		var is_find: bool = (event.keycode == KEY_F and (event.ctrl_pressed or event.meta_pressed)) or (event.keycode == KEY_SLASH and not event.shift_pressed and not event.ctrl_pressed and not event.meta_pressed)
-		if (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_S:
+		var is_find: bool = ((event.keycode == KEY_F or event.keycode == KEY_K) and (event.ctrl_pressed or event.meta_pressed)) or (event.keycode == KEY_SLASH and not event.shift_pressed and not event.ctrl_pressed and not event.meta_pressed)
+		if event.keycode == KEY_F1:
+			_show_shortcut_cheatsheet()
+			if event.shift_pressed and status_toast != null:
+				DisplayServer.clipboard_set(status_toast.text)
+			get_viewport().set_input_as_handled()
+		elif (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_S:
 			_trigger_instant_json_backup()
 			get_viewport().set_input_as_handled()
 		elif (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_N:

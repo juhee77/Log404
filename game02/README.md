@@ -5,7 +5,7 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 
 ---
 
-## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 205 Milestone)
+## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 206)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
@@ -14,6 +14,10 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 ---
 
 ## 🚀 최신 스프린트 업데이트 요약 ([전체 회의록 보기](SPRINT_LOG.md))
+
+### 📓 [Sprint 206] 3대 뷰 전역 `F1` 단축키 치트시트(Shift: 복사) · `Ctrl/Cmd+K` 검색창 포커스
+- **전역 `F1` 도움말 & `Ctrl/Cmd+K` 검색**: 입력창 포커스 여부와 관계없이 `F1` 키로 현재 화면(`MainView`·`DetailModal`·`AddModal`)의 단축키 치트시트를 즉시 확인(`Shift+F1`: 복사)하고, `Ctrl/Cmd+K`로 검색창에 바로 진입합니다.
+- **웹 목업 동기화**: `index.html` 웹 목업에도 `F1` 3대 뷰 치트시트와 `Ctrl/Cmd+K` 검색창 포커스를 동기화했습니다.
 
 ### 📓 [Sprint 205 Milestone] 3대 뷰 전역 `Ctrl/Cmd+S` 저장·백업 · `Ctrl/Cmd+N` 새 일기
 - **전역 `Ctrl/Cmd+S` & `Ctrl/Cmd+N`**: 입력창 포커스 중에도 `Ctrl/Cmd+S`로 즉시 저장·백업(`MainView`: JSON 백업, `DetailModal`: 밑줄 저장, `AddModal`: 일기 등록)하고, `Ctrl/Cmd+N`으로 새 일기 쓰기 모달을 바로 엽니다(`Shift`: 샘플 채움).

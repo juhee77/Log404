@@ -3882,6 +3882,31 @@ func _init() -> void:
 	main_inst.detail_modal.close()
 	print("✓ Sprint 205 Milestone: Global Ctrl/Cmd+S Save/Backup & Ctrl/Cmd+N AddModal verified")
 
+	# Sprint 206: Global F1 Help Cheatsheet (3 Views) & Ctrl/Cmd+K Search Focus
+	main_inst.search_input.release_focus()
+	var ev_ctrl_k = InputEventKey.new()
+	ev_ctrl_k.pressed = true
+	ev_ctrl_k.ctrl_pressed = true
+	ev_ctrl_k.keycode = KEY_K
+	main_inst._unhandled_input(ev_ctrl_k)
+
+	var ev_f1 = InputEventKey.new()
+	ev_f1.pressed = true
+	ev_f1.keycode = KEY_F1
+	main_inst._unhandled_input(ev_f1)
+	assert("단축키:" in main_inst.status_toast.text, "F1 in MainView (even focused) should display cheatsheet")
+
+	main_inst._on_card_clicked(main_inst.archive_state.items[0])
+	main_inst.detail_modal._unhandled_input(ev_f1)
+	assert("모달 단축키:" in main_inst.status_toast.text, "F1 in DetailModal should display modal cheatsheet")
+	main_inst.detail_modal.close()
+
+	main_inst._on_add_btn_pressed()
+	main_inst.add_modal._unhandled_input(ev_f1)
+	assert("새 일기 단축키:" in main_inst.status_toast.text, "F1 in AddModal should display AddModal cheatsheet")
+	main_inst.add_modal.close()
+	print("✓ Sprint 206: Global F1 Help Cheatsheet (3 Views) & Ctrl/Cmd+K Search Focus verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

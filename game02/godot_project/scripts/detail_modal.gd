@@ -908,6 +908,12 @@ func close() -> void:
 func _unhandled_input(event: InputEvent) -> void:
 	if not visible or not (event is InputEventKey) or not event.pressed or event.echo:
 		return
+	if event.keycode == KEY_F1:
+		help_requested.emit()
+		if event.shift_pressed:
+			DisplayServer.clipboard_set("⌨️ 모달 단축키: [←/→] 넘김(Shift: 처음·끝) · [+/-] 권(Shift: 초판·북마크) · [1~4] 인장(Shift: 찍고닫기) · [E] 문장(Shift: 샘플) · [L] 형광펜(Shift: 속지) · [C] 복사(Shift: 리포트) · [ESC] 닫기(Shift: 카드복사+닫기)")
+		get_viewport().set_input_as_handled()
+		return
 	if (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_S:
 		_on_save_quote_btn_pressed()
 		get_viewport().set_input_as_handled()

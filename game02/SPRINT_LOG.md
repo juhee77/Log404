@@ -5,6 +5,21 @@
 
 ---
 
+## 📓 [Sprint 206] 3대 뷰 전역 `F1` 단축키 치트시트(Shift: 복사) · `Ctrl/Cmd+K` 검색창 포커스
+- **일시**: 2026-11-21
+- **14인 가상 애자일 스쿼드 회의록**:
+  - **다꾸러 VOC (지민·수빈·하연)**: "입력창에 커서가 있을 때도 `F1` 키만 누르면 현재 화면(`MainView`/`DetailModal`/`AddModal`)에 맞는 단축키 치트시트를 바로 띄우고(`Shift+F1`: 복사), 노션·슬랙처럼 `Ctrl/Cmd+K`로 검색창에 즉시 포커스를 주고 싶어요!"
+  - **PO & UX/UI**: `MainView`, `DetailModal`, `AddModal`의 `_unhandled_input` 최상단(포커스 체크 이전)에 `KEY_F1` 치트시트 분기를 추가하고, `MainView`의 `is_find` 조건에 `(event.keycode == KEY_K and (event.ctrl_pressed or event.meta_pressed))`를 통합한다.
+- **구현 내역**:
+  - [`main_view.gd`](godot_project/scripts/main_view.gd): `F1`(치트시트 / `Shift+F1`: 복사) 및 `Ctrl/Cmd+K`(검색창 포커스·전체 선택) 추가.
+  - [`detail_modal.gd`](godot_project/scripts/detail_modal.gd): `F1`(모달 치트시트 / `Shift+F1`: 복사) 추가.
+  - [`add_modal.gd`](godot_project/scripts/add_modal.gd): `F1`(새 일기 치트시트 / `Shift+F1`: 복사) 추가.
+  - [`index.html`](index.html): 웹 인터랙티브 목업에 `F1` 3대 뷰 치트시트 및 `Ctrl/Cmd+K` 검색창 포커스 동기화.
+  - [`test_main_integration.gd`](godot_project/tests/test_main_integration.gd): `Ctrl+K` 및 3대 뷰 `F1` 치트시트 검증 추가.
+- **검증**: `test_archive.gd`, `test_persistence.gd`, `test_main_integration.gd` 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 갱신 완료.
+
+---
+
 ## 📓 [Sprint 205 Milestone] 3대 뷰 전역 `Ctrl/Cmd+S` 저장·백업 · `Ctrl/Cmd+N` 새 일기 (포커스 중에도 동작)
 - **일시**: 2026-11-21
 - **14인 가상 애자일 스쿼드 회의록**:

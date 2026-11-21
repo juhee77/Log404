@@ -1332,6 +1332,21 @@
                 else if (lk === 'h' || e.key === '?') showToast('⌨️ 새 일기 단축키: [1~5/←→/Space] 컬러 · [Home/End] 첫·끝 · [R] 랜덤 · [C/E/G] 분류 · [T/A/Q] 칸이동 · [F] 샘플 · [S/Enter] 등록 · [0/Bksp/X] 초기화 · [ESC] 닫기');
                 else if (e.key === 'Enter') showToast('📖 새 일기 등록 제출!');
                 else if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') showToast(e.key === 'ArrowLeft' ? '🎨 이전 표지 컬러 선택' : '🎨 다음 표지 컬러 선택');
+            } else if (e.key === 'F1') {
+                e.preventDefault();
+                const am = document.getElementById('add-modal');
+                const jm = document.getElementById('journal-modal');
+                if (am && !am.classList.contains('hidden')) {
+                    showToast('⌨️ 새 일기 단축키: [1~6/←→/Space] 컬러 · [7/8] 분류 · [9] 샘플 · [T/A/Q] 칸이동 · [S/Enter] 등록 · [ESC] 닫기');
+                } else if (jm && !jm.classList.contains('hidden')) {
+                    showToast('⌨️ 모달 단축키: [←/→/↑/↓] 넘김 · [1~4] 인장 · [5~8] 잉크 · [9] 형광펜 · [0] 원문복원 · [Enter] 편집 · [ESC/Bksp] 닫기');
+                } else {
+                    showToast('⌨️ 단축키: [0] 초기화 · [1~5] 탭 · [6~9] 정렬 · [Ctrl+K//] 검색 · [Ctrl+S] 백업 · [Ctrl+N] 새일기 · [H/F1] 도움말');
+                }
+            } else if ((e.ctrlKey || e.metaKey) && (e.key === 'k' || e.key === 'K')) {
+                e.preventDefault();
+                const si = document.getElementById('search-input');
+                if (si) { si.focus(); si.select(); }
             } else if ((e.ctrlKey || e.metaKey) && (e.key === 's' || e.key === 'S')) {
                 e.preventDefault();
                 const jm = document.getElementById('journal-modal');
@@ -1456,6 +1471,21 @@
                 else if (lk === 'h' || e.key === '?') showToast('⌨️ 새 일기 단축키: [1~5/←→/Space] 컬러 · [Home/End] 첫·끝 · [R] 랜덤 · [C/E/G] 분류 · [T/A/Q] 칸이동 · [F] 샘플 · [S/Enter] 등록 · [0/Bksp/X] 초기화 · [ESC] 닫기');
                 else if (e.key === 'Enter') showToast('📖 새 일기 등록 제출!');
                 else if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') showToast(e.key === 'ArrowLeft' ? '🎨 이전 표지 컬러 선택' : '🎨 다음 표지 컬러 선택');
+            } else if (e.key === 'F1') {
+                e.preventDefault();
+                const am = document.getElementById('add-modal');
+                const jm = document.getElementById('journal-modal');
+                if (am && !am.classList.contains('hidden')) {
+                    showToast('⌨️ 새 일기 단축키: [1~6/←→/Space] 컬러 · [7/8] 분류 · [9] 샘플 · [T/A/Q] 칸이동 · [S/Enter] 등록 · [ESC] 닫기');
+                } else if (jm && !jm.classList.contains('hidden')) {
+                    showToast('⌨️ 모달 단축키: [←/→/↑/↓] 넘김 · [1~4] 인장 · [5~8] 잉크 · [9] 형광펜 · [0] 원문복원 · [Enter] 편집 · [ESC/Bksp] 닫기');
+                } else {
+                    showToast('⌨️ 단축키: [0] 초기화 · [1~5] 탭 · [6~9] 정렬 · [Ctrl+K//] 검색 · [Ctrl+S] 백업 · [Ctrl+N] 새일기 · [H/F1] 도움말');
+                }
+            } else if ((e.ctrlKey || e.metaKey) && (e.key === 'k' || e.key === 'K')) {
+                e.preventDefault();
+                const si = document.getElementById('search-input');
+                if (si) { si.focus(); si.select(); }
             } else if ((e.ctrlKey || e.metaKey) && (e.key === 's' || e.key === 'S')) {
                 e.preventDefault();
                 const jm = document.getElementById('journal-modal');
