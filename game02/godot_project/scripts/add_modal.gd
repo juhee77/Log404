@@ -293,6 +293,18 @@ func _unhandled_input(event: InputEvent) -> void:
 			_submit_with_sample_fallback()
 		get_viewport().set_input_as_handled()
 		return
+	if (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_E and cat_option != null:
+		cat_option.select(0)
+		if event.shift_pressed:
+			_submit_with_sample_fallback()
+		get_viewport().set_input_as_handled()
+		return
+	if (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_W:
+		if event.shift_pressed:
+			clear_inputs()
+		close()
+		get_viewport().set_input_as_handled()
+		return
 	if event.shift_pressed and (event.keycode == KEY_ENTER or event.keycode == KEY_KP_ENTER):
 		_submit_with_sample_fallback()
 		get_viewport().set_input_as_handled()

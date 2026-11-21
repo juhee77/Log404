@@ -3994,6 +3994,31 @@ func _init() -> void:
 	main_inst.add_modal.close()
 	print("✓ Sprint 209: Global Ctrl/Cmd+I Infographic/Ink/Sample & Ctrl/Cmd+G Gacha/Grade/Cat verified")
 
+	# Sprint 210 Milestone: Global Ctrl/Cmd+E (Manga/Edit/Cat) & Ctrl/Cmd+W (Close Modal/Scrape)
+	main_inst.search_input.grab_focus()
+	var ev_ctrl_e = InputEventKey.new()
+	ev_ctrl_e.pressed = true
+	ev_ctrl_e.ctrl_pressed = true
+	ev_ctrl_e.keycode = KEY_E
+	main_inst._unhandled_input(ev_ctrl_e)
+	assert(main_inst.archive_state.current_filter == 0, "Ctrl+E in MainView (even focused) should filter manga (0)")
+
+	main_inst._on_card_clicked(main_inst.archive_state.items[0])
+	var ev_ctrl_w = InputEventKey.new()
+	ev_ctrl_w.pressed = true
+	ev_ctrl_w.ctrl_pressed = true
+	ev_ctrl_w.keycode = KEY_W
+	main_inst.detail_modal._unhandled_input(ev_ctrl_w)
+	assert(main_inst.detail_modal.visible == false, "Ctrl+W in DetailModal should close modal")
+
+	main_inst._on_add_btn_pressed()
+	main_inst.add_modal.cat_option.select(1)
+	main_inst.add_modal._unhandled_input(ev_ctrl_e)
+	assert(main_inst.add_modal.cat_option.selected == 0, "Ctrl+E in AddModal should select Manga (0)")
+	main_inst.add_modal._unhandled_input(ev_ctrl_w)
+	assert(main_inst.add_modal.visible == false, "Ctrl+W in AddModal should close modal")
+	print("✓ Sprint 210 Milestone: Global Ctrl/Cmd+E Manga/Edit/Cat & Ctrl/Cmd+W Close/Scrape verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

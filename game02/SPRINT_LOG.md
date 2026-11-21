@@ -5,6 +5,21 @@
 
 ---
 
+## 📓 [Sprint 210 Milestone] 3대 뷰 전역 `Ctrl/Cmd+E` 이북·편집·분류 · `Ctrl/Cmd+W` 모달 닫기·스크랩
+- **일시**: 2026-11-21
+- **14인 가상 애자일 스쿼드 회의록**:
+  - **다꾸러 VOC (지민·수빈·하연)**: "입력창 포커스 중에도 브라우저·에디터처럼 `Ctrl/Cmd+W`로 열린 모달(`DetailModal`/`AddModal`)을 바로 닫고(`MainView`: 웹 스크랩), `Ctrl/Cmd+E`로 이북·단행본 필터(`MainView`)·밑줄 편집 포커스(`DetailModal`)·이북 분류 선택(`AddModal`)을 실행하고 싶어요!"
+  - **PO & UX/UI**: `MainView`, `DetailModal`, `AddModal`의 `_unhandled_input` 최상단에 `ctrl_pressed or meta_pressed` + `KEY_E`/`KEY_W` 분기를 추가해 3대 뷰 전역 `Ctrl/Cmd` 워크플로우를 완성한다.
+- **구현 내역**:
+  - [`main_view.gd`](godot_project/scripts/main_view.gd): `Ctrl/Cmd+E`(이북·단행본 필터 / `Shift`: 첫 작품 열기) 및 `Ctrl/Cmd+W`(웹 스크랩 / `Shift`: 첫 작품 열기) 추가.
+  - [`detail_modal.gd`](godot_project/scripts/detail_modal.gd): `Ctrl/Cmd+E`(밑줄 편집 포커스 / `Shift`: 샘플 채움) 및 `Ctrl/Cmd+W`(모달 닫기 / `Shift`: 복사+닫기) 추가.
+  - [`add_modal.gd`](godot_project/scripts/add_modal.gd): `Ctrl/Cmd+E`(이북·만화 분류 선택 / `Shift`: 등록) 및 `Ctrl/Cmd+W`(모달 닫기 / `Shift`: 비우고 닫기) 추가.
+  - [`index.html`](index.html): 웹 인터랙티브 목업에 `Ctrl/Cmd+E`, `Ctrl/Cmd+W` 전역 단축키 동기화.
+  - [`test_main_integration.gd`](godot_project/tests/test_main_integration.gd): 포커스 상태 `Ctrl+E`, `Ctrl+W` 3대 뷰 검증 추가.
+- **검증**: `test_archive.gd`, `test_persistence.gd`, `test_main_integration.gd` 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 갱신 완료.
+
+---
+
 ## 📓 [Sprint 209] 3대 뷰 전역 `Ctrl/Cmd+I` 인포그래픽·잉크·샘플 · `Ctrl/Cmd+G` 가챠·등급·분류
 - **일시**: 2026-11-21
 - **14인 가상 애자일 스쿼드 회의록**:

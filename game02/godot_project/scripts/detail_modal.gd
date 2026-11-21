@@ -947,6 +947,19 @@ func _unhandled_input(event: InputEvent) -> void:
 		cycle_condition_grade(-1 if event.shift_pressed else 1)
 		get_viewport().set_input_as_handled()
 		return
+	if (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_W:
+		if event.shift_pressed:
+			copy_book_quote_card()
+		close()
+		get_viewport().set_input_as_handled()
+		return
+	if (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_E and quote_input != null:
+		if event.shift_pressed:
+			quote_input.text = "오늘도 한 페이지의 여운을 남겼다."
+		quote_input.grab_focus()
+		quote_input.select_all()
+		get_viewport().set_input_as_handled()
+		return
 	if event.keycode == KEY_ESCAPE:
 		if event.shift_pressed:
 			copy_book_quote_card()
