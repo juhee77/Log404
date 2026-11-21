@@ -5,6 +5,19 @@
 
 ---
 
+## 📓 [Sprint 194] `AddModal` 키보드 `0` 기본값 리셋 · `Home/End` 첫·끝 컬러 점프 · `Backspace` 초기화
+- **일시**: 2026-11-21
+- **14인 가상 애자일 스쿼드 회의록**:
+  - **다꾸러 VOC (지민·수빈·하연)**: "`AddModal`에서 작성 중이던 내용과 카테고리·컬러를 한 번에 처음 기본값으로 되돌리는 `0` 키(`Shift+0`: 리셋 후 닫기), 표지 스와치 맨 앞/끝으로 점프하는 `Home`/`End`, 그리고 입력칸 밖에서 `Backspace`로 비우기(`Shift+Backspace`: 비우고 닫기)가 있으면 좋겠어요!"
+  - **PO & UX/UI**: `AddModal` `_unhandled_input`에 `KEY_0`(입력·카테고리·컬러 기본값 초기화 / `Shift+0`: 닫기), `KEY_HOME`/`KEY_END`(첫 번째/마지막 스와치 점프), `KEY_BACKSPACE`(`clear_inputs()` / `Shift+Backspace`: `close()`)를 추가한다.
+- **구현 내역**:
+  - [`add_modal.gd`](godot_project/scripts/add_modal.gd): `KEY_0`, `KEY_HOME`, `KEY_END`, `KEY_BACKSPACE` 단축키 분기 추가.
+  - [`index.html`](index.html): 웹 인터랙티브 목업에 `AddModal` `0`/`Home`/`End`/`Backspace` 단축키 피드백 동기화.
+  - [`test_main_integration.gd`](godot_project/tests/test_main_integration.gd): `Home`/`End` 스와치 점프, `0` 모달 기본값 리셋, `Shift+Backspace` 비우고 닫기 검증 추가.
+- **검증**: `test_archive.gd`, `test_persistence.gd`, `test_main_integration.gd` 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 갱신 완료.
+
+---
+
 ## 📓 [Sprint 193] `AddModal` 키보드 `A/Q` 작가·밑줄 포커스 · `Space` 컬러 순환 · `R` 랜덤 표지 컬러
 - **일시**: 2026-11-21
 - **14인 가상 애자일 스쿼드 회의록**:

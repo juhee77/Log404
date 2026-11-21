@@ -3571,6 +3571,41 @@ func _init() -> void:
 	main_inst.add_modal.close()
 	print("✓ Sprint 193: AddModal Keys A/Q Focus, Space Swatch Step & R Random Color verified")
 
+	# Sprint 194: AddModal Keys 0 Reset, Home/End Swatch Jump & Backspace Clear
+	main_inst._on_add_btn_pressed()
+	main_inst.add_modal.title_input.release_focus()
+	main_inst.add_modal.author_input.release_focus()
+	main_inst.add_modal.quote_input.release_focus()
+
+	var ev_am_end = InputEventKey.new()
+	ev_am_end.pressed = true
+	ev_am_end.keycode = KEY_END
+	main_inst.add_modal._unhandled_input(ev_am_end)
+	assert(main_inst.add_modal.selected_color == main_inst.add_modal.COVER_SWATCHES[main_inst.add_modal.COVER_SWATCHES.size() - 1]["hex"], "End in AddModal should jump to last swatch")
+
+	var ev_am_home = InputEventKey.new()
+	ev_am_home.pressed = true
+	ev_am_home.keycode = KEY_HOME
+	main_inst.add_modal._unhandled_input(ev_am_home)
+	assert(main_inst.add_modal.selected_color == main_inst.add_modal.COVER_SWATCHES[0]["hex"], "Home in AddModal should jump to first swatch")
+
+	main_inst.add_modal.title_input.text = "초기화 테스트"
+	main_inst.add_modal.cat_option.select(1)
+	var ev_am_0 = InputEventKey.new()
+	ev_am_0.pressed = true
+	ev_am_0.keycode = KEY_0
+	main_inst.add_modal._unhandled_input(ev_am_0)
+	assert(main_inst.add_modal.title_input.text == "" and main_inst.add_modal.cat_option.selected == 0, "Key 0 in AddModal should reset inputs and category")
+
+	main_inst.add_modal.title_input.release_focus()
+	var ev_am_shift_bksp = InputEventKey.new()
+	ev_am_shift_bksp.pressed = true
+	ev_am_shift_bksp.shift_pressed = true
+	ev_am_shift_bksp.keycode = KEY_BACKSPACE
+	main_inst.add_modal._unhandled_input(ev_am_shift_bksp)
+	assert(main_inst.add_modal.visible == false, "Shift+Backspace in AddModal should clear and close modal")
+	print("✓ Sprint 194: AddModal Keys 0 Reset, Home/End Swatch Jump & Backspace Clear verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

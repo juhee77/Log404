@@ -5,7 +5,7 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 
 ---
 
-## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 193)
+## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 194)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
@@ -14,6 +14,10 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 ---
 
 ## 🚀 최신 스프린트 업데이트 요약 ([전체 회의록 보기](SPRINT_LOG.md))
+
+### 📓 [Sprint 194] `AddModal` 키보드 `0` 기본값 리셋 · `Home/End` 첫·끝 컬러 점프 · `Backspace` 초기화
+- **`AddModal` 리셋 & 스와치 점프**: 입력창 포커스 해제 상태에서 `0`으로 입력·카테고리·표지 컬러를 기본값으로 초기화(`Shift+0`: 리셋 후 닫기), `Home`/`End`로 첫/마지막 표지 스와치 점프, `Backspace`로 입력란 비우기(`Shift+Backspace`: 비우고 닫기)를 지원합니다.
+- **웹 목업 동기화**: `index.html` 웹 목업에도 `AddModal` `0`/`Home`/`End`/`Backspace` 단축키 피드백을 동기화했습니다.
 
 ### 📓 [Sprint 193] `AddModal` 키보드 `A/Q` 작가·밑줄 포커스 · `Space` 컬러 순환 · `R` 랜덤 표지 컬러
 - **`AddModal` 입력 포커스 & 컬러 팔레트**: 입력창 포커스 해제 상태에서 `A`(작가/브랜드) · `Q`(한줄 밑줄) 입력칸으로 즉시 포커스를 이동(`Shift`: 비우고 포커스)하고, `Space`로 표지 컬러 순환(`Shift+Space`: 역순), `R`로 랜덤 표지 컬러 선택(`Shift+R`: 샘플 폴백 등록)을 지원합니다.

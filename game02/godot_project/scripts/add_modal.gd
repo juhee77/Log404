@@ -351,6 +351,26 @@ func _unhandled_input(event: InputEvent) -> void:
 			if event.shift_pressed:
 				_submit_with_sample_fallback()
 			get_viewport().set_input_as_handled()
+		elif event.keycode == KEY_0:
+			clear_inputs()
+			if cat_option != null:
+				cat_option.select(0)
+			if not COVER_SWATCHES.is_empty():
+				select_color(COVER_SWATCHES[0]["hex"])
+			if event.shift_pressed:
+				close()
+			get_viewport().set_input_as_handled()
+		elif event.keycode == KEY_HOME and not COVER_SWATCHES.is_empty():
+			select_color(COVER_SWATCHES[0]["hex"])
+			get_viewport().set_input_as_handled()
+		elif event.keycode == KEY_END and not COVER_SWATCHES.is_empty():
+			select_color(COVER_SWATCHES[COVER_SWATCHES.size() - 1]["hex"])
+			get_viewport().set_input_as_handled()
+		elif event.keycode == KEY_BACKSPACE:
+			clear_inputs()
+			if event.shift_pressed:
+				close()
+			get_viewport().set_input_as_handled()
 
 func _on_close_btn_pressed() -> void:
 	close()
