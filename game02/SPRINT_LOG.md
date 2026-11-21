@@ -5,6 +5,19 @@
 
 ---
 
+## 📓 [Sprint 197] `DetailModal` 키보드 `↑/↓` 카드 넘김(Shift: 처음·끝) · `0` 문장 원문 복원
+- **일시**: 2026-11-21
+- **14인 가상 애자일 스쿼드 회의록**:
+  - **다꾸러 VOC (지민·수빈·하연)**: "`DetailModal`에서 `←/→`뿐만 아니라 `↑/↓` 방향키로도 이전/다음 일기를 넘기고(`Shift+↑/↓`: 처음·끝 작품 점프), 밑줄 문장을 고치다가 원문으로 되돌리고 싶을 때 `0` 키로 저장된 원문을 복원하고 삭제 무장도 해제(`Shift+0`: 닫기)하고 싶어요!"
+  - **PO & UX/UI**: `DetailModal` `_unhandled_input`에 `KEY_UP`/`KEY_DOWN`(`navigate_requested.emit(±1)` / `Shift`: `±9999`) 및 `KEY_0`(`quote_input.text = current_item.memo` 원문 복원 및 `delete_armed` 해제 / `Shift+0`: 닫기)를 추가한다.
+- **구현 내역**:
+  - [`detail_modal.gd`](godot_project/scripts/detail_modal.gd): `KEY_UP`, `KEY_DOWN`, `KEY_0` 단축키 분기 추가.
+  - [`index.html`](index.html): 웹 인터랙티브 목업에 `DetailModal` `ArrowUp`/`ArrowDown`/`0` 단축키 동기화.
+  - [`test_main_integration.gd`](godot_project/tests/test_main_integration.gd): `↑/↓` 카드 넘김 및 `0` 원문 복원 검증 추가.
+- **검증**: `test_archive.gd`, `test_persistence.gd`, `test_main_integration.gd` 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 갱신 완료.
+
+---
+
 ## 📓 [Sprint 196] `DetailModal` 키보드 `Enter` 문장 편집(Shift: 형광펜) · `Backspace` 닫기(Shift: 복사+닫기)
 - **일시**: 2026-11-21
 - **14인 가상 애자일 스쿼드 회의록**:

@@ -3660,6 +3660,31 @@ func _init() -> void:
 	assert(main_inst.detail_modal.visible == false and "복사" in main_inst.status_toast.text, "Shift+Backspace in DetailModal should copy quote card and close")
 	print("✓ Sprint 196: DetailModal Keys Enter Edit/Highlight & Backspace Close/Copy+Close verified")
 
+	# Sprint 197: DetailModal Keys Up/Down Navigation & 0 Restore Quote/Disarm
+	main_inst._on_card_clicked(main_inst.archive_state.items[0])
+	main_inst.detail_modal.quote_input.release_focus()
+	var title_0_197 = main_inst.detail_modal.current_item.title
+	var ev_dm_down = InputEventKey.new()
+	ev_dm_down.pressed = true
+	ev_dm_down.keycode = KEY_DOWN
+	main_inst.detail_modal._unhandled_input(ev_dm_down)
+	assert(main_inst.detail_modal.current_item.title != title_0_197, "Down arrow in DetailModal should navigate to next card")
+
+	var ev_dm_up = InputEventKey.new()
+	ev_dm_up.pressed = true
+	ev_dm_up.keycode = KEY_UP
+	main_inst.detail_modal._unhandled_input(ev_dm_up)
+	assert(main_inst.detail_modal.current_item.title == title_0_197, "Up arrow in DetailModal should navigate back to first card")
+
+	main_inst.detail_modal.quote_input.text = "임시 수정 문구"
+	var ev_dm_0 = InputEventKey.new()
+	ev_dm_0.pressed = true
+	ev_dm_0.keycode = KEY_0
+	main_inst.detail_modal._unhandled_input(ev_dm_0)
+	assert(main_inst.detail_modal.quote_input.text == main_inst.detail_modal.current_item.memo, "Key 0 in DetailModal should restore quote_input text to saved memo")
+	main_inst.detail_modal.close()
+	print("✓ Sprint 197: DetailModal Keys Up/Down Navigation & 0 Restore Quote/Disarm verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()
