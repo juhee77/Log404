@@ -1034,6 +1034,12 @@ func _unhandled_input(event: InputEvent) -> void:
 			if event.shift_pressed:
 				close()
 			get_viewport().set_input_as_handled()
+		elif event.keycode == KEY_9:
+			toggle_quote_highlight()
+			if event.shift_pressed:
+				copy_book_quote_card()
+				close()
+			get_viewport().set_input_as_handled()
 		else:
 			var shift_pairs := {
 				KEY_V: [boost_estimated_value, reduce_estimated_value],

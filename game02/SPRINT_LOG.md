@@ -5,6 +5,20 @@
 
 ---
 
+## 📓 [Sprint 200 Milestone] `DetailModal` 숫자키 `9` 형광펜 토글(Shift: 복사+닫기) · 모달 `0~9` & 치트시트 100% 완성
+- **일시**: 2026-11-21
+- **14인 가상 애자일 스쿼드 회의록**:
+  - **다꾸러 VOC (지민·수빈·하연)**: "`DetailModal`에서 `1~4`(인장), `5~8`(만년필 잉크 4종), `0`(원문 복원)에 이어 마지막 숫자키 `9`로 형광펜 하이라이트를 즉시 토글(`Shift+9`: 형광펜 토글 후 독서 카드 복사+닫기)하고, `H` 모달 단축키 치트시트에도 `0~9` 및 `Enter`/`Bksp` 안내를 100% 반영해주세요!"
+  - **PO & UX/UI**: `DetailModal` `_unhandled_input`에 `KEY_9`(`toggle_quote_highlight()` / `Shift+9`: `copy_book_quote_card(); close()`)를 추가해 메인과 모달 모두 `0~9` 전 숫자키 매핑을 완성한다. `MainView` `_on_modal_help_requested()` 치트시트에도 `[5~8] 잉크 · [9] 형광펜 · [0] 원문복원` 등을 동기화한다.
+- **구현 내역**:
+  - [`detail_modal.gd`](godot_project/scripts/detail_modal.gd): `KEY_9` 형광펜 토글 및 `Shift+9` 복사+닫기 분기 추가.
+  - [`main_view.gd`](godot_project/scripts/main_view.gd): `_on_modal_help_requested()` 모달 치트시트 동기화.
+  - [`index.html`](index.html): 웹 인터랙티브 목업에 `DetailModal` `9` 및 `Shift+9` 형광펜 토글 단축키 동기화.
+  - [`test_main_integration.gd`](godot_project/tests/test_main_integration.gd): `9` 형광펜 토글, `Shift+9` 복사+닫기, 모달 치트시트 검증 추가.
+- **검증**: `test_archive.gd`, `test_persistence.gd`, `test_main_integration.gd` 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 갱신 완료.
+
+---
+
 ## 📓 [Sprint 199] 메인 숫자키 `6~9` 4대 정렬 모드 즉시 전환(Shift: 첫 작품 열기) — 숫자 `0~9` 완전 매핑
 - **일시**: 2026-11-21
 - **14인 가상 애자일 스쿼드 회의록**:

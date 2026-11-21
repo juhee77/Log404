@@ -3741,6 +3741,27 @@ func _init() -> void:
 	assert("[6~9] 정렬" in main_inst.status_toast.text, "Cheatsheet should include [6~9] 정렬")
 	print("✓ Sprint 199: MainView Keys 6~9 Direct Sort Modes & Shift Instant Open verified")
 
+	# Sprint 200 Milestone: DetailModal Key 9 Highlight Toggle (Shift: Copy+Close) & Modal 0~9 Complete
+	main_inst._on_card_clicked(main_inst.archive_state.items[0])
+	main_inst.detail_modal.quote_input.release_focus()
+	var hl_before_200 = main_inst.detail_modal.current_item.highlight_enabled
+	var ev_dm_9 = InputEventKey.new()
+	ev_dm_9.pressed = true
+	ev_dm_9.keycode = KEY_9
+	main_inst.detail_modal._unhandled_input(ev_dm_9)
+	assert(main_inst.detail_modal.current_item.highlight_enabled != hl_before_200, "Key 9 in DetailModal should toggle highlight_enabled")
+
+	var ev_dm_shift_9 = InputEventKey.new()
+	ev_dm_shift_9.pressed = true
+	ev_dm_shift_9.shift_pressed = true
+	ev_dm_shift_9.keycode = KEY_9
+	main_inst.detail_modal._unhandled_input(ev_dm_shift_9)
+	assert(main_inst.detail_modal.current_item.highlight_enabled == hl_before_200 and main_inst.detail_modal.visible == false, "Shift+9 in DetailModal should toggle highlight, copy card, and close")
+
+	main_inst._on_modal_help_requested()
+	assert("[5~8] 잉크 · [9] 형광펜 · [0] 원문복원" in main_inst.status_toast.text, "Modal cheatsheet should include 5~8 Ink, 9 Highlight, and 0 Restore")
+	print("✓ Sprint 200 Milestone: DetailModal Key 9 Highlight & Modal 0~9 Complete verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()
