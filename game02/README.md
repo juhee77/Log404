@@ -5,7 +5,7 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 
 ---
 
-## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 216)
+## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 217)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
@@ -14,6 +14,10 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 ---
 
 ## 🚀 최신 스프린트 업데이트 요약 ([전체 회의록 보기](SPRINT_LOG.md))
+
+### 📓 [Sprint 217] 3대 뷰 전역 `Ctrl/Cmd+↑/↓` & `Ctrl/Cmd+PgUp/PgDn` 정렬·탭·작품넘김·스와치 순환
+- **전역 `Ctrl/Cmd+↑/↓/PgUp/PgDn`**: 입력창 포커스 중에도 `Ctrl/Cmd+↑/↓` 및 `Ctrl/Cmd+PgUp/PgDn`으로 정렬·필터 탭 순환(`MainView`)·작품 넘김(`DetailModal`)·입력칸 포커스 이동 및 스와치 순환(`AddModal`)을 실행합니다.
+- **웹 목업 동기화**: `index.html` 웹 목업에도 `Ctrl/Cmd+↑/↓/PgUp/PgDn` 단축키를 동기화했습니다.
 
 ### 📓 [Sprint 216] 3대 뷰 전역 `Ctrl/Cmd+6~9` 정렬·잉크·형광펜·스와치·샘플 완전 통일
 - **전역 `Ctrl/Cmd+6~9`**: 입력창 포커스 중에도 `Ctrl/Cmd+6~9`로 4종 정렬(`MainView`)·만년필 잉크 6~8 및 형광펜 9(`DetailModal`)·6번 바이올렛/분류 7~8/샘플 9(`AddModal`)까지 전역 숫자 단축키 `0~9`를 완성했습니다.

@@ -1120,6 +1120,18 @@ func _unhandled_input(event: InputEvent) -> void:
 			if event.shift_pressed and status_toast != null:
 				DisplayServer.clipboard_set(status_toast.text)
 			get_viewport().set_input_as_handled()
+		elif (event.ctrl_pressed or event.meta_pressed) and event.keycode in [KEY_UP, KEY_DOWN]:
+			var dir_ud: int = -1 if event.keycode == KEY_UP else 1
+			if event.shift_pressed:
+				cycle_ambient_sound(dir_ud)
+			else:
+				_step_sort(dir_ud)
+			get_viewport().set_input_as_handled()
+		elif (event.ctrl_pressed or event.meta_pressed) and event.keycode in [KEY_PAGEUP, KEY_PAGEDOWN]:
+			_step_filter_tab(-1 if event.keycode == KEY_PAGEUP else 1)
+			if event.shift_pressed:
+				_open_first_filtered_card()
+			get_viewport().set_input_as_handled()
 		elif event.keycode == KEY_SLASH and event.shift_pressed and (search_input == null or not search_input.has_focus()):
 			_show_shortcut_cheatsheet()
 			get_viewport().set_input_as_handled()

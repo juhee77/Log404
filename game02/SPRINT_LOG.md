@@ -5,6 +5,21 @@
 
 ---
 
+## 📓 [Sprint 217] 3대 뷰 전역 `Ctrl/Cmd+↑/↓` & `Ctrl/Cmd+PgUp/PgDn` 정렬·탭·작품넘김·스와치 순환
+- **일시**: 2026-11-21
+- **14인 가상 애자일 스쿼드 회의록**:
+  - **다꾸러 VOC (지민·수빈·하연)**: "입력창 포커스 중에도 `Ctrl/Cmd+↑/↓`와 `Ctrl/Cmd+PgUp/PgDn`으로 정렬·필터 탭 순환(`MainView`)·작품 카드 이전/다음 넘김(`DetailModal`)·입력칸 포커스 이동 및 스와치 순환(`AddModal`)을 바로 조작하고 싶어요!"
+  - **PO & UX/UI**: `MainView`, `DetailModal`, `AddModal`의 `_unhandled_input` 최상단에 `ctrl_pressed or meta_pressed` + `KEY_UP/KEY_DOWN/KEY_PAGEUP/KEY_PAGEDOWN` 분기를 추가한다.
+- **구현 내역**:
+  - [`main_view.gd`](godot_project/scripts/main_view.gd): `Ctrl/Cmd+↑/↓`(4종 정렬 순환 / `Shift`: 사운드 순환) 및 `Ctrl/Cmd+PgUp/PgDn`(필터 탭 순환 / `Shift`: 첫 작품 열기) 추가.
+  - [`detail_modal.gd`](godot_project/scripts/detail_modal.gd): `Ctrl/Cmd+↑/↓/PgUp/PgDn`(이전/다음 작품 넘김 / `Shift`: 처음·끝) 추가.
+  - [`add_modal.gd`](godot_project/scripts/add_modal.gd): `Ctrl/Cmd+↑/↓`(입력칸 포커스 이동 / `Shift`: 스와치 순환) 및 `Ctrl/Cmd+PgUp/PgDn`(스와치 순환 / `Shift`: 분류 토글) 추가.
+  - [`index.html`](index.html): 웹 인터랙티브 목업에 `Ctrl/Cmd+↑/↓/PgUp/PgDn` 전역 단축키 동기화.
+  - [`test_main_integration.gd`](godot_project/tests/test_main_integration.gd): 포커스 상태 `Ctrl+Down`, `Ctrl+PageDown` 3대 뷰 검증 추가.
+- **검증**: `test_archive.gd`, `test_persistence.gd`, `test_main_integration.gd` 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 갱신 완료.
+
+---
+
 ## 📓 [Sprint 216] 3대 뷰 전역 `Ctrl/Cmd+6~9` 정렬·잉크·형광펜·스와치·샘플 완전 통일
 - **일시**: 2026-11-21
 - **14인 가상 애자일 스쿼드 회의록**:

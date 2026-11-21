@@ -4253,6 +4253,39 @@ func _init() -> void:
 	main_inst.add_modal.close()
 	print("✓ Sprint 216: Global Ctrl/Cmd+6~9 Sort/Ink+Highlight/Violet+Cat+Sample verified")
 
+	# Sprint 217: Global Ctrl/Cmd+Up/Down & Ctrl/Cmd+PageUp/PageDown (Sort/Tab/Nav/Swatch)
+	main_inst.search_input.grab_focus()
+	var sort_before_217 = main_inst.sort_mode
+	var ev_ctrl_down = InputEventKey.new()
+	ev_ctrl_down.pressed = true
+	ev_ctrl_down.ctrl_pressed = true
+	ev_ctrl_down.keycode = KEY_DOWN
+	main_inst._unhandled_input(ev_ctrl_down)
+	assert(main_inst.sort_mode != sort_before_217, "Ctrl+Down in MainView (even focused) should step sort_mode")
+	main_inst._set_sort_mode(0)
+
+	var ev_ctrl_pgdn = InputEventKey.new()
+	ev_ctrl_pgdn.pressed = true
+	ev_ctrl_pgdn.ctrl_pressed = true
+	ev_ctrl_pgdn.keycode = KEY_PAGEDOWN
+	main_inst._unhandled_input(ev_ctrl_pgdn)
+	assert(main_inst.archive_state.current_filter == 0, "Ctrl+PageDown in MainView (even focused) should step to Manga tab (0)")
+	main_inst._on_tab_all_pressed()
+
+	main_inst._on_card_clicked(main_inst.archive_state.items[0])
+	var id_before_217 = main_inst.detail_modal.current_item.id
+	main_inst.detail_modal.quote_input.grab_focus()
+	main_inst.detail_modal._unhandled_input(ev_ctrl_down)
+	assert(main_inst.detail_modal.current_item.id != id_before_217, "Ctrl+Down in DetailModal (even focused) should navigate to next card")
+	main_inst.detail_modal.close()
+
+	main_inst._on_add_btn_pressed()
+	var color_before_217 = main_inst.add_modal.selected_color
+	main_inst.add_modal._unhandled_input(ev_ctrl_pgdn)
+	assert(main_inst.add_modal.selected_color != color_before_217, "Ctrl+PageDown in AddModal should step cover swatch color")
+	main_inst.add_modal.close()
+	print("✓ Sprint 217: Global Ctrl/Cmd+Up/Down & PageUp/PageDown Sort/Tab/Nav/Swatch verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

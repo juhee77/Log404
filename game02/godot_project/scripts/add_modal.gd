@@ -388,6 +388,28 @@ func _unhandled_input(event: InputEvent) -> void:
 		help_requested.emit(event.shift_pressed)
 		get_viewport().set_input_as_handled()
 		return
+	if (event.ctrl_pressed or event.meta_pressed) and event.keycode in [KEY_UP, KEY_DOWN]:
+		var dir_ud: int = -1 if event.keycode == KEY_UP else 1
+		if event.shift_pressed:
+			_step_color(dir_ud)
+		else:
+			var flds := [title_input, author_input, quote_input]
+			var cur_i: int = -1
+			for i in range(flds.size()):
+				if flds[i] != null and flds[i].has_focus():
+					cur_i = i
+					break
+			var nxt_i: int = (0 if dir_ud > 0 else flds.size() - 1) if cur_i == -1 else (cur_i + dir_ud + flds.size()) % flds.size()
+			if flds[nxt_i] != null:
+				flds[nxt_i].grab_focus()
+		get_viewport().set_input_as_handled()
+		return
+	if (event.ctrl_pressed or event.meta_pressed) and event.keycode in [KEY_PAGEUP, KEY_PAGEDOWN]:
+		_step_color(-1 if event.keycode == KEY_PAGEUP else 1)
+		if event.shift_pressed and cat_option != null:
+			cat_option.select(1 - cat_option.selected)
+		get_viewport().set_input_as_handled()
+		return
 	if event.shift_pressed and (event.keycode == KEY_ENTER or event.keycode == KEY_KP_ENTER):
 		_submit_with_sample_fallback()
 		get_viewport().set_input_as_handled()
