@@ -357,6 +357,18 @@ func _unhandled_input(event: InputEvent) -> void:
 			fill_sample_inputs()
 		get_viewport().set_input_as_handled()
 		return
+	if (event.ctrl_pressed or event.meta_pressed) and event.keycode in [KEY_1, KEY_2, KEY_3, KEY_4, KEY_5]:
+		var sw_idx: int = event.keycode - KEY_1
+		if sw_idx >= 0 and sw_idx < COVER_SWATCHES.size():
+			select_color(COVER_SWATCHES[sw_idx]["hex"])
+			if event.shift_pressed:
+				_submit_with_sample_fallback()
+		get_viewport().set_input_as_handled()
+		return
+	if (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_H:
+		help_requested.emit(event.shift_pressed)
+		get_viewport().set_input_as_handled()
+		return
 	if event.shift_pressed and (event.keycode == KEY_ENTER or event.keycode == KEY_KP_ENTER):
 		_submit_with_sample_fallback()
 		get_viewport().set_input_as_handled()

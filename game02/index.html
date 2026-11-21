@@ -1501,6 +1501,26 @@
                     if (typeof toggleSound === 'function') toggleSound();
                     else showToast('🎧 앰비언트 사운드 전환');
                 }
+            } else if ((e.ctrlKey || e.metaKey) && ['1', '2', '3', '4', '5'].includes(e.key)) {
+                e.preventDefault();
+                const jm = document.getElementById('journal-modal');
+                if (jm && !jm.classList.contains('hidden')) {
+                    if (e.key === '5') {
+                        setDiaryInk('#2c221e');
+                        showToast('🖋️ 에스프레소 만년필 잉크 적용');
+                    } else {
+                        const stamps = { '1': '전권완결', '2': '초판특전', '3': '인생최애', '4': '위시리스트' };
+                        showToast('💮 인장 스탬프: ' + stamps[e.key]);
+                    }
+                    if (e.shiftKey) closeJournalModal();
+                } else {
+                    const tabs = { '1': 'all', '2': 'manga', '3': 'gacha', '4': 'completed', '5': 'favorites' };
+                    switchCategory(tabs[e.key]);
+                    showToast('🔖 빠른 탭 전환 (' + e.key + ')');
+                }
+            } else if ((e.ctrlKey || e.metaKey) && (e.key === 'h' || e.key === 'H')) {
+                e.preventDefault();
+                showToast('⌨️ 전역 단축키: [Ctrl/Cmd+1~5] 탭·인장 · [Ctrl/Cmd+H] 도움말 · [Ctrl/Cmd+S] 저장 · [Ctrl/Cmd+W] 닫기');
             } else if (document.getElementById('journal-modal') && !document.getElementById('journal-modal').classList.contains('hidden') && (e.key === '/' || e.key === 'Tab' || e.key === 'Enter' || e.key === 'Backspace' || e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === '0' || e.key === '9' || ['5', '6', '7', '8'].includes(e.key)) && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
                 if (e.key === 'Tab') {
                     e.preventDefault();
@@ -1783,6 +1803,26 @@
                     if (typeof toggleSound === 'function') toggleSound();
                     else showToast('🎧 앰비언트 사운드 전환');
                 }
+            } else if ((e.ctrlKey || e.metaKey) && ['1', '2', '3', '4', '5'].includes(e.key)) {
+                e.preventDefault();
+                const jm = document.getElementById('journal-modal');
+                if (jm && !jm.classList.contains('hidden')) {
+                    if (e.key === '5') {
+                        setDiaryInk('#2c221e');
+                        showToast('🖋️ 에스프레소 만년필 잉크 적용');
+                    } else {
+                        const stamps = { '1': '전권완결', '2': '초판특전', '3': '인생최애', '4': '위시리스트' };
+                        showToast('💮 인장 스탬프: ' + stamps[e.key]);
+                    }
+                    if (e.shiftKey) closeJournalModal();
+                } else {
+                    const tabs = { '1': 'all', '2': 'manga', '3': 'gacha', '4': 'completed', '5': 'favorites' };
+                    switchCategory(tabs[e.key]);
+                    showToast('🔖 빠른 탭 전환 (' + e.key + ')');
+                }
+            } else if ((e.ctrlKey || e.metaKey) && (e.key === 'h' || e.key === 'H')) {
+                e.preventDefault();
+                showToast('⌨️ 전역 단축키: [Ctrl/Cmd+1~5] 탭·인장 · [Ctrl/Cmd+H] 도움말 · [Ctrl/Cmd+S] 저장 · [Ctrl/Cmd+W] 닫기');
             } else if (document.getElementById('journal-modal') && !document.getElementById('journal-modal').classList.contains('hidden') && (e.key === '/' || e.key === 'Tab' || e.key === 'Enter' || e.key === 'Backspace' || e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === '0' || e.key === '9' || ['5', '6', '7', '8'].includes(e.key)) && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
                 if (e.key === 'Tab') {
                     e.preventDefault();

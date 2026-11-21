@@ -4177,6 +4177,43 @@ func _init() -> void:
 	assert(main_inst.archive_state.items.size() == count_before_214 + 1, "Ctrl+Shift+O in AddModal should submit item")
 	print("✓ Sprint 214: Global Ctrl/Cmd+O Open/Obi/Submit & Ctrl/Cmd+Y Mute/Reread/Sample verified")
 
+	# Sprint 215 Milestone: Global Ctrl/Cmd+1~5 (Tabs/Stamps+Ink/Swatches) & Ctrl/Cmd+H (Cheatsheet)
+	main_inst.search_input.grab_focus()
+	var ev_ctrl_2 = InputEventKey.new()
+	ev_ctrl_2.pressed = true
+	ev_ctrl_2.ctrl_pressed = true
+	ev_ctrl_2.keycode = KEY_2
+	main_inst._unhandled_input(ev_ctrl_2)
+	assert(main_inst.archive_state.current_filter == 0, "Ctrl+2 in MainView (even focused) should switch to Manga tab (0)")
+	var ev_ctrl_h = InputEventKey.new()
+	ev_ctrl_h.pressed = true
+	ev_ctrl_h.ctrl_pressed = true
+	ev_ctrl_h.keycode = KEY_H
+	main_inst._unhandled_input(ev_ctrl_h)
+	assert(main_inst.status_toast.text.find("단축키") != -1, "Ctrl+H in MainView should show shortcut cheatsheet")
+	main_inst._on_tab_all_pressed()
+
+	main_inst._on_card_clicked(main_inst.archive_state.items[0])
+	main_inst.detail_modal.quote_input.grab_focus()
+	main_inst.detail_modal._unhandled_input(ev_ctrl_2)
+	assert(main_inst.detail_modal.current_item.status_tag == "초판특전", "Ctrl+2 in DetailModal (even focused) should apply 초판특전 stamp")
+	var ev_ctrl_5 = InputEventKey.new()
+	ev_ctrl_5.pressed = true
+	ev_ctrl_5.ctrl_pressed = true
+	ev_ctrl_5.keycode = KEY_5
+	main_inst.detail_modal._unhandled_input(ev_ctrl_5)
+	assert(main_inst.detail_modal.current_item.memo_ink_color == "#2c221e", "Ctrl+5 in DetailModal should set espresso ink")
+	main_inst.detail_modal._unhandled_input(ev_ctrl_h)
+	assert(main_inst.status_toast.text.find("모달 단축키") != -1, "Ctrl+H in DetailModal should show modal cheatsheet")
+	main_inst.detail_modal.close()
+
+	main_inst._on_add_btn_pressed()
+	main_inst.add_modal.select_color(main_inst.add_modal.COVER_SWATCHES[0]["hex"])
+	main_inst.add_modal._unhandled_input(ev_ctrl_2)
+	assert(main_inst.add_modal.selected_color == main_inst.add_modal.COVER_SWATCHES[1]["hex"], "Ctrl+2 in AddModal should select 2nd cover swatch")
+	main_inst.add_modal.close()
+	print("✓ Sprint 215 Milestone: Global Ctrl/Cmd+1~5 Tabs/Stamps/Swatches & Ctrl/Cmd+H Cheatsheet verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

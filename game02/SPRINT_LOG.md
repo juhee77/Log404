@@ -5,6 +5,21 @@
 
 ---
 
+## 📓 [Sprint 215 Milestone] 3대 뷰 전역 `Ctrl/Cmd+1~5` 탭·인장·잉크·스와치 · `Ctrl/Cmd+H` 치트시트
+- **일시**: 2026-11-21
+- **14인 가상 애자일 스쿼드 회의록**:
+  - **다꾸러 VOC (지민·수빈·하연)**: "입력창 포커스 중에도 `Ctrl/Cmd+1~5`로 서재 필터 탭(`MainView`)·인장 스탬프 1~4 및 에스프레소 잉크 5(`DetailModal`)·표지 컬러스와치 1~5(`AddModal`)를 바로 선택하고, `Ctrl/Cmd+H`로 단축키 치트시트(`Shift`: 클립보드 복사)를 즉시 호출하고 싶어요!"
+  - **PO & UX/UI**: `MainView`, `DetailModal`, `AddModal`의 `_unhandled_input` 최상단에 `ctrl_pressed or meta_pressed` + `KEY_1~KEY_5`/`KEY_H` 분기를 추가해 마일스톤을 완성한다.
+- **구현 내역**:
+  - [`main_view.gd`](godot_project/scripts/main_view.gd): `Ctrl/Cmd+1~5`(5대 필터 탭 전환 / `Shift`: 첫 작품 열기) 및 `Ctrl/Cmd+H`(단축키 치트시트 / `Shift`: 클립보드 복사) 추가.
+  - [`detail_modal.gd`](godot_project/scripts/detail_modal.gd): `Ctrl/Cmd+1~4`(인장 스탬프) · `Ctrl/Cmd+5`(에스프레소 잉크 / `Shift`: 닫기) 및 `Ctrl/Cmd+H`(모달 단축키 치트시트 / `Shift`: 클립보드 복사) 추가.
+  - [`add_modal.gd`](godot_project/scripts/add_modal.gd): `Ctrl/Cmd+1~5`(표지 컬러스와치 1~5 선택 / `Shift`: 등록) 및 `Ctrl/Cmd+H`(작성창 단축키 치트시트) 추가.
+  - [`index.html`](index.html): 웹 인터랙티브 목업에 `Ctrl/Cmd+1~5`, `Ctrl/Cmd+H` 전역 단축키 동기화.
+  - [`test_main_integration.gd`](godot_project/tests/test_main_integration.gd): 포커스 상태 `Ctrl+1~5`, `Ctrl+H` 3대 뷰 검증 추가.
+- **검증**: `test_archive.gd`, `test_persistence.gd`, `test_main_integration.gd` 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 갱신 완료.
+
+---
+
 ## 📓 [Sprint 214] 3대 뷰 전역 `Ctrl/Cmd+O` 작품열기·띠지·일기등록 · `Ctrl/Cmd+Y` 음소거·회독·샘플채움
 - **일시**: 2026-11-21
 - **14인 가상 애자일 스쿼드 회의록**:

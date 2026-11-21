@@ -1001,6 +1001,25 @@ func _unhandled_input(event: InputEvent) -> void:
 			increment_reread_count()
 		get_viewport().set_input_as_handled()
 		return
+	if (event.ctrl_pressed or event.meta_pressed) and event.keycode in [KEY_1, KEY_2, KEY_3, KEY_4]:
+		var stamp_map := {KEY_1: "전권완결", KEY_2: "초판특전", KEY_3: "인생최애", KEY_4: "위시리스트"}
+		apply_stamp(stamp_map[event.keycode])
+		if event.shift_pressed:
+			close()
+		get_viewport().set_input_as_handled()
+		return
+	if (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_5:
+		set_fountain_pen_ink("#2c221e")
+		if event.shift_pressed:
+			close()
+		get_viewport().set_input_as_handled()
+		return
+	if (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_H:
+		help_requested.emit()
+		if event.shift_pressed:
+			DisplayServer.clipboard_set("⌨️ 모달 단축키: [←/→] 넘김(Shift: 처음·끝) · [+/-] 권(Shift: 초판·북마크) · [1~4] 인장(Shift: 찍고닫기) · [E] 문장(Shift: 샘플) · [L] 형광펜(Shift: 속지) · [C] 복사(Shift: 리포트) · [ESC] 닫기(Shift: 카드복사+닫기)")
+		get_viewport().set_input_as_handled()
+		return
 	if event.keycode == KEY_ESCAPE:
 		if event.shift_pressed:
 			copy_book_quote_card()

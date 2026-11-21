@@ -1097,6 +1097,21 @@ func _unhandled_input(event: InputEvent) -> void:
 			else:
 				cycle_ambient_sound(-ambient_sound_index if ambient_sound_index != 0 else 1)
 			get_viewport().set_input_as_handled()
+		elif (event.ctrl_pressed or event.meta_pressed) and event.keycode in [KEY_1, KEY_2, KEY_3, KEY_4, KEY_5]:
+			match event.keycode:
+				KEY_1: _on_tab_all_pressed()
+				KEY_2: _on_tab_manga_pressed()
+				KEY_3: _on_tab_gacha_pressed()
+				KEY_4: _on_tab_complete_pressed()
+				KEY_5: _on_tab_fav_pressed()
+			if event.shift_pressed:
+				_open_first_filtered_card()
+			get_viewport().set_input_as_handled()
+		elif (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_H:
+			_show_shortcut_cheatsheet()
+			if event.shift_pressed and status_toast != null:
+				DisplayServer.clipboard_set(status_toast.text)
+			get_viewport().set_input_as_handled()
 		elif event.keycode == KEY_SLASH and event.shift_pressed and (search_input == null or not search_input.has_focus()):
 			_show_shortcut_cheatsheet()
 			get_viewport().set_input_as_handled()
