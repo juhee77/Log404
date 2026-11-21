@@ -18,14 +18,15 @@ Godot 4+ 기반의 감성 게임 및 인터랙티브 아카이브 애플리케�
 > **Godot 4.6.2 모바일 기반 E-Book 리더기 서재(Apple Books · 리디북스) & 만년필 다꾸 독서노트(굿노트 · 몰스킨) 감성 아카이브 앱**  
 > 14인 가상 애자일 스쿼드가 20분 주기 자동 스프린트로 지속 개선 중입니다.
 
-### 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 204)
+### 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 205 Milestone)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
 | ![Pocket Archive Main Screen](game02/godot_project/screenshots/godot_app_screen.png) | ![Pocket Archive Detail Modal](game02/godot_project/screenshots/godot_modal_screen.png) |
 
 ### ✨ 주요 핵심 기능
-- **최신 Sprint 204 하이라이트**: `DetailModal` & `AddModal` `/` 키 즉시 입력칸 포커스로 3대 뷰 `/` 일관성 완성(`detail_modal.gd` · `add_modal.gd` · `index.html`)
+- **최신 Sprint 205 Milestone 하이라이트**: 3대 뷰 전역 `Ctrl/Cmd+S` 저장·백업 · `Ctrl/Cmd+N` 새 일기(포커스 중에도 동작)(`main_view.gd` · `detail_modal.gd` · `add_modal.gd` · `index.html`) 완성
+- **Sprint 204 하이라이트**: `DetailModal` & `AddModal` `/` 키 즉시 입력칸 포커스로 3대 뷰 `/` 일관성 완성(`detail_modal.gd` · `add_modal.gd` · `index.html`)
 - **Sprint 203 하이라이트**: `DetailModal` `Tab`/`Shift+Tab` 이전·다음 작품 넘김 · 입력창 포커스 해제(`detail_modal.gd` · `index.html`) 완성
 - **Sprint 202 하이라이트**: `MainView` & `AddModal` `Tab`/`Shift+Tab` 필터 탭 순환 · 입력칸 포커스 이동(`main_view.gd` · `add_modal.gd` · `index.html`) 완성
 - **Sprint 201 하이라이트**: `AddModal` 숫자키 `6` 바이올렛 컬러 · `7/8` 분류 · `9` 샘플 채움으로 3대 뷰 `0~9` 숫자키 100% 완성(`add_modal.gd` · `main_view.gd` · `index.html`)

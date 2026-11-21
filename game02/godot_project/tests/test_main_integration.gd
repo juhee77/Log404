@@ -3849,6 +3849,39 @@ func _init() -> void:
 	main_inst.add_modal.close()
 	print("✓ Sprint 204: DetailModal & AddModal '/' Quick Input Focus Parity verified")
 
+	# Sprint 205 Milestone: Global Ctrl/Cmd+S Save/Backup & Ctrl/Cmd+N AddModal
+	main_inst.search_input.grab_focus()
+	var ev_ctrl_s = InputEventKey.new()
+	ev_ctrl_s.pressed = true
+	ev_ctrl_s.ctrl_pressed = true
+	ev_ctrl_s.keycode = KEY_S
+	main_inst._unhandled_input(ev_ctrl_s)
+	assert("백업" in main_inst.status_toast.text or "JSON" in main_inst.status_toast.text, "Ctrl+S in MainView (even focused) should trigger instant JSON backup")
+
+	var ev_ctrl_n = InputEventKey.new()
+	ev_ctrl_n.pressed = true
+	ev_ctrl_n.ctrl_pressed = true
+	ev_ctrl_n.keycode = KEY_N
+	main_inst._unhandled_input(ev_ctrl_n)
+	assert(main_inst.add_modal.visible == true, "Ctrl+N in MainView should open AddModal")
+
+	var count_before_205 = main_inst.archive_state.items.size()
+	main_inst.add_modal.title_input.text = "Ctrl+S 등록 테스트"
+	main_inst.add_modal._unhandled_input(ev_ctrl_s)
+	assert(main_inst.archive_state.items.size() == count_before_205 + 1 and main_inst.add_modal.visible == false, "Ctrl+S in AddModal (even focused) should submit and close")
+	main_inst.archive_state.remove_item(main_inst.archive_state.items[main_inst.archive_state.items.size() - 1].id)
+	main_inst._render_cards()
+
+	main_inst._on_card_clicked(main_inst.archive_state.items[0])
+	var old_memo_205 = main_inst.detail_modal.current_item.memo
+	main_inst.detail_modal.quote_input.text = "Ctrl+S 저장 테스트 문구"
+	main_inst.detail_modal._unhandled_input(ev_ctrl_s)
+	assert(main_inst.detail_modal.current_item.memo == "Ctrl+S 저장 테스트 문구", "Ctrl+S in DetailModal should save quote_input")
+	main_inst.detail_modal.quote_input.text = old_memo_205
+	main_inst.detail_modal._unhandled_input(ev_ctrl_s)
+	main_inst.detail_modal.close()
+	print("✓ Sprint 205 Milestone: Global Ctrl/Cmd+S Save/Backup & Ctrl/Cmd+N AddModal verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

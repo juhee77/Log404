@@ -5,6 +5,21 @@
 
 ---
 
+## 📓 [Sprint 205 Milestone] 3대 뷰 전역 `Ctrl/Cmd+S` 저장·백업 · `Ctrl/Cmd+N` 새 일기 (포커스 중에도 동작)
+- **일시**: 2026-11-21
+- **14인 가상 애자일 스쿼드 회의록**:
+  - **다꾸러 VOC (지민·수빈·하연)**: "검색창이나 일기 입력칸에 커서가 들어가 있는 상태에서도 `Ctrl/Cmd+S`를 누르면 즉시 저장·백업(`MainView`: JSON 백업, `DetailModal`: 밑줄 문장 저장, `AddModal`: 일기 등록 제출)되고, `Ctrl/Cmd+N`으로 새 일기 모달을 바로 띄우고 싶어요!"
+  - **PO & UX/UI**: `MainView`, `DetailModal`, `AddModal`의 `_unhandled_input` 최상단(포커스 체크 이전)에 `ctrl_pressed or meta_pressed` + `KEY_S`/`KEY_N` 분기를 배치하여 입력창 포커스 중에도 표준 OS 단축키가 100% 동작하도록 구현한다.
+- **구현 내역**:
+  - [`main_view.gd`](godot_project/scripts/main_view.gd): `Ctrl/Cmd+S`(즉시 JSON 백업), `Ctrl/Cmd+N`(새 일기 모달 / `Shift`: 샘플 채움) 추가.
+  - [`detail_modal.gd`](godot_project/scripts/detail_modal.gd): `Ctrl/Cmd+S`(밑줄 저장) 추가.
+  - [`add_modal.gd`](godot_project/scripts/add_modal.gd): `Ctrl/Cmd+S`(일기 등록 / `Shift`: 샘플 폴백 등록) 추가.
+  - [`index.html`](index.html): 웹 인터랙티브 목업에 `Ctrl/Cmd+S`, `Ctrl/Cmd+N` 전역 단축키 동기화.
+  - [`test_main_integration.gd`](godot_project/tests/test_main_integration.gd): 포커스 상태 `Ctrl+S` 백업·등록·저장 및 `Ctrl+N` 모달 오픈 검증 추가.
+- **검증**: `test_archive.gd`, `test_persistence.gd`, `test_main_integration.gd` 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 갱신 완료.
+
+---
+
 ## 📓 [Sprint 204] `DetailModal` & `AddModal` `/` 키 즉시 입력칸 포커스 — 3대 뷰 `/` 일관성 완성
 - **일시**: 2026-11-21
 - **14인 가상 애자일 스쿼드 회의록**:

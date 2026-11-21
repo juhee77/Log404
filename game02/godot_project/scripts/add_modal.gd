@@ -259,6 +259,13 @@ func _unhandled_input(event: InputEvent) -> void:
 		_on_submit_btn_pressed()
 		get_viewport().set_input_as_handled()
 		return
+	if (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_S:
+		if event.shift_pressed:
+			_submit_with_sample_fallback()
+		else:
+			_on_submit_btn_pressed()
+		get_viewport().set_input_as_handled()
+		return
 	if event.shift_pressed and (event.keycode == KEY_ENTER or event.keycode == KEY_KP_ENTER):
 		_submit_with_sample_fallback()
 		get_viewport().set_input_as_handled()

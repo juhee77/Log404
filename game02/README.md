@@ -5,7 +5,7 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 
 ---
 
-## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 204)
+## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 205 Milestone)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
@@ -14,6 +14,10 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 ---
 
 ## 🚀 최신 스프린트 업데이트 요약 ([전체 회의록 보기](SPRINT_LOG.md))
+
+### 📓 [Sprint 205 Milestone] 3대 뷰 전역 `Ctrl/Cmd+S` 저장·백업 · `Ctrl/Cmd+N` 새 일기
+- **전역 `Ctrl/Cmd+S` & `Ctrl/Cmd+N`**: 입력창 포커스 중에도 `Ctrl/Cmd+S`로 즉시 저장·백업(`MainView`: JSON 백업, `DetailModal`: 밑줄 저장, `AddModal`: 일기 등록)하고, `Ctrl/Cmd+N`으로 새 일기 쓰기 모달을 바로 엽니다(`Shift`: 샘플 채움).
+- **웹 목업 동기화**: `index.html` 웹 목업에도 `Ctrl/Cmd+S`와 `Ctrl/Cmd+N` 전역 단축키를 동기화했습니다.
 
 ### 📓 [Sprint 204] `DetailModal` & `AddModal` `/` 키 즉시 입력칸 포커스 — 3대 뷰 `/` 일관성 완성
 - **3대 뷰 `/` 즉시 포커스 통일**: `MainView` 검색창(`/`), `DetailModal` 한줄 밑줄 편집창(`/`), `AddModal` 제목 입력창(`/`) 모두 `/` 키 한 번으로 즉시 입력 포커스 및 전체 선택을 수행합니다.
