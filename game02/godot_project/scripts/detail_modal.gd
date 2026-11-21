@@ -1050,6 +1050,21 @@ func _unhandled_input(event: InputEvent) -> void:
 		close()
 		get_viewport().set_input_as_handled()
 		return
+	if (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_SLASH:
+		if event.shift_pressed:
+			help_requested.emit()
+		elif quote_input != null:
+			quote_input.grab_focus()
+			quote_input.select_all()
+		get_viewport().set_input_as_handled()
+		return
+	if (event.ctrl_pressed or event.meta_pressed) and (event.keycode == KEY_ENTER or event.keycode == KEY_KP_ENTER):
+		if event.shift_pressed:
+			toggle_quote_highlight()
+		else:
+			_on_save_quote_btn_pressed()
+		get_viewport().set_input_as_handled()
+		return
 	if event.keycode == KEY_ESCAPE:
 		if event.shift_pressed:
 			copy_book_quote_card()

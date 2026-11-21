@@ -5,6 +5,21 @@
 
 ---
 
+## 📓 [Sprint 219] 3대 뷰 전역 `Ctrl/Cmd+/` 포커스·도움말 · `Ctrl/Cmd+Enter` 열기·저장·등록
+- **일시**: 2026-11-21
+- **14인 가상 애자일 스쿼드 회의록**:
+  - **다꾸러 VOC (지민·수빈·하연)**: "입력창 포커스 여부와 무관하게 `Ctrl/Cmd+/`로 검색/밑줄/제목 입력칸에 즉시 포커스(`Shift`: 치트시트)하고, `Ctrl/Cmd+Enter`로 첫 작품 열기(`MainView`)·밑줄 저장(`DetailModal`)·일기 등록(`AddModal`)을 바로 실행하고 싶어요!"
+  - **PO & UX/UI**: `MainView`, `DetailModal`, `AddModal`의 `_unhandled_input` 최상단에 `ctrl_pressed or meta_pressed` + `KEY_SLASH`/`KEY_ENTER` 분기를 추가한다.
+- **구현 내역**:
+  - [`main_view.gd`](godot_project/scripts/main_view.gd): `Ctrl/Cmd+/`(검색창 포커스 / `Shift`: 치트시트) 및 `Ctrl/Cmd+Enter`(첫 작품 열기 / `Shift`: 새 일기 창) 추가.
+  - [`detail_modal.gd`](godot_project/scripts/detail_modal.gd): `Ctrl/Cmd+/`(밑줄 입력칸 포커스 / `Shift`: 치트시트) 및 `Ctrl/Cmd+Enter`(밑줄 저장 / `Shift`: 형광펜 토글) 추가.
+  - [`add_modal.gd`](godot_project/scripts/add_modal.gd): `Ctrl/Cmd+/`(제목 입력칸 포커스 / `Shift`: 치트시트) 및 `Ctrl/Cmd+Enter`(일기 등록 / `Shift`: 샘플 즉시 등록) 추가.
+  - [`index.html`](index.html): 웹 인터랙티브 목업에 `Ctrl/Cmd+/`, `Ctrl/Cmd+Enter` 전역 단축키 동기화.
+  - [`test_main_integration.gd`](godot_project/tests/test_main_integration.gd): 포커스 상태 `Ctrl+/`, `Ctrl+Enter` 3대 뷰 검증 추가.
+- **검증**: `test_archive.gd`, `test_persistence.gd`, `test_main_integration.gd` 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 갱신 완료.
+
+---
+
 ## 📓 [Sprint 218] 3대 뷰 전역 `Ctrl/Cmd+Space` 열기·넘김·스와치 · `Ctrl/Cmd+Backspace` 초기화·닫기·비우기
 - **일시**: 2026-11-21
 - **14인 가상 애자일 스쿼드 회의록**:

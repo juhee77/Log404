@@ -5,7 +5,7 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 
 ---
 
-## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 218)
+## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 219)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
@@ -14,6 +14,10 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 ---
 
 ## 🚀 최신 스프린트 업데이트 요약 ([전체 회의록 보기](SPRINT_LOG.md))
+
+### 📓 [Sprint 219] 3대 뷰 전역 `Ctrl/Cmd+/` 포커스·도움말 · `Ctrl/Cmd+Enter` 열기·저장·등록
+- **전역 `Ctrl/Cmd+/` & `Ctrl/Cmd+Enter`**: 어느 화면에서나 `Ctrl/Cmd+/`로 입력칸 포커스(`Shift`: 치트시트)를 잡고, `Ctrl/Cmd+Enter`로 작품 열기(`MainView`)·밑줄 저장(`DetailModal`)·일기 등록(`AddModal`)을 즉시 실행합니다.
+- **웹 목업 동기화**: `index.html` 웹 목업에도 `Ctrl/Cmd+/` 및 `Ctrl/Cmd+Enter` 단축키를 동기화했습니다.
 
 ### 📓 [Sprint 218] 3대 뷰 전역 `Ctrl/Cmd+Space` 열기·넘김·스와치 · `Ctrl/Cmd+Backspace` 초기화·닫기·비우기
 - **전역 `Ctrl/Cmd+Space` & `Ctrl/Cmd+Backspace`**: 입력창 포커스 중에도 `Ctrl/Cmd+Space`로 작품 열기(`MainView`)·작품 넘김(`DetailModal`)·스와치 순환(`AddModal`)을 실행하고, `Ctrl/Cmd+Backspace`로 필터 초기화(`MainView`)·모달 닫기(`DetailModal`)·입력 비우기(`AddModal`)를 실행합니다.

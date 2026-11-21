@@ -4321,6 +4321,44 @@ func _init() -> void:
 	main_inst.add_modal.close()
 	print("✓ Sprint 218: Global Ctrl/Cmd+Space Open/Nav/Swatch & Ctrl/Cmd+Backspace Reset/Close/Clear verified")
 
+	# Sprint 219: Global Ctrl/Cmd+/ (Focus/Help) & Ctrl/Cmd+Enter (Open/Save/Submit)
+	var ev_ctrl_slash = InputEventKey.new()
+	ev_ctrl_slash.pressed = true
+	ev_ctrl_slash.ctrl_pressed = true
+	ev_ctrl_slash.keycode = KEY_SLASH
+	main_inst.search_input.release_focus()
+	main_inst._unhandled_input(ev_ctrl_slash)
+	assert(main_inst.search_input.has_focus(), "Ctrl+/ in MainView should focus search_input")
+
+	var ev_ctrl_enter = InputEventKey.new()
+	ev_ctrl_enter.pressed = true
+	ev_ctrl_enter.ctrl_pressed = true
+	ev_ctrl_enter.keycode = KEY_ENTER
+	main_inst._unhandled_input(ev_ctrl_enter)
+	assert(main_inst.detail_modal.visible == true, "Ctrl+Enter in MainView (even focused) should open first filtered item")
+
+	main_inst.detail_modal.quote_input.release_focus()
+	main_inst.detail_modal._unhandled_input(ev_ctrl_slash)
+	assert(main_inst.detail_modal.quote_input.has_focus(), "Ctrl+/ in DetailModal should focus quote_input")
+	main_inst.detail_modal.quote_input.text = "Ctrl+Enter 저장 테스트"
+	main_inst.detail_modal._unhandled_input(ev_ctrl_enter)
+	assert(main_inst.detail_modal.current_item.memo == "Ctrl+Enter 저장 테스트", "Ctrl+Enter in DetailModal should save quote")
+	main_inst.detail_modal.close()
+
+	main_inst._on_add_btn_pressed()
+	main_inst.add_modal.title_input.release_focus()
+	main_inst.add_modal._unhandled_input(ev_ctrl_slash)
+	assert(main_inst.add_modal.title_input.has_focus(), "Ctrl+/ in AddModal should focus title_input")
+	var ev_ctrl_shift_enter = InputEventKey.new()
+	ev_ctrl_shift_enter.pressed = true
+	ev_ctrl_shift_enter.ctrl_pressed = true
+	ev_ctrl_shift_enter.shift_pressed = true
+	ev_ctrl_shift_enter.keycode = KEY_ENTER
+	var count_before_219 = main_inst.archive_state.items.size()
+	main_inst.add_modal._unhandled_input(ev_ctrl_shift_enter)
+	assert(main_inst.archive_state.items.size() == count_before_219 + 1, "Ctrl+Shift+Enter in AddModal should submit sample item")
+	print("✓ Sprint 219: Global Ctrl/Cmd+/ Focus/Help & Ctrl/Cmd+Enter Open/Save/Submit verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

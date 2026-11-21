@@ -260,7 +260,18 @@ func _unhandled_input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 		return
 	if (event.ctrl_pressed or event.meta_pressed) and (event.keycode == KEY_ENTER or event.keycode == KEY_KP_ENTER):
-		_on_submit_btn_pressed()
+		if event.shift_pressed:
+			_submit_with_sample_fallback()
+		else:
+			_on_submit_btn_pressed()
+		get_viewport().set_input_as_handled()
+		return
+	if (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_SLASH:
+		if event.shift_pressed:
+			help_requested.emit(false)
+		elif title_input != null:
+			title_input.grab_focus()
+			title_input.select_all()
 		get_viewport().set_input_as_handled()
 		return
 	if (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_S:

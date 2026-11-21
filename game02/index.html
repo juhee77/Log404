@@ -1578,6 +1578,29 @@
                     switchCategory('all');
                     showToast(e.shiftKey ? '🧹 스튜디오 전체 초기화 완료!' : '🧹 검색/필터 초기화 완료!');
                 }
+            } else if ((e.ctrlKey || e.metaKey) && (e.key === '/' || e.key === '?')) {
+                e.preventDefault();
+                const jm = document.getElementById('journal-modal');
+                if (e.shiftKey) {
+                    showToast('⌨️ 전역 단축키: [Ctrl/Cmd+/] 포커스 · [Ctrl/Cmd+Enter] 열기·저장 · [Ctrl/Cmd+H] 도움말');
+                } else if (jm && !jm.classList.contains('hidden')) {
+                    const qi = document.getElementById('diary-quote-input');
+                    if (qi) { qi.focus(); qi.select(); }
+                } else {
+                    const si = document.getElementById('search-input');
+                    if (si) { si.focus(); si.select(); }
+                }
+            } else if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                e.preventDefault();
+                const jm = document.getElementById('journal-modal');
+                if (jm && !jm.classList.contains('hidden')) {
+                    if (e.shiftKey) showToast('🖍️ 형광펜 하이라이트 토글');
+                    else showToast('🖋️ 밑줄 문장 저장 완료!');
+                } else if (e.shiftKey) {
+                    if (typeof openAddModal === 'function') openAddModal();
+                } else if (ITEMS.length > 0) {
+                    openJournalModal(ITEMS[0].id);
+                }
             } else if (document.getElementById('journal-modal') && !document.getElementById('journal-modal').classList.contains('hidden') && (e.key === '/' || e.key === 'Tab' || e.key === 'Enter' || e.key === 'Backspace' || e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === '0' || e.key === '9' || ['5', '6', '7', '8'].includes(e.key)) && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
                 if (e.key === 'Tab') {
                     e.preventDefault();
@@ -1936,6 +1959,29 @@
                     if (si) si.value = '';
                     switchCategory('all');
                     showToast(e.shiftKey ? '🧹 스튜디오 전체 초기화 완료!' : '🧹 검색/필터 초기화 완료!');
+                }
+            } else if ((e.ctrlKey || e.metaKey) && (e.key === '/' || e.key === '?')) {
+                e.preventDefault();
+                const jm = document.getElementById('journal-modal');
+                if (e.shiftKey) {
+                    showToast('⌨️ 전역 단축키: [Ctrl/Cmd+/] 포커스 · [Ctrl/Cmd+Enter] 열기·저장 · [Ctrl/Cmd+H] 도움말');
+                } else if (jm && !jm.classList.contains('hidden')) {
+                    const qi = document.getElementById('diary-quote-input');
+                    if (qi) { qi.focus(); qi.select(); }
+                } else {
+                    const si = document.getElementById('search-input');
+                    if (si) { si.focus(); si.select(); }
+                }
+            } else if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                e.preventDefault();
+                const jm = document.getElementById('journal-modal');
+                if (jm && !jm.classList.contains('hidden')) {
+                    if (e.shiftKey) showToast('🖍️ 형광펜 하이라이트 토글');
+                    else showToast('🖋️ 밑줄 문장 저장 완료!');
+                } else if (e.shiftKey) {
+                    if (typeof openAddModal === 'function') openAddModal();
+                } else if (ITEMS.length > 0) {
+                    openJournalModal(ITEMS[0].id);
                 }
             } else if (document.getElementById('journal-modal') && !document.getElementById('journal-modal').classList.contains('hidden') && (e.key === '/' || e.key === 'Tab' || e.key === 'Enter' || e.key === 'Backspace' || e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === '0' || e.key === '9' || ['5', '6', '7', '8'].includes(e.key)) && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
                 if (e.key === 'Tab') {
