@@ -1327,7 +1327,7 @@
                 else if (lk === 'h' || e.key === '?') showToast('⌨️ 새 일기 단축키: [1~5/←→/Space] 컬러 · [Home/End] 첫·끝 · [R] 랜덤 · [C/E/G] 분류 · [T/A/Q] 칸이동 · [F] 샘플 · [S/Enter] 등록 · [0/Bksp/X] 초기화 · [ESC] 닫기');
                 else if (e.key === 'Enter') showToast('📖 새 일기 등록 제출!');
                 else if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') showToast(e.key === 'ArrowLeft' ? '🎨 이전 표지 컬러 선택' : '🎨 다음 표지 컬러 선택');
-            } else if (document.getElementById('journal-modal') && !document.getElementById('journal-modal').classList.contains('hidden') && (e.key === 'Enter' || e.key === 'Backspace' || e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === '0') && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
+            } else if (document.getElementById('journal-modal') && !document.getElementById('journal-modal').classList.contains('hidden') && (e.key === 'Enter' || e.key === 'Backspace' || e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === '0' || ['5', '6', '7', '8'].includes(e.key)) && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
                 if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
                     const dir = e.key === 'ArrowUp' ? -1 : 1;
                     const idx = ITEMS.findIndex(x => x.id === activeId);
@@ -1340,6 +1340,10 @@
                     const qi = document.getElementById('diary-quote-input');
                     if (item && qi) qi.value = item.quote || '';
                     showToast(e.shiftKey ? '🧹 일기장 입력 복원 및 닫기' : '🧹 밑줄 입력란 원문 복원 완료!');
+                    if (e.shiftKey) closeJournalModal();
+                } else if (['5', '6', '7', '8'].includes(e.key)) {
+                    const inks = { '5': '#2c221e', '6': '#7f1d1d', '7': '#78350f', '8': '#14532d' };
+                    setDiaryInk(inks[e.key]);
                     if (e.shiftKey) closeJournalModal();
                 } else if (e.key === 'Backspace') {
                     if (e.shiftKey) showToast('📋 독서 카드 복사 및 일기장 닫기');
@@ -1409,7 +1413,7 @@
                 else if (lk === 'h' || e.key === '?') showToast('⌨️ 새 일기 단축키: [1~5/←→/Space] 컬러 · [Home/End] 첫·끝 · [R] 랜덤 · [C/E/G] 분류 · [T/A/Q] 칸이동 · [F] 샘플 · [S/Enter] 등록 · [0/Bksp/X] 초기화 · [ESC] 닫기');
                 else if (e.key === 'Enter') showToast('📖 새 일기 등록 제출!');
                 else if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') showToast(e.key === 'ArrowLeft' ? '🎨 이전 표지 컬러 선택' : '🎨 다음 표지 컬러 선택');
-            } else if (document.getElementById('journal-modal') && !document.getElementById('journal-modal').classList.contains('hidden') && (e.key === 'Enter' || e.key === 'Backspace' || e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === '0') && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
+            } else if (document.getElementById('journal-modal') && !document.getElementById('journal-modal').classList.contains('hidden') && (e.key === 'Enter' || e.key === 'Backspace' || e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === '0' || ['5', '6', '7', '8'].includes(e.key)) && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
                 if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
                     const dir = e.key === 'ArrowUp' ? -1 : 1;
                     const idx = ITEMS.findIndex(x => x.id === activeId);
@@ -1422,6 +1426,10 @@
                     const qi = document.getElementById('diary-quote-input');
                     if (item && qi) qi.value = item.quote || '';
                     showToast(e.shiftKey ? '🧹 일기장 입력 복원 및 닫기' : '🧹 밑줄 입력란 원문 복원 완료!');
+                    if (e.shiftKey) closeJournalModal();
+                } else if (['5', '6', '7', '8'].includes(e.key)) {
+                    const inks = { '5': '#2c221e', '6': '#7f1d1d', '7': '#78350f', '8': '#14532d' };
+                    setDiaryInk(inks[e.key]);
                     if (e.shiftKey) closeJournalModal();
                 } else if (e.key === 'Backspace') {
                     if (e.shiftKey) showToast('📋 독서 카드 복사 및 일기장 닫기');

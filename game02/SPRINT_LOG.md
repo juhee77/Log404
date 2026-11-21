@@ -5,6 +5,19 @@
 
 ---
 
+## 📓 [Sprint 198] `DetailModal` 숫자키 `5~8` 만년필 잉크 4종 즉시 선택(Shift: 적용+닫기)
+- **일시**: 2026-11-21
+- **14인 가상 애자일 스쿼드 회의록**:
+  - **다꾸러 VOC (지민·수빈·하연)**: "`DetailModal`에서 `1~4`로 도장 인장을 바로 찍는 것처럼, `5~8` 숫자키로도 만년필 잉크 4종(`5`: 에스프레소, `6`: 버건디, `7`: 세피아, `8`: 포레스트)을 `I` 키로 순환하지 않고 바로 선택(`Shift+5~8`: 잉크 적용 후 닫기)하고 싶어요!"
+  - **PO & UX/UI**: `DetailModal` `_unhandled_input`에 `KEY_5`~`KEY_8` 분기를 추가하여 `set_fountain_pen_ink()`를 호출하고 `Shift` 조합 시 `close()`로 이어지도록 구현한다.
+- **구현 내역**:
+  - [`detail_modal.gd`](godot_project/scripts/detail_modal.gd): `KEY_5`~`KEY_8` 만년필 잉크 4종 직접 선택 및 `Shift` 닫기 분기 추가.
+  - [`index.html`](index.html): 웹 인터랙티브 목업에 `DetailModal` `5~8` 만년필 잉크 단축키 동기화.
+  - [`test_main_integration.gd`](godot_project/tests/test_main_integration.gd): `6`/`7` 잉크 전환 및 `Shift+5` 잉크 적용+닫기 검증 추가.
+- **검증**: `test_archive.gd`, `test_persistence.gd`, `test_main_integration.gd` 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 갱신 완료.
+
+---
+
 ## 📓 [Sprint 197] `DetailModal` 키보드 `↑/↓` 카드 넘김(Shift: 처음·끝) · `0` 문장 원문 복원
 - **일시**: 2026-11-21
 - **14인 가상 애자일 스쿼드 회의록**:

@@ -1023,6 +1023,17 @@ func _unhandled_input(event: InputEvent) -> void:
 			if event.shift_pressed:
 				close()
 			get_viewport().set_input_as_handled()
+		elif event.keycode in [KEY_5, KEY_6, KEY_7, KEY_8]:
+			var ink_map := {
+				KEY_5: "#2c221e",
+				KEY_6: "#7f1d1d",
+				KEY_7: "#78350f",
+				KEY_8: "#14532d",
+			}
+			set_fountain_pen_ink(ink_map[event.keycode])
+			if event.shift_pressed:
+				close()
+			get_viewport().set_input_as_handled()
 		else:
 			var shift_pairs := {
 				KEY_V: [boost_estimated_value, reduce_estimated_value],

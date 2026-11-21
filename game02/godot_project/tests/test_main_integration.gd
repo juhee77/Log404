@@ -3685,6 +3685,29 @@ func _init() -> void:
 	main_inst.detail_modal.close()
 	print("✓ Sprint 197: DetailModal Keys Up/Down Navigation & 0 Restore Quote/Disarm verified")
 
+	# Sprint 198: DetailModal Keys 5~8 Direct Fountain-Pen Ink Swatches
+	main_inst._on_card_clicked(main_inst.archive_state.items[0])
+	main_inst.detail_modal.quote_input.release_focus()
+	var ev_dm_6 = InputEventKey.new()
+	ev_dm_6.pressed = true
+	ev_dm_6.keycode = KEY_6
+	main_inst.detail_modal._unhandled_input(ev_dm_6)
+	assert(main_inst.detail_modal.current_item.memo_ink_color == "#7f1d1d", "Key 6 in DetailModal should select burgundy ink")
+
+	var ev_dm_7 = InputEventKey.new()
+	ev_dm_7.pressed = true
+	ev_dm_7.keycode = KEY_7
+	main_inst.detail_modal._unhandled_input(ev_dm_7)
+	assert(main_inst.detail_modal.current_item.memo_ink_color == "#78350f", "Key 7 in DetailModal should select sepia ink")
+
+	var ev_dm_shift_5 = InputEventKey.new()
+	ev_dm_shift_5.pressed = true
+	ev_dm_shift_5.shift_pressed = true
+	ev_dm_shift_5.keycode = KEY_5
+	main_inst.detail_modal._unhandled_input(ev_dm_shift_5)
+	assert(main_inst.detail_modal.current_item.memo_ink_color == "#2c221e" and main_inst.detail_modal.visible == false, "Shift+5 in DetailModal should select espresso ink and close")
+	print("✓ Sprint 198: DetailModal Keys 5~8 Direct Fountain-Pen Ink Swatches verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()
