@@ -5,7 +5,7 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 
 ---
 
-## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 210 Milestone)
+## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 211)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
@@ -14,6 +14,10 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 ---
 
 ## 🚀 최신 스프린트 업데이트 요약 ([전체 회의록 보기](SPRINT_LOG.md))
+
+### 📓 [Sprint 211] 3대 뷰 전역 `Ctrl/Cmd+0` 초기화·복원 · `Ctrl/Cmd+T` 테마·태그·제목포커스
+- **전역 `Ctrl/Cmd+0` & `Ctrl/Cmd+T`**: 입력창 포커스 중에도 `Ctrl/Cmd+0`으로 필터 초기화(`MainView`)·원문 복원(`DetailModal`)·모달 리셋(`AddModal`)을 실행하고, `Ctrl/Cmd+T`로 속지 테마(`MainView`)·스마트 태그(`DetailModal`)·제목 포커스(`AddModal`)를 전환합니다.
+- **웹 목업 동기화**: `index.html` 웹 목업에도 `Ctrl/Cmd+0` 및 `Ctrl/Cmd+T` 단축키를 동기화했습니다.
 
 ### 📓 [Sprint 210 Milestone] 3대 뷰 전역 `Ctrl/Cmd+E` 이북·편집·분류 · `Ctrl/Cmd+W` 모달 닫기·스크랩
 - **전역 `Ctrl/Cmd+E` & `Ctrl/Cmd+W`**: 입력창 포커스 중에도 `Ctrl/Cmd+E`로 이북·단행본 필터(`MainView`)·밑줄 편집 포커스(`DetailModal`)·이북 분류 선택(`AddModal`)을 실행하고, `Ctrl/Cmd+W`로 열린 모달을 즉시 닫거나(`DetailModal`/`AddModal`) 웹 표지 스크랩(`MainView`)을 실행합니다.

@@ -4019,6 +4019,38 @@ func _init() -> void:
 	assert(main_inst.add_modal.visible == false, "Ctrl+W in AddModal should close modal")
 	print("✓ Sprint 210 Milestone: Global Ctrl/Cmd+E Manga/Edit/Cat & Ctrl/Cmd+W Close/Scrape verified")
 
+	# Sprint 211: Global Ctrl/Cmd+0 (Reset/Restore) & Ctrl/Cmd+T (Theme/Tag/Focus)
+	main_inst._on_tab_manga_pressed()
+	main_inst.search_input.text = "슬램덩크"
+	main_inst.search_input.grab_focus()
+	var ev_ctrl_t = InputEventKey.new()
+	ev_ctrl_t.pressed = true
+	ev_ctrl_t.ctrl_pressed = true
+	ev_ctrl_t.keycode = KEY_T
+	var t_before_211 = main_inst.theme_cursor
+	main_inst._unhandled_input(ev_ctrl_t)
+	assert(main_inst.theme_cursor != t_before_211, "Ctrl+T in MainView (even focused) should step theme")
+
+	var ev_ctrl_0 = InputEventKey.new()
+	ev_ctrl_0.pressed = true
+	ev_ctrl_0.ctrl_pressed = true
+	ev_ctrl_0.keycode = KEY_0
+	main_inst._unhandled_input(ev_ctrl_0)
+	assert(main_inst.archive_state.current_filter == -1 and main_inst.search_input.text == "", "Ctrl+0 in MainView should reset all filters and search")
+
+	main_inst._on_card_clicked(main_inst.archive_state.items[0])
+	main_inst.detail_modal.quote_input.text = "임시 변경"
+	main_inst.detail_modal._unhandled_input(ev_ctrl_0)
+	assert(main_inst.detail_modal.quote_input.text == main_inst.detail_modal.current_item.memo, "Ctrl+0 in DetailModal should restore quote_input")
+	main_inst.detail_modal.close()
+
+	main_inst._on_add_btn_pressed()
+	main_inst.add_modal.title_input.text = "임시 제목"
+	main_inst.add_modal._unhandled_input(ev_ctrl_0)
+	assert(main_inst.add_modal.title_input.text == "", "Ctrl+0 in AddModal should reset inputs")
+	main_inst.add_modal.close()
+	print("✓ Sprint 211: Global Ctrl/Cmd+0 Reset/Restore & Ctrl/Cmd+T Theme/Tag/Focus verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

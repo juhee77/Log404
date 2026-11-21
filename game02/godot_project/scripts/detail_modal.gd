@@ -960,6 +960,20 @@ func _unhandled_input(event: InputEvent) -> void:
 		quote_input.select_all()
 		get_viewport().set_input_as_handled()
 		return
+	if (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_0:
+		if current_item != null and quote_input != null:
+			quote_input.text = current_item.memo
+		if delete_armed:
+			delete_armed = false
+			_apply_delete_btn_style(false)
+		if event.shift_pressed:
+			close()
+		get_viewport().set_input_as_handled()
+		return
+	if (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_T:
+		cycle_custom_tag(-1 if event.shift_pressed else 1)
+		get_viewport().set_input_as_handled()
+		return
 	if event.keycode == KEY_ESCAPE:
 		if event.shift_pressed:
 			copy_book_quote_card()

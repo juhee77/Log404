@@ -1424,6 +1424,29 @@
                     if (e.shiftKey) showToast('📋 독서 카드 복사 및 일기장 닫기');
                     closeJournalModal();
                 }
+            } else if ((e.ctrlKey || e.metaKey) && e.key === '0') {
+                e.preventDefault();
+                const jm = document.getElementById('journal-modal');
+                if (jm && !jm.classList.contains('hidden')) {
+                    const item = ITEMS.find(x => x.id === activeId);
+                    const qi = document.getElementById('diary-quote-input');
+                    if (item && qi) qi.value = item.quote || '';
+                    showToast(e.shiftKey ? '🧹 일기장 입력 복원 및 닫기' : '🧹 밑줄 입력란 원문 복원 완료!');
+                    if (e.shiftKey) closeJournalModal();
+                } else {
+                    const si = document.getElementById('search-input');
+                    if (si) si.value = '';
+                    switchCategory('all');
+                    showToast(e.shiftKey ? '🧹 스튜디오 전체 초기화 완료!' : '🧹 검색/필터 초기화 완료!');
+                }
+            } else if ((e.ctrlKey || e.metaKey) && (e.key === 't' || e.key === 'T')) {
+                e.preventDefault();
+                const jm = document.getElementById('journal-modal');
+                if (jm && !jm.classList.contains('hidden')) {
+                    showToast('🏷️ 스마트 키워드 태그 순환!');
+                } else {
+                    showToast(e.shiftKey ? '🎨 이전 속지 테마 적용' : '🎨 다음 속지 테마 적용');
+                }
             } else if (document.getElementById('journal-modal') && !document.getElementById('journal-modal').classList.contains('hidden') && (e.key === '/' || e.key === 'Tab' || e.key === 'Enter' || e.key === 'Backspace' || e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === '0' || e.key === '9' || ['5', '6', '7', '8'].includes(e.key)) && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
                 if (e.key === 'Tab') {
                     e.preventDefault();
@@ -1628,6 +1651,29 @@
                     e.preventDefault();
                     if (e.shiftKey) showToast('📋 독서 카드 복사 및 일기장 닫기');
                     closeJournalModal();
+                }
+            } else if ((e.ctrlKey || e.metaKey) && e.key === '0') {
+                e.preventDefault();
+                const jm = document.getElementById('journal-modal');
+                if (jm && !jm.classList.contains('hidden')) {
+                    const item = ITEMS.find(x => x.id === activeId);
+                    const qi = document.getElementById('diary-quote-input');
+                    if (item && qi) qi.value = item.quote || '';
+                    showToast(e.shiftKey ? '🧹 일기장 입력 복원 및 닫기' : '🧹 밑줄 입력란 원문 복원 완료!');
+                    if (e.shiftKey) closeJournalModal();
+                } else {
+                    const si = document.getElementById('search-input');
+                    if (si) si.value = '';
+                    switchCategory('all');
+                    showToast(e.shiftKey ? '🧹 스튜디오 전체 초기화 완료!' : '🧹 검색/필터 초기화 완료!');
+                }
+            } else if ((e.ctrlKey || e.metaKey) && (e.key === 't' || e.key === 'T')) {
+                e.preventDefault();
+                const jm = document.getElementById('journal-modal');
+                if (jm && !jm.classList.contains('hidden')) {
+                    showToast('🏷️ 스마트 키워드 태그 순환!');
+                } else {
+                    showToast(e.shiftKey ? '🎨 이전 속지 테마 적용' : '🎨 다음 속지 테마 적용');
                 }
             } else if (document.getElementById('journal-modal') && !document.getElementById('journal-modal').classList.contains('hidden') && (e.key === '/' || e.key === 'Tab' || e.key === 'Enter' || e.key === 'Backspace' || e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === '0' || e.key === '9' || ['5', '6', '7', '8'].includes(e.key)) && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
                 if (e.key === 'Tab') {

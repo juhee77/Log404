@@ -5,6 +5,21 @@
 
 ---
 
+## 📓 [Sprint 211] 3대 뷰 전역 `Ctrl/Cmd+0` 초기화·복원 · `Ctrl/Cmd+T` 테마·태그·제목포커스
+- **일시**: 2026-11-21
+- **14인 가상 애자일 스쿼드 회의록**:
+  - **다꾸러 VOC (지민·수빈·하연)**: "입력창 포커스 중에도 `Ctrl/Cmd+0`으로 필터 초기화(`MainView`)·문장 원문 복원(`DetailModal`)·모달 기본값 리셋(`AddModal`)을 바로 실행하고, `Ctrl/Cmd+T`로 속지 테마(`MainView`)·스마트 키워드 태그(`DetailModal`)·제목 입력칸 포커스(`AddModal`)를 전환하고 싶어요!"
+  - **PO & UX/UI**: `MainView`, `DetailModal`, `AddModal`의 `_unhandled_input` 최상단에 `ctrl_pressed or meta_pressed` + `KEY_0`/`KEY_T` 분기를 추가한다.
+- **구현 내역**:
+  - [`main_view.gd`](godot_project/scripts/main_view.gd): `Ctrl/Cmd+0`(필터 초기화 / `Shift`: 스튜디오 리셋) 및 `Ctrl/Cmd+T`(속지 테마 순환) 추가.
+  - [`detail_modal.gd`](godot_project/scripts/detail_modal.gd): `Ctrl/Cmd+0`(문장 원문 복원 / `Shift`: 닫기) 및 `Ctrl/Cmd+T`(스마트 태그 순환) 추가.
+  - [`add_modal.gd`](godot_project/scripts/add_modal.gd): `Ctrl/Cmd+0`(모달 기본값 초기화 / `Shift`: 닫기) 및 `Ctrl/Cmd+T`(제목 입력칸 포커스) 추가.
+  - [`index.html`](index.html): 웹 인터랙티브 목업에 `Ctrl/Cmd+0`, `Ctrl/Cmd+T` 전역 단축키 동기화.
+  - [`test_main_integration.gd`](godot_project/tests/test_main_integration.gd): 포커스 상태 `Ctrl+T`, `Ctrl+0` 3대 뷰 검증 추가.
+- **검증**: `test_archive.gd`, `test_persistence.gd`, `test_main_integration.gd` 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 갱신 완료.
+
+---
+
 ## 📓 [Sprint 210 Milestone] 3대 뷰 전역 `Ctrl/Cmd+E` 이북·편집·분류 · `Ctrl/Cmd+W` 모달 닫기·스크랩
 - **일시**: 2026-11-21
 - **14인 가상 애자일 스쿼드 회의록**:

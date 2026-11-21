@@ -305,6 +305,22 @@ func _unhandled_input(event: InputEvent) -> void:
 		close()
 		get_viewport().set_input_as_handled()
 		return
+	if (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_0:
+		clear_inputs()
+		if cat_option != null:
+			cat_option.select(0)
+		if not COVER_SWATCHES.is_empty():
+			select_color(COVER_SWATCHES[0]["hex"])
+		if event.shift_pressed:
+			close()
+		get_viewport().set_input_as_handled()
+		return
+	if (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_T and title_input != null:
+		if event.shift_pressed:
+			title_input.text = ""
+		title_input.grab_focus()
+		get_viewport().set_input_as_handled()
+		return
 	if event.shift_pressed and (event.keycode == KEY_ENTER or event.keycode == KEY_KP_ENTER):
 		_submit_with_sample_fallback()
 		get_viewport().set_input_as_handled()
