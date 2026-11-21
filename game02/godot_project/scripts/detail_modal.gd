@@ -974,6 +974,14 @@ func _unhandled_input(event: InputEvent) -> void:
 		cycle_custom_tag(-1 if event.shift_pressed else 1)
 		get_viewport().set_input_as_handled()
 		return
+	if (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_P:
+		cycle_paper_pattern(-1 if event.shift_pressed else 1)
+		get_viewport().set_input_as_handled()
+		return
+	if (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_M:
+		cycle_reading_mood(-1 if event.shift_pressed else 1)
+		get_viewport().set_input_as_handled()
+		return
 	if event.keycode == KEY_ESCAPE:
 		if event.shift_pressed:
 			copy_book_quote_card()

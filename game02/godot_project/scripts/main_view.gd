@@ -1066,6 +1066,14 @@ func _unhandled_input(event: InputEvent) -> void:
 		elif (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_T:
 			_step_theme(-1 if event.shift_pressed else 1)
 			get_viewport().set_input_as_handled()
+		elif (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_P:
+			_on_camera_snap_btn_pressed()
+			if event.shift_pressed and archive_state != null and not archive_state.items.is_empty():
+				_open_detail_modal(archive_state.items[0])
+			get_viewport().set_input_as_handled()
+		elif (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_M:
+			cycle_ambient_sound(-1 if event.shift_pressed else 1)
+			get_viewport().set_input_as_handled()
 		elif event.keycode == KEY_SLASH and event.shift_pressed and (search_input == null or not search_input.has_focus()):
 			_show_shortcut_cheatsheet()
 			get_viewport().set_input_as_handled()

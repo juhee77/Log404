@@ -5,7 +5,7 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 
 ---
 
-## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 211)
+## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 212)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
@@ -14,6 +14,10 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 ---
 
 ## 🚀 최신 스프린트 업데이트 요약 ([전체 회의록 보기](SPRINT_LOG.md))
+
+### 📓 [Sprint 212] 3대 뷰 전역 `Ctrl/Cmd+P` 촬영·속지패턴·컬러스와치 · `Ctrl/Cmd+M` 사운드·독서무드·감상포커스
+- **전역 `Ctrl/Cmd+P` & `Ctrl/Cmd+M`**: 입력창 포커스 중에도 `Ctrl/Cmd+P`로 폴라로이드 촬영(`MainView`)·속지 패턴(`DetailModal`)·표지 컬러스와치(`AddModal`)를 전환하고, `Ctrl/Cmd+M`으로 앰비언트 사운드(`MainView`)·독서 무드(`DetailModal`)·감상 입력 포커스(`AddModal`)를 실행합니다.
+- **웹 목업 동기화**: `index.html` 웹 목업에도 `Ctrl/Cmd+P` 및 `Ctrl/Cmd+M` 단축키를 동기화했습니다.
 
 ### 📓 [Sprint 211] 3대 뷰 전역 `Ctrl/Cmd+0` 초기화·복원 · `Ctrl/Cmd+T` 테마·태그·제목포커스
 - **전역 `Ctrl/Cmd+0` & `Ctrl/Cmd+T`**: 입력창 포커스 중에도 `Ctrl/Cmd+0`으로 필터 초기화(`MainView`)·원문 복원(`DetailModal`)·모달 리셋(`AddModal`)을 실행하고, `Ctrl/Cmd+T`로 속지 테마(`MainView`)·스마트 태그(`DetailModal`)·제목 포커스(`AddModal`)를 전환합니다.

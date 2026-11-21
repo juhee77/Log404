@@ -4051,6 +4051,49 @@ func _init() -> void:
 	main_inst.add_modal.close()
 	print("✓ Sprint 211: Global Ctrl/Cmd+0 Reset/Restore & Ctrl/Cmd+T Theme/Tag/Focus verified")
 
+	# Sprint 212: Global Ctrl/Cmd+P (Polaroid/Pattern/Swatch) & Ctrl/Cmd+M (Sound/Mood/MemoFocus)
+	main_inst.search_input.grab_focus()
+	var count_before_212 = main_inst.archive_state.items.size()
+	var ev_ctrl_p = InputEventKey.new()
+	ev_ctrl_p.pressed = true
+	ev_ctrl_p.ctrl_pressed = true
+	ev_ctrl_p.keycode = KEY_P
+	main_inst._unhandled_input(ev_ctrl_p)
+	assert(main_inst.archive_state.items.size() == count_before_212 + 1, "Ctrl+P in MainView (even focused) should trigger camera snap")
+
+	var ev_ctrl_m = InputEventKey.new()
+	ev_ctrl_m.pressed = true
+	ev_ctrl_m.ctrl_pressed = true
+	ev_ctrl_m.keycode = KEY_M
+	var sound_before_212 = main_inst.ambient_sound_index
+	main_inst._unhandled_input(ev_ctrl_m)
+	assert(main_inst.ambient_sound_index != sound_before_212, "Ctrl+M in MainView (even focused) should cycle ambient sound")
+
+	main_inst._on_card_clicked(main_inst.archive_state.items[0])
+	main_inst.detail_modal.quote_input.grab_focus()
+	var pat_before_212 = main_inst.detail_modal.current_item.paper_pattern
+	main_inst.detail_modal._unhandled_input(ev_ctrl_p)
+	assert(main_inst.detail_modal.current_item.paper_pattern != pat_before_212, "Ctrl+P in DetailModal (even focused) should cycle paper_pattern")
+	var mood_before_212 = main_inst.detail_modal.current_item.reading_mood
+	main_inst.detail_modal._unhandled_input(ev_ctrl_m)
+	assert(main_inst.detail_modal.current_item.reading_mood != mood_before_212, "Ctrl+M in DetailModal (even focused) should cycle reading_mood")
+	main_inst.detail_modal.close()
+
+	main_inst._on_add_btn_pressed()
+	var color_before_212 = main_inst.add_modal.selected_color
+	main_inst.add_modal._unhandled_input(ev_ctrl_p)
+	assert(main_inst.add_modal.selected_color != color_before_212, "Ctrl+P in AddModal should step cover swatch color")
+	main_inst.add_modal.quote_input.text = "임시 감상"
+	var ev_ctrl_shift_m = InputEventKey.new()
+	ev_ctrl_shift_m.pressed = true
+	ev_ctrl_shift_m.ctrl_pressed = true
+	ev_ctrl_shift_m.shift_pressed = true
+	ev_ctrl_shift_m.keycode = KEY_M
+	main_inst.add_modal._unhandled_input(ev_ctrl_shift_m)
+	assert(main_inst.add_modal.quote_input.text == "", "Ctrl+Shift+M in AddModal should clear quote_input")
+	main_inst.add_modal.close()
+	print("✓ Sprint 212: Global Ctrl/Cmd+P Polaroid/Pattern/Swatch & Ctrl/Cmd+M Sound/Mood/MemoFocus verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

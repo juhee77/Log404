@@ -321,6 +321,16 @@ func _unhandled_input(event: InputEvent) -> void:
 		title_input.grab_focus()
 		get_viewport().set_input_as_handled()
 		return
+	if (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_P:
+		_step_color(-1 if event.shift_pressed else 1)
+		get_viewport().set_input_as_handled()
+		return
+	if (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_M and quote_input != null:
+		if event.shift_pressed:
+			quote_input.text = ""
+		quote_input.grab_focus()
+		get_viewport().set_input_as_handled()
+		return
 	if event.shift_pressed and (event.keycode == KEY_ENTER or event.keycode == KEY_KP_ENTER):
 		_submit_with_sample_fallback()
 		get_viewport().set_input_as_handled()

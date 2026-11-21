@@ -5,6 +5,21 @@
 
 ---
 
+## 📓 [Sprint 212] 3대 뷰 전역 `Ctrl/Cmd+P` 촬영·속지패턴·컬러스와치 · `Ctrl/Cmd+M` 사운드·독서무드·감상포커스
+- **일시**: 2026-11-21
+- **14인 가상 애자일 스쿼드 회의록**:
+  - **다꾸러 VOC (지민·수빈·하연)**: "입력창 포커스 중에도 `Ctrl/Cmd+P`로 폴라로이드 촬영(`MainView`)·속지 패턴 순환(`DetailModal`)·표지 컬러스와치 전환(`AddModal`)을 바로 실행하고, `Ctrl/Cmd+M`으로 앰비언트 사운드(`MainView`)·독서 무드 스탬프(`DetailModal`)·감상 입력칸 포커스(`AddModal`)를 조작하고 싶어요!"
+  - **PO & UX/UI**: `MainView`, `DetailModal`, `AddModal`의 `_unhandled_input` 최상단에 `ctrl_pressed or meta_pressed` + `KEY_P`/`KEY_M` 분기를 추가한다.
+- **구현 내역**:
+  - [`main_view.gd`](godot_project/scripts/main_view.gd): `Ctrl/Cmd+P`(폴라로이드 실물 촬영 / `Shift`: 첫 작품 열기) 및 `Ctrl/Cmd+M`(앰비언트 사운드 순환) 추가.
+  - [`detail_modal.gd`](godot_project/scripts/detail_modal.gd): `Ctrl/Cmd+P`(속지 패턴 순환) 및 `Ctrl/Cmd+M`(독서 무드 스탬프 순환) 추가.
+  - [`add_modal.gd`](godot_project/scripts/add_modal.gd): `Ctrl/Cmd+P`(표지 컬러스와치 순환) 및 `Ctrl/Cmd+M`(한 줄 감상 입력칸 포커스 / `Shift`: 비우기) 추가.
+  - [`index.html`](index.html): 웹 인터랙티브 목업에 `Ctrl/Cmd+P`, `Ctrl/Cmd+M` 전역 단축키 동기화.
+  - [`test_main_integration.gd`](godot_project/tests/test_main_integration.gd): 포커스 상태 `Ctrl+P`, `Ctrl+M` 3대 뷰 검증 추가.
+- **검증**: `test_archive.gd`, `test_persistence.gd`, `test_main_integration.gd` 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 갱신 완료.
+
+---
+
 ## 📓 [Sprint 211] 3대 뷰 전역 `Ctrl/Cmd+0` 초기화·복원 · `Ctrl/Cmd+T` 테마·태그·제목포커스
 - **일시**: 2026-11-21
 - **14인 가상 애자일 스쿼드 회의록**:

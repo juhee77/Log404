@@ -1447,6 +1447,24 @@
                 } else {
                     showToast(e.shiftKey ? '🎨 이전 속지 테마 적용' : '🎨 다음 속지 테마 적용');
                 }
+            } else if ((e.ctrlKey || e.metaKey) && (e.key === 'p' || e.key === 'P')) {
+                e.preventDefault();
+                const jm = document.getElementById('journal-modal');
+                if (jm && !jm.classList.contains('hidden')) {
+                    showToast(e.shiftKey ? '📄 이전 속지 패턴 적용' : '📄 다음 속지 패턴 적용');
+                } else {
+                    if (typeof openCameraModal === 'function') openCameraModal();
+                    else showToast('📸 폴라로이드 실물 촬영 스튜디오 실행!');
+                }
+            } else if ((e.ctrlKey || e.metaKey) && (e.key === 'm' || e.key === 'M')) {
+                e.preventDefault();
+                const jm = document.getElementById('journal-modal');
+                if (jm && !jm.classList.contains('hidden')) {
+                    showToast(e.shiftKey ? '🎭 이전 독서 무드 스탬프' : '🎭 다음 독서 무드 스탬프');
+                } else {
+                    if (typeof toggleSound === 'function') toggleSound();
+                    else showToast('🎧 앰비언트 사운드 전환');
+                }
             } else if (document.getElementById('journal-modal') && !document.getElementById('journal-modal').classList.contains('hidden') && (e.key === '/' || e.key === 'Tab' || e.key === 'Enter' || e.key === 'Backspace' || e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === '0' || e.key === '9' || ['5', '6', '7', '8'].includes(e.key)) && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
                 if (e.key === 'Tab') {
                     e.preventDefault();
@@ -1674,6 +1692,24 @@
                     showToast('🏷️ 스마트 키워드 태그 순환!');
                 } else {
                     showToast(e.shiftKey ? '🎨 이전 속지 테마 적용' : '🎨 다음 속지 테마 적용');
+                }
+            } else if ((e.ctrlKey || e.metaKey) && (e.key === 'p' || e.key === 'P')) {
+                e.preventDefault();
+                const jm = document.getElementById('journal-modal');
+                if (jm && !jm.classList.contains('hidden')) {
+                    showToast(e.shiftKey ? '📄 이전 속지 패턴 적용' : '📄 다음 속지 패턴 적용');
+                } else {
+                    if (typeof openCameraModal === 'function') openCameraModal();
+                    else showToast('📸 폴라로이드 실물 촬영 스튜디오 실행!');
+                }
+            } else if ((e.ctrlKey || e.metaKey) && (e.key === 'm' || e.key === 'M')) {
+                e.preventDefault();
+                const jm = document.getElementById('journal-modal');
+                if (jm && !jm.classList.contains('hidden')) {
+                    showToast(e.shiftKey ? '🎭 이전 독서 무드 스탬프' : '🎭 다음 독서 무드 스탬프');
+                } else {
+                    if (typeof toggleSound === 'function') toggleSound();
+                    else showToast('🎧 앰비언트 사운드 전환');
                 }
             } else if (document.getElementById('journal-modal') && !document.getElementById('journal-modal').classList.contains('hidden') && (e.key === '/' || e.key === 'Tab' || e.key === 'Enter' || e.key === 'Backspace' || e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === '0' || e.key === '9' || ['5', '6', '7', '8'].includes(e.key)) && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
                 if (e.key === 'Tab') {
