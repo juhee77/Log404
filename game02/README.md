@@ -5,7 +5,7 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 
 ---
 
-## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 213)
+## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 214)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
@@ -14,6 +14,10 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 ---
 
 ## 🚀 최신 스프린트 업데이트 요약 ([전체 회의록 보기](SPRINT_LOG.md))
+
+### 📓 [Sprint 214] 3대 뷰 전역 `Ctrl/Cmd+O` 작품열기·띠지·일기등록 · `Ctrl/Cmd+Y` 음소거·회독·샘플채움
+- **전역 `Ctrl/Cmd+O` & `Ctrl/Cmd+Y`**: 입력창 포커스 중에도 `Ctrl/Cmd+O`로 작품 열기(`MainView`)·띠지 프리셋(`DetailModal`)·일기 등록(`AddModal`)을 실행하고, `Ctrl/Cmd+Y`로 음소거 토글(`MainView`)·회독 증감(`DetailModal`)·샘플 채움(`AddModal`)을 조작합니다.
+- **웹 목업 동기화**: `index.html` 웹 목업에도 `Ctrl/Cmd+O` 및 `Ctrl/Cmd+Y` 단축키를 동기화했습니다.
 
 ### 📓 [Sprint 213] 3대 뷰 전역 `Ctrl/Cmd+U` 초판필터·날씨·작가포커스 · `Ctrl/Cmd+J` 마지막점프·장소·분류전환
 - **전역 `Ctrl/Cmd+U` & `Ctrl/Cmd+J`**: 입력창 포커스 중에도 `Ctrl/Cmd+U`로 초판 필터(`MainView`)·독서 날씨(`DetailModal`)·작가 포커스(`AddModal`)를 실행하고, `Ctrl/Cmd+J`로 마지막 작품 점프(`MainView`)·독서 장소(`DetailModal`)·분류 토글(`AddModal`)을 전환합니다.

@@ -4136,6 +4136,47 @@ func _init() -> void:
 	main_inst.add_modal.close()
 	print("✓ Sprint 213: Global Ctrl/Cmd+U Firsts/Weather/AuthorFocus & Ctrl/Cmd+J LastJump/Spot/CatToggle verified")
 
+	# Sprint 214: Global Ctrl/Cmd+O (Open/Obi/Submit) & Ctrl/Cmd+Y (Mute/Reread/Sample)
+	main_inst._on_tab_all_pressed()
+	main_inst.search_input.grab_focus()
+	var ev_ctrl_y = InputEventKey.new()
+	ev_ctrl_y.pressed = true
+	ev_ctrl_y.ctrl_pressed = true
+	ev_ctrl_y.keycode = KEY_Y
+	var snd_before_214 = main_inst.ambient_sound_index
+	main_inst._unhandled_input(ev_ctrl_y)
+	assert(main_inst.ambient_sound_index != snd_before_214, "Ctrl+Y in MainView (even focused) should toggle/cycle ambient sound")
+
+	var ev_ctrl_o = InputEventKey.new()
+	ev_ctrl_o.pressed = true
+	ev_ctrl_o.ctrl_pressed = true
+	ev_ctrl_o.keycode = KEY_O
+	main_inst._unhandled_input(ev_ctrl_o)
+	assert(main_inst.detail_modal.visible == true, "Ctrl+O in MainView (even focused) should open first filtered item")
+
+	main_inst.detail_modal.quote_input.grab_focus()
+	var obi_before_214 = main_inst.detail_modal.current_item.obi_text
+	main_inst.detail_modal._unhandled_input(ev_ctrl_o)
+	assert(main_inst.detail_modal.current_item.obi_text != obi_before_214, "Ctrl+O in DetailModal (even focused) should cycle obi_text")
+	var reread_before_214 = main_inst.detail_modal.current_item.reread_count
+	main_inst.detail_modal._unhandled_input(ev_ctrl_y)
+	assert(main_inst.detail_modal.current_item.reread_count == reread_before_214 + 1, "Ctrl+Y in DetailModal (even focused) should increment reread_count")
+	main_inst.detail_modal.close()
+
+	main_inst._on_add_btn_pressed()
+	main_inst.add_modal.clear_inputs()
+	main_inst.add_modal._unhandled_input(ev_ctrl_y)
+	assert(main_inst.add_modal.title_input.text != "", "Ctrl+Y in AddModal should fill sample inputs")
+	var ev_ctrl_shift_o = InputEventKey.new()
+	ev_ctrl_shift_o.pressed = true
+	ev_ctrl_shift_o.ctrl_pressed = true
+	ev_ctrl_shift_o.shift_pressed = true
+	ev_ctrl_shift_o.keycode = KEY_O
+	var count_before_214 = main_inst.archive_state.items.size()
+	main_inst.add_modal._unhandled_input(ev_ctrl_shift_o)
+	assert(main_inst.archive_state.items.size() == count_before_214 + 1, "Ctrl+Shift+O in AddModal should submit item")
+	print("✓ Sprint 214: Global Ctrl/Cmd+O Open/Obi/Submit & Ctrl/Cmd+Y Mute/Reread/Sample verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

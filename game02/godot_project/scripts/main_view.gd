@@ -1085,6 +1085,18 @@ func _unhandled_input(event: InputEvent) -> void:
 			else:
 				_open_last_filtered_card()
 			get_viewport().set_input_as_handled()
+		elif (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_O:
+			if event.shift_pressed:
+				pick_random_item(true)
+			else:
+				_open_first_filtered_card()
+			get_viewport().set_input_as_handled()
+		elif (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_Y:
+			if event.shift_pressed:
+				cycle_ambient_sound(-1)
+			else:
+				cycle_ambient_sound(-ambient_sound_index if ambient_sound_index != 0 else 1)
+			get_viewport().set_input_as_handled()
 		elif event.keycode == KEY_SLASH and event.shift_pressed and (search_input == null or not search_input.has_focus()):
 			_show_shortcut_cheatsheet()
 			get_viewport().set_input_as_handled()

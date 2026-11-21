@@ -1483,6 +1483,24 @@
                     const target = e.shiftKey ? ITEMS[0] : ITEMS[ITEMS.length - 1];
                     if (target) openJournalModal(target.id);
                 }
+            } else if ((e.ctrlKey || e.metaKey) && (e.key === 'o' || e.key === 'O')) {
+                e.preventDefault();
+                const jm = document.getElementById('journal-modal');
+                if (jm && !jm.classList.contains('hidden')) {
+                    showToast(e.shiftKey ? '🎀 이전 띠지 프리셋 적용' : '🎀 다음 띠지 프리셋 적용');
+                } else if (ITEMS.length > 0) {
+                    const target = e.shiftKey ? ITEMS[Math.floor(Math.random() * ITEMS.length)] : ITEMS[0];
+                    if (target) openJournalModal(target.id);
+                }
+            } else if ((e.ctrlKey || e.metaKey) && (e.key === 'y' || e.key === 'Y')) {
+                e.preventDefault();
+                const jm = document.getElementById('journal-modal');
+                if (jm && !jm.classList.contains('hidden')) {
+                    showToast(e.shiftKey ? '📖 회독 카운트 -1' : '📖 회독 카운트 +1');
+                } else {
+                    if (typeof toggleSound === 'function') toggleSound();
+                    else showToast('🎧 앰비언트 사운드 전환');
+                }
             } else if (document.getElementById('journal-modal') && !document.getElementById('journal-modal').classList.contains('hidden') && (e.key === '/' || e.key === 'Tab' || e.key === 'Enter' || e.key === 'Backspace' || e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === '0' || e.key === '9' || ['5', '6', '7', '8'].includes(e.key)) && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
                 if (e.key === 'Tab') {
                     e.preventDefault();
@@ -1746,6 +1764,24 @@
                 } else if (ITEMS.length > 0) {
                     const target = e.shiftKey ? ITEMS[0] : ITEMS[ITEMS.length - 1];
                     if (target) openJournalModal(target.id);
+                }
+            } else if ((e.ctrlKey || e.metaKey) && (e.key === 'o' || e.key === 'O')) {
+                e.preventDefault();
+                const jm = document.getElementById('journal-modal');
+                if (jm && !jm.classList.contains('hidden')) {
+                    showToast(e.shiftKey ? '🎀 이전 띠지 프리셋 적용' : '🎀 다음 띠지 프리셋 적용');
+                } else if (ITEMS.length > 0) {
+                    const target = e.shiftKey ? ITEMS[Math.floor(Math.random() * ITEMS.length)] : ITEMS[0];
+                    if (target) openJournalModal(target.id);
+                }
+            } else if ((e.ctrlKey || e.metaKey) && (e.key === 'y' || e.key === 'Y')) {
+                e.preventDefault();
+                const jm = document.getElementById('journal-modal');
+                if (jm && !jm.classList.contains('hidden')) {
+                    showToast(e.shiftKey ? '📖 회독 카운트 -1' : '📖 회독 카운트 +1');
+                } else {
+                    if (typeof toggleSound === 'function') toggleSound();
+                    else showToast('🎧 앰비언트 사운드 전환');
                 }
             } else if (document.getElementById('journal-modal') && !document.getElementById('journal-modal').classList.contains('hidden') && (e.key === '/' || e.key === 'Tab' || e.key === 'Enter' || e.key === 'Backspace' || e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === '0' || e.key === '9' || ['5', '6', '7', '8'].includes(e.key)) && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
                 if (e.key === 'Tab') {

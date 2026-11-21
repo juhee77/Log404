@@ -5,6 +5,21 @@
 
 ---
 
+## 📓 [Sprint 214] 3대 뷰 전역 `Ctrl/Cmd+O` 작품열기·띠지·일기등록 · `Ctrl/Cmd+Y` 음소거·회독·샘플채움
+- **일시**: 2026-11-21
+- **14인 가상 애자일 스쿼드 회의록**:
+  - **다꾸러 VOC (지민·수빈·하연)**: "입력창 포커스 중에도 `Ctrl/Cmd+O`로 첫/랜덤 작품 상세 열기(`MainView`)·띠지 프리셋 순환(`DetailModal`)·일기 등록(`AddModal`)을 실행하고, `Ctrl/Cmd+Y`로 앰비언트 음소거/순환(`MainView`)·회독 카운트 증감(`DetailModal`)·샘플 일기 채움(`AddModal`)을 바로 조작하고 싶어요!"
+  - **PO & UX/UI**: `MainView`, `DetailModal`, `AddModal`의 `_unhandled_input` 최상단에 `ctrl_pressed or meta_pressed` + `KEY_O`/`KEY_Y` 분기를 추가한다.
+- **구현 내역**:
+  - [`main_view.gd`](godot_project/scripts/main_view.gd): `Ctrl/Cmd+O`(첫 작품 열기 / `Shift`: 랜덤 작품) 및 `Ctrl/Cmd+Y`(앰비언트 음소거 토글 / `Shift`: 역순 순환) 추가.
+  - [`detail_modal.gd`](godot_project/scripts/detail_modal.gd): `Ctrl/Cmd+O`(띠지 프리셋 순환) 및 `Ctrl/Cmd+Y`(회독 카운트 +1 / `Shift`: -1) 추가.
+  - [`add_modal.gd`](godot_project/scripts/add_modal.gd): `Ctrl/Cmd+O`(일기 등록 / `Shift`: 샘플 즉시 등록) 및 `Ctrl/Cmd+Y`(샘플 일기 채움 / `Shift`: 입력 비우기) 추가.
+  - [`index.html`](index.html): 웹 인터랙티브 목업에 `Ctrl/Cmd+O`, `Ctrl/Cmd+Y` 전역 단축키 동기화.
+  - [`test_main_integration.gd`](godot_project/tests/test_main_integration.gd): 포커스 상태 `Ctrl+O`, `Ctrl+Y` 3대 뷰 검증 추가.
+- **검증**: `test_archive.gd`, `test_persistence.gd`, `test_main_integration.gd` 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 갱신 완료.
+
+---
+
 ## 📓 [Sprint 213] 3대 뷰 전역 `Ctrl/Cmd+U` 초판필터·날씨·작가포커스 · `Ctrl/Cmd+J` 마지막점프·장소·분류전환
 - **일시**: 2026-11-21
 - **14인 가상 애자일 스쿼드 회의록**:
