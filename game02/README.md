@@ -5,7 +5,7 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 
 ---
 
-## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 207)
+## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 208)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
@@ -14,6 +14,10 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 ---
 
 ## 🚀 최신 스프린트 업데이트 요약 ([전체 회의록 보기](SPRINT_LOG.md))
+
+### 📓 [Sprint 208] 3대 뷰 전역 `Ctrl/Cmd+L` 오늘밑줄·형광펜·초기화 · `Ctrl/Cmd+D` 완독·복수소장
+- **전역 `Ctrl/Cmd+L` & `Ctrl/Cmd+D`**: 입력창 포커스 중에도 `Ctrl/Cmd+L`로 오늘의 밑줄 열기(`MainView`)·형광펜 토글(`DetailModal`)·입력 비우기(`AddModal`)를 실행하고, `Ctrl/Cmd+D`로 완독작 필터(`MainView`)·복수 소장 증감(`DetailModal`)을 실행합니다.
+- **웹 목업 동기화**: `index.html` 웹 목업에도 `Ctrl/Cmd+L` 및 `Ctrl/Cmd+D` 단축키를 동기화했습니다.
 
 ### 📓 [Sprint 207] 3대 뷰 전역 `Ctrl/Cmd+R` 랜덤·회독·컬러 · `Ctrl/Cmd+B` 백업·리포트
 - **전역 `Ctrl/Cmd+R` & `Ctrl/Cmd+B`**: 입력창 포커스 중에도 `Ctrl/Cmd+R`로 랜덤 작품 오픈(`MainView`)·회독 수 증가(`DetailModal`)·랜덤 표지 컬러(`AddModal`)를 실행하고, `Ctrl/Cmd+B`로 즉시 JSON 백업(`Shift`: 서재 리포트 복사)을 실행합니다.

@@ -277,6 +277,10 @@ func _unhandled_input(event: InputEvent) -> void:
 		select_color(COVER_SWATCHES[next_r_idx]["hex"])
 		get_viewport().set_input_as_handled()
 		return
+	if (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_L:
+		clear_inputs()
+		get_viewport().set_input_as_handled()
+		return
 	if event.shift_pressed and (event.keycode == KEY_ENTER or event.keycode == KEY_KP_ENTER):
 		_submit_with_sample_fallback()
 		get_viewport().set_input_as_handled()

@@ -3936,6 +3936,34 @@ func _init() -> void:
 	main_inst.add_modal.close()
 	print("✓ Sprint 207: Global Ctrl/Cmd+R Random/Reread/Color & Ctrl/Cmd+B Backup verified")
 
+	# Sprint 208: Global Ctrl/Cmd+L (TodayQuote/Highlight/Clear) & Ctrl/Cmd+D (Complete/Dup)
+	main_inst.search_input.grab_focus()
+	var ev_ctrl_d = InputEventKey.new()
+	ev_ctrl_d.pressed = true
+	ev_ctrl_d.ctrl_pressed = true
+	ev_ctrl_d.keycode = KEY_D
+	main_inst._unhandled_input(ev_ctrl_d)
+	assert(main_inst.filter_completed_only == true, "Ctrl+D in MainView (even focused) should filter completed items")
+
+	var ev_ctrl_l = InputEventKey.new()
+	ev_ctrl_l.pressed = true
+	ev_ctrl_l.ctrl_pressed = true
+	ev_ctrl_l.keycode = KEY_L
+	main_inst._unhandled_input(ev_ctrl_l)
+	assert(main_inst.detail_modal.visible == true, "Ctrl+L in MainView should open current quote item")
+
+	var hl_before_208 = main_inst.detail_modal.current_item.highlight_enabled
+	main_inst.detail_modal._unhandled_input(ev_ctrl_l)
+	assert(main_inst.detail_modal.current_item.highlight_enabled != hl_before_208, "Ctrl+L in DetailModal should toggle highlight")
+	main_inst.detail_modal._unhandled_input(ev_ctrl_l)
+
+	var dup_before_208 = main_inst.detail_modal.current_item.duplicate_count
+	main_inst.detail_modal._unhandled_input(ev_ctrl_d)
+	assert(main_inst.detail_modal.current_item.duplicate_count == dup_before_208 + 1, "Ctrl+D in DetailModal should increment duplicate_count")
+	main_inst.detail_modal.decrement_duplicate_count()
+	main_inst.detail_modal.close()
+	print("✓ Sprint 208: Global Ctrl/Cmd+L TodayQuote/Highlight & Ctrl/Cmd+D Complete/Dup verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

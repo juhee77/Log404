@@ -925,6 +925,20 @@ func _unhandled_input(event: InputEvent) -> void:
 			increment_reread_count()
 		get_viewport().set_input_as_handled()
 		return
+	if (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_L:
+		if event.shift_pressed:
+			cycle_paper_pattern()
+		else:
+			toggle_quote_highlight()
+		get_viewport().set_input_as_handled()
+		return
+	if (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_D:
+		if event.shift_pressed:
+			decrement_duplicate_count()
+		else:
+			increment_duplicate_count()
+		get_viewport().set_input_as_handled()
+		return
 	if event.keycode == KEY_ESCAPE:
 		if event.shift_pressed:
 			copy_book_quote_card()
