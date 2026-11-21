@@ -982,6 +982,14 @@ func _unhandled_input(event: InputEvent) -> void:
 		cycle_reading_mood(-1 if event.shift_pressed else 1)
 		get_viewport().set_input_as_handled()
 		return
+	if (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_U:
+		cycle_reading_weather(-1 if event.shift_pressed else 1)
+		get_viewport().set_input_as_handled()
+		return
+	if (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_J:
+		cycle_reading_spot(-1 if event.shift_pressed else 1)
+		get_viewport().set_input_as_handled()
+		return
 	if event.keycode == KEY_ESCAPE:
 		if event.shift_pressed:
 			copy_book_quote_card()

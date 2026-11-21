@@ -5,6 +5,21 @@
 
 ---
 
+## 📓 [Sprint 213] 3대 뷰 전역 `Ctrl/Cmd+U` 초판필터·날씨·작가포커스 · `Ctrl/Cmd+J` 마지막점프·장소·분류전환
+- **일시**: 2026-11-21
+- **14인 가상 애자일 스쿼드 회의록**:
+  - **다꾸러 VOC (지민·수빈·하연)**: "입력창 포커스 중에도 `Ctrl/Cmd+U`로 초판 스탬프 필터(`MainView`)·독서 날씨 스탬프(`DetailModal`)·작가 입력칸 포커스(`AddModal`)를 바로 실행하고, `Ctrl/Cmd+J`로 마지막 작품 상세 점프(`MainView`)·독서 장소 스탬프(`DetailModal`)·분류 토글(`AddModal`)을 조작하고 싶어요!"
+  - **PO & UX/UI**: `MainView`, `DetailModal`, `AddModal`의 `_unhandled_input` 최상단에 `ctrl_pressed or meta_pressed` + `KEY_U`/`KEY_J` 분기를 추가한다.
+- **구현 내역**:
+  - [`main_view.gd`](godot_project/scripts/main_view.gd): `Ctrl/Cmd+U`(초판 스탬프 필터 / `Shift`: 첫 작품 열기) 및 `Ctrl/Cmd+J`(마지막 작품 열기 / `Shift`: 첫 작품 열기) 추가.
+  - [`detail_modal.gd`](godot_project/scripts/detail_modal.gd): `Ctrl/Cmd+U`(독서 날씨 스탬프 순환) 및 `Ctrl/Cmd+J`(독서 장소 스탬프 순환) 추가.
+  - [`add_modal.gd`](godot_project/scripts/add_modal.gd): `Ctrl/Cmd+U`(작가 입력칸 포커스 / `Shift`: 비우기) 및 `Ctrl/Cmd+J`(이북↔가챠 분류 토글 / `Shift`: 등록) 추가.
+  - [`index.html`](index.html): 웹 인터랙티브 목업에 `Ctrl/Cmd+U`, `Ctrl/Cmd+J` 전역 단축키 동기화.
+  - [`test_main_integration.gd`](godot_project/tests/test_main_integration.gd): 포커스 상태 `Ctrl+U`, `Ctrl+J` 3대 뷰 검증 추가.
+- **검증**: `test_archive.gd`, `test_persistence.gd`, `test_main_integration.gd` 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 갱신 완료.
+
+---
+
 ## 📓 [Sprint 212] 3대 뷰 전역 `Ctrl/Cmd+P` 촬영·속지패턴·컬러스와치 · `Ctrl/Cmd+M` 사운드·독서무드·감상포커스
 - **일시**: 2026-11-21
 - **14인 가상 애자일 스쿼드 회의록**:

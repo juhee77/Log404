@@ -4094,6 +4094,48 @@ func _init() -> void:
 	main_inst.add_modal.close()
 	print("✓ Sprint 212: Global Ctrl/Cmd+P Polaroid/Pattern/Swatch & Ctrl/Cmd+M Sound/Mood/MemoFocus verified")
 
+	# Sprint 213: Global Ctrl/Cmd+U (Firsts/Weather/AuthorFocus) & Ctrl/Cmd+J (LastJump/Spot/CatToggle)
+	main_inst._on_tab_all_pressed()
+	main_inst.search_input.grab_focus()
+	var ev_ctrl_u = InputEventKey.new()
+	ev_ctrl_u.pressed = true
+	ev_ctrl_u.ctrl_pressed = true
+	ev_ctrl_u.keycode = KEY_U
+	main_inst._unhandled_input(ev_ctrl_u)
+	assert(main_inst.filter_firsts_only == true, "Ctrl+U in MainView (even focused) should enable filter_firsts_only")
+	main_inst._on_tab_all_pressed()
+
+	var ev_ctrl_j = InputEventKey.new()
+	ev_ctrl_j.pressed = true
+	ev_ctrl_j.ctrl_pressed = true
+	ev_ctrl_j.keycode = KEY_J
+	main_inst._unhandled_input(ev_ctrl_j)
+	assert(main_inst.detail_modal.visible == true, "Ctrl+J in MainView should open last filtered item in DetailModal")
+
+	main_inst.detail_modal.quote_input.grab_focus()
+	var weather_before_213 = main_inst.detail_modal.current_item.reading_weather
+	main_inst.detail_modal._unhandled_input(ev_ctrl_u)
+	assert(main_inst.detail_modal.current_item.reading_weather != weather_before_213, "Ctrl+U in DetailModal (even focused) should cycle reading_weather")
+	var spot_before_213 = main_inst.detail_modal.current_item.reading_spot
+	main_inst.detail_modal._unhandled_input(ev_ctrl_j)
+	assert(main_inst.detail_modal.current_item.reading_spot != spot_before_213, "Ctrl+J in DetailModal (even focused) should cycle reading_spot")
+	main_inst.detail_modal.close()
+
+	main_inst._on_add_btn_pressed()
+	main_inst.add_modal.cat_option.select(0)
+	main_inst.add_modal._unhandled_input(ev_ctrl_j)
+	assert(main_inst.add_modal.cat_option.selected == 1, "Ctrl+J in AddModal should toggle category")
+	main_inst.add_modal.author_input.text = "임시 작가"
+	var ev_ctrl_shift_u = InputEventKey.new()
+	ev_ctrl_shift_u.pressed = true
+	ev_ctrl_shift_u.ctrl_pressed = true
+	ev_ctrl_shift_u.shift_pressed = true
+	ev_ctrl_shift_u.keycode = KEY_U
+	main_inst.add_modal._unhandled_input(ev_ctrl_shift_u)
+	assert(main_inst.add_modal.author_input.text == "", "Ctrl+Shift+U in AddModal should clear author_input")
+	main_inst.add_modal.close()
+	print("✓ Sprint 213: Global Ctrl/Cmd+U Firsts/Weather/AuthorFocus & Ctrl/Cmd+J LastJump/Spot/CatToggle verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

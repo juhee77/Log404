@@ -331,6 +331,18 @@ func _unhandled_input(event: InputEvent) -> void:
 		quote_input.grab_focus()
 		get_viewport().set_input_as_handled()
 		return
+	if (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_U and author_input != null:
+		if event.shift_pressed:
+			author_input.text = ""
+		author_input.grab_focus()
+		get_viewport().set_input_as_handled()
+		return
+	if (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_J and cat_option != null:
+		cat_option.select(1 - cat_option.selected)
+		if event.shift_pressed:
+			_submit_with_sample_fallback()
+		get_viewport().set_input_as_handled()
+		return
 	if event.shift_pressed and (event.keycode == KEY_ENTER or event.keycode == KEY_KP_ENTER):
 		_submit_with_sample_fallback()
 		get_viewport().set_input_as_handled()
