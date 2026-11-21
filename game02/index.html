@@ -1386,6 +1386,10 @@
                     const nextCat = cats[(curIdx + (e.key === 'PageUp' ? -1 : 1) + cats.length) % cats.length];
                     switchCategory(nextCat);
                 }
+            } else if ((!document.getElementById('journal-modal') || document.getElementById('journal-modal').classList.contains('hidden')) && (!document.getElementById('add-modal') || document.getElementById('add-modal').classList.contains('hidden')) && ['6', '7', '8', '9'].includes(e.key) && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
+                const modeNames = { '6': '기본 등록순', '7': '권수 많은 순(다독순)', '8': '최근 기록순(최신순)', '9': '소장 가치순(고액순)' };
+                showToast('📚 정렬 기준 변경: ' + modeNames[e.key]);
+                if (e.shiftKey && e.key !== '6' && ITEMS.length > 0) openJournalModal(ITEMS[0].id);
             } else if ((!document.getElementById('journal-modal') || document.getElementById('journal-modal').classList.contains('hidden')) && (e.key === 'Enter' || e.key === 'Backspace') && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
                 if (e.key === 'Enter') {
                     if (e.shiftKey) openAddModal();

@@ -5,6 +5,19 @@
 
 ---
 
+## 📓 [Sprint 199] 메인 숫자키 `6~9` 4대 정렬 모드 즉시 전환(Shift: 첫 작품 열기) — 숫자 `0~9` 완전 매핑
+- **일시**: 2026-11-21
+- **14인 가상 애자일 스쿼드 회의록**:
+  - **다꾸러 VOC (지민·수빈·하연)**: "`0`(초기화)과 `1~5`(5대 필터 탭)에 이어 남은 숫자키 `6~9`로 4가지 정렬 모드(`6`: 기본순, `7`: 다독순, `8`: 최신순, `9`: 가치순)를 한 번에 고르고 `Shift+7~9`로 정렬된 첫 작품까지 바로 펼치면 숫자키 `0~9`가 빈틈없이 완성될 것 같아요!"
+  - **PO & UX/UI**: `MainView` `_unhandled_input`에 `KEY_6`~`KEY_9` 분기를 추가해 `_set_sort_mode(event.keycode - KEY_6)`를 실행(`Shift+6`: `_reset_all_filters()`, `Shift+7~9`: `_open_first_filtered_card()`)하고, `KEY_H` 치트시트에 `[6~9] 정렬`을 동기화한다.
+- **구현 내역**:
+  - [`main_view.gd`](godot_project/scripts/main_view.gd): `KEY_6`~`KEY_9` 정렬 모드 직접 전환 분기 및 `_show_shortcut_cheatsheet()` 업데이트.
+  - [`index.html`](index.html): 웹 인터랙티브 목업에 메인 화면 `6~9` 및 `Shift+6~9` 정렬 단축키 동기화.
+  - [`test_main_integration.gd`](godot_project/tests/test_main_integration.gd): `6`/`7`/`8`/`Shift+9` 정렬 전환 및 `KEY_H` 치트시트 `[6~9] 정렬` 검증 추가.
+- **검증**: `test_archive.gd`, `test_persistence.gd`, `test_main_integration.gd` 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 갱신 완료.
+
+---
+
 ## 📓 [Sprint 198] `DetailModal` 숫자키 `5~8` 만년필 잉크 4종 즉시 선택(Shift: 적용+닫기)
 - **일시**: 2026-11-21
 - **14인 가상 애자일 스쿼드 회의록**:

@@ -3708,6 +3708,39 @@ func _init() -> void:
 	assert(main_inst.detail_modal.current_item.memo_ink_color == "#2c221e" and main_inst.detail_modal.visible == false, "Shift+5 in DetailModal should select espresso ink and close")
 	print("✓ Sprint 198: DetailModal Keys 5~8 Direct Fountain-Pen Ink Swatches verified")
 
+	# Sprint 199: MainView Keys 6~9 Direct Sort Modes & Shift Instant Open
+	main_inst.search_input.release_focus()
+	main_inst._reset_all_filters()
+	var ev_k7 = InputEventKey.new()
+	ev_k7.pressed = true
+	ev_k7.keycode = KEY_7
+	main_inst._unhandled_input(ev_k7)
+	assert(main_inst.sort_mode == 1, "Key 7 in MainView should switch sort_mode to 1 (다독순)")
+
+	var ev_k8 = InputEventKey.new()
+	ev_k8.pressed = true
+	ev_k8.keycode = KEY_8
+	main_inst._unhandled_input(ev_k8)
+	assert(main_inst.sort_mode == 2, "Key 8 in MainView should switch sort_mode to 2 (최신순)")
+
+	var ev_shift_k9 = InputEventKey.new()
+	ev_shift_k9.pressed = true
+	ev_shift_k9.shift_pressed = true
+	ev_shift_k9.keycode = KEY_9
+	main_inst._unhandled_input(ev_shift_k9)
+	assert(main_inst.sort_mode == 3 and main_inst.detail_modal.visible == true, "Shift+9 in MainView should switch sort_mode to 3 (가치순) and open first card")
+	main_inst.detail_modal.close()
+
+	var ev_k6 = InputEventKey.new()
+	ev_k6.pressed = true
+	ev_k6.keycode = KEY_6
+	main_inst._unhandled_input(ev_k6)
+	assert(main_inst.sort_mode == 0, "Key 6 in MainView should switch sort_mode to 0 (기본순)")
+
+	main_inst._unhandled_input(ev_h_183)
+	assert("[6~9] 정렬" in main_inst.status_toast.text, "Cheatsheet should include [6~9] 정렬")
+	print("✓ Sprint 199: MainView Keys 6~9 Direct Sort Modes & Shift Instant Open verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()
