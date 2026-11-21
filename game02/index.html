@@ -1327,6 +1327,16 @@
                 else if (lk === 'h' || e.key === '?') showToast('⌨️ 새 일기 단축키: [1~5/←→/Space] 컬러 · [Home/End] 첫·끝 · [R] 랜덤 · [C/E/G] 분류 · [T/A/Q] 칸이동 · [F] 샘플 · [S/Enter] 등록 · [0/Bksp/X] 초기화 · [ESC] 닫기');
                 else if (e.key === 'Enter') showToast('📖 새 일기 등록 제출!');
                 else if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') showToast(e.key === 'ArrowLeft' ? '🎨 이전 표지 컬러 선택' : '🎨 다음 표지 컬러 선택');
+            } else if (document.getElementById('journal-modal') && !document.getElementById('journal-modal').classList.contains('hidden') && (e.key === 'Enter' || e.key === 'Backspace') && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
+                if (e.key === 'Backspace') {
+                    if (e.shiftKey) showToast('📋 독서 카드 복사 및 일기장 닫기');
+                    closeJournalModal();
+                } else if (e.shiftKey) {
+                    showToast('🖍️ 형광펜 하이라이트 토글');
+                } else {
+                    const qi = document.getElementById('diary-quote-input');
+                    if (qi) { qi.focus(); qi.select(); }
+                }
             } else if ((!document.getElementById('journal-modal') || document.getElementById('journal-modal').classList.contains('hidden')) && ['k', 'K', 'z', 'Z'].includes(e.key) && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
                 const lk = e.key.toLowerCase();
                 if (lk === 'k') {
@@ -1386,6 +1396,16 @@
                 else if (lk === 'h' || e.key === '?') showToast('⌨️ 새 일기 단축키: [1~5/←→/Space] 컬러 · [Home/End] 첫·끝 · [R] 랜덤 · [C/E/G] 분류 · [T/A/Q] 칸이동 · [F] 샘플 · [S/Enter] 등록 · [0/Bksp/X] 초기화 · [ESC] 닫기');
                 else if (e.key === 'Enter') showToast('📖 새 일기 등록 제출!');
                 else if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') showToast(e.key === 'ArrowLeft' ? '🎨 이전 표지 컬러 선택' : '🎨 다음 표지 컬러 선택');
+            } else if (document.getElementById('journal-modal') && !document.getElementById('journal-modal').classList.contains('hidden') && (e.key === 'Enter' || e.key === 'Backspace') && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
+                if (e.key === 'Backspace') {
+                    if (e.shiftKey) showToast('📋 독서 카드 복사 및 일기장 닫기');
+                    closeJournalModal();
+                } else if (e.shiftKey) {
+                    showToast('🖍️ 형광펜 하이라이트 토글');
+                } else {
+                    const qi = document.getElementById('diary-quote-input');
+                    if (qi) { qi.focus(); qi.select(); }
+                }
             } else if ((e.key === 'i' || e.key === 'I') && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
                 const jm = document.getElementById('journal-modal');
                 if (jm && !jm.classList.contains('hidden') && activeId != null) {

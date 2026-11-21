@@ -5,6 +5,19 @@
 
 ---
 
+## 📓 [Sprint 196] `DetailModal` 키보드 `Enter` 문장 편집(Shift: 형광펜) · `Backspace` 닫기(Shift: 복사+닫기)
+- **일시**: 2026-11-21
+- **14인 가상 애자일 스쿼드 회의록**:
+  - **다꾸러 VOC (지민·수빈·하연)**: "펼친 독서노트(`DetailModal`)를 구경하다가 `Enter`만 누르면 한줄 밑줄 입력칸으로 바로 들어가고(`Shift+Enter`: 형광펜 토글), `Backspace`를 누르면 `ESC`처럼 일기장을 덮고(`Shift+Backspace`: 독서 카드 복사 후 닫기) 서재로 돌아가고 싶어요!"
+  - **PO & UX/UI**: `DetailModal` `_unhandled_input`에 `KEY_ENTER, KEY_KP_ENTER`(`quote_input.grab_focus()` + `select_all()` / `Shift+Enter`: `toggle_quote_highlight()`)와 `KEY_BACKSPACE`(삭제 무장 해제 또는 `close()` / `Shift+Backspace`: `copy_book_quote_card(); close()`)를 추가한다.
+- **구현 내역**:
+  - [`detail_modal.gd`](godot_project/scripts/detail_modal.gd): `KEY_BACKSPACE`, `KEY_ENTER, KEY_KP_ENTER` 단축키 분기 추가.
+  - [`index.html`](index.html): 웹 인터랙티브 목업에 `DetailModal` `Enter`/`Backspace` 단축키 동기화.
+  - [`test_main_integration.gd`](godot_project/tests/test_main_integration.gd): `Shift+Enter` 형광펜 토글, `Backspace` 닫기, `Shift+Backspace` 카드 복사 후 닫기 검증 추가.
+- **검증**: `test_archive.gd`, `test_persistence.gd`, `test_main_integration.gd` 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 갱신 완료.
+
+---
+
 ## 📓 [Sprint 195 Milestone] `AddModal` `H/?` 단축키 치트시트(Shift: 복사) · 단독 `Enter` 등록 제출
 - **일시**: 2026-11-21
 - **14인 가상 애자일 스쿼드 회의록**:

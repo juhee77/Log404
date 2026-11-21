@@ -3630,6 +3630,36 @@ func _init() -> void:
 	main_inst._render_cards()
 	print("✓ Sprint 195 Milestone: AddModal Key H/? Cheatsheet & Plain Enter Submit verified")
 
+	# Sprint 196: DetailModal Keys Enter (Edit Quote / Shift: Highlight) & Backspace (Close / Shift: Copy+Close)
+	main_inst._on_card_clicked(main_inst.archive_state.items[0])
+	assert(main_inst.detail_modal.visible == true, "DetailModal should open for Sprint 196")
+	main_inst.detail_modal.quote_input.release_focus()
+
+	var hl_before_196 = main_inst.detail_modal.current_item.highlight_enabled
+	var ev_dm_shift_enter = InputEventKey.new()
+	ev_dm_shift_enter.pressed = true
+	ev_dm_shift_enter.shift_pressed = true
+	ev_dm_shift_enter.keycode = KEY_ENTER
+	main_inst.detail_modal._unhandled_input(ev_dm_shift_enter)
+	assert(main_inst.detail_modal.current_item.highlight_enabled != hl_before_196, "Shift+Enter in DetailModal should toggle highlight")
+	main_inst.detail_modal._unhandled_input(ev_dm_shift_enter)
+
+	var ev_dm_bksp = InputEventKey.new()
+	ev_dm_bksp.pressed = true
+	ev_dm_bksp.keycode = KEY_BACKSPACE
+	main_inst.detail_modal._unhandled_input(ev_dm_bksp)
+	assert(main_inst.detail_modal.visible == false, "Backspace in DetailModal should close modal")
+
+	main_inst._on_card_clicked(main_inst.archive_state.items[0])
+	main_inst.detail_modal.quote_input.release_focus()
+	var ev_dm_shift_bksp = InputEventKey.new()
+	ev_dm_shift_bksp.pressed = true
+	ev_dm_shift_bksp.shift_pressed = true
+	ev_dm_shift_bksp.keycode = KEY_BACKSPACE
+	main_inst.detail_modal._unhandled_input(ev_dm_shift_bksp)
+	assert(main_inst.detail_modal.visible == false and "복사" in main_inst.status_toast.text, "Shift+Backspace in DetailModal should copy quote card and close")
+	print("✓ Sprint 196: DetailModal Keys Enter Edit/Highlight & Backspace Close/Copy+Close verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

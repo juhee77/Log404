@@ -5,7 +5,7 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 
 ---
 
-## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 195 Milestone)
+## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 196)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
@@ -14,6 +14,10 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 ---
 
 ## 🚀 최신 스프린트 업데이트 요약 ([전체 회의록 보기](SPRINT_LOG.md))
+
+### 📓 [Sprint 196] `DetailModal` 키보드 `Enter` 문장 편집(Shift: 형광펜) · `Backspace` 닫기(Shift: 복사+닫기)
+- **`DetailModal` `Enter` & `Backspace` 단축키**: 일기장 상세 모달에서 `Enter`로 한줄 밑줄 편집창에 즉시 포커스(`Shift+Enter`: 형광펜 하이라이트 토글)하고, `Backspace`로 모달 닫기(`Shift+Backspace`: 독서 카드 복사 후 닫기)를 지원합니다.
+- **웹 목업 동기화**: `index.html` 웹 목업에도 `DetailModal` `Enter`/`Backspace` 단축키를 동기화했습니다.
 
 ### 📓 [Sprint 195 Milestone] `AddModal` `H/?` 단축키 치트시트(Shift: 복사) · 단독 `Enter` 등록 제출
 - **`AddModal` 치트시트 & 단독 `Enter` 등록**: 새 일기 모달에서도 `H` 또는 `?` 키로 전용 단축키 치트시트 토스트를 띄우고(`Shift+H`: 클립보드 복사), 입력칸 포커스 해제 상태에서 단독 `Enter` 키만으로 일기를 즉시 등록합니다.
