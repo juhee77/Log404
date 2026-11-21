@@ -920,6 +920,12 @@ func _unhandled_input(event: InputEvent) -> void:
 		else:
 			close()
 		get_viewport().set_input_as_handled()
+	elif event.keycode == KEY_TAB:
+		if quote_input != null and quote_input.has_focus():
+			quote_input.release_focus()
+		else:
+			navigate_requested.emit(-1 if event.shift_pressed else 1)
+		get_viewport().set_input_as_handled()
 	elif quote_input == null or not quote_input.has_focus():
 		if event.keycode == KEY_LEFT:
 			navigate_requested.emit(-9999 if event.shift_pressed else -1)

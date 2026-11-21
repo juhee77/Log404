@@ -3820,6 +3820,18 @@ func _init() -> void:
 	main_inst.add_modal.close()
 	print("✓ Sprint 202: MainView & AddModal Tab / Shift+Tab Navigation verified")
 
+	# Sprint 203: DetailModal Tab / Shift+Tab Card Navigation & Quote Focus Release
+	main_inst._on_card_clicked(main_inst.archive_state.items[0])
+	main_inst.detail_modal.quote_input.release_focus()
+	var title_dm_203 = main_inst.detail_modal.current_item.title
+	main_inst.detail_modal._unhandled_input(ev_tab_202)
+	assert(main_inst.detail_modal.current_item.title != title_dm_203, "Tab in DetailModal (unfocused) should navigate to next card")
+
+	main_inst.detail_modal._unhandled_input(ev_shift_tab_202)
+	assert(main_inst.detail_modal.current_item.title == title_dm_203, "Shift+Tab in DetailModal should navigate back to first card")
+	main_inst.detail_modal.close()
+	print("✓ Sprint 203: DetailModal Tab / Shift+Tab Card Navigation verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

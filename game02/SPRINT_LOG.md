@@ -5,6 +5,19 @@
 
 ---
 
+## 📓 [Sprint 203] `DetailModal` `Tab`/`Shift+Tab` 이전·다음 작품 넘김 · 입력창 포커스 해제
+- **일시**: 2026-11-21
+- **14인 가상 애자일 스쿼드 회의록**:
+  - **다꾸러 VOC (지민·수빈·하연)**: "`MainView`와 `AddModal`처럼 `DetailModal`에서도 한줄 밑줄 입력창(`quote_input`) 수정 중 `Tab`을 누르면 포커스가 해제되고, 비포커스 상태에서 `Tab`/`Shift+Tab`으로 이전·다음 일기장을 한 손으로 넘겨보고 싶어요!"
+  - **PO & UX/UI**: `DetailModal` `_unhandled_input`에 `KEY_TAB`(`quote_input.has_focus()` 시 `release_focus()`, 비포커스 시 `navigate_requested.emit(-1 if event.shift_pressed else 1)`)을 추가하여 3대 뷰 모두 일관된 `Tab` 내비게이션을 완성한다.
+- **구현 내역**:
+  - [`detail_modal.gd`](godot_project/scripts/detail_modal.gd): `KEY_TAB` 포커스 해제 및 카드 넘김 분기 추가.
+  - [`index.html`](index.html): 웹 인터랙티브 목업에 `DetailModal` `Tab`/`Shift+Tab` 카드 넘김 동기화.
+  - [`test_main_integration.gd`](godot_project/tests/test_main_integration.gd): `DetailModal` `Tab`/`Shift+Tab` 카드 넘김 검증 추가.
+- **검증**: `test_archive.gd`, `test_persistence.gd`, `test_main_integration.gd` 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 갱신 완료.
+
+---
+
 ## 📓 [Sprint 202] `MainView` & `AddModal` `Tab`/`Shift+Tab` 필터 탭 순환 · 입력칸 포커스 이동
 - **일시**: 2026-11-21
 - **14인 가상 애자일 스쿼드 회의록**:
