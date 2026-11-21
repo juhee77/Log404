@@ -5,7 +5,7 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 
 ---
 
-## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 220 Milestone)
+## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 221)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
@@ -14,6 +14,10 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 ---
 
 ## 🚀 최신 스프린트 업데이트 요약 ([전체 회의록 보기](SPRINT_LOG.md))
+
+### 📓 [Sprint 221] 검색창 실시간 필터링 작품 수 표시 (`전체 N종` / `K/N종 표시`)
+- **실시간 검색창 건수 안내**: `_render_cards()`가 호출될 때마다 `search_input` 플레이스홀더에 전체 종수(`전체 6종`) 또는 필터링된 건수(`4/6종 표시`)를 실시간으로 반영합니다.
+- **웹 목업 동기화**: `index.html`의 `renderShelf()`에서도 `#search-box` 플레이스홀더를 동일하게 동기화했습니다.
 
 ### 📓 [Sprint 220 Milestone] 3대 뷰 전역 `Ctrl/Cmd+Tab` 전환 · `Ctrl/Cmd+ESC` 즉시 초기화·닫기
 - **전역 `Ctrl/Cmd+Tab` & `Ctrl/Cmd+ESC`**: 입력창 포커스 중에도 `Ctrl/Cmd+Tab`으로 탭·작품·스와치를 전환하고, `Ctrl/Cmd+ESC`로 스튜디오 리셋(`MainView`)·즉시 닫기(`DetailModal`)·비우고 닫기(`AddModal`)를 실행해 전역 `Ctrl/Cmd` 단축키 마일스톤을 완성했습니다.

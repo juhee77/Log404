@@ -5,6 +5,19 @@
 
 ---
 
+## 📓 [Sprint 221] 검색창 실시간 필터링 작품 수 표시 (`전체 N종` / `K/N종 표시`)
+- **일시**: 2026-11-21
+- **14인 가상 애자일 스쿼드 회의록**:
+  - **다꾸러 VOC (지민·수빈·하연)**: "카테고리 탭이나 필터를 눌렀을 때 현재 서재에 몇 종의 작품이 필터링되어 표시되고 있는지 검색창 플레이스홀더에서 바로 확인하고 싶어요!"
+  - **PO & UX/UI**: `MainView._render_cards()`에서 필터링 결과 개수에 따라 `search_input.placeholder_text`를 `"작품·대사 검색... (전체 N종)"` 또는 `"작품·대사 검색... (K/N종 표시)"`로 실시간 갱신한다.
+- **구현 내역**:
+  - [`main_view.gd`](godot_project/scripts/main_view.gd): `_render_cards()` 내 `search_input.placeholder_text` 실시간 필터 건수 표시 추가.
+  - [`index.html`](index.html): `renderShelf()` 내 `#search-box` 플레이스홀더 실시간 건수 동기화.
+  - [`test_main_integration.gd`](godot_project/tests/test_main_integration.gd): 전체 탭(`전체 6종`) 및 만화 탭(`4/6종 표시`) 플레이스홀더 검증 추가.
+- **검증**: `test_archive.gd`, `test_persistence.gd`, `test_main_integration.gd` 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 갱신 완료.
+
+---
+
 ## 📓 [Sprint 220 Milestone] 3대 뷰 전역 `Ctrl/Cmd+Tab` 전환 · `Ctrl/Cmd+ESC` 즉시 초기화·닫기
 - **일시**: 2026-11-21
 - **14인 가상 애자일 스쿼드 회의록**:

@@ -591,6 +591,13 @@ func _render_cards() -> void:
 		filtered.sort_custom(func(a, b): return a.updated_at > b.updated_at)
 	elif sort_mode == 3:
 		filtered.sort_custom(func(a, b): return a.get_item_value() > b.get_item_value())
+
+	var total_count: int = archive_state.items.size()
+	if search_input != null:
+		if filtered.size() == total_count:
+			search_input.placeholder_text = "작품·대사 검색... (전체 %d종)" % total_count
+		else:
+			search_input.placeholder_text = "작품·대사 검색... (%d/%d종 표시)" % [filtered.size(), total_count]
 	
 	if filtered.is_empty():
 		var empty_box := VBoxContainer.new()

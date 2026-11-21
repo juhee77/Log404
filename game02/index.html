@@ -553,6 +553,12 @@
                 const totalVal = filtered.reduce((acc, it) => acc + (it.estimated_value || 0), 0);
                 summaryEl.textContent = `${filtered.length}종 · ₩${totalVal.toLocaleString('ko-KR')}`;
             }
+            const sbEl = document.getElementById('search-box');
+            if (sbEl) {
+                sbEl.placeholder = filtered.length === ITEMS.length
+                    ? `작품·대사 검색... (전체 ${ITEMS.length}종)`
+                    : `작품·대사 검색... (${filtered.length}/${ITEMS.length}종 표시)`;
+            }
 
             const container = document.getElementById('shelf-container');
             container.innerHTML = '';
