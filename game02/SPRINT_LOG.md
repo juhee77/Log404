@@ -5,6 +5,21 @@
 
 ---
 
+## 📓 [Sprint 209] 3대 뷰 전역 `Ctrl/Cmd+I` 인포그래픽·잉크·샘플 · `Ctrl/Cmd+G` 가챠·등급·분류
+- **일시**: 2026-11-21
+- **14인 가상 애자일 스쿼드 회의록**:
+  - **다꾸러 VOC (지민·수빈·하연)**: "입력창 포커스 중에도 `Ctrl/Cmd+I`로 서재 인포그래픽 브리핑(`MainView`)·만년필 잉크 순환(`DetailModal`)·샘플 일기 채움(`AddModal`)을 바로 실행하고, `Ctrl/Cmd+G`로 가챠노트 필터(`MainView`)·상태 등급 순환(`DetailModal`)·가챠 분류 선택(`AddModal`)을 조작하고 싶어요!"
+  - **PO & UX/UI**: `MainView`, `DetailModal`, `AddModal`의 `_unhandled_input` 최상단에 `ctrl_pressed or meta_pressed` + `KEY_I`/`KEY_G` 분기를 추가한다.
+- **구현 내역**:
+  - [`main_view.gd`](godot_project/scripts/main_view.gd): `Ctrl/Cmd+I`(인포그래픽 / `Shift`: JSON 백업) 및 `Ctrl/Cmd+G`(가챠노트 필터 / `Shift`: 첫 작품 열기) 추가.
+  - [`detail_modal.gd`](godot_project/scripts/detail_modal.gd): `Ctrl/Cmd+I`(잉크 순환) 및 `Ctrl/Cmd+G`(상태 등급 순환) 추가.
+  - [`add_modal.gd`](godot_project/scripts/add_modal.gd): `Ctrl/Cmd+I`(샘플 채움 / `Shift`: 등록) 및 `Ctrl/Cmd+G`(가챠·굿즈 선택 / `Shift`: 등록) 추가.
+  - [`index.html`](index.html): 웹 인터랙티브 목업에 `Ctrl/Cmd+I`, `Ctrl/Cmd+G` 전역 단축키 동기화.
+  - [`test_main_integration.gd`](godot_project/tests/test_main_integration.gd): 포커스 상태 `Ctrl+G`, `Ctrl+I` 3대 뷰 검증 추가.
+- **검증**: `test_archive.gd`, `test_persistence.gd`, `test_main_integration.gd` 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 갱신 완료.
+
+---
+
 ## 📓 [Sprint 208] 3대 뷰 전역 `Ctrl/Cmd+L` 오늘밑줄·형광펜·초기화 · `Ctrl/Cmd+D` 완독·복수소장
 - **일시**: 2026-11-21
 - **14인 가상 애자일 스쿼드 회의록**:

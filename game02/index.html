@@ -1387,6 +1387,27 @@
                 } else {
                     switchCategory('complete');
                 }
+            } else if ((e.ctrlKey || e.metaKey) && (e.key === 'i' || e.key === 'I')) {
+                e.preventDefault();
+                const jm = document.getElementById('journal-modal');
+                if (jm && !jm.classList.contains('hidden')) {
+                    const item = ITEMS.find(x => x.id === activeId);
+                    if (item) {
+                        const inks = ['#2c221e', '#7f1d1d', '#78350f', '#14532d'];
+                        const idx = inks.indexOf(item.ink_color || '#2c221e');
+                        setDiaryInk(inks[(idx + (e.shiftKey ? -1 : 1) + inks.length) % inks.length]);
+                    }
+                } else {
+                    showToast(e.shiftKey ? '💾 로컬 JSON 서재 백업 저장 완료!' : '📊 서재 인포그래픽 브리핑!');
+                }
+            } else if ((e.ctrlKey || e.metaKey) && (e.key === 'g' || e.key === 'G')) {
+                e.preventDefault();
+                const jm = document.getElementById('journal-modal');
+                if (jm && !jm.classList.contains('hidden')) {
+                    showToast('✨ 상태 등급 순환 완료!');
+                } else {
+                    switchCategory('gacha');
+                }
             } else if (document.getElementById('journal-modal') && !document.getElementById('journal-modal').classList.contains('hidden') && (e.key === '/' || e.key === 'Tab' || e.key === 'Enter' || e.key === 'Backspace' || e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === '0' || e.key === '9' || ['5', '6', '7', '8'].includes(e.key)) && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
                 if (e.key === 'Tab') {
                     e.preventDefault();
@@ -1554,6 +1575,27 @@
                     showToast(e.shiftKey ? '👯 복수 소장 수량 감소 (-1)' : '👯 복수 소장 수량 증가 (+1)');
                 } else {
                     switchCategory('complete');
+                }
+            } else if ((e.ctrlKey || e.metaKey) && (e.key === 'i' || e.key === 'I')) {
+                e.preventDefault();
+                const jm = document.getElementById('journal-modal');
+                if (jm && !jm.classList.contains('hidden')) {
+                    const item = ITEMS.find(x => x.id === activeId);
+                    if (item) {
+                        const inks = ['#2c221e', '#7f1d1d', '#78350f', '#14532d'];
+                        const idx = inks.indexOf(item.ink_color || '#2c221e');
+                        setDiaryInk(inks[(idx + (e.shiftKey ? -1 : 1) + inks.length) % inks.length]);
+                    }
+                } else {
+                    showToast(e.shiftKey ? '💾 로컬 JSON 서재 백업 저장 완료!' : '📊 서재 인포그래픽 브리핑!');
+                }
+            } else if ((e.ctrlKey || e.metaKey) && (e.key === 'g' || e.key === 'G')) {
+                e.preventDefault();
+                const jm = document.getElementById('journal-modal');
+                if (jm && !jm.classList.contains('hidden')) {
+                    showToast('✨ 상태 등급 순환 완료!');
+                } else {
+                    switchCategory('gacha');
                 }
             } else if (document.getElementById('journal-modal') && !document.getElementById('journal-modal').classList.contains('hidden') && (e.key === '/' || e.key === 'Tab' || e.key === 'Enter' || e.key === 'Backspace' || e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === '0' || e.key === '9' || ['5', '6', '7', '8'].includes(e.key)) && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
                 if (e.key === 'Tab') {

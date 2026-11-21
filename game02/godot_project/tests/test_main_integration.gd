@@ -3964,6 +3964,36 @@ func _init() -> void:
 	main_inst.detail_modal.close()
 	print("✓ Sprint 208: Global Ctrl/Cmd+L TodayQuote/Highlight & Ctrl/Cmd+D Complete/Dup verified")
 
+	# Sprint 209: Global Ctrl/Cmd+I (Infographic/Ink/Sample) & Ctrl/Cmd+G (Gacha/Grade/Cat)
+	main_inst.search_input.grab_focus()
+	var ev_ctrl_g = InputEventKey.new()
+	ev_ctrl_g.pressed = true
+	ev_ctrl_g.ctrl_pressed = true
+	ev_ctrl_g.keycode = KEY_G
+	main_inst._unhandled_input(ev_ctrl_g)
+	assert(main_inst.archive_state.current_filter == 1, "Ctrl+G in MainView (even focused) should filter gacha (1)")
+
+	var ev_ctrl_i = InputEventKey.new()
+	ev_ctrl_i.pressed = true
+	ev_ctrl_i.ctrl_pressed = true
+	ev_ctrl_i.keycode = KEY_I
+	main_inst._unhandled_input(ev_ctrl_i)
+	assert("서재" in main_inst.status_toast.text or "종" in main_inst.status_toast.text, "Ctrl+I in MainView should show library infographic")
+
+	main_inst._on_card_clicked(main_inst.archive_state.items[0])
+	var ink_before_209 = main_inst.detail_modal.current_item.memo_ink_color
+	main_inst.detail_modal._unhandled_input(ev_ctrl_i)
+	assert(main_inst.detail_modal.current_item.memo_ink_color != ink_before_209, "Ctrl+I in DetailModal should cycle fountain-pen ink")
+	main_inst.detail_modal.close()
+
+	main_inst._on_add_btn_pressed()
+	main_inst.add_modal._unhandled_input(ev_ctrl_g)
+	assert(main_inst.add_modal.cat_option.selected == 1, "Ctrl+G in AddModal should select Gacha (1)")
+	main_inst.add_modal._unhandled_input(ev_ctrl_i)
+	assert(main_inst.add_modal.title_input.text == "오늘의 독서 스크랩", "Ctrl+I in AddModal should fill sample inputs")
+	main_inst.add_modal.close()
+	print("✓ Sprint 209: Global Ctrl/Cmd+I Infographic/Ink/Sample & Ctrl/Cmd+G Gacha/Grade/Cat verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

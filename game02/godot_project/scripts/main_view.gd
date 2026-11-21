@@ -1036,6 +1036,17 @@ func _unhandled_input(event: InputEvent) -> void:
 			if event.shift_pressed:
 				_open_first_filtered_card()
 			get_viewport().set_input_as_handled()
+		elif (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_I:
+			if event.shift_pressed:
+				_trigger_instant_json_backup()
+			else:
+				show_library_infographic()
+			get_viewport().set_input_as_handled()
+		elif (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_G:
+			_on_tab_gacha_pressed()
+			if event.shift_pressed:
+				_open_first_filtered_card()
+			get_viewport().set_input_as_handled()
 		elif event.keycode == KEY_SLASH and event.shift_pressed and (search_input == null or not search_input.has_focus()):
 			_show_shortcut_cheatsheet()
 			get_viewport().set_input_as_handled()
