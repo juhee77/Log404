@@ -72,22 +72,35 @@ func _ready() -> void:
 	_style_diary_controls()
 	if quote_input != null:
 		quote_input.text_submitted.connect(func(_t): _on_save_quote_btn_pressed())
-		quote_input.tooltip_text = "밑줄 문장·감상평 입력 (Enter: 저장 · 우클릭: 입력 비우기/원문 복원)"
+		quote_input.tooltip_text = "밑줄 문장·감상평 입력 (Enter: 저장 · 우클릭: 입력 비우기/원문 복원 · Shift+좌클릭: 저장+복사)"
 		quote_input.gui_input.connect(func(ev: InputEvent) -> void:
-			if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_RIGHT and current_item != null:
-				if quote_input.text != "":
-					quote_input.text = ""
-				else:
-					editing_vol_index = -1
-					quote_input.text = current_item.memo
-					quote_input.placeholder_text = "🖋️ 오늘 밑줄 친 명대사·감상평 수정..."
+			if ev is InputEventMouseButton and ev.pressed:
+				if ev.button_index == MOUSE_BUTTON_LEFT and ev.shift_pressed:
+					quote_input.accept_event()
+					var q_copy: String = quote_input.text.strip_edges()
+					_on_save_quote_btn_pressed()
+					if q_copy != "":
+						DisplayServer.clipboard_set(q_copy)
+						quote_input.tooltip_text = "✅ 저장·복사됨: " + q_copy
+				elif ev.button_index == MOUSE_BUTTON_RIGHT and current_item != null:
+					if quote_input.text != "":
+						quote_input.text = ""
+					else:
+						editing_vol_index = -1
+						quote_input.text = current_item.memo
+						quote_input.placeholder_text = "🖋️ 오늘 밑줄 친 명대사·감상평 수정..."
+						_render_volumes()
 		)
 	var dimmer: Control = get_node_or_null("Dimmer")
 	if dimmer != null:
-		dimmer.tooltip_text = "좌클릭: 일기장 닫기 · 우클릭: 닫고 즉시 JSON 백업"
+		dimmer.tooltip_text = "좌클릭: 일기장 닫기 · 우클릭: 닫고 즉시 JSON 백업 · Shift+좌클릭: 카드 복사+닫기"
 		dimmer.gui_input.connect(func(ev):
 			if ev is InputEventMouseButton and ev.pressed:
-				if ev.button_index == MOUSE_BUTTON_LEFT:
+				if ev.button_index == MOUSE_BUTTON_LEFT and ev.shift_pressed:
+					dimmer.accept_event()
+					copy_book_quote_card()
+					close()
+				elif ev.button_index == MOUSE_BUTTON_LEFT:
 					close()
 				elif ev.button_index == MOUSE_BUTTON_RIGHT:
 					close()
@@ -98,7 +111,7 @@ func _ready() -> void:
 	if title_label != null:
 		title_label.mouse_filter = Control.MOUSE_FILTER_STOP
 		title_label.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
-		title_label.tooltip_text = "좌클릭: 작품 제목 클립보드 복사 · 우클릭: 감상 카드 전체 복사 (C)"
+		title_label.tooltip_text = "좌클릭: 작품 제목 클립보드 복사 · 우클릭·Shift+좌클릭: 감상 카드 전체 복사 (C)"
 	if author_label != null:
 		author_label.tooltip_text = "좌클릭: 이 작가·시리즈의 다른 작품 검색하기 · Shift+좌클릭: 작가명 복사 · 우클릭: 가치 +5,000원(Shift: -5,000원)"
 	if tag_label != null:
@@ -107,7 +120,10 @@ func _ready() -> void:
 		memo_label.tooltip_text = "좌클릭: 밑줄 문장 편집 입력창 이동 (E) · 우클릭: 형광펜 토글 (L) · Shift+좌클릭: 감상평 복사"
 		title_label.gui_input.connect(func(ev: InputEvent) -> void:
 			if ev is InputEventMouseButton and ev.pressed and current_item != null:
-				if ev.button_index == MOUSE_BUTTON_LEFT:
+				if ev.button_index == MOUSE_BUTTON_LEFT and ev.shift_pressed:
+					title_label.accept_event()
+					card_copied.emit(current_item)
+				elif ev.button_index == MOUSE_BUTTON_LEFT:
 					DisplayServer.clipboard_set(current_item.title)
 					title_label.tooltip_text = "✅ 복사됨: " + current_item.title
 				elif ev.button_index == MOUSE_BUTTON_RIGHT:
@@ -116,10 +132,14 @@ func _ready() -> void:
 	if cat_badge != null:
 		cat_badge.mouse_filter = Control.MOUSE_FILTER_STOP
 		cat_badge.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
-		cat_badge.tooltip_text = "좌클릭: 같은 카테고리(이북/가챠) 서재만 모아보기 · 우클릭: 전체 서재 보기"
+		cat_badge.tooltip_text = "좌클릭: 같은 카테고리(이북/가챠) 서재만 모아보기 · 우클릭: 전체 서재 보기 · Shift+좌클릭: 전체 서재 보기"
 		cat_badge.gui_input.connect(func(ev: InputEvent) -> void:
 			if ev is InputEventMouseButton and ev.pressed and current_item != null:
-				if ev.button_index == MOUSE_BUTTON_LEFT:
+				if ev.button_index == MOUSE_BUTTON_LEFT and ev.shift_pressed:
+					cat_badge.accept_event()
+					close()
+					filter_category_requested.emit(-1)
+				elif ev.button_index == MOUSE_BUTTON_LEFT:
 					var target_cat: int = current_item.category
 					close()
 					filter_category_requested.emit(target_cat)
@@ -268,13 +288,15 @@ func _style_diary_controls() -> void:
 	if stamp_lbl != null:
 		stamp_lbl.mouse_filter = Control.MOUSE_FILTER_STOP
 		stamp_lbl.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
-		stamp_lbl.tooltip_text = "좌클릭: 인장 프리셋 순환 (1~4) · 우클릭: 역순환"
+		stamp_lbl.tooltip_text = "좌클릭: 인장 프리셋 순환 (1~4) · 우클릭·Shift+좌클릭: 역순환"
 		stamp_lbl.gui_input.connect(func(ev: InputEvent) -> void:
 			if ev is InputEventMouseButton and ev.pressed and current_item != null:
 				if ev.button_index == MOUSE_BUTTON_LEFT or ev.button_index == MOUSE_BUTTON_RIGHT:
+					if ev.button_index == MOUSE_BUTTON_LEFT and ev.shift_pressed:
+						stamp_lbl.accept_event()
 					var presets: Array = STAMP_PRESET_MAP.values()
 					var cur_idx: int = presets.find(current_item.status_tag)
-					var step: int = -1 if ev.button_index == MOUSE_BUTTON_RIGHT else 1
+					var step: int = -1 if (ev.button_index == MOUSE_BUTTON_RIGHT or (ev.button_index == MOUSE_BUTTON_LEFT and ev.shift_pressed)) else 1
 					var next_idx: int = (cur_idx + step + presets.size()) % presets.size() if cur_idx != -1 else 0
 					apply_stamp(presets[next_idx])
 		)
@@ -282,10 +304,13 @@ func _style_diary_controls() -> void:
 	if ink_lbl != null:
 		ink_lbl.mouse_filter = Control.MOUSE_FILTER_STOP
 		ink_lbl.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
-		ink_lbl.tooltip_text = "좌클릭: 만년필 잉크 순환 (I) · 우클릭: 역순환 (Shift+I)"
+		ink_lbl.tooltip_text = "좌클릭: 만년필 잉크 순환 (I) · 우클릭·Shift+좌클릭: 역순환 (Shift+I)"
 		ink_lbl.gui_input.connect(func(ev: InputEvent) -> void:
 			if ev is InputEventMouseButton and ev.pressed and current_item != null:
-				if ev.button_index == MOUSE_BUTTON_LEFT:
+				if ev.button_index == MOUSE_BUTTON_LEFT and ev.shift_pressed:
+					ink_lbl.accept_event()
+					cycle_fountain_pen_ink(-1)
+				elif ev.button_index == MOUSE_BUTTON_LEFT:
 					cycle_fountain_pen_ink(1)
 				elif ev.button_index == MOUSE_BUTTON_RIGHT:
 					cycle_fountain_pen_ink(-1)
@@ -781,7 +806,7 @@ func open(item) -> void:
 		quote_input.release_focus()
 		quote_input.placeholder_text = "🖋️ 오늘 밑줄 친 명대사·감상평 수정..."
 	title_label.text = "📔 " + item.title
-	title_label.tooltip_text = "좌클릭: 작품 제목 클립보드 복사 · 우클릭: 감상 카드 전체 복사 (C)"
+	title_label.tooltip_text = "좌클릭: 작품 제목 클립보드 복사 · 우클릭·Shift+좌클릭: 감상 카드 전체 복사 (C)"
 	if author_label != null:
 		author_label.tooltip_text = "좌클릭: 이 작가·시리즈의 다른 작품 검색하기 · Shift+좌클릭: 작가명 복사 · 우클릭: 가치 +5,000원(Shift: -5,000원)"
 	if tag_label != null:
@@ -883,8 +908,178 @@ func close() -> void:
 func _unhandled_input(event: InputEvent) -> void:
 	if not visible or not (event is InputEventKey) or not event.pressed or event.echo:
 		return
+	if event.keycode == KEY_F1:
+		help_requested.emit()
+		if event.shift_pressed:
+			DisplayServer.clipboard_set("⌨️ 모달 단축키: [←/→] 넘김(Shift: 처음·끝) · [+/-] 권(Shift: 초판·북마크) · [1~4] 인장(Shift: 찍고닫기) · [E] 문장(Shift: 샘플) · [L] 형광펜(Shift: 속지) · [C] 복사(Shift: 리포트) · [ESC] 닫기(Shift: 카드복사+닫기)")
+		get_viewport().set_input_as_handled()
+		return
+	if (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_S:
+		_on_save_quote_btn_pressed()
+		get_viewport().set_input_as_handled()
+		return
+	if (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_R:
+		if event.shift_pressed:
+			decrement_reread_count()
+		else:
+			increment_reread_count()
+		get_viewport().set_input_as_handled()
+		return
+	if (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_L:
+		if event.shift_pressed:
+			cycle_paper_pattern()
+		else:
+			toggle_quote_highlight()
+		get_viewport().set_input_as_handled()
+		return
+	if (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_D:
+		if event.shift_pressed:
+			decrement_duplicate_count()
+		else:
+			increment_duplicate_count()
+		get_viewport().set_input_as_handled()
+		return
+	if (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_I:
+		cycle_fountain_pen_ink(-1 if event.shift_pressed else 1)
+		get_viewport().set_input_as_handled()
+		return
+	if (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_G:
+		cycle_condition_grade(-1 if event.shift_pressed else 1)
+		get_viewport().set_input_as_handled()
+		return
+	if (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_W:
+		if event.shift_pressed:
+			copy_book_quote_card()
+		close()
+		get_viewport().set_input_as_handled()
+		return
+	if (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_E and quote_input != null:
+		if event.shift_pressed:
+			quote_input.text = "오늘도 한 페이지의 여운을 남겼다."
+		quote_input.grab_focus()
+		quote_input.select_all()
+		get_viewport().set_input_as_handled()
+		return
+	if (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_0:
+		if current_item != null and quote_input != null:
+			quote_input.text = current_item.memo
+		if delete_armed:
+			delete_armed = false
+			_apply_delete_btn_style(false)
+		if event.shift_pressed:
+			close()
+		get_viewport().set_input_as_handled()
+		return
+	if (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_T:
+		cycle_custom_tag(-1 if event.shift_pressed else 1)
+		get_viewport().set_input_as_handled()
+		return
+	if (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_P:
+		cycle_paper_pattern(-1 if event.shift_pressed else 1)
+		get_viewport().set_input_as_handled()
+		return
+	if (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_M:
+		cycle_reading_mood(-1 if event.shift_pressed else 1)
+		get_viewport().set_input_as_handled()
+		return
+	if (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_U:
+		cycle_reading_weather(-1 if event.shift_pressed else 1)
+		get_viewport().set_input_as_handled()
+		return
+	if (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_J:
+		cycle_reading_spot(-1 if event.shift_pressed else 1)
+		get_viewport().set_input_as_handled()
+		return
+	if (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_O:
+		cycle_obi_preset(-1 if event.shift_pressed else 1)
+		get_viewport().set_input_as_handled()
+		return
+	if (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_Y:
+		if event.shift_pressed:
+			decrement_reread_count()
+		else:
+			increment_reread_count()
+		get_viewport().set_input_as_handled()
+		return
+	if (event.ctrl_pressed or event.meta_pressed) and event.keycode in [KEY_1, KEY_2, KEY_3, KEY_4]:
+		var stamp_map := {KEY_1: "전권완결", KEY_2: "초판특전", KEY_3: "인생최애", KEY_4: "위시리스트"}
+		apply_stamp(stamp_map[event.keycode])
+		if event.shift_pressed:
+			close()
+		get_viewport().set_input_as_handled()
+		return
+	if (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_5:
+		set_fountain_pen_ink("#2c221e")
+		if event.shift_pressed:
+			close()
+		get_viewport().set_input_as_handled()
+		return
+	if (event.ctrl_pressed or event.meta_pressed) and event.keycode in [KEY_6, KEY_7, KEY_8]:
+		var ink_map := {KEY_6: "#7f1d1d", KEY_7: "#78350f", KEY_8: "#14532d"}
+		set_fountain_pen_ink(ink_map[event.keycode])
+		if event.shift_pressed:
+			close()
+		get_viewport().set_input_as_handled()
+		return
+	if (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_9:
+		toggle_quote_highlight()
+		if event.shift_pressed:
+			copy_book_quote_card()
+			close()
+		get_viewport().set_input_as_handled()
+		return
+	if (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_H:
+		help_requested.emit()
+		if event.shift_pressed:
+			DisplayServer.clipboard_set("⌨️ 모달 단축키: [←/→] 넘김(Shift: 처음·끝) · [+/-] 권(Shift: 초판·북마크) · [1~4] 인장(Shift: 찍고닫기) · [E] 문장(Shift: 샘플) · [L] 형광펜(Shift: 속지) · [C] 복사(Shift: 리포트) · [ESC] 닫기(Shift: 카드복사+닫기)")
+		get_viewport().set_input_as_handled()
+		return
+	if (event.ctrl_pressed or event.meta_pressed) and event.keycode in [KEY_UP, KEY_DOWN, KEY_PAGEUP, KEY_PAGEDOWN]:
+		var is_prev: bool = event.keycode in [KEY_UP, KEY_PAGEUP]
+		var step_val: int = (-9999 if event.shift_pressed else -1) if is_prev else (9999 if event.shift_pressed else 1)
+		navigate_requested.emit(step_val)
+		get_viewport().set_input_as_handled()
+		return
+	if (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_SPACE:
+		navigate_requested.emit(-1 if event.shift_pressed else 1)
+		get_viewport().set_input_as_handled()
+		return
+	if (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_BACKSPACE:
+		if event.shift_pressed:
+			copy_book_quote_card()
+		close()
+		get_viewport().set_input_as_handled()
+		return
+	if (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_SLASH:
+		if event.shift_pressed:
+			help_requested.emit()
+		elif quote_input != null:
+			quote_input.grab_focus()
+			quote_input.select_all()
+		get_viewport().set_input_as_handled()
+		return
+	if (event.ctrl_pressed or event.meta_pressed) and (event.keycode == KEY_ENTER or event.keycode == KEY_KP_ENTER):
+		if event.shift_pressed:
+			toggle_quote_highlight()
+		else:
+			_on_save_quote_btn_pressed()
+		get_viewport().set_input_as_handled()
+		return
+	if (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_TAB:
+		navigate_requested.emit(-1 if event.shift_pressed else 1)
+		get_viewport().set_input_as_handled()
+		return
+	if (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_ESCAPE:
+		if event.shift_pressed:
+			copy_book_quote_card()
+		close()
+		get_viewport().set_input_as_handled()
+		return
 	if event.keycode == KEY_ESCAPE:
-		if quote_input != null and quote_input.has_focus():
+		if event.shift_pressed:
+			copy_book_quote_card()
+			close()
+		elif quote_input != null and quote_input.has_focus():
 			quote_input.release_focus()
 		elif delete_armed:
 			delete_armed = false
@@ -892,12 +1087,33 @@ func _unhandled_input(event: InputEvent) -> void:
 		else:
 			close()
 		get_viewport().set_input_as_handled()
+	elif event.keycode == KEY_TAB:
+		if quote_input != null and quote_input.has_focus():
+			quote_input.release_focus()
+		else:
+			navigate_requested.emit(-1 if event.shift_pressed else 1)
+		get_viewport().set_input_as_handled()
 	elif quote_input == null or not quote_input.has_focus():
 		if event.keycode == KEY_LEFT:
-			navigate_requested.emit(-1)
+			navigate_requested.emit(-9999 if event.shift_pressed else -1)
 			get_viewport().set_input_as_handled()
 		elif event.keycode == KEY_RIGHT:
-			navigate_requested.emit(1)
+			navigate_requested.emit(9999 if event.shift_pressed else 1)
+			get_viewport().set_input_as_handled()
+		elif event.keycode == KEY_UP:
+			navigate_requested.emit(-9999 if event.shift_pressed else -1)
+			get_viewport().set_input_as_handled()
+		elif event.keycode == KEY_DOWN:
+			navigate_requested.emit(9999 if event.shift_pressed else 1)
+			get_viewport().set_input_as_handled()
+		elif event.keycode == KEY_0:
+			if current_item != null and quote_input != null:
+				quote_input.text = current_item.memo
+			if delete_armed:
+				delete_armed = false
+				_apply_delete_btn_style(false)
+			if event.shift_pressed:
+				close()
 			get_viewport().set_input_as_handled()
 		elif event.keycode == KEY_HOME:
 			navigate_requested.emit(-9999)
@@ -906,25 +1122,70 @@ func _unhandled_input(event: InputEvent) -> void:
 			navigate_requested.emit(9999)
 			get_viewport().set_input_as_handled()
 		elif event.keycode == KEY_PAGEDOWN:
-			navigate_requested.emit(1)
+			navigate_requested.emit(9999 if event.shift_pressed else 1)
 			get_viewport().set_input_as_handled()
 		elif event.keycode == KEY_PAGEUP:
-			navigate_requested.emit(-1)
+			navigate_requested.emit(-9999 if event.shift_pressed else -1)
 			get_viewport().set_input_as_handled()
 		elif event.keycode == KEY_SPACE:
 			navigate_requested.emit(-1 if event.shift_pressed else 1)
 			get_viewport().set_input_as_handled()
 		elif event.keycode in [KEY_EQUAL, KEY_PLUS, KEY_KP_ADD]:
 			_on_add_vol_btn_pressed()
+			if event.shift_pressed and current_item != null and not current_item.volumes.is_empty():
+				var last_v = current_item.volumes[current_item.volumes.size() - 1]
+				last_v["status"] = "first"
+				last_v["bookmarked"] = true
+				_render_volumes()
+				_refresh_vol_header()
+				diary_updated.emit(current_item)
 			get_viewport().set_input_as_handled()
 		elif event.keycode in [KEY_MINUS, KEY_KP_SUBTRACT]:
-			remove_last_volume()
+			if event.shift_pressed and current_item != null and not current_item.volumes.is_empty():
+				var all_bm: bool = true
+				for vol_d in current_item.volumes:
+					if not bool(vol_d.get("bookmarked", false)):
+						all_bm = false
+						break
+				var target_bm: bool = not all_bm
+				for vol_d in current_item.volumes:
+					vol_d["bookmarked"] = target_bm
+				_render_volumes()
+				_refresh_vol_header()
+				diary_updated.emit(current_item)
+			else:
+				remove_last_volume()
 			get_viewport().set_input_as_handled()
-		elif event.keycode == KEY_H:
+		elif event.keycode == KEY_H or (event.keycode == KEY_SLASH and event.shift_pressed):
 			help_requested.emit()
+			if event.keycode == KEY_H and event.shift_pressed:
+				DisplayServer.clipboard_set("⌨️ 모달 단축키: [←/→] 넘김(Shift: 처음·끝) · [+/-] 권(Shift: 초판·북마크) · [1~4] 인장(Shift: 찍고닫기) · [E] 문장(Shift: 샘플) · [L] 형광펜(Shift: 속지) · [C] 복사(Shift: 리포트) · [ESC] 닫기(Shift: 카드복사+닫기)")
+			get_viewport().set_input_as_handled()
+		elif event.keycode == KEY_SLASH and not event.shift_pressed and quote_input != null:
+			quote_input.grab_focus()
+			quote_input.select_all()
+			get_viewport().set_input_as_handled()
+		elif event.keycode == KEY_BACKSPACE:
+			if event.shift_pressed:
+				copy_book_quote_card()
+				close()
+			elif delete_armed:
+				delete_armed = false
+				_apply_delete_btn_style(false)
+			else:
+				close()
+			get_viewport().set_input_as_handled()
+		elif event.keycode == KEY_ENTER or event.keycode == KEY_KP_ENTER:
+			if event.shift_pressed:
+				toggle_quote_highlight()
+			elif quote_input != null:
+				quote_input.grab_focus()
+				quote_input.select_all()
 			get_viewport().set_input_as_handled()
 		elif event.keycode == KEY_E:
 			if quote_input != null:
+				if event.shift_pressed:
+					quote_input.text = "오늘도 한 페이지의 여운을 남겼다."
 				quote_input.grab_focus()
 				quote_input.caret_column = quote_input.text.length()
 			get_viewport().set_input_as_handled()
@@ -936,6 +1197,25 @@ func _unhandled_input(event: InputEvent) -> void:
 				KEY_4: "위시리스트",
 			}
 			apply_stamp(stamp_map[event.keycode])
+			if event.shift_pressed:
+				close()
+			get_viewport().set_input_as_handled()
+		elif event.keycode in [KEY_5, KEY_6, KEY_7, KEY_8]:
+			var ink_map := {
+				KEY_5: "#2c221e",
+				KEY_6: "#7f1d1d",
+				KEY_7: "#78350f",
+				KEY_8: "#14532d",
+			}
+			set_fountain_pen_ink(ink_map[event.keycode])
+			if event.shift_pressed:
+				close()
+			get_viewport().set_input_as_handled()
+		elif event.keycode == KEY_9:
+			toggle_quote_highlight()
+			if event.shift_pressed:
+				copy_book_quote_card()
+				close()
 			get_viewport().set_input_as_handled()
 		else:
 			var shift_pairs := {
@@ -975,13 +1255,19 @@ func _unhandled_input(event: InputEvent) -> void:
 				step_cyclers[event.keycode].call(-1 if event.shift_pressed else 1)
 				get_viewport().set_input_as_handled()
 				return
-			var simple_actions := {
-				KEY_L: toggle_quote_highlight,
-				KEY_DELETE: _on_delete_btn_pressed,
-				KEY_BACKSPACE: _on_delete_btn_pressed,
-			}
-			if simple_actions.has(event.keycode):
-				simple_actions[event.keycode].call()
+			if event.keycode == KEY_L:
+				if event.shift_pressed:
+					cycle_paper_pattern(1)
+				else:
+					toggle_quote_highlight()
+				get_viewport().set_input_as_handled()
+			elif event.keycode in [KEY_DELETE, KEY_BACKSPACE]:
+				if event.shift_pressed:
+					if delete_armed:
+						delete_armed = false
+						_apply_delete_btn_style(false)
+				else:
+					_on_delete_btn_pressed()
 				get_viewport().set_input_as_handled()
 
 func apply_stamp(stamp_name: String) -> void:

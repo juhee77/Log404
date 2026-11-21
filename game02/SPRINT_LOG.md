@@ -5,6 +5,806 @@
 
 ---
 
+## 📓 [Sprint 221] 검색창 실시간 필터링 작품 수 표시 (`전체 N종` / `K/N종 표시`)
+- **일시**: 2026-11-21
+- **14인 가상 애자일 스쿼드 회의록**:
+  - **다꾸러 VOC (지민·수빈·하연)**: "카테고리 탭이나 필터를 눌렀을 때 현재 서재에 몇 종의 작품이 필터링되어 표시되고 있는지 검색창 플레이스홀더에서 바로 확인하고 싶어요!"
+  - **PO & UX/UI**: `MainView._render_cards()`에서 필터링 결과 개수에 따라 `search_input.placeholder_text`를 `"작품·대사 검색... (전체 N종)"` 또는 `"작품·대사 검색... (K/N종 표시)"`로 실시간 갱신한다.
+- **구현 내역**:
+  - [`main_view.gd`](godot_project/scripts/main_view.gd): `_render_cards()` 내 `search_input.placeholder_text` 실시간 필터 건수 표시 추가.
+  - [`index.html`](index.html): `renderShelf()` 내 `#search-box` 플레이스홀더 실시간 건수 동기화.
+  - [`test_main_integration.gd`](godot_project/tests/test_main_integration.gd): 전체 탭(`전체 6종`) 및 만화 탭(`4/6종 표시`) 플레이스홀더 검증 추가.
+- **검증**: `test_archive.gd`, `test_persistence.gd`, `test_main_integration.gd` 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 갱신 완료.
+
+---
+
+## 📓 [Sprint 220 Milestone] 3대 뷰 전역 `Ctrl/Cmd+Tab` 전환 · `Ctrl/Cmd+ESC` 즉시 초기화·닫기
+- **일시**: 2026-11-21
+- **14인 가상 애자일 스쿼드 회의록**:
+  - **다꾸러 VOC (지민·수빈·하연)**: "입력창 포커스 중에도 `Ctrl/Cmd+Tab`으로 서재 탭 전환(`MainView`)·작품 카드 넘김(`DetailModal`)·표지 스와치 순환(`AddModal`)을 바로 실행하고, `Ctrl/Cmd+ESC`로 스튜디오 전체 초기화(`MainView`)·모달 즉시 닫기(`DetailModal`)·입력 비우고 닫기(`AddModal`)를 실행해 전역 `Ctrl/Cmd` 워크플로우 마일스톤을 완성하고 싶어요!"
+  - **PO & UX/UI**: `MainView`, `DetailModal`, `AddModal`의 `_unhandled_input` 최상단에 `ctrl_pressed or meta_pressed` + `KEY_TAB`/`KEY_ESCAPE` 분기를 추가한다.
+- **구현 내역**:
+  - [`main_view.gd`](godot_project/scripts/main_view.gd): `Ctrl/Cmd+Tab`(필터 탭 순환 / `Shift`: 역순) 및 `Ctrl/Cmd+ESC`(스튜디오 전체 초기화) 추가.
+  - [`detail_modal.gd`](godot_project/scripts/detail_modal.gd): `Ctrl/Cmd+Tab`(이전/다음 작품 넘김) 및 `Ctrl/Cmd+ESC`(즉시 닫기 / `Shift`: 카드 복사+닫기) 추가.
+  - [`add_modal.gd`](godot_project/scripts/add_modal.gd): `Ctrl/Cmd+Tab`(표지 컬러스와치 순환) 및 `Ctrl/Cmd+ESC`(입력 비우고 닫기) 추가.
+  - [`index.html`](index.html): 웹 인터랙티브 목업에 `Ctrl/Cmd+Tab`, `Ctrl/Cmd+ESC` 전역 단축키 동기화.
+  - [`test_main_integration.gd`](godot_project/tests/test_main_integration.gd): 포커스 상태 `Ctrl+Tab`, `Ctrl+ESC` 3대 뷰 검증 추가.
+- **검증**: `test_archive.gd`, `test_persistence.gd`, `test_main_integration.gd` 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 갱신 완료.
+
+---
+
+## 📓 [Sprint 219] 3대 뷰 전역 `Ctrl/Cmd+/` 포커스·도움말 · `Ctrl/Cmd+Enter` 열기·저장·등록
+- **일시**: 2026-11-21
+- **14인 가상 애자일 스쿼드 회의록**:
+  - **다꾸러 VOC (지민·수빈·하연)**: "입력창 포커스 여부와 무관하게 `Ctrl/Cmd+/`로 검색/밑줄/제목 입력칸에 즉시 포커스(`Shift`: 치트시트)하고, `Ctrl/Cmd+Enter`로 첫 작품 열기(`MainView`)·밑줄 저장(`DetailModal`)·일기 등록(`AddModal`)을 바로 실행하고 싶어요!"
+  - **PO & UX/UI**: `MainView`, `DetailModal`, `AddModal`의 `_unhandled_input` 최상단에 `ctrl_pressed or meta_pressed` + `KEY_SLASH`/`KEY_ENTER` 분기를 추가한다.
+- **구현 내역**:
+  - [`main_view.gd`](godot_project/scripts/main_view.gd): `Ctrl/Cmd+/`(검색창 포커스 / `Shift`: 치트시트) 및 `Ctrl/Cmd+Enter`(첫 작품 열기 / `Shift`: 새 일기 창) 추가.
+  - [`detail_modal.gd`](godot_project/scripts/detail_modal.gd): `Ctrl/Cmd+/`(밑줄 입력칸 포커스 / `Shift`: 치트시트) 및 `Ctrl/Cmd+Enter`(밑줄 저장 / `Shift`: 형광펜 토글) 추가.
+  - [`add_modal.gd`](godot_project/scripts/add_modal.gd): `Ctrl/Cmd+/`(제목 입력칸 포커스 / `Shift`: 치트시트) 및 `Ctrl/Cmd+Enter`(일기 등록 / `Shift`: 샘플 즉시 등록) 추가.
+  - [`index.html`](index.html): 웹 인터랙티브 목업에 `Ctrl/Cmd+/`, `Ctrl/Cmd+Enter` 전역 단축키 동기화.
+  - [`test_main_integration.gd`](godot_project/tests/test_main_integration.gd): 포커스 상태 `Ctrl+/`, `Ctrl+Enter` 3대 뷰 검증 추가.
+- **검증**: `test_archive.gd`, `test_persistence.gd`, `test_main_integration.gd` 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 갱신 완료.
+
+---
+
+## 📓 [Sprint 218] 3대 뷰 전역 `Ctrl/Cmd+Space` 열기·넘김·스와치 · `Ctrl/Cmd+Backspace` 초기화·닫기·비우기
+- **일시**: 2026-11-21
+- **14인 가상 애자일 스쿼드 회의록**:
+  - **다꾸러 VOC (지민·수빈·하연)**: "입력창 포커스 중에도 `Ctrl/Cmd+Space`로 첫/랜덤 작품 열기(`MainView`)·작품 카드 넘김(`DetailModal`)·표지 스와치 순환(`AddModal`)을 바로 실행하고, `Ctrl/Cmd+Backspace`로 필터 초기화(`MainView`)·모달 닫기(`DetailModal`)·입력 비우기(`AddModal`)를 조작하고 싶어요!"
+  - **PO & UX/UI**: `MainView`, `DetailModal`, `AddModal`의 `_unhandled_input` 최상단에 `ctrl_pressed or meta_pressed` + `KEY_SPACE`/`KEY_BACKSPACE` 분기를 추가한다.
+- **구현 내역**:
+  - [`main_view.gd`](godot_project/scripts/main_view.gd): `Ctrl/Cmd+Space`(첫 작품 열기 / `Shift`: 랜덤 작품) 및 `Ctrl/Cmd+Backspace`(필터·검색 초기화 / `Shift`: 스튜디오 리셋) 추가.
+  - [`detail_modal.gd`](godot_project/scripts/detail_modal.gd): `Ctrl/Cmd+Space`(이전/다음 작품 넘김) 및 `Ctrl/Cmd+Backspace`(모달 닫기 / `Shift`: 카드 복사+닫기) 추가.
+  - [`add_modal.gd`](godot_project/scripts/add_modal.gd): `Ctrl/Cmd+Space`(표지 컬러스와치 순환) 및 `Ctrl/Cmd+Backspace`(입력 비우기 / `Shift`: 닫기) 추가.
+  - [`index.html`](index.html): 웹 인터랙티브 목업에 `Ctrl/Cmd+Space`, `Ctrl/Cmd+Backspace` 전역 단축키 동기화.
+  - [`test_main_integration.gd`](godot_project/tests/test_main_integration.gd): 포커스 상태 `Ctrl+Space`, `Ctrl+Backspace` 3대 뷰 검증 추가.
+- **검증**: `test_archive.gd`, `test_persistence.gd`, `test_main_integration.gd` 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 갱신 완료.
+
+---
+
+## 📓 [Sprint 217] 3대 뷰 전역 `Ctrl/Cmd+↑/↓` & `Ctrl/Cmd+PgUp/PgDn` 정렬·탭·작품넘김·스와치 순환
+- **일시**: 2026-11-21
+- **14인 가상 애자일 스쿼드 회의록**:
+  - **다꾸러 VOC (지민·수빈·하연)**: "입력창 포커스 중에도 `Ctrl/Cmd+↑/↓`와 `Ctrl/Cmd+PgUp/PgDn`으로 정렬·필터 탭 순환(`MainView`)·작품 카드 이전/다음 넘김(`DetailModal`)·입력칸 포커스 이동 및 스와치 순환(`AddModal`)을 바로 조작하고 싶어요!"
+  - **PO & UX/UI**: `MainView`, `DetailModal`, `AddModal`의 `_unhandled_input` 최상단에 `ctrl_pressed or meta_pressed` + `KEY_UP/KEY_DOWN/KEY_PAGEUP/KEY_PAGEDOWN` 분기를 추가한다.
+- **구현 내역**:
+  - [`main_view.gd`](godot_project/scripts/main_view.gd): `Ctrl/Cmd+↑/↓`(4종 정렬 순환 / `Shift`: 사운드 순환) 및 `Ctrl/Cmd+PgUp/PgDn`(필터 탭 순환 / `Shift`: 첫 작품 열기) 추가.
+  - [`detail_modal.gd`](godot_project/scripts/detail_modal.gd): `Ctrl/Cmd+↑/↓/PgUp/PgDn`(이전/다음 작품 넘김 / `Shift`: 처음·끝) 추가.
+  - [`add_modal.gd`](godot_project/scripts/add_modal.gd): `Ctrl/Cmd+↑/↓`(입력칸 포커스 이동 / `Shift`: 스와치 순환) 및 `Ctrl/Cmd+PgUp/PgDn`(스와치 순환 / `Shift`: 분류 토글) 추가.
+  - [`index.html`](index.html): 웹 인터랙티브 목업에 `Ctrl/Cmd+↑/↓/PgUp/PgDn` 전역 단축키 동기화.
+  - [`test_main_integration.gd`](godot_project/tests/test_main_integration.gd): 포커스 상태 `Ctrl+Down`, `Ctrl+PageDown` 3대 뷰 검증 추가.
+- **검증**: `test_archive.gd`, `test_persistence.gd`, `test_main_integration.gd` 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 갱신 완료.
+
+---
+
+## 📓 [Sprint 216] 3대 뷰 전역 `Ctrl/Cmd+6~9` 정렬·잉크·형광펜·스와치·샘플 완전 통일
+- **일시**: 2026-11-21
+- **14인 가상 애자일 스쿼드 회의록**:
+  - **다꾸러 VOC (지민·수빈·하연)**: "입력창 포커스 중에도 `Ctrl/Cmd+6~9`로 4종 정렬(`MainView`)·버건디/세피아/포레스트 잉크 및 형광펜 토글(`DetailModal`)·6번 바이올렛 스와치/이북·가챠 분류/샘플 채움(`AddModal`)까지 숫자키 `0~9` 전 구간을 완성하고 싶어요!"
+  - **PO & UX/UI**: `MainView`, `DetailModal`, `AddModal`의 `_unhandled_input` 최상단에 `ctrl_pressed or meta_pressed` + `KEY_6~KEY_9` 분기를 추가한다.
+- **구현 내역**:
+  - [`main_view.gd`](godot_project/scripts/main_view.gd): `Ctrl/Cmd+6~9`(기본/다독/최신/자산가치순 정렬 / `Shift`: 첫 작품 열기) 추가.
+  - [`detail_modal.gd`](godot_project/scripts/detail_modal.gd): `Ctrl/Cmd+6~8`(버건디·세피아·포레스트 잉크) 및 `Ctrl/Cmd+9`(형광펜 토글 / `Shift`: 복사+닫기) 추가.
+  - [`add_modal.gd`](godot_project/scripts/add_modal.gd): `Ctrl/Cmd+6`(6번 바이올렛 스와치), `Ctrl/Cmd+7/8`(이북·가챠 분류), `Ctrl/Cmd+9`(샘플 채움 / `Shift`: 등록) 추가.
+  - [`index.html`](index.html): 웹 인터랙티브 목업에 `Ctrl/Cmd+6~9` 전역 단축키 동기화.
+  - [`test_main_integration.gd`](godot_project/tests/test_main_integration.gd): 포커스 상태 `Ctrl+6~9` 3대 뷰 검증 추가.
+- **검증**: `test_archive.gd`, `test_persistence.gd`, `test_main_integration.gd` 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 갱신 완료.
+
+---
+
+## 📓 [Sprint 215 Milestone] 3대 뷰 전역 `Ctrl/Cmd+1~5` 탭·인장·잉크·스와치 · `Ctrl/Cmd+H` 치트시트
+- **일시**: 2026-11-21
+- **14인 가상 애자일 스쿼드 회의록**:
+  - **다꾸러 VOC (지민·수빈·하연)**: "입력창 포커스 중에도 `Ctrl/Cmd+1~5`로 서재 필터 탭(`MainView`)·인장 스탬프 1~4 및 에스프레소 잉크 5(`DetailModal`)·표지 컬러스와치 1~5(`AddModal`)를 바로 선택하고, `Ctrl/Cmd+H`로 단축키 치트시트(`Shift`: 클립보드 복사)를 즉시 호출하고 싶어요!"
+  - **PO & UX/UI**: `MainView`, `DetailModal`, `AddModal`의 `_unhandled_input` 최상단에 `ctrl_pressed or meta_pressed` + `KEY_1~KEY_5`/`KEY_H` 분기를 추가해 마일스톤을 완성한다.
+- **구현 내역**:
+  - [`main_view.gd`](godot_project/scripts/main_view.gd): `Ctrl/Cmd+1~5`(5대 필터 탭 전환 / `Shift`: 첫 작품 열기) 및 `Ctrl/Cmd+H`(단축키 치트시트 / `Shift`: 클립보드 복사) 추가.
+  - [`detail_modal.gd`](godot_project/scripts/detail_modal.gd): `Ctrl/Cmd+1~4`(인장 스탬프) · `Ctrl/Cmd+5`(에스프레소 잉크 / `Shift`: 닫기) 및 `Ctrl/Cmd+H`(모달 단축키 치트시트 / `Shift`: 클립보드 복사) 추가.
+  - [`add_modal.gd`](godot_project/scripts/add_modal.gd): `Ctrl/Cmd+1~5`(표지 컬러스와치 1~5 선택 / `Shift`: 등록) 및 `Ctrl/Cmd+H`(작성창 단축키 치트시트) 추가.
+  - [`index.html`](index.html): 웹 인터랙티브 목업에 `Ctrl/Cmd+1~5`, `Ctrl/Cmd+H` 전역 단축키 동기화.
+  - [`test_main_integration.gd`](godot_project/tests/test_main_integration.gd): 포커스 상태 `Ctrl+1~5`, `Ctrl+H` 3대 뷰 검증 추가.
+- **검증**: `test_archive.gd`, `test_persistence.gd`, `test_main_integration.gd` 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 갱신 완료.
+
+---
+
+## 📓 [Sprint 214] 3대 뷰 전역 `Ctrl/Cmd+O` 작품열기·띠지·일기등록 · `Ctrl/Cmd+Y` 음소거·회독·샘플채움
+- **일시**: 2026-11-21
+- **14인 가상 애자일 스쿼드 회의록**:
+  - **다꾸러 VOC (지민·수빈·하연)**: "입력창 포커스 중에도 `Ctrl/Cmd+O`로 첫/랜덤 작품 상세 열기(`MainView`)·띠지 프리셋 순환(`DetailModal`)·일기 등록(`AddModal`)을 실행하고, `Ctrl/Cmd+Y`로 앰비언트 음소거/순환(`MainView`)·회독 카운트 증감(`DetailModal`)·샘플 일기 채움(`AddModal`)을 바로 조작하고 싶어요!"
+  - **PO & UX/UI**: `MainView`, `DetailModal`, `AddModal`의 `_unhandled_input` 최상단에 `ctrl_pressed or meta_pressed` + `KEY_O`/`KEY_Y` 분기를 추가한다.
+- **구현 내역**:
+  - [`main_view.gd`](godot_project/scripts/main_view.gd): `Ctrl/Cmd+O`(첫 작품 열기 / `Shift`: 랜덤 작품) 및 `Ctrl/Cmd+Y`(앰비언트 음소거 토글 / `Shift`: 역순 순환) 추가.
+  - [`detail_modal.gd`](godot_project/scripts/detail_modal.gd): `Ctrl/Cmd+O`(띠지 프리셋 순환) 및 `Ctrl/Cmd+Y`(회독 카운트 +1 / `Shift`: -1) 추가.
+  - [`add_modal.gd`](godot_project/scripts/add_modal.gd): `Ctrl/Cmd+O`(일기 등록 / `Shift`: 샘플 즉시 등록) 및 `Ctrl/Cmd+Y`(샘플 일기 채움 / `Shift`: 입력 비우기) 추가.
+  - [`index.html`](index.html): 웹 인터랙티브 목업에 `Ctrl/Cmd+O`, `Ctrl/Cmd+Y` 전역 단축키 동기화.
+  - [`test_main_integration.gd`](godot_project/tests/test_main_integration.gd): 포커스 상태 `Ctrl+O`, `Ctrl+Y` 3대 뷰 검증 추가.
+- **검증**: `test_archive.gd`, `test_persistence.gd`, `test_main_integration.gd` 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 갱신 완료.
+
+---
+
+## 📓 [Sprint 213] 3대 뷰 전역 `Ctrl/Cmd+U` 초판필터·날씨·작가포커스 · `Ctrl/Cmd+J` 마지막점프·장소·분류전환
+- **일시**: 2026-11-21
+- **14인 가상 애자일 스쿼드 회의록**:
+  - **다꾸러 VOC (지민·수빈·하연)**: "입력창 포커스 중에도 `Ctrl/Cmd+U`로 초판 스탬프 필터(`MainView`)·독서 날씨 스탬프(`DetailModal`)·작가 입력칸 포커스(`AddModal`)를 바로 실행하고, `Ctrl/Cmd+J`로 마지막 작품 상세 점프(`MainView`)·독서 장소 스탬프(`DetailModal`)·분류 토글(`AddModal`)을 조작하고 싶어요!"
+  - **PO & UX/UI**: `MainView`, `DetailModal`, `AddModal`의 `_unhandled_input` 최상단에 `ctrl_pressed or meta_pressed` + `KEY_U`/`KEY_J` 분기를 추가한다.
+- **구현 내역**:
+  - [`main_view.gd`](godot_project/scripts/main_view.gd): `Ctrl/Cmd+U`(초판 스탬프 필터 / `Shift`: 첫 작품 열기) 및 `Ctrl/Cmd+J`(마지막 작품 열기 / `Shift`: 첫 작품 열기) 추가.
+  - [`detail_modal.gd`](godot_project/scripts/detail_modal.gd): `Ctrl/Cmd+U`(독서 날씨 스탬프 순환) 및 `Ctrl/Cmd+J`(독서 장소 스탬프 순환) 추가.
+  - [`add_modal.gd`](godot_project/scripts/add_modal.gd): `Ctrl/Cmd+U`(작가 입력칸 포커스 / `Shift`: 비우기) 및 `Ctrl/Cmd+J`(이북↔가챠 분류 토글 / `Shift`: 등록) 추가.
+  - [`index.html`](index.html): 웹 인터랙티브 목업에 `Ctrl/Cmd+U`, `Ctrl/Cmd+J` 전역 단축키 동기화.
+  - [`test_main_integration.gd`](godot_project/tests/test_main_integration.gd): 포커스 상태 `Ctrl+U`, `Ctrl+J` 3대 뷰 검증 추가.
+- **검증**: `test_archive.gd`, `test_persistence.gd`, `test_main_integration.gd` 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 갱신 완료.
+
+---
+
+## 📓 [Sprint 212] 3대 뷰 전역 `Ctrl/Cmd+P` 촬영·속지패턴·컬러스와치 · `Ctrl/Cmd+M` 사운드·독서무드·감상포커스
+- **일시**: 2026-11-21
+- **14인 가상 애자일 스쿼드 회의록**:
+  - **다꾸러 VOC (지민·수빈·하연)**: "입력창 포커스 중에도 `Ctrl/Cmd+P`로 폴라로이드 촬영(`MainView`)·속지 패턴 순환(`DetailModal`)·표지 컬러스와치 전환(`AddModal`)을 바로 실행하고, `Ctrl/Cmd+M`으로 앰비언트 사운드(`MainView`)·독서 무드 스탬프(`DetailModal`)·감상 입력칸 포커스(`AddModal`)를 조작하고 싶어요!"
+  - **PO & UX/UI**: `MainView`, `DetailModal`, `AddModal`의 `_unhandled_input` 최상단에 `ctrl_pressed or meta_pressed` + `KEY_P`/`KEY_M` 분기를 추가한다.
+- **구현 내역**:
+  - [`main_view.gd`](godot_project/scripts/main_view.gd): `Ctrl/Cmd+P`(폴라로이드 실물 촬영 / `Shift`: 첫 작품 열기) 및 `Ctrl/Cmd+M`(앰비언트 사운드 순환) 추가.
+  - [`detail_modal.gd`](godot_project/scripts/detail_modal.gd): `Ctrl/Cmd+P`(속지 패턴 순환) 및 `Ctrl/Cmd+M`(독서 무드 스탬프 순환) 추가.
+  - [`add_modal.gd`](godot_project/scripts/add_modal.gd): `Ctrl/Cmd+P`(표지 컬러스와치 순환) 및 `Ctrl/Cmd+M`(한 줄 감상 입력칸 포커스 / `Shift`: 비우기) 추가.
+  - [`index.html`](index.html): 웹 인터랙티브 목업에 `Ctrl/Cmd+P`, `Ctrl/Cmd+M` 전역 단축키 동기화.
+  - [`test_main_integration.gd`](godot_project/tests/test_main_integration.gd): 포커스 상태 `Ctrl+P`, `Ctrl+M` 3대 뷰 검증 추가.
+- **검증**: `test_archive.gd`, `test_persistence.gd`, `test_main_integration.gd` 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 갱신 완료.
+
+---
+
+## 📓 [Sprint 211] 3대 뷰 전역 `Ctrl/Cmd+0` 초기화·복원 · `Ctrl/Cmd+T` 테마·태그·제목포커스
+- **일시**: 2026-11-21
+- **14인 가상 애자일 스쿼드 회의록**:
+  - **다꾸러 VOC (지민·수빈·하연)**: "입력창 포커스 중에도 `Ctrl/Cmd+0`으로 필터 초기화(`MainView`)·문장 원문 복원(`DetailModal`)·모달 기본값 리셋(`AddModal`)을 바로 실행하고, `Ctrl/Cmd+T`로 속지 테마(`MainView`)·스마트 키워드 태그(`DetailModal`)·제목 입력칸 포커스(`AddModal`)를 전환하고 싶어요!"
+  - **PO & UX/UI**: `MainView`, `DetailModal`, `AddModal`의 `_unhandled_input` 최상단에 `ctrl_pressed or meta_pressed` + `KEY_0`/`KEY_T` 분기를 추가한다.
+- **구현 내역**:
+  - [`main_view.gd`](godot_project/scripts/main_view.gd): `Ctrl/Cmd+0`(필터 초기화 / `Shift`: 스튜디오 리셋) 및 `Ctrl/Cmd+T`(속지 테마 순환) 추가.
+  - [`detail_modal.gd`](godot_project/scripts/detail_modal.gd): `Ctrl/Cmd+0`(문장 원문 복원 / `Shift`: 닫기) 및 `Ctrl/Cmd+T`(스마트 태그 순환) 추가.
+  - [`add_modal.gd`](godot_project/scripts/add_modal.gd): `Ctrl/Cmd+0`(모달 기본값 초기화 / `Shift`: 닫기) 및 `Ctrl/Cmd+T`(제목 입력칸 포커스) 추가.
+  - [`index.html`](index.html): 웹 인터랙티브 목업에 `Ctrl/Cmd+0`, `Ctrl/Cmd+T` 전역 단축키 동기화.
+  - [`test_main_integration.gd`](godot_project/tests/test_main_integration.gd): 포커스 상태 `Ctrl+T`, `Ctrl+0` 3대 뷰 검증 추가.
+- **검증**: `test_archive.gd`, `test_persistence.gd`, `test_main_integration.gd` 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 갱신 완료.
+
+---
+
+## 📓 [Sprint 210 Milestone] 3대 뷰 전역 `Ctrl/Cmd+E` 이북·편집·분류 · `Ctrl/Cmd+W` 모달 닫기·스크랩
+- **일시**: 2026-11-21
+- **14인 가상 애자일 스쿼드 회의록**:
+  - **다꾸러 VOC (지민·수빈·하연)**: "입력창 포커스 중에도 브라우저·에디터처럼 `Ctrl/Cmd+W`로 열린 모달(`DetailModal`/`AddModal`)을 바로 닫고(`MainView`: 웹 스크랩), `Ctrl/Cmd+E`로 이북·단행본 필터(`MainView`)·밑줄 편집 포커스(`DetailModal`)·이북 분류 선택(`AddModal`)을 실행하고 싶어요!"
+  - **PO & UX/UI**: `MainView`, `DetailModal`, `AddModal`의 `_unhandled_input` 최상단에 `ctrl_pressed or meta_pressed` + `KEY_E`/`KEY_W` 분기를 추가해 3대 뷰 전역 `Ctrl/Cmd` 워크플로우를 완성한다.
+- **구현 내역**:
+  - [`main_view.gd`](godot_project/scripts/main_view.gd): `Ctrl/Cmd+E`(이북·단행본 필터 / `Shift`: 첫 작품 열기) 및 `Ctrl/Cmd+W`(웹 스크랩 / `Shift`: 첫 작품 열기) 추가.
+  - [`detail_modal.gd`](godot_project/scripts/detail_modal.gd): `Ctrl/Cmd+E`(밑줄 편집 포커스 / `Shift`: 샘플 채움) 및 `Ctrl/Cmd+W`(모달 닫기 / `Shift`: 복사+닫기) 추가.
+  - [`add_modal.gd`](godot_project/scripts/add_modal.gd): `Ctrl/Cmd+E`(이북·만화 분류 선택 / `Shift`: 등록) 및 `Ctrl/Cmd+W`(모달 닫기 / `Shift`: 비우고 닫기) 추가.
+  - [`index.html`](index.html): 웹 인터랙티브 목업에 `Ctrl/Cmd+E`, `Ctrl/Cmd+W` 전역 단축키 동기화.
+  - [`test_main_integration.gd`](godot_project/tests/test_main_integration.gd): 포커스 상태 `Ctrl+E`, `Ctrl+W` 3대 뷰 검증 추가.
+- **검증**: `test_archive.gd`, `test_persistence.gd`, `test_main_integration.gd` 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 갱신 완료.
+
+---
+
+## 📓 [Sprint 209] 3대 뷰 전역 `Ctrl/Cmd+I` 인포그래픽·잉크·샘플 · `Ctrl/Cmd+G` 가챠·등급·분류
+- **일시**: 2026-11-21
+- **14인 가상 애자일 스쿼드 회의록**:
+  - **다꾸러 VOC (지민·수빈·하연)**: "입력창 포커스 중에도 `Ctrl/Cmd+I`로 서재 인포그래픽 브리핑(`MainView`)·만년필 잉크 순환(`DetailModal`)·샘플 일기 채움(`AddModal`)을 바로 실행하고, `Ctrl/Cmd+G`로 가챠노트 필터(`MainView`)·상태 등급 순환(`DetailModal`)·가챠 분류 선택(`AddModal`)을 조작하고 싶어요!"
+  - **PO & UX/UI**: `MainView`, `DetailModal`, `AddModal`의 `_unhandled_input` 최상단에 `ctrl_pressed or meta_pressed` + `KEY_I`/`KEY_G` 분기를 추가한다.
+- **구현 내역**:
+  - [`main_view.gd`](godot_project/scripts/main_view.gd): `Ctrl/Cmd+I`(인포그래픽 / `Shift`: JSON 백업) 및 `Ctrl/Cmd+G`(가챠노트 필터 / `Shift`: 첫 작품 열기) 추가.
+  - [`detail_modal.gd`](godot_project/scripts/detail_modal.gd): `Ctrl/Cmd+I`(잉크 순환) 및 `Ctrl/Cmd+G`(상태 등급 순환) 추가.
+  - [`add_modal.gd`](godot_project/scripts/add_modal.gd): `Ctrl/Cmd+I`(샘플 채움 / `Shift`: 등록) 및 `Ctrl/Cmd+G`(가챠·굿즈 선택 / `Shift`: 등록) 추가.
+  - [`index.html`](index.html): 웹 인터랙티브 목업에 `Ctrl/Cmd+I`, `Ctrl/Cmd+G` 전역 단축키 동기화.
+  - [`test_main_integration.gd`](godot_project/tests/test_main_integration.gd): 포커스 상태 `Ctrl+G`, `Ctrl+I` 3대 뷰 검증 추가.
+- **검증**: `test_archive.gd`, `test_persistence.gd`, `test_main_integration.gd` 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 갱신 완료.
+
+---
+
+## 📓 [Sprint 208] 3대 뷰 전역 `Ctrl/Cmd+L` 오늘밑줄·형광펜·초기화 · `Ctrl/Cmd+D` 완독·복수소장
+- **일시**: 2026-11-21
+- **14인 가상 애자일 스쿼드 회의록**:
+  - **다꾸러 VOC (지민·수빈·하연)**: "입력창 포커스 중에도 `Ctrl/Cmd+L`로 오늘의 밑줄 작품 열기(`MainView`), 형광펜 토글(`DetailModal`), 입력란 비우기(`AddModal`)를 실행하고, `Ctrl/Cmd+D`로 완독작 필터(`MainView`)와 복수 소장 수량 증감(`DetailModal`)을 바로 조작하고 싶어요!"
+  - **PO & UX/UI**: `MainView`, `DetailModal`, `AddModal`의 `_unhandled_input` 최상단에 `ctrl_pressed or meta_pressed` + `KEY_L`/`KEY_D` 분기를 추가한다.
+- **구현 내역**:
+  - [`main_view.gd`](godot_project/scripts/main_view.gd): `Ctrl/Cmd+L`(오늘의 밑줄 작품 열기) 및 `Ctrl/Cmd+D`(완독작 필터 / `Shift`: 첫 작품 열기) 추가.
+  - [`detail_modal.gd`](godot_project/scripts/detail_modal.gd): `Ctrl/Cmd+L`(형광펜 토글 / `Shift`: 속지 패턴) 및 `Ctrl/Cmd+D`(복수 소장 +1 / `Shift`: -1) 추가.
+  - [`add_modal.gd`](godot_project/scripts/add_modal.gd): `Ctrl/Cmd+L`(입력란 초기화) 추가.
+  - [`index.html`](index.html): 웹 인터랙티브 목업에 `Ctrl/Cmd+L`, `Ctrl/Cmd+D` 전역 단축키 동기화.
+  - [`test_main_integration.gd`](godot_project/tests/test_main_integration.gd): 포커스 상태 `Ctrl+D`, `Ctrl+L` 검증 추가.
+- **검증**: `test_archive.gd`, `test_persistence.gd`, `test_main_integration.gd` 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 갱신 완료.
+
+---
+
+## 📓 [Sprint 207] 3대 뷰 전역 `Ctrl/Cmd+R` 랜덤·회독·컬러 · `Ctrl/Cmd+B` 백업·리포트
+- **일시**: 2026-11-21
+- **14인 가상 애자일 스쿼드 회의록**:
+  - **다꾸러 VOC (지민·수빈·하연)**: "`Ctrl/Cmd+S`, `Ctrl/Cmd+N`, `Ctrl/Cmd+K`처럼 입력칸 포커스 중에도 `Ctrl/Cmd+R`로 랜덤 작품 추천(`MainView`)·회독 수 증가(`DetailModal`)·랜덤 표지 컬러(`AddModal`)를 바로 실행하고, `Ctrl/Cmd+B`로 즉시 JSON 백업(`Shift`: 요약 리포트 복사)을 하고 싶어요!"
+  - **PO & UX/UI**: `MainView`, `DetailModal`, `AddModal`의 `_unhandled_input` 최상단에 `ctrl_pressed or meta_pressed` + `KEY_R` 분기를 추가하고, `MainView`에 `Ctrl/Cmd+B` 백업/리포트 분기를 추가한다.
+- **구현 내역**:
+  - [`main_view.gd`](godot_project/scripts/main_view.gd): `Ctrl/Cmd+R`(랜덤 추천 / `Shift`: 필터만) 및 `Ctrl/Cmd+B`(즉시 JSON 백업 / `Shift`: 리포트 복사) 추가.
+  - [`detail_modal.gd`](godot_project/scripts/detail_modal.gd): `Ctrl/Cmd+R`(회독 수 증가 / `Shift`: 감소) 추가.
+  - [`add_modal.gd`](godot_project/scripts/add_modal.gd): `Ctrl/Cmd+R`(랜덤 표지 컬러) 추가.
+  - [`index.html`](index.html): 웹 인터랙티브 목업에 `Ctrl/Cmd+R`, `Ctrl/Cmd+B` 전역 단축키 동기화.
+  - [`test_main_integration.gd`](godot_project/tests/test_main_integration.gd): 포커스 상태 `Ctrl+B` 백업 및 3대 뷰 `Ctrl+R` 검증 추가.
+- **검증**: `test_archive.gd`, `test_persistence.gd`, `test_main_integration.gd` 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 갱신 완료.
+
+---
+
+## 📓 [Sprint 206] 3대 뷰 전역 `F1` 단축키 치트시트(Shift: 복사) · `Ctrl/Cmd+K` 검색창 포커스
+- **일시**: 2026-11-21
+- **14인 가상 애자일 스쿼드 회의록**:
+  - **다꾸러 VOC (지민·수빈·하연)**: "입력창에 커서가 있을 때도 `F1` 키만 누르면 현재 화면(`MainView`/`DetailModal`/`AddModal`)에 맞는 단축키 치트시트를 바로 띄우고(`Shift+F1`: 복사), 노션·슬랙처럼 `Ctrl/Cmd+K`로 검색창에 즉시 포커스를 주고 싶어요!"
+  - **PO & UX/UI**: `MainView`, `DetailModal`, `AddModal`의 `_unhandled_input` 최상단(포커스 체크 이전)에 `KEY_F1` 치트시트 분기를 추가하고, `MainView`의 `is_find` 조건에 `(event.keycode == KEY_K and (event.ctrl_pressed or event.meta_pressed))`를 통합한다.
+- **구현 내역**:
+  - [`main_view.gd`](godot_project/scripts/main_view.gd): `F1`(치트시트 / `Shift+F1`: 복사) 및 `Ctrl/Cmd+K`(검색창 포커스·전체 선택) 추가.
+  - [`detail_modal.gd`](godot_project/scripts/detail_modal.gd): `F1`(모달 치트시트 / `Shift+F1`: 복사) 추가.
+  - [`add_modal.gd`](godot_project/scripts/add_modal.gd): `F1`(새 일기 치트시트 / `Shift+F1`: 복사) 추가.
+  - [`index.html`](index.html): 웹 인터랙티브 목업에 `F1` 3대 뷰 치트시트 및 `Ctrl/Cmd+K` 검색창 포커스 동기화.
+  - [`test_main_integration.gd`](godot_project/tests/test_main_integration.gd): `Ctrl+K` 및 3대 뷰 `F1` 치트시트 검증 추가.
+- **검증**: `test_archive.gd`, `test_persistence.gd`, `test_main_integration.gd` 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 갱신 완료.
+
+---
+
+## 📓 [Sprint 205 Milestone] 3대 뷰 전역 `Ctrl/Cmd+S` 저장·백업 · `Ctrl/Cmd+N` 새 일기 (포커스 중에도 동작)
+- **일시**: 2026-11-21
+- **14인 가상 애자일 스쿼드 회의록**:
+  - **다꾸러 VOC (지민·수빈·하연)**: "검색창이나 일기 입력칸에 커서가 들어가 있는 상태에서도 `Ctrl/Cmd+S`를 누르면 즉시 저장·백업(`MainView`: JSON 백업, `DetailModal`: 밑줄 문장 저장, `AddModal`: 일기 등록 제출)되고, `Ctrl/Cmd+N`으로 새 일기 모달을 바로 띄우고 싶어요!"
+  - **PO & UX/UI**: `MainView`, `DetailModal`, `AddModal`의 `_unhandled_input` 최상단(포커스 체크 이전)에 `ctrl_pressed or meta_pressed` + `KEY_S`/`KEY_N` 분기를 배치하여 입력창 포커스 중에도 표준 OS 단축키가 100% 동작하도록 구현한다.
+- **구현 내역**:
+  - [`main_view.gd`](godot_project/scripts/main_view.gd): `Ctrl/Cmd+S`(즉시 JSON 백업), `Ctrl/Cmd+N`(새 일기 모달 / `Shift`: 샘플 채움) 추가.
+  - [`detail_modal.gd`](godot_project/scripts/detail_modal.gd): `Ctrl/Cmd+S`(밑줄 저장) 추가.
+  - [`add_modal.gd`](godot_project/scripts/add_modal.gd): `Ctrl/Cmd+S`(일기 등록 / `Shift`: 샘플 폴백 등록) 추가.
+  - [`index.html`](index.html): 웹 인터랙티브 목업에 `Ctrl/Cmd+S`, `Ctrl/Cmd+N` 전역 단축키 동기화.
+  - [`test_main_integration.gd`](godot_project/tests/test_main_integration.gd): 포커스 상태 `Ctrl+S` 백업·등록·저장 및 `Ctrl+N` 모달 오픈 검증 추가.
+- **검증**: `test_archive.gd`, `test_persistence.gd`, `test_main_integration.gd` 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 갱신 완료.
+
+---
+
+## 📓 [Sprint 204] `DetailModal` & `AddModal` `/` 키 즉시 입력칸 포커스 — 3대 뷰 `/` 일관성 완성
+- **일시**: 2026-11-21
+- **14인 가상 애자일 스쿼드 회의록**:
+  - **다꾸러 VOC (지민·수빈·하연)**: "`MainView`에서 `/`를 누르면 검색창으로 바로 포커스가 가는 것처럼, `DetailModal`에서도 `/`를 누르면 한줄 밑줄 편집창(`quote_input`)으로, `AddModal`에서도 `/`를 누르면 제목 입력창(`title_input`)으로 즉시 이동하면 3개 화면 조작감이 100% 통일될 것 같아요!"
+  - **PO & UX/UI**: `DetailModal`과 `AddModal` `_unhandled_input`에 `KEY_SLASH and not event.shift_pressed` 분기를 추가하여 각각 `quote_input` / `title_input`에 즉시 포커스하고 전체 선택(`select_all()`)을 수행한다.
+- **구현 내역**:
+  - [`detail_modal.gd`](godot_project/scripts/detail_modal.gd): `KEY_SLASH`(비Shift) 입력 시 `quote_input.grab_focus()` + `select_all()` 추가.
+  - [`add_modal.gd`](godot_project/scripts/add_modal.gd): `KEY_SLASH`(비Shift) 입력 시 `title_input.grab_focus()` + `select_all()` 추가.
+  - [`index.html`](index.html): 웹 인터랙티브 목업에 `DetailModal` `/` 밑줄 입력칸 포커스 동기화.
+  - [`test_main_integration.gd`](godot_project/tests/test_main_integration.gd): `DetailModal` 및 `AddModal` `/` 키 입력 검증 추가.
+- **검증**: `test_archive.gd`, `test_persistence.gd`, `test_main_integration.gd` 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 갱신 완료.
+
+---
+
+## 📓 [Sprint 203] `DetailModal` `Tab`/`Shift+Tab` 이전·다음 작품 넘김 · 입력창 포커스 해제
+- **일시**: 2026-11-21
+- **14인 가상 애자일 스쿼드 회의록**:
+  - **다꾸러 VOC (지민·수빈·하연)**: "`MainView`와 `AddModal`처럼 `DetailModal`에서도 한줄 밑줄 입력창(`quote_input`) 수정 중 `Tab`을 누르면 포커스가 해제되고, 비포커스 상태에서 `Tab`/`Shift+Tab`으로 이전·다음 일기장을 한 손으로 넘겨보고 싶어요!"
+  - **PO & UX/UI**: `DetailModal` `_unhandled_input`에 `KEY_TAB`(`quote_input.has_focus()` 시 `release_focus()`, 비포커스 시 `navigate_requested.emit(-1 if event.shift_pressed else 1)`)을 추가하여 3대 뷰 모두 일관된 `Tab` 내비게이션을 완성한다.
+- **구현 내역**:
+  - [`detail_modal.gd`](godot_project/scripts/detail_modal.gd): `KEY_TAB` 포커스 해제 및 카드 넘김 분기 추가.
+  - [`index.html`](index.html): 웹 인터랙티브 목업에 `DetailModal` `Tab`/`Shift+Tab` 카드 넘김 동기화.
+  - [`test_main_integration.gd`](godot_project/tests/test_main_integration.gd): `DetailModal` `Tab`/`Shift+Tab` 카드 넘김 검증 추가.
+- **검증**: `test_archive.gd`, `test_persistence.gd`, `test_main_integration.gd` 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 갱신 완료.
+
+---
+
+## 📓 [Sprint 202] `MainView` & `AddModal` `Tab`/`Shift+Tab` 필터 탭 순환 · 입력칸 포커스 이동
+- **일시**: 2026-11-21
+- **14인 가상 애자일 스쿼드 회의록**:
+  - **다꾸러 VOC (지민·수빈·하연)**: "검색창에서 검색어를 치고 난 뒤 `Tab`을 누르면 바로 포커스가 해제되어 서재 단축키를 쓸 수 있고, 서재 메인에서는 `Tab`/`Shift+Tab`으로 5개 필터 탭을 오갈 수 있으면 정말 편하겠어요! `AddModal`에서도 `Tab`/`Shift+Tab`으로 제목·작가·밑줄 입력칸을 깔끔하게 순환하고 싶습니다."
+  - **PO & UX/UI**: `MainView` `_unhandled_input`에 `KEY_TAB`(`search_input.has_focus()` 시 `release_focus()`, 비포커스 시 `_step_filter_tab(±1)`)을 추가하고, `AddModal` `_unhandled_input`에도 `KEY_TAB`으로 `title_input` ↔ `author_input` ↔ `quote_input` ↔ 포커스 해제 순환 로직을 구현한다.
+- **구현 내역**:
+  - [`main_view.gd`](godot_project/scripts/main_view.gd): `KEY_TAB` 검색 포커스 해제 및 5대 필터 탭 순환 분기 추가.
+  - [`add_modal.gd`](godot_project/scripts/add_modal.gd): `KEY_TAB` 3단 입력칸 포커스 순환 분기 추가.
+  - [`index.html`](index.html): 웹 인터랙티브 목업에 `MainView` `Tab`/`Shift+Tab` 필터 탭 순환 동기화.
+  - [`test_main_integration.gd`](godot_project/tests/test_main_integration.gd): `MainView` `Tab`/`Shift+Tab` 탭 순환 및 `AddModal` `Tab` 입력칸 순환 검증 추가.
+- **검증**: `test_archive.gd`, `test_persistence.gd`, `test_main_integration.gd` 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 갱신 완료.
+
+---
+
+## 📓 [Sprint 201] `AddModal` 숫자키 `6` 바이올렛 컬러 · `7/8` 분류 · `9` 샘플 채움 — 새 일기 모달 `0~9` 완성
+- **일시**: 2026-11-21
+- **14인 가상 애자일 스쿼드 회의록**:
+  - **다꾸러 VOC (지민·수빈·하연)**: "`AddModal` 표지 스와치가 6개(크림슨·코발트·테라코타·로즈·포레스트·바이올렛)인데 `1~5`까지만 숫자키가 있어서 `6`번 바이올렛도 숫자키로 고르고, `7/8`로 이북·가챠 분류 선택, `9`로 샘플 일기 채움(`Shift+9`: 샘플 등록)까지 `0~9` 숫자키를 통일하고 싶어요!"
+  - **PO & UX/UI**: `AddModal` `_unhandled_input`에 `KEY_6`(바이올렛 스와치), `KEY_7`/`KEY_8`(이북·만화/가챠·굿즈 선택), `KEY_9`(샘플 채움 / `Shift+9`: 샘플 등록)를 추가해 3대 뷰(`MainView`, `DetailModal`, `AddModal`) 모두 숫자키 `0~9` 100% 커버리지를 달성한다.
+- **구현 내역**:
+  - [`add_modal.gd`](godot_project/scripts/add_modal.gd): `KEY_6` 스와치, `KEY_7`/`KEY_8` 카테고리, `KEY_9` 샘플 채움 분기 추가.
+  - [`main_view.gd`](godot_project/scripts/main_view.gd): `_on_add_modal_help_requested()` 치트시트 안내 업데이트.
+  - [`index.html`](index.html): 웹 인터랙티브 목업에 `AddModal` `6~9` 단축키 피드백 동기화.
+  - [`test_main_integration.gd`](godot_project/tests/test_main_integration.gd): `6` 바이올렛 스와치, `7/8` 분류, `9` 샘플 채움 검증 추가.
+- **검증**: `test_archive.gd`, `test_persistence.gd`, `test_main_integration.gd` 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 갱신 완료.
+
+---
+
+## 📓 [Sprint 200 Milestone] `DetailModal` 숫자키 `9` 형광펜 토글(Shift: 복사+닫기) · 모달 `0~9` & 치트시트 100% 완성
+- **일시**: 2026-11-21
+- **14인 가상 애자일 스쿼드 회의록**:
+  - **다꾸러 VOC (지민·수빈·하연)**: "`DetailModal`에서 `1~4`(인장), `5~8`(만년필 잉크 4종), `0`(원문 복원)에 이어 마지막 숫자키 `9`로 형광펜 하이라이트를 즉시 토글(`Shift+9`: 형광펜 토글 후 독서 카드 복사+닫기)하고, `H` 모달 단축키 치트시트에도 `0~9` 및 `Enter`/`Bksp` 안내를 100% 반영해주세요!"
+  - **PO & UX/UI**: `DetailModal` `_unhandled_input`에 `KEY_9`(`toggle_quote_highlight()` / `Shift+9`: `copy_book_quote_card(); close()`)를 추가해 메인과 모달 모두 `0~9` 전 숫자키 매핑을 완성한다. `MainView` `_on_modal_help_requested()` 치트시트에도 `[5~8] 잉크 · [9] 형광펜 · [0] 원문복원` 등을 동기화한다.
+- **구현 내역**:
+  - [`detail_modal.gd`](godot_project/scripts/detail_modal.gd): `KEY_9` 형광펜 토글 및 `Shift+9` 복사+닫기 분기 추가.
+  - [`main_view.gd`](godot_project/scripts/main_view.gd): `_on_modal_help_requested()` 모달 치트시트 동기화.
+  - [`index.html`](index.html): 웹 인터랙티브 목업에 `DetailModal` `9` 및 `Shift+9` 형광펜 토글 단축키 동기화.
+  - [`test_main_integration.gd`](godot_project/tests/test_main_integration.gd): `9` 형광펜 토글, `Shift+9` 복사+닫기, 모달 치트시트 검증 추가.
+- **검증**: `test_archive.gd`, `test_persistence.gd`, `test_main_integration.gd` 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 갱신 완료.
+
+---
+
+## 📓 [Sprint 199] 메인 숫자키 `6~9` 4대 정렬 모드 즉시 전환(Shift: 첫 작품 열기) — 숫자 `0~9` 완전 매핑
+- **일시**: 2026-11-21
+- **14인 가상 애자일 스쿼드 회의록**:
+  - **다꾸러 VOC (지민·수빈·하연)**: "`0`(초기화)과 `1~5`(5대 필터 탭)에 이어 남은 숫자키 `6~9`로 4가지 정렬 모드(`6`: 기본순, `7`: 다독순, `8`: 최신순, `9`: 가치순)를 한 번에 고르고 `Shift+7~9`로 정렬된 첫 작품까지 바로 펼치면 숫자키 `0~9`가 빈틈없이 완성될 것 같아요!"
+  - **PO & UX/UI**: `MainView` `_unhandled_input`에 `KEY_6`~`KEY_9` 분기를 추가해 `_set_sort_mode(event.keycode - KEY_6)`를 실행(`Shift+6`: `_reset_all_filters()`, `Shift+7~9`: `_open_first_filtered_card()`)하고, `KEY_H` 치트시트에 `[6~9] 정렬`을 동기화한다.
+- **구현 내역**:
+  - [`main_view.gd`](godot_project/scripts/main_view.gd): `KEY_6`~`KEY_9` 정렬 모드 직접 전환 분기 및 `_show_shortcut_cheatsheet()` 업데이트.
+  - [`index.html`](index.html): 웹 인터랙티브 목업에 메인 화면 `6~9` 및 `Shift+6~9` 정렬 단축키 동기화.
+  - [`test_main_integration.gd`](godot_project/tests/test_main_integration.gd): `6`/`7`/`8`/`Shift+9` 정렬 전환 및 `KEY_H` 치트시트 `[6~9] 정렬` 검증 추가.
+- **검증**: `test_archive.gd`, `test_persistence.gd`, `test_main_integration.gd` 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 갱신 완료.
+
+---
+
+## 📓 [Sprint 198] `DetailModal` 숫자키 `5~8` 만년필 잉크 4종 즉시 선택(Shift: 적용+닫기)
+- **일시**: 2026-11-21
+- **14인 가상 애자일 스쿼드 회의록**:
+  - **다꾸러 VOC (지민·수빈·하연)**: "`DetailModal`에서 `1~4`로 도장 인장을 바로 찍는 것처럼, `5~8` 숫자키로도 만년필 잉크 4종(`5`: 에스프레소, `6`: 버건디, `7`: 세피아, `8`: 포레스트)을 `I` 키로 순환하지 않고 바로 선택(`Shift+5~8`: 잉크 적용 후 닫기)하고 싶어요!"
+  - **PO & UX/UI**: `DetailModal` `_unhandled_input`에 `KEY_5`~`KEY_8` 분기를 추가하여 `set_fountain_pen_ink()`를 호출하고 `Shift` 조합 시 `close()`로 이어지도록 구현한다.
+- **구현 내역**:
+  - [`detail_modal.gd`](godot_project/scripts/detail_modal.gd): `KEY_5`~`KEY_8` 만년필 잉크 4종 직접 선택 및 `Shift` 닫기 분기 추가.
+  - [`index.html`](index.html): 웹 인터랙티브 목업에 `DetailModal` `5~8` 만년필 잉크 단축키 동기화.
+  - [`test_main_integration.gd`](godot_project/tests/test_main_integration.gd): `6`/`7` 잉크 전환 및 `Shift+5` 잉크 적용+닫기 검증 추가.
+- **검증**: `test_archive.gd`, `test_persistence.gd`, `test_main_integration.gd` 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 갱신 완료.
+
+---
+
+## 📓 [Sprint 197] `DetailModal` 키보드 `↑/↓` 카드 넘김(Shift: 처음·끝) · `0` 문장 원문 복원
+- **일시**: 2026-11-21
+- **14인 가상 애자일 스쿼드 회의록**:
+  - **다꾸러 VOC (지민·수빈·하연)**: "`DetailModal`에서 `←/→`뿐만 아니라 `↑/↓` 방향키로도 이전/다음 일기를 넘기고(`Shift+↑/↓`: 처음·끝 작품 점프), 밑줄 문장을 고치다가 원문으로 되돌리고 싶을 때 `0` 키로 저장된 원문을 복원하고 삭제 무장도 해제(`Shift+0`: 닫기)하고 싶어요!"
+  - **PO & UX/UI**: `DetailModal` `_unhandled_input`에 `KEY_UP`/`KEY_DOWN`(`navigate_requested.emit(±1)` / `Shift`: `±9999`) 및 `KEY_0`(`quote_input.text = current_item.memo` 원문 복원 및 `delete_armed` 해제 / `Shift+0`: 닫기)를 추가한다.
+- **구현 내역**:
+  - [`detail_modal.gd`](godot_project/scripts/detail_modal.gd): `KEY_UP`, `KEY_DOWN`, `KEY_0` 단축키 분기 추가.
+  - [`index.html`](index.html): 웹 인터랙티브 목업에 `DetailModal` `ArrowUp`/`ArrowDown`/`0` 단축키 동기화.
+  - [`test_main_integration.gd`](godot_project/tests/test_main_integration.gd): `↑/↓` 카드 넘김 및 `0` 원문 복원 검증 추가.
+- **검증**: `test_archive.gd`, `test_persistence.gd`, `test_main_integration.gd` 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 갱신 완료.
+
+---
+
+## 📓 [Sprint 196] `DetailModal` 키보드 `Enter` 문장 편집(Shift: 형광펜) · `Backspace` 닫기(Shift: 복사+닫기)
+- **일시**: 2026-11-21
+- **14인 가상 애자일 스쿼드 회의록**:
+  - **다꾸러 VOC (지민·수빈·하연)**: "펼친 독서노트(`DetailModal`)를 구경하다가 `Enter`만 누르면 한줄 밑줄 입력칸으로 바로 들어가고(`Shift+Enter`: 형광펜 토글), `Backspace`를 누르면 `ESC`처럼 일기장을 덮고(`Shift+Backspace`: 독서 카드 복사 후 닫기) 서재로 돌아가고 싶어요!"
+  - **PO & UX/UI**: `DetailModal` `_unhandled_input`에 `KEY_ENTER, KEY_KP_ENTER`(`quote_input.grab_focus()` + `select_all()` / `Shift+Enter`: `toggle_quote_highlight()`)와 `KEY_BACKSPACE`(삭제 무장 해제 또는 `close()` / `Shift+Backspace`: `copy_book_quote_card(); close()`)를 추가한다.
+- **구현 내역**:
+  - [`detail_modal.gd`](godot_project/scripts/detail_modal.gd): `KEY_BACKSPACE`, `KEY_ENTER, KEY_KP_ENTER` 단축키 분기 추가.
+  - [`index.html`](index.html): 웹 인터랙티브 목업에 `DetailModal` `Enter`/`Backspace` 단축키 동기화.
+  - [`test_main_integration.gd`](godot_project/tests/test_main_integration.gd): `Shift+Enter` 형광펜 토글, `Backspace` 닫기, `Shift+Backspace` 카드 복사 후 닫기 검증 추가.
+- **검증**: `test_archive.gd`, `test_persistence.gd`, `test_main_integration.gd` 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 갱신 완료.
+
+---
+
+## 📓 [Sprint 195 Milestone] `AddModal` `H/?` 단축키 치트시트(Shift: 복사) · 단독 `Enter` 등록 제출
+- **일시**: 2026-11-21
+- **14인 가상 애자일 스쿼드 회의록**:
+  - **다꾸러 VOC (지민·수빈·하연)**: "`AddModal`에도 `MainView`나 `DetailModal`처럼 `H` 또는 `?`를 눌렀을 때 새 일기 모달 전용 단축키 치트시트가 토스트로 뜨면 좋겠어요(`Shift+H`: 클립보드 복사). 그리고 입력칸 밖에서 `Enter`만 눌러도 바로 등록되도록 해주세요!"
+  - **PO & UX/UI**: `AddModal`에 `help_requested(copy_to_clipboard)` 시그널과 `KEY_H`/`Shift+KEY_SLASH`/`KEY_ENTER` 분기를 추가하고, `MainView`에 `_on_add_modal_help_requested()` 핸들러를 연결해 새 일기 단축키 전체 가이드를 안내한다.
+- **구현 내역**:
+  - [`add_modal.gd`](godot_project/scripts/add_modal.gd): `help_requested` 시그널 및 `KEY_ENTER`, `KEY_H`, `Shift+KEY_SLASH` 분기 추가.
+  - [`main_view.gd`](godot_project/scripts/main_view.gd): `add_modal.help_requested` 연결 및 `_on_add_modal_help_requested()` 핸들러 구현.
+  - [`index.html`](index.html): 웹 인터랙티브 목업에 `AddModal` `H`/`?`/`Enter` 단축키 피드백 동기화.
+  - [`test_main_integration.gd`](godot_project/tests/test_main_integration.gd): `AddModal` `H` 치트시트 토스트 및 비포커스 `Enter` 등록 검증 추가.
+- **검증**: `test_archive.gd`, `test_persistence.gd`, `test_main_integration.gd` 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 갱신 완료.
+
+---
+
+## 📓 [Sprint 194] `AddModal` 키보드 `0` 기본값 리셋 · `Home/End` 첫·끝 컬러 점프 · `Backspace` 초기화
+- **일시**: 2026-11-21
+- **14인 가상 애자일 스쿼드 회의록**:
+  - **다꾸러 VOC (지민·수빈·하연)**: "`AddModal`에서 작성 중이던 내용과 카테고리·컬러를 한 번에 처음 기본값으로 되돌리는 `0` 키(`Shift+0`: 리셋 후 닫기), 표지 스와치 맨 앞/끝으로 점프하는 `Home`/`End`, 그리고 입력칸 밖에서 `Backspace`로 비우기(`Shift+Backspace`: 비우고 닫기)가 있으면 좋겠어요!"
+  - **PO & UX/UI**: `AddModal` `_unhandled_input`에 `KEY_0`(입력·카테고리·컬러 기본값 초기화 / `Shift+0`: 닫기), `KEY_HOME`/`KEY_END`(첫 번째/마지막 스와치 점프), `KEY_BACKSPACE`(`clear_inputs()` / `Shift+Backspace`: `close()`)를 추가한다.
+- **구현 내역**:
+  - [`add_modal.gd`](godot_project/scripts/add_modal.gd): `KEY_0`, `KEY_HOME`, `KEY_END`, `KEY_BACKSPACE` 단축키 분기 추가.
+  - [`index.html`](index.html): 웹 인터랙티브 목업에 `AddModal` `0`/`Home`/`End`/`Backspace` 단축키 피드백 동기화.
+  - [`test_main_integration.gd`](godot_project/tests/test_main_integration.gd): `Home`/`End` 스와치 점프, `0` 모달 기본값 리셋, `Shift+Backspace` 비우고 닫기 검증 추가.
+- **검증**: `test_archive.gd`, `test_persistence.gd`, `test_main_integration.gd` 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 갱신 완료.
+
+---
+
+## 📓 [Sprint 193] `AddModal` 키보드 `A/Q` 작가·밑줄 포커스 · `Space` 컬러 순환 · `R` 랜덤 표지 컬러
+- **일시**: 2026-11-21
+- **14인 가상 애자일 스쿼드 회의록**:
+  - **다꾸러 VOC (지민·수빈·하연)**: "`AddModal`에서 `T`로 제목칸에 포커스를 주는 것처럼 `A`(작가/브랜드)와 `Q`(한줄 밑줄) 입력칸에도 바로 이동하고, `Space`로 표지 컬러를 한 칸씩 넘기거나(`Shift+Space`: 역순) `R`로 랜덤 표지 컬러를 뽑아보고 싶어요(`Shift+R`: 랜덤 컬러+샘플 등록)!"
+  - **PO & UX/UI**: `AddModal` `_unhandled_input`에 `KEY_A`(`author_input.grab_focus()`), `KEY_Q`(`quote_input.grab_focus()`), `KEY_SPACE`(`_step_color(±1)`), `KEY_R`(랜덤 표지 스와치 선택 / `Shift+R`: 샘플 폴백 등록)를 추가한다.
+- **구현 내역**:
+  - [`add_modal.gd`](godot_project/scripts/add_modal.gd): `KEY_A`, `KEY_Q`, `KEY_SPACE`, `KEY_R` 단축키 분기 추가.
+  - [`index.html`](index.html): 웹 인터랙티브 목업에 `AddModal` `A`/`Q`/`Space`/`R` 단축키 피드백 동기화.
+  - [`test_main_integration.gd`](godot_project/tests/test_main_integration.gd): `Space` 표지 순환, `R` 랜덤 컬러, `Shift+A` 작가 입력 초기화 검증 추가.
+- **검증**: `test_archive.gd`, `test_persistence.gd`, `test_main_integration.gd` 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 갱신 완료.
+
+---
+
+## 📓 [Sprint 192] `AddModal` 키보드 `E/G` 카테고리 직접 선택 · `T` 제목 포커스 · `S` 등록 제출
+- **일시**: 2026-11-21
+- **14인 가상 애자일 스쿼드 회의록**:
+  - **다꾸러 VOC (지민·수빈·하연)**: "`AddModal`에서 `C`로 카테고리를 토글하는 것도 좋지만 `E`(이북·만화), `G`(가챠·굿즈)로 바로 고르고, `T`로 제목 입력칸에 포커스를 주거나, `S`(Submit)로 바로 등록(`Shift+S`: 샘플 폴백 등록)할 수 있으면 완벽할 것 같아요!"
+  - **PO & UX/UI**: `AddModal` `_unhandled_input`에 `KEY_E`(`cat_option.select(0)`), `KEY_G`(`cat_option.select(1)`), `KEY_T`(`title_input.grab_focus()` / `Shift+T`: 비우고 포커스), `KEY_S`(`_on_submit_btn_pressed()` / `Shift+S`: `_submit_with_sample_fallback()`)를 연결한다.
+- **구현 내역**:
+  - [`add_modal.gd`](godot_project/scripts/add_modal.gd): `KEY_S`, `KEY_E`, `KEY_G`, `KEY_T` 단축키 분기 추가.
+  - [`index.html`](index.html): 웹 인터랙티브 목업에 `AddModal` `S`/`E`/`G`/`T` 단축키 피드백 동기화.
+  - [`test_main_integration.gd`](godot_project/tests/test_main_integration.gd): `KEY_G`, `KEY_E`, `Shift+S` 샘플 폴백 등록 및 모달 닫힘 검증 추가.
+- **검증**: `test_archive.gd`, `test_persistence.gd`, `test_main_integration.gd` 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 갱신 완료.
+
+---
+
+## 📓 [Sprint 191] `AddModal` 키보드 `F` 샘플 채움 · `X` 입력 초기화(Shift: 닫기) · `←/→` 표지 컬러 순환
+- **일시**: 2026-11-21
+- **14인 가상 애자일 스쿼드 회의록**:
+  - **다꾸러 VOC (지민·수빈·하연)**: "새 일기 쓰기(`AddModal`) 모달에서 입력창에 포커스가 없을 때 `1~5` 숫자키 대신 `←/→` 방향키로 표지 컬러를 부드럽게 넘기고, `F`(Fill)로 샘플 일기를 채워보거나 `X`로 입력란을 한 번에 비우고(`Shift+X`: 모달 닫기) 싶어요!"
+  - **PO & UX/UI**: `AddModal`에 `fill_sample_inputs()`와 `_step_color(delta)` 헬퍼를 추가하고 `_unhandled_input`에 `KEY_F`(`fill_sample_inputs()` / `Shift+F`: `_submit_with_sample_fallback()`), `KEY_X`(`clear_inputs()` / `Shift+X`: `close()`), `KEY_LEFT`/`KEY_RIGHT`(`_step_color(±1)`)를 연결한다.
+- **구현 내역**:
+  - [`add_modal.gd`](godot_project/scripts/add_modal.gd): `fill_sample_inputs()`, `_step_color(delta)`, 및 `KEY_F`/`KEY_X`/`KEY_LEFT`/`KEY_RIGHT` 분기 추가.
+  - [`index.html`](index.html): 웹 인터랙티브 목업에 `AddModal` `F`/`X`/`ArrowLeft`/`ArrowRight` 단축키 피드백 동기화.
+  - [`test_main_integration.gd`](godot_project/tests/test_main_integration.gd): `AddModal` `←/→` 컬러 순환, `F` 샘플 채움, `X` 비우기, `Shift+X` 닫기 검증 추가.
+- **검증**: `test_archive.gd`, `test_persistence.gd`, `test_main_integration.gd` 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 갱신 완료.
+
+---
+
+## 📓 [Sprint 190 Milestone] 메인 키보드 `Enter` 열기(Shift: 새 일기 모달) · `Backspace` 초기화(Shift: 스튜디오 리셋)
+- **일시**: 2026-11-21
+- **14인 가상 애자일 스쿼드 회의록**:
+  - **다꾸러 VOC (지민·수빈·하연)**: "검색창이 아닌 서재 화면에서 `Enter`만 누르면 첫 번째 일기 모달이 바로 열리고(`Shift+Enter`: 새 일기 쓰기 모달 열기), `Backspace`를 누르면 뒤로가듯 검색과 필터가 초기화(`Shift+Backspace`: 정렬·테마까지 스튜디오 리셋)되면 키보드 조작이 완벽히 자연스러울 것 같아요!"
+  - **PO & UX/UI**: `MainView` `_unhandled_input`에 `KEY_ENTER, KEY_KP_ENTER`(`_open_first_filtered_card()` / `Shift`: `_on_add_btn_pressed()`)와 `KEY_BACKSPACE`(`_reset_all_filters()` / `Shift`: `_set_sort_mode(0)` + `_reset_theme()`)를 추가하고 `KEY_H` 치트시트에 `[Enter] 열기 · [Bksp] 초기화`를 동기화한다.
+- **구현 내역**:
+  - [`main_view.gd`](godot_project/scripts/main_view.gd): `KEY_ENTER, KEY_KP_ENTER`, `KEY_BACKSPACE` 분기 및 `_show_shortcut_cheatsheet()` 업데이트.
+  - [`index.html`](index.html): 웹 인터랙티브 목업에 `Enter`/`Backspace` 및 `Shift` 조합 단축키 동기화.
+  - [`test_main_integration.gd`](godot_project/tests/test_main_integration.gd): `Enter`, `Shift+Enter`, `Backspace`, `Shift+Backspace`, `KEY_H` 치트시트 검증 추가.
+- **검증**: `test_archive.gd`, `test_persistence.gd`, `test_main_integration.gd` 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 갱신 완료.
+
+---
+
+## 📓 [Sprint 189] 메인 키보드 `↑/↓` 정렬·사운드 순환 · `PageUp/PageDown` 필터 탭 순환
+- **일시**: 2026-11-21
+- **14인 가상 애자일 스쿼드 회의록**:
+  - **다꾸러 VOC (지민·수빈·하연)**: "`←/→`로 문장과 테마를 넘길 수 있게 되니, 상하 방향키 `↑/↓`로 정렬 기준(`기본·다독·최신·가치순`)이나 앰비언트 사운드(`Shift+↑/↓`)를 넘기고 `PageUp/PageDown`으로 `전체·이북·가챠·완독·인생작` 탭을 순서대로 순환하고 싶어요!"
+  - **PO & UX/UI**: `MainView`에 `_step_filter_tab(delta)` 헬퍼를 추가하고, `KEY_UP`/`KEY_DOWN`(`_step_sort(±1)` / `Shift`: `cycle_ambient_sound(±1)`)과 `KEY_PAGEUP`/`KEY_PAGEDOWN`(`_step_filter_tab(±1)` / `Shift`: `_open_first_filtered_card()`)를 연결한다. `KEY_H` 치트시트에 `[↑/↓] 정렬·사운드 · [PgUp/Dn] 탭순환`을 동기화한다.
+- **구현 내역**:
+  - [`main_view.gd`](godot_project/scripts/main_view.gd): `_step_filter_tab()`, `KEY_UP`/`KEY_DOWN`/`KEY_PAGEUP`/`KEY_PAGEDOWN` 분기 및 `_show_shortcut_cheatsheet()` 업데이트.
+  - [`index.html`](index.html): 웹 인터랙티브 목업에 `ArrowUp`/`ArrowDown`/`PageUp`/`PageDown` 단축키 동기화.
+  - [`test_main_integration.gd`](godot_project/tests/test_main_integration.gd): `↑/↓` 정렬·사운드 순환, `PageUp/PageDown` 탭 순환 및 `KEY_H` 치트시트 검증 추가.
+- **검증**: `test_archive.gd`, `test_persistence.gd`, `test_main_integration.gd` 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 갱신 완료.
+
+---
+
+## 📓 [Sprint 188] 메인 키보드 `←/→` 오늘의 밑줄·테마 탐색 · `Home/End` 처음·끝 작품 즉시 열기
+- **일시**: 2026-11-21
+- **14인 가상 애자일 스쿼드 회의록**:
+  - **다꾸러 VOC (지민·수빈·하연)**: "A~Z 26키가 완성된 김에, 서재 메인에서도 모달처럼 방향키 `←/→`로 오늘의 밑줄 배너를 넘기고(`Shift+←/→`로 속지 테마 변경), `Home/End` 키로 첫 작품·마지막 작품을 바로 펼쳐보고 싶어요!"
+  - **PO & UX/UI**: `MainView` `_unhandled_input`에 `KEY_LEFT`/`KEY_RIGHT`(`_step_today_quote(±1)` / `Shift`: `_step_theme(±1)`)와 `KEY_HOME`/`KEY_END`(`_open_first_filtered_card()` / `_open_last_filtered_card()`, `Shift`: `_reset_all_filters()` 선행)를 추가하고 `KEY_H` 치트시트에 `[←/→] 문장·테마 · [Home/End] 처음·끝`을 동기화한다.
+- **구현 내역**:
+  - [`main_view.gd`](godot_project/scripts/main_view.gd): `KEY_LEFT`, `KEY_RIGHT`, `KEY_HOME`, `KEY_END` 분기 및 `_show_shortcut_cheatsheet()` 업데이트.
+  - [`index.html`](index.html): 웹 인터랙티브 목업에 `ArrowLeft`/`ArrowRight`/`Home`/`End` 단축키 동기화.
+  - [`test_main_integration.gd`](godot_project/tests/test_main_integration.gd): `←/→` 문장·테마 순환, `Home/End` 처음·끝 작품 모달 오픈 및 `KEY_H` 치트시트 검증 추가.
+- **검증**: `test_archive.gd`, `test_persistence.gd`, `test_main_integration.gd` 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 갱신 완료.
+
+---
+
+## 📓 [Sprint 187] 메인 키보드 `J` 마지막 작품 열기(Shift: 첫 작품) · `Y` 앰비언트 음소거 토글 — A~Z 26/26 완전 매핑
+- **일시**: 2026-11-21
+- **14인 가상 애자일 스쿼드 회의록**:
+  - **다꾸러 VOC (지민·수빈·하연)**: "방금 추가한 최신 일기나 서재 맨 끝 작품을 바로 펼쳐보는 `J`(Jump to End) 키와, `M` 키로 배경음을 여러 번 넘기지 않고 원탭으로 음소거/재생을 전환하는 `Y` 키가 있으면 알파벳 A~Z 26키가 빈틈없이 완성될 것 같아요!"
+  - **PO & UX/UI**: `MainView` `_unhandled_input`에 `KEY_J`(`_open_last_filtered_card()` / `Shift+J`: `_open_first_filtered_card()`)와 `KEY_Y`(`ambient_sound_index` 0↔1 음소거/재생 토글 / `Shift+Y`: 역순환)를 추가해 A~Z 26개 알파벳 단축키 100% 커버리지를 달성한다. `KEY_H` 치트시트에 `[J/Y] 끝열기·음소거`를 동기화한다.
+- **구현 내역**:
+  - [`main_view.gd`](godot_project/scripts/main_view.gd): `_open_last_filtered_card()` 헬퍼 및 `KEY_J`/`KEY_Y` 분기 추가, `_show_shortcut_cheatsheet()`에 `[J/Y] 끝열기·음소거` 반영.
+  - [`index.html`](index.html): 웹 인터랙티브 목업에 `J`/`Y` 및 `Shift+J`/`Shift+Y` 단축키 동기화.
+  - [`test_main_integration.gd`](godot_project/tests/test_main_integration.gd): `KEY_J`, `Shift+J`, `KEY_Y` 음소거 토글 및 `KEY_H` 치트시트 검증 추가.
+- **검증**: `test_archive.gd`, `test_persistence.gd`, `test_main_integration.gd` 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 갱신 완료.
+
+---
+
+## 📓 [Sprint 186] 메인 키보드 `K` 다독순 · `Z` 최신순 정렬 토글(Shift: 기본순 복귀) · 치트시트 Sync
+- **일시**: 2026-11-21
+- **14인 가상 애자일 스쿼드 회의록**:
+  - **다꾸러 VOC (지민·수빈·하연)**: "`V` 키로 가치순 정렬을 바로 전환하는 게 정말 편한데, 권수가 많은 `다독순`(`K`)과 최근에 기록한 `최신순`(`Z`)도 `S` 키로 여러 번 순환하지 않고 원키로 바로 토글되면 좋겠어요!"
+  - **PO & UX/UI**: `MainView` `_unhandled_input`에 `KEY_K`(`sort_mode = 1` 다독순 토글)와 `KEY_Z`(`sort_mode = 2` 최신순 토글)를 추가하고, 재입력 또는 `Shift` 조합 시 `sort_mode = 0`(기본 등록순)으로 복귀하도록 설계한다. `KEY_H` 치트시트에 `[K/Z] 다독·최신순`을 동기화한다.
+- **구현 내역**:
+  - [`main_view.gd`](godot_project/scripts/main_view.gd): `KEY_K`, `KEY_Z` 정렬 토글 분기 추가 및 `_show_shortcut_cheatsheet()`에 `[K/Z] 다독·최신순` 반영.
+  - [`index.html`](index.html): 웹 인터랙티브 목업에 `K`/`Z` 및 `Shift+K`/`Shift+Z` 정렬 피드백 동기화.
+  - [`test_main_integration.gd`](godot_project/tests/test_main_integration.gd): `KEY_K`, `KEY_Z`, `Shift+Z` 정렬 전환/복귀 및 `KEY_H` 치트시트 검증 추가.
+- **검증**: `test_archive.gd`, `test_persistence.gd`, `test_main_integration.gd` 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 갱신 완료.
+
+---
+
+## 📓 [Sprint 185 Milestone] 메인 키보드 `O` 즉시 열기(Shift: 랜덤 오픈) · `X` 초기화(Shift: 스튜디오 리셋)
+- **일시**: 2026-11-21
+- **14인 가상 애자일 스쿼드 회의록**:
+  - **다꾸러 VOC (지민·수빈·하연)**: "`Space` 외에도 알파벳 `O`(Open) 키로 필터링된 첫 작품을 바로 펼치고 `Shift+O`로 랜덤 추천 일기를 모달로 열어보고 싶어요. 또 검색/필터가 걸렸을 때 `X`로 한 번에 비우고 `Shift+X`로 정렬과 테마까지 기본 스튜디오 상태로 초기화하고 싶습니다."
+  - **PO & UX/UI**: `MainView` `_unhandled_input`에 `KEY_O`(`_open_first_filtered_card()` / `Shift`: `pick_random_item(true)`) 및 `KEY_X`(`_reset_all_filters()` / `Shift`: `_set_sort_mode(0)` + `_reset_theme()`)를 추가하고, `KEY_H` 치트시트에 `[O/X] 열기·초기화`를 동기화한다.
+- **구현 내역**:
+  - [`main_view.gd`](godot_project/scripts/main_view.gd): `KEY_O`, `KEY_X` 분기 추가 및 `_show_shortcut_cheatsheet()`에 `[O/X] 열기·초기화` 반영.
+  - [`index.html`](index.html): 웹 인터랙티브 목업에 `O`/`X` 및 `Shift+O`/`Shift+X` 단축키 동기화.
+  - [`test_main_integration.gd`](godot_project/tests/test_main_integration.gd): `KEY_O`, `Shift+O`, `KEY_X`, `Shift+X`, `KEY_H` 치트시트 `[O/X] 열기·초기화` 검증 추가.
+- **검증**: `test_archive.gd`, `test_persistence.gd`, `test_main_integration.gd` 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 갱신 완료.
+
+---
+
+## 📓 [Sprint 184] 메인 키보드 `A` 전체일기 · `U` 초판특전 필터(Shift: 첫 작품 열기) · 치트시트 Sync
+- **일시**: 2026-11-21
+- **14인 가상 애자일 스쿼드 회의록**:
+  - **다꾸러 VOC (지민·수빈·하연)**: "`E/G/D`·`F`로 분류를 보다가 다시 `전체일기`로 돌아오거나(`A`: All), `초판 스탬프 보유 작품`(`U`: Unique/초판특전)만 빠르게 필터링하고 `Shift` 조합으로 첫 작품 모달까지 한 번에 열고 싶어요."
+  - **PO & UX/UI**: `MainView` `_unhandled_input`에 `KEY_A`(`_on_tab_all_pressed()`)와 `KEY_U`(`_on_stat_firsts_clicked()`)를 추가하고 `Shift` 시 `_open_first_filtered_card()`를 연결한다. `KEY_H` 치트시트에도 `[A/U] 전체·초판` 안내를 동기화한다.
+- **구현 내역**:
+  - [`main_view.gd`](godot_project/scripts/main_view.gd): `KEY_A`, `KEY_U` 분기 및 `Shift+A`/`Shift+U` 즉시 모달 오픈 추가, `_show_shortcut_cheatsheet()`에 `[A/U] 전체·초판` 반영.
+  - [`index.html`](index.html): 웹 인터랙티브 목업에 `A`/`U` 및 `Shift+A`/`Shift+U` 단축키 동기화.
+  - [`test_main_integration.gd`](godot_project/tests/test_main_integration.gd): `KEY_A`, `KEY_U`, `Shift+A`, `Shift+U`, `KEY_H` 치트시트 검증 추가.
+- **검증**: `test_archive.gd`, `test_persistence.gd`, `test_main_integration.gd` 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 갱신 완료.
+
+---
+
+## 📓 [Sprint 183] 메인 키보드 `E/G/D` 분류 필터(Shift: 첫 작품 열기) · 치트시트 Sync
+- **일시**: 2026-11-21
+- **14인 가상 애자일 스쿼드 회의록**:
+  - **다꾸러 VOC (지민·수빈·하연)**: "서재에서 `1~5` 숫자키 외에도 손이 자주 가는 왼손 알파벳 영역에서 이북/만화(`E`), 가챠(`G`), 완독(`D`) 탭을 바로 전환하고, `Shift`와 함께 누르면 해당 카테고리의 첫 번째 작품을 즉시 펼쳐보고 싶어요."
+  - **PO & UX/UI**: `MainView` `_unhandled_input`에 직관적인 이니셜 니모닉 키(`E`: E-Book/만화, `G`: Gacha/굿즈, `D`: Done/완독)를 배치하고 `Shift+E/G/D` 시 `_open_first_filtered_card()`로 모달까지 한 번에 연결한다. `KEY_H` 단축키 치트시트(`_show_shortcut_cheatsheet`)에도 `[E/G/D] 분류`를 동기화하며 기존 `[우클릭] 역순환·백업` 안내를 복원한다.
+- **구현 내역**:
+  - [`main_view.gd`](godot_project/scripts/main_view.gd): `KEY_E`, `KEY_G`, `KEY_D` 분기 추가(`_on_tab_manga_pressed()`, `_on_tab_gacha_pressed()`, `_on_tab_complete_pressed()` 및 `Shift` 시 `_open_first_filtered_card()`), `_show_shortcut_cheatsheet()`에 `[E/G/D] 분류` 및 `[우클릭] 역순환·백업` 포함.
+  - [`index.html`](index.html): 웹 인터랙티브 목업에 메인 화면 `E/G/D` 및 `Shift+E/G/D` 키보드 단축키 동기화.
+  - [`test_main_integration.gd`](godot_project/tests/test_main_integration.gd): `KEY_E`, `KEY_G`, `KEY_D` 필터 전환, `Shift+E/G/D` 첫 작품 모달 오픈, `KEY_H` 치트시트 `[E/G/D] 분류` 검증 추가.
+- **검증**: `test_archive.gd`, `test_persistence.gd`, `test_main_integration.gd` 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 갱신 완료.
+
+---
+
+## 📓 [Sprint 182] 메인 키보드 `B` 즉시 백업(Shift: 리포트 복사) · `F` 인생작 필터(Shift: 첫 작품 열기)
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A (안심 백업러):** "메인 서재에서 `B` 키만 누르면 바로 JSON 로컬 백업이 저장되고, `Shift+B`를 누르면 서재 요약 리포트가 클립보드에 복사되면 정말 안심될 것 같아요!"
+- **가챠러 B (최애작 탐색러):** "검색 단축키는 `Ctrl/Cmd+F`니까, 단독 `F` 키를 누르면 `★ 인생작` 탭으로 바로 필터링되고 `Shift+F`를 누르면 첫 인생작 모달이 즉시 열리면 손이 편하겠어요."
+- **미니멀러 C (웹 동기화):** "웹 목업(`index.html`)의 전역 키보드 리스너에도 `B`/`Shift+B`와 `F`/`Shift+F`를 동일하게 반영해주세요."
+- **PO & UX/UI 확정:**
+  1. **`MainView` `_unhandled_input` `B` & `F` (`main_view.gd`)**:
+     - `B`: `_trigger_instant_json_backup()` 실행(`Shift+B`: `copy_summary_to_clipboard()` 실행).
+     - `F` (단독): `_on_tab_fav_pressed()` 실행(`Shift+F`: 필터링 후 `_open_first_filtered_card()` 실행).
+     - `_show_shortcut_cheatsheet()` 안내에 `[F] 인생작 · [B] 백업` 추가.
+  2. **웹 목업(`index.html`) 동기화 & TDD/QA 검증:** 전역 `keydown` 리스너에 `B`/`Shift+B`, `F`/`Shift+F`를 연결하고 `test_main_integration.gd`에 Sprint 182 통합 검증을 추가해 3종 헤드리스 테스트 100% 통과 및 Metal 4.0 스크린샷을 갱신했습니다.
+
+---
+
+## 📓 [Sprint 181] 메인 키보드 `V` 가치순 정렬 토글(Shift: 기본순) · `L` 오늘의 밑줄 작품 열기(Shift: 작품 필터)
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A (자산 수집러):** "메인 서재에서 `V` 키 한 번만 누르면 `💎 가치순` 정렬로 바로 바뀌고, 다시 `V`나 `Shift+V`를 누르면 기본순으로 돌아오면 소장 가치 TOP 작품을 순식간에 확인할 수 있겠어요!"
+- **가챠러 B (밑줄 탐색러):** "배너의 오늘의 밑줄을 보다가 `L` 키를 누르면 그 작품의 일기장이 바로 열리고, `Shift+L`을 누르면 그 작품명으로 서재가 필터링되면 정말 직관적일 것 같아요."
+- **미니멀러 C (웹 동기화):** "웹 목업(`index.html`)의 전역 키보드 리스너에도 `V`/`Shift+V`와 `L`/`Shift+L`을 동일하게 반영해주세요."
+- **PO & UX/UI 확정:**
+  1. **`MainView` `_unhandled_input` `V` & `L` (`main_view.gd`)**:
+     - `V`: 가치순(`sort_mode = 3`) 토글(`Shift+V` 또는 이미 가치순일 때 기본순 `0` 복원).
+     - `L`: `open_current_quote_item()` 실행(`Shift+L`: 현재 오늘의 밑줄 작품명으로 `search_input` 필터링).
+     - `_show_shortcut_cheatsheet()` 안내에 `[V] 가치순 · [L] 오늘밑줄` 추가.
+  2. **웹 목업(`index.html`) 동기화 & TDD/QA 검증:** 전역 `keydown` 리스너에 `V`/`Shift+V`, `L`/`Shift+L`을 연결하고 `test_main_integration.gd`에 Sprint 181 통합 검증을 추가해 3종 헤드리스 테스트 100% 통과 및 Metal 4.0 스크린샷을 갱신했습니다.
+
+---
+
+## 🏆 [Sprint 180 Milestone] 메인 키보드 `W` 웹표지 스크랩 · `P` 폴라로이드 촬영(Shift: 등록 후 즉시 열기)
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A (키보드 파워 유저):** "180회 마일스톤 스프린트! 하단 도크의 `웹표지 스크랩`(`WebBtn`)과 `폴라로이드 촬영`(`CamBtn`)도 키보드에서 `W`와 `P` 키 한 번으로 바로 등록할 수 있으면 마우스를 아래까지 내릴 필요가 없겠어요!"
+- **가챠러 B (원키 등록+열기):** "`Shift+W`, `Shift+P`를 누르면 스크랩·촬영 등록과 동시에 방금 만든 일기장 모달을 곧바로 열어줘서 바로 다꾸를 시작할 수 있으면 완벽해요!"
+- **미니멀러 C (웹 동기화):** "웹 목업(`index.html`)의 전역 키보드 리스너에도 `W`/`P`와 `Shift+W`/`Shift+P`를 동일하게 연결해주세요."
+- **PO & UX/UI 확정:**
+  1. **`MainView` `_unhandled_input` `W` & `P` (`main_view.gd`)**:
+     - `W`: `_on_web_scrape_btn_pressed()` 실행(`Shift+W`: 등록 후 `items[0]` 모달 즉시 열기).
+     - `P`: `_on_camera_snap_btn_pressed()` 실행(`Shift+P`: 등록 후 `items[0]` 모달 즉시 열기).
+     - `_show_shortcut_cheatsheet()` 안내에 `[W/P] 스크랩·촬영` 추가.
+  2. **웹 목업(`index.html`) 동기화 & TDD/QA 검증:** 전역 `keydown` 리스너에 `W`/`P` 및 `Shift+W`/`Shift+P`를 동기화하고 `test_main_integration.gd`에 Sprint 180 마일스톤 검증을 추가해 3종 헤드리스 테스트 100% 통과 및 Metal 4.0 스크린샷을 갱신했습니다.
+
+---
+
+## 📓 [Sprint 179] `AddModal` 키보드 `1~5` 표지 스와치(Shift: 즉시 등록) & `C` 분류 전환(Shift: 즉시 등록)
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A (키보드 다꾸러):** "새 일기 작성 모달(`AddModal`)에서 입력창 포커스를 푼 뒤 `1~5` 키로 표지 스와치 5종을 고르고, `Shift+1~5`를 누르면 그 색 표지로 샘플을 즉시 등록할 수 있으면 정말 편할 것 같아요!"
+- **가챠러 B (빠른 분류 전환):** "`AddModal`에서도 `C` 키를 누르면 이북·단행본 ↔ 가챠·굿즈 분류가 전환되고, `Shift+C`를 누르면 분류 전환과 동시에 샘플을 즉시 등록해주면 마우스 없이도 모든 등록 흐름이 완결되겠어요!"
+- **미니멀러 C (웹 동기화):** "웹 목업(`index.html`)의 메인 서재에서도 `Shift+W`(웹 스크랩)와 `Shift+P`(폴라로이드 촬영) 단축키를 지원해 빠른 등록을 맞춰주세요."
+- **PO & UX/UI 확정:**
+  1. **`AddModal` `_unhandled_input` `1~5` & `C` (`add_modal.gd`)**:
+     - 입력란 비포커스 시 `1~5`: `COVER_SWATCHES[0..4]` 표지색 선택(`Shift+1~5`: 선택 후 `_submit_with_sample_fallback()` 즉시 등록).
+     - 입력란 비포커스 시 `C`: `cat_option` 이북 ↔ 가챠 전환(`Shift+C`: 전환 후 `_submit_with_sample_fallback()` 즉시 등록).
+  2. **웹 목업(`index.html`) 동기화 & TDD/QA 검증:** 메인 서재 `Shift+W`/`Shift+P` 빠른 등록 단축키를 연결하고 `test_main_integration.gd`에 Sprint 179 통합 검증을 추가해 3종 헤드리스 테스트 100% 통과 및 Metal 4.0 스크린샷을 갱신했습니다.
+
+---
+
+## 📓 [Sprint 178] `DetailModal` 키보드 `Shift+ESC` 카드 복사+닫기 · `Shift+H` 치트시트 복사 · `Shift+/`(`?`) 도움말
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A (키보드 파워 유저):** "일기장 모달을 닫을 때 `Shift+ESC`를 누르면 `CloseBtn`/`Dimmer` `Shift+좌클릭`처럼 감상 카드를 클립보드에 복사하면서 바로 닫아주면 마우스 없이도 완벽할 거예요!"
+- **가챠러 B (단축키 레퍼런스):** "일기장 모달 안에서도 메인 서재처럼 `?` (`Shift+/`) 키로 단축키 도움말을 띄우고, `Shift+H` 키를 누르면 모달 단축키 치트시트 문자열까지 클립보드에 복사되면 좋겠어요."
+- **미니멀러 C (웹 동기화):** "웹 목업(`index.html`)의 `#journal-modal` 열린 상태에서도 `Shift+ESC` 카드 복사+닫기와 `Shift+H` 치트시트 복사를 동일하게 반영해주세요."
+- **PO & UX/UI 확정:**
+  1. **`DetailModal` `_unhandled_input` `Shift+ESC` · `Shift+H` · `Shift+/` (`detail_modal.gd`)**:
+     - `Shift+ESC`: `copy_book_quote_card()` 실행 후 `close()` 즉시 호출.
+     - `Shift+/` (`?`): `help_requested.emit()` 발행.
+     - `Shift+H`: `help_requested.emit()` 발행과 함께 모달 단축키 치트시트 텍스트를 클립보드에 복사.
+  2. **웹 목업(`index.html`) 동기화 & TDD/QA 검증:** `#journal-modal` `Shift+Escape` 및 `Shift+H`를 동기화하고 `test_main_integration.gd`에 Sprint 178 통합 검증을 추가해 3종 헤드리스 테스트 100% 통과 및 Metal 4.0 스크린샷을 갱신했습니다.
+
+---
+
+## 📓 [Sprint 177] 메인 키보드 `Shift+/`(`?`) 단축키 치트시트 · `Shift+ESC` 필터 초기화 · `Space`/`Shift+Space` 서재·랜덤 열기
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A (키보드 파워 유저):** "메인 서재에서 `?` (`Shift+/`) 키를 눌렀을 때 검색창으로 포커스가 이동하는 대신 단축키 치트시트가 바로 뜨면 직관적일 것 같아요!"
+- **가챠러 B (원키 서재 탐색):** "검색창에 포커스가 없을 때 `Space`를 누르면 첫 번째 서재 카드를, `Shift+Space`를 누르면 랜덤 일기장을 열어주고, `Shift+ESC`를 누르면 검색어·필터를 전체 초기화해주면 키보드 탐색이 완벽해질 거예요!"
+- **미니멀러 C (웹 동기화):** "웹 목업(`index.html`)의 전역 키보드 리스너에도 `Space`/`Shift+Space`와 `Shift+ESC`를 동일하게 반영해주세요."
+- **PO & UX/UI 확정:**
+  1. **`MainView` `_unhandled_input` `Shift+/` · `Shift+ESC` · `Space`/`Shift+Space` (`main_view.gd`)**:
+     - `Shift+/` (`?`): `_show_shortcut_cheatsheet()` 표시.
+     - `Shift+ESC` (또는 검색어 존재 시 `ESC`): `_reset_all_filters()` 실행.
+     - `Space` / `Shift+Space`: `_open_first_filtered_card()` / `pick_random_item(true)` 실행.
+  2. **웹 목업(`index.html`) 동기화 & TDD/QA 검증:** 전역 `keydown` 핸들러에 `Space`/`Shift+Space`와 `Shift+Escape`를 추가하고 `test_main_integration.gd`에 Sprint 177 통합 검증을 추가해 3종 헤드리스 테스트 100% 통과 및 Metal 4.0 스크린샷을 갱신했습니다.
+
+---
+
+## 📓 [Sprint 176] `AddModal` 키보드 `Shift+ESC` 입력 전체 비우기 & `Shift+Enter` 샘플 자동 채움 등록
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A (키보드 다꾸러):** "새 일기 작성 모달(`AddModal`)에서 `ESC`를 누르면 창이 닫히거나 포커스된 칸 하나만 지워지는데, `Shift+ESC`를 누르면 창을 닫지 않고 제목·작가·밑줄 3칸을 모두 한꺼번에 비워주면 좋겠어요."
+- **가챠러 B (원키 등록러):** "`Ctrl/Cmd+Enter`는 제목이 비어있으면 경고가 뜨는데, `Shift+Enter`를 누르면 `SubmitBtn` `Shift+좌클릭`처럼 빈 제목일 때도 샘플을 자동 채워서 즉시 등록까지 완료되면 정말 빠를 거예요!"
+- **미니멀러 C (웹 동기화):** "웹 목업(`index.html`)의 `#diary-quote-input`에서도 `Shift+Enter` 시 저장+복사, `Shift+ESC` 시 입력란 초기화를 동기화해주세요."
+- **PO & UX/UI 확정:**
+  1. **`AddModal` `_unhandled_input` `Shift+ESC` & `Shift+Enter` (`add_modal.gd`)**:
+     - `Shift+ESC`: `clear_inputs()` 호출로 모달을 닫지 않고 입력란 3종을 일괄 비웁니다.
+     - `Shift+Enter`: `_submit_with_sample_fallback()` 호출로 빈 제목 시 샘플 자동 채움 후 즉시 서재에 등록합니다.
+  2. **웹 목업(`index.html`) 동기화 & TDD/QA 검증:** `#diary-quote-input`에 `Shift+Enter` 저장+복사 및 `Shift+Escape` 초기화를 연결하고 `test_main_integration.gd`에 Sprint 176 통합 검증을 추가해 3종 헤드리스 테스트 100% 통과 및 Metal 4.0 스크린샷을 갱신했습니다.
+
+---
+
+## 🏆 [Sprint 175 Milestone] `DetailModal` 키보드 `Shift+L` 속지 순환 · `Shift+Delete` 삭제 해제 · `Shift+PgUp/PgDn` 처음·끝 점프
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A (키보드 다꾸러):** "175회 마일스톤 스프린트! `L` 키로 형광펜을 토글할 때 `Shift+L`을 누르면 `HighlightBtn` `Shift+좌클릭`처럼 일기장 속지 패턴을 순환해주면 손이 정말 편할 것 같아요!"
+- **가챠러 B (안전 UX 유저):** "실수로 `Delete`나 `Backspace`를 눌러 삭제 확인 상태(`delete_armed`)가 되었을 때 `Shift+Delete`/`Shift+Backspace`로 즉시 삭제 확인을 해제할 수 있고, `Shift+PageUp`/`PageDown`으로도 첫 작품·마지막 작품에 점프할 수 있으면 완벽해요!"
+- **미니멀러 C (웹 동기화):** "웹 목업(`index.html`)의 모달 키보드 리스너에도 `Shift+L`, `Shift+Delete`/`Backspace`, `Shift+PageUp`/`PageDown`을 동일하게 반영해주세요."
+- **PO & UX/UI 확정:**
+  1. **`DetailModal` `_unhandled_input` `Shift+L` / `Shift+Delete` / `Shift+PgUp/PgDn` (`detail_modal.gd`)**:
+     - `Shift+L`: `cycle_paper_pattern(1)` 실행.
+     - `Shift+Delete` / `Shift+Backspace`: `delete_armed = false` 및 `_apply_delete_btn_style(false)`로 안전 해제.
+     - `Shift+PageUp` / `Shift+PageDown`: `navigate_requested.emit(-9999)` / `navigate_requested.emit(9999)` 발행.
+  2. **웹 목업(`index.html`) 동기화 & TDD/QA 검증:** 동일한 키보드 단축키를 `index.html`에 연결하고 `test_main_integration.gd`에 Sprint 175 마일스톤 검증을 추가해 3종 헤드리스 테스트 100% 통과 및 Metal 4.0 스크린샷을 갱신했습니다.
+
+---
+
+## 📓 [Sprint 174] `DetailModal` 키보드 `Shift+E` 샘플 밑줄 채움 & `Shift+1~4` 인장 찍고 닫기
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A (키보드 다꾸러):** "일기장 모달에서 `E` 키를 누르면 밑줄 입력창으로 포커스가 가는데, `Shift+E`를 누르면 샘플 밑줄 문장을 자동으로 채운 뒤 포커스를 맞춰주면 빠르게 기록을 남길 때 좋겠어요!"
+- **가챠러 B (스탬프 퀵액션):** "`1~4` 키로 4종 인장을 찍을 때 `Shift+1~4`를 누르면 인장 버튼 `Shift+좌클릭`처럼 인장을 찍으면서 동시에 일기장 모달을 닫아주면 마우스 없이도 완결되겠어요!"
+- **미니멀러 C (웹 동기화):** "웹 목업(`index.html`)의 모달 열린 상태 키보드 리스너에도 `Shift+E`와 `Shift+1~4`를 동일하게 반영해주세요."
+- **PO & UX/UI 확정:**
+  1. **`DetailModal` `_unhandled_input` `Shift+E` & `Shift+1~4` (`detail_modal.gd`)**:
+     - `Shift+E`: `quote_input.text`에 샘플 밑줄 `"오늘도 한 페이지의 여운을 남겼다."`를 채운 뒤 포커스 이동.
+     - `Shift+1~4`: 해당 인장 프리셋(`전권완결`/`초판특전`/`인생최애`/`위시리스트`) 적용 후 `close()` 즉시 실행.
+  2. **웹 목업(`index.html`) 동기화 & TDD/QA 검증:** `#journal-modal` 열린 상태 키보드 리스너에 `Shift+E` 및 `Shift+1~4`를 연결하고 `test_main_integration.gd`에 Sprint 174 통합 검증을 추가해 3종 헤드리스 테스트 100% 통과 및 Metal 4.0 스크린샷을 갱신했습니다.
+
+---
+
+## 📓 [Sprint 173] `DetailModal` 키보드 `Shift+←/→` 처음·끝 점프 & `Shift++/-` 초판북마크 추가·전권 북마크 토글
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A (키보드 파워 유저):** "일기장 모달에서 `←`/`→` 키로 페이지를 넘길 때 `Shift+←`/`Shift+→`를 누르면 `Home`/`End` 키까지 손가락을 뻗지 않아도 첫 작품·마지막 작품으로 즉시 점프하면 좋겠어요!"
+- **가챠러 B (권별 빠른 기록러):** "모달에서 `+` 키로 새 권을 추가할 때 `Shift++`를 누르면 `초판특전+북마크 ON` 상태로 바로 추가되고, `Shift+-`를 누르면 마지막 권을 지우는 대신 전권 북마크를 일괄 토글해주면 키보드만으로 모든 권별 작업이 가능하겠어요!"
+- **미니멀러 C (웹 동기화):** "웹 목업(`index.html`)의 `ArrowLeft`/`ArrowRight` 키 리스너에도 `Shift+←/→` 처음·끝 작품 점프를 동일하게 반영해주세요."
+- **PO & UX/UI 확정:**
+  1. **`DetailModal` `_unhandled_input` `Shift+←/→` & `Shift++/-` (`detail_modal.gd`)**:
+     - `Shift+←` / `Shift+→`: `navigate_requested.emit(-9999)` / `navigate_requested.emit(9999)` 발행.
+     - `Shift++` (`KEY_EQUAL`/`KEY_PLUS`/`KEY_KP_ADD`): 새 권 추가 후 즉시 `status = "first"`, `bookmarked = true` 적용.
+     - `Shift+-` (`KEY_MINUS`/`KEY_KP_SUBTRACT`): 전권 북마크 일괄 온·오프 토글.
+  2. **웹 목업(`index.html`) 동기화 & TDD/QA 검증:** `ArrowLeft`/`ArrowRight` 키 핸들러에 `e.shiftKey` 처음·끝 작품 점프를 연결하고 `test_main_integration.gd`에 Sprint 173 통합 검증을 추가해 3종 헤드리스 테스트 100% 통과 및 Metal 4.0 스크린샷을 갱신했습니다.
+
+---
+
+## 📓 [Sprint 172] 메인 키보드 `Shift+0` 스튜디오 완전 초기화 · `Shift+C` 오늘의 밑줄 복사 · `Shift+H` 단축키 치트시트 복사
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A (키보드 파워 유저):** "`0` 키를 누르면 검색·필터가 초기화되는데, `Shift+0`을 누르면 정렬 기준과 속지 테마까지 한꺼번에 기본값으로 되돌리는 완전 초기화가 되면 좋겠어요!"
+- **가챠러 B (밑줄 공유러):** "메인 서재에서 `C` 키는 전체 서재 요약을 복사하는데, `Shift+C`를 누르면 배너에 떠 있는 오늘의 밑줄 문장만 깔끔하게 복사할 수 있으면 편리할 것 같아요."
+- **미니멀러 C (단축키 레퍼런스):** "`H` 키로 단축키 치트시트를 띄울 때 `Shift+H`를 누르면 치트시트 텍스트까지 클립보드에 함께 복사해주고 웹 목업(`index.html`)에도 동일하게 동기화해주세요."
+- **PO & UX/UI 확정:**
+  1. **`MainView` `_unhandled_input` `Shift+0` / `Shift+C` / `Shift+H` (`main_view.gd`)**:
+     - `Shift+0`: `_reset_all_filters()` + `_set_sort_mode(0)` + `_reset_theme()` 실행.
+     - `Shift+C`: `today_quote_label.text`를 클립보드에 복사하고 토스트 안내 표시.
+     - `Shift+H`: `_show_shortcut_cheatsheet()` 실행 후 `status_toast.text`를 클립보드에 복사.
+  2. **웹 목업(`index.html`) 동기화 & TDD/QA 검증:** 전역 `keydown` 리스너에 `Shift+0`, `Shift+C`, `Shift+H`를 추가하고 `test_main_integration.gd`에 Sprint 172 통합 검증을 추가해 3종 헤드리스 테스트 100% 통과 및 Metal 4.0 스크린샷을 갱신했습니다.
+
+---
+
+## 📓 [Sprint 171] 메인 키보드 `Shift+1~5` 탭 필터 후 즉시 열기 · `Shift+N` 샘플 모달 · `Shift+I` 즉시 백업
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A (키보드 파워 유저):** "메인 서재에서 `1~5` 키로 탭을 바꿀 수 있는데, 탭 버튼의 `Shift+좌클릭`처럼 키보드에서도 `Shift+1~5`를 누르면 탭 전환과 동시에 랜덤·첫 번째 작품 일기장이 바로 열리면 좋겠어요!"
+- **가챠러 B (빠른 입력 유저):** "`N` 키로 새 일기 창을 열 때 `Shift+N`을 누르면 샘플 제목·작가·문장이 미리 채워진 상태로 열리고, `Shift+I`를 누르면 인포그래픽 대신 즉시 JSON 백업이 실행되면 키보드만으로도 모든 파워 액션을 쓸 수 있겠어요!"
+- **미니멀러 C (웹 동기화):** "웹 목업(`index.html`)의 전역 키보드 리스너에도 `Shift+1~5`, `Shift+N`, `Shift+I` 단축키를 동일하게 추가해주세요."
+- **PO & UX/UI 확정:**
+  1. **`MainView` `_unhandled_input` `Shift+1~5` / `Shift+N` / `Shift+I` (`main_view.gd`)**:
+     - `Shift+1`: 전체 탭 복원 후 `pick_random_item(true)` 즉시 열기.
+     - `Shift+2~5`: 해당 카테고리/필터 전환 후 `_open_first_filtered_card()` 실행.
+     - `Shift+N`: `AddModal` 열기 + 샘플 텍스트 3종 자동 채움.
+     - `Shift+I`: `_trigger_instant_json_backup()` 즉시 백업 실행.
+  2. **웹 목업(`index.html`) 동기화 & TDD/QA 검증:** 전역 `keydown` 핸들러에 동일한 `Shift+1~5`, `Shift+N`, `Shift+I`를 연결하고 `test_main_integration.gd`에 Sprint 171 통합 검증을 추가해 3종 헤드리스 테스트 100% 통과 및 Metal 4.0 스크린샷을 갱신했습니다.
+
+---
+
+## 🏆 [Sprint 170 Milestone] `TitleLabel` `Shift+좌클릭` 감상 카드 전체 복사 & `StampLbl`/`InkLbl` `Shift+좌클릭` 역순환 완결
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A (다꾸러):** "170회 마일스톤 스프린트! 일기장 모달의 작품 제목(`TitleLabel`)을 우클릭하면 감상 카드 전체가 복사되는데, 트랙패드에서 `Shift+좌클릭`으로도 똑같이 감상 카드를 복사할 수 있으면 좋겠어요."
+- **가챠러 B (잉크·인장 다꾸):** "`StampRow`의 `💮 인장:` 라벨(`StampLbl`)과 `InkRow`의 `🖋️ 잉크:` 라벨(`InkLbl`)도 우클릭 역순환뿐 아니라 `Shift+좌클릭`으로 이전 인장·이전 잉크색으로 돌아가면 모달 내 모든 라벨·버튼이 100% 통일되겠어요!"
+- **미니멀러 C (웹 동기화):** "웹 목업(`index.html`)의 `#diary-title` 제목 클릭에도 `Shift+좌클릭` 시 감상 카드 전체 복사를 연결해주세요."
+- **PO & UX/UI 확정:**
+  1. **`DetailModal` `TitleLabel` `Shift+좌클릭` 감상 카드 전체 복사 (`detail_modal.gd`)**: `TitleLabel` `gui_input`과 `open()` 툴팁에 `Shift+좌클릭` 시 `accept_event()` 및 `card_copied.emit(current_item)`을 연결했습니다.
+  2. **`DetailModal` `StampLbl`/`InkLbl` `Shift+좌클릭` 역순환 (`detail_modal.gd`)**: `StampLbl`과 `InkLbl` `gui_input`에서 `Shift+좌클릭` 시 `accept_event()` 처리 후 각각 이전 인장 프리셋(`-1`)과 이전 만년필 잉크(`cycle_fountain_pen_ink(-1)`)로 역순환합니다.
+  3. **웹 목업(`index.html`) 동기화 & TDD/QA 검증:** `#diary-title`에 `Shift+좌클릭` 감상 카드 복사를 동기화하고 `test_main_integration.gd`에 Sprint 170 마일스톤 검증을 추가해 3종 헤드리스 테스트 100% 통과 및 Metal 4.0 스크린샷을 갱신했습니다.
+
+---
+
+## 📓 [Sprint 169] `AddModal` 입력 3종 `Shift+좌클릭` 개별 샘플 채움 & `DetailModal` `CatBadge` `Shift+좌클릭` 전체 서재 복원
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A (다꾸러):** "`AddModal`의 제목·작가·첫 밑줄 입력란 3곳에서 우클릭하면 비우기/샘플 전환이 되는데, `Shift+좌클릭`하면 언제든 해당 입력란에 기본 샘플 문장을 깔끔하게 채워주면 좋겠어요."
+- **가챠러 B (필터 복원러):** "`DetailModal` 왼쪽 표지 위 카테고리 배지(`CatBadge`)를 우클릭하면 전체 서재로 돌아가는데, 트랙패드에서 `Shift+좌클릭`으로도 모달을 닫으며 전체 서재를 복원할 수 있으면 편리하겠어요!"
+- **미니멀러 C (웹 동기화):** "웹 목업(`index.html`)의 `#diary-cover-cat` 배지에도 `Shift+좌클릭` 시 전체 서재 복원 후 모달 닫기를 동기화해주세요."
+- **PO & UX/UI 확정:**
+  1. **`AddModal` 입력란 3종 `Shift+좌클릭` 샘플 채움 (`add_modal.gd`)**: `TitleInput`, `AuthorInput`, `QuoteInput`의 `gui_input`에서 `Shift+좌클릭` 시 `accept_event()` 처리 후 해당 필드의 샘플 텍스트를 즉시 채웁니다.
+  2. **`DetailModal` `CatBadge` `Shift+좌클릭` 전체 서재 복원 (`detail_modal.gd`)**: `CatBadge` `gui_input`에서 `Shift+좌클릭` 시 `accept_event()` 처리 후 `close()` 및 `filter_category_requested.emit(-1)`을 발행해 전체 서재로 복원합니다.
+  3. **웹 목업(`index.html`) 동기화 & TDD/QA 검증:** `#diary-cover-cat`에 `Shift+좌클릭` 전체 서재 복원을 동기화하고 `test_main_integration.gd`에 Sprint 169 통합 검증을 추가해 3종 헤드리스 테스트 100% 통과 및 Metal 4.0 스크린샷을 갱신했습니다.
+
+---
+
+## 📓 [Sprint 168] `SearchInput` `Shift+좌클릭` 첫 결과 열기 & `QuoteInput` `Shift+좌클릭` 밑줄 저장+복사
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A (다꾸러):** "통합 검색창(`SearchInput`)에 검색어를 입력한 뒤 마우스로 `Shift+좌클릭`만 해도 엔터 키처럼 첫 번째 필터링된 작품 일기장이 바로 열리면 한 손 마우스 조작이 훨씬 편할 것 같아요."
+- **가챠러 B (대사 입력러):** "`DetailModal` 밑줄 입력창(`QuoteInput`)에 감상평을 적은 뒤, 저장 버튼까지 마우스를 옮기지 않고 입력창 자체에서 `Shift+좌클릭`만 해도 저장과 동시에 클립보드 복사가 완료되면 좋겠어요!"
+- **미니멀러 C (웹 동기화):** "웹 목업(`index.html`)의 `#search-box`와 `#diary-quote-input`에도 동일한 `Shift+좌클릭` 동작을 연결해주세요."
+- **PO & UX/UI 확정:**
+  1. **`MainView` `SearchInput` `Shift+좌클릭` 첫 결과 열기 (`main_view.gd`)**: `SearchInput` `gui_input`에서 `Shift+좌클릭` 시 `accept_event()` 처리 후 `_open_first_filtered_card()`를 호출해 첫 번째 필터링 카드를 즉시 엽니다.
+  2. **`DetailModal` `QuoteInput` `Shift+좌클릭` 저장+복사 (`detail_modal.gd`)**: `QuoteInput` `gui_input`에서 `Shift+좌클릭` 시 `accept_event()` 처리 후 `_on_save_quote_btn_pressed()`로 저장하고 입력 텍스트를 클립보드에 복사합니다.
+  3. **웹 목업(`index.html`) 동기화 & TDD/QA 검증:** `#search-box`와 `#diary-quote-input`에 `Shift+좌클릭` 핸들러를 추가하고 `test_main_integration.gd`에 Sprint 168 통합 검증을 추가해 3종 헤드리스 테스트 100% 통과 및 Metal 4.0 스크린샷을 갱신했습니다.
+
+---
+
+## 📓 [Sprint 167] `AddModal` `Dimmer` `Shift+좌클릭` 입력 비우기 & `TitleLabel` `Shift+좌클릭` 샘플 즉시 등록
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A (다꾸러):** "새 일기 작성 모달(`AddModal`)에서 어두운 배경(`Dimmer`)을 우클릭하면 창을 닫지 않고 입력 내용만 비우는데, 트랙패드에서 `Shift+좌클릭`으로도 똑같이 입력 내용만 깔끔히 비울 수 있으면 좋겠어요."
+- **가챠러 B (원클릭 등록):** "`AddModal` 상단 제목(`TitleLabel`)을 좌클릭하면 샘플 일기를 채워주는데, `Shift+좌클릭`하면 샘플을 채우면서 동시에 바로 서재에 등록까지 끝낼 수 있으면 테스트나 빠른 스크랩 시 최고일 거예요!"
+- **미니멀러 C (웹 동기화):** "웹 목업(`index.html`)의 모달 노트 헤더(`🖋️ 나만의 독서 노트 & 권별 밑줄`)에서도 `Shift+좌클릭` 시 샘플 밑줄을 채우면서 바로 저장되도록 맞춰주세요."
+- **PO & UX/UI 확정:**
+  1. **`AddModal` `Dimmer` `Shift+좌클릭` 입력 내용만 비우기 (`add_modal.gd`)**: `Dimmer` `gui_input`에서 `Shift+좌클릭` 시 `accept_event()` 처리 후 `clear_inputs()`를 호출해 모달을 닫지 않고 입력란을 초기화합니다.
+  2. **`AddModal` `TitleLabel` `Shift+좌클릭` 샘플 즉시 등록 (`add_modal.gd`)**: 상단 제목 라벨 `Shift+좌클릭` 시 `accept_event()` 처리 후 `_submit_with_sample_fallback()`를 실행해 샘플 일기를 즉시 서재에 등록합니다.
+  3. **웹 목업(`index.html`) 동기화 & TDD/QA 검증:** 모달 노트 헤더에 `Shift+좌클릭` 샘플 밑줄 채움+저장을 연결하고 `test_main_integration.gd`에 Sprint 167 통합 검증을 추가해 3종 헤드리스 테스트 100% 통과 및 Metal 4.0 스크린샷을 갱신했습니다.
+
+---
+
+## 📓 [Sprint 166] `EmptyStateResetBtn` `Shift+좌클릭` 복원 후 랜덤 일기장 열기 & `DetailModal` `Dimmer` `Shift+좌클릭` 카드 복사+닫기
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A (다꾸러):** "검색 결과가 없을 때 나오는 `🔄 전체 서재 보기`(`EmptyStateResetBtn`) 버튼에서 우클릭하면 복원 후 미리보기 토스트가 뜨는데, `Shift+좌클릭`으로 누르면 전체 서재를 복원하면서 곧바로 랜덤 일기장 모달을 열어주면 좋겠어요!"
+- **가챠러 B (모달 퀵액션):** "`DetailModal` 바깥 어두운 배경(`Dimmer`)을 `Shift+좌클릭`했을 때도 `CloseBtn`처럼 감상 카드를 클립보드에 복사하면서 일기장을 닫아주면 마우스를 모달 밖으로 빼는 손맛이 딱 맞을 거예요."
+- **미니멀러 C (웹 동기화):** "웹 목업(`index.html`)의 빈 상태 복원 버튼과 `#journal-modal` 배경 클릭 핸들러에도 동일한 `Shift+좌클릭` 동작을 넣어주세요."
+- **PO & UX/UI 확정:**
+  1. **`MainView` `EmptyStateResetBtn` `Shift+좌클릭` 복원 후 랜덤 열기 (`main_view.gd`)**: `Shift+좌클릭` 시 `accept_event()` 처리 후 `_reset_all_filters()`와 `pick_random_item(true)`를 연속 호출해 전체 서재 복원과 동시에 랜덤 일기장 모달을 엽니다.
+  2. **`DetailModal` `Dimmer` `Shift+좌클릭` 카드 복사+닫기 (`detail_modal.gd`)**: `Dimmer` `gui_input`에서 `Shift+좌클릭` 시 `accept_event()`, `copy_book_quote_card()`, `close()`를 순차 실행합니다.
+  3. **웹 목업(`index.html`) 동기화 & TDD/QA 검증:** 빈 상태 복원 버튼과 `#journal-modal` 배경 클릭에 `Shift+좌클릭` 랜덤 열기·카드 복사+닫기를 동기화했습니다. `test_main_integration.gd`에 Sprint 166 통합 검증을 추가해 3종 헤드리스 테스트 100% 통과 및 Metal 4.0 스크린샷을 갱신했습니다.
+
+---
+
+## 🏆 [Sprint 165 Milestone] `AddModal` 스와치 5종·`CatOption`·`CloseBtn`·`SubmitBtn` `Shift+좌클릭` 파워 액션 완결
+
+### 1. 14인 스쿼드 회의록 & VOC
+- **소장러 A (다꾸러):** "165회 마일스톤 스프린트! `AddModal`의 표지 컬러 스와치 5종을 우클릭하면 그 색으로 즉시 샘플 등록이 되는데, 트랙패드에서 `Shift+좌클릭`으로도 똑같이 그 색 표지로 즉시 등록할 수 있으면 좋겠어요."
+- **가챠러 B (빠른 등록러):** "`AddModal`의 작품 분류(`CatOption`) 이북↔가챠 전환, `CloseBtn` 입력란 비우기, `SubmitBtn` 빈 제목 시 샘플 자동 채움 등록도 `Shift+좌클릭`을 모두 지원하면 `DetailModal`과 `AddModal` 전체가 완벽한 트랙패드 친화 UX로 통일되겠어요!"
+- **미니멀러 C (웹 동기화):** "웹 목업(`index.html`) 상단 `+ 새 일기 쓰기` 버튼에서도 `Shift+좌클릭` 시 프롬프트 없이 샘플 일기가 즉시 등록되도록 맞춰주세요."
+- **PO & UX/UI 확정:**
+  1. **`AddModal` 표지 스와치 5종 `Shift+좌클릭` 즉시 등록 (`add_modal.gd`)**: `_build_color_swatches` 내 각 스와치 버튼 `gui_input`에서 `Shift+좌클릭` 시 `accept_event()`, `select_color(hex_val)`, `_submit_with_sample_fallback()`를 실행합니다.
+  2. **`AddModal` `CatOption`/`CloseBtn`/`SubmitBtn` `Shift+좌클릭` (`add_modal.gd`)**: `CatOption` `Shift+좌클릭`으로 이북↔가챠 즉시 전환, `CloseBtn` `Shift+좌클릭`으로 입력란 비우기(`clear_inputs()`), `SubmitBtn` `Shift+좌클릭`으로 샘플 자동 채움 등록(`_submit_with_sample_fallback()`)을 연결하고 툴팁에 안내를 병기했습니다.
+  3. **웹 목업(`index.html`) 동기화 & TDD/QA 검증:** `openNewDiaryModal(instantSample)`을 확장해 `+ 새 일기 쓰기` 버튼 `Shift+좌클릭` 시 샘플 즉시 등록을 지원하고, `test_main_integration.gd`에 Sprint 165 마일스톤 검증을 추가해 3종 헤드리스 테스트 100% 통과 및 Metal 4.0 스크린샷을 갱신했습니다.
+
+---
+
 ## 📓 [Sprint 164] `StampRow`·`InkRow` 17종 데코레이터 순환 버튼 `Shift+좌클릭` 역순환 일괄 지원
 
 ### 1. 14인 스쿼드 회의록 & VOC

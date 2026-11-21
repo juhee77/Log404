@@ -77,6 +77,8 @@ func _ready() -> void:
 	detail_modal.navigate_requested.connect(_on_modal_navigate_requested)
 	detail_modal.diary_updated.connect(_on_diary_updated)
 	detail_modal.help_requested.connect(_on_modal_help_requested)
+	if add_modal != null and add_modal.has_signal("help_requested"):
+		add_modal.help_requested.connect(_on_add_modal_help_requested)
 	detail_modal.summary_copy_requested.connect(copy_summary_to_clipboard)
 	detail_modal.close_and_backup_requested.connect(_trigger_instant_json_backup)
 	detail_modal.filter_category_requested.connect(func(cat: int) -> void:
@@ -134,13 +136,16 @@ func _ready() -> void:
 
 	if search_input != null:
 		search_input.clear_button_enabled = true
-		search_input.tooltip_text = "작품명·작가·대사·태그·보관위치·날씨·장소·소장경로 통합 검색 (Enter: 첫 결과 열기 · ESC·우클릭: 지우기/추천 검색)"
+		search_input.tooltip_text = "작품명·작가·대사·태그·보관위치·날씨·장소·소장경로 통합 검색 (Enter: 첫 결과 열기 · ESC·우클릭: 지우기/추천 검색 · Shift+좌클릭: 첫 결과 열기)"
 		search_input.text_submitted.connect(func(_t: String) -> void: _open_first_filtered_card())
 		search_input.gui_input.connect(func(ev):
 			if ev is InputEventKey and ev.pressed and not ev.echo and ev.keycode == KEY_ESCAPE and search_input.text != "":
 				search_input.text = ""
 				_render_cards()
 				_show_toast("🔍 검색어 초기화 (%s)" % _get_filtered_cards_summary())
+			elif ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_LEFT and ev.shift_pressed:
+				search_input.accept_event()
+				_open_first_filtered_card()
 			elif ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_RIGHT:
 				if search_input.text != "":
 					search_input.text = ""
@@ -586,6 +591,13 @@ func _render_cards() -> void:
 		filtered.sort_custom(func(a, b): return a.updated_at > b.updated_at)
 	elif sort_mode == 3:
 		filtered.sort_custom(func(a, b): return a.get_item_value() > b.get_item_value())
+
+	var total_count: int = archive_state.items.size()
+	if search_input != null:
+		if filtered.size() == total_count:
+			search_input.placeholder_text = "작품·대사 검색... (전체 %d종)" % total_count
+		else:
+			search_input.placeholder_text = "작품·대사 검색... (%d/%d종 표시)" % [filtered.size(), total_count]
 	
 	if filtered.is_empty():
 		var empty_box := VBoxContainer.new()
@@ -624,11 +636,16 @@ func _render_cards() -> void:
 		reset_btn.add_theme_color_override("font_color", Color(0.28, 0.22, 0.18, 1.0))
 		reset_btn.add_theme_font_size_override("font_size", 12)
 		reset_btn.pressed.connect(_reset_all_filters)
-		reset_btn.tooltip_text = "좌클릭: 전체 서재 복원 · 우클릭: 복원 후 랜덤 추천 미리보기"
+		reset_btn.tooltip_text = "좌클릭: 전체 서재 복원 · 우클릭: 복원 후 랜덤 추천 미리보기 · Shift+좌클릭: 복원 후 랜덤 일기장 열기"
 		reset_btn.gui_input.connect(func(ev: InputEvent) -> void:
-			if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_RIGHT:
-				_reset_all_filters()
-				pick_random_item(false)
+			if ev is InputEventMouseButton and ev.pressed:
+				if ev.button_index == MOUSE_BUTTON_RIGHT:
+					_reset_all_filters()
+					pick_random_item(false)
+				elif ev.button_index == MOUSE_BUTTON_LEFT and ev.shift_pressed:
+					reset_btn.accept_event()
+					_reset_all_filters()
+					pick_random_item(true)
 		)
 		empty_box.add_child(empty_lbl)
 		empty_box.add_child(reset_btn)
@@ -793,6 +810,32 @@ func _open_first_filtered_card() -> void:
 			_open_detail_modal(first_node.current_item)
 			return
 	_show_toast("📭 검색 결과가 없습니다. (ESC로 초기화)")
+
+func _open_last_filtered_card() -> void:
+	if card_grid != null and card_grid.get_child_count() > 0:
+		var last_node = card_grid.get_child(card_grid.get_child_count() - 1)
+		if last_node != null and last_node.get("current_item") != null:
+			_open_detail_modal(last_node.current_item)
+			return
+	_show_toast("📭 검색 결과가 없습니다. (ESC로 초기화)")
+
+func _step_filter_tab(delta: int) -> void:
+	var cur_tab: int = 0
+	if filter_favorites_only:
+		cur_tab = 4
+	elif filter_completed_only:
+		cur_tab = 3
+	elif archive_state.current_filter == 1:
+		cur_tab = 2
+	elif archive_state.current_filter == 0:
+		cur_tab = 1
+	var next_tab: int = (cur_tab + delta + 5) % 5
+	match next_tab:
+		0: _on_tab_all_pressed()
+		1: _on_tab_manga_pressed()
+		2: _on_tab_gacha_pressed()
+		3: _on_tab_complete_pressed()
+		4: _on_tab_fav_pressed()
 
 func _trigger_instant_json_backup() -> void:
 	archive_state.save_to_file()
@@ -969,30 +1012,229 @@ func _unhandled_input(event: InputEvent) -> void:
 	if (detail_modal != null and detail_modal.visible) or (add_modal != null and add_modal.visible):
 		return
 	if event is InputEventKey and event.pressed and not event.echo:
-		var is_find: bool = (event.keycode == KEY_F and (event.ctrl_pressed or event.meta_pressed)) or (event.keycode == KEY_SLASH and not event.ctrl_pressed and not event.meta_pressed)
-		if is_find and search_input != null:
+		var is_find: bool = ((event.keycode == KEY_F or event.keycode == KEY_K) and (event.ctrl_pressed or event.meta_pressed)) or (event.keycode == KEY_SLASH and not event.shift_pressed and not event.ctrl_pressed and not event.meta_pressed)
+		if event.keycode == KEY_F1:
+			_show_shortcut_cheatsheet()
+			if event.shift_pressed and status_toast != null:
+				DisplayServer.clipboard_set(status_toast.text)
+			get_viewport().set_input_as_handled()
+		elif (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_S:
+			_trigger_instant_json_backup()
+			get_viewport().set_input_as_handled()
+		elif (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_N:
+			_on_add_btn_pressed()
+			if event.shift_pressed and add_modal != null and add_modal.has_method("fill_sample_inputs"):
+				add_modal.fill_sample_inputs()
+			get_viewport().set_input_as_handled()
+		elif (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_R:
+			pick_random_item(not event.shift_pressed)
+			get_viewport().set_input_as_handled()
+		elif (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_B:
+			if event.shift_pressed:
+				copy_summary_to_clipboard()
+			else:
+				_trigger_instant_json_backup()
+			get_viewport().set_input_as_handled()
+		elif (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_L:
+			open_current_quote_item()
+			get_viewport().set_input_as_handled()
+		elif (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_D:
+			_on_tab_complete_pressed()
+			if event.shift_pressed:
+				_open_first_filtered_card()
+			get_viewport().set_input_as_handled()
+		elif (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_I:
+			if event.shift_pressed:
+				_trigger_instant_json_backup()
+			else:
+				show_library_infographic()
+			get_viewport().set_input_as_handled()
+		elif (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_G:
+			_on_tab_gacha_pressed()
+			if event.shift_pressed:
+				_open_first_filtered_card()
+			get_viewport().set_input_as_handled()
+		elif (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_E:
+			_on_tab_manga_pressed()
+			if event.shift_pressed:
+				_open_first_filtered_card()
+			get_viewport().set_input_as_handled()
+		elif (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_W:
+			_on_web_scrape_btn_pressed()
+			if event.shift_pressed and archive_state != null and not archive_state.items.is_empty():
+				_open_detail_modal(archive_state.items[0])
+			get_viewport().set_input_as_handled()
+		elif (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_0:
+			_reset_all_filters()
+			if event.shift_pressed:
+				_set_sort_mode(0)
+				_reset_theme()
+			get_viewport().set_input_as_handled()
+		elif (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_T:
+			_step_theme(-1 if event.shift_pressed else 1)
+			get_viewport().set_input_as_handled()
+		elif (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_P:
+			_on_camera_snap_btn_pressed()
+			if event.shift_pressed and archive_state != null and not archive_state.items.is_empty():
+				_open_detail_modal(archive_state.items[0])
+			get_viewport().set_input_as_handled()
+		elif (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_M:
+			cycle_ambient_sound(-1 if event.shift_pressed else 1)
+			get_viewport().set_input_as_handled()
+		elif (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_U:
+			_on_stat_firsts_clicked()
+			if event.shift_pressed:
+				_open_first_filtered_card()
+			get_viewport().set_input_as_handled()
+		elif (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_J:
+			if event.shift_pressed:
+				_open_first_filtered_card()
+			else:
+				_open_last_filtered_card()
+			get_viewport().set_input_as_handled()
+		elif (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_O:
+			if event.shift_pressed:
+				pick_random_item(true)
+			else:
+				_open_first_filtered_card()
+			get_viewport().set_input_as_handled()
+		elif (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_Y:
+			if event.shift_pressed:
+				cycle_ambient_sound(-1)
+			else:
+				cycle_ambient_sound(-ambient_sound_index if ambient_sound_index != 0 else 1)
+			get_viewport().set_input_as_handled()
+		elif (event.ctrl_pressed or event.meta_pressed) and event.keycode in [KEY_1, KEY_2, KEY_3, KEY_4, KEY_5]:
+			match event.keycode:
+				KEY_1: _on_tab_all_pressed()
+				KEY_2: _on_tab_manga_pressed()
+				KEY_3: _on_tab_gacha_pressed()
+				KEY_4: _on_tab_complete_pressed()
+				KEY_5: _on_tab_fav_pressed()
+			if event.shift_pressed:
+				_open_first_filtered_card()
+			get_viewport().set_input_as_handled()
+		elif (event.ctrl_pressed or event.meta_pressed) and event.keycode in [KEY_6, KEY_7, KEY_8, KEY_9]:
+			_set_sort_mode(event.keycode - KEY_6)
+			if event.shift_pressed:
+				if event.keycode == KEY_6:
+					_set_sort_mode(0)
+				else:
+					_open_first_filtered_card()
+			get_viewport().set_input_as_handled()
+		elif (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_H:
+			_show_shortcut_cheatsheet()
+			if event.shift_pressed and status_toast != null:
+				DisplayServer.clipboard_set(status_toast.text)
+			get_viewport().set_input_as_handled()
+		elif (event.ctrl_pressed or event.meta_pressed) and event.keycode in [KEY_UP, KEY_DOWN]:
+			var dir_ud: int = -1 if event.keycode == KEY_UP else 1
+			if event.shift_pressed:
+				cycle_ambient_sound(dir_ud)
+			else:
+				_step_sort(dir_ud)
+			get_viewport().set_input_as_handled()
+		elif (event.ctrl_pressed or event.meta_pressed) and event.keycode in [KEY_PAGEUP, KEY_PAGEDOWN]:
+			_step_filter_tab(-1 if event.keycode == KEY_PAGEUP else 1)
+			if event.shift_pressed:
+				_open_first_filtered_card()
+			get_viewport().set_input_as_handled()
+		elif (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_SPACE:
+			if event.shift_pressed:
+				pick_random_item(true)
+			else:
+				_open_first_filtered_card()
+			get_viewport().set_input_as_handled()
+		elif (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_BACKSPACE:
+			_reset_all_filters()
+			if event.shift_pressed:
+				_set_sort_mode(0)
+				_reset_theme()
+			get_viewport().set_input_as_handled()
+		elif (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_SLASH:
+			if event.shift_pressed:
+				_show_shortcut_cheatsheet()
+			elif search_input != null:
+				search_input.grab_focus()
+				search_input.select_all()
+			get_viewport().set_input_as_handled()
+		elif (event.ctrl_pressed or event.meta_pressed) and (event.keycode == KEY_ENTER or event.keycode == KEY_KP_ENTER):
+			if event.shift_pressed:
+				_on_add_btn_pressed()
+			else:
+				_open_first_filtered_card()
+			get_viewport().set_input_as_handled()
+		elif (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_TAB:
+			_step_filter_tab(-1 if event.shift_pressed else 1)
+			get_viewport().set_input_as_handled()
+		elif (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_ESCAPE:
+			_reset_all_filters()
+			_set_sort_mode(0)
+			_reset_theme()
+			get_viewport().set_input_as_handled()
+		elif event.keycode == KEY_SLASH and event.shift_pressed and (search_input == null or not search_input.has_focus()):
+			_show_shortcut_cheatsheet()
+			get_viewport().set_input_as_handled()
+		elif is_find and search_input != null:
 			search_input.grab_focus()
 			search_input.select_all()
 			get_viewport().set_input_as_handled()
+		elif event.keycode == KEY_ESCAPE and (search_input == null or not search_input.has_focus()):
+			if event.shift_pressed or (search_input != null and search_input.text != ""):
+				_reset_all_filters()
+				get_viewport().set_input_as_handled()
+		elif event.keycode == KEY_TAB:
+			if search_input != null and search_input.has_focus():
+				search_input.release_focus()
+			else:
+				_step_filter_tab(-1 if event.shift_pressed else 1)
+			get_viewport().set_input_as_handled()
 		elif search_input == null or not search_input.has_focus():
 			match event.keycode:
+				KEY_SPACE:
+					if event.shift_pressed:
+						pick_random_item(true)
+					else:
+						_open_first_filtered_card()
+					get_viewport().set_input_as_handled()
 				KEY_0:
 					_reset_all_filters()
+					if event.shift_pressed:
+						_set_sort_mode(0)
+						_reset_theme()
 					get_viewport().set_input_as_handled()
 				KEY_1:
 					_on_tab_all_pressed()
+					if event.shift_pressed:
+						pick_random_item(true)
 					get_viewport().set_input_as_handled()
 				KEY_2:
 					_on_tab_manga_pressed()
+					if event.shift_pressed:
+						_open_first_filtered_card()
 					get_viewport().set_input_as_handled()
 				KEY_3:
 					_on_tab_gacha_pressed()
+					if event.shift_pressed:
+						_open_first_filtered_card()
 					get_viewport().set_input_as_handled()
 				KEY_4:
 					_on_tab_complete_pressed()
+					if event.shift_pressed:
+						_open_first_filtered_card()
 					get_viewport().set_input_as_handled()
 				KEY_5:
 					_on_tab_fav_pressed()
+					if event.shift_pressed:
+						_open_first_filtered_card()
+					get_viewport().set_input_as_handled()
+				KEY_6, KEY_7, KEY_8, KEY_9:
+					_set_sort_mode(event.keycode - KEY_6)
+					if event.shift_pressed:
+						if event.keycode == KEY_6:
+							_reset_all_filters()
+						else:
+							_open_first_filtered_card()
 					get_viewport().set_input_as_handled()
 				KEY_S:
 					_step_sort(-1 if event.shift_pressed else 1)
@@ -1002,6 +1244,10 @@ func _unhandled_input(event: InputEvent) -> void:
 					get_viewport().set_input_as_handled()
 				KEY_N:
 					_on_add_btn_pressed()
+					if event.shift_pressed and add_modal != null:
+						add_modal.title_input.text = "나의 비밀 독서 일기"
+						add_modal.author_input.text = "주희의 서재"
+						add_modal.quote_input.text = "오늘도 한 페이지의 여운을 남겼다."
 					get_viewport().set_input_as_handled()
 				KEY_T:
 					_step_theme(-1 if event.shift_pressed else 1)
@@ -1013,20 +1259,183 @@ func _unhandled_input(event: InputEvent) -> void:
 					_step_today_quote(-1 if event.shift_pressed else 1)
 					get_viewport().set_input_as_handled()
 				KEY_I:
-					show_library_infographic()
+					if event.shift_pressed:
+						_trigger_instant_json_backup()
+					else:
+						show_library_infographic()
 					get_viewport().set_input_as_handled()
 				KEY_C:
-					copy_summary_to_clipboard()
+					if event.shift_pressed and today_quote_label != null:
+						DisplayServer.clipboard_set(today_quote_label.text)
+						_show_toast("📋 오늘의 밑줄 복사 완료: " + today_quote_label.text)
+					else:
+						copy_summary_to_clipboard()
+					get_viewport().set_input_as_handled()
+				KEY_W:
+					_on_web_scrape_btn_pressed()
+					if event.shift_pressed and archive_state != null and not archive_state.items.is_empty():
+						_open_detail_modal(archive_state.items[0])
+					get_viewport().set_input_as_handled()
+				KEY_P:
+					_on_camera_snap_btn_pressed()
+					if event.shift_pressed and archive_state != null and not archive_state.items.is_empty():
+						_open_detail_modal(archive_state.items[0])
+					get_viewport().set_input_as_handled()
+				KEY_V:
+					_set_sort_mode(0 if (event.shift_pressed or sort_mode == 3) else 3)
+					get_viewport().set_input_as_handled()
+				KEY_L:
+					if event.shift_pressed:
+						var quotes_l = _collect_all_quotes()
+						if not quotes_l.is_empty():
+							var q_entry = quotes_l[quote_cursor % quotes_l.size()]
+							var q_it = q_entry.get("item", null)
+							if q_it != null and search_input != null:
+								search_input.text = q_it.title
+								_render_cards()
+								_show_toast("🔍 오늘의 밑줄 작품 필터: " + q_it.title)
+					else:
+						open_current_quote_item()
+					get_viewport().set_input_as_handled()
+				KEY_B:
+					if event.shift_pressed:
+						copy_summary_to_clipboard()
+					else:
+						_trigger_instant_json_backup()
+					get_viewport().set_input_as_handled()
+				KEY_F:
+					_on_tab_fav_pressed()
+					if event.shift_pressed:
+						_open_first_filtered_card()
+					get_viewport().set_input_as_handled()
+				KEY_E:
+					_on_tab_manga_pressed()
+					if event.shift_pressed:
+						_open_first_filtered_card()
+					get_viewport().set_input_as_handled()
+				KEY_G:
+					_on_tab_gacha_pressed()
+					if event.shift_pressed:
+						_open_first_filtered_card()
+					get_viewport().set_input_as_handled()
+				KEY_D:
+					_on_tab_complete_pressed()
+					if event.shift_pressed:
+						_open_first_filtered_card()
+					get_viewport().set_input_as_handled()
+				KEY_A:
+					_on_tab_all_pressed()
+					if event.shift_pressed:
+						_open_first_filtered_card()
+					get_viewport().set_input_as_handled()
+				KEY_U:
+					_on_stat_firsts_clicked()
+					if event.shift_pressed:
+						_open_first_filtered_card()
+					get_viewport().set_input_as_handled()
+				KEY_O:
+					if event.shift_pressed:
+						pick_random_item(true)
+					else:
+						_open_first_filtered_card()
+					get_viewport().set_input_as_handled()
+				KEY_X:
+					_reset_all_filters()
+					if event.shift_pressed:
+						_set_sort_mode(0)
+						_reset_theme()
+					get_viewport().set_input_as_handled()
+				KEY_K:
+					_set_sort_mode(0 if (event.shift_pressed or sort_mode == 1) else 1)
+					get_viewport().set_input_as_handled()
+				KEY_Z:
+					_set_sort_mode(0 if (event.shift_pressed or sort_mode == 2) else 2)
+					get_viewport().set_input_as_handled()
+				KEY_J:
+					if event.shift_pressed:
+						_open_first_filtered_card()
+					else:
+						_open_last_filtered_card()
+					get_viewport().set_input_as_handled()
+				KEY_Y:
+					if event.shift_pressed:
+						cycle_ambient_sound(-1)
+					else:
+						cycle_ambient_sound(-ambient_sound_index if ambient_sound_index != 0 else 1)
+					get_viewport().set_input_as_handled()
+				KEY_LEFT:
+					if event.shift_pressed:
+						_step_theme(-1)
+					else:
+						_step_today_quote(-1)
+					get_viewport().set_input_as_handled()
+				KEY_RIGHT:
+					if event.shift_pressed:
+						_step_theme(1)
+					else:
+						_step_today_quote(1)
+					get_viewport().set_input_as_handled()
+				KEY_HOME:
+					if event.shift_pressed:
+						_reset_all_filters()
+					_open_first_filtered_card()
+					get_viewport().set_input_as_handled()
+				KEY_END:
+					if event.shift_pressed:
+						_reset_all_filters()
+					_open_last_filtered_card()
+					get_viewport().set_input_as_handled()
+				KEY_UP:
+					if event.shift_pressed:
+						cycle_ambient_sound(-1)
+					else:
+						_step_sort(-1)
+					get_viewport().set_input_as_handled()
+				KEY_DOWN:
+					if event.shift_pressed:
+						cycle_ambient_sound(1)
+					else:
+						_step_sort(1)
+					get_viewport().set_input_as_handled()
+				KEY_PAGEUP:
+					_step_filter_tab(-1)
+					if event.shift_pressed:
+						_open_first_filtered_card()
+					get_viewport().set_input_as_handled()
+				KEY_PAGEDOWN:
+					_step_filter_tab(1)
+					if event.shift_pressed:
+						_open_first_filtered_card()
+					get_viewport().set_input_as_handled()
+				KEY_ENTER, KEY_KP_ENTER:
+					if event.shift_pressed:
+						_on_add_btn_pressed()
+					else:
+						_open_first_filtered_card()
+					get_viewport().set_input_as_handled()
+				KEY_BACKSPACE:
+					_reset_all_filters()
+					if event.shift_pressed:
+						_set_sort_mode(0)
+						_reset_theme()
 					get_viewport().set_input_as_handled()
 				KEY_H:
 					_show_shortcut_cheatsheet()
+					if event.shift_pressed and status_toast != null:
+						DisplayServer.clipboard_set(status_toast.text)
 					get_viewport().set_input_as_handled()
 
 func _show_shortcut_cheatsheet() -> void:
-	_show_toast("⌨️ 단축키: [0] 초기화 · [1~5] 탭 · [/] 검색 · [Space] 책장 · [S/T/M/Q] 순환(Shift+역순) · [R] 추천(Shift+미리보기) · [N] 새 일기 · [I] 요약 · [C] 복사 · [우클릭] 역순환·백업")
+	_show_toast("⌨️ 단축키: [0] 초기화 · [1~5] 탭 · [/] 검색 · [Space] 책장 · [←/→] 문장·테마 · [Home/End] 처음·끝 · [↑/↓] 정렬·사운드 · [PgUp/Dn] 탭순환 · [Enter] 열기 · [Bksp] 초기화 · [6~9] 정렬 · [W/P] 스크랩·촬영 · [V] 가치순 · [L] 오늘밑줄 · [F] 인생작 · [B] 백업 · [E/G/D] 분류 · [A/U] 전체·초판 · [O/X] 열기·초기화 · [K/Z] 다독·최신순 · [J/Y] 끝열기·음소거 · [S/T/M/Q] 순환(Shift+역순) · [R] 추천 · [N] 새 일기 · [I] 요약 · [C] 복사 · [우클릭] 역순환·백업")
 
 func _on_modal_help_requested() -> void:
-	_show_toast("⌨️ 모달 단축키: [←/→] 넘김 · [Home/End] 처음·끝 · [1~4] 인장 · [+/-] 권 · [X] 아이콘 · [Q] 표지색 · [Y] 회독 · [Z] 상태 · [I] 잉크 · [N] 펜촉 · [W] 마테 · [S] 스티커 · [R] 레어도 · [P] 속지 · [O] 띠지 · [M] 기분 · [G] 등급 · [T] 태그 · [F] 마감 · [A] 경로 · [B] 보관 · [D] 복수 · [K] 최애캐 · [U] 날씨 · [J] 장소 · [V] 가치 · [Shift+순환키] 역순환 · [E] 문장 · [L] 형광펜 · [C] 복사(Shift+C: 리포트) · [Del] 삭제 · [ESC] 닫기")
+	_show_toast("⌨️ 모달 단축키: [←/→] 넘김 · [↑/↓] 이동 · [Home/End] 처음·끝 · [1~4] 인장 · [5~8] 잉크 · [9] 형광펜 · [0] 원문복원 · [+/-] 권 · [X] 아이콘 · [Q] 표지색 · [Y] 회독 · [Z] 상태 · [I] 잉크 · [N] 펜촉 · [W] 마테 · [S] 스티커 · [R] 레어도 · [P] 속지 · [O] 띠지 · [M] 기분 · [G] 등급 · [T] 태그 · [F] 마감 · [A] 경로 · [B] 보관 · [D] 복수 · [K] 최애캐 · [U] 날씨 · [J] 장소 · [V] 가치 · [Shift+순환키] 역순환 · [E] 문장 · [Enter] 편집 · [L] 형광펜 · [C] 복사(Shift+C: 리포트) · [Del] 삭제 · [ESC] 닫기 · [Bksp] 닫기")
+
+func _on_add_modal_help_requested(copy_to_clipboard: bool = false) -> void:
+	var msg := "⌨️ 새 일기 단축키: [1~6/←→/Space] 컬러 · [7/8] 분류 · [9] 샘플 · [Home/End] 첫·끝 · [R] 랜덤 · [C/E/G] 분류 · [T/A/Q] 칸이동 · [F] 샘플 · [S/Enter] 등록 · [0/Bksp/X] 초기화 · [ESC] 닫기"
+	_show_toast(msg)
+	if copy_to_clipboard:
+		DisplayServer.clipboard_set(msg)
 
 func _on_modal_navigate_requested(delta: int) -> void:
 	if archive_state == null or archive_state.items.is_empty():

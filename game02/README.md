@@ -5,7 +5,7 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 
 ---
 
-## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 164)
+## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 221)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
@@ -14,6 +14,215 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 ---
 
 ## 🚀 최신 스프린트 업데이트 요약 ([전체 회의록 보기](SPRINT_LOG.md))
+
+### 📓 [Sprint 221] 검색창 실시간 필터링 작품 수 표시 (`전체 N종` / `K/N종 표시`)
+- **실시간 검색창 건수 안내**: `_render_cards()`가 호출될 때마다 `search_input` 플레이스홀더에 전체 종수(`전체 6종`) 또는 필터링된 건수(`4/6종 표시`)를 실시간으로 반영합니다.
+- **웹 목업 동기화**: `index.html`의 `renderShelf()`에서도 `#search-box` 플레이스홀더를 동일하게 동기화했습니다.
+
+### 📓 [Sprint 220 Milestone] 3대 뷰 전역 `Ctrl/Cmd+Tab` 전환 · `Ctrl/Cmd+ESC` 즉시 초기화·닫기
+- **전역 `Ctrl/Cmd+Tab` & `Ctrl/Cmd+ESC`**: 입력창 포커스 중에도 `Ctrl/Cmd+Tab`으로 탭·작품·스와치를 전환하고, `Ctrl/Cmd+ESC`로 스튜디오 리셋(`MainView`)·즉시 닫기(`DetailModal`)·비우고 닫기(`AddModal`)를 실행해 전역 `Ctrl/Cmd` 단축키 마일스톤을 완성했습니다.
+- **웹 목업 동기화**: `index.html` 웹 목업에도 `Ctrl/Cmd+Tab` 및 `Ctrl/Cmd+ESC` 단축키를 동기화했습니다.
+
+### 📓 [Sprint 219] 3대 뷰 전역 `Ctrl/Cmd+/` 포커스·도움말 · `Ctrl/Cmd+Enter` 열기·저장·등록
+- **전역 `Ctrl/Cmd+/` & `Ctrl/Cmd+Enter`**: 어느 화면에서나 `Ctrl/Cmd+/`로 입력칸 포커스(`Shift`: 치트시트)를 잡고, `Ctrl/Cmd+Enter`로 작품 열기(`MainView`)·밑줄 저장(`DetailModal`)·일기 등록(`AddModal`)을 즉시 실행합니다.
+- **웹 목업 동기화**: `index.html` 웹 목업에도 `Ctrl/Cmd+/` 및 `Ctrl/Cmd+Enter` 단축키를 동기화했습니다.
+
+### 📓 [Sprint 218] 3대 뷰 전역 `Ctrl/Cmd+Space` 열기·넘김·스와치 · `Ctrl/Cmd+Backspace` 초기화·닫기·비우기
+- **전역 `Ctrl/Cmd+Space` & `Ctrl/Cmd+Backspace`**: 입력창 포커스 중에도 `Ctrl/Cmd+Space`로 작품 열기(`MainView`)·작품 넘김(`DetailModal`)·스와치 순환(`AddModal`)을 실행하고, `Ctrl/Cmd+Backspace`로 필터 초기화(`MainView`)·모달 닫기(`DetailModal`)·입력 비우기(`AddModal`)를 실행합니다.
+- **웹 목업 동기화**: `index.html` 웹 목업에도 `Ctrl/Cmd+Space` 및 `Ctrl/Cmd+Backspace` 단축키를 동기화했습니다.
+
+### 📓 [Sprint 217] 3대 뷰 전역 `Ctrl/Cmd+↑/↓` & `Ctrl/Cmd+PgUp/PgDn` 정렬·탭·작품넘김·스와치 순환
+- **전역 `Ctrl/Cmd+↑/↓/PgUp/PgDn`**: 입력창 포커스 중에도 `Ctrl/Cmd+↑/↓` 및 `Ctrl/Cmd+PgUp/PgDn`으로 정렬·필터 탭 순환(`MainView`)·작품 넘김(`DetailModal`)·입력칸 포커스 이동 및 스와치 순환(`AddModal`)을 실행합니다.
+- **웹 목업 동기화**: `index.html` 웹 목업에도 `Ctrl/Cmd+↑/↓/PgUp/PgDn` 단축키를 동기화했습니다.
+
+### 📓 [Sprint 216] 3대 뷰 전역 `Ctrl/Cmd+6~9` 정렬·잉크·형광펜·스와치·샘플 완전 통일
+- **전역 `Ctrl/Cmd+6~9`**: 입력창 포커스 중에도 `Ctrl/Cmd+6~9`로 4종 정렬(`MainView`)·만년필 잉크 6~8 및 형광펜 9(`DetailModal`)·6번 바이올렛/분류 7~8/샘플 9(`AddModal`)까지 전역 숫자 단축키 `0~9`를 완성했습니다.
+- **웹 목업 동기화**: `index.html` 웹 목업에도 `Ctrl/Cmd+6~9` 단축키를 동기화했습니다.
+
+### 📓 [Sprint 215 Milestone] 3대 뷰 전역 `Ctrl/Cmd+1~5` 탭·인장·잉크·스와치 · `Ctrl/Cmd+H` 치트시트
+- **전역 `Ctrl/Cmd+1~5` & `Ctrl/Cmd+H`**: 입력창 포커스 중에도 `Ctrl/Cmd+1~5`로 서재 탭(`MainView`)·인장/잉크(`DetailModal`)·컬러스와치(`AddModal`)를 전환하고, `Ctrl/Cmd+H`로 단축키 치트시트를 즉시 호출합니다.
+- **웹 목업 동기화**: `index.html` 웹 목업에도 `Ctrl/Cmd+1~5` 및 `Ctrl/Cmd+H` 단축키를 동기화했습니다.
+
+### 📓 [Sprint 214] 3대 뷰 전역 `Ctrl/Cmd+O` 작품열기·띠지·일기등록 · `Ctrl/Cmd+Y` 음소거·회독·샘플채움
+- **전역 `Ctrl/Cmd+O` & `Ctrl/Cmd+Y`**: 입력창 포커스 중에도 `Ctrl/Cmd+O`로 작품 열기(`MainView`)·띠지 프리셋(`DetailModal`)·일기 등록(`AddModal`)을 실행하고, `Ctrl/Cmd+Y`로 음소거 토글(`MainView`)·회독 증감(`DetailModal`)·샘플 채움(`AddModal`)을 조작합니다.
+- **웹 목업 동기화**: `index.html` 웹 목업에도 `Ctrl/Cmd+O` 및 `Ctrl/Cmd+Y` 단축키를 동기화했습니다.
+
+### 📓 [Sprint 213] 3대 뷰 전역 `Ctrl/Cmd+U` 초판필터·날씨·작가포커스 · `Ctrl/Cmd+J` 마지막점프·장소·분류전환
+- **전역 `Ctrl/Cmd+U` & `Ctrl/Cmd+J`**: 입력창 포커스 중에도 `Ctrl/Cmd+U`로 초판 필터(`MainView`)·독서 날씨(`DetailModal`)·작가 포커스(`AddModal`)를 실행하고, `Ctrl/Cmd+J`로 마지막 작품 점프(`MainView`)·독서 장소(`DetailModal`)·분류 토글(`AddModal`)을 전환합니다.
+- **웹 목업 동기화**: `index.html` 웹 목업에도 `Ctrl/Cmd+U` 및 `Ctrl/Cmd+J` 단축키를 동기화했습니다.
+
+### 📓 [Sprint 212] 3대 뷰 전역 `Ctrl/Cmd+P` 촬영·속지패턴·컬러스와치 · `Ctrl/Cmd+M` 사운드·독서무드·감상포커스
+- **전역 `Ctrl/Cmd+P` & `Ctrl/Cmd+M`**: 입력창 포커스 중에도 `Ctrl/Cmd+P`로 폴라로이드 촬영(`MainView`)·속지 패턴(`DetailModal`)·표지 컬러스와치(`AddModal`)를 전환하고, `Ctrl/Cmd+M`으로 앰비언트 사운드(`MainView`)·독서 무드(`DetailModal`)·감상 입력 포커스(`AddModal`)를 실행합니다.
+- **웹 목업 동기화**: `index.html` 웹 목업에도 `Ctrl/Cmd+P` 및 `Ctrl/Cmd+M` 단축키를 동기화했습니다.
+
+### 📓 [Sprint 211] 3대 뷰 전역 `Ctrl/Cmd+0` 초기화·복원 · `Ctrl/Cmd+T` 테마·태그·제목포커스
+- **전역 `Ctrl/Cmd+0` & `Ctrl/Cmd+T`**: 입력창 포커스 중에도 `Ctrl/Cmd+0`으로 필터 초기화(`MainView`)·원문 복원(`DetailModal`)·모달 리셋(`AddModal`)을 실행하고, `Ctrl/Cmd+T`로 속지 테마(`MainView`)·스마트 태그(`DetailModal`)·제목 포커스(`AddModal`)를 전환합니다.
+- **웹 목업 동기화**: `index.html` 웹 목업에도 `Ctrl/Cmd+0` 및 `Ctrl/Cmd+T` 단축키를 동기화했습니다.
+
+### 📓 [Sprint 210 Milestone] 3대 뷰 전역 `Ctrl/Cmd+E` 이북·편집·분류 · `Ctrl/Cmd+W` 모달 닫기·스크랩
+- **전역 `Ctrl/Cmd+E` & `Ctrl/Cmd+W`**: 입력창 포커스 중에도 `Ctrl/Cmd+E`로 이북·단행본 필터(`MainView`)·밑줄 편집 포커스(`DetailModal`)·이북 분류 선택(`AddModal`)을 실행하고, `Ctrl/Cmd+W`로 열린 모달을 즉시 닫거나(`DetailModal`/`AddModal`) 웹 표지 스크랩(`MainView`)을 실행합니다.
+- **웹 목업 동기화**: `index.html` 웹 목업에도 `Ctrl/Cmd+E` 및 `Ctrl/Cmd+W` 단축키를 동기화했습니다.
+
+### 📓 [Sprint 209] 3대 뷰 전역 `Ctrl/Cmd+I` 인포그래픽·잉크·샘플 · `Ctrl/Cmd+G` 가챠·등급·분류
+- **전역 `Ctrl/Cmd+I` & `Ctrl/Cmd+G`**: 입력창 포커스 중에도 `Ctrl/Cmd+I`로 인포그래픽 브리핑(`MainView`)·만년필 잉크 순환(`DetailModal`)·샘플 채움(`AddModal`)을 실행하고, `Ctrl/Cmd+G`로 가챠노트 필터(`MainView`)·상태 등급 순환(`DetailModal`)·가챠 분류 선택(`AddModal`)을 실행합니다.
+- **웹 목업 동기화**: `index.html` 웹 목업에도 `Ctrl/Cmd+I` 및 `Ctrl/Cmd+G` 단축키를 동기화했습니다.
+
+### 📓 [Sprint 208] 3대 뷰 전역 `Ctrl/Cmd+L` 오늘밑줄·형광펜·초기화 · `Ctrl/Cmd+D` 완독·복수소장
+- **전역 `Ctrl/Cmd+L` & `Ctrl/Cmd+D`**: 입력창 포커스 중에도 `Ctrl/Cmd+L`로 오늘의 밑줄 열기(`MainView`)·형광펜 토글(`DetailModal`)·입력 비우기(`AddModal`)를 실행하고, `Ctrl/Cmd+D`로 완독작 필터(`MainView`)·복수 소장 증감(`DetailModal`)을 실행합니다.
+- **웹 목업 동기화**: `index.html` 웹 목업에도 `Ctrl/Cmd+L` 및 `Ctrl/Cmd+D` 단축키를 동기화했습니다.
+
+### 📓 [Sprint 207] 3대 뷰 전역 `Ctrl/Cmd+R` 랜덤·회독·컬러 · `Ctrl/Cmd+B` 백업·리포트
+- **전역 `Ctrl/Cmd+R` & `Ctrl/Cmd+B`**: 입력창 포커스 중에도 `Ctrl/Cmd+R`로 랜덤 작품 오픈(`MainView`)·회독 수 증가(`DetailModal`)·랜덤 표지 컬러(`AddModal`)를 실행하고, `Ctrl/Cmd+B`로 즉시 JSON 백업(`Shift`: 서재 리포트 복사)을 실행합니다.
+- **웹 목업 동기화**: `index.html` 웹 목업에도 `Ctrl/Cmd+R` 및 `Ctrl/Cmd+B` 단축키를 동기화했습니다.
+
+### 📓 [Sprint 206] 3대 뷰 전역 `F1` 단축키 치트시트(Shift: 복사) · `Ctrl/Cmd+K` 검색창 포커스
+- **전역 `F1` 도움말 & `Ctrl/Cmd+K` 검색**: 입력창 포커스 여부와 관계없이 `F1` 키로 현재 화면(`MainView`·`DetailModal`·`AddModal`)의 단축키 치트시트를 즉시 확인(`Shift+F1`: 복사)하고, `Ctrl/Cmd+K`로 검색창에 바로 진입합니다.
+- **웹 목업 동기화**: `index.html` 웹 목업에도 `F1` 3대 뷰 치트시트와 `Ctrl/Cmd+K` 검색창 포커스를 동기화했습니다.
+
+### 📓 [Sprint 205 Milestone] 3대 뷰 전역 `Ctrl/Cmd+S` 저장·백업 · `Ctrl/Cmd+N` 새 일기
+- **전역 `Ctrl/Cmd+S` & `Ctrl/Cmd+N`**: 입력창 포커스 중에도 `Ctrl/Cmd+S`로 즉시 저장·백업(`MainView`: JSON 백업, `DetailModal`: 밑줄 저장, `AddModal`: 일기 등록)하고, `Ctrl/Cmd+N`으로 새 일기 쓰기 모달을 바로 엽니다(`Shift`: 샘플 채움).
+- **웹 목업 동기화**: `index.html` 웹 목업에도 `Ctrl/Cmd+S`와 `Ctrl/Cmd+N` 전역 단축키를 동기화했습니다.
+
+### 📓 [Sprint 204] `DetailModal` & `AddModal` `/` 키 즉시 입력칸 포커스 — 3대 뷰 `/` 일관성 완성
+- **3대 뷰 `/` 즉시 포커스 통일**: `MainView` 검색창(`/`), `DetailModal` 한줄 밑줄 편집창(`/`), `AddModal` 제목 입력창(`/`) 모두 `/` 키 한 번으로 즉시 입력 포커스 및 전체 선택을 수행합니다.
+- **웹 목업 동기화**: `index.html` 웹 목업에도 `DetailModal` `/` 밑줄 입력칸 포커스를 동기화했습니다.
+
+### 📓 [Sprint 203] `DetailModal` `Tab`/`Shift+Tab` 이전·다음 작품 넘김 · 입력창 포커스 해제
+- **`DetailModal` `Tab`/`Shift+Tab` 내비게이션**: 일기장 상세 모달에서 한줄 밑줄 편집 중 `Tab` 시 즉시 포커스를 해제해 단축키 모드로 복귀하고, 비포커스 상태에서 `Tab`/`Shift+Tab`으로 다음·이전 작품 일기장을 부드럽게 넘깁니다.
+- **웹 목업 동기화**: `index.html` 웹 목업에도 `DetailModal` `Tab`/`Shift+Tab` 카드 넘김을 동기화했습니다.
+
+### 📓 [Sprint 202] `MainView` & `AddModal` `Tab`/`Shift+Tab` 필터 탭 순환 · 입력칸 포커스 이동
+- **`Tab`/`Shift+Tab` 내비게이션**: `MainView` 검색창 포커스 중 `Tab` 시 즉시 포커스를 해제해 단축키 모드로 복귀하고, 비포커스 시 `Tab`/`Shift+Tab`으로 5대 필터 탭을 순환합니다. `AddModal`에서도 제목·작가·한줄 밑줄 입력칸을 `Tab`/`Shift+Tab`으로 부드럽게 이동합니다.
+- **웹 목업 동기화**: `index.html` 웹 목업에도 `MainView` `Tab`/`Shift+Tab` 필터 탭 순환을 동기화했습니다.
+
+### 📓 [Sprint 201] `AddModal` 숫자키 `6` 바이올렛 컬러 · `7/8` 분류 · `9` 샘플 채움 (`0~9` 완성)
+- **`AddModal` `0~9` 숫자키 완성**: `1~6`(표지 스와치 6종), `7/8`(이북·만화/가챠·굿즈 분류), `9`(샘플 자동 채움 / `Shift+9`: 즉시 등록), `0`(초기화)으로 3대 뷰 모두 `0~9` 숫자키를 100% 완성하고 `H` 치트시트와 `index.html` 웹 목업을 동기화했습니다.
+
+### 📓 [Sprint 200 Milestone] `DetailModal` 숫자키 `9` 형광펜 토글(Shift: 복사+닫기) · 모달 `0~9` 완성
+- **`DetailModal` `0~9` 숫자키 & 치트시트 100% 완성**: `1~4`(도장 인장), `5~8`(만년필 잉크 4종), `9`(형광펜 하이라이트 토글 / `Shift+9`: 복사+닫기), `0`(문장 원문 복원)으로 모달 숫자키를 100% 완성하고 `H` 모달 단축키 치트시트를 동기화했습니다.
+- **웹 목업 동기화**: `index.html` 웹 목업에도 `DetailModal` `9` 및 `Shift+9` 형광펜 토글 단축키를 동기화했습니다.
+
+### 📓 [Sprint 199] 메인 숫자키 `6~9` 4대 정렬 모드 즉시 전환(Shift: 첫 작품 열기) — 숫자 `0~9` 완전 매핑
+- **메인 숫자키 `6~9` 정렬 직접 선택**: `6`(기본순), `7`(다독순), `8`(최신순), `9`(가치순) 숫자키로 정렬 모드를 원탭 전환(`Shift+6`: 필터 초기화, `Shift+7~9`: 정렬 후 첫 작품 모달 열기)하여 숫자키 `0~9`를 100% 완성했습니다.
+- **치트시트 동기화 & 웹 목업**: `H` 단축키 치트시트에 `[6~9] 정렬` 안내를 반영하고 `index.html` 웹 목업과도 동기화했습니다.
+
+### 📓 [Sprint 198] `DetailModal` 숫자키 `5~8` 만년필 잉크 4종 즉시 선택(Shift: 적용+닫기)
+- **`DetailModal` `5~8` 만년필 잉크 직접 선택**: 일기장 상세 모달에서 `5`(에스프레소), `6`(버건디), `7`(세피아), `8`(포레스트) 숫자키로 만년필 잉크 컬러를 즉시 변경하고 `Shift+5~8`로 적용 후 바로 모달을 닫습니다.
+- **웹 목업 동기화**: `index.html` 웹 목업에도 `DetailModal` `5~8` 잉크 단축키를 동기화했습니다.
+
+### 📓 [Sprint 197] `DetailModal` 키보드 `↑/↓` 카드 넘김(Shift: 처음·끝) · `0` 문장 원문 복원
+- **`DetailModal` `↑/↓` & `0` 단축키**: 일기장 상세 모달에서 `↑/↓` 방향키로 이전/다음 작품을 넘기고(`Shift`: 처음·끝 작품 점프), `0` 키로 한줄 밑줄 입력창을 저장된 원문으로 복원 및 삭제 무장 해제(`Shift+0`: 모달 닫기)를 지원합니다.
+- **웹 목업 동기화**: `index.html` 웹 목업에도 `DetailModal` `ArrowUp`/`ArrowDown`/`0` 단축키를 동기화했습니다.
+
+### 📓 [Sprint 196] `DetailModal` 키보드 `Enter` 문장 편집(Shift: 형광펜) · `Backspace` 닫기(Shift: 복사+닫기)
+- **`DetailModal` `Enter` & `Backspace` 단축키**: 일기장 상세 모달에서 `Enter`로 한줄 밑줄 편집창에 즉시 포커스(`Shift+Enter`: 형광펜 하이라이트 토글)하고, `Backspace`로 모달 닫기(`Shift+Backspace`: 독서 카드 복사 후 닫기)를 지원합니다.
+- **웹 목업 동기화**: `index.html` 웹 목업에도 `DetailModal` `Enter`/`Backspace` 단축키를 동기화했습니다.
+
+### 📓 [Sprint 195 Milestone] `AddModal` `H/?` 단축키 치트시트(Shift: 복사) · 단독 `Enter` 등록 제출
+- **`AddModal` 치트시트 & 단독 `Enter` 등록**: 새 일기 모달에서도 `H` 또는 `?` 키로 전용 단축키 치트시트 토스트를 띄우고(`Shift+H`: 클립보드 복사), 입력칸 포커스 해제 상태에서 단독 `Enter` 키만으로 일기를 즉시 등록합니다.
+- **웹 목업 동기화**: `index.html` 웹 목업에도 `AddModal` `H`/`?`/`Enter` 단축키 피드백을 동기화했습니다.
+
+### 📓 [Sprint 194] `AddModal` 키보드 `0` 기본값 리셋 · `Home/End` 첫·끝 컬러 점프 · `Backspace` 초기화
+- **`AddModal` 리셋 & 스와치 점프**: 입력창 포커스 해제 상태에서 `0`으로 입력·카테고리·표지 컬러를 기본값으로 초기화(`Shift+0`: 리셋 후 닫기), `Home`/`End`로 첫/마지막 표지 스와치 점프, `Backspace`로 입력란 비우기(`Shift+Backspace`: 비우고 닫기)를 지원합니다.
+- **웹 목업 동기화**: `index.html` 웹 목업에도 `AddModal` `0`/`Home`/`End`/`Backspace` 단축키 피드백을 동기화했습니다.
+
+### 📓 [Sprint 193] `AddModal` 키보드 `A/Q` 작가·밑줄 포커스 · `Space` 컬러 순환 · `R` 랜덤 표지 컬러
+- **`AddModal` 입력 포커스 & 컬러 팔레트**: 입력창 포커스 해제 상태에서 `A`(작가/브랜드) · `Q`(한줄 밑줄) 입력칸으로 즉시 포커스를 이동(`Shift`: 비우고 포커스)하고, `Space`로 표지 컬러 순환(`Shift+Space`: 역순), `R`로 랜덤 표지 컬러 선택(`Shift+R`: 샘플 폴백 등록)을 지원합니다.
+- **웹 목업 동기화**: `index.html` 웹 목업에도 `AddModal` `A`/`Q`/`Space`/`R` 단축키 피드백을 동기화했습니다.
+
+### 📓 [Sprint 192] `AddModal` 키보드 `E/G` 카테고리 직접 선택 · `T` 제목 포커스 · `S` 등록 제출
+- **`AddModal` 원키 등록 & 카테고리**: 입력창 포커스 해제 상태에서 `E`(이북·만화) / `G`(가챠·굿즈)로 카테고리를 즉시 선택하고(`Shift`: 샘플 폴백 등록), `T`로 제목 입력칸 포커스 이동, `S`로 일기 등록(`Shift+S`: 샘플 폴백 즉시 등록)을 지원합니다.
+- **웹 목업 동기화**: `index.html` 웹 목업에도 `AddModal` `S`/`E`/`G`/`T` 단축키 피드백을 동기화했습니다.
+
+### 📓 [Sprint 191] `AddModal` 키보드 `F` 샘플 채움 · `X` 입력 초기화(Shift: 닫기) · `←/→` 표지 컬러 순환
+- **`AddModal` 파워 키보드 워크플로우**: 새 일기 쓰기 모달에서 입력창 포커스 해제 시 `←/→`로 표지 스와치 컬러를 순환하고, `F`로 샘플 일기 자동 채움(`Shift+F`: 즉시 등록), `X`로 입력란 비우기(`Shift+X`: 비우고 닫기)를 지원합니다.
+- **웹 목업 동기화**: `index.html` 웹 목업에도 `AddModal` `F`/`X`/`←`/`→` 단축키 피드백을 동일하게 반영했습니다.
+
+### 📓 [Sprint 190 Milestone] 메인 키보드 `Enter` 열기(Shift: 새 일기 모달) · `Backspace` 초기화(Shift: 스튜디오 리셋)
+- **메인 키보드 `Enter` & `Backspace` 파워 액션**: 검색창 포커스 해제 상태에서 `Enter`로 첫 필터 작품을 즉시 열고(`Shift+Enter`: `+ 일기 쓰기` 모달 열기), `Backspace`로 검색/필터를 일괄 초기화(`Shift+Backspace`: 정렬·테마까지 스튜디오 리셋)합니다.
+- **치트시트 동기화 & 웹 목업**: `H` 단축키 치트시트에 `[Enter] 열기 · [Bksp] 초기화` 안내를 반영하고 `index.html` 웹 목업과도 100% 동기화했습니다.
+
+### 📓 [Sprint 189] 메인 키보드 `↑/↓` 정렬·사운드 순환 · `PageUp/PageDown` 필터 탭 순환
+- **메인 키보드 `↑/↓` & `PageUp/PageDown` 내비게이션**: `↑/↓`로 정렬 기준을 순환하고(`Shift+↑/↓`: 앰비언트 사운드 변경), `PageUp`/`PageDown` 키로 5개 필터 탭(`전체·이북·가챠·완독·인생작`)을 순서대로 탐색합니다(`Shift`: 첫 작품 바로 열기).
+- **치트시트 동기화 & 웹 목업**: `H` 단축키 치트시트에 `[↑/↓] 정렬·사운드 · [PgUp/Dn] 탭순환` 안내를 반영하고 `index.html` 웹 목업과도 동기화했습니다.
+
+### 📓 [Sprint 188] 메인 키보드 `←/→` 문장·테마 탐색 · `Home/End` 처음·끝 작품 열기
+- **메인 키보드 `←/→` & `Home/End` 내비게이션**: `←/→`로 오늘의 밑줄을 앞뒤로 넘기고(`Shift+←/→`: 속지 테마 변경), `Home`/`End` 키로 필터링된 첫 작품·마지막 작품을 바로 모달로 엽니다(`Shift`: 필터 초기화 후 열기).
+- **치트시트 동기화 & 웹 목업**: `H` 단축키 치트시트에 `[←/→] 문장·테마 · [Home/End] 처음·끝` 안내를 반영하고 `index.html` 웹 목업과도 동기화했습니다.
+
+### 📓 [Sprint 187] 메인 키보드 `J` 마지막 작품 열기 · `Y` 앰비언트 음소거 토글 (A~Z 26/26 완성)
+- **메인 키보드 `J/Y` 끝열기 & 음소거 토글**: `J`로 현재 필터의 마지막 작품을 즉시 열고(`Shift+J`: 첫 작품), `Y`로 앰비언트 사운드 음소거(`🔇 무음`)↔재생(`☔ 빗소리`)을 원탭 전환해 A~Z 26개 알파벳 단축키를 100% 완성했습니다.
+- **치트시트 동기화 & 웹 목업**: `H` 단축키 치트시트에 `[J/Y] 끝열기·음소거` 안내를 반영하고 `index.html` 웹 목업과도 동기화했습니다.
+
+### 📓 [Sprint 186] 메인 키보드 `K` 다독순 · `Z` 최신순 정렬 토글(Shift: 기본순 복귀) · 치트시트 Sync
+- **메인 키보드 `K/Z` 다독·최신순 정렬 토글**: `K`(권수 많은 순·다독순)와 `Z`(최근 기록순·최신순) 키로 정렬 모드를 원탭 전환하며, 재입력 또는 `Shift` 조합 시 `기본 등록순`으로 즉시 복귀합니다.
+- **치트시트 동기화 & 웹 목업**: `H` 단축키 치트시트에 `[K/Z] 다독·최신순` 안내를 반영하고 `index.html` 웹 목업과도 동기화했습니다.
+
+### 📓 [Sprint 185 Milestone] 메인 키보드 `O` 즉시 열기(Shift: 랜덤 오픈) · `X` 초기화(Shift: 스튜디오 리셋)
+- **메인 키보드 `O/X` 열기 & 스튜디오 리셋**: `O`로 첫 필터 작품을 즉시 열고(`Shift+O`: 랜덤 추천 일기 모달 오픈), `X`로 검색/필터를 일괄 초기화(`Shift+X`: 정렬·테마까지 기본 스튜디오 상태로 리셋)합니다.
+- **치트시트 동기화 & 웹 목업**: `H` 단축키 치트시트에 `[O/X] 열기·초기화` 안내를 반영하고 `index.html` 웹 목업과도 100% 동기화했습니다.
+
+### 📓 [Sprint 184] 메인 키보드 `A` 전체일기 · `U` 초판특전 필터(Shift: 첫 작품 열기) · 치트시트 Sync
+- **메인 키보드 `A/U` 전체·초판 필터 & `Shift` 즉시 열기**: 검색창 포커스 해제 상태에서 `A`(전체일기) 및 `U`(초판 스탬프 보유 작품) 필터를 즉시 전환하며, `Shift+A/U` 입력 시 첫 번째 작품을 바로 모달로 엽니다.
+- **치트시트 동기화 & 웹 목업**: `H` 단축키 치트시트에 `[A/U] 전체·초판` 안내를 반영하고 `index.html` 웹 목업과도 100% 동기화했습니다.
+
+### 📓 [Sprint 183] 메인 키보드 `E/G/D` 분류 필터(Shift: 첫 작품 열기) · 치트시트 Sync
+- **메인 키보드 `E/G/D` 분류 & `Shift` 즉시 열기**: 검색창 포커스 해제 상태에서 `E`(이북·만화), `G`(가챠노트), `D`(완독) 탭을 즉시 전환하며, `Shift+E/G/D` 입력 시 해당 분류의 첫 번째 작품을 바로 모달로 엽니다.
+- **치트시트 동기화 & 웹 목업**: `H` 단축키 치트시트에 `[E/G/D] 분류` 및 `[우클릭] 역순환·백업` 안내를 반영하고 `index.html` 웹 목업과도 100% 동기화했습니다.
+
+### 📓 [Sprint 182] 메인 키보드 `B` 즉시 백업(Shift: 리포트 복사) · `F` 인생작 필터(Shift: 첫 작품 열기)
+- **메인 키보드 백업·인생작 단축키 (`main_view.gd` · `index.html`)**: `B`로 즉시 JSON 백업(`Shift+B`: 리포트 복사)을 실행하며, 단독 `F`로 `★ 인생작` 필터(`Shift+F`: 첫 작품 열기)를 지원합니다.
+
+### 📓 [Sprint 181] 메인 키보드 `V` 가치순 정렬 토글(Shift: 기본순) · `L` 오늘의 밑줄 작품 열기(Shift: 작품 필터)
+- **메인 키보드 가치순·오늘밑줄 단축키 (`main_view.gd` · `index.html`)**: `V`로 `💎 가치순` 정렬을 토글(`Shift+V`: 기본순)하며, `L`로 오늘의 밑줄 작품 모달을 즉시 엽니다(`Shift+L`: 작품명 필터링).
+
+### 🏆 [Sprint 180 Milestone] 메인 키보드 `W` 웹표지 스크랩 · `P` 폴라로이드 촬영(Shift: 등록 후 즉시 열기)
+- **메인 키보드 스크랩·촬영 단축키 완결 (`main_view.gd` · `index.html`)**: `W`로 웹표지 스크랩, `P`로 폴라로이드 촬영을 실행하며 `Shift+W`/`Shift+P`로 등록과 동시에 일기장 모달을 즉시 엽니다.
+
+### 📓 [Sprint 179] `AddModal` 키보드 `1~5` 표지 스와치(Shift: 즉시 등록) & `C` 분류 전환(Shift: 즉시 등록)
+- **`AddModal` 키보드 스와치·분류 단축키 (`add_modal.gd` · `index.html`)**: 입력란 비포커스 상태에서 `1~5`로 표지색 선택(`Shift`: 즉시 등록), `C`로 이북↔가챠 전환(`Shift`: 즉시 등록)을 지원합니다.
+
+### 📓 [Sprint 178] `DetailModal` 키보드 `Shift+ESC` 카드 복사+닫기 · `Shift+H` 치트시트 복사 · `Shift+/`(`?`) 도움말
+- **모달 키보드 완결 (`detail_modal.gd` · `index.html`)**: `Shift+ESC`로 감상 카드를 복사하며 닫고, `?`(`Shift+/`)로 모달 단축키 도움말 표시, `Shift+H`로 모달 단축키 치트시트 복사를 지원합니다.
+
+### 📓 [Sprint 177] 메인 키보드 `Shift+/`(`?`) 단축키 치트시트 · `Shift+ESC` 필터 초기화 · `Space`/`Shift+Space` 서재·랜덤 열기
+- **메인 키보드 탐색 완성 (`main_view.gd` · `index.html`)**: `?`(`Shift+/`)로 단축키 치트시트 표시, `Shift+ESC`로 검색·필터 전체 초기화, `Space`/`Shift+Space`로 첫 작품·랜덤 일기장 열기를 지원합니다.
+
+### 📓 [Sprint 176] `AddModal` 키보드 `Shift+ESC` 입력 전체 비우기 & `Shift+Enter` 샘플 자동 채움 등록
+- **`AddModal` 키보드 `Shift` 파워 단축키 (`add_modal.gd` · `index.html`)**: `Shift+ESC`로 창을 닫지 않고 입력란 3종을 일괄 비우며, `Shift+Enter`로 샘플 자동 채움 후 즉시 등록합니다.
+
+### 🏆 [Sprint 175 Milestone] `DetailModal` 키보드 `Shift+L` 속지 순환 · `Shift+Delete` 삭제 해제 · `Shift+PgUp/PgDn` 처음·끝 점프
+- **모달 키보드 `Shift` 파워 액션 완결 (`detail_modal.gd` · `index.html`)**: `Shift+L`로 속지 패턴 순환, `Shift+Delete`/`Backspace`로 삭제 확인 안전 해제, `Shift+PageUp`/`PageDown`으로 처음·끝 작품 점프를 지원합니다.
+
+### 📓 [Sprint 174] `DetailModal` 키보드 `Shift+E` 샘플 밑줄 채움 & `Shift+1~4` 인장 찍고 닫기
+- **모달 키보드 `Shift+E`/`Shift+1~4` 확장 (`detail_modal.gd` · `index.html`)**: `Shift+E`로 샘플 밑줄 문장을 즉시 채워 입력창에 포커스하며, `Shift+1~4`로 4종 인장을 찍음과 동시에 모달을 닫습니다.
+
+### 📓 [Sprint 173] `DetailModal` 키보드 `Shift+←/→` 처음·끝 점프 & `Shift++/-` 초판북마크 추가·전권 북마크 토글
+- **모달 키보드 `Shift` 파워 액션 확장 (`detail_modal.gd` · `index.html`)**: `Shift+←/→`로 첫 작품·마지막 작품 즉시 점프, `Shift++`로 초판+북마크 권 추가, `Shift+-`로 전권 북마크 일괄 토글을 지원합니다.
+
+### 📓 [Sprint 172] 메인 키보드 `Shift+0` 스튜디오 완전 초기화 · `Shift+C` 오늘의 밑줄 복사 · `Shift+H` 단축키 치트시트 복사
+- **키보드 `Shift` 스튜디오 초기화·복사 확장 (`main_view.gd` · `index.html`)**: `Shift+0`으로 필터·정렬·테마를 한 번에 초기화하며, `Shift+C`로 오늘의 밑줄 문장 복사, `Shift+H`로 단축키 치트시트 복사까지 지원합니다.
+
+### 📓 [Sprint 171] 메인 키보드 `Shift+1~5` 탭 필터 후 즉시 열기 · `Shift+N` 샘플 모달 · `Shift+I` 즉시 백업
+- **키보드 `Shift` 파워 단축키 확장 (`main_view.gd` · `index.html`)**: `Shift+1~5`로 탭 전환과 동시에 랜덤/첫 작품 일기장을 열며, `Shift+N`으로 샘플 채움 일기 작성 창 열기, `Shift+I`로 즉시 JSON 백업을 실행합니다.
+
+### 🏆 [Sprint 170 Milestone] `TitleLabel` `Shift+좌클릭` 감상 카드 전체 복사 & `StampLbl`/`InkLbl` `Shift+좌클릭` 역순환 완결
+- **제목 카드 복사 & 라벨 역순환 완결 (`detail_modal.gd` · `index.html`)**: `TitleLabel` `Shift+좌클릭`으로 감상 카드 전체를 복사하며, `StampLbl`·`InkLbl` `Shift+좌클릭`으로 인장·만년필 잉크 역순환을 실행해 모달 내 모든 트랙패드 파워 액션을 완결했습니다.
+
+### 📓 [Sprint 169] `AddModal` 입력 3종 `Shift+좌클릭` 개별 샘플 채움 & `DetailModal` `CatBadge` `Shift+좌클릭` 전체 서재 복원
+- **개별 샘플 채움 & 카테고리 전체 복원 (`add_modal.gd` · `detail_modal.gd` · `index.html`)**: `AddModal` 입력란 3종 `Shift+좌클릭`으로 해당 칸의 샘플을 즉시 채우며, `DetailModal` `CatBadge` `Shift+좌클릭`으로 모달을 닫고 전체 서재를 복원합니다.
+
+### 📓 [Sprint 168] `SearchInput` `Shift+좌클릭` 첫 결과 열기 & `QuoteInput` `Shift+좌클릭` 밑줄 저장+복사
+- **입력창 원클릭 숏컷 (`main_view.gd` · `detail_modal.gd` · `index.html`)**: `SearchInput` `Shift+좌클릭`으로 첫 검색 결과 일기장을 즉시 열며, `QuoteInput` `Shift+좌클릭`으로 작성 중인 밑줄·감상평을 저장과 동시에 클립보드에 복사합니다.
+
+### 📓 [Sprint 167] `AddModal` `Dimmer` `Shift+좌클릭` 입력 비우기 & `TitleLabel` `Shift+좌클릭` 샘플 즉시 등록
+- **`AddModal` 배경 비우기 & 헤더 즉시 등록 (`add_modal.gd` · `index.html`)**: `AddModal` 배경 `Shift+좌클릭`으로 창을 닫지 않고 입력란만 비우며, 모달 제목 `Shift+좌클릭`으로 샘플 일기를 즉시 등록합니다.
+
+### 📓 [Sprint 166] `EmptyStateResetBtn` `Shift+좌클릭` 복원 후 랜덤 일기장 열기 & `DetailModal` `Dimmer` `Shift+좌클릭` 카드 복사+닫기
+- **빈 서재 랜덤 열기 & 배경 카드 복사+닫기 (`main_view.gd` · `detail_modal.gd` · `index.html`)**: `EmptyStateResetBtn` `Shift+좌클릭`으로 전체 서재 복원 후 랜덤 일기장을 즉시 열며, `DetailModal` `Dimmer` `Shift+좌클릭`으로 감상 카드 복사 후 모달을 닫습니다.
+
+### 🏆 [Sprint 165 Milestone] `AddModal` 스와치 5종·`CatOption`·`CloseBtn`·`SubmitBtn` `Shift+좌클릭` 파워 액션 완결
+- **`AddModal` 트랙패드 파워 액션 완결 (`add_modal.gd` · `index.html`)**: 표지 컬러 스와치 5종·`SubmitBtn` `Shift+좌클릭`으로 즉시 샘플 등록, `CatOption` `Shift+좌클릭`으로 이북↔가챠 전환, `CloseBtn` `Shift+좌클릭`으로 입력란 비우기를 모두 지원합니다.
 
 ### 📓 [Sprint 164] `StampRow`·`InkRow` 17종 데코레이터 순환 버튼 `Shift+좌클릭` 역순환 일괄 지원
 - **17종 데코레이터 역순환 완결 (`detail_modal.gd` · `index.html`)**: 띠지·테이프·스티커·레어도·속지·보관위치·입수경로·기분·소장상태·펜촉·서명·태그·최애캐릭터·컨디션·마감·날씨·장소 17종 순환 버튼에 `Shift+좌클릭` 역순환(`-1`)을 일괄 적용했습니다.

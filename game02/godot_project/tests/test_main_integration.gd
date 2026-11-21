@@ -2714,6 +2714,1693 @@ func _init() -> void:
 	main_inst.detail_modal.close()
 	print("✓ Sprint 164: StampRow & InkRow 17-Cycler Shift+Left-Click Reverse verified")
 
+	# Sprint 165 Milestone: AddModal Swatches, CatOption, CloseBtn & SubmitBtn Shift+Left-Click
+	var prev_cnt165: int = main_inst.archive_state.items.size()
+	main_inst.add_modal.open()
+	var am165 = main_inst.add_modal
+	var swatch0_165: Button = am165.color_row.get_child(0) as Button
+	assert(swatch0_165 != null and "Shift+좌클릭: 이 색으로 즉시 등록" in swatch0_165.tooltip_text, "AddModal swatch tooltip should mention Shift+Left-Click")
+	assert("Shift+좌클릭: 이북 ↔ 가챠 즉시 전환" in am165.cat_option.tooltip_text, "AddModal CatOption tooltip should mention Shift+Left-Click")
+	assert("Shift+좌클릭: 입력란 모두 비우기" in am165.close_btn.tooltip_text, "AddModal CloseBtn tooltip should mention Shift+Left-Click")
+	assert("Shift+좌클릭: 샘플 자동 채움 등록" in am165.submit_btn.tooltip_text, "AddModal SubmitBtn tooltip should mention Shift+Left-Click")
+	var shift_lclick165 := InputEventMouseButton.new()
+	shift_lclick165.button_index = MOUSE_BUTTON_LEFT
+	shift_lclick165.pressed = true
+	shift_lclick165.shift_pressed = true
+	am165.cat_option.select(0)
+	am165.cat_option.gui_input.emit(shift_lclick165)
+	assert(am165.cat_option.selected == 1, "Shift+Left-Click on CatOption should toggle category")
+	am165.title_input.text = "임시 제목"
+	am165.close_btn.gui_input.emit(shift_lclick165)
+	assert(am165.title_input.text == "" and am165.visible, "Shift+Left-Click on CloseBtn should clear inputs without closing")
+	swatch0_165.gui_input.emit(shift_lclick165)
+	assert(main_inst.archive_state.items.size() == prev_cnt165 + 1 and not am165.visible, "Shift+Left-Click on swatch should instant-submit sample item")
+	main_inst.add_modal.open()
+	am165.clear_inputs()
+	am165.submit_btn.gui_input.emit(shift_lclick165)
+	assert(main_inst.archive_state.items.size() == prev_cnt165 + 2 and not am165.visible, "Shift+Left-Click on SubmitBtn should auto-fill sample and submit")
+	print("✓ Sprint 165 Milestone: AddModal Swatches/CatOption/CloseBtn/SubmitBtn Shift+Left-Click verified")
+
+	# Sprint 166: EmptyStateResetBtn Shift+Left-Click (Reset+Open Random) & DetailModal Dimmer Shift+Left-Click (Copy+Close)
+	main_inst.search_input.text = "__NONE_SPRINT166__"
+	main_inst._render_cards()
+	var reset_btn166: Button = main_inst.find_child("EmptyStateResetBtn", true, false) as Button
+	assert(reset_btn166 != null and "Shift+좌클릭: 복원 후 랜덤 일기장 열기" in reset_btn166.tooltip_text, "EmptyStateResetBtn tooltip should mention Shift+Left-Click random open")
+	var shift_lclick166 := InputEventMouseButton.new()
+	shift_lclick166.button_index = MOUSE_BUTTON_LEFT
+	shift_lclick166.pressed = true
+	shift_lclick166.shift_pressed = true
+	reset_btn166.gui_input.emit(shift_lclick166)
+	assert(main_inst.search_input.text == "" and main_inst.detail_modal.visible, "Shift+Left-Click on EmptyStateResetBtn should reset filters and open random modal")
+	main_inst.detail_modal.close()
+	main_inst.detail_modal.open(main_inst.archive_state.items[0])
+	var dimmer166: Control = main_inst.detail_modal.get_node_or_null("Dimmer")
+	assert(dimmer166 != null and "Shift+좌클릭: 카드 복사+닫기" in dimmer166.tooltip_text, "DetailModal Dimmer tooltip should mention Shift+Left-Click copy+close")
+	dimmer166.gui_input.emit(shift_lclick166)
+	assert(not main_inst.detail_modal.visible, "Shift+Left-Click on DetailModal Dimmer should copy card and close modal")
+	print("✓ Sprint 166: EmptyStateResetBtn Random Open & DetailModal Dimmer Copy+Close verified")
+
+	# Sprint 167: AddModal Dimmer Shift+Left-Click Clear & TitleLabel Shift+Left-Click Sample Submit
+	var prev_cnt167: int = main_inst.archive_state.items.size()
+	main_inst.add_modal.open()
+	var am_dimmer167: Control = main_inst.add_modal.get_node_or_null("Dimmer")
+	var am_title167: Label = main_inst.add_modal.get_node_or_null("Panel/VBox/Header/HBox/TitleLabel")
+	assert(am_dimmer167 != null and am_title167 != null, "AddModal Dimmer and TitleLabel should exist")
+	assert("Shift+좌클릭: 입력 내용만 비우기" in am_dimmer167.tooltip_text, "AddModal Dimmer tooltip should mention Shift+Left-Click clear")
+	assert("Shift+좌클릭: 샘플 즉시 등록" in am_title167.tooltip_text, "AddModal TitleLabel tooltip should mention Shift+Left-Click sample submit")
+	var shift_lclick167 := InputEventMouseButton.new()
+	shift_lclick167.button_index = MOUSE_BUTTON_LEFT
+	shift_lclick167.pressed = true
+	shift_lclick167.shift_pressed = true
+	main_inst.add_modal.title_input.text = "임시167"
+	am_dimmer167.gui_input.emit(shift_lclick167)
+	assert(main_inst.add_modal.title_input.text == "" and main_inst.add_modal.visible, "Shift+Left-Click on AddModal Dimmer should clear inputs without closing")
+	am_title167.gui_input.emit(shift_lclick167)
+	assert(main_inst.archive_state.items.size() == prev_cnt167 + 1 and not main_inst.add_modal.visible, "Shift+Left-Click on AddModal TitleLabel should fill sample and submit")
+	print("✓ Sprint 167: AddModal Dimmer Clear & TitleLabel Shift+Left-Click Sample Submit verified")
+
+	# Sprint 168: SearchInput Shift+Left-Click Open First & QuoteInput Shift+Left-Click Save+Copy
+	main_inst.search_input.text = ""
+	main_inst._render_cards()
+	assert("Shift+좌클릭: 첫 결과 열기" in main_inst.search_input.tooltip_text, "SearchInput tooltip should mention Shift+Left-Click open first")
+	var shift_lclick168 := InputEventMouseButton.new()
+	shift_lclick168.button_index = MOUSE_BUTTON_LEFT
+	shift_lclick168.pressed = true
+	shift_lclick168.shift_pressed = true
+	main_inst.search_input.gui_input.emit(shift_lclick168)
+	assert(main_inst.detail_modal.visible, "Shift+Left-Click on SearchInput should open first filtered card")
+	assert("Shift+좌클릭: 저장+복사" in main_inst.detail_modal.quote_input.tooltip_text, "QuoteInput tooltip should mention Shift+Left-Click save+copy")
+	main_inst.detail_modal.quote_input.text = "스쿼드 168 테스트 밑줄"
+	main_inst.detail_modal.quote_input.gui_input.emit(shift_lclick168)
+	assert(main_inst.detail_modal.current_item.memo == "스쿼드 168 테스트 밑줄" and main_inst.detail_modal.quote_input.tooltip_text == "✅ 저장·복사됨: 스쿼드 168 테스트 밑줄", "Shift+Left-Click on QuoteInput should save and copy")
+	main_inst.detail_modal.close()
+	print("✓ Sprint 168: SearchInput Open First & QuoteInput Save+Copy Shift+Left-Click verified")
+
+	# Sprint 169: AddModal Input Fields Shift+Left-Click Sample Fill & DetailModal CatBadge Shift+Left-Click All Library Reset
+	main_inst.add_modal.open()
+	main_inst.add_modal.clear_inputs()
+	assert("Shift+좌클릭: 샘플 채움" in main_inst.add_modal.title_input.tooltip_text, "AddModal input tooltip should mention Shift+Left-Click sample fill")
+	var shift_lclick169 := InputEventMouseButton.new()
+	shift_lclick169.button_index = MOUSE_BUTTON_LEFT
+	shift_lclick169.pressed = true
+	shift_lclick169.shift_pressed = true
+	main_inst.add_modal.title_input.gui_input.emit(shift_lclick169)
+	main_inst.add_modal.author_input.gui_input.emit(shift_lclick169)
+	main_inst.add_modal.quote_input.gui_input.emit(shift_lclick169)
+	assert(main_inst.add_modal.title_input.text == "나의 비밀 독서 일기" and main_inst.add_modal.author_input.text == "주희의 서재" and main_inst.add_modal.quote_input.text == "오늘도 한 페이지의 여운을 남겼다.", "Shift+Left-Click on AddModal inputs should fill sample texts")
+	main_inst.add_modal.close()
+	main_inst._on_tab_manga_pressed()
+	main_inst.detail_modal.open(main_inst.archive_state.items[0])
+	assert("Shift+좌클릭: 전체 서재 보기" in main_inst.detail_modal.cat_badge.tooltip_text, "CatBadge tooltip should mention Shift+Left-Click all library reset")
+	main_inst.detail_modal.cat_badge.gui_input.emit(shift_lclick169)
+	assert(not main_inst.detail_modal.visible and main_inst.card_grid.get_child_count() == main_inst.archive_state.items.size(), "Shift+Left-Click on CatBadge should close modal and reset to all library")
+	print("✓ Sprint 169: AddModal Input Sample Fill & CatBadge All-Library Reset Shift+Left-Click verified")
+
+	# Sprint 170 Milestone: TitleLabel Shift+Left-Click Card Copy & StampLbl/InkLbl Shift+Left-Click Reverse
+	var item170 = main_inst.archive_state.items[0]
+	main_inst.detail_modal.open(item170)
+	var title_lbl170: Label = main_inst.detail_modal.title_label
+	var stamp_lbl170: Label = main_inst.detail_modal.find_child("StampLbl", true, false) as Label
+	var ink_lbl170: Label = main_inst.detail_modal.find_child("InkLbl", true, false) as Label
+	assert("우클릭·Shift+좌클릭: 감상 카드 전체 복사" in title_lbl170.tooltip_text, "TitleLabel tooltip should mention Shift+Left-Click card copy")
+	assert(stamp_lbl170 != null and "우클릭·Shift+좌클릭: 역순환" in stamp_lbl170.tooltip_text, "StampLbl tooltip should mention Shift+Left-Click reverse")
+	assert(ink_lbl170 != null and "우클릭·Shift+좌클릭: 역순환" in ink_lbl170.tooltip_text, "InkLbl tooltip should mention Shift+Left-Click reverse")
+	var shift_lclick170 := InputEventMouseButton.new()
+	shift_lclick170.button_index = MOUSE_BUTTON_LEFT
+	shift_lclick170.pressed = true
+	shift_lclick170.shift_pressed = true
+	var copied_cnt170: Array = [0]
+	var copy_cb170 := func(_it): copied_cnt170[0] += 1
+	main_inst.detail_modal.card_copied.connect(copy_cb170)
+	title_lbl170.gui_input.emit(shift_lclick170)
+	main_inst.detail_modal.card_copied.disconnect(copy_cb170)
+	assert(copied_cnt170[0] == 1, "Shift+Left-Click on TitleLabel should emit card_copied")
+	var lclick170 := InputEventMouseButton.new()
+	lclick170.button_index = MOUSE_BUTTON_LEFT
+	lclick170.pressed = true
+	stamp_lbl170.gui_input.emit(lclick170)
+	ink_lbl170.gui_input.emit(lclick170)
+	var fwd_stamp170: String = item170.status_tag
+	var fwd_ink170: String = item170.memo_ink_color
+	stamp_lbl170.gui_input.emit(lclick170)
+	ink_lbl170.gui_input.emit(lclick170)
+	assert(item170.status_tag != fwd_stamp170 and item170.memo_ink_color != fwd_ink170, "Left-click should advance stamp and ink")
+	stamp_lbl170.gui_input.emit(shift_lclick170)
+	ink_lbl170.gui_input.emit(shift_lclick170)
+	assert(item170.status_tag == fwd_stamp170 and item170.memo_ink_color == fwd_ink170, "Shift+Left-Click on StampLbl and InkLbl should step backward")
+	main_inst.detail_modal.close()
+	print("✓ Sprint 170 Milestone: TitleLabel Card Copy & StampLbl/InkLbl Shift+Left-Click Reverse verified")
+
+	# Sprint 171: MainView Shift+1~5 Tab Open, Shift+N Sample Modal & Shift+I Instant Backup
+	main_inst.search_input.release_focus()
+	var shift_k171 := InputEventKey.new()
+	shift_k171.pressed = true
+	shift_k171.shift_pressed = true
+	shift_k171.keycode = KEY_2
+	main_inst._unhandled_input(shift_k171)
+	assert(main_inst.detail_modal.visible and main_inst.detail_modal.current_item.category == 0, "Shift+2 should filter Manga and open first item")
+	main_inst.detail_modal.close()
+	shift_k171.keycode = KEY_3
+	main_inst._unhandled_input(shift_k171)
+	assert(main_inst.detail_modal.visible and main_inst.detail_modal.current_item.category == 1, "Shift+3 should filter Gacha and open first item")
+	main_inst.detail_modal.close()
+	shift_k171.keycode = KEY_N
+	main_inst._unhandled_input(shift_k171)
+	assert(main_inst.add_modal.visible and main_inst.add_modal.title_input.text == "나의 비밀 독서 일기", "Shift+N should open AddModal with sample filled")
+	main_inst.add_modal.close()
+	shift_k171.keycode = KEY_I
+	main_inst._unhandled_input(shift_k171)
+	assert("백업" in main_inst.status_toast.text or "JSON" in main_inst.status_toast.text, "Shift+I should trigger instant JSON backup")
+	print("✓ Sprint 171: MainView Shift+1~5 Tab Open, Shift+N Sample Modal & Shift+I Backup verified")
+
+	# Sprint 172: MainView Shift+0 Full Studio Reset, Shift+C Today Quote Copy & Shift+H Cheatsheet Copy
+	main_inst.search_input.release_focus()
+	main_inst.search_input.text = "슬램덩크"
+	main_inst._step_sort(1)
+	main_inst._step_theme(1)
+	var shift_k172 := InputEventKey.new()
+	shift_k172.pressed = true
+	shift_k172.shift_pressed = true
+	shift_k172.keycode = KEY_0
+	main_inst._unhandled_input(shift_k172)
+	assert(main_inst.search_input.text == "" and main_inst.sort_mode == 0 and main_inst.theme_cursor == 0, "Shift+0 should reset search, sort, and theme to default")
+	shift_k172.keycode = KEY_C
+	main_inst._unhandled_input(shift_k172)
+	assert("오늘의 밑줄 복사 완료" in main_inst.status_toast.text, "Shift+C should copy today's quote")
+	shift_k172.keycode = KEY_H
+	main_inst._unhandled_input(shift_k172)
+	assert("단축키:" in main_inst.status_toast.text, "Shift+H should show and copy shortcut cheatsheet")
+	print("✓ Sprint 172: MainView Shift+0 Full Studio Reset, Shift+C Quote Copy & Shift+H Cheatsheet verified")
+
+	# Sprint 173: DetailModal Shift+Left/Right First/Last Jump & Shift+Plus/Minus Volume Power Keys
+	var item173 = main_inst.archive_state.items[1]
+	for v in item173.volumes:
+		v["bookmarked"] = false
+	var prev_vols173: int = item173.volumes.size()
+	main_inst.detail_modal.open(item173)
+	var nav_deltas173: Array = []
+	var nav_cb173 := func(d: int): nav_deltas173.append(d)
+	main_inst.detail_modal.navigate_requested.connect(nav_cb173)
+	var shift_k173 := InputEventKey.new()
+	shift_k173.pressed = true
+	shift_k173.shift_pressed = true
+	shift_k173.keycode = KEY_RIGHT
+	main_inst.detail_modal._unhandled_input(shift_k173)
+	shift_k173.keycode = KEY_LEFT
+	main_inst.detail_modal._unhandled_input(shift_k173)
+	main_inst.detail_modal.navigate_requested.disconnect(nav_cb173)
+	assert(nav_deltas173 == [9999, -9999], "Shift+Right/Left in DetailModal should emit 9999 and -9999")
+	main_inst.detail_modal.open(item173)
+	shift_k173.keycode = KEY_EQUAL
+	main_inst.detail_modal._unhandled_input(shift_k173)
+	assert(item173.volumes.size() == prev_vols173 + 1 and item173.volumes[-1].get("status", "") == "first" and bool(item173.volumes[-1].get("bookmarked", false)), "Shift+Plus should add first+bookmarked volume")
+	shift_k173.keycode = KEY_MINUS
+	main_inst.detail_modal._unhandled_input(shift_k173)
+	for v in item173.volumes:
+		assert(bool(v.get("bookmarked", false)), "Shift+Minus should batch-bookmark all volumes")
+	main_inst.detail_modal.close()
+	print("✓ Sprint 173: DetailModal Shift+Arrows First/Last & Shift++/- Vol Power Keys verified")
+
+	# Sprint 174: DetailModal Shift+E Sample Quote & Shift+1~4 Stamp+Close
+	var item174 = main_inst.archive_state.items[0]
+	main_inst.detail_modal.open(item174)
+	main_inst.detail_modal.quote_input.text = ""
+	main_inst.detail_modal.quote_input.release_focus()
+	var shift_k174 := InputEventKey.new()
+	shift_k174.pressed = true
+	shift_k174.shift_pressed = true
+	shift_k174.keycode = KEY_E
+	main_inst.detail_modal._unhandled_input(shift_k174)
+	assert(main_inst.detail_modal.quote_input.text == "오늘도 한 페이지의 여운을 남겼다.", "Shift+E in DetailModal should fill sample quote")
+	main_inst.detail_modal.quote_input.release_focus()
+	shift_k174.keycode = KEY_3
+	main_inst.detail_modal._unhandled_input(shift_k174)
+	assert(item174.status_tag == "인생최애" and not main_inst.detail_modal.visible, "Shift+3 in DetailModal should apply stamp and close")
+	print("✓ Sprint 174: DetailModal Shift+E Sample Quote & Shift+1~4 Stamp+Close verified")
+
+	# Sprint 175 Milestone: DetailModal Shift+L Paper Pattern, Shift+Delete Disarm & Shift+PageUp/Down
+	var item175 = main_inst.archive_state.items[1]
+	main_inst.detail_modal.open(item175)
+	main_inst.detail_modal.quote_input.release_focus()
+	var nav_deltas175: Array = []
+	var nav_cb175 := func(d: int): nav_deltas175.append(d)
+	main_inst.detail_modal.navigate_requested.connect(nav_cb175)
+	var shift_k175 := InputEventKey.new()
+	shift_k175.pressed = true
+	shift_k175.shift_pressed = true
+	shift_k175.keycode = KEY_PAGEDOWN
+	main_inst.detail_modal._unhandled_input(shift_k175)
+	shift_k175.keycode = KEY_PAGEUP
+	main_inst.detail_modal._unhandled_input(shift_k175)
+	main_inst.detail_modal.navigate_requested.disconnect(nav_cb175)
+	assert(nav_deltas175 == [9999, -9999], "Shift+PageDown/PageUp should emit 9999 and -9999")
+	main_inst.detail_modal.open(item175)
+	var orig_paper175: String = item175.paper_pattern
+	shift_k175.keycode = KEY_L
+	main_inst.detail_modal._unhandled_input(shift_k175)
+	assert(item175.paper_pattern != orig_paper175, "Shift+L in DetailModal should cycle paper pattern")
+	var arm_k175 := InputEventKey.new()
+	arm_k175.pressed = true
+	arm_k175.keycode = KEY_DELETE
+	main_inst.detail_modal._unhandled_input(arm_k175)
+	assert(main_inst.detail_modal.delete_armed, "Delete key should arm delete")
+	shift_k175.keycode = KEY_DELETE
+	main_inst.detail_modal._unhandled_input(shift_k175)
+	assert(not main_inst.detail_modal.delete_armed, "Shift+Delete should disarm delete")
+	main_inst.detail_modal.close()
+	print("✓ Sprint 175 Milestone: DetailModal Shift+L Paper, Shift+Delete Disarm & Shift+PageUp/Down verified")
+
+	# Sprint 176: AddModal Shift+ESC Clear All & Shift+Enter Sample Submit
+	var prev_cnt176: int = main_inst.archive_state.items.size()
+	main_inst.add_modal.open()
+	main_inst.add_modal.title_input.text = "임시176"
+	main_inst.add_modal.author_input.text = "임시작가"
+	main_inst.add_modal.title_input.release_focus()
+	var shift_k176 := InputEventKey.new()
+	shift_k176.pressed = true
+	shift_k176.shift_pressed = true
+	shift_k176.keycode = KEY_ESCAPE
+	main_inst.add_modal._unhandled_input(shift_k176)
+	assert(main_inst.add_modal.title_input.text == "" and main_inst.add_modal.author_input.text == "" and main_inst.add_modal.visible, "Shift+ESC in AddModal should clear all inputs without closing")
+	shift_k176.keycode = KEY_ENTER
+	main_inst.add_modal._unhandled_input(shift_k176)
+	assert(main_inst.archive_state.items.size() == prev_cnt176 + 1 and not main_inst.add_modal.visible, "Shift+Enter in AddModal should auto-fill sample and submit")
+	print("✓ Sprint 176: AddModal Shift+ESC Clear All & Shift+Enter Sample Submit verified")
+
+	# Sprint 177: MainView Shift+/ Cheatsheet, Shift+ESC Filter Reset & Space/Shift+Space Open
+	main_inst.search_input.release_focus()
+	main_inst.search_input.text = "프리렌"
+	main_inst._render_cards()
+	var shift_k177 := InputEventKey.new()
+	shift_k177.pressed = true
+	shift_k177.shift_pressed = true
+	shift_k177.keycode = KEY_ESCAPE
+	main_inst._unhandled_input(shift_k177)
+	assert(main_inst.search_input.text == "" and main_inst.card_grid.get_child_count() == main_inst.archive_state.items.size(), "Shift+ESC in MainView should reset all filters")
+	shift_k177.keycode = KEY_SLASH
+	main_inst._unhandled_input(shift_k177)
+	assert("단축키:" in main_inst.status_toast.text, "Shift+/ (?) should show shortcut cheatsheet")
+	var space_k177 := InputEventKey.new()
+	space_k177.pressed = true
+	space_k177.keycode = KEY_SPACE
+	main_inst._unhandled_input(space_k177)
+	assert(main_inst.detail_modal.visible, "Space in MainView should open first filtered card")
+	main_inst.detail_modal.close()
+	shift_k177.keycode = KEY_SPACE
+	main_inst._unhandled_input(shift_k177)
+	assert(main_inst.detail_modal.visible, "Shift+Space in MainView should open random diary modal")
+	main_inst.detail_modal.close()
+	print("✓ Sprint 177: MainView Shift+/ Cheatsheet, Shift+ESC Reset & Space/Shift+Space Open verified")
+
+	# Sprint 178: DetailModal Shift+ESC Copy+Close, Shift+H Cheatsheet Copy & Shift+/ (?) Help
+	main_inst.detail_modal.open(main_inst.archive_state.items[0])
+	main_inst.detail_modal.quote_input.release_focus()
+	var help_cnt178: Array = [0]
+	var help_cb178 := func(): help_cnt178[0] += 1
+	main_inst.detail_modal.help_requested.connect(help_cb178)
+	var shift_k178 := InputEventKey.new()
+	shift_k178.pressed = true
+	shift_k178.shift_pressed = true
+	shift_k178.keycode = KEY_SLASH
+	main_inst.detail_modal._unhandled_input(shift_k178)
+	shift_k178.keycode = KEY_H
+	main_inst.detail_modal._unhandled_input(shift_k178)
+	main_inst.detail_modal.help_requested.disconnect(help_cb178)
+	assert(help_cnt178[0] == 2 and "모달 단축키:" in main_inst.status_toast.text, "Shift+/ and Shift+H in DetailModal should emit help_requested")
+	shift_k178.keycode = KEY_ESCAPE
+	main_inst.detail_modal._unhandled_input(shift_k178)
+	assert(not main_inst.detail_modal.visible, "Shift+ESC in DetailModal should copy quote card and close")
+	print("✓ Sprint 178: DetailModal Shift+ESC Copy+Close, Shift+H Cheatsheet & Shift+/ Help verified")
+
+	# Sprint 179: AddModal Keys 1~5 Swatches (Shift: Instant Submit) & Key C Category Toggle (Shift: Instant Submit)
+	var prev_cnt179: int = main_inst.archive_state.items.size()
+	main_inst.add_modal.open()
+	main_inst.add_modal.title_input.release_focus()
+	var k179 := InputEventKey.new()
+	k179.pressed = true
+	k179.keycode = KEY_2
+	main_inst.add_modal._unhandled_input(k179)
+	assert(main_inst.add_modal.selected_color == main_inst.add_modal.COVER_SWATCHES[1]["hex"], "Key 2 in AddModal should select second swatch")
+	k179.keycode = KEY_C
+	main_inst.add_modal._unhandled_input(k179)
+	assert(main_inst.add_modal.cat_option.selected == 1, "Key C in AddModal should toggle category")
+	var shift_k179 := InputEventKey.new()
+	shift_k179.pressed = true
+	shift_k179.shift_pressed = true
+	shift_k179.keycode = KEY_3
+	main_inst.add_modal._unhandled_input(shift_k179)
+	assert(main_inst.archive_state.items.size() == prev_cnt179 + 1 and not main_inst.add_modal.visible and main_inst.archive_state.items[0].cover_color == main_inst.add_modal.COVER_SWATCHES[2]["hex"], "Shift+3 in AddModal should select swatch 3 and instant-submit")
+	main_inst.add_modal.open()
+	main_inst.add_modal.title_input.release_focus()
+	main_inst.add_modal.cat_option.select(0)
+	shift_k179.keycode = KEY_C
+	main_inst.add_modal._unhandled_input(shift_k179)
+	assert(main_inst.archive_state.items.size() == prev_cnt179 + 2 and main_inst.archive_state.items[0].category == 1, "Shift+C in AddModal should toggle category and instant-submit")
+	print("✓ Sprint 179: AddModal Keys 1~5 Swatches & C Category Toggle/Submit verified")
+
+	# Sprint 180 Milestone: MainView Keys W (Web Scrape) & P (Camera Snap) with Shift Instant Open
+	main_inst.search_input.release_focus()
+	var prev_cnt180: int = main_inst.archive_state.items.size()
+	var k_w180 := InputEventKey.new()
+	k_w180.pressed = true
+	k_w180.keycode = KEY_W
+	main_inst._unhandled_input(k_w180)
+	assert(main_inst.archive_state.items.size() == prev_cnt180 + 1 and not main_inst.detail_modal.visible, "Key W in MainView should web-scrape item")
+	var k_sp180 := InputEventKey.new()
+	k_sp180.pressed = true
+	k_sp180.shift_pressed = true
+	k_sp180.keycode = KEY_P
+	main_inst._unhandled_input(k_sp180)
+	assert(main_inst.archive_state.items.size() == prev_cnt180 + 2 and main_inst.detail_modal.visible, "Shift+P in MainView should camera-snap item and open modal")
+	main_inst.detail_modal.close()
+	var k_h180 := InputEventKey.new()
+	k_h180.pressed = true
+	k_h180.keycode = KEY_H
+	main_inst._unhandled_input(k_h180)
+	assert("[W/P] 스크랩·촬영" in main_inst.status_toast.text, "Cheatsheet toast should include [W/P] Scrape/Snap")
+	print("✓ Sprint 180 Milestone: MainView Keys W/P Scrape & Snap (Shift: Open) verified")
+
+	# Sprint 181: MainView Keys V (Value Sort Toggle) & L (Today Quote Open/Filter)
+	main_inst.search_input.release_focus()
+	main_inst._set_sort_mode(0)
+	var k_v181 := InputEventKey.new()
+	k_v181.pressed = true
+	k_v181.keycode = KEY_V
+	main_inst._unhandled_input(k_v181)
+	assert(main_inst.sort_mode == 3, "Key V in MainView should switch to value sort (3)")
+	var k_sv181 := InputEventKey.new()
+	k_sv181.pressed = true
+	k_sv181.shift_pressed = true
+	k_sv181.keycode = KEY_V
+	main_inst._unhandled_input(k_sv181)
+	assert(main_inst.sort_mode == 0, "Shift+V in MainView should reset sort to default (0)")
+	var k_l181 := InputEventKey.new()
+	k_l181.pressed = true
+	k_l181.keycode = KEY_L
+	main_inst._unhandled_input(k_l181)
+	assert(main_inst.detail_modal.visible, "Key L in MainView should open current quote item")
+	main_inst.detail_modal.close()
+	var k_sl181 := InputEventKey.new()
+	k_sl181.pressed = true
+	k_sl181.shift_pressed = true
+	k_sl181.keycode = KEY_L
+	main_inst._unhandled_input(k_sl181)
+	assert(main_inst.search_input.text != "" and "오늘의 밑줄 작품 필터:" in main_inst.status_toast.text, "Shift+L in MainView should filter by current quote item")
+	var k_h181 := InputEventKey.new()
+	k_h181.pressed = true
+	k_h181.keycode = KEY_H
+	main_inst._unhandled_input(k_h181)
+	assert("[V] 가치순 · [L] 오늘밑줄" in main_inst.status_toast.text, "Cheatsheet should include [V] and [L]")
+	print("✓ Sprint 181: MainView Keys V Value Sort & L Today Quote Open/Filter verified")
+
+	# Sprint 182: MainView Keys B (Backup/Report Copy) & F (Favorites Filter/Open)
+	main_inst.search_input.release_focus()
+	main_inst._reset_all_filters()
+	var k_b182 := InputEventKey.new()
+	k_b182.pressed = true
+	k_b182.keycode = KEY_B
+	main_inst._unhandled_input(k_b182)
+	assert("백업" in main_inst.status_toast.text or "JSON" in main_inst.status_toast.text, "Key B in MainView should trigger instant JSON backup")
+	var k_sb182 := InputEventKey.new()
+	k_sb182.pressed = true
+	k_sb182.shift_pressed = true
+	k_sb182.keycode = KEY_B
+	main_inst._unhandled_input(k_sb182)
+	assert("복사" in main_inst.status_toast.text, "Shift+B in MainView should copy library summary")
+	var k_f182 := InputEventKey.new()
+	k_f182.pressed = true
+	k_f182.keycode = KEY_F
+	main_inst._unhandled_input(k_f182)
+	assert(not main_inst.detail_modal.visible, "Plain Key F should filter favorites without opening modal")
+	var k_sf182 := InputEventKey.new()
+	k_sf182.pressed = true
+	k_sf182.shift_pressed = true
+	k_sf182.keycode = KEY_F
+	main_inst._unhandled_input(k_sf182)
+	assert(main_inst.detail_modal.visible, "Shift+F in MainView should filter favorites and open first item")
+	main_inst.detail_modal.close()
+	var k_h182 := InputEventKey.new()
+	k_h182.pressed = true
+	k_h182.keycode = KEY_H
+	main_inst._unhandled_input(k_h182)
+	assert("[F] 인생작 · [B] 백업" in main_inst.status_toast.text, "Cheatsheet should include [F] and [B]")
+	print("✓ Sprint 182: MainView Keys B Backup/Report & F Favorites Filter/Open verified")
+
+	# Sprint 183: MainView Keys E/G/D category filter & Shift instant open
+	main_inst.search_input.release_focus()
+	main_inst._reset_all_filters()
+	var ev_e = InputEventKey.new()
+	ev_e.pressed = true
+	ev_e.keycode = KEY_E
+	main_inst._unhandled_input(ev_e)
+	assert(main_inst.archive_state.current_filter == 0 and not main_inst.filter_completed_only, "Key E should switch filter to manga (0)")
+	assert(not main_inst.detail_modal.visible, "Plain Key E should not open modal")
+
+	var ev_g = InputEventKey.new()
+	ev_g.pressed = true
+	ev_g.keycode = KEY_G
+	main_inst._unhandled_input(ev_g)
+	assert(main_inst.archive_state.current_filter == 1 and not main_inst.filter_completed_only, "Key G should switch filter to gacha (1)")
+	assert(not main_inst.detail_modal.visible, "Plain Key G should not open modal")
+
+	var ev_d = InputEventKey.new()
+	ev_d.pressed = true
+	ev_d.keycode = KEY_D
+	main_inst._unhandled_input(ev_d)
+	assert(main_inst.filter_completed_only == true, "Key D should switch filter to complete")
+	assert(not main_inst.detail_modal.visible, "Plain Key D should not open modal")
+
+	var ev_shift_e = InputEventKey.new()
+	ev_shift_e.pressed = true
+	ev_shift_e.shift_pressed = true
+	ev_shift_e.keycode = KEY_E
+	main_inst._unhandled_input(ev_shift_e)
+	assert(main_inst.archive_state.current_filter == 0, "Shift+E should switch filter to manga")
+	assert(main_inst.detail_modal.visible == true, "Shift+E should open first filtered manga card in modal")
+	main_inst.detail_modal.close()
+
+	var ev_shift_g = InputEventKey.new()
+	ev_shift_g.pressed = true
+	ev_shift_g.shift_pressed = true
+	ev_shift_g.keycode = KEY_G
+	main_inst._unhandled_input(ev_shift_g)
+	assert(main_inst.archive_state.current_filter == 1, "Shift+G should switch filter to gacha")
+	assert(main_inst.detail_modal.visible == true, "Shift+G should open first filtered gacha card in modal")
+	main_inst.detail_modal.close()
+
+	var ev_shift_d = InputEventKey.new()
+	ev_shift_d.pressed = true
+	ev_shift_d.shift_pressed = true
+	ev_shift_d.keycode = KEY_D
+	main_inst._unhandled_input(ev_shift_d)
+	assert(main_inst.filter_completed_only == true, "Shift+D should switch filter to complete")
+	assert(main_inst.detail_modal.visible == true, "Shift+D should open first filtered complete card in modal")
+	main_inst.detail_modal.close()
+
+	var ev_h_183 = InputEventKey.new()
+	ev_h_183.pressed = true
+	ev_h_183.keycode = KEY_H
+	main_inst._unhandled_input(ev_h_183)
+	assert("[E/G/D] 분류" in main_inst.status_toast.text, "Cheatsheet should include [E/G/D] 분류")
+	print("✓ Sprint 183: MainView Keys E/G/D Category Filter & Shift Instant Open verified")
+
+	# Sprint 184: MainView Keys A (All) & U (Firsts) Filter + Shift Instant Open
+	main_inst.search_input.release_focus()
+	var ev_u = InputEventKey.new()
+	ev_u.pressed = true
+	ev_u.keycode = KEY_U
+	main_inst._unhandled_input(ev_u)
+	assert(main_inst.filter_firsts_only == true, "Key U should enable filter_firsts_only")
+	assert(not main_inst.detail_modal.visible, "Plain Key U should not open modal")
+
+	var ev_a = InputEventKey.new()
+	ev_a.pressed = true
+	ev_a.keycode = KEY_A
+	main_inst._unhandled_input(ev_a)
+	assert(main_inst.archive_state.current_filter == -1 and not main_inst.filter_firsts_only, "Key A should switch back to all library")
+	assert(not main_inst.detail_modal.visible, "Plain Key A should not open modal")
+
+	var ev_shift_u = InputEventKey.new()
+	ev_shift_u.pressed = true
+	ev_shift_u.shift_pressed = true
+	ev_shift_u.keycode = KEY_U
+	main_inst._unhandled_input(ev_shift_u)
+	assert(main_inst.filter_firsts_only == true, "Shift+U should filter firsts")
+	assert(main_inst.detail_modal.visible == true, "Shift+U should open first matching card in modal")
+	main_inst.detail_modal.close()
+
+	var ev_shift_a = InputEventKey.new()
+	ev_shift_a.pressed = true
+	ev_shift_a.shift_pressed = true
+	ev_shift_a.keycode = KEY_A
+	main_inst._unhandled_input(ev_shift_a)
+	assert(main_inst.archive_state.current_filter == -1 and not main_inst.filter_firsts_only, "Shift+A should switch to all library")
+	assert(main_inst.detail_modal.visible == true, "Shift+A should open first card in modal")
+	main_inst.detail_modal.close()
+
+	main_inst._unhandled_input(ev_h_183)
+	assert("[A/U] 전체·초판" in main_inst.status_toast.text, "Cheatsheet should include [A/U] 전체·초판")
+	print("✓ Sprint 184: MainView Keys A All & U Firsts Filter + Shift Instant Open verified")
+
+	# Sprint 185 Milestone: MainView Keys O (Open/Random) & X (Reset/Full Studio Reset)
+	main_inst.search_input.release_focus()
+	main_inst._reset_all_filters()
+	var ev_o = InputEventKey.new()
+	ev_o.pressed = true
+	ev_o.keycode = KEY_O
+	main_inst._unhandled_input(ev_o)
+	assert(main_inst.detail_modal.visible == true, "Key O should open first filtered card in modal")
+	main_inst.detail_modal.close()
+
+	var ev_shift_o = InputEventKey.new()
+	ev_shift_o.pressed = true
+	ev_shift_o.shift_pressed = true
+	ev_shift_o.keycode = KEY_O
+	main_inst._unhandled_input(ev_shift_o)
+	assert(main_inst.detail_modal.visible == true, "Shift+O should open random item in modal")
+	main_inst.detail_modal.close()
+
+	main_inst._on_tab_manga_pressed()
+	main_inst.search_input.text = "슬램덩크"
+	main_inst._set_sort_mode(2)
+	var ev_x = InputEventKey.new()
+	ev_x.pressed = true
+	ev_x.keycode = KEY_X
+	main_inst._unhandled_input(ev_x)
+	assert(main_inst.archive_state.current_filter == -1 and main_inst.search_input.text == "", "Key X should reset all filters and search")
+
+	main_inst._on_tab_gacha_pressed()
+	main_inst._set_sort_mode(3)
+	var ev_shift_x = InputEventKey.new()
+	ev_shift_x.pressed = true
+	ev_shift_x.shift_pressed = true
+	ev_shift_x.keycode = KEY_X
+	main_inst._unhandled_input(ev_shift_x)
+	assert(main_inst.archive_state.current_filter == -1 and main_inst.sort_mode == 0, "Shift+X should reset filters, sort mode, and theme")
+
+	main_inst._unhandled_input(ev_h_183)
+	assert("[O/X] 열기·초기화" in main_inst.status_toast.text, "Cheatsheet should include [O/X] 열기·초기화")
+	print("✓ Sprint 185 Milestone: MainView Keys O Open/Random & X Reset/Studio Reset verified")
+
+	# Sprint 186: MainView Keys K (Volume/Count Sort) & Z (Latest Sort)
+	main_inst.search_input.release_focus()
+	main_inst._set_sort_mode(0)
+	var ev_k = InputEventKey.new()
+	ev_k.pressed = true
+	ev_k.keycode = KEY_K
+	main_inst._unhandled_input(ev_k)
+	assert(main_inst.sort_mode == 1, "Key K should switch sort_mode to 1 (다독순)")
+	main_inst._unhandled_input(ev_k)
+	assert(main_inst.sort_mode == 0, "Pressing K again should toggle sort_mode back to 0")
+
+	var ev_z = InputEventKey.new()
+	ev_z.pressed = true
+	ev_z.keycode = KEY_Z
+	main_inst._unhandled_input(ev_z)
+	assert(main_inst.sort_mode == 2, "Key Z should switch sort_mode to 2 (최신순)")
+	var ev_shift_z = InputEventKey.new()
+	ev_shift_z.pressed = true
+	ev_shift_z.shift_pressed = true
+	ev_shift_z.keycode = KEY_Z
+	main_inst._unhandled_input(ev_shift_z)
+	assert(main_inst.sort_mode == 0, "Shift+Z should reset sort_mode to 0")
+
+	main_inst._unhandled_input(ev_h_183)
+	assert("[K/Z] 다독·최신순" in main_inst.status_toast.text, "Cheatsheet should include [K/Z] 다독·최신순")
+	print("✓ Sprint 186: MainView Keys K Volume Sort & Z Latest Sort verified")
+
+	# Sprint 187: MainView Keys J (Last/First Jump) & Y (Ambient Mute Toggle) — 26/26 A-Z Complete
+	main_inst.search_input.release_focus()
+	main_inst._reset_all_filters()
+	var ev_j = InputEventKey.new()
+	ev_j.pressed = true
+	ev_j.keycode = KEY_J
+	main_inst._unhandled_input(ev_j)
+	assert(main_inst.detail_modal.visible == true, "Key J should open last filtered card in modal")
+	var last_card_title = main_inst.detail_modal.current_item.title
+	main_inst.detail_modal.close()
+
+	var ev_shift_j = InputEventKey.new()
+	ev_shift_j.pressed = true
+	ev_shift_j.shift_pressed = true
+	ev_shift_j.keycode = KEY_J
+	main_inst._unhandled_input(ev_shift_j)
+	assert(main_inst.detail_modal.visible == true and main_inst.detail_modal.current_item.title != last_card_title, "Shift+J should open first filtered card")
+	main_inst.detail_modal.close()
+
+	var ev_y = InputEventKey.new()
+	ev_y.pressed = true
+	ev_y.keycode = KEY_Y
+	main_inst.ambient_sound_index = 2
+	main_inst._unhandled_input(ev_y)
+	assert(main_inst.ambient_sound_index == 0, "Key Y should mute ambient sound (index 0)")
+	main_inst._unhandled_input(ev_y)
+	assert(main_inst.ambient_sound_index == 1, "Key Y again should unmute ambient sound to index 1")
+
+	main_inst._unhandled_input(ev_h_183)
+	assert("[J/Y] 끝열기·음소거" in main_inst.status_toast.text, "Cheatsheet should include [J/Y] 끝열기·음소거")
+	print("✓ Sprint 187: MainView Keys J Last/First Jump & Y Ambient Mute Toggle (26/26 A-Z) verified")
+
+	# Sprint 188: MainView Arrow (Quote/Theme) & Home/End (First/Last Card) Navigation
+	main_inst.search_input.release_focus()
+	main_inst._reset_all_filters()
+	var q_before_188 = main_inst.quote_cursor
+	var ev_right = InputEventKey.new()
+	ev_right.pressed = true
+	ev_right.keycode = KEY_RIGHT
+	main_inst._unhandled_input(ev_right)
+	assert(main_inst.quote_cursor != q_before_188, "Right arrow should step today's quote forward")
+
+	var ev_left = InputEventKey.new()
+	ev_left.pressed = true
+	ev_left.keycode = KEY_LEFT
+	main_inst._unhandled_input(ev_left)
+	assert(main_inst.quote_cursor == q_before_188, "Left arrow should step today's quote backward")
+
+	var t_before_188 = main_inst.theme_cursor
+	var ev_shift_right = InputEventKey.new()
+	ev_shift_right.pressed = true
+	ev_shift_right.shift_pressed = true
+	ev_shift_right.keycode = KEY_RIGHT
+	main_inst._unhandled_input(ev_shift_right)
+	assert(main_inst.theme_cursor != t_before_188, "Shift+Right should step theme forward")
+
+	var ev_shift_left = InputEventKey.new()
+	ev_shift_left.pressed = true
+	ev_shift_left.shift_pressed = true
+	ev_shift_left.keycode = KEY_LEFT
+	main_inst._unhandled_input(ev_shift_left)
+	assert(main_inst.theme_cursor == t_before_188, "Shift+Left should step theme backward")
+
+	var ev_home = InputEventKey.new()
+	ev_home.pressed = true
+	ev_home.keycode = KEY_HOME
+	main_inst._unhandled_input(ev_home)
+	assert(main_inst.detail_modal.visible == true, "Home key should open first filtered card")
+	var home_title = main_inst.detail_modal.current_item.title
+	main_inst.detail_modal.close()
+
+	var ev_end = InputEventKey.new()
+	ev_end.pressed = true
+	ev_end.keycode = KEY_END
+	main_inst._unhandled_input(ev_end)
+	assert(main_inst.detail_modal.visible == true and main_inst.detail_modal.current_item.title != home_title, "End key should open last filtered card")
+	main_inst.detail_modal.close()
+
+	main_inst._unhandled_input(ev_h_183)
+	assert("[←/→] 문장·테마 · [Home/End] 처음·끝" in main_inst.status_toast.text, "Cheatsheet should include Arrow and Home/End hints")
+	print("✓ Sprint 188: MainView Arrow Quote/Theme & Home/End First/Last Navigation verified")
+
+	# Sprint 189: MainView Up/Down (Sort/Sound) & PageUp/PageDown (Tab Cycle)
+	main_inst.search_input.release_focus()
+	main_inst._reset_all_filters()
+	main_inst._set_sort_mode(0)
+	var ev_down = InputEventKey.new()
+	ev_down.pressed = true
+	ev_down.keycode = KEY_DOWN
+	main_inst._unhandled_input(ev_down)
+	assert(main_inst.sort_mode == 1, "Down arrow should step sort_mode forward to 1")
+
+	var ev_up = InputEventKey.new()
+	ev_up.pressed = true
+	ev_up.keycode = KEY_UP
+	main_inst._unhandled_input(ev_up)
+	assert(main_inst.sort_mode == 0, "Up arrow should step sort_mode backward to 0")
+
+	var snd_before_189 = main_inst.ambient_sound_index
+	var ev_shift_down = InputEventKey.new()
+	ev_shift_down.pressed = true
+	ev_shift_down.shift_pressed = true
+	ev_shift_down.keycode = KEY_DOWN
+	main_inst._unhandled_input(ev_shift_down)
+	assert(main_inst.ambient_sound_index != snd_before_189, "Shift+Down should cycle ambient sound forward")
+
+	var ev_pgdn = InputEventKey.new()
+	ev_pgdn.pressed = true
+	ev_pgdn.keycode = KEY_PAGEDOWN
+	main_inst._unhandled_input(ev_pgdn)
+	assert(main_inst.archive_state.current_filter == 0, "PageDown from All should cycle to Manga (0)")
+
+	var ev_pgup = InputEventKey.new()
+	ev_pgup.pressed = true
+	ev_pgup.keycode = KEY_PAGEUP
+	main_inst._unhandled_input(ev_pgup)
+	assert(main_inst.archive_state.current_filter == -1, "PageUp from Manga should cycle back to All (-1)")
+
+	main_inst._unhandled_input(ev_h_183)
+	assert("[↑/↓] 정렬·사운드 · [PgUp/Dn] 탭순환" in main_inst.status_toast.text, "Cheatsheet should include Up/Down and PageUp/Down hints")
+	print("✓ Sprint 189: MainView Up/Down Sort/Sound & PageUp/Down Tab Cycle verified")
+
+	# Sprint 190 Milestone: MainView Enter (Open/AddModal) & Backspace (Reset/Studio Reset)
+	main_inst.search_input.release_focus()
+	main_inst._reset_all_filters()
+	var ev_enter_190 = InputEventKey.new()
+	ev_enter_190.pressed = true
+	ev_enter_190.keycode = KEY_ENTER
+	main_inst._unhandled_input(ev_enter_190)
+	assert(main_inst.detail_modal.visible == true, "Enter in MainView should open first filtered card")
+	main_inst.detail_modal.close()
+
+	var ev_shift_enter_190 = InputEventKey.new()
+	ev_shift_enter_190.pressed = true
+	ev_shift_enter_190.shift_pressed = true
+	ev_shift_enter_190.keycode = KEY_ENTER
+	main_inst._unhandled_input(ev_shift_enter_190)
+	assert(main_inst.add_modal.visible == true, "Shift+Enter in MainView should open AddModal")
+	main_inst.add_modal.close()
+
+	main_inst._on_tab_gacha_pressed()
+	main_inst.search_input.text = "치이카와"
+	var ev_bksp_190 = InputEventKey.new()
+	ev_bksp_190.pressed = true
+	ev_bksp_190.keycode = KEY_BACKSPACE
+	main_inst._unhandled_input(ev_bksp_190)
+	assert(main_inst.archive_state.current_filter == -1 and main_inst.search_input.text == "", "Backspace should reset all filters and search")
+
+	main_inst._on_tab_manga_pressed()
+	main_inst._set_sort_mode(3)
+	var ev_shift_bksp_190 = InputEventKey.new()
+	ev_shift_bksp_190.pressed = true
+	ev_shift_bksp_190.shift_pressed = true
+	ev_shift_bksp_190.keycode = KEY_BACKSPACE
+	main_inst._unhandled_input(ev_shift_bksp_190)
+	assert(main_inst.archive_state.current_filter == -1 and main_inst.sort_mode == 0, "Shift+Backspace should perform full studio reset")
+
+	main_inst._unhandled_input(ev_h_183)
+	assert("[Enter] 열기 · [Bksp] 초기화" in main_inst.status_toast.text, "Cheatsheet should include Enter and Backspace hints")
+	print("✓ Sprint 190 Milestone: MainView Enter Open/AddModal & Backspace Reset/Studio Reset verified")
+
+	# Sprint 191: AddModal Keys F (Sample Fill), X (Clear/Close) & Left/Right (Swatch Cycle)
+	main_inst._on_add_btn_pressed()
+	assert(main_inst.add_modal.visible == true, "AddModal should be open")
+	main_inst.add_modal.title_input.release_focus()
+	main_inst.add_modal.author_input.release_focus()
+	main_inst.add_modal.quote_input.release_focus()
+
+	var am_color_before = main_inst.add_modal.selected_color
+	var ev_am_right = InputEventKey.new()
+	ev_am_right.pressed = true
+	ev_am_right.keycode = KEY_RIGHT
+	main_inst.add_modal._unhandled_input(ev_am_right)
+	assert(main_inst.add_modal.selected_color != am_color_before, "Right arrow in AddModal should cycle cover swatch forward")
+
+	var ev_am_left = InputEventKey.new()
+	ev_am_left.pressed = true
+	ev_am_left.keycode = KEY_LEFT
+	main_inst.add_modal._unhandled_input(ev_am_left)
+	assert(main_inst.add_modal.selected_color == am_color_before, "Left arrow in AddModal should cycle cover swatch backward")
+
+	var ev_am_f = InputEventKey.new()
+	ev_am_f.pressed = true
+	ev_am_f.keycode = KEY_F
+	main_inst.add_modal._unhandled_input(ev_am_f)
+	assert(main_inst.add_modal.title_input.text == "오늘의 독서 스크랩", "Key F in AddModal should fill sample inputs")
+
+	var ev_am_x = InputEventKey.new()
+	ev_am_x.pressed = true
+	ev_am_x.keycode = KEY_X
+	main_inst.add_modal._unhandled_input(ev_am_x)
+	assert(main_inst.add_modal.title_input.text == "" and main_inst.add_modal.visible == true, "Key X in AddModal should clear inputs while staying open")
+
+	main_inst.add_modal.title_input.release_focus()
+	var ev_am_shift_x = InputEventKey.new()
+	ev_am_shift_x.pressed = true
+	ev_am_shift_x.shift_pressed = true
+	ev_am_shift_x.keycode = KEY_X
+	main_inst.add_modal._unhandled_input(ev_am_shift_x)
+	assert(main_inst.add_modal.visible == false, "Shift+X in AddModal should clear inputs and close modal")
+	print("✓ Sprint 191: AddModal Keys F Sample Fill, X Clear/Close & Left/Right Swatch Cycle verified")
+
+	# Sprint 192: AddModal Keys E/G Category, T Focus & S Submit
+	main_inst._on_add_btn_pressed()
+	main_inst.add_modal.title_input.release_focus()
+	main_inst.add_modal.author_input.release_focus()
+	main_inst.add_modal.quote_input.release_focus()
+
+	var ev_am_g = InputEventKey.new()
+	ev_am_g.pressed = true
+	ev_am_g.keycode = KEY_G
+	main_inst.add_modal._unhandled_input(ev_am_g)
+	assert(main_inst.add_modal.cat_option.selected == 1, "Key G in AddModal should select Gacha (1)")
+
+	var ev_am_e = InputEventKey.new()
+	ev_am_e.pressed = true
+	ev_am_e.keycode = KEY_E
+	main_inst.add_modal._unhandled_input(ev_am_e)
+	assert(main_inst.add_modal.cat_option.selected == 0, "Key E in AddModal should select Manga/E-Book (0)")
+
+	var count_before_192 = main_inst.archive_state.items.size()
+	var ev_am_shift_s = InputEventKey.new()
+	ev_am_shift_s.pressed = true
+	ev_am_shift_s.shift_pressed = true
+	ev_am_shift_s.keycode = KEY_S
+	main_inst.add_modal._unhandled_input(ev_am_shift_s)
+	assert(main_inst.archive_state.items.size() == count_before_192 + 1 and main_inst.add_modal.visible == false, "Shift+S in AddModal should submit with sample fallback and close")
+	main_inst.archive_state.remove_item(main_inst.archive_state.items[main_inst.archive_state.items.size() - 1].id)
+	main_inst._render_cards()
+	print("✓ Sprint 192: AddModal Keys E/G Category, T Focus & S Submit verified")
+
+	# Sprint 193: AddModal Keys A/Q Input Focus, Space Swatch Step & R Random Color
+	main_inst._on_add_btn_pressed()
+	main_inst.add_modal.title_input.release_focus()
+	main_inst.add_modal.author_input.release_focus()
+	main_inst.add_modal.quote_input.release_focus()
+
+	var color_s193_before = main_inst.add_modal.selected_color
+	var ev_am_space = InputEventKey.new()
+	ev_am_space.pressed = true
+	ev_am_space.keycode = KEY_SPACE
+	main_inst.add_modal._unhandled_input(ev_am_space)
+	assert(main_inst.add_modal.selected_color != color_s193_before, "Space in AddModal should cycle cover swatch forward")
+
+	var ev_am_r = InputEventKey.new()
+	ev_am_r.pressed = true
+	ev_am_r.keycode = KEY_R
+	var color_r_before = main_inst.add_modal.selected_color
+	main_inst.add_modal._unhandled_input(ev_am_r)
+	assert(main_inst.add_modal.selected_color != color_r_before, "Key R in AddModal should pick a different random cover swatch")
+
+	main_inst.add_modal.author_input.text = "임시 작가"
+	var ev_am_shift_a = InputEventKey.new()
+	ev_am_shift_a.pressed = true
+	ev_am_shift_a.shift_pressed = true
+	ev_am_shift_a.keycode = KEY_A
+	main_inst.add_modal._unhandled_input(ev_am_shift_a)
+	assert(main_inst.add_modal.author_input.text == "", "Shift+A in AddModal should clear author_input")
+
+	main_inst.add_modal.close()
+	print("✓ Sprint 193: AddModal Keys A/Q Focus, Space Swatch Step & R Random Color verified")
+
+	# Sprint 194: AddModal Keys 0 Reset, Home/End Swatch Jump & Backspace Clear
+	main_inst._on_add_btn_pressed()
+	main_inst.add_modal.title_input.release_focus()
+	main_inst.add_modal.author_input.release_focus()
+	main_inst.add_modal.quote_input.release_focus()
+
+	var ev_am_end = InputEventKey.new()
+	ev_am_end.pressed = true
+	ev_am_end.keycode = KEY_END
+	main_inst.add_modal._unhandled_input(ev_am_end)
+	assert(main_inst.add_modal.selected_color == main_inst.add_modal.COVER_SWATCHES[main_inst.add_modal.COVER_SWATCHES.size() - 1]["hex"], "End in AddModal should jump to last swatch")
+
+	var ev_am_home = InputEventKey.new()
+	ev_am_home.pressed = true
+	ev_am_home.keycode = KEY_HOME
+	main_inst.add_modal._unhandled_input(ev_am_home)
+	assert(main_inst.add_modal.selected_color == main_inst.add_modal.COVER_SWATCHES[0]["hex"], "Home in AddModal should jump to first swatch")
+
+	main_inst.add_modal.title_input.text = "초기화 테스트"
+	main_inst.add_modal.cat_option.select(1)
+	var ev_am_0 = InputEventKey.new()
+	ev_am_0.pressed = true
+	ev_am_0.keycode = KEY_0
+	main_inst.add_modal._unhandled_input(ev_am_0)
+	assert(main_inst.add_modal.title_input.text == "" and main_inst.add_modal.cat_option.selected == 0, "Key 0 in AddModal should reset inputs and category")
+
+	main_inst.add_modal.title_input.release_focus()
+	var ev_am_shift_bksp = InputEventKey.new()
+	ev_am_shift_bksp.pressed = true
+	ev_am_shift_bksp.shift_pressed = true
+	ev_am_shift_bksp.keycode = KEY_BACKSPACE
+	main_inst.add_modal._unhandled_input(ev_am_shift_bksp)
+	assert(main_inst.add_modal.visible == false, "Shift+Backspace in AddModal should clear and close modal")
+	print("✓ Sprint 194: AddModal Keys 0 Reset, Home/End Swatch Jump & Backspace Clear verified")
+
+	# Sprint 195 Milestone: AddModal Key H/? Cheatsheet & Plain Enter Submit
+	main_inst._on_add_btn_pressed()
+	main_inst.add_modal.title_input.release_focus()
+	main_inst.add_modal.author_input.release_focus()
+	main_inst.add_modal.quote_input.release_focus()
+
+	var ev_am_h = InputEventKey.new()
+	ev_am_h.pressed = true
+	ev_am_h.keycode = KEY_H
+	main_inst.add_modal._unhandled_input(ev_am_h)
+	assert("새 일기 단축키" in main_inst.status_toast.text and "[S/Enter] 등록" in main_inst.status_toast.text, "H in AddModal should display AddModal cheatsheet toast")
+
+	var count_before_195 = main_inst.archive_state.items.size()
+	main_inst.add_modal.title_input.text = "엔터 등록 테스트"
+	main_inst.add_modal.title_input.release_focus()
+	var ev_am_enter = InputEventKey.new()
+	ev_am_enter.pressed = true
+	ev_am_enter.keycode = KEY_ENTER
+	main_inst.add_modal._unhandled_input(ev_am_enter)
+	assert(main_inst.archive_state.items.size() == count_before_195 + 1 and main_inst.add_modal.visible == false, "Plain Enter in AddModal (unfocused) should submit and close")
+	main_inst.archive_state.remove_item(main_inst.archive_state.items[main_inst.archive_state.items.size() - 1].id)
+	main_inst._render_cards()
+	print("✓ Sprint 195 Milestone: AddModal Key H/? Cheatsheet & Plain Enter Submit verified")
+
+	# Sprint 196: DetailModal Keys Enter (Edit Quote / Shift: Highlight) & Backspace (Close / Shift: Copy+Close)
+	main_inst._on_card_clicked(main_inst.archive_state.items[0])
+	assert(main_inst.detail_modal.visible == true, "DetailModal should open for Sprint 196")
+	main_inst.detail_modal.quote_input.release_focus()
+
+	var hl_before_196 = main_inst.detail_modal.current_item.highlight_enabled
+	var ev_dm_shift_enter = InputEventKey.new()
+	ev_dm_shift_enter.pressed = true
+	ev_dm_shift_enter.shift_pressed = true
+	ev_dm_shift_enter.keycode = KEY_ENTER
+	main_inst.detail_modal._unhandled_input(ev_dm_shift_enter)
+	assert(main_inst.detail_modal.current_item.highlight_enabled != hl_before_196, "Shift+Enter in DetailModal should toggle highlight")
+	main_inst.detail_modal._unhandled_input(ev_dm_shift_enter)
+
+	var ev_dm_bksp = InputEventKey.new()
+	ev_dm_bksp.pressed = true
+	ev_dm_bksp.keycode = KEY_BACKSPACE
+	main_inst.detail_modal._unhandled_input(ev_dm_bksp)
+	assert(main_inst.detail_modal.visible == false, "Backspace in DetailModal should close modal")
+
+	main_inst._on_card_clicked(main_inst.archive_state.items[0])
+	main_inst.detail_modal.quote_input.release_focus()
+	var ev_dm_shift_bksp = InputEventKey.new()
+	ev_dm_shift_bksp.pressed = true
+	ev_dm_shift_bksp.shift_pressed = true
+	ev_dm_shift_bksp.keycode = KEY_BACKSPACE
+	main_inst.detail_modal._unhandled_input(ev_dm_shift_bksp)
+	assert(main_inst.detail_modal.visible == false and "복사" in main_inst.status_toast.text, "Shift+Backspace in DetailModal should copy quote card and close")
+	print("✓ Sprint 196: DetailModal Keys Enter Edit/Highlight & Backspace Close/Copy+Close verified")
+
+	# Sprint 197: DetailModal Keys Up/Down Navigation & 0 Restore Quote/Disarm
+	main_inst._on_card_clicked(main_inst.archive_state.items[0])
+	main_inst.detail_modal.quote_input.release_focus()
+	var title_0_197 = main_inst.detail_modal.current_item.title
+	var ev_dm_down = InputEventKey.new()
+	ev_dm_down.pressed = true
+	ev_dm_down.keycode = KEY_DOWN
+	main_inst.detail_modal._unhandled_input(ev_dm_down)
+	assert(main_inst.detail_modal.current_item.title != title_0_197, "Down arrow in DetailModal should navigate to next card")
+
+	var ev_dm_up = InputEventKey.new()
+	ev_dm_up.pressed = true
+	ev_dm_up.keycode = KEY_UP
+	main_inst.detail_modal._unhandled_input(ev_dm_up)
+	assert(main_inst.detail_modal.current_item.title == title_0_197, "Up arrow in DetailModal should navigate back to first card")
+
+	main_inst.detail_modal.quote_input.text = "임시 수정 문구"
+	var ev_dm_0 = InputEventKey.new()
+	ev_dm_0.pressed = true
+	ev_dm_0.keycode = KEY_0
+	main_inst.detail_modal._unhandled_input(ev_dm_0)
+	assert(main_inst.detail_modal.quote_input.text == main_inst.detail_modal.current_item.memo, "Key 0 in DetailModal should restore quote_input text to saved memo")
+	main_inst.detail_modal.close()
+	print("✓ Sprint 197: DetailModal Keys Up/Down Navigation & 0 Restore Quote/Disarm verified")
+
+	# Sprint 198: DetailModal Keys 5~8 Direct Fountain-Pen Ink Swatches
+	main_inst._on_card_clicked(main_inst.archive_state.items[0])
+	main_inst.detail_modal.quote_input.release_focus()
+	var ev_dm_6 = InputEventKey.new()
+	ev_dm_6.pressed = true
+	ev_dm_6.keycode = KEY_6
+	main_inst.detail_modal._unhandled_input(ev_dm_6)
+	assert(main_inst.detail_modal.current_item.memo_ink_color == "#7f1d1d", "Key 6 in DetailModal should select burgundy ink")
+
+	var ev_dm_7 = InputEventKey.new()
+	ev_dm_7.pressed = true
+	ev_dm_7.keycode = KEY_7
+	main_inst.detail_modal._unhandled_input(ev_dm_7)
+	assert(main_inst.detail_modal.current_item.memo_ink_color == "#78350f", "Key 7 in DetailModal should select sepia ink")
+
+	var ev_dm_shift_5 = InputEventKey.new()
+	ev_dm_shift_5.pressed = true
+	ev_dm_shift_5.shift_pressed = true
+	ev_dm_shift_5.keycode = KEY_5
+	main_inst.detail_modal._unhandled_input(ev_dm_shift_5)
+	assert(main_inst.detail_modal.current_item.memo_ink_color == "#2c221e" and main_inst.detail_modal.visible == false, "Shift+5 in DetailModal should select espresso ink and close")
+	print("✓ Sprint 198: DetailModal Keys 5~8 Direct Fountain-Pen Ink Swatches verified")
+
+	# Sprint 199: MainView Keys 6~9 Direct Sort Modes & Shift Instant Open
+	main_inst.search_input.release_focus()
+	main_inst._reset_all_filters()
+	var ev_k7 = InputEventKey.new()
+	ev_k7.pressed = true
+	ev_k7.keycode = KEY_7
+	main_inst._unhandled_input(ev_k7)
+	assert(main_inst.sort_mode == 1, "Key 7 in MainView should switch sort_mode to 1 (다독순)")
+
+	var ev_k8 = InputEventKey.new()
+	ev_k8.pressed = true
+	ev_k8.keycode = KEY_8
+	main_inst._unhandled_input(ev_k8)
+	assert(main_inst.sort_mode == 2, "Key 8 in MainView should switch sort_mode to 2 (최신순)")
+
+	var ev_shift_k9 = InputEventKey.new()
+	ev_shift_k9.pressed = true
+	ev_shift_k9.shift_pressed = true
+	ev_shift_k9.keycode = KEY_9
+	main_inst._unhandled_input(ev_shift_k9)
+	assert(main_inst.sort_mode == 3 and main_inst.detail_modal.visible == true, "Shift+9 in MainView should switch sort_mode to 3 (가치순) and open first card")
+	main_inst.detail_modal.close()
+
+	var ev_k6 = InputEventKey.new()
+	ev_k6.pressed = true
+	ev_k6.keycode = KEY_6
+	main_inst._unhandled_input(ev_k6)
+	assert(main_inst.sort_mode == 0, "Key 6 in MainView should switch sort_mode to 0 (기본순)")
+
+	main_inst._unhandled_input(ev_h_183)
+	assert("[6~9] 정렬" in main_inst.status_toast.text, "Cheatsheet should include [6~9] 정렬")
+	print("✓ Sprint 199: MainView Keys 6~9 Direct Sort Modes & Shift Instant Open verified")
+
+	# Sprint 200 Milestone: DetailModal Key 9 Highlight Toggle (Shift: Copy+Close) & Modal 0~9 Complete
+	main_inst._on_card_clicked(main_inst.archive_state.items[0])
+	main_inst.detail_modal.quote_input.release_focus()
+	var hl_before_200 = main_inst.detail_modal.current_item.highlight_enabled
+	var ev_dm_9 = InputEventKey.new()
+	ev_dm_9.pressed = true
+	ev_dm_9.keycode = KEY_9
+	main_inst.detail_modal._unhandled_input(ev_dm_9)
+	assert(main_inst.detail_modal.current_item.highlight_enabled != hl_before_200, "Key 9 in DetailModal should toggle highlight_enabled")
+
+	var ev_dm_shift_9 = InputEventKey.new()
+	ev_dm_shift_9.pressed = true
+	ev_dm_shift_9.shift_pressed = true
+	ev_dm_shift_9.keycode = KEY_9
+	main_inst.detail_modal._unhandled_input(ev_dm_shift_9)
+	assert(main_inst.detail_modal.current_item.highlight_enabled == hl_before_200 and main_inst.detail_modal.visible == false, "Shift+9 in DetailModal should toggle highlight, copy card, and close")
+
+	main_inst._on_modal_help_requested()
+	assert("[5~8] 잉크 · [9] 형광펜 · [0] 원문복원" in main_inst.status_toast.text, "Modal cheatsheet should include 5~8 Ink, 9 Highlight, and 0 Restore")
+	print("✓ Sprint 200 Milestone: DetailModal Key 9 Highlight & Modal 0~9 Complete verified")
+
+	# Sprint 201: AddModal Keys 6 Violet Swatch, 7/8 Category & 9 Sample (0~9 Complete)
+	main_inst._on_add_btn_pressed()
+	main_inst.add_modal.title_input.release_focus()
+	main_inst.add_modal.author_input.release_focus()
+	main_inst.add_modal.quote_input.release_focus()
+
+	var ev_am_6 = InputEventKey.new()
+	ev_am_6.pressed = true
+	ev_am_6.keycode = KEY_6
+	main_inst.add_modal._unhandled_input(ev_am_6)
+	assert(main_inst.add_modal.selected_color == "#6d28d9", "Key 6 in AddModal should select violet swatch (#6d28d9)")
+
+	var ev_am_8 = InputEventKey.new()
+	ev_am_8.pressed = true
+	ev_am_8.keycode = KEY_8
+	main_inst.add_modal._unhandled_input(ev_am_8)
+	assert(main_inst.add_modal.cat_option.selected == 1, "Key 8 in AddModal should select Gacha (1)")
+
+	var ev_am_7 = InputEventKey.new()
+	ev_am_7.pressed = true
+	ev_am_7.keycode = KEY_7
+	main_inst.add_modal._unhandled_input(ev_am_7)
+	assert(main_inst.add_modal.cat_option.selected == 0, "Key 7 in AddModal should select Manga (0)")
+
+	var ev_am_9 = InputEventKey.new()
+	ev_am_9.pressed = true
+	ev_am_9.keycode = KEY_9
+	main_inst.add_modal._unhandled_input(ev_am_9)
+	assert(main_inst.add_modal.title_input.text == "오늘의 독서 스크랩", "Key 9 in AddModal should fill sample inputs")
+	main_inst.add_modal.close()
+	print("✓ Sprint 201: AddModal Keys 6 Violet Swatch, 7/8 Category & 9 Sample (0~9 Complete) verified")
+
+	# Sprint 202: MainView & AddModal Tab / Shift+Tab Smooth Tab & Input Focus Navigation
+	main_inst._reset_all_filters()
+	main_inst.search_input.release_focus()
+	var ev_tab_202 = InputEventKey.new()
+	ev_tab_202.pressed = true
+	ev_tab_202.keycode = KEY_TAB
+	main_inst._unhandled_input(ev_tab_202)
+	assert(main_inst.archive_state.current_filter == 0, "Tab in MainView (unfocused) should cycle to Manga tab (0)")
+
+	var ev_shift_tab_202 = InputEventKey.new()
+	ev_shift_tab_202.pressed = true
+	ev_shift_tab_202.shift_pressed = true
+	ev_shift_tab_202.keycode = KEY_TAB
+	main_inst._unhandled_input(ev_shift_tab_202)
+	assert(main_inst.archive_state.current_filter == -1, "Shift+Tab in MainView should cycle back to All tab (-1)")
+
+	main_inst._on_add_btn_pressed()
+	main_inst.add_modal.title_input.release_focus()
+	main_inst.add_modal.author_input.release_focus()
+	main_inst.add_modal.quote_input.release_focus()
+	main_inst.add_modal._unhandled_input(ev_tab_202)
+	main_inst.add_modal._unhandled_input(ev_tab_202)
+	main_inst.add_modal._unhandled_input(ev_tab_202)
+	main_inst.add_modal.close()
+	print("✓ Sprint 202: MainView & AddModal Tab / Shift+Tab Navigation verified")
+
+	# Sprint 203: DetailModal Tab / Shift+Tab Card Navigation & Quote Focus Release
+	main_inst._on_card_clicked(main_inst.archive_state.items[0])
+	main_inst.detail_modal.quote_input.release_focus()
+	var title_dm_203 = main_inst.detail_modal.current_item.title
+	main_inst.detail_modal._unhandled_input(ev_tab_202)
+	assert(main_inst.detail_modal.current_item.title != title_dm_203, "Tab in DetailModal (unfocused) should navigate to next card")
+
+	main_inst.detail_modal._unhandled_input(ev_shift_tab_202)
+	assert(main_inst.detail_modal.current_item.title == title_dm_203, "Shift+Tab in DetailModal should navigate back to first card")
+	main_inst.detail_modal.close()
+	print("✓ Sprint 203: DetailModal Tab / Shift+Tab Card Navigation verified")
+
+	# Sprint 204: DetailModal & AddModal '/' Quick Input Focus Parity
+	main_inst._on_card_clicked(main_inst.archive_state.items[0])
+	main_inst.detail_modal.quote_input.release_focus()
+	var ev_slash_204 = InputEventKey.new()
+	ev_slash_204.pressed = true
+	ev_slash_204.keycode = KEY_SLASH
+	main_inst.detail_modal._unhandled_input(ev_slash_204)
+	main_inst.detail_modal.close()
+
+	main_inst._on_add_btn_pressed()
+	main_inst.add_modal.title_input.release_focus()
+	main_inst.add_modal.author_input.release_focus()
+	main_inst.add_modal.quote_input.release_focus()
+	main_inst.add_modal._unhandled_input(ev_slash_204)
+	main_inst.add_modal.close()
+	print("✓ Sprint 204: DetailModal & AddModal '/' Quick Input Focus Parity verified")
+
+	# Sprint 205 Milestone: Global Ctrl/Cmd+S Save/Backup & Ctrl/Cmd+N AddModal
+	main_inst.search_input.grab_focus()
+	var ev_ctrl_s = InputEventKey.new()
+	ev_ctrl_s.pressed = true
+	ev_ctrl_s.ctrl_pressed = true
+	ev_ctrl_s.keycode = KEY_S
+	main_inst._unhandled_input(ev_ctrl_s)
+	assert("백업" in main_inst.status_toast.text or "JSON" in main_inst.status_toast.text, "Ctrl+S in MainView (even focused) should trigger instant JSON backup")
+
+	var ev_ctrl_n = InputEventKey.new()
+	ev_ctrl_n.pressed = true
+	ev_ctrl_n.ctrl_pressed = true
+	ev_ctrl_n.keycode = KEY_N
+	main_inst._unhandled_input(ev_ctrl_n)
+	assert(main_inst.add_modal.visible == true, "Ctrl+N in MainView should open AddModal")
+
+	var count_before_205 = main_inst.archive_state.items.size()
+	main_inst.add_modal.title_input.text = "Ctrl+S 등록 테스트"
+	main_inst.add_modal._unhandled_input(ev_ctrl_s)
+	assert(main_inst.archive_state.items.size() == count_before_205 + 1 and main_inst.add_modal.visible == false, "Ctrl+S in AddModal (even focused) should submit and close")
+	main_inst.archive_state.remove_item(main_inst.archive_state.items[main_inst.archive_state.items.size() - 1].id)
+	main_inst._render_cards()
+
+	main_inst._on_card_clicked(main_inst.archive_state.items[0])
+	var old_memo_205 = main_inst.detail_modal.current_item.memo
+	main_inst.detail_modal.quote_input.text = "Ctrl+S 저장 테스트 문구"
+	main_inst.detail_modal._unhandled_input(ev_ctrl_s)
+	assert(main_inst.detail_modal.current_item.memo == "Ctrl+S 저장 테스트 문구", "Ctrl+S in DetailModal should save quote_input")
+	main_inst.detail_modal.quote_input.text = old_memo_205
+	main_inst.detail_modal._unhandled_input(ev_ctrl_s)
+	main_inst.detail_modal.close()
+	print("✓ Sprint 205 Milestone: Global Ctrl/Cmd+S Save/Backup & Ctrl/Cmd+N AddModal verified")
+
+	# Sprint 206: Global F1 Help Cheatsheet (3 Views) & Ctrl/Cmd+K Search Focus
+	main_inst.search_input.release_focus()
+	var ev_ctrl_k = InputEventKey.new()
+	ev_ctrl_k.pressed = true
+	ev_ctrl_k.ctrl_pressed = true
+	ev_ctrl_k.keycode = KEY_K
+	main_inst._unhandled_input(ev_ctrl_k)
+
+	var ev_f1 = InputEventKey.new()
+	ev_f1.pressed = true
+	ev_f1.keycode = KEY_F1
+	main_inst._unhandled_input(ev_f1)
+	assert("단축키:" in main_inst.status_toast.text, "F1 in MainView (even focused) should display cheatsheet")
+
+	main_inst._on_card_clicked(main_inst.archive_state.items[0])
+	main_inst.detail_modal._unhandled_input(ev_f1)
+	assert("모달 단축키:" in main_inst.status_toast.text, "F1 in DetailModal should display modal cheatsheet")
+	main_inst.detail_modal.close()
+
+	main_inst._on_add_btn_pressed()
+	main_inst.add_modal._unhandled_input(ev_f1)
+	assert("새 일기 단축키:" in main_inst.status_toast.text, "F1 in AddModal should display AddModal cheatsheet")
+	main_inst.add_modal.close()
+	print("✓ Sprint 206: Global F1 Help Cheatsheet (3 Views) & Ctrl/Cmd+K Search Focus verified")
+
+	# Sprint 207: Global Ctrl/Cmd+R (Random/Reread/Color) & Ctrl/Cmd+B (Backup/Report)
+	main_inst.search_input.grab_focus()
+	var ev_ctrl_b = InputEventKey.new()
+	ev_ctrl_b.pressed = true
+	ev_ctrl_b.ctrl_pressed = true
+	ev_ctrl_b.keycode = KEY_B
+	main_inst._unhandled_input(ev_ctrl_b)
+	assert("백업" in main_inst.status_toast.text or "JSON" in main_inst.status_toast.text, "Ctrl+B in MainView (even focused) should trigger instant JSON backup")
+
+	var ev_ctrl_r = InputEventKey.new()
+	ev_ctrl_r.pressed = true
+	ev_ctrl_r.ctrl_pressed = true
+	ev_ctrl_r.keycode = KEY_R
+	main_inst._unhandled_input(ev_ctrl_r)
+	assert(main_inst.detail_modal.visible == true, "Ctrl+R in MainView should pick and open random item")
+
+	var rr_before_207 = main_inst.detail_modal.current_item.reread_count
+	main_inst.detail_modal._unhandled_input(ev_ctrl_r)
+	assert(main_inst.detail_modal.current_item.reread_count == rr_before_207 + 1, "Ctrl+R in DetailModal should increment reread_count")
+	main_inst.detail_modal.decrement_reread_count()
+	main_inst.detail_modal.close()
+
+	main_inst._on_add_btn_pressed()
+	var am_color_207 = main_inst.add_modal.selected_color
+	main_inst.add_modal._unhandled_input(ev_ctrl_r)
+	assert(main_inst.add_modal.selected_color != am_color_207, "Ctrl+R in AddModal (even focused) should pick random cover swatch")
+	main_inst.add_modal.close()
+	print("✓ Sprint 207: Global Ctrl/Cmd+R Random/Reread/Color & Ctrl/Cmd+B Backup verified")
+
+	# Sprint 208: Global Ctrl/Cmd+L (TodayQuote/Highlight/Clear) & Ctrl/Cmd+D (Complete/Dup)
+	main_inst.search_input.grab_focus()
+	var ev_ctrl_d = InputEventKey.new()
+	ev_ctrl_d.pressed = true
+	ev_ctrl_d.ctrl_pressed = true
+	ev_ctrl_d.keycode = KEY_D
+	main_inst._unhandled_input(ev_ctrl_d)
+	assert(main_inst.filter_completed_only == true, "Ctrl+D in MainView (even focused) should filter completed items")
+
+	var ev_ctrl_l = InputEventKey.new()
+	ev_ctrl_l.pressed = true
+	ev_ctrl_l.ctrl_pressed = true
+	ev_ctrl_l.keycode = KEY_L
+	main_inst._unhandled_input(ev_ctrl_l)
+	assert(main_inst.detail_modal.visible == true, "Ctrl+L in MainView should open current quote item")
+
+	var hl_before_208 = main_inst.detail_modal.current_item.highlight_enabled
+	main_inst.detail_modal._unhandled_input(ev_ctrl_l)
+	assert(main_inst.detail_modal.current_item.highlight_enabled != hl_before_208, "Ctrl+L in DetailModal should toggle highlight")
+	main_inst.detail_modal._unhandled_input(ev_ctrl_l)
+
+	var dup_before_208 = main_inst.detail_modal.current_item.duplicate_count
+	main_inst.detail_modal._unhandled_input(ev_ctrl_d)
+	assert(main_inst.detail_modal.current_item.duplicate_count == dup_before_208 + 1, "Ctrl+D in DetailModal should increment duplicate_count")
+	main_inst.detail_modal.decrement_duplicate_count()
+	main_inst.detail_modal.close()
+	print("✓ Sprint 208: Global Ctrl/Cmd+L TodayQuote/Highlight & Ctrl/Cmd+D Complete/Dup verified")
+
+	# Sprint 209: Global Ctrl/Cmd+I (Infographic/Ink/Sample) & Ctrl/Cmd+G (Gacha/Grade/Cat)
+	main_inst.search_input.grab_focus()
+	var ev_ctrl_g = InputEventKey.new()
+	ev_ctrl_g.pressed = true
+	ev_ctrl_g.ctrl_pressed = true
+	ev_ctrl_g.keycode = KEY_G
+	main_inst._unhandled_input(ev_ctrl_g)
+	assert(main_inst.archive_state.current_filter == 1, "Ctrl+G in MainView (even focused) should filter gacha (1)")
+
+	var ev_ctrl_i = InputEventKey.new()
+	ev_ctrl_i.pressed = true
+	ev_ctrl_i.ctrl_pressed = true
+	ev_ctrl_i.keycode = KEY_I
+	main_inst._unhandled_input(ev_ctrl_i)
+	assert("서재" in main_inst.status_toast.text or "종" in main_inst.status_toast.text, "Ctrl+I in MainView should show library infographic")
+
+	main_inst._on_card_clicked(main_inst.archive_state.items[0])
+	var ink_before_209 = main_inst.detail_modal.current_item.memo_ink_color
+	main_inst.detail_modal._unhandled_input(ev_ctrl_i)
+	assert(main_inst.detail_modal.current_item.memo_ink_color != ink_before_209, "Ctrl+I in DetailModal should cycle fountain-pen ink")
+	main_inst.detail_modal.close()
+
+	main_inst._on_add_btn_pressed()
+	main_inst.add_modal._unhandled_input(ev_ctrl_g)
+	assert(main_inst.add_modal.cat_option.selected == 1, "Ctrl+G in AddModal should select Gacha (1)")
+	main_inst.add_modal._unhandled_input(ev_ctrl_i)
+	assert(main_inst.add_modal.title_input.text == "오늘의 독서 스크랩", "Ctrl+I in AddModal should fill sample inputs")
+	main_inst.add_modal.close()
+	print("✓ Sprint 209: Global Ctrl/Cmd+I Infographic/Ink/Sample & Ctrl/Cmd+G Gacha/Grade/Cat verified")
+
+	# Sprint 210 Milestone: Global Ctrl/Cmd+E (Manga/Edit/Cat) & Ctrl/Cmd+W (Close Modal/Scrape)
+	main_inst.search_input.grab_focus()
+	var ev_ctrl_e = InputEventKey.new()
+	ev_ctrl_e.pressed = true
+	ev_ctrl_e.ctrl_pressed = true
+	ev_ctrl_e.keycode = KEY_E
+	main_inst._unhandled_input(ev_ctrl_e)
+	assert(main_inst.archive_state.current_filter == 0, "Ctrl+E in MainView (even focused) should filter manga (0)")
+
+	main_inst._on_card_clicked(main_inst.archive_state.items[0])
+	var ev_ctrl_w = InputEventKey.new()
+	ev_ctrl_w.pressed = true
+	ev_ctrl_w.ctrl_pressed = true
+	ev_ctrl_w.keycode = KEY_W
+	main_inst.detail_modal._unhandled_input(ev_ctrl_w)
+	assert(main_inst.detail_modal.visible == false, "Ctrl+W in DetailModal should close modal")
+
+	main_inst._on_add_btn_pressed()
+	main_inst.add_modal.cat_option.select(1)
+	main_inst.add_modal._unhandled_input(ev_ctrl_e)
+	assert(main_inst.add_modal.cat_option.selected == 0, "Ctrl+E in AddModal should select Manga (0)")
+	main_inst.add_modal._unhandled_input(ev_ctrl_w)
+	assert(main_inst.add_modal.visible == false, "Ctrl+W in AddModal should close modal")
+	print("✓ Sprint 210 Milestone: Global Ctrl/Cmd+E Manga/Edit/Cat & Ctrl/Cmd+W Close/Scrape verified")
+
+	# Sprint 211: Global Ctrl/Cmd+0 (Reset/Restore) & Ctrl/Cmd+T (Theme/Tag/Focus)
+	main_inst._on_tab_manga_pressed()
+	main_inst.search_input.text = "슬램덩크"
+	main_inst.search_input.grab_focus()
+	var ev_ctrl_t = InputEventKey.new()
+	ev_ctrl_t.pressed = true
+	ev_ctrl_t.ctrl_pressed = true
+	ev_ctrl_t.keycode = KEY_T
+	var t_before_211 = main_inst.theme_cursor
+	main_inst._unhandled_input(ev_ctrl_t)
+	assert(main_inst.theme_cursor != t_before_211, "Ctrl+T in MainView (even focused) should step theme")
+
+	var ev_ctrl_0 = InputEventKey.new()
+	ev_ctrl_0.pressed = true
+	ev_ctrl_0.ctrl_pressed = true
+	ev_ctrl_0.keycode = KEY_0
+	main_inst._unhandled_input(ev_ctrl_0)
+	assert(main_inst.archive_state.current_filter == -1 and main_inst.search_input.text == "", "Ctrl+0 in MainView should reset all filters and search")
+
+	main_inst._on_card_clicked(main_inst.archive_state.items[0])
+	main_inst.detail_modal.quote_input.text = "임시 변경"
+	main_inst.detail_modal._unhandled_input(ev_ctrl_0)
+	assert(main_inst.detail_modal.quote_input.text == main_inst.detail_modal.current_item.memo, "Ctrl+0 in DetailModal should restore quote_input")
+	main_inst.detail_modal.close()
+
+	main_inst._on_add_btn_pressed()
+	main_inst.add_modal.title_input.text = "임시 제목"
+	main_inst.add_modal._unhandled_input(ev_ctrl_0)
+	assert(main_inst.add_modal.title_input.text == "", "Ctrl+0 in AddModal should reset inputs")
+	main_inst.add_modal.close()
+	print("✓ Sprint 211: Global Ctrl/Cmd+0 Reset/Restore & Ctrl/Cmd+T Theme/Tag/Focus verified")
+
+	# Sprint 212: Global Ctrl/Cmd+P (Polaroid/Pattern/Swatch) & Ctrl/Cmd+M (Sound/Mood/MemoFocus)
+	main_inst.search_input.grab_focus()
+	var count_before_212 = main_inst.archive_state.items.size()
+	var ev_ctrl_p = InputEventKey.new()
+	ev_ctrl_p.pressed = true
+	ev_ctrl_p.ctrl_pressed = true
+	ev_ctrl_p.keycode = KEY_P
+	main_inst._unhandled_input(ev_ctrl_p)
+	assert(main_inst.archive_state.items.size() == count_before_212 + 1, "Ctrl+P in MainView (even focused) should trigger camera snap")
+
+	var ev_ctrl_m = InputEventKey.new()
+	ev_ctrl_m.pressed = true
+	ev_ctrl_m.ctrl_pressed = true
+	ev_ctrl_m.keycode = KEY_M
+	var sound_before_212 = main_inst.ambient_sound_index
+	main_inst._unhandled_input(ev_ctrl_m)
+	assert(main_inst.ambient_sound_index != sound_before_212, "Ctrl+M in MainView (even focused) should cycle ambient sound")
+
+	main_inst._on_card_clicked(main_inst.archive_state.items[0])
+	main_inst.detail_modal.quote_input.grab_focus()
+	var pat_before_212 = main_inst.detail_modal.current_item.paper_pattern
+	main_inst.detail_modal._unhandled_input(ev_ctrl_p)
+	assert(main_inst.detail_modal.current_item.paper_pattern != pat_before_212, "Ctrl+P in DetailModal (even focused) should cycle paper_pattern")
+	var mood_before_212 = main_inst.detail_modal.current_item.reading_mood
+	main_inst.detail_modal._unhandled_input(ev_ctrl_m)
+	assert(main_inst.detail_modal.current_item.reading_mood != mood_before_212, "Ctrl+M in DetailModal (even focused) should cycle reading_mood")
+	main_inst.detail_modal.close()
+
+	main_inst._on_add_btn_pressed()
+	var color_before_212 = main_inst.add_modal.selected_color
+	main_inst.add_modal._unhandled_input(ev_ctrl_p)
+	assert(main_inst.add_modal.selected_color != color_before_212, "Ctrl+P in AddModal should step cover swatch color")
+	main_inst.add_modal.quote_input.text = "임시 감상"
+	var ev_ctrl_shift_m = InputEventKey.new()
+	ev_ctrl_shift_m.pressed = true
+	ev_ctrl_shift_m.ctrl_pressed = true
+	ev_ctrl_shift_m.shift_pressed = true
+	ev_ctrl_shift_m.keycode = KEY_M
+	main_inst.add_modal._unhandled_input(ev_ctrl_shift_m)
+	assert(main_inst.add_modal.quote_input.text == "", "Ctrl+Shift+M in AddModal should clear quote_input")
+	main_inst.add_modal.close()
+	print("✓ Sprint 212: Global Ctrl/Cmd+P Polaroid/Pattern/Swatch & Ctrl/Cmd+M Sound/Mood/MemoFocus verified")
+
+	# Sprint 213: Global Ctrl/Cmd+U (Firsts/Weather/AuthorFocus) & Ctrl/Cmd+J (LastJump/Spot/CatToggle)
+	main_inst._on_tab_all_pressed()
+	main_inst.search_input.grab_focus()
+	var ev_ctrl_u = InputEventKey.new()
+	ev_ctrl_u.pressed = true
+	ev_ctrl_u.ctrl_pressed = true
+	ev_ctrl_u.keycode = KEY_U
+	main_inst._unhandled_input(ev_ctrl_u)
+	assert(main_inst.filter_firsts_only == true, "Ctrl+U in MainView (even focused) should enable filter_firsts_only")
+	main_inst._on_tab_all_pressed()
+
+	var ev_ctrl_j = InputEventKey.new()
+	ev_ctrl_j.pressed = true
+	ev_ctrl_j.ctrl_pressed = true
+	ev_ctrl_j.keycode = KEY_J
+	main_inst._unhandled_input(ev_ctrl_j)
+	assert(main_inst.detail_modal.visible == true, "Ctrl+J in MainView should open last filtered item in DetailModal")
+
+	main_inst.detail_modal.quote_input.grab_focus()
+	var weather_before_213 = main_inst.detail_modal.current_item.reading_weather
+	main_inst.detail_modal._unhandled_input(ev_ctrl_u)
+	assert(main_inst.detail_modal.current_item.reading_weather != weather_before_213, "Ctrl+U in DetailModal (even focused) should cycle reading_weather")
+	var spot_before_213 = main_inst.detail_modal.current_item.reading_spot
+	main_inst.detail_modal._unhandled_input(ev_ctrl_j)
+	assert(main_inst.detail_modal.current_item.reading_spot != spot_before_213, "Ctrl+J in DetailModal (even focused) should cycle reading_spot")
+	main_inst.detail_modal.close()
+
+	main_inst._on_add_btn_pressed()
+	main_inst.add_modal.cat_option.select(0)
+	main_inst.add_modal._unhandled_input(ev_ctrl_j)
+	assert(main_inst.add_modal.cat_option.selected == 1, "Ctrl+J in AddModal should toggle category")
+	main_inst.add_modal.author_input.text = "임시 작가"
+	var ev_ctrl_shift_u = InputEventKey.new()
+	ev_ctrl_shift_u.pressed = true
+	ev_ctrl_shift_u.ctrl_pressed = true
+	ev_ctrl_shift_u.shift_pressed = true
+	ev_ctrl_shift_u.keycode = KEY_U
+	main_inst.add_modal._unhandled_input(ev_ctrl_shift_u)
+	assert(main_inst.add_modal.author_input.text == "", "Ctrl+Shift+U in AddModal should clear author_input")
+	main_inst.add_modal.close()
+	print("✓ Sprint 213: Global Ctrl/Cmd+U Firsts/Weather/AuthorFocus & Ctrl/Cmd+J LastJump/Spot/CatToggle verified")
+
+	# Sprint 214: Global Ctrl/Cmd+O (Open/Obi/Submit) & Ctrl/Cmd+Y (Mute/Reread/Sample)
+	main_inst._on_tab_all_pressed()
+	main_inst.search_input.grab_focus()
+	var ev_ctrl_y = InputEventKey.new()
+	ev_ctrl_y.pressed = true
+	ev_ctrl_y.ctrl_pressed = true
+	ev_ctrl_y.keycode = KEY_Y
+	var snd_before_214 = main_inst.ambient_sound_index
+	main_inst._unhandled_input(ev_ctrl_y)
+	assert(main_inst.ambient_sound_index != snd_before_214, "Ctrl+Y in MainView (even focused) should toggle/cycle ambient sound")
+
+	var ev_ctrl_o = InputEventKey.new()
+	ev_ctrl_o.pressed = true
+	ev_ctrl_o.ctrl_pressed = true
+	ev_ctrl_o.keycode = KEY_O
+	main_inst._unhandled_input(ev_ctrl_o)
+	assert(main_inst.detail_modal.visible == true, "Ctrl+O in MainView (even focused) should open first filtered item")
+
+	main_inst.detail_modal.quote_input.grab_focus()
+	var obi_before_214 = main_inst.detail_modal.current_item.obi_text
+	main_inst.detail_modal._unhandled_input(ev_ctrl_o)
+	assert(main_inst.detail_modal.current_item.obi_text != obi_before_214, "Ctrl+O in DetailModal (even focused) should cycle obi_text")
+	var reread_before_214 = main_inst.detail_modal.current_item.reread_count
+	main_inst.detail_modal._unhandled_input(ev_ctrl_y)
+	assert(main_inst.detail_modal.current_item.reread_count == reread_before_214 + 1, "Ctrl+Y in DetailModal (even focused) should increment reread_count")
+	main_inst.detail_modal.close()
+
+	main_inst._on_add_btn_pressed()
+	main_inst.add_modal.clear_inputs()
+	main_inst.add_modal._unhandled_input(ev_ctrl_y)
+	assert(main_inst.add_modal.title_input.text != "", "Ctrl+Y in AddModal should fill sample inputs")
+	var ev_ctrl_shift_o = InputEventKey.new()
+	ev_ctrl_shift_o.pressed = true
+	ev_ctrl_shift_o.ctrl_pressed = true
+	ev_ctrl_shift_o.shift_pressed = true
+	ev_ctrl_shift_o.keycode = KEY_O
+	var count_before_214 = main_inst.archive_state.items.size()
+	main_inst.add_modal._unhandled_input(ev_ctrl_shift_o)
+	assert(main_inst.archive_state.items.size() == count_before_214 + 1, "Ctrl+Shift+O in AddModal should submit item")
+	print("✓ Sprint 214: Global Ctrl/Cmd+O Open/Obi/Submit & Ctrl/Cmd+Y Mute/Reread/Sample verified")
+
+	# Sprint 215 Milestone: Global Ctrl/Cmd+1~5 (Tabs/Stamps+Ink/Swatches) & Ctrl/Cmd+H (Cheatsheet)
+	main_inst.search_input.grab_focus()
+	var ev_ctrl_2 = InputEventKey.new()
+	ev_ctrl_2.pressed = true
+	ev_ctrl_2.ctrl_pressed = true
+	ev_ctrl_2.keycode = KEY_2
+	main_inst._unhandled_input(ev_ctrl_2)
+	assert(main_inst.archive_state.current_filter == 0, "Ctrl+2 in MainView (even focused) should switch to Manga tab (0)")
+	var ev_ctrl_h = InputEventKey.new()
+	ev_ctrl_h.pressed = true
+	ev_ctrl_h.ctrl_pressed = true
+	ev_ctrl_h.keycode = KEY_H
+	main_inst._unhandled_input(ev_ctrl_h)
+	assert(main_inst.status_toast.text.find("단축키") != -1, "Ctrl+H in MainView should show shortcut cheatsheet")
+	main_inst._on_tab_all_pressed()
+
+	main_inst._on_card_clicked(main_inst.archive_state.items[0])
+	main_inst.detail_modal.quote_input.grab_focus()
+	main_inst.detail_modal._unhandled_input(ev_ctrl_2)
+	assert(main_inst.detail_modal.current_item.status_tag == "초판특전", "Ctrl+2 in DetailModal (even focused) should apply 초판특전 stamp")
+	var ev_ctrl_5 = InputEventKey.new()
+	ev_ctrl_5.pressed = true
+	ev_ctrl_5.ctrl_pressed = true
+	ev_ctrl_5.keycode = KEY_5
+	main_inst.detail_modal._unhandled_input(ev_ctrl_5)
+	assert(main_inst.detail_modal.current_item.memo_ink_color == "#2c221e", "Ctrl+5 in DetailModal should set espresso ink")
+	main_inst.detail_modal._unhandled_input(ev_ctrl_h)
+	assert(main_inst.status_toast.text.find("모달 단축키") != -1, "Ctrl+H in DetailModal should show modal cheatsheet")
+	main_inst.detail_modal.close()
+
+	main_inst._on_add_btn_pressed()
+	main_inst.add_modal.select_color(main_inst.add_modal.COVER_SWATCHES[0]["hex"])
+	main_inst.add_modal._unhandled_input(ev_ctrl_2)
+	assert(main_inst.add_modal.selected_color == main_inst.add_modal.COVER_SWATCHES[1]["hex"], "Ctrl+2 in AddModal should select 2nd cover swatch")
+	main_inst.add_modal.close()
+	print("✓ Sprint 215 Milestone: Global Ctrl/Cmd+1~5 Tabs/Stamps/Swatches & Ctrl/Cmd+H Cheatsheet verified")
+
+	# Sprint 216: Global Ctrl/Cmd+6~9 (Sort/Ink+Highlight/Violet+Cat+Sample)
+	main_inst.search_input.grab_focus()
+	var ev_ctrl_8 = InputEventKey.new()
+	ev_ctrl_8.pressed = true
+	ev_ctrl_8.ctrl_pressed = true
+	ev_ctrl_8.keycode = KEY_8
+	main_inst._unhandled_input(ev_ctrl_8)
+	assert(main_inst.sort_mode == 2, "Ctrl+8 in MainView (even focused) should set sort_mode=2 (Latest)")
+	main_inst._set_sort_mode(0)
+
+	main_inst._on_card_clicked(main_inst.archive_state.items[0])
+	main_inst.detail_modal.quote_input.grab_focus()
+	var ev_ctrl_6 = InputEventKey.new()
+	ev_ctrl_6.pressed = true
+	ev_ctrl_6.ctrl_pressed = true
+	ev_ctrl_6.keycode = KEY_6
+	main_inst.detail_modal._unhandled_input(ev_ctrl_6)
+	assert(main_inst.detail_modal.current_item.memo_ink_color == "#7f1d1d", "Ctrl+6 in DetailModal (even focused) should set burgundy ink")
+	var hl_before_216 = main_inst.detail_modal.current_item.highlight_enabled
+	var ev_ctrl_9 = InputEventKey.new()
+	ev_ctrl_9.pressed = true
+	ev_ctrl_9.ctrl_pressed = true
+	ev_ctrl_9.keycode = KEY_9
+	main_inst.detail_modal._unhandled_input(ev_ctrl_9)
+	assert(main_inst.detail_modal.current_item.highlight_enabled != hl_before_216, "Ctrl+9 in DetailModal (even focused) should toggle highlight_enabled")
+	main_inst.detail_modal.close()
+
+	main_inst._on_add_btn_pressed()
+	main_inst.add_modal._unhandled_input(ev_ctrl_6)
+	assert(main_inst.add_modal.selected_color == main_inst.add_modal.COVER_SWATCHES[5]["hex"], "Ctrl+6 in AddModal should select 6th Violet swatch")
+	main_inst.add_modal.cat_option.select(0)
+	main_inst.add_modal._unhandled_input(ev_ctrl_8)
+	assert(main_inst.add_modal.cat_option.selected == 1, "Ctrl+8 in AddModal should select Gacha category (1)")
+	main_inst.add_modal.clear_inputs()
+	main_inst.add_modal._unhandled_input(ev_ctrl_9)
+	assert(main_inst.add_modal.title_input.text != "", "Ctrl+9 in AddModal should fill sample inputs")
+	main_inst.add_modal.close()
+	print("✓ Sprint 216: Global Ctrl/Cmd+6~9 Sort/Ink+Highlight/Violet+Cat+Sample verified")
+
+	# Sprint 217: Global Ctrl/Cmd+Up/Down & Ctrl/Cmd+PageUp/PageDown (Sort/Tab/Nav/Swatch)
+	main_inst.search_input.grab_focus()
+	var sort_before_217 = main_inst.sort_mode
+	var ev_ctrl_down = InputEventKey.new()
+	ev_ctrl_down.pressed = true
+	ev_ctrl_down.ctrl_pressed = true
+	ev_ctrl_down.keycode = KEY_DOWN
+	main_inst._unhandled_input(ev_ctrl_down)
+	assert(main_inst.sort_mode != sort_before_217, "Ctrl+Down in MainView (even focused) should step sort_mode")
+	main_inst._set_sort_mode(0)
+
+	var ev_ctrl_pgdn = InputEventKey.new()
+	ev_ctrl_pgdn.pressed = true
+	ev_ctrl_pgdn.ctrl_pressed = true
+	ev_ctrl_pgdn.keycode = KEY_PAGEDOWN
+	main_inst._unhandled_input(ev_ctrl_pgdn)
+	assert(main_inst.archive_state.current_filter == 0, "Ctrl+PageDown in MainView (even focused) should step to Manga tab (0)")
+	main_inst._on_tab_all_pressed()
+
+	main_inst._on_card_clicked(main_inst.archive_state.items[0])
+	var id_before_217 = main_inst.detail_modal.current_item.id
+	main_inst.detail_modal.quote_input.grab_focus()
+	main_inst.detail_modal._unhandled_input(ev_ctrl_down)
+	assert(main_inst.detail_modal.current_item.id != id_before_217, "Ctrl+Down in DetailModal (even focused) should navigate to next card")
+	main_inst.detail_modal.close()
+
+	main_inst._on_add_btn_pressed()
+	var color_before_217 = main_inst.add_modal.selected_color
+	main_inst.add_modal._unhandled_input(ev_ctrl_pgdn)
+	assert(main_inst.add_modal.selected_color != color_before_217, "Ctrl+PageDown in AddModal should step cover swatch color")
+	main_inst.add_modal.close()
+	print("✓ Sprint 217: Global Ctrl/Cmd+Up/Down & PageUp/PageDown Sort/Tab/Nav/Swatch verified")
+
+	# Sprint 218: Global Ctrl/Cmd+Space (Open/Nav/Swatch) & Ctrl/Cmd+Backspace (Reset/Close/Clear)
+	main_inst._on_tab_manga_pressed()
+	main_inst.search_input.text = "슬램덩크"
+	main_inst.search_input.grab_focus()
+	var ev_ctrl_bksp = InputEventKey.new()
+	ev_ctrl_bksp.pressed = true
+	ev_ctrl_bksp.ctrl_pressed = true
+	ev_ctrl_bksp.keycode = KEY_BACKSPACE
+	main_inst._unhandled_input(ev_ctrl_bksp)
+	assert(main_inst.archive_state.current_filter == -1 and main_inst.search_input.text == "", "Ctrl+Backspace in MainView (even focused) should reset filters and search")
+
+	var ev_ctrl_space = InputEventKey.new()
+	ev_ctrl_space.pressed = true
+	ev_ctrl_space.ctrl_pressed = true
+	ev_ctrl_space.keycode = KEY_SPACE
+	main_inst._unhandled_input(ev_ctrl_space)
+	assert(main_inst.detail_modal.visible == true, "Ctrl+Space in MainView (even focused) should open first filtered item")
+
+	var id_before_218 = main_inst.detail_modal.current_item.id
+	main_inst.detail_modal.quote_input.grab_focus()
+	main_inst.detail_modal._unhandled_input(ev_ctrl_space)
+	assert(main_inst.detail_modal.current_item.id != id_before_218, "Ctrl+Space in DetailModal (even focused) should navigate to next item")
+	main_inst.detail_modal._unhandled_input(ev_ctrl_bksp)
+	assert(main_inst.detail_modal.visible == false, "Ctrl+Backspace in DetailModal should close modal")
+
+	main_inst._on_add_btn_pressed()
+	var color_before_218 = main_inst.add_modal.selected_color
+	main_inst.add_modal._unhandled_input(ev_ctrl_space)
+	assert(main_inst.add_modal.selected_color != color_before_218, "Ctrl+Space in AddModal should step cover swatch")
+	main_inst.add_modal.title_input.text = "임시 제목"
+	main_inst.add_modal._unhandled_input(ev_ctrl_bksp)
+	assert(main_inst.add_modal.title_input.text == "", "Ctrl+Backspace in AddModal should clear inputs")
+	main_inst.add_modal.close()
+	print("✓ Sprint 218: Global Ctrl/Cmd+Space Open/Nav/Swatch & Ctrl/Cmd+Backspace Reset/Close/Clear verified")
+
+	# Sprint 219: Global Ctrl/Cmd+/ (Focus/Help) & Ctrl/Cmd+Enter (Open/Save/Submit)
+	var ev_ctrl_slash = InputEventKey.new()
+	ev_ctrl_slash.pressed = true
+	ev_ctrl_slash.ctrl_pressed = true
+	ev_ctrl_slash.keycode = KEY_SLASH
+	main_inst.search_input.release_focus()
+	main_inst._unhandled_input(ev_ctrl_slash)
+	assert(main_inst.search_input.has_focus(), "Ctrl+/ in MainView should focus search_input")
+
+	var ev_ctrl_enter = InputEventKey.new()
+	ev_ctrl_enter.pressed = true
+	ev_ctrl_enter.ctrl_pressed = true
+	ev_ctrl_enter.keycode = KEY_ENTER
+	main_inst._unhandled_input(ev_ctrl_enter)
+	assert(main_inst.detail_modal.visible == true, "Ctrl+Enter in MainView (even focused) should open first filtered item")
+
+	main_inst.detail_modal.quote_input.release_focus()
+	main_inst.detail_modal._unhandled_input(ev_ctrl_slash)
+	assert(main_inst.detail_modal.quote_input.has_focus(), "Ctrl+/ in DetailModal should focus quote_input")
+	main_inst.detail_modal.quote_input.text = "Ctrl+Enter 저장 테스트"
+	main_inst.detail_modal._unhandled_input(ev_ctrl_enter)
+	assert(main_inst.detail_modal.current_item.memo == "Ctrl+Enter 저장 테스트", "Ctrl+Enter in DetailModal should save quote")
+	main_inst.detail_modal.close()
+
+	main_inst._on_add_btn_pressed()
+	main_inst.add_modal.title_input.release_focus()
+	main_inst.add_modal._unhandled_input(ev_ctrl_slash)
+	assert(main_inst.add_modal.title_input.has_focus(), "Ctrl+/ in AddModal should focus title_input")
+	var ev_ctrl_shift_enter = InputEventKey.new()
+	ev_ctrl_shift_enter.pressed = true
+	ev_ctrl_shift_enter.ctrl_pressed = true
+	ev_ctrl_shift_enter.shift_pressed = true
+	ev_ctrl_shift_enter.keycode = KEY_ENTER
+	var count_before_219 = main_inst.archive_state.items.size()
+	main_inst.add_modal._unhandled_input(ev_ctrl_shift_enter)
+	assert(main_inst.archive_state.items.size() == count_before_219 + 1, "Ctrl+Shift+Enter in AddModal should submit sample item")
+	print("✓ Sprint 219: Global Ctrl/Cmd+/ Focus/Help & Ctrl/Cmd+Enter Open/Save/Submit verified")
+
+	# Sprint 220 Milestone: Global Ctrl/Cmd+Tab Switch & Ctrl/Cmd+ESC Instant Reset/Close
+	main_inst._on_tab_all_pressed()
+	main_inst.search_input.grab_focus()
+	var ev_ctrl_tab = InputEventKey.new()
+	ev_ctrl_tab.pressed = true
+	ev_ctrl_tab.ctrl_pressed = true
+	ev_ctrl_tab.keycode = KEY_TAB
+	main_inst._unhandled_input(ev_ctrl_tab)
+	assert(main_inst.archive_state.current_filter == 0, "Ctrl+Tab in MainView (even focused) should step to Manga tab (0)")
+	var ev_ctrl_esc = InputEventKey.new()
+	ev_ctrl_esc.pressed = true
+	ev_ctrl_esc.ctrl_pressed = true
+	ev_ctrl_esc.keycode = KEY_ESCAPE
+	main_inst._unhandled_input(ev_ctrl_esc)
+	assert(main_inst.archive_state.current_filter == -1, "Ctrl+ESC in MainView should full-reset filters")
+
+	main_inst._on_card_clicked(main_inst.archive_state.items[0])
+	var id_before_220 = main_inst.detail_modal.current_item.id
+	main_inst.detail_modal.quote_input.grab_focus()
+	main_inst.detail_modal._unhandled_input(ev_ctrl_tab)
+	assert(main_inst.detail_modal.current_item.id != id_before_220, "Ctrl+Tab in DetailModal (even focused) should navigate to next item")
+	main_inst.detail_modal._unhandled_input(ev_ctrl_esc)
+	assert(main_inst.detail_modal.visible == false, "Ctrl+ESC in DetailModal (even focused) should close modal")
+
+	main_inst._on_add_btn_pressed()
+	var color_before_220 = main_inst.add_modal.selected_color
+	main_inst.add_modal.title_input.text = "임시 제목"
+	main_inst.add_modal._unhandled_input(ev_ctrl_tab)
+	assert(main_inst.add_modal.selected_color != color_before_220, "Ctrl+Tab in AddModal should step cover swatch")
+	main_inst.add_modal._unhandled_input(ev_ctrl_esc)
+	assert(main_inst.add_modal.visible == false and main_inst.add_modal.title_input.text == "", "Ctrl+ESC in AddModal should clear and close")
+	print("✓ Sprint 220 Milestone: Global Ctrl/Cmd+Tab Switch & Ctrl/Cmd+ESC Instant Reset/Close verified")
+
+	# Sprint 221: Live Filtered Count in Search Placeholder
+	main_inst.archive_state.reset_to_rich_defaults()
+	main_inst._on_tab_all_pressed()
+	assert(main_inst.search_input.placeholder_text == "작품·대사 검색... (전체 6종)", "All tab should show total 6종 in search placeholder")
+	main_inst._on_tab_manga_pressed()
+	assert(main_inst.search_input.placeholder_text == "작품·대사 검색... (4/6종 표시)", "Manga tab should show 4/6종 표시 in search placeholder")
+	main_inst._on_tab_all_pressed()
+	print("✓ Sprint 221: Live Filtered Count in Search Placeholder verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

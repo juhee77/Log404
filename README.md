@@ -18,13 +18,70 @@ Godot 4+ 기반의 감성 게임 및 인터랙티브 아카이브 애플리케�
 > **Godot 4.6.2 모바일 기반 E-Book 리더기 서재(Apple Books · 리디북스) & 만년필 다꾸 독서노트(굿노트 · 몰스킨) 감성 아카이브 앱**  
 > 14인 가상 애자일 스쿼드가 20분 주기 자동 스프린트로 지속 개선 중입니다.
 
-### 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 164)
+### 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 221)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
 | ![Pocket Archive Main Screen](game02/godot_project/screenshots/godot_app_screen.png) | ![Pocket Archive Detail Modal](game02/godot_project/screenshots/godot_modal_screen.png) |
 
 ### ✨ 주요 핵심 기능
+- **최신 Sprint 221 하이라이트**: 검색창 실시간 필터링 작품 수 표시(`전체 N종` / `K/N종 표시` · `main_view.gd` · `index.html`) 완성
+- **Sprint 220 Milestone 하이라이트**: 3대 뷰 전역 `Ctrl/Cmd+Tab` 전환 · `Ctrl/Cmd+ESC` 즉시 초기화·닫기(`main_view.gd` · `detail_modal.gd` · `add_modal.gd` · `index.html`) 완성
+- **Sprint 219 하이라이트**: 3대 뷰 전역 `Ctrl/Cmd+/` 포커스·도움말 · `Ctrl/Cmd+Enter` 열기·저장·등록(`main_view.gd` · `detail_modal.gd` · `add_modal.gd` · `index.html`) 완성
+- **Sprint 218 하이라이트**: 3대 뷰 전역 `Ctrl/Cmd+Space` 열기·넘김·스와치 · `Ctrl/Cmd+Backspace` 초기화·닫기·비우기(`main_view.gd` · `detail_modal.gd` · `add_modal.gd` · `index.html`) 완성
+- **Sprint 217 하이라이트**: 3대 뷰 전역 `Ctrl/Cmd+↑/↓` & `Ctrl/Cmd+PgUp/PgDn` 정렬·탭·작품넘김·스와치 순환(`main_view.gd` · `detail_modal.gd` · `add_modal.gd` · `index.html`) 완성
+- **Sprint 216 하이라이트**: 3대 뷰 전역 `Ctrl/Cmd+6~9` 정렬·잉크·형광펜·스와치·샘플(`main_view.gd` · `detail_modal.gd` · `add_modal.gd` · `index.html`) 완성
+- **Sprint 215 Milestone 하이라이트**: 3대 뷰 전역 `Ctrl/Cmd+1~5` 탭·인장·잉크·스와치 · `Ctrl/Cmd+H` 치트시트(`main_view.gd` · `detail_modal.gd` · `add_modal.gd` · `index.html`) 완성
+- **Sprint 214 하이라이트**: 3대 뷰 전역 `Ctrl/Cmd+O` 작품열기·띠지·일기등록 · `Ctrl/Cmd+Y` 음소거·회독·샘플채움(`main_view.gd` · `detail_modal.gd` · `add_modal.gd` · `index.html`) 완성
+- **Sprint 213 하이라이트**: 3대 뷰 전역 `Ctrl/Cmd+U` 초판필터·날씨·작가포커스 · `Ctrl/Cmd+J` 마지막점프·장소·분류전환(`main_view.gd` · `detail_modal.gd` · `add_modal.gd` · `index.html`) 완성
+- **Sprint 212 하이라이트**: 3대 뷰 전역 `Ctrl/Cmd+P` 촬영·속지패턴·컬러스와치 · `Ctrl/Cmd+M` 사운드·독서무드·감상포커스(`main_view.gd` · `detail_modal.gd` · `add_modal.gd` · `index.html`) 완성
+- **Sprint 211 하이라이트**: 3대 뷰 전역 `Ctrl/Cmd+0` 초기화·복원 · `Ctrl/Cmd+T` 테마·태그·제목포커스(`main_view.gd` · `detail_modal.gd` · `add_modal.gd` · `index.html`) 완성
+- **Sprint 210 Milestone 하이라이트**: 3대 뷰 전역 `Ctrl/Cmd+E` 이북·편집·분류 · `Ctrl/Cmd+W` 모달 닫기·스크랩(`main_view.gd` · `detail_modal.gd` · `add_modal.gd` · `index.html`) 완성
+- **Sprint 209 하이라이트**: 3대 뷰 전역 `Ctrl/Cmd+I` 인포그래픽·잉크·샘플 · `Ctrl/Cmd+G` 가챠·등급·분류(`main_view.gd` · `detail_modal.gd` · `add_modal.gd` · `index.html`) 완성
+- **Sprint 208 하이라이트**: 3대 뷰 전역 `Ctrl/Cmd+L` 오늘밑줄·형광펜·초기화 · `Ctrl/Cmd+D` 완독·복수소장(`main_view.gd` · `detail_modal.gd` · `add_modal.gd` · `index.html`) 완성
+- **Sprint 207 하이라이트**: 3대 뷰 전역 `Ctrl/Cmd+R` 랜덤·회독·컬러 · `Ctrl/Cmd+B` 백업·리포트(`main_view.gd` · `detail_modal.gd` · `add_modal.gd` · `index.html`) 완성
+- **Sprint 206 하이라이트**: 3대 뷰 전역 `F1` 단축키 치트시트(`Shift`: 복사) · `Ctrl/Cmd+K` 검색창 포커스(`main_view.gd` · `detail_modal.gd` · `add_modal.gd` · `index.html`) 완성
+- **Sprint 205 Milestone 하이라이트**: 3대 뷰 전역 `Ctrl/Cmd+S` 저장·백업 · `Ctrl/Cmd+N` 새 일기(포커스 중에도 동작)(`main_view.gd` · `detail_modal.gd` · `add_modal.gd` · `index.html`) 완성
+- **Sprint 204 하이라이트**: `DetailModal` & `AddModal` `/` 키 즉시 입력칸 포커스로 3대 뷰 `/` 일관성 완성(`detail_modal.gd` · `add_modal.gd` · `index.html`)
+- **Sprint 203 하이라이트**: `DetailModal` `Tab`/`Shift+Tab` 이전·다음 작품 넘김 · 입력창 포커스 해제(`detail_modal.gd` · `index.html`) 완성
+- **Sprint 202 하이라이트**: `MainView` & `AddModal` `Tab`/`Shift+Tab` 필터 탭 순환 · 입력칸 포커스 이동(`main_view.gd` · `add_modal.gd` · `index.html`) 완성
+- **Sprint 201 하이라이트**: `AddModal` 숫자키 `6` 바이올렛 컬러 · `7/8` 분류 · `9` 샘플 채움으로 3대 뷰 `0~9` 숫자키 100% 완성(`add_modal.gd` · `main_view.gd` · `index.html`)
+- **Sprint 200 Milestone 하이라이트**: `DetailModal` 숫자키 `9` 형광펜 토글(`Shift`: 복사+닫기)로 모달 `0~9` 숫자키 및 치트시트(`H`) 100% 완성(`detail_modal.gd` · `main_view.gd` · `index.html`)
+- **Sprint 199 하이라이트**: 메인 숫자키 `6~9` 4대 정렬 모드 즉시 전환(`Shift`: 첫 작품 열기)으로 `0~9` 숫자키 완성(`main_view.gd` · `index.html`)
+- **Sprint 198 하이라이트**: `DetailModal` 숫자키 `5~8` 만년필 잉크 4종 즉시 선택(`Shift`: 적용+닫기)(`detail_modal.gd` · `index.html`) 완성
+- **Sprint 197 하이라이트**: `DetailModal` 키보드 `↑/↓` 카드 넘김(`Shift`: 처음·끝) · `0` 문장 원문 복원(`detail_modal.gd` · `index.html`) 완성
+- **Sprint 196 하이라이트**: `DetailModal` 키보드 `Enter` 문장 편집(`Shift`: 형광펜) · `Backspace` 닫기(`Shift`: 복사+닫기)(`detail_modal.gd` · `index.html`) 완성
+- **Sprint 195 Milestone 하이라이트**: `AddModal` `H/?` 단축키 치트시트(`Shift`: 복사) · 단독 `Enter` 등록 제출(`add_modal.gd` · `main_view.gd` · `index.html`) 완성
+- **Sprint 194 하이라이트**: `AddModal` 키보드 `0` 기본값 리셋 · `Home/End` 첫·끝 컬러 점프 · `Backspace` 초기화(`add_modal.gd` · `index.html`) 완성
+- **Sprint 193 하이라이트**: `AddModal` 키보드 `A/Q` 작가·밑줄 포커스 · `Space` 컬러 순환 · `R` 랜덤 표지 컬러(`add_modal.gd` · `index.html`) 완성
+- **Sprint 192 하이라이트**: `AddModal` 키보드 `E/G` 카테고리 직접 선택 · `T` 제목 포커스 · `S` 등록 제출(`add_modal.gd` · `index.html`) 완성
+- **Sprint 191 하이라이트**: `AddModal` 키보드 `F` 샘플 채움 · `X` 입력 초기화(`Shift`: 닫기) · `←/→` 표지 컬러 순환(`add_modal.gd` · `index.html`) 완성
+- **Sprint 190 Milestone 하이라이트**: 메인 키보드 `Enter` 열기(`Shift`: 새 일기 모달) · `Backspace` 초기화(`Shift`: 스튜디오 리셋) 및 치트시트(`H`) 동기화(`main_view.gd` · `index.html`) 완성
+- **Sprint 189 하이라이트**: 메인 키보드 `↑/↓` 정렬·사운드 순환 · `PageUp/PageDown` 필터 탭 순환 및 치트시트(`H`) 동기화(`main_view.gd` · `index.html`) 완성
+- **Sprint 188 하이라이트**: 메인 키보드 `←/→` 문장·테마 탐색 · `Home/End` 처음·끝 작품 즉시 열기 및 치트시트(`H`) 동기화(`main_view.gd` · `index.html`) 완성
+- **Sprint 187 하이라이트**: 메인 키보드 `J` 마지막 작품 열기(`Shift`: 첫 작품) · `Y` 앰비언트 음소거 토글로 A~Z 26/26 단축키 완성(`main_view.gd` · `index.html`)
+- **Sprint 186 하이라이트**: 메인 키보드 `K` 다독순 · `Z` 최신순 정렬 토글(`Shift`: 기본순 복귀) 및 치트시트(`H`) 동기화(`main_view.gd` · `index.html`) 완성
+- **Sprint 185 Milestone 하이라이트**: 메인 키보드 `O` 즉시 열기(`Shift`: 랜덤 오픈) · `X` 초기화(`Shift`: 스튜디오 리셋) 및 치트시트(`H`) 동기화(`main_view.gd` · `index.html`) 완성
+- **Sprint 184 하이라이트**: 메인 키보드 `A` 전체일기 · `U` 초판특전 필터(`Shift`: 첫 작품 열기) 및 치트시트(`H`) 동기화(`main_view.gd` · `index.html`) 완성
+- **Sprint 183 하이라이트**: 메인 키보드 `E/G/D` 분류 필터(`Shift`: 첫 작품 열기) 및 치트시트(`H`) 동기화(`main_view.gd` · `index.html`) 완성
+- **Sprint 182 하이라이트**: 메인 키보드 `B` 즉시 백업(`Shift`: 리포트 복사) 및 `F` 인생작 필터(`Shift`: 첫 작품 열기)(`main_view.gd` · `index.html`) 완성
+- **최신 Sprint 181 하이라이트**: 메인 키보드 `V` 가치순 정렬 토글(`Shift`: 기본순) 및 `L` 오늘의 밑줄 작품 열기(`Shift`: 작품 필터)(`main_view.gd` · `index.html`) 완성
+- **🏆 Sprint 180 마일스톤 하이라이트**: 메인 키보드 `W` 웹표지 스크랩 및 `P` 폴라로이드 촬영(`Shift`: 등록 후 즉시 열기)(`main_view.gd` · `index.html`) 완결
+- **최신 Sprint 179 하이라이트**: `AddModal` 키보드 `1~5` 표지 스와치(`Shift`: 즉시 등록) 및 `C` 분류 전환(`Shift`: 즉시 등록)(`add_modal.gd` · `index.html`) 완성
+- **최신 Sprint 178 하이라이트**: `DetailModal` 키보드 `Shift+ESC` 카드 복사+닫기, `Shift+H` 치트시트 복사 및 `Shift+/`(`?`) 도움말(`detail_modal.gd` · `index.html`) 완성
+- **최신 Sprint 177 하이라이트**: 메인 키보드 `Shift+/`(`?`) 치트시트, `Shift+ESC` 필터 초기화 및 `Space`/`Shift+Space` 서재·랜덤 열기(`main_view.gd` · `index.html`) 완성
+- **최신 Sprint 176 하이라이트**: `AddModal` 키보드 `Shift+ESC` 입력 전체 비우기 및 `Shift+Enter` 샘플 자동 채움 등록(`add_modal.gd` · `index.html`) 완성
+- **🏆 Sprint 175 마일스톤 하이라이트**: `DetailModal` 키보드 `Shift+L` 속지 순환, `Shift+Delete` 삭제 해제 및 `Shift+PgUp/PgDn` 처음·끝 점프(`detail_modal.gd` · `index.html`) 완결
+- **최신 Sprint 174 하이라이트**: `DetailModal` 키보드 `Shift+E` 샘플 밑줄 채움 및 `Shift+1~4` 인장 찍고 닫기(`detail_modal.gd` · `index.html`) 완성
+- **최신 Sprint 173 하이라이트**: `DetailModal` 키보드 `Shift+←/→` 처음·끝 점프, `Shift++` 초판+북마크 추가 및 `Shift+-` 전권 북마크 토글(`detail_modal.gd` · `index.html`) 완성
+- **최신 Sprint 172 하이라이트**: 메인 키보드 `Shift+0` 스튜디오 완전 초기화, `Shift+C` 오늘의 밑줄 복사 및 `Shift+H` 단축키 치트시트 복사(`main_view.gd` · `index.html`) 완성
+- **최신 Sprint 171 하이라이트**: 메인 키보드 `Shift+1~5` 탭 필터 후 즉시 열기, `Shift+N` 샘플 모달 및 `Shift+I` 즉시 백업(`main_view.gd` · `index.html`) 완성
+- **🏆 Sprint 170 마일스톤 하이라이트**: `TitleLabel` `Shift+좌클릭` 감상 카드 전체 복사 및 `StampLbl`/`InkLbl` `Shift+좌클릭` 역순환(`detail_modal.gd` · `index.html`) 완결
+- **최신 Sprint 169 하이라이트**: `AddModal` 입력 3종 `Shift+좌클릭` 개별 샘플 채움 및 `DetailModal` `CatBadge` `Shift+좌클릭` 전체 서재 복원(`add_modal.gd` · `detail_modal.gd` · `index.html`) 완성
+- **최신 Sprint 168 하이라이트**: `SearchInput` `Shift+좌클릭` 첫 결과 열기 및 `QuoteInput` `Shift+좌클릭` 밑줄 저장+복사(`main_view.gd` · `detail_modal.gd` · `index.html`) 완성
+- **최신 Sprint 167 하이라이트**: `AddModal` `Dimmer` `Shift+좌클릭` 입력 비우기 및 `TitleLabel` `Shift+좌클릭` 샘플 즉시 등록(`add_modal.gd` · `index.html`) 완성
+- **최신 Sprint 166 하이라이트**: `EmptyStateResetBtn` `Shift+좌클릭` 복원 후 랜덤 일기장 열기 및 `DetailModal` `Dimmer` `Shift+좌클릭` 카드 복사+닫기(`main_view.gd` · `detail_modal.gd` · `index.html`) 완성
+- **🏆 Sprint 165 마일스톤 하이라이트**: `AddModal` 표지 스와치 5종·`CatOption`·`CloseBtn`·`SubmitBtn` `Shift+좌클릭` 파워 액션(`add_modal.gd` · `index.html`) 완결
 - **최신 Sprint 164 하이라이트**: `StampRow`·`InkRow` 17종 데코레이터 순환 버튼 `Shift+좌클릭` 역순환(`detail_modal.gd` · `index.html`) 일괄 완성
 - **최신 Sprint 163 하이라이트**: `RereadBtn`/`DuplicateBtn`/`ValueBtn` `Shift+좌클릭` -1·-5,000원 역감소(`detail_modal.gd` · `index.html`) 완성
 - **최신 Sprint 162 하이라이트**: `DateStampBtn` `Shift+좌클릭` 구매일+전권 오늘 날짜 동기화 및 `DeleteBtn` `Shift+좌클릭` 삭제 확인 해제(`detail_modal.gd` · `index.html`) 완성
