@@ -994,6 +994,10 @@ func _unhandled_input(event: InputEvent) -> void:
 			if event.keycode == KEY_H and event.shift_pressed:
 				DisplayServer.clipboard_set("⌨️ 모달 단축키: [←/→] 넘김(Shift: 처음·끝) · [+/-] 권(Shift: 초판·북마크) · [1~4] 인장(Shift: 찍고닫기) · [E] 문장(Shift: 샘플) · [L] 형광펜(Shift: 속지) · [C] 복사(Shift: 리포트) · [ESC] 닫기(Shift: 카드복사+닫기)")
 			get_viewport().set_input_as_handled()
+		elif event.keycode == KEY_SLASH and not event.shift_pressed and quote_input != null:
+			quote_input.grab_focus()
+			quote_input.select_all()
+			get_viewport().set_input_as_handled()
 		elif event.keycode == KEY_BACKSPACE:
 			if event.shift_pressed:
 				copy_book_quote_card()

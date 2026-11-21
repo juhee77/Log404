@@ -411,6 +411,10 @@ func _unhandled_input(event: InputEvent) -> void:
 		elif event.keycode == KEY_H or (event.keycode == KEY_SLASH and event.shift_pressed):
 			help_requested.emit(event.shift_pressed and event.keycode == KEY_H)
 			get_viewport().set_input_as_handled()
+		elif event.keycode == KEY_SLASH and not event.shift_pressed and title_input != null:
+			title_input.grab_focus()
+			title_input.select_all()
+			get_viewport().set_input_as_handled()
 
 func _on_close_btn_pressed() -> void:
 	close()

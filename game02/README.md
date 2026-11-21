@@ -5,7 +5,7 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 
 ---
 
-## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 203)
+## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 204)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
@@ -14,6 +14,10 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 ---
 
 ## 🚀 최신 스프린트 업데이트 요약 ([전체 회의록 보기](SPRINT_LOG.md))
+
+### 📓 [Sprint 204] `DetailModal` & `AddModal` `/` 키 즉시 입력칸 포커스 — 3대 뷰 `/` 일관성 완성
+- **3대 뷰 `/` 즉시 포커스 통일**: `MainView` 검색창(`/`), `DetailModal` 한줄 밑줄 편집창(`/`), `AddModal` 제목 입력창(`/`) 모두 `/` 키 한 번으로 즉시 입력 포커스 및 전체 선택을 수행합니다.
+- **웹 목업 동기화**: `index.html` 웹 목업에도 `DetailModal` `/` 밑줄 입력칸 포커스를 동기화했습니다.
 
 ### 📓 [Sprint 203] `DetailModal` `Tab`/`Shift+Tab` 이전·다음 작품 넘김 · 입력창 포커스 해제
 - **`DetailModal` `Tab`/`Shift+Tab` 내비게이션**: 일기장 상세 모달에서 한줄 밑줄 편집 중 `Tab` 시 즉시 포커스를 해제해 단축키 모드로 복귀하고, 비포커스 상태에서 `Tab`/`Shift+Tab`으로 다음·이전 작품 일기장을 부드럽게 넘깁니다.

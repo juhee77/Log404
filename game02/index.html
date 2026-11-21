@@ -1332,7 +1332,7 @@
                 else if (lk === 'h' || e.key === '?') showToast('⌨️ 새 일기 단축키: [1~5/←→/Space] 컬러 · [Home/End] 첫·끝 · [R] 랜덤 · [C/E/G] 분류 · [T/A/Q] 칸이동 · [F] 샘플 · [S/Enter] 등록 · [0/Bksp/X] 초기화 · [ESC] 닫기');
                 else if (e.key === 'Enter') showToast('📖 새 일기 등록 제출!');
                 else if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') showToast(e.key === 'ArrowLeft' ? '🎨 이전 표지 컬러 선택' : '🎨 다음 표지 컬러 선택');
-            } else if (document.getElementById('journal-modal') && !document.getElementById('journal-modal').classList.contains('hidden') && (e.key === 'Tab' || e.key === 'Enter' || e.key === 'Backspace' || e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === '0' || e.key === '9' || ['5', '6', '7', '8'].includes(e.key)) && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
+            } else if (document.getElementById('journal-modal') && !document.getElementById('journal-modal').classList.contains('hidden') && (e.key === '/' || e.key === 'Tab' || e.key === 'Enter' || e.key === 'Backspace' || e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === '0' || e.key === '9' || ['5', '6', '7', '8'].includes(e.key)) && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
                 if (e.key === 'Tab') {
                     e.preventDefault();
                     const dir = e.shiftKey ? -1 : 1;
@@ -1358,6 +1358,10 @@
                 } else if (e.key === '9') {
                     showToast(e.shiftKey ? '🖍️ 형광펜 토글 · 독서 카드 복사 및 닫기' : '🖍️ 형광펜 하이라이트 토글');
                     if (e.shiftKey) closeJournalModal();
+                } else if (e.key === '/' && !e.shiftKey) {
+                    e.preventDefault();
+                    const qi = document.getElementById('diary-quote-input');
+                    if (qi) { qi.focus(); qi.select(); }
                 } else if (e.key === 'Backspace') {
                     if (e.shiftKey) showToast('📋 독서 카드 복사 및 일기장 닫기');
                     closeJournalModal();
@@ -1441,7 +1445,7 @@
                 else if (lk === 'h' || e.key === '?') showToast('⌨️ 새 일기 단축키: [1~5/←→/Space] 컬러 · [Home/End] 첫·끝 · [R] 랜덤 · [C/E/G] 분류 · [T/A/Q] 칸이동 · [F] 샘플 · [S/Enter] 등록 · [0/Bksp/X] 초기화 · [ESC] 닫기');
                 else if (e.key === 'Enter') showToast('📖 새 일기 등록 제출!');
                 else if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') showToast(e.key === 'ArrowLeft' ? '🎨 이전 표지 컬러 선택' : '🎨 다음 표지 컬러 선택');
-            } else if (document.getElementById('journal-modal') && !document.getElementById('journal-modal').classList.contains('hidden') && (e.key === 'Tab' || e.key === 'Enter' || e.key === 'Backspace' || e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === '0' || e.key === '9' || ['5', '6', '7', '8'].includes(e.key)) && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
+            } else if (document.getElementById('journal-modal') && !document.getElementById('journal-modal').classList.contains('hidden') && (e.key === '/' || e.key === 'Tab' || e.key === 'Enter' || e.key === 'Backspace' || e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === '0' || e.key === '9' || ['5', '6', '7', '8'].includes(e.key)) && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
                 if (e.key === 'Tab') {
                     e.preventDefault();
                     const dir = e.shiftKey ? -1 : 1;
@@ -1467,6 +1471,10 @@
                 } else if (e.key === '9') {
                     showToast(e.shiftKey ? '🖍️ 형광펜 토글 · 독서 카드 복사 및 닫기' : '🖍️ 형광펜 하이라이트 토글');
                     if (e.shiftKey) closeJournalModal();
+                } else if (e.key === '/' && !e.shiftKey) {
+                    e.preventDefault();
+                    const qi = document.getElementById('diary-quote-input');
+                    if (qi) { qi.focus(); qi.select(); }
                 } else if (e.key === 'Backspace') {
                     if (e.shiftKey) showToast('📋 독서 카드 복사 및 일기장 닫기');
                     closeJournalModal();

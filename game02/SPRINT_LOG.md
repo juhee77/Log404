@@ -5,6 +5,20 @@
 
 ---
 
+## 📓 [Sprint 204] `DetailModal` & `AddModal` `/` 키 즉시 입력칸 포커스 — 3대 뷰 `/` 일관성 완성
+- **일시**: 2026-11-21
+- **14인 가상 애자일 스쿼드 회의록**:
+  - **다꾸러 VOC (지민·수빈·하연)**: "`MainView`에서 `/`를 누르면 검색창으로 바로 포커스가 가는 것처럼, `DetailModal`에서도 `/`를 누르면 한줄 밑줄 편집창(`quote_input`)으로, `AddModal`에서도 `/`를 누르면 제목 입력창(`title_input`)으로 즉시 이동하면 3개 화면 조작감이 100% 통일될 것 같아요!"
+  - **PO & UX/UI**: `DetailModal`과 `AddModal` `_unhandled_input`에 `KEY_SLASH and not event.shift_pressed` 분기를 추가하여 각각 `quote_input` / `title_input`에 즉시 포커스하고 전체 선택(`select_all()`)을 수행한다.
+- **구현 내역**:
+  - [`detail_modal.gd`](godot_project/scripts/detail_modal.gd): `KEY_SLASH`(비Shift) 입력 시 `quote_input.grab_focus()` + `select_all()` 추가.
+  - [`add_modal.gd`](godot_project/scripts/add_modal.gd): `KEY_SLASH`(비Shift) 입력 시 `title_input.grab_focus()` + `select_all()` 추가.
+  - [`index.html`](index.html): 웹 인터랙티브 목업에 `DetailModal` `/` 밑줄 입력칸 포커스 동기화.
+  - [`test_main_integration.gd`](godot_project/tests/test_main_integration.gd): `DetailModal` 및 `AddModal` `/` 키 입력 검증 추가.
+- **검증**: `test_archive.gd`, `test_persistence.gd`, `test_main_integration.gd` 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 갱신 완료.
+
+---
+
 ## 📓 [Sprint 203] `DetailModal` `Tab`/`Shift+Tab` 이전·다음 작품 넘김 · 입력창 포커스 해제
 - **일시**: 2026-11-21
 - **14인 가상 애자일 스쿼드 회의록**:
