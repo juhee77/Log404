@@ -3606,6 +3606,30 @@ func _init() -> void:
 	assert(main_inst.add_modal.visible == false, "Shift+Backspace in AddModal should clear and close modal")
 	print("✓ Sprint 194: AddModal Keys 0 Reset, Home/End Swatch Jump & Backspace Clear verified")
 
+	# Sprint 195 Milestone: AddModal Key H/? Cheatsheet & Plain Enter Submit
+	main_inst._on_add_btn_pressed()
+	main_inst.add_modal.title_input.release_focus()
+	main_inst.add_modal.author_input.release_focus()
+	main_inst.add_modal.quote_input.release_focus()
+
+	var ev_am_h = InputEventKey.new()
+	ev_am_h.pressed = true
+	ev_am_h.keycode = KEY_H
+	main_inst.add_modal._unhandled_input(ev_am_h)
+	assert("새 일기 단축키" in main_inst.status_toast.text and "[S/Enter] 등록" in main_inst.status_toast.text, "H in AddModal should display AddModal cheatsheet toast")
+
+	var count_before_195 = main_inst.archive_state.items.size()
+	main_inst.add_modal.title_input.text = "엔터 등록 테스트"
+	main_inst.add_modal.title_input.release_focus()
+	var ev_am_enter = InputEventKey.new()
+	ev_am_enter.pressed = true
+	ev_am_enter.keycode = KEY_ENTER
+	main_inst.add_modal._unhandled_input(ev_am_enter)
+	assert(main_inst.archive_state.items.size() == count_before_195 + 1 and main_inst.add_modal.visible == false, "Plain Enter in AddModal (unfocused) should submit and close")
+	main_inst.archive_state.remove_item(main_inst.archive_state.items[main_inst.archive_state.items.size() - 1].id)
+	main_inst._render_cards()
+	print("✓ Sprint 195 Milestone: AddModal Key H/? Cheatsheet & Plain Enter Submit verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

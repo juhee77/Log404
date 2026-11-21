@@ -77,6 +77,8 @@ func _ready() -> void:
 	detail_modal.navigate_requested.connect(_on_modal_navigate_requested)
 	detail_modal.diary_updated.connect(_on_diary_updated)
 	detail_modal.help_requested.connect(_on_modal_help_requested)
+	if add_modal != null and add_modal.has_signal("help_requested"):
+		add_modal.help_requested.connect(_on_add_modal_help_requested)
 	detail_modal.summary_copy_requested.connect(copy_summary_to_clipboard)
 	detail_modal.close_and_backup_requested.connect(_trigger_instant_json_backup)
 	detail_modal.filter_category_requested.connect(func(cat: int) -> void:
@@ -1248,6 +1250,12 @@ func _show_shortcut_cheatsheet() -> void:
 
 func _on_modal_help_requested() -> void:
 	_show_toast("⌨️ 모달 단축키: [←/→] 넘김 · [Home/End] 처음·끝 · [1~4] 인장 · [+/-] 권 · [X] 아이콘 · [Q] 표지색 · [Y] 회독 · [Z] 상태 · [I] 잉크 · [N] 펜촉 · [W] 마테 · [S] 스티커 · [R] 레어도 · [P] 속지 · [O] 띠지 · [M] 기분 · [G] 등급 · [T] 태그 · [F] 마감 · [A] 경로 · [B] 보관 · [D] 복수 · [K] 최애캐 · [U] 날씨 · [J] 장소 · [V] 가치 · [Shift+순환키] 역순환 · [E] 문장 · [L] 형광펜 · [C] 복사(Shift+C: 리포트) · [Del] 삭제 · [ESC] 닫기")
+
+func _on_add_modal_help_requested(copy_to_clipboard: bool = false) -> void:
+	var msg := "⌨️ 새 일기 단축키: [1~5/←→/Space] 컬러 · [Home/End] 첫·끝 · [R] 랜덤 · [C/E/G] 분류 · [T/A/Q] 칸이동 · [F] 샘플 · [S/Enter] 등록 · [0/Bksp/X] 초기화 · [ESC] 닫기"
+	_show_toast(msg)
+	if copy_to_clipboard:
+		DisplayServer.clipboard_set(msg)
 
 func _on_modal_navigate_requested(delta: int) -> void:
 	if archive_state == null or archive_state.items.is_empty():

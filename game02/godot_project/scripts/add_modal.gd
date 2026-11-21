@@ -2,6 +2,7 @@ class_name AddModal
 extends Control
 
 signal item_submitted(title: String, category: int, author: String, color_hex: String, quote_text: String)
+signal help_requested(copy_to_clipboard: bool)
 
 @onready var title_input: LineEdit = $Panel/VBox/BodyMargin/Body/TitleInput
 @onready var author_input: LineEdit = $Panel/VBox/BodyMargin/Body/AuthorInput
@@ -370,6 +371,12 @@ func _unhandled_input(event: InputEvent) -> void:
 			clear_inputs()
 			if event.shift_pressed:
 				close()
+			get_viewport().set_input_as_handled()
+		elif event.keycode == KEY_ENTER or event.keycode == KEY_KP_ENTER:
+			_on_submit_btn_pressed()
+			get_viewport().set_input_as_handled()
+		elif event.keycode == KEY_H or (event.keycode == KEY_SLASH and event.shift_pressed):
+			help_requested.emit(event.shift_pressed and event.keycode == KEY_H)
 			get_viewport().set_input_as_handled()
 
 func _on_close_btn_pressed() -> void:

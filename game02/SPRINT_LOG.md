@@ -5,6 +5,20 @@
 
 ---
 
+## 📓 [Sprint 195 Milestone] `AddModal` `H/?` 단축키 치트시트(Shift: 복사) · 단독 `Enter` 등록 제출
+- **일시**: 2026-11-21
+- **14인 가상 애자일 스쿼드 회의록**:
+  - **다꾸러 VOC (지민·수빈·하연)**: "`AddModal`에도 `MainView`나 `DetailModal`처럼 `H` 또는 `?`를 눌렀을 때 새 일기 모달 전용 단축키 치트시트가 토스트로 뜨면 좋겠어요(`Shift+H`: 클립보드 복사). 그리고 입력칸 밖에서 `Enter`만 눌러도 바로 등록되도록 해주세요!"
+  - **PO & UX/UI**: `AddModal`에 `help_requested(copy_to_clipboard)` 시그널과 `KEY_H`/`Shift+KEY_SLASH`/`KEY_ENTER` 분기를 추가하고, `MainView`에 `_on_add_modal_help_requested()` 핸들러를 연결해 새 일기 단축키 전체 가이드를 안내한다.
+- **구현 내역**:
+  - [`add_modal.gd`](godot_project/scripts/add_modal.gd): `help_requested` 시그널 및 `KEY_ENTER`, `KEY_H`, `Shift+KEY_SLASH` 분기 추가.
+  - [`main_view.gd`](godot_project/scripts/main_view.gd): `add_modal.help_requested` 연결 및 `_on_add_modal_help_requested()` 핸들러 구현.
+  - [`index.html`](index.html): 웹 인터랙티브 목업에 `AddModal` `H`/`?`/`Enter` 단축키 피드백 동기화.
+  - [`test_main_integration.gd`](godot_project/tests/test_main_integration.gd): `AddModal` `H` 치트시트 토스트 및 비포커스 `Enter` 등록 검증 추가.
+- **검증**: `test_archive.gd`, `test_persistence.gd`, `test_main_integration.gd` 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 갱신 완료.
+
+---
+
 ## 📓 [Sprint 194] `AddModal` 키보드 `0` 기본값 리셋 · `Home/End` 첫·끝 컬러 점프 · `Backspace` 초기화
 - **일시**: 2026-11-21
 - **14인 가상 애자일 스쿼드 회의록**:
