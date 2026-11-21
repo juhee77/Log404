@@ -3540,6 +3540,37 @@ func _init() -> void:
 	main_inst._render_cards()
 	print("✓ Sprint 192: AddModal Keys E/G Category, T Focus & S Submit verified")
 
+	# Sprint 193: AddModal Keys A/Q Input Focus, Space Swatch Step & R Random Color
+	main_inst._on_add_btn_pressed()
+	main_inst.add_modal.title_input.release_focus()
+	main_inst.add_modal.author_input.release_focus()
+	main_inst.add_modal.quote_input.release_focus()
+
+	var color_s193_before = main_inst.add_modal.selected_color
+	var ev_am_space = InputEventKey.new()
+	ev_am_space.pressed = true
+	ev_am_space.keycode = KEY_SPACE
+	main_inst.add_modal._unhandled_input(ev_am_space)
+	assert(main_inst.add_modal.selected_color != color_s193_before, "Space in AddModal should cycle cover swatch forward")
+
+	var ev_am_r = InputEventKey.new()
+	ev_am_r.pressed = true
+	ev_am_r.keycode = KEY_R
+	var color_r_before = main_inst.add_modal.selected_color
+	main_inst.add_modal._unhandled_input(ev_am_r)
+	assert(main_inst.add_modal.selected_color != color_r_before, "Key R in AddModal should pick a different random cover swatch")
+
+	main_inst.add_modal.author_input.text = "임시 작가"
+	var ev_am_shift_a = InputEventKey.new()
+	ev_am_shift_a.pressed = true
+	ev_am_shift_a.shift_pressed = true
+	ev_am_shift_a.keycode = KEY_A
+	main_inst.add_modal._unhandled_input(ev_am_shift_a)
+	assert(main_inst.add_modal.author_input.text == "", "Shift+A in AddModal should clear author_input")
+
+	main_inst.add_modal.close()
+	print("✓ Sprint 193: AddModal Keys A/Q Focus, Space Swatch Step & R Random Color verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

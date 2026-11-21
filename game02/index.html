@@ -1317,6 +1317,10 @@
                 else if (lk === 's') showToast(e.shiftKey ? '✨ 샘플 폴백 즉시 일기 등록!' : '📖 새 일기 등록 제출!');
                 else if (lk === 'e' || lk === 'g') showToast(lk === 'e' ? '📚 카테고리: 이북·만화 선택' : '🔮 카테고리: 가챠·굿즈 선택');
                 else if (lk === 't') showToast('✏️ 제목 입력란 포커스 이동');
+                else if (lk === 'a') showToast('✍️ 작가/브랜드 입력란 포커스 이동');
+                else if (lk === 'q') showToast('💬 한줄 밑줄 입력란 포커스 이동');
+                else if (e.key === ' ') showToast(e.shiftKey ? '🎨 이전 표지 컬러 선택' : '🎨 다음 표지 컬러 선택');
+                else if (lk === 'r') showToast(e.shiftKey ? '🎲 랜덤 표지 컬러 적용 및 즉시 등록!' : '🎲 랜덤 표지 컬러 선택!');
                 else if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') showToast(e.key === 'ArrowLeft' ? '🎨 이전 표지 컬러 선택' : '🎨 다음 표지 컬러 선택');
             } else if ((!document.getElementById('journal-modal') || document.getElementById('journal-modal').classList.contains('hidden')) && ['k', 'K', 'z', 'Z'].includes(e.key) && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
                 const lk = e.key.toLowerCase();
@@ -1367,6 +1371,10 @@
                 else if (lk === 's') showToast(e.shiftKey ? '✨ 샘플 폴백 즉시 일기 등록!' : '📖 새 일기 등록 제출!');
                 else if (lk === 'e' || lk === 'g') showToast(lk === 'e' ? '📚 카테고리: 이북·만화 선택' : '🔮 카테고리: 가챠·굿즈 선택');
                 else if (lk === 't') showToast('✏️ 제목 입력란 포커스 이동');
+                else if (lk === 'a') showToast('✍️ 작가/브랜드 입력란 포커스 이동');
+                else if (lk === 'q') showToast('💬 한줄 밑줄 입력란 포커스 이동');
+                else if (e.key === ' ') showToast(e.shiftKey ? '🎨 이전 표지 컬러 선택' : '🎨 다음 표지 컬러 선택');
+                else if (lk === 'r') showToast(e.shiftKey ? '🎲 랜덤 표지 컬러 적용 및 즉시 등록!' : '🎲 랜덤 표지 컬러 선택!');
                 else if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') showToast(e.key === 'ArrowLeft' ? '🎨 이전 표지 컬러 선택' : '🎨 다음 표지 컬러 선택');
             } else if ((e.key === 'i' || e.key === 'I') && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
                 const jm = document.getElementById('journal-modal');

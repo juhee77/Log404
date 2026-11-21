@@ -5,6 +5,19 @@
 
 ---
 
+## 📓 [Sprint 193] `AddModal` 키보드 `A/Q` 작가·밑줄 포커스 · `Space` 컬러 순환 · `R` 랜덤 표지 컬러
+- **일시**: 2026-11-21
+- **14인 가상 애자일 스쿼드 회의록**:
+  - **다꾸러 VOC (지민·수빈·하연)**: "`AddModal`에서 `T`로 제목칸에 포커스를 주는 것처럼 `A`(작가/브랜드)와 `Q`(한줄 밑줄) 입력칸에도 바로 이동하고, `Space`로 표지 컬러를 한 칸씩 넘기거나(`Shift+Space`: 역순) `R`로 랜덤 표지 컬러를 뽑아보고 싶어요(`Shift+R`: 랜덤 컬러+샘플 등록)!"
+  - **PO & UX/UI**: `AddModal` `_unhandled_input`에 `KEY_A`(`author_input.grab_focus()`), `KEY_Q`(`quote_input.grab_focus()`), `KEY_SPACE`(`_step_color(±1)`), `KEY_R`(랜덤 표지 스와치 선택 / `Shift+R`: 샘플 폴백 등록)를 추가한다.
+- **구현 내역**:
+  - [`add_modal.gd`](godot_project/scripts/add_modal.gd): `KEY_A`, `KEY_Q`, `KEY_SPACE`, `KEY_R` 단축키 분기 추가.
+  - [`index.html`](index.html): 웹 인터랙티브 목업에 `AddModal` `A`/`Q`/`Space`/`R` 단축키 피드백 동기화.
+  - [`test_main_integration.gd`](godot_project/tests/test_main_integration.gd): `Space` 표지 순환, `R` 랜덤 컬러, `Shift+A` 작가 입력 초기화 검증 추가.
+- **검증**: `test_archive.gd`, `test_persistence.gd`, `test_main_integration.gd` 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 갱신 완료.
+
+---
+
 ## 📓 [Sprint 192] `AddModal` 키보드 `E/G` 카테고리 직접 선택 · `T` 제목 포커스 · `S` 등록 제출
 - **일시**: 2026-11-21
 - **14인 가상 애자일 스쿼드 회의록**:

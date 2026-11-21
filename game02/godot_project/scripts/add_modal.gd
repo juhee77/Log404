@@ -330,6 +330,27 @@ func _unhandled_input(event: InputEvent) -> void:
 				title_input.text = ""
 			title_input.grab_focus()
 			get_viewport().set_input_as_handled()
+		elif event.keycode == KEY_A and author_input != null:
+			if event.shift_pressed:
+				author_input.text = ""
+			author_input.grab_focus()
+			get_viewport().set_input_as_handled()
+		elif event.keycode == KEY_Q and quote_input != null:
+			if event.shift_pressed:
+				quote_input.text = ""
+			quote_input.grab_focus()
+			get_viewport().set_input_as_handled()
+		elif event.keycode == KEY_SPACE:
+			_step_color(-1 if event.shift_pressed else 1)
+			get_viewport().set_input_as_handled()
+		elif event.keycode == KEY_R and not COVER_SWATCHES.is_empty():
+			var next_r_idx: int = randi() % COVER_SWATCHES.size()
+			if COVER_SWATCHES.size() > 1 and COVER_SWATCHES[next_r_idx]["hex"].to_lower() == selected_color.to_lower():
+				next_r_idx = (next_r_idx + 1) % COVER_SWATCHES.size()
+			select_color(COVER_SWATCHES[next_r_idx]["hex"])
+			if event.shift_pressed:
+				_submit_with_sample_fallback()
+			get_viewport().set_input_as_handled()
 
 func _on_close_btn_pressed() -> void:
 	close()
