@@ -593,11 +593,15 @@ func _render_cards() -> void:
 		filtered.sort_custom(func(a, b): return a.get_item_value() > b.get_item_value())
 
 	var total_count: int = archive_state.items.size()
+	var filtered_val: int = 0
+	for fit in filtered:
+		filtered_val += fit.get_item_value()
+	var filtered_val_str: String = archive_state.format_krw(filtered_val)
 	if search_input != null:
 		if filtered.size() == total_count:
-			search_input.placeholder_text = "작품·대사 검색... (전체 %d종)" % total_count
+			search_input.placeholder_text = "작품·대사 검색... (전체 %d종 · %s)" % [total_count, filtered_val_str]
 		else:
-			search_input.placeholder_text = "작품·대사 검색... (%d/%d종 표시)" % [filtered.size(), total_count]
+			search_input.placeholder_text = "작품·대사 검색... (%d/%d종 · %s)" % [filtered.size(), total_count, filtered_val_str]
 	
 	if filtered.is_empty():
 		var empty_box := VBoxContainer.new()

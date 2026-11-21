@@ -4392,14 +4392,14 @@ func _init() -> void:
 	assert(main_inst.add_modal.visible == false and main_inst.add_modal.title_input.text == "", "Ctrl+ESC in AddModal should clear and close")
 	print("✓ Sprint 220 Milestone: Global Ctrl/Cmd+Tab Switch & Ctrl/Cmd+ESC Instant Reset/Close verified")
 
-	# Sprint 221: Live Filtered Count in Search Placeholder
+	# Sprint 221 & 222: Live Filtered Count + Asset Value in Search Placeholder
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst._on_tab_all_pressed()
-	assert(main_inst.search_input.placeholder_text == "작품·대사 검색... (전체 6종)", "All tab should show total 6종 in search placeholder")
+	assert(main_inst.search_input.placeholder_text == "작품·대사 검색... (전체 6종 · ₩80,000)", "All tab should show total 6종 · ₩80,000 in search placeholder")
 	main_inst._on_tab_manga_pressed()
-	assert(main_inst.search_input.placeholder_text == "작품·대사 검색... (4/6종 표시)", "Manga tab should show 4/6종 표시 in search placeholder")
+	assert(main_inst.search_input.placeholder_text == "작품·대사 검색... (4/6종 · ₩70,000)", "Manga tab should show 4/6종 · ₩70,000 in search placeholder")
 	main_inst._on_tab_all_pressed()
-	print("✓ Sprint 221: Live Filtered Count in Search Placeholder verified")
+	print("✓ Sprint 222: Live Filtered Count & Asset Value in Search Placeholder verified")
 
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()

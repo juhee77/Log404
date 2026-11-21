@@ -5,6 +5,20 @@
 
 ---
 
+## 📓 [Sprint 222] 검색창 실시간 필터링 작품 수 · 소장 자산 합계 표시 및 스크린샷 기본 뷰 복원
+- **일시**: 2026-11-22
+- **14인 가상 애자일 스쿼드 회의록**:
+  - **다꾸러 VOC (지민·수빈·하연)**: "검색창 플레이스홀더에서 필터링된 작품 수뿐만 아니라 해당 작품들의 소장 자산 가치(`₩80,000` / `₩70,000`)도 함께 한눈에 확인하고 싶어요! 그리고 기본 스크린샷 뷰가 항상 전체 6종 서재를 보여주었으면 좋겠어요."
+  - **PO & UX/UI**: `MainView._render_cards()`에서 필터링 결과의 `archive_state.format_krw(filtered_val)`를 함께 계산해 `search_input.placeholder_text`에 표시하고, `render_screen.gd`가 항상 clean 6-card `전체일기` 상태에서 스크린샷을 캡처하도록 보강한다.
+- **구현 내역**:
+  - [`main_view.gd`](godot_project/scripts/main_view.gd): `_render_cards()` 내 `search_input.placeholder_text`에 건수 및 자산 합계(`전체 6종 · ₩80,000` / `4/6종 · ₩70,000`) 실시간 표시.
+  - [`render_screen.gd`](godot_project/tests/render_screen.gd): 캡처 직전 `reset_to_rich_defaults()` 및 `_on_tab_all_pressed()` 호출로 기본 6종 서재 뷰 보장.
+  - [`index.html`](index.html): `renderShelf()` 내 `#search-box` 플레이스홀더에 건수·자산 합계 동기화.
+  - [`test_main_integration.gd`](godot_project/tests/test_main_integration.gd): 전체/만화 탭별 건수 및 자산 합계(`₩80,000` / `₩70,000`) 검증 추가.
+- **검증**: `test_archive.gd`, `test_persistence.gd`, `test_main_integration.gd` 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 갱신 완료.
+
+---
+
 ## 📓 [Sprint 221] 검색창 실시간 필터링 작품 수 표시 (`전체 N종` / `K/N종 표시`)
 - **일시**: 2026-11-21
 - **14인 가상 애자일 스쿼드 회의록**:
