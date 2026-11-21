@@ -1260,7 +1260,7 @@ func _on_modal_help_requested() -> void:
 	_show_toast("⌨️ 모달 단축키: [←/→] 넘김 · [↑/↓] 이동 · [Home/End] 처음·끝 · [1~4] 인장 · [5~8] 잉크 · [9] 형광펜 · [0] 원문복원 · [+/-] 권 · [X] 아이콘 · [Q] 표지색 · [Y] 회독 · [Z] 상태 · [I] 잉크 · [N] 펜촉 · [W] 마테 · [S] 스티커 · [R] 레어도 · [P] 속지 · [O] 띠지 · [M] 기분 · [G] 등급 · [T] 태그 · [F] 마감 · [A] 경로 · [B] 보관 · [D] 복수 · [K] 최애캐 · [U] 날씨 · [J] 장소 · [V] 가치 · [Shift+순환키] 역순환 · [E] 문장 · [Enter] 편집 · [L] 형광펜 · [C] 복사(Shift+C: 리포트) · [Del] 삭제 · [ESC] 닫기 · [Bksp] 닫기")
 
 func _on_add_modal_help_requested(copy_to_clipboard: bool = false) -> void:
-	var msg := "⌨️ 새 일기 단축키: [1~5/←→/Space] 컬러 · [Home/End] 첫·끝 · [R] 랜덤 · [C/E/G] 분류 · [T/A/Q] 칸이동 · [F] 샘플 · [S/Enter] 등록 · [0/Bksp/X] 초기화 · [ESC] 닫기"
+	var msg := "⌨️ 새 일기 단축키: [1~6/←→/Space] 컬러 · [7/8] 분류 · [9] 샘플 · [Home/End] 첫·끝 · [R] 랜덤 · [C/E/G] 분류 · [T/A/Q] 칸이동 · [F] 샘플 · [S/Enter] 등록 · [0/Bksp/X] 초기화 · [ESC] 닫기"
 	_show_toast(msg)
 	if copy_to_clipboard:
 		DisplayServer.clipboard_set(msg)

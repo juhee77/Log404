@@ -3762,6 +3762,38 @@ func _init() -> void:
 	assert("[5~8] 잉크 · [9] 형광펜 · [0] 원문복원" in main_inst.status_toast.text, "Modal cheatsheet should include 5~8 Ink, 9 Highlight, and 0 Restore")
 	print("✓ Sprint 200 Milestone: DetailModal Key 9 Highlight & Modal 0~9 Complete verified")
 
+	# Sprint 201: AddModal Keys 6 Violet Swatch, 7/8 Category & 9 Sample (0~9 Complete)
+	main_inst._on_add_btn_pressed()
+	main_inst.add_modal.title_input.release_focus()
+	main_inst.add_modal.author_input.release_focus()
+	main_inst.add_modal.quote_input.release_focus()
+
+	var ev_am_6 = InputEventKey.new()
+	ev_am_6.pressed = true
+	ev_am_6.keycode = KEY_6
+	main_inst.add_modal._unhandled_input(ev_am_6)
+	assert(main_inst.add_modal.selected_color == "#6d28d9", "Key 6 in AddModal should select violet swatch (#6d28d9)")
+
+	var ev_am_8 = InputEventKey.new()
+	ev_am_8.pressed = true
+	ev_am_8.keycode = KEY_8
+	main_inst.add_modal._unhandled_input(ev_am_8)
+	assert(main_inst.add_modal.cat_option.selected == 1, "Key 8 in AddModal should select Gacha (1)")
+
+	var ev_am_7 = InputEventKey.new()
+	ev_am_7.pressed = true
+	ev_am_7.keycode = KEY_7
+	main_inst.add_modal._unhandled_input(ev_am_7)
+	assert(main_inst.add_modal.cat_option.selected == 0, "Key 7 in AddModal should select Manga (0)")
+
+	var ev_am_9 = InputEventKey.new()
+	ev_am_9.pressed = true
+	ev_am_9.keycode = KEY_9
+	main_inst.add_modal._unhandled_input(ev_am_9)
+	assert(main_inst.add_modal.title_input.text == "오늘의 독서 스크랩", "Key 9 in AddModal should fill sample inputs")
+	main_inst.add_modal.close()
+	print("✓ Sprint 201: AddModal Keys 6 Violet Swatch, 7/8 Category & 9 Sample (0~9 Complete) verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

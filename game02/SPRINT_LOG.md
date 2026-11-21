@@ -5,6 +5,20 @@
 
 ---
 
+## 📓 [Sprint 201] `AddModal` 숫자키 `6` 바이올렛 컬러 · `7/8` 분류 · `9` 샘플 채움 — 새 일기 모달 `0~9` 완성
+- **일시**: 2026-11-21
+- **14인 가상 애자일 스쿼드 회의록**:
+  - **다꾸러 VOC (지민·수빈·하연)**: "`AddModal` 표지 스와치가 6개(크림슨·코발트·테라코타·로즈·포레스트·바이올렛)인데 `1~5`까지만 숫자키가 있어서 `6`번 바이올렛도 숫자키로 고르고, `7/8`로 이북·가챠 분류 선택, `9`로 샘플 일기 채움(`Shift+9`: 샘플 등록)까지 `0~9` 숫자키를 통일하고 싶어요!"
+  - **PO & UX/UI**: `AddModal` `_unhandled_input`에 `KEY_6`(바이올렛 스와치), `KEY_7`/`KEY_8`(이북·만화/가챠·굿즈 선택), `KEY_9`(샘플 채움 / `Shift+9`: 샘플 등록)를 추가해 3대 뷰(`MainView`, `DetailModal`, `AddModal`) 모두 숫자키 `0~9` 100% 커버리지를 달성한다.
+- **구현 내역**:
+  - [`add_modal.gd`](godot_project/scripts/add_modal.gd): `KEY_6` 스와치, `KEY_7`/`KEY_8` 카테고리, `KEY_9` 샘플 채움 분기 추가.
+  - [`main_view.gd`](godot_project/scripts/main_view.gd): `_on_add_modal_help_requested()` 치트시트 안내 업데이트.
+  - [`index.html`](index.html): 웹 인터랙티브 목업에 `AddModal` `6~9` 단축키 피드백 동기화.
+  - [`test_main_integration.gd`](godot_project/tests/test_main_integration.gd): `6` 바이올렛 스와치, `7/8` 분류, `9` 샘플 채움 검증 추가.
+- **검증**: `test_archive.gd`, `test_persistence.gd`, `test_main_integration.gd` 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 갱신 완료.
+
+---
+
 ## 📓 [Sprint 200 Milestone] `DetailModal` 숫자키 `9` 형광펜 토글(Shift: 복사+닫기) · 모달 `0~9` & 치트시트 100% 완성
 - **일시**: 2026-11-21
 - **14인 가상 애자일 스쿼드 회의록**:

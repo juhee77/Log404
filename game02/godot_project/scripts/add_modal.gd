@@ -282,12 +282,22 @@ func _unhandled_input(event: InputEvent) -> void:
 			any_focused = true
 			break
 	if not any_focused:
-		if event.keycode in [KEY_1, KEY_2, KEY_3, KEY_4, KEY_5]:
+		if event.keycode in [KEY_1, KEY_2, KEY_3, KEY_4, KEY_5, KEY_6]:
 			var sw_idx: int = event.keycode - KEY_1
 			if sw_idx >= 0 and sw_idx < COVER_SWATCHES.size():
 				select_color(COVER_SWATCHES[sw_idx]["hex"])
 				if event.shift_pressed:
 					_submit_with_sample_fallback()
+			get_viewport().set_input_as_handled()
+		elif event.keycode in [KEY_7, KEY_8] and cat_option != null:
+			cat_option.select(0 if event.keycode == KEY_7 else 1)
+			if event.shift_pressed:
+				_submit_with_sample_fallback()
+			get_viewport().set_input_as_handled()
+		elif event.keycode == KEY_9:
+			fill_sample_inputs()
+			if event.shift_pressed:
+				_submit_with_sample_fallback()
 			get_viewport().set_input_as_handled()
 		elif event.keycode == KEY_C and cat_option != null:
 			cat_option.select(1 if cat_option.selected == 0 else 0)

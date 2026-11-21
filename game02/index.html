@@ -1322,6 +1322,11 @@
                 else if (e.key === ' ') showToast(e.shiftKey ? '🎨 이전 표지 컬러 선택' : '🎨 다음 표지 컬러 선택');
                 else if (lk === 'r') showToast(e.shiftKey ? '🎲 랜덤 표지 컬러 적용 및 즉시 등록!' : '🎲 랜덤 표지 컬러 선택!');
                 else if (e.key === '0') showToast(e.shiftKey ? '🧹 모달 기본값 초기화 및 닫기' : '🧹 모달 기본값 초기화');
+                else if (['6', '7', '8', '9'].includes(e.key)) {
+                    if (e.key === '6') showToast('🎨 6번 바이올렛 표지 컬러 선택');
+                    else if (e.key === '7' || e.key === '8') showToast(e.key === '7' ? '📚 카테고리: 이북·만화 선택' : '🔮 카테고리: 가챠·굿즈 선택');
+                    else showToast(e.shiftKey ? '📝 샘플 일기 자동 채움 및 등록!' : '📝 샘플 일기 자동 채움!');
+                }
                 else if (e.key === 'Home' || e.key === 'End') showToast(e.key === 'Home' ? '🎨 첫 번째 표지 컬러 선택' : '🎨 마지막 표지 컬러 선택');
                 else if (e.key === 'Backspace') showToast(e.shiftKey ? '🧹 입력 초기화 및 모달 닫기' : '🧹 입력란 전체 비우기');
                 else if (lk === 'h' || e.key === '?') showToast('⌨️ 새 일기 단축키: [1~5/←→/Space] 컬러 · [Home/End] 첫·끝 · [R] 랜덤 · [C/E/G] 분류 · [T/A/Q] 칸이동 · [F] 샘플 · [S/Enter] 등록 · [0/Bksp/X] 초기화 · [ESC] 닫기');
@@ -1415,6 +1420,11 @@
                 else if (e.key === ' ') showToast(e.shiftKey ? '🎨 이전 표지 컬러 선택' : '🎨 다음 표지 컬러 선택');
                 else if (lk === 'r') showToast(e.shiftKey ? '🎲 랜덤 표지 컬러 적용 및 즉시 등록!' : '🎲 랜덤 표지 컬러 선택!');
                 else if (e.key === '0') showToast(e.shiftKey ? '🧹 모달 기본값 초기화 및 닫기' : '🧹 모달 기본값 초기화');
+                else if (['6', '7', '8', '9'].includes(e.key)) {
+                    if (e.key === '6') showToast('🎨 6번 바이올렛 표지 컬러 선택');
+                    else if (e.key === '7' || e.key === '8') showToast(e.key === '7' ? '📚 카테고리: 이북·만화 선택' : '🔮 카테고리: 가챠·굿즈 선택');
+                    else showToast(e.shiftKey ? '📝 샘플 일기 자동 채움 및 등록!' : '📝 샘플 일기 자동 채움!');
+                }
                 else if (e.key === 'Home' || e.key === 'End') showToast(e.key === 'Home' ? '🎨 첫 번째 표지 컬러 선택' : '🎨 마지막 표지 컬러 선택');
                 else if (e.key === 'Backspace') showToast(e.shiftKey ? '🧹 입력 초기화 및 모달 닫기' : '🧹 입력란 전체 비우기');
                 else if (lk === 'h' || e.key === '?') showToast('⌨️ 새 일기 단축키: [1~5/←→/Space] 컬러 · [Home/End] 첫·끝 · [R] 랜덤 · [C/E/G] 분류 · [T/A/Q] 칸이동 · [F] 샘플 · [S/Enter] 등록 · [0/Bksp/X] 초기화 · [ESC] 닫기');
