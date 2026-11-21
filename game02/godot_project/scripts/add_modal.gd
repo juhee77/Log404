@@ -274,6 +274,15 @@ func _unhandled_input(event: InputEvent) -> void:
 			title_input.select_all()
 		get_viewport().set_input_as_handled()
 		return
+	if (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_TAB:
+		_step_color(-1 if event.shift_pressed else 1)
+		get_viewport().set_input_as_handled()
+		return
+	if (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_ESCAPE:
+		clear_inputs()
+		close()
+		get_viewport().set_input_as_handled()
+		return
 	if (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_S:
 		if event.shift_pressed:
 			_submit_with_sample_fallback()

@@ -1065,6 +1065,16 @@ func _unhandled_input(event: InputEvent) -> void:
 			_on_save_quote_btn_pressed()
 		get_viewport().set_input_as_handled()
 		return
+	if (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_TAB:
+		navigate_requested.emit(-1 if event.shift_pressed else 1)
+		get_viewport().set_input_as_handled()
+		return
+	if (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_ESCAPE:
+		if event.shift_pressed:
+			copy_book_quote_card()
+		close()
+		get_viewport().set_input_as_handled()
+		return
 	if event.keycode == KEY_ESCAPE:
 		if event.shift_pressed:
 			copy_book_quote_card()

@@ -1157,6 +1157,14 @@ func _unhandled_input(event: InputEvent) -> void:
 			else:
 				_open_first_filtered_card()
 			get_viewport().set_input_as_handled()
+		elif (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_TAB:
+			_step_filter_tab(-1 if event.shift_pressed else 1)
+			get_viewport().set_input_as_handled()
+		elif (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_ESCAPE:
+			_reset_all_filters()
+			_set_sort_mode(0)
+			_reset_theme()
+			get_viewport().set_input_as_handled()
 		elif event.keycode == KEY_SLASH and event.shift_pressed and (search_input == null or not search_input.has_focus()):
 			_show_shortcut_cheatsheet()
 			get_viewport().set_input_as_handled()

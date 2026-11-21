@@ -4359,6 +4359,39 @@ func _init() -> void:
 	assert(main_inst.archive_state.items.size() == count_before_219 + 1, "Ctrl+Shift+Enter in AddModal should submit sample item")
 	print("✓ Sprint 219: Global Ctrl/Cmd+/ Focus/Help & Ctrl/Cmd+Enter Open/Save/Submit verified")
 
+	# Sprint 220 Milestone: Global Ctrl/Cmd+Tab Switch & Ctrl/Cmd+ESC Instant Reset/Close
+	main_inst._on_tab_all_pressed()
+	main_inst.search_input.grab_focus()
+	var ev_ctrl_tab = InputEventKey.new()
+	ev_ctrl_tab.pressed = true
+	ev_ctrl_tab.ctrl_pressed = true
+	ev_ctrl_tab.keycode = KEY_TAB
+	main_inst._unhandled_input(ev_ctrl_tab)
+	assert(main_inst.archive_state.current_filter == 0, "Ctrl+Tab in MainView (even focused) should step to Manga tab (0)")
+	var ev_ctrl_esc = InputEventKey.new()
+	ev_ctrl_esc.pressed = true
+	ev_ctrl_esc.ctrl_pressed = true
+	ev_ctrl_esc.keycode = KEY_ESCAPE
+	main_inst._unhandled_input(ev_ctrl_esc)
+	assert(main_inst.archive_state.current_filter == -1, "Ctrl+ESC in MainView should full-reset filters")
+
+	main_inst._on_card_clicked(main_inst.archive_state.items[0])
+	var id_before_220 = main_inst.detail_modal.current_item.id
+	main_inst.detail_modal.quote_input.grab_focus()
+	main_inst.detail_modal._unhandled_input(ev_ctrl_tab)
+	assert(main_inst.detail_modal.current_item.id != id_before_220, "Ctrl+Tab in DetailModal (even focused) should navigate to next item")
+	main_inst.detail_modal._unhandled_input(ev_ctrl_esc)
+	assert(main_inst.detail_modal.visible == false, "Ctrl+ESC in DetailModal (even focused) should close modal")
+
+	main_inst._on_add_btn_pressed()
+	var color_before_220 = main_inst.add_modal.selected_color
+	main_inst.add_modal.title_input.text = "임시 제목"
+	main_inst.add_modal._unhandled_input(ev_ctrl_tab)
+	assert(main_inst.add_modal.selected_color != color_before_220, "Ctrl+Tab in AddModal should step cover swatch")
+	main_inst.add_modal._unhandled_input(ev_ctrl_esc)
+	assert(main_inst.add_modal.visible == false and main_inst.add_modal.title_input.text == "", "Ctrl+ESC in AddModal should clear and close")
+	print("✓ Sprint 220 Milestone: Global Ctrl/Cmd+Tab Switch & Ctrl/Cmd+ESC Instant Reset/Close verified")
+
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst.archive_state.save_to_file()

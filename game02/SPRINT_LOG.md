@@ -5,6 +5,21 @@
 
 ---
 
+## 📓 [Sprint 220 Milestone] 3대 뷰 전역 `Ctrl/Cmd+Tab` 전환 · `Ctrl/Cmd+ESC` 즉시 초기화·닫기
+- **일시**: 2026-11-21
+- **14인 가상 애자일 스쿼드 회의록**:
+  - **다꾸러 VOC (지민·수빈·하연)**: "입력창 포커스 중에도 `Ctrl/Cmd+Tab`으로 서재 탭 전환(`MainView`)·작품 카드 넘김(`DetailModal`)·표지 스와치 순환(`AddModal`)을 바로 실행하고, `Ctrl/Cmd+ESC`로 스튜디오 전체 초기화(`MainView`)·모달 즉시 닫기(`DetailModal`)·입력 비우고 닫기(`AddModal`)를 실행해 전역 `Ctrl/Cmd` 워크플로우 마일스톤을 완성하고 싶어요!"
+  - **PO & UX/UI**: `MainView`, `DetailModal`, `AddModal`의 `_unhandled_input` 최상단에 `ctrl_pressed or meta_pressed` + `KEY_TAB`/`KEY_ESCAPE` 분기를 추가한다.
+- **구현 내역**:
+  - [`main_view.gd`](godot_project/scripts/main_view.gd): `Ctrl/Cmd+Tab`(필터 탭 순환 / `Shift`: 역순) 및 `Ctrl/Cmd+ESC`(스튜디오 전체 초기화) 추가.
+  - [`detail_modal.gd`](godot_project/scripts/detail_modal.gd): `Ctrl/Cmd+Tab`(이전/다음 작품 넘김) 및 `Ctrl/Cmd+ESC`(즉시 닫기 / `Shift`: 카드 복사+닫기) 추가.
+  - [`add_modal.gd`](godot_project/scripts/add_modal.gd): `Ctrl/Cmd+Tab`(표지 컬러스와치 순환) 및 `Ctrl/Cmd+ESC`(입력 비우고 닫기) 추가.
+  - [`index.html`](index.html): 웹 인터랙티브 목업에 `Ctrl/Cmd+Tab`, `Ctrl/Cmd+ESC` 전역 단축키 동기화.
+  - [`test_main_integration.gd`](godot_project/tests/test_main_integration.gd): 포커스 상태 `Ctrl+Tab`, `Ctrl+ESC` 3대 뷰 검증 추가.
+- **검증**: `test_archive.gd`, `test_persistence.gd`, `test_main_integration.gd` 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 갱신 완료.
+
+---
+
 ## 📓 [Sprint 219] 3대 뷰 전역 `Ctrl/Cmd+/` 포커스·도움말 · `Ctrl/Cmd+Enter` 열기·저장·등록
 - **일시**: 2026-11-21
 - **14인 가상 애자일 스쿼드 회의록**:
