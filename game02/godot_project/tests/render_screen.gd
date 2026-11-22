@@ -9,6 +9,12 @@ func _init() -> void:
 	for i in range(15):
 		await process_frame
 
+	if main_inst.archive_state != null:
+		main_inst.archive_state.reset_to_rich_defaults()
+		main_inst._on_tab_all_pressed()
+		for i in range(5):
+			await process_frame
+
 	var vp = root.get_viewport()
 	var tex = vp.get_texture()
 	if tex != null:

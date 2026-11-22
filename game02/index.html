@@ -380,7 +380,7 @@
                         <div class="flex items-center justify-between mb-2">
                             <span onclick="if(event&&event.shiftKey){const it=ITEMS.find(x=>x.id===activeId);if(it&&it.volumes){const allBm=it.volumes.every(v=>!!v.bookmarked);it.volumes.forEach(v=>v.bookmarked=!allBm);renderDiaryVolumes(it);}}else{addVolumeInDiary();}" title="클릭: 다음 권 기록 추가 (+) · Shift+좌클릭: 전권 북마크 일괄 토글" class="text-xs font-bold text-[#5c4938] cursor-pointer hover:text-[#c85a32]">📌 권별 소장 스탬프 & 좋아하는 대사</span>
                             <div class="flex items-center gap-1.5">
-                                <button onclick="if(event&&event.shiftKey){addVolumeInDiary();const it=ITEMS.find(x=>x.id===activeId);if(it&&it.volumes&&it.volumes.length){const lv=it.volumes[it.volumes.length-1];lv.status='first';lv.bookmarked=true;renderDiaryVolumes(it);}}else{addVolumeInDiary();}" oncontextmenu="event.preventDefault(); addVolumeInDiary(); const it = ITEMS.find(x => x.id === activeId); if (it && it.volumes && it.volumes.length) selectVolForEdit(it.volumes.length - 1);" title="새 권·파츠 일기 1개 추가 (+ · 우클릭: 추가 후 바로 밑줄 입력 · Shift+좌클릭: 초판+북마크 추가)"
+                                <button id="diary-add-vol-btn" onclick="if(event&&event.shiftKey){addVolumeInDiary();const it=ITEMS.find(x=>x.id===activeId);if(it&&it.volumes&&it.volumes.length){const lv=it.volumes[it.volumes.length-1];lv.status='first';lv.bookmarked=true;renderDiaryVolumes(it);}}else{addVolumeInDiary();}" oncontextmenu="event.preventDefault(); addVolumeInDiary(); const it = ITEMS.find(x => x.id === activeId); if (it && it.volumes && it.volumes.length) selectVolForEdit(it.volumes.length - 1);" title="새 권·파츠 일기 1개 추가 (+ · 우클릭: 추가 후 바로 밑줄 입력 · Shift+좌클릭: 초판+북마크 추가)"
                                     class="px-2.5 py-1 rounded-lg bg-[#c85a32] hover:bg-[#b04b25] text-white text-[11px] font-bold cursor-pointer">
                                     + 다음 권 기록 추가
                                 </button>
@@ -548,17 +548,33 @@
                 return cMatch && qMatch;
             });
 
+            const totalVal = filtered.reduce((acc, it) => acc + (it.estimated_value || 0), 0);
             const summaryEl = document.getElementById('filter-summary-badge');
             if (summaryEl) {
-                const totalVal = filtered.reduce((acc, it) => acc + (it.estimated_value || 0), 0);
                 summaryEl.textContent = `${filtered.length}종 · ₩${totalVal.toLocaleString('ko-KR')}`;
+                summaryEl.title = `필터·정렬 요약: ${filtered.length}/${ITEMS.length}종 · ₩${totalVal.toLocaleString('ko-KR')}`;
             }
             const sbEl = document.getElementById('search-box');
             if (sbEl) {
+                const valStr = `₩${totalVal.toLocaleString('ko-KR')}`;
                 sbEl.placeholder = filtered.length === ITEMS.length
-                    ? `작품·대사 검색... (전체 ${ITEMS.length}종)`
-                    : `작품·대사 검색... (${filtered.length}/${ITEMS.length}종 표시)`;
+                    ? `작품·대사 검색... (전체 ${ITEMS.length}종 · ${valStr})`
+                    : `작품·대사 검색... (${filtered.length}/${ITEMS.length}종 · ${valStr})`;
             }
+            const tabDefs = [
+                ['tab-all', '[1] 전체 서재', ITEMS],
+                ['tab-manga', '[2] 이북·단행본', ITEMS.filter(it => it.category === 'manga')],
+                ['tab-gacha', '[3] 가챠·굿즈', ITEMS.filter(it => it.category === 'gacha')],
+                ['tab-complete', '[4] 완독·2권 이상', ITEMS.filter(it => it.stamp === '전권완결' || (it.volumes && it.volumes.length >= 2))],
+                ['tab-fav', '[5] 인생최애·★5.0', ITEMS.filter(it => it.stamp === '인생최애' || (it.volumes && it.volumes.every(v => v.rating === 5)))]
+            ];
+            tabDefs.forEach(([id, label, list]) => {
+                const el = document.getElementById(id);
+                if (el) {
+                    const v = list.reduce((acc, it) => acc + (it.estimated_value || 0), 0);
+                    el.title = `${label} (${list.length}종 · ₩${v.toLocaleString('ko-KR')})`;
+                }
+            });
 
             const container = document.getElementById('shelf-container');
             container.innerHTML = '';
@@ -589,7 +605,10 @@
                             openJournalModal(item.id);
                         }
                     };
-                    card.title = `${item.title} · 좌클릭: 열기 · Shift+좌클릭: 작가 검색 · Shift+우클릭: 감상 요약 복사`;
+                    const quotePreview = (item.volumes && item.volumes[0] && item.volumes[0].quote)
+                        ? `"${item.volumes[0].quote}"`
+                        : item.memo;
+                    card.title = `${item.title} (${item.author}) — 🖋️ ${quotePreview}\n좌클릭: 열기 · Shift+좌클릭: 작가 검색 · Shift+우클릭: 감상 요약 복사`;
                     card.oncontextmenu = (ev) => {
                         ev.preventDefault();
                         if (ev.shiftKey) {
@@ -597,10 +616,6 @@
                             navigator.clipboard?.writeText(txt).catch(() => {});
                         }
                     };
-
-                    const quotePreview = (item.volumes && item.volumes[0] && item.volumes[0].quote)
-                        ? `"${item.volumes[0].quote}"`
-                        : item.memo;
 
                     card.innerHTML = `
                         <div class="masking-tape absolute -top-2 left-1/2 -translate-x-1/2"></div>
@@ -637,8 +652,11 @@
             const spineShelf = document.getElementById('mini-spine-shelf');
             if (spineShelf) {
                 spineShelf.innerHTML = ITEMS.map(it => {
-                    const w = Math.min(14, Math.max(8, 6 + (it.volumes ? it.volumes.length : 1) * 2));
-                    return `<div onclick="openJournalModal('${it.id}')" title="${it.title}" style="width:${w}px;background:${it.color}" class="h-5 rounded-t-xs cursor-pointer hover:opacity-80 shadow-2xs"></div>`;
+                    const vols = it.volumes ? it.volumes.length : 1;
+                    const w = Math.min(14, Math.max(8, 6 + vols * 2));
+                    const avgR = (it.volumes && it.volumes.length) ? (it.volumes.reduce((a, v) => a + Number(v.rating || 5), 0) / it.volumes.length).toFixed(1) : '5.0';
+                    const tip = `${it.title} (${it.author || '작가 미상'} · ★${avgR} · ${vols}권 소장)`;
+                    return `<div onclick="openJournalModal('${it.id}')" title="${tip}" style="width:${w}px;background:${it.color}" class="h-5 rounded-t-xs cursor-pointer hover:opacity-80 shadow-2xs"></div>`;
                 }).join('');
             }
         }
@@ -679,6 +697,16 @@
             const pageEl = document.getElementById('journal-page-indicator');
             if (pageEl && idx >= 0) {
                 pageEl.textContent = `Page ${idx + 1} / ${ITEMS.length} · 주희의 다꾸 일기장`;
+                pageEl.title = `현재 ${idx + 1}/${ITEMS.length}번째: ${item.title} (₩${(item.estimated_value || 0).toLocaleString('ko-KR')})`;
+            }
+            const delDiaryBtn = document.getElementById('delete-diary-btn');
+            if (delDiaryBtn) {
+                const vCnt = item.volumes ? item.volumes.length : 0;
+                delDiaryBtn.title = `「${item.title}」(${vCnt}권) 일기장을 서재에서 삭제 (우클릭·Shift+좌클릭: 삭제 확인 해제)`;
+            }
+            const hlBtn = document.getElementById('btn-highlighter');
+            if (hlBtn) {
+                hlBtn.title = `형광펜 하이라이트 [현재: ${item.highlight_enabled ? 'ON ✨' : 'OFF'}] (L)`;
             }
             if (idx >= 0 && ITEMS.length > 0) {
                 const prevIdx = (idx - 1 + ITEMS.length) % ITEMS.length;
@@ -774,7 +802,10 @@
             ambientIdx = (ambientIdx + delta + AMBIENT_PRESETS.length) % AMBIENT_PRESETS.length;
             const snd = AMBIENT_PRESETS[ambientIdx];
             const btn = document.getElementById('ambient-sound-btn');
-            if (btn) btn.textContent = snd;
+            if (btn) {
+                btn.textContent = snd;
+                btn.title = `[M] 앰비언트 (${ambientIdx + 1}/${AMBIENT_PRESETS.length}: ${snd}) · 우클릭·Shift+M: 이전 · Shift+좌클릭: 즉시 무음`;
+            }
         }
 
         const RARITY_PRESETS = ["🌟 노말", "💎 레어", "👑 슈퍼레어", "🔮 시크릿"];
@@ -836,6 +867,11 @@
         function renderDiaryVolumes(item) {
             const list = document.getElementById('diary-volumes-list');
             list.innerHTML = '';
+            const addVolBtn = document.getElementById('diary-add-vol-btn');
+            if (addVolBtn && item) {
+                const nxtVol = (item.volumes ? item.volumes.length : 0) + 1;
+                addVolBtn.title = `새 ${nxtVol}권·파츠 일기 추가 (+ · 우클릭: 추가 후 바로 밑줄 입력 · Shift+좌클릭: 초판+북마크 추가)`;
+            }
             if (item.category === 'gacha' && (!item.volumes || item.volumes.length === 0)) {
                 const info = document.createElement('div');
                 info.className = 'p-2.5 rounded-xl bg-[#faf6f0] border border-[#e5dac9] text-xs font-bold text-[#5c4938] space-y-1';
@@ -848,9 +884,14 @@
                 row.className = 'p-2.5 rounded-xl bg-[#faf6f0] border border-[#e5dac9] flex items-center justify-between text-xs';
                 const isFirst = v.status === 'first';
                 const isBm = !!v.bookmarked;
+                const vStText = isFirst ? '초판특전' : '소장완료';
+                const vBmText = isBm ? '북마크 ON' : '북마크 OFF';
+                const vRVal = Number(v.rating || 0);
+                const vRText = vRVal > 0 ? `★${vRVal}` : '별점 없음';
+                const vDtText = (v.date || '').trim() || '날짜 없음';
                 row.innerHTML = `
                     <div class="flex items-center gap-2 min-w-0">
-                        <span onclick="if(event&&event.shiftKey){const it=ITEMS.find(x=>x.id===activeId);if(it&&it.volumes&&it.volumes[${idx}]){const tv=it.volumes[${idx}];tv.status='first';tv.bookmarked=true;tv.rating=5;renderDiaryVolumes(it);refreshDiaryAuthor(it);renderShelf();}}else{startEditVolQuote(${idx});}" oncontextmenu="event.preventDefault(); toggleVolBookmark(${idx});" title="좌클릭: ${v.vol}권 밑줄 문장 편집 · 우클릭: 북마크 토글 · Shift+좌클릭: 초판+북마크+★5" class="serif-font font-bold text-[#2c221e] shrink-0 cursor-pointer hover:text-[#c85a32]">${v.vol}권</span>
+                        <span onclick="if(event&&event.shiftKey){const it=ITEMS.find(x=>x.id===activeId);if(it&&it.volumes&&it.volumes[${idx}]){const tv=it.volumes[${idx}];tv.status='first';tv.bookmarked=true;tv.rating=5;renderDiaryVolumes(it);refreshDiaryAuthor(it);renderShelf();}}else{startEditVolQuote(${idx});}" oncontextmenu="event.preventDefault(); toggleVolBookmark(${idx});" title="${v.vol}권 요약: ${vStText} · ${vRText} · ${vBmText} · ${vDtText}&#10;좌클릭: ${v.vol}권 밑줄 문장 편집 · 우클릭: 북마크 토글 · Shift+좌클릭: 초판+북마크+★5" class="serif-font font-bold text-[#2c221e] shrink-0 cursor-pointer hover:text-[#c85a32]">${v.vol}권</span>
                         <button onclick="if(event&&event.shiftKey){const it=ITEMS.find(x=>x.id===activeId);if(it&&it.volumes&&it.volumes[${idx}]){const ns=it.volumes[${idx}].status==='first'?'owned':'first';it.volumes.forEach(vv=>vv.status=ns);renderDiaryVolumes(it);}}else{toggleVolStatus(${idx});}" oncontextmenu="event.preventDefault(); toggleVolStatus(${idx}); toggleVolBookmark(${idx});" title="클릭: 초판/소장 전환 · 우클릭: 초판+북마크 동시 토글 · Shift+좌클릭: 전권 일괄 전환" class="px-1.5 py-0.5 rounded border ${isFirst ? 'bg-[#fff8f5] border-[#c85a32]/50 text-[#c85a32]' : 'bg-[#eef5f0] border-[#4a6b5d]/50 text-[#4a6b5d]'} text-[10px] font-bold shrink-0 cursor-pointer">${isFirst ? '🔖 초판특전' : '✓ 소장완료'}</button>
                         <button onclick="if(event&&event.shiftKey){const it=ITEMS.find(x=>x.id===activeId);if(it&&it.volumes&&it.volumes[${idx}]){it.volumes[${idx}].status='first';it.volumes[${idx}].bookmarked=true;renderDiaryVolumes(it);}}else{toggleVolBookmark(${idx});}" oncontextmenu="event.preventDefault(); startEditVolQuote(${idx});" class="text-[12px] shrink-0 cursor-pointer hover:scale-110" title="북마크 토글 (우클릭: ${v.vol}권 밑줄 문장 편집 · Shift+좌클릭: 초판+북마크)">${isBm ? '🔖' : '🏷️'}</button>
                         <span onclick="if(event&&event.shiftKey){const it=ITEMS.find(x=>x.id===activeId);if(it&&it.volumes&&it.volumes[${idx}]){const tv=it.volumes[${idx}];navigator.clipboard?.writeText(`${it.title} ${tv.vol}권: '${tv.quote||''}'`);tv.bookmarked=true;renderDiaryVolumes(it);refreshDiaryAuthor(it);renderShelf();}}else{startEditVolQuote(${idx});}" oncontextmenu="event.preventDefault(); const qText = this.textContent; navigator.clipboard?.writeText('${'${'}item.title.replace(/'/g, "\\'")${'}'} ${v.vol}권: ' + qText); this.title='✅ 복사됨: ' + qText;" class="serif-font text-[#5c4938] truncate cursor-pointer hover:text-[#c85a32]" title="클릭하여 ${v.vol}권 밑줄 문장 편집 · 우클릭: 밑줄 문장 복사 · Shift+좌클릭: 복사+북마크">${v.quote ? `"${v.quote}"` : '메모 없음'}</span>

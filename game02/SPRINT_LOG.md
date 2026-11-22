@@ -5,6 +5,259 @@
 
 ---
 
+## 📓 [Sprint 241] 상단 책등 선반(`SpineShelf`) 미니어처 책등 툴팁 작가·별점·자산가치 실시간 동기화
+- **일시**: 2026-11-22
+- **14인 가상 애자일 스쿼드 회의록**:
+  - **다꾸러 VOC (지민·수빈·하연)**: "상단 스파인 책등 선반의 미니어처 책등에 마우스를 올렸을 때도 작품명·권수뿐 아니라 작가명, 평균 별점(`★5.0`), 추정 자산가치(`₩21,000`)까지 한눈에 보고 싶어요!"
+  - **PO & UX/UI**: `MainView._update_stats()`의 `spine_shelf_row` 생성 루프에서 각 책등의 `tooltip_text`에 작가·평균 별점·소장 권수·자산가치를 포함하고, 웹 목업(`index.html`)의 `#mini-spine-shelf` `title` 툴팁도 동일하게 동기화한다.
+- **구현 내역**:
+  - [`main_view.gd`](godot_project/scripts/main_view.gd): `_update_stats()` 내 `spine.tooltip_text`에 작가·평균 별점·자산가치 추가.
+  - [`index.html`](index.html): `#mini-spine-shelf` 책등 `title`에 작가·별점·권수 동기화.
+  - [`test_main_integration.gd`](godot_project/tests/test_main_integration.gd): 책등 선반 첫 번째 책등 툴팁의 작가·별점·권수·자산가치 검증 추가.
+- **검증**: `test_archive.gd`, `test_persistence.gd`, `test_main_integration.gd` 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 갱신 완료.
+
+---
+
+## 🏆 [Sprint 240 Milestone] 메인 서재 카드(`CardItem`) & 밑줄 라벨(`status_label`) 전체 원문·작가·별점 툴팁 동기화
+- **일시**: 2026-11-22
+- **14인 가상 애자일 스쿼드 회의록**:
+  - **다꾸러 VOC (지민·수빈·하연)**: "메인 서재 카드 하단의 밑줄 문장이 말줄임(`...`) 처리되었을 때도 일기를 열지 않고 카드나 밑줄 문장에 마우스를 올리면 작가·평균 별점·잘리지 않은 전체 밑줄 문장을 바로 읽고 싶어요!"
+  - **PO & UX/UI**: `CardItem.setup()`에서 `status_label`의 `mouse_filter = Control.MOUSE_FILTER_PASS` 및 전체 원문 `tooltip_text`를 설정하고, 카드 자체의 `tooltip_text`에도 작가명·평균 별점(`★5.0`)·전체 밑줄 문장을 포함하며 웹 목업(`index.html`)도 동일하게 동기화한다.
+- **구현 내역**:
+  - [`card_item.gd`](godot_project/scripts/card_item.gd): `setup()` 내 `CardItem` 및 `status_label` 툴팁에 작가·평균 별점·전체 밑줄 원문 추가.
+  - [`index.html`](index.html): `renderShelf()` 내 카드 `title` 툴팁에 작가 및 전체 밑줄 원문 동기화.
+  - [`test_main_integration.gd`](godot_project/tests/test_main_integration.gd): 메인 서재 카드 및 `status_label` 툴팁의 작가·별점·원문 검증 추가.
+- **검증**: `test_archive.gd`, `test_persistence.gd`, `test_main_integration.gd` 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 갱신 완료.
+
+---
+
+## 📓 [Sprint 239] 새 일기 작성 모달(`AddModal`) 등록·닫기 버튼 실시간 입력 제목 및 작성 칸 수 툴팁 동기화
+- **일시**: 2026-11-22
+- **14인 가상 애자일 스쿼드 회의록**:
+  - **다꾸러 VOC (지민·수빈·하연)**: "새 일기 작성 모달에서 제목을 입력하면 등록 버튼 툴팁에 내가 입력한 작품명이 바로 반영되고, 닫기 버튼 툴팁에는 현재 작성 중인 칸 수(`[작성 중 3/3칸]` / `[입력칸 비어 있음]`)가 표시되어 실수로 닫는 일을 줄이고 싶어요!"
+  - **PO & UX/UI**: `AddModal._sync_submit_tooltip()`을 `text_changed`, `fill_sample_inputs()`, `clear_inputs()`, `open()`, `select_color()`에 연동하여 `submit_btn`에 입력 중인 작품명(`「...」`)을, `close_btn`에 작성 칸 수 상태를 실시간 표시한다.
+- **구현 내역**:
+  - [`add_modal.gd`](godot_project/scripts/add_modal.gd): `_sync_submit_tooltip()` 확장 및 `text_changed`/샘플 채움/비우기 연동.
+  - [`test_main_integration.gd`](godot_project/tests/test_main_integration.gd): `AddModal` `submit_btn`·`close_btn` 실시간 입력 상태 툴팁 검증 추가.
+- **검증**: `test_archive.gd`, `test_persistence.gd`, `test_main_integration.gd` 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 갱신 완료.
+
+---
+
+## 📓 [Sprint 238] 상세 모달 권별 번호 배지(`vol_lbl`) 실시간 요약(소장상태·별점·북마크·기록일) 툴팁 동기화
+- **일시**: 2026-11-22
+- **14인 가상 애자일 스쿼드 회의록**:
+  - **다꾸러 VOC (지민·수빈·하연)**: "상세 일기장 권별 행 맨 앞의 `1권`, `2권` 번호 라벨에 마우스를 올렸을 때도 단축키 안내와 함께 해당 권의 상태(`초판특전`/`소장완료`), 별점(`★5`), 북마크(`ON`/`OFF`), 기록일을 한눈에 요약해서 보고 싶어요!"
+  - **PO & UX/UI**: `DetailModal._render_volumes()`에서 각 권별 `vol_lbl.tooltip_text` 첫 줄에 `"%d권 요약: %s · %s · %s · %s"`를 실시간으로 구성하고 기존 단축키 안내를 유지하며, 웹 목업(`index.html`)도 동일하게 동기화한다.
+- **구현 내역**:
+  - [`detail_modal.gd`](godot_project/scripts/detail_modal.gd): `_render_volumes()` 내 `vol_lbl` 툴팁에 권별 실시간 요약 정보 추가.
+  - [`index.html`](index.html): `renderDiaryVolumes()` 내 권 번호 `<span>` `title` 툴팁 동기화.
+  - [`test_main_integration.gd`](godot_project/tests/test_main_integration.gd): 1권 `vol_lbl` 실시간 요약 툴팁 검증 추가.
+- **검증**: `test_archive.gd`, `test_persistence.gd`, `test_main_integration.gd` 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 갱신 완료.
+
+---
+
+## 📓 [Sprint 237] 상세 모달 권별 소장상태(`status_btn`) · 기록일(`date_btn`) · 북마크(`bm_btn`) 실시간 툴팁 동기화
+- **일시**: 2026-11-22
+- **14인 가상 애자일 스쿼드 회의록**:
+  - **다꾸러 VOC (지민·수빈·하연)**: "상세 일기장 권별 행의 소장상태(`🔖초판특전`/`✓소장완료`), 날짜 스탬프(`📅 11.22`), 북마크(`🏷️`/`🔖`) 버튼에 마우스를 올렸을 때도 해당 권수와 현재 상태(`1권 상태: 초판특전`, `1권 기록일: ...`, `1권 북마크 [ON/OFF]`)를 바로 확인하고 싶어요!"
+  - **PO & UX/UI**: `DetailModal._render_volumes()`에서 각 권별 `status_btn`, `date_btn`, `bm_btn`의 `tooltip_text`에 권수 및 실시간 상태·기록일·북마크 ON/OFF를 반영한다.
+- **구현 내역**:
+  - [`detail_modal.gd`](godot_project/scripts/detail_modal.gd): `_render_volumes()` 내 `status_btn`, `date_btn`, `bm_btn` 툴팁 실시간 동기화.
+  - [`test_main_integration.gd`](godot_project/tests/test_main_integration.gd): 1권 `status_btn`, `date_btn`, `bm_btn` 툴팁 검증 추가.
+- **검증**: `test_archive.gd`, `test_persistence.gd`, `test_main_integration.gd` 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 갱신 완료.
+
+---
+
+## 📓 [Sprint 236] 상세 모달 권별 별점 버튼(`star_btn`) 실시간 권수·점수(`N권 별점 X/5점`) 툴팁 동기화
+- **일시**: 2026-11-22
+- **14인 가상 애자일 스쿼드 회의록**:
+  - **다꾸러 VOC (지민·수빈·하연)**: "상세 일기장의 권별 별점 버튼(`★★★★★`)에 마우스를 올렸을 때 현재 몇 권의 몇 점(`1권 별점 5/5점`)인지 숫자로도 바로 확인하고 싶어요!"
+  - **PO & UX/UI**: `DetailModal._render_volumes()`에서 각 권별 `star_btn.tooltip_text` 앞에 `"%d권 별점 %d/5점"`을 실시간으로 표시한다.
+- **구현 내역**:
+  - [`detail_modal.gd`](godot_project/scripts/detail_modal.gd): `_render_volumes()` 내 `star_btn` 툴팁에 권수 및 `X/5점` 수치 동기화.
+  - [`test_main_integration.gd`](godot_project/tests/test_main_integration.gd): 1권 `star_btn` 툴팁(`1권 별점 5/5점`) 검증 추가.
+- **검증**: `test_archive.gd`, `test_persistence.gd`, `test_main_integration.gd` 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 갱신 완료.
+
+---
+
+## 📓 [Sprint 235 Milestone] 상세 모달 권별 밑줄 문장(`quote_lbl`) 전체 원문 툴팁 동기화
+- **일시**: 2026-11-22
+- **14인 가상 애자일 스쿼드 회의록**:
+  - **다꾸러 VOC (지민·수빈·하연)**: "상세 일기장 하단의 권별 밑줄 노트(2권·3권 등)에서 긴 대사가 말줄임(`...`) 처리될 때 마우스를 올리면 잘리지 않은 전체 원문을 바로 읽고 싶어요!"
+  - **PO & UX/UI**: `DetailModal._render_volumes()`에서 각 권별 `quote_lbl.tooltip_text` 첫 줄에 해당 권의 전체 밑줄 문장(`🖋️ "..."`)을 포함한다.
+- **구현 내역**:
+  - [`detail_modal.gd`](godot_project/scripts/detail_modal.gd): `_render_volumes()` 내 권별 `quote_lbl` 툴팁에 전체 밑줄 원문 표시.
+  - [`test_main_integration.gd`](godot_project/tests/test_main_integration.gd): 2권 `quote_lbl` 툴팁의 전체 원문 표시 검증 추가.
+- **검증**: `test_archive.gd`, `test_persistence.gd`, `test_main_integration.gd` 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 갱신 완료.
+
+---
+
+## 📓 [Sprint 234] 상세 모달 권별 헤더(`VolHeader`) 실시간 소장률·초판·북마크·평균별점 툴팁 동기화
+- **일시**: 2026-11-22
+- **14인 가상 애자일 스쿼드 회의록**:
+  - **다꾸러 VOC (지민·수빈·하연)**: "상세 일기장 하단의 `📌 권별 밑줄 노트` 헤더에 마우스를 올렸을 때 현재 소장률(`3/3권 100%`), 초판 권수, 북마크 권수, 평균 별점(`★5.0`)을 한 번에 확인하고 싶어요!"
+  - **PO & UX/UI**: `DetailModal._refresh_vol_header()`에서 `vol_header.tooltip_text`에 실시간 소장률·초판·북마크·평균 별점을 동기화한다.
+- **구현 내역**:
+  - [`detail_modal.gd`](godot_project/scripts/detail_modal.gd): `_refresh_vol_header()` 내 `VolHeader` 툴팁에 실시간 권수·달성률·초판·북마크·평균 별점 표시.
+  - [`test_main_integration.gd`](godot_project/tests/test_main_integration.gd): `VolHeader` 툴팁의 `소장 3/3권 (100%)` 및 `평균 ★5.0` 검증 추가.
+- **검증**: `test_archive.gd`, `test_persistence.gd`, `test_main_integration.gd` 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 갱신 완료.
+
+---
+
+## 📓 [Sprint 233] 오늘의 밑줄(`TodayQuoteLabel`) 전체 원문·작가명 툴팁 동기화
+- **일시**: 2026-11-22
+- **14인 가상 애자일 스쿼드 회의록**:
+  - **다꾸러 VOC (지민·수빈·하연)**: "상단 책등 배너의 `오늘의 밑줄`이 모바일 화면에서 길게 말줄임(`...`)될 때 마우스를 올리면 잘리지 않은 전체 명대사 원문과 작가명까지 함께 읽고 싶어요!"
+  - **PO & UX/UI**: `MainView._apply_today_quote()`에서 `today_quote_label.tooltip_text` 첫 줄에 전체 원문(`entry["text"]`)과 작가명(`target_item.author_or_series`)을 포함한다.
+- **구현 내역**:
+  - [`main_view.gd`](godot_project/scripts/main_view.gd): `_apply_today_quote()` 내 `TodayQuoteLabel` 툴팁에 전체 문장 원문 및 작가명 표시.
+  - [`test_main_integration.gd`](godot_project/tests/test_main_integration.gd): `TodayQuoteLabel` 툴팁의 전체 원문 및 작가명(`이노우에 다케히코`) 검증 추가.
+- **검증**: `test_archive.gd`, `test_persistence.gd`, `test_main_integration.gd` 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 갱신 완료.
+
+---
+
+## 📓 [Sprint 232] 랜덤 추천(`RandomPickBtn`) 필터 풀 · 상세 닫기(`CloseBtn`) 작품명 툴팁 동기화
+- **일시**: 2026-11-22
+- **14인 가상 애자일 스쿼드 회의록**:
+  - **다꾸러 VOC (지민·수빈·하연)**: "상단 `🎲 추천` 버튼에 마우스를 올렸을 때 현재 필터링된 추천 대상 규모(`4/6종 · ₩70,000`)를, 상세 모달 `×` 닫기 버튼에서는 현재 닫으려는 작품명(`「슬램덩크 신장재편판」`)을 바로 확인하고 싶어요!"
+  - **PO & UX/UI**: `MainView._render_cards()`에서 `random_pick_btn.tooltip_text`를 실시간 갱신하고, `DetailModal.open()`에서 `close_btn.tooltip_text`에 작품명을 반영한다.
+- **구현 내역**:
+  - [`main_view.gd`](godot_project/scripts/main_view.gd): `_render_cards()` 내 `RandomPickBtn` 툴팁에 실시간 필터 건수·자산 합계 표시.
+  - [`detail_modal.gd`](godot_project/scripts/detail_modal.gd): `open()` 내 `CloseBtn` 툴팁에 현재 작품명(`「%s」`) 표시.
+  - [`test_main_integration.gd`](godot_project/tests/test_main_integration.gd): `RandomPickBtn` (`4/6종 · ₩70,000`) 및 `CloseBtn` (`「슬램덩크 신장재편판」`) 툴팁 검증 추가.
+- **검증**: `test_archive.gd`, `test_persistence.gd`, `test_main_integration.gd` 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 갱신 완료.
+
+---
+
+## 📓 [Sprint 231] 상·하단 주요 액션 버튼(`WebBtn`/`CamBtn`/`DiyBtn`/`AddBtn`) 실시간 서재·분류 통계 툴팁 동기화
+- **일시**: 2026-11-22
+- **14인 가상 애자일 스쿼드 회의록**:
+  - **다꾸러 VOC (지민·수빈·하연)**: "하단 `웹표지 스크랩`, `폴라로이드 촬영`, `새 일기 쓰기` 및 상단 `+ 일기 쓰기` 버튼에 마우스를 올렸을 때도 현재 이북/가챠/전체 서재 종수와 자산 합계(`이북 4종 · ₩70,000`, `가챠 2종 · ₩10,000`, `현재 6종 · ₩80,000`)를 바로 확인하고 싶어요!"
+  - **PO & UX/UI**: `MainView._update_stats()`에서 `WebBtn`, `CamBtn`, `DiyBtn`, `AddBtn`의 `tooltip_text`에 실시간 분류별 종수와 자산 합계를 반영한다.
+- **구현 내역**:
+  - [`main_view.gd`](godot_project/scripts/main_view.gd): `_update_stats()` 내 `WebBtn`, `CamBtn`, `DiyBtn`, `AddBtn` 툴팁 실시간 통계 동기화.
+  - [`test_main_integration.gd`](godot_project/tests/test_main_integration.gd): 4종 액션 버튼 툴팁의 실시간 이북/가챠/전체 통계 검증 추가.
+- **검증**: `test_archive.gd`, `test_persistence.gd`, `test_main_integration.gd` 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 갱신 완료.
+
+---
+
+## 📓 [Sprint 230 Milestone] 일기 작성 모달(`AddModal`) 제출 버튼(`SubmitBtn`) 실시간 분류·표지색 툴팁 동기화
+- **일시**: 2026-11-22
+- **14인 가상 애자일 스쿼드 회의록**:
+  - **다꾸러 VOC (지민·수빈·하연)**: "새 일기 작성 창(`AddModal`)에서 등록 버튼(`SubmitBtn`)에 마우스를 올렸을 때 현재 선택된 분류(`이북·단행본` / `가챠·굿즈`)와 표지 스와치 색상(`[크림슨]`, `[코발트]` 등)을 바로 확인해 3대 뷰 실시간 툴팁 마일스톤을 완성하고 싶어요!"
+  - **PO & UX/UI**: `AddModal._sync_submit_tooltip()` 헬퍼를 추가해 `_ready()`, `open()`, `select_color()`, `cat_option.item_selected` 시 `submit_btn.tooltip_text`를 실시간으로 갱신한다.
+- **구현 내역**:
+  - [`add_modal.gd`](godot_project/scripts/add_modal.gd): `_sync_submit_tooltip()` 추가로 `SubmitBtn` 툴팁에 실시간 분류 및 스와치 색상명(`[%s]`) 표시.
+  - [`test_main_integration.gd`](godot_project/tests/test_main_integration.gd): `AddModal` `SubmitBtn` 툴팁의 `이북·단행본`, `[크림슨]` → `[코발트]` 전환 검증 추가.
+- **검증**: `test_archive.gd`, `test_persistence.gd`, `test_main_integration.gd` 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 갱신 완료.
+
+---
+
+## 📓 [Sprint 229] 상세 모달 밑줄 저장(`SaveQuoteBtn`) · 형광펜(`HighlightBtn`) 실시간 상태 툴팁 동기화
+- **일시**: 2026-11-22
+- **14인 가상 애자일 스쿼드 회의록**:
+  - **다꾸러 VOC (지민·수빈·하연)**: "상세 일기장에서 `🖋️ 밑줄 저장`과 `🖍️ 형광펜` 버튼에 마우스를 올렸을 때 현재 저장 대상 작품명(`「슬램덩크 신장재편판」`)과 형광펜 `ON ✨ / OFF` 상태를 바로 확인하고 싶어요!"
+  - **PO & UX/UI**: `DetailModal.open()`에서 `save_quote_btn.tooltip_text`에 작품명을 반영하고, `_apply_ink_style()`에서 `HighlightBtn.tooltip_text`에 실시간 `ON ✨ / OFF` 상태를 반영한다.
+- **구현 내역**:
+  - [`detail_modal.gd`](godot_project/scripts/detail_modal.gd): `open()` 내 `SaveQuoteBtn` (`「%s」`) 및 `_apply_ink_style()` 내 `HighlightBtn` (`[현재: ON ✨ / OFF]`) 실시간 툴팁 동기화.
+  - [`index.html`](index.html): `openJournalModal()` 내 `#btn-highlighter` `title` 속성 실시간 `ON ✨ / OFF` 상태 동기화.
+  - [`test_main_integration.gd`](godot_project/tests/test_main_integration.gd): `SaveQuoteBtn` 작품명 및 `HighlightBtn` `ON ✨ / OFF` 툴팁 토글 검증 추가.
+- **검증**: `test_archive.gd`, `test_persistence.gd`, `test_main_integration.gd` 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 갱신 완료.
+
+---
+
+## 📓 [Sprint 228] 상세 모달 공유(`ShareCardBtn`) · 삭제(`DeleteBtn`) 실시간 작품명·권수·자산가치 툴팁 동기화
+- **일시**: 2026-11-22
+- **14인 가상 애자일 스쿼드 회의록**:
+  - **다꾸러 VOC (지민·수빈·하연)**: "상세 일기장에서 `💌 공유`와 `일기 삭제` 버튼에 마우스를 올렸을 때 현재 펼친 작품명, 권수, 추정 자산 가치(`「슬램덩크 신장재편판」(3권 · ₩21,000)`)를 바로 확인해 실수로 다른 일기를 삭제하지 않게 해주세요!"
+  - **PO & UX/UI**: `DetailModal.open(item)`에서 `ShareCardBtn.tooltip_text`와 `DeleteBtn.tooltip_text`를 현재 작품의 제목·권수·자산가치로 실시간 갱신한다.
+- **구현 내역**:
+  - [`detail_modal.gd`](godot_project/scripts/detail_modal.gd): `open()` 내 `ShareCardBtn` (`「%s」(%d권 · %s)`) 및 `DeleteBtn` (`「%s」(%d권)`) 실시간 툴팁 동기화.
+  - [`index.html`](index.html): `openJournalModal()` 내 `#delete-diary-btn` `title` 속성 실시간 작품명·권수 동기화.
+  - [`test_main_integration.gd`](godot_project/tests/test_main_integration.gd): `ShareCardBtn` 및 `DeleteBtn` 툴팁의 실시간 작품명·권수·자산가치 검증 추가.
+- **검증**: `test_archive.gd`, `test_persistence.gd`, `test_main_integration.gd` 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 갱신 완료.
+
+---
+
+## 📓 [Sprint 227] 상세 모달 권 추가(`AddVolBtn`) · 삭제(`RemVolBtn`) 실시간 권수 툴팁 동기화
+- **일시**: 2026-11-22
+- **14인 가상 애자일 스쿼드 회의록**:
+  - **다꾸러 VOC (지민·수빈·하연)**: "상세 일기장에서 `+ 다음 권 일기 추가`와 `- 권 삭제` 버튼에 마우스를 올렸을 때 다음에 추가될 권수(`새 4권`)와 현재 삭제될 마지막 권수(`마지막 3권`)를 바로 확인하고 싶어요!"
+  - **PO & UX/UI**: `DetailModal._render_volumes()`에서 `current_item.volumes.size()`에 따라 `add_vol_btn.tooltip_text`와 `rem_btn.tooltip_text`를 실시간으로 갱신한다.
+- **구현 내역**:
+  - [`detail_modal.gd`](godot_project/scripts/detail_modal.gd): `_render_volumes()` 내 `add_vol_btn` (`새 %d권`) 및 `rem_btn` (`마지막 %d권`) 실시간 툴팁 동기화.
+  - [`index.html`](index.html): `renderDiaryVolumes()` 내 `#diary-add-vol-btn` `title` 속성 실시간 다음 권수 동기화.
+  - [`test_main_integration.gd`](godot_project/tests/test_main_integration.gd): `add_vol_btn` (`새 4권`) 및 `rem_btn` (`마지막 3권`) 툴팁 검증 추가.
+- **검증**: `test_archive.gd`, `test_persistence.gd`, `test_main_integration.gd` 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 갱신 완료.
+
+---
+
+## 📓 [Sprint 226] 상세 모달 페이지 배지(`PageBadgeLabel`) 실시간 작품명·순번·자산가치 툴팁 동기화
+- **일시**: 2026-11-22
+- **14인 가상 애자일 스쿼드 회의록**:
+  - **다꾸러 VOC (지민·수빈·하연)**: "상세 일기장 우측 상단의 `1/6` 페이지 배지에 마우스를 올렸을 때 현재 펼친 작품명, 순번, 그리고 이 작품의 추정 자산 가치(`₩21,000`)까지 바로 확인하고 싶어요!"
+  - **PO & UX/UI**: `MainView._update_modal_nav_tooltips(item)`에서 `PageBadgeLabel.tooltip_text`를 `"현재 %d/%d번째: %s (%s) · 좌클릭: 다음 · 우클릭: 이전 · Shift+좌/우클릭: 처음/끝"`으로 실시간 갱신한다.
+- **구현 내역**:
+  - [`main_view.gd`](godot_project/scripts/main_view.gd): `_update_modal_nav_tooltips()` 내 `PageBadgeLabel.tooltip_text` 실시간 작품명·순번·자산가치 동기화.
+  - [`index.html`](index.html): `openJournalModal()` 내 `#journal-page-indicator` `title` 속성 실시간 동기화.
+  - [`test_main_integration.gd`](godot_project/tests/test_main_integration.gd): `PageBadgeLabel` 툴팁의 `1/6번째: 슬램덩크` 및 `₩21,000` 검증 추가.
+- **검증**: `test_archive.gd`, `test_persistence.gd`, `test_main_integration.gd` 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 갱신 완료.
+
+---
+
+## 📓 [Sprint 225 Milestone] 앰비언트 사운드(`AmbientBtn`) & 속지 테마(`ThemeBtn`) 실시간 프리셋 툴팁 동기화
+- **일시**: 2026-11-22
+- **14인 가상 애자일 스쿼드 회의록**:
+  - **다꾸러 VOC (지민·수빈·하연)**: "상단 앰비언트 사운드 버튼과 하단 속지 테마 버튼에 마우스를 올렸을 때 현재 몇 번째 프리셋(`2/6`, `2/4`)과 어떤 테마·사운드가 적용되어 있는지 실시간으로 확인하고 싶어요!"
+  - **PO & UX/UI**: `MainView.cycle_ambient_sound()`, `_step_theme()`, `_reset_theme()`에서 `_sync_theme_btn_tooltip()` 헬퍼와 `AmbientBtn.tooltip_text`를 실시간으로 갱신한다.
+- **구현 내역**:
+  - [`main_view.gd`](godot_project/scripts/main_view.gd): `AmbientBtn` (`%d/%d: %s`) 및 `ThemeBtn` (`%d/%d: %s`) 실시간 툴팁 동기화 추가.
+  - [`index.html`](index.html): `cycleAmbientSound()` 내 `#ambient-sound-btn` `title` 속성 실시간 프리셋 인덱스 동기화.
+  - [`test_main_integration.gd`](godot_project/tests/test_main_integration.gd): `AmbientBtn` (`2/6:`) 및 `ThemeBtn` (`2/4:`) 툴팁 검증 추가.
+- **검증**: `test_archive.gd`, `test_persistence.gd`, `test_main_integration.gd` 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 갱신 완료.
+
+---
+
+## 📓 [Sprint 224] 정렬 버튼(`SortBtn`) 실시간 정렬 기준 · 필터 건수 · 자산 합계 툴팁 동기화
+- **일시**: 2026-11-22
+- **14인 가상 애자일 스쿼드 회의록**:
+  - **다꾸러 VOC (지민·수빈·하연)**: "정렬 버튼(`↕ 기본순`)에 마우스를 올렸을 때도 현재 선택된 정렬 기준과 함께 필터링된 작품 수·자산 합계(`가치순 (4/6종 · ₩70,000)`)가 실시간으로 보이면 좋겠어요!"
+  - **PO & UX/UI**: `MainView._render_cards()`에서 `sort_btn.tooltip_text`를 현재 `sort_mode` 명칭, `filtered.size()/total_count`, `filtered_val_str`로 동적 갱신한다.
+- **구현 내역**:
+  - [`main_view.gd`](godot_project/scripts/main_view.gd): `_render_cards()` 내 `sort_btn.tooltip_text` 실시간 정렬명·건수·자산 합계 표시.
+  - [`index.html`](index.html): `renderShelf()` 내 `#filter-summary-badge` `title` 속성 실시간 요약 동기화.
+  - [`test_main_integration.gd`](godot_project/tests/test_main_integration.gd): 만화 탭 + 가치순 정렬(`가치순 (4/6종 · ₩70,000)`) `sort_btn.tooltip_text` 검증 추가.
+- **검증**: `test_archive.gd`, `test_persistence.gd`, `test_main_integration.gd` 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 갱신 완료.
+
+---
+
+## 📓 [Sprint 223] 5대 필터 탭 실시간 작품 수 · 소장 자산 합계 툴팁 동기화
+- **일시**: 2026-11-22
+- **14인 가상 애자일 스쿼드 회의록**:
+  - **다꾸러 VOC (지민·수빈·하연)**: "5개 필터 탭(`전체일기`, `이북·단행본`, `가챠노트`, `완독작`, `인생작`)에 마우스를 올렸을 때 각 분류별 작품 수와 자산 합계(`6종 · ₩80,000`, `4종 · ₩70,000`, `2종 · ₩10,000` 등)를 바로 비교해 보고 싶어요!"
+  - **PO & UX/UI**: `MainView._update_stats()`에서 5개 필터 탭의 실시간 건수와 `format_krw()` 자산 합계를 계산해 `tab_all`~`tab_fav`의 `tooltip_text`에 반영한다.
+- **구현 내역**:
+  - [`main_view.gd`](godot_project/scripts/main_view.gd): `_update_stats()` 내 5대 필터 탭(`tab_all`~`tab_fav`) 툴팁에 실시간 종수 및 자산 합계(`₩...`) 표시.
+  - [`index.html`](index.html): `renderShelf()` 내 `#tab-all`~`#tab-fav` 버튼 `title` 속성에 건수·자산 합계 동기화.
+  - [`test_main_integration.gd`](godot_project/tests/test_main_integration.gd): 5대 필터 탭 툴팁의 실시간 종수·자산 합계 검증 추가.
+- **검증**: `test_archive.gd`, `test_persistence.gd`, `test_main_integration.gd` 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 갱신 완료.
+
+---
+
+## 📓 [Sprint 222] 검색창 실시간 필터링 작품 수 · 소장 자산 합계 표시 및 스크린샷 기본 뷰 복원
+- **일시**: 2026-11-22
+- **14인 가상 애자일 스쿼드 회의록**:
+  - **다꾸러 VOC (지민·수빈·하연)**: "검색창 플레이스홀더에서 필터링된 작품 수뿐만 아니라 해당 작품들의 소장 자산 가치(`₩80,000` / `₩70,000`)도 함께 한눈에 확인하고 싶어요! 그리고 기본 스크린샷 뷰가 항상 전체 6종 서재를 보여주었으면 좋겠어요."
+  - **PO & UX/UI**: `MainView._render_cards()`에서 필터링 결과의 `archive_state.format_krw(filtered_val)`를 함께 계산해 `search_input.placeholder_text`에 표시하고, `render_screen.gd`가 항상 clean 6-card `전체일기` 상태에서 스크린샷을 캡처하도록 보강한다.
+- **구현 내역**:
+  - [`main_view.gd`](godot_project/scripts/main_view.gd): `_render_cards()` 내 `search_input.placeholder_text`에 건수 및 자산 합계(`전체 6종 · ₩80,000` / `4/6종 · ₩70,000`) 실시간 표시.
+  - [`render_screen.gd`](godot_project/tests/render_screen.gd): 캡처 직전 `reset_to_rich_defaults()` 및 `_on_tab_all_pressed()` 호출로 기본 6종 서재 뷰 보장.
+  - [`index.html`](index.html): `renderShelf()` 내 `#search-box` 플레이스홀더에 건수·자산 합계 동기화.
+  - [`test_main_integration.gd`](godot_project/tests/test_main_integration.gd): 전체/만화 탭별 건수 및 자산 합계(`₩80,000` / `₩70,000`) 검증 추가.
+- **검증**: `test_archive.gd`, `test_persistence.gd`, `test_main_integration.gd` 100% 통과 및 Metal 4.0 스크린샷(`godot_app_screen.png`, `godot_modal_screen.png`) 갱신 완료.
+
+---
+
 ## 📓 [Sprint 221] 검색창 실시간 필터링 작품 수 표시 (`전체 N종` / `K/N종 표시`)
 - **일시**: 2026-11-21
 - **14인 가상 애자일 스쿼드 회의록**:

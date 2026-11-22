@@ -18,14 +18,34 @@ Godot 4+ 기반의 감성 게임 및 인터랙티브 아카이브 애플리케�
 > **Godot 4.6.2 모바일 기반 E-Book 리더기 서재(Apple Books · 리디북스) & 만년필 다꾸 독서노트(굿노트 · 몰스킨) 감성 아카이브 앱**  
 > 14인 가상 애자일 스쿼드가 20분 주기 자동 스프린트로 지속 개선 중입니다.
 
-### 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 221)
+### 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 241)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
 | ![Pocket Archive Main Screen](game02/godot_project/screenshots/godot_app_screen.png) | ![Pocket Archive Detail Modal](game02/godot_project/screenshots/godot_modal_screen.png) |
 
 ### ✨ 주요 핵심 기능
-- **최신 Sprint 221 하이라이트**: 검색창 실시간 필터링 작품 수 표시(`전체 N종` / `K/N종 표시` · `main_view.gd` · `index.html`) 완성
+- **최신 Sprint 241 하이라이트**: 상단 책등 선반(`SpineShelf`) 미니어처 책등 툴팁 작가·별점·자산가치 실시간 동기화(`main_view.gd` · `index.html`) 완성
+- **Sprint 240 Milestone 하이라이트**: 메인 서재 카드(`CardItem`) & 밑줄 라벨(`status_label`) 전체 원문·작가·별점 툴팁 동기화(`card_item.gd` · `index.html`) 완성
+- **Sprint 239 하이라이트**: 새 일기 작성 모달(`AddModal`) 등록·닫기 버튼 실시간 입력 제목 및 작성 칸 수(`3/3칸`) 툴팁 동기화(`add_modal.gd`) 완성
+- **Sprint 238 하이라이트**: 상세 모달 권별 번호 배지(`vol_lbl`) 실시간 요약(소장상태·별점·북마크·기록일) 툴팁 동기화(`detail_modal.gd` · `index.html`) 완성
+- **Sprint 237 하이라이트**: 상세 모달 권별 소장상태(`status_btn`) · 기록일(`date_btn`) · 북마크(`bm_btn`) 실시간 툴팁 동기화(`detail_modal.gd`) 완성
+- **Sprint 236 하이라이트**: 상세 모달 권별 별점 버튼(`star_btn`) 실시간 권수·점수(`N권 별점 X/5점`) 툴팁 동기화(`detail_modal.gd`) 완성
+- **Sprint 235 Milestone 하이라이트**: 상세 모달 권별 밑줄 문장(`quote_lbl`) 전체 원문 툴팁 동기화(`detail_modal.gd`) 완성
+- **Sprint 234 하이라이트**: 상세 모달 권별 헤더(`VolHeader`) 실시간 소장률·초판·북마크·평균별점 툴팁 동기화(`detail_modal.gd`) 완성
+- **Sprint 233 하이라이트**: 오늘의 밑줄(`TodayQuoteLabel`) 전체 원문·작가명 툴팁 동기화(`main_view.gd`) 완성
+- **Sprint 232 하이라이트**: 랜덤 추천(`RandomPickBtn`) 필터 풀 · 상세 닫기(`CloseBtn`) 작품명 툴팁 동기화(`main_view.gd` · `detail_modal.gd`) 완성
+- **Sprint 231 하이라이트**: 상·하단 주요 액션 버튼(`WebBtn`/`CamBtn`/`DiyBtn`/`AddBtn`) 실시간 서재·분류 통계 툴팁 동기화(`main_view.gd`) 완성
+- **Sprint 230 Milestone 하이라이트**: 일기 작성 모달(`AddModal`) 제출 버튼(`SubmitBtn`) 실시간 분류·표지색 툴팁 동기화(`add_modal.gd`)로 3대 뷰 실시간 툴팁 완성
+- **Sprint 229 하이라이트**: 상세 모달 밑줄 저장(`SaveQuoteBtn`) · 형광펜(`HighlightBtn`) 실시간 상태 툴팁 동기화(`detail_modal.gd` · `index.html`) 완성
+- **Sprint 228 하이라이트**: 상세 모달 공유(`ShareCardBtn`) · 삭제(`DeleteBtn`) 실시간 작품명·권수·자산가치 툴팁 동기화(`detail_modal.gd` · `index.html`) 완성
+- **Sprint 227 하이라이트**: 상세 모달 권 추가(`AddVolBtn`) · 삭제(`RemVolBtn`) 실시간 권수 툴팁 동기화(`detail_modal.gd` · `index.html`) 완성
+- **Sprint 226 하이라이트**: 상세 모달 페이지 배지(`PageBadgeLabel`) 실시간 작품명·순번·자산가치 툴팁 동기화(`main_view.gd` · `index.html`) 완성
+- **Sprint 225 Milestone 하이라이트**: 앰비언트 사운드(`AmbientBtn`) & 속지 테마(`ThemeBtn`) 실시간 프리셋 툴팁 동기화(`main_view.gd` · `index.html`) 완성
+- **Sprint 224 하이라이트**: 정렬 버튼(`SortBtn`) 실시간 정렬 기준 · 필터 건수 · 자산 합계 툴팁 동기화(`main_view.gd` · `index.html`) 완성
+- **Sprint 223 하이라이트**: 5대 필터 탭 실시간 작품 수 · 소장 자산 합계 툴팁 동기화(`main_view.gd` · `index.html`) 완성
+- **Sprint 222 하이라이트**: 검색창 실시간 필터링 작품 수 · 소장 자산 합계 표시(`전체 6종 · ₩80,000` / `4/6종 · ₩70,000`) 및 기본 6종 서재 렌더링 복원(`main_view.gd` · `render_screen.gd` · `index.html`) 완성
+- **Sprint 221 하이라이트**: 검색창 실시간 필터링 작품 수 표시(`전체 N종` / `K/N종 표시` · `main_view.gd` · `index.html`) 완성
 - **Sprint 220 Milestone 하이라이트**: 3대 뷰 전역 `Ctrl/Cmd+Tab` 전환 · `Ctrl/Cmd+ESC` 즉시 초기화·닫기(`main_view.gd` · `detail_modal.gd` · `add_modal.gd` · `index.html`) 완성
 - **Sprint 219 하이라이트**: 3대 뷰 전역 `Ctrl/Cmd+/` 포커스·도움말 · `Ctrl/Cmd+Enter` 열기·저장·등록(`main_view.gd` · `detail_modal.gd` · `add_modal.gd` · `index.html`) 완성
 - **Sprint 218 하이라이트**: 3대 뷰 전역 `Ctrl/Cmd+Space` 열기·넘김·스와치 · `Ctrl/Cmd+Backspace` 초기화·닫기·비우기(`main_view.gd` · `detail_modal.gd` · `add_modal.gd` · `index.html`) 완성

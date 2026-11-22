@@ -28,8 +28,10 @@ func _ready() -> void:
 	cat_option.clear()
 	cat_option.add_item("📖 이북 · 만화 단행본 일기", 0)
 	cat_option.add_item("🔮 가챠 · 굿즈 스크랩 노트", 1)
+	cat_option.item_selected.connect(func(_idx: int) -> void: _sync_submit_tooltip())
 	_build_color_swatches()
 	_style_inputs()
+	_sync_submit_tooltip()
 	title_input.text_submitted.connect(func(_t): author_input.grab_focus())
 	author_input.text_submitted.connect(func(_t): _on_submit_btn_pressed())
 	quote_input.text_submitted.connect(func(_t): _on_submit_btn_pressed())
@@ -43,13 +45,16 @@ func _ready() -> void:
 		var smp: String = pair[1]
 		if fld != null:
 			fld.tooltip_text = "우클릭: 입력 비우기 / 샘플 채움 · Shift+좌클릭: 샘플 채움"
+			fld.text_changed.connect(func(_t: String) -> void: _sync_submit_tooltip())
 			fld.gui_input.connect(func(ev: InputEvent) -> void:
 				if ev is InputEventMouseButton and ev.pressed:
 					if ev.button_index == MOUSE_BUTTON_RIGHT:
 						fld.text = "" if fld.text != "" else smp
+						_sync_submit_tooltip()
 					elif ev.button_index == MOUSE_BUTTON_LEFT and ev.shift_pressed:
 						fld.accept_event()
 						fld.text = smp
+						_sync_submit_tooltip()
 			)
 	var dimmer: Control = get_node_or_null("Dimmer")
 	if dimmer != null:
@@ -192,6 +197,7 @@ func fill_sample_inputs() -> void:
 		author_input.text = "주희의 다꾸 서재"
 	if quote_input != null and quote_input.text.strip_edges() == "":
 		quote_input.text = "소중한 한 권의 기억을 담다."
+	_sync_submit_tooltip()
 
 func _step_color(delta: int) -> void:
 	if COVER_SWATCHES.is_empty():
@@ -208,11 +214,35 @@ func clear_inputs() -> void:
 	title_input.text = ""
 	author_input.text = ""
 	quote_input.text = ""
+	_sync_submit_tooltip()
 	title_input.grab_focus()
 
 func select_color(hex_code: String) -> void:
 	selected_color = hex_code
 	_highlight_selected_swatch()
+	_sync_submit_tooltip()
+
+func _sync_submit_tooltip() -> void:
+	var cat_name: String = "이북·단행본" if (cat_option == null or cat_option.selected == 0) else "가챠·굿즈"
+	var swatch_name: String = "크림슨"
+	for sw in COVER_SWATCHES:
+		if sw["hex"].to_lower() == selected_color.to_lower():
+			swatch_name = sw["name"]
+			break
+	var draft_title: String = title_input.text.strip_edges() if title_input != null else ""
+	if submit_btn != null:
+		if draft_title.is_empty():
+			submit_btn.tooltip_text = "새 %s 일기 등록 [%s] (Enter · 우클릭: 샘플 자동 채움 · Shift+좌클릭: 샘플 자동 채움 등록)" % [cat_name, swatch_name]
+		else:
+			var short_title: String = draft_title.left(18) + ("…" if draft_title.length() > 18 else "")
+			submit_btn.tooltip_text = "「%s」 %s 일기 등록 [%s] (Enter · 우클릭: 샘플 자동 채움 · Shift+좌클릭: 샘플 자동 채움 등록)" % [short_title, cat_name, swatch_name]
+	if close_btn != null:
+		var filled_cnt: int = 0
+		for fld in [title_input, author_input, quote_input]:
+			if fld != null and not fld.text.strip_edges().is_empty():
+				filled_cnt += 1
+		var draft_status: String = "[작성 중 %d/3칸]" % filled_cnt if filled_cnt > 0 else "[입력칸 비어 있음]"
+		close_btn.tooltip_text = "닫기 %s (ESC · 우클릭: 입력란 모두 비우기 · Shift+좌클릭: 입력란 모두 비우기)" % draft_status
 
 func _highlight_selected_swatch() -> void:
 	if color_row == null:
@@ -246,6 +276,7 @@ func open() -> void:
 	cat_option.selected = 0
 	selected_color = "#b91c1c"
 	_highlight_selected_swatch()
+	_sync_submit_tooltip()
 	visible = true
 	title_input.grab_focus()
 

@@ -143,8 +143,14 @@ func setup(item) -> void:
 		status_label.text = "🖋️ " + first_quote
 
 	var val_fmt = ArchiveStateClass.format_krw(est_val) if est_val > 0 else "₩0"
-	tooltip_text = "%s\n%s · %s · %s\n%s · %s · %s\n(Shift+좌클릭: 작가 검색 · 우클릭: +1권 빠른 기록 · Shift+우클릭: 감상 요약 복사)" % [
+	if status_label != null:
+		status_label.mouse_filter = Control.MOUSE_FILTER_PASS
+		status_label.tooltip_text = "🖋️ \"%s\" — %s" % [first_quote, item.title]
+	tooltip_text = "%s (%s · ★%.1f)\n🖋️ \"%s\"\n%s · %s · %s\n%s · %s · %s\n(Shift+좌클릭: 작가 검색 · 우클릭: +1권 빠른 기록 · Shift+우클릭: 감상 요약 복사)" % [
 		item.title,
+		base_author,
+		avg_r,
+		first_quote,
 		item.storage_location,
 		item.reading_weather,
 		item.reading_spot,

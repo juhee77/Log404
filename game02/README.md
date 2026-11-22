@@ -5,7 +5,7 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 
 ---
 
-## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 221)
+## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 241)
 
 | 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
 | :---: | :---: |
@@ -14,6 +14,74 @@ Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디�
 ---
 
 ## 🚀 최신 스프린트 업데이트 요약 ([전체 회의록 보기](SPRINT_LOG.md))
+
+### 📓 [Sprint 241] 상단 책등 선반(`SpineShelf`) 미니어처 책등 툴팁 작가·별점·자산가치 실시간 동기화
+- **책등 선반 실시간 스펙 툴팁**: `MainView._update_stats()` 및 `index.html` 실행 시 상단 미니어처 책등에 마우스를 올리면 작품명·작가·평균 별점(`★5.0`)·소장 권수·추정 자산가치(`₩21,000`)를 한눈에 확인할 수 있습니다.
+
+### 🏆 [Sprint 240 Milestone] 메인 서재 카드(`CardItem`) & 밑줄 라벨(`status_label`) 전체 원문·작가·별점 툴팁 동기화
+- **서재 카드 원문·작가·별점 툴팁**: `CardItem.setup()` 및 `index.html` 실행 시 카드와 하단 밑줄 라벨에 말줄임 처리되지 않은 전체 밑줄 문장, 작가명, 평균 별점(`★5.0`)을 실시간으로 표시해 일기를 열지 않고도 감상 원문을 확인할 수 있습니다.
+
+### 📓 [Sprint 239] 새 일기 작성 모달(`AddModal`) 등록·닫기 버튼 실시간 입력 제목 및 작성 칸 수 툴팁 동기화
+- **작성 모달 실시간 상태 툴팁**: `AddModal`에서 제목·작가·문장을 입력하거나 샘플 채움/비우기를 실행할 때 `SubmitBtn` 툴팁에 입력 중인 작품명(`「...」`)을, `CloseBtn` 툴팁에 `[작성 중 N/3칸]`/`[입력칸 비어 있음]` 상태를 실시간 표시합니다.
+
+### 📓 [Sprint 238] 상세 모달 권별 번호 배지(`vol_lbl`) 실시간 요약(소장상태·별점·북마크·기록일) 툴팁 동기화
+- **권별 번호 배지 요약 툴팁**: `DetailModal._render_volumes()` 및 `index.html` 실행 시 각 권의 번호 배지(`1권`, `2권`) 툴팁에 소장상태·별점·북마크·기록일 실시간 요약(`1권 요약: 초판특전 · ★5 · 북마크 ON · ...`)을 표시합니다.
+
+### 📓 [Sprint 237] 상세 모달 권별 소장상태(`status_btn`) · 기록일(`date_btn`) · 북마크(`bm_btn`) 실시간 툴팁 동기화
+- **권별 행 전체 실시간 툴팁 완성**: `DetailModal._render_volumes()` 실행 시 각 권의 소장상태(`1권 상태: 초판특전`), 기록일(`1권 기록일: ...`), 북마크 상태(`1권 북마크 [ON/OFF]`)를 툴팁에 실시간 표시합니다.
+
+### 📓 [Sprint 236] 상세 모달 권별 별점 버튼(`star_btn`) 실시간 권수·점수(`N권 별점 X/5점`) 툴팁 동기화
+- **권별 별점 수치 툴팁**: `DetailModal._render_volumes()` 실행 시 각 권별 `star_btn` 툴팁에 권수와 별점(`1권 별점 5/5점`)을 실시간 표시합니다.
+
+### 📓 [Sprint 235 Milestone] 상세 모달 권별 밑줄 문장(`quote_lbl`) 전체 원문 툴팁 동기화
+- **권별 밑줄 원문 툴팁**: `DetailModal._render_volumes()` 실행 시 말줄임 처리되는 각 권의 `quote_lbl` 툴팁에 잘리지 않은 전체 밑줄 원문을 실시간 표시합니다.
+
+### 📓 [Sprint 234] 상세 모달 권별 헤더(`VolHeader`) 실시간 소장률·초판·북마크·평균별점 툴팁 동기화
+- **권별 헤더 실시간 통계 툴팁**: `DetailModal._refresh_vol_header()` 실행 시 `VolHeader` 툴팁에 소장률(`3/3권 100%`), 초판 권수, 북마크 권수, 평균 별점(`★5.0`)을 실시간 표시합니다.
+
+### 📓 [Sprint 233] 오늘의 밑줄(`TodayQuoteLabel`) 전체 원문·작가명 툴팁 동기화
+- **오늘의 밑줄 원문 툴팁**: `_apply_today_quote()` 실행 시 말줄임 처리되는 `TodayQuoteLabel` 툴팁에 잘리지 않은 전체 명대사 원문과 작가명을 실시간으로 표시합니다.
+
+### 📓 [Sprint 232] 랜덤 추천(`RandomPickBtn`) 필터 풀 · 상세 닫기(`CloseBtn`) 작품명 툴팁 동기화
+- **추천/닫기 실시간 툴팁**: `_render_cards()` 실행 시 `RandomPickBtn` 툴팁에 현재 필터링된 추천 대상(`4/6종 · ₩70,000`)을, `DetailModal.open()` 실행 시 `CloseBtn` 툴팁에 현재 작품명(`「슬램덩크 신장재편판」`)을 실시간 반영합니다.
+
+### 📓 [Sprint 231] 상·하단 주요 액션 버튼(`WebBtn`/`CamBtn`/`DiyBtn`/`AddBtn`) 실시간 서재·분류 통계 툴팁 동기화
+- **액션 버튼 실시간 통계 툴팁**: `_update_stats()` 실행 시 `웹표지 스크랩` (`이북 4종 · ₩70,000`), `폴라로이드 촬영` (`가챠 2종 · ₩10,000`), `새 일기 쓰기` & `+ 일기 쓰기` (`현재 6종 · ₩80,000`) 툴팁에 실시간 통계를 반영합니다.
+
+### 📓 [Sprint 230 Milestone] 일기 작성 모달(`AddModal`) 제출 버튼(`SubmitBtn`) 실시간 분류·표지색 툴팁 동기화
+- **작성 모달 실시간 툴팁**: `AddModal`에서 분류(`이북·단행본`/`가챠·굿즈`) 또는 표지 컬러 스와치(`[크림슨]`~`[바이올렛]`)를 선택할 때마다 `SubmitBtn` 툴팁에 실시간으로 반영되어 3대 뷰 실시간 툴팁 마일스톤을 완성했습니다.
+
+### 📓 [Sprint 229] 상세 모달 밑줄 저장(`SaveQuoteBtn`) · 형광펜(`HighlightBtn`) 실시간 상태 툴팁 동기화
+- **밑줄 저장/형광펜 실시간 툴팁**: `DetailModal.open()` 및 `_apply_ink_style()` 실행 시 `SaveQuoteBtn` (`「슬램덩크 신장재편판」`)과 `HighlightBtn` (`[현재: ON ✨ / OFF]`) 툴팁을 실시간 동기화합니다.
+- **웹 목업 동기화**: `index.html`의 `openJournalModal()`에서도 `#btn-highlighter` 툴팁을 동일하게 동기화했습니다.
+
+### 📓 [Sprint 228] 상세 모달 공유(`ShareCardBtn`) · 삭제(`DeleteBtn`) 실시간 작품명·권수·자산가치 툴팁 동기화
+- **공유/삭제 실시간 툴팁**: `DetailModal.open()` 실행 시 `ShareCardBtn` (`「슬램덩크 신장재편판」(3권 · ₩21,000)`)과 `DeleteBtn` (`「슬램덩크 신장재편판」(3권)`) 툴팁에 현재 작품 정보를 실시간 반영합니다.
+- **웹 목업 동기화**: `index.html`의 `openJournalModal()`에서도 `#delete-diary-btn` 툴팁을 동일하게 동기화했습니다.
+
+### 📓 [Sprint 227] 상세 모달 권 추가(`AddVolBtn`) · 삭제(`RemVolBtn`) 실시간 권수 툴팁 동기화
+- **권 추가/삭제 실시간 툴팁**: `_render_volumes()` 실행 시 `add_vol_btn` (`새 4권`)과 `rem_btn` (`마지막 3권`) 툴팁에 다음 추가 권수와 현재 마지막 권수를 실시간 반영합니다.
+- **웹 목업 동기화**: `index.html`의 `renderDiaryVolumes()`에서도 `#diary-add-vol-btn` 툴팁을 동일하게 동기화했습니다.
+
+### 📓 [Sprint 226] 상세 모달 페이지 배지(`PageBadgeLabel`) 실시간 작품명·순번·자산가치 툴팁 동기화
+- **상세 모달 페이지 배지 실시간 툴팁**: `_update_modal_nav_tooltips()` 실행 시 `PageBadgeLabel` 툴팁에 현재 펼친 작품의 순번, 작품명, 추정 자산 가치(`1/6번째: 슬램덩크 신장재편판 (₩21,000)`)를 실시간 반영합니다.
+- **웹 목업 동기화**: `index.html`의 `openJournalModal()`에서도 `#journal-page-indicator` 툴팁을 동일하게 동기화했습니다.
+
+### 📓 [Sprint 225 Milestone] 앰비언트 사운드(`AmbientBtn`) & 속지 테마(`ThemeBtn`) 실시간 프리셋 툴팁 동기화
+- **실시간 프리셋 툴팁**: 사운드(`cycle_ambient_sound`) 및 속지 테마(`_step_theme`, `_reset_theme`) 전환 시 `AmbientBtn` (`2/6`)과 `ThemeBtn` (`2/4`) 툴팁에 현재 프리셋 번호와 이름이 실시간 반영됩니다.
+- **웹 목업 동기화**: `index.html`의 `cycleAmbientSound()`에서도 `#ambient-sound-btn` 툴팁을 동일하게 동기화했습니다.
+
+### 📓 [Sprint 224] 정렬 버튼(`SortBtn`) 실시간 정렬 기준 · 필터 건수 · 자산 합계 툴팁 동기화
+- **정렬 버튼 실시간 툴팁**: `_render_cards()` 실행 시 `sort_btn` 툴팁에 현재 정렬 기준(`기본순`·`다독순`·`최신순`·`가치순`)과 필터링된 건수·자산 합계(`4/6종 · ₩70,000`)를 실시간 표시합니다.
+- **웹 목업 동기화**: `index.html`의 `renderShelf()`에서도 `#filter-summary-badge` 툴팁을 동일하게 동기화했습니다.
+
+### 📓 [Sprint 223] 5대 필터 탭 실시간 작품 수 · 소장 자산 합계 툴팁 동기화
+- **5대 필터 탭 실시간 툴팁**: `_update_stats()` 실행 시 `전체일기`, `이북·단행본`, `가챠노트`, `완독작`, `인생작` 탭 툴팁에 각 분류별 실시간 작품 수와 자산 합계(`₩...`)를 표시합니다.
+- **웹 목업 동기화**: `index.html`의 `renderShelf()`에서도 `#tab-all`~`#tab-fav` 버튼 `title` 속성을 동일하게 동기화했습니다.
+
+### 📓 [Sprint 222] 검색창 실시간 필터링 작품 수 · 소장 자산 합계 표시 및 스크린샷 기본 뷰 복원
+- **검색창 실시간 건수·자산 합계**: `_render_cards()` 실행 시 필터링된 작품 수와 자산 가치 합계(`전체 6종 · ₩80,000` / `4/6종 · ₩70,000`)를 `search_input` 플레이스홀더에 실시간 표시합니다.
+- **웹 목업 & 렌더 동기화**: `index.html`의 `renderShelf()`를 동일하게 동기화하고, `render_screen.gd`가 항상 기본 6종 전체 서재 스크린샷을 캡처하도록 보강했습니다.
 
 ### 📓 [Sprint 221] 검색창 실시간 필터링 작품 수 표시 (`전체 N종` / `K/N종 표시`)
 - **실시간 검색창 건수 안내**: `_render_cards()`가 호출될 때마다 `search_input` 플레이스홀더에 전체 종수(`전체 6종`) 또는 필터링된 건수(`4/6종 표시`)를 실시간으로 반영합니다.

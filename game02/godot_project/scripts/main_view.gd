@@ -56,6 +56,7 @@ func cycle_ambient_sound(delta: int = 1) -> String:
 	var ambient_btn: Button = get_node_or_null("VBox/TopBar/TopMargin/StatsVBox/TitleRow/AmbientBtn")
 	if ambient_btn != null:
 		ambient_btn.text = snd
+		ambient_btn.tooltip_text = "[M] 앰비언트 (%d/%d: %s) · 우클릭·Shift+M: 이전 · Shift+좌클릭: 즉시 무음" % [ambient_sound_index + 1, AMBIENT_SOUND_PRESETS.size(), snd]
 	_show_toast("🎧 앰비언트: " + snd + " 재생")
 	return snd
 
@@ -448,16 +449,51 @@ func _update_stats() -> void:
 		var card_node = pair[0].get_parent().get_parent() if pair[0] != null and pair[0].get_parent() != null else null
 		if card_node is Control:
 			card_node.tooltip_text = pair[1]
+	var manga_cnt_tab: int = 0
+	var manga_val_tab: int = 0
+	var gacha_val_tab: int = 0
+	var comp_cnt_tab: int = 0
+	var comp_val_tab: int = 0
+	var fav_cnt_tab: int = 0
+	var fav_val_tab: int = 0
+	for it in archive_state.items:
+		var iv: int = it.get_item_value()
+		if it.category == 1:
+			gacha_val_tab += iv
+		else:
+			manga_cnt_tab += 1
+			manga_val_tab += iv
+		if it.status_tag == "전권완결" or it.status_tag == "완독" or it.volumes.size() >= 2:
+			comp_cnt_tab += 1
+			comp_val_tab += iv
+		if it.status_tag == "인생최애" or it.get_average_rating() >= 5.0:
+			fav_cnt_tab += 1
+			fav_val_tab += iv
+
 	if tab_all != null:
-		tab_all.tooltip_text = "[1] 전체 일기 (%d종) · 우클릭: 완전 초기화 · Shift+좌클릭: 랜덤 열기" % archive_state.items.size()
+		tab_all.tooltip_text = "[1] 전체 일기 (%d종 · %s) · 우클릭: 완전 초기화 · Shift+좌클릭: 랜덤 열기" % [archive_state.items.size(), val_str]
 	if tab_manga != null:
-		tab_manga.tooltip_text = "[2] 이북·단행본 (%d종) · 우클릭: 가치순 보기 · Shift+좌클릭: 첫 작품 열기" % (archive_state.items.size() - g_count)
+		tab_manga.tooltip_text = "[2] 이북·단행본 (%d종 · %s) · 우클릭: 가치순 보기 · Shift+좌클릭: 첫 작품 열기" % [manga_cnt_tab, archive_state.format_krw(manga_val_tab)]
 	if tab_gacha != null:
-		tab_gacha.tooltip_text = "[3] 가챠·굿즈 (%d종) · 우클릭: 가치순 보기 · Shift+좌클릭: 첫 작품 열기" % g_count
+		tab_gacha.tooltip_text = "[3] 가챠·굿즈 (%d종 · %s) · 우클릭: 가치순 보기 · Shift+좌클릭: 첫 작품 열기" % [g_count, archive_state.format_krw(gacha_val_tab)]
 	if tab_complete != null:
-		tab_complete.tooltip_text = "[4] 완독·2권 이상 작품 보기 · 우클릭: 가치순 보기 · Shift+좌클릭: 첫 작품 열기"
+		tab_complete.tooltip_text = "[4] 완독·2권 이상 (%d종 · %s) · 우클릭: 가치순 보기 · Shift+좌클릭: 첫 작품 열기" % [comp_cnt_tab, archive_state.format_krw(comp_val_tab)]
 	if tab_fav != null:
-		tab_fav.tooltip_text = "[5] 인생최애·★5.0 만점작 보기 · 우클릭: 가치순 보기 · Shift+좌클릭: 첫 작품 열기"
+		tab_fav.tooltip_text = "[5] 인생최애·★5.0 만점작 (%d종 · %s) · 우클릭: 가치순 보기 · Shift+좌클릭: 첫 작품 열기" % [fav_cnt_tab, archive_state.format_krw(fav_val_tab)]
+	var nav_row_stats: HBoxContainer = get_node_or_null("VBox/BottomBar/Margin/VBox/NavRow")
+	if nav_row_stats != null and nav_row_stats.get_child_count() >= 3:
+		var wb: Control = nav_row_stats.get_child(0) as Control
+		var cb: Control = nav_row_stats.get_child(1) as Control
+		var db: Control = nav_row_stats.get_child(2) as Control
+		if wb != null:
+			wb.tooltip_text = "웹에서 작품 표지와 기본 정보 자동 스크랩 추가 (이북 %d종 · %s · 우클릭: 이북·단행본 필터 · Shift+좌클릭: 스크랩 후 열기)" % [manga_cnt_tab, archive_state.format_krw(manga_val_tab)]
+		if cb != null:
+			cb.tooltip_text = "실물 굿즈·단행본 폴라로이드 촬영 기록 추가 (가챠 %d종 · %s · 우클릭: 가챠노트 필터 · Shift+좌클릭: 촬영 후 열기)" % [g_count, archive_state.format_krw(gacha_val_tab)]
+		if db != null:
+			db.tooltip_text = "[N] 새 독서 일기·가챠 스크랩 직접 작성 (현재 %d종 · %s · 우클릭: 즉시 JSON 저장 · Shift+좌클릭: 샘플 채움 열기)" % [archive_state.items.size(), val_str]
+	var top_add_stats: Control = get_node_or_null("VBox/TopBar/TopMargin/StatsVBox/TitleRow/AddBtn")
+	if top_add_stats != null:
+		top_add_stats.tooltip_text = "[N] 새 독서 일기·가챠 스크랩 작성 (현재 %d종 · %s · 우클릭: 즉시 JSON 저장 · Shift+좌클릭: 샘플 채움 열기)" % [archive_state.items.size(), val_str]
 	
 	_render_spine_shelf()
 	_refresh_today_quote()
@@ -479,7 +515,15 @@ func _render_spine_shelf() -> void:
 		ribbon.size = Vector2(w, 3)
 		spine.add_child(ribbon)
 		var capture_item = it
-		spine.tooltip_text = "%s (%d권 소장 · 좌클릭: 열기 · 우클릭: 미리보기 · Shift+좌/우클릭: 검색/복사)" % [it.title, it.volumes.size()]
+		var sp_author: String = it.author_or_series if it.author_or_series != "" else "작가 미상"
+		var sp_avg_r: float = 5.0
+		if it.volumes.size() > 0:
+			var sp_sum_r: float = 0.0
+			for v in it.volumes:
+				sp_sum_r += float(v.get("rating", 5))
+			sp_avg_r = sp_sum_r / float(it.volumes.size())
+		var sp_val: String = archive_state.format_krw(it.get_item_value())
+		spine.tooltip_text = "%s (%s · ★%.1f · %d권 소장 · %s)\n좌클릭: 열기 · 우클릭: 미리보기 · Shift+좌/우클릭: 검색/복사" % [it.title, sp_author, sp_avg_r, it.volumes.size(), sp_val]
 		spine.mouse_entered.connect(func(): _show_toast("📚 책등 엿보기: " + capture_item.title + " (" + str(capture_item.volumes.size()) + "권)"))
 		spine.gui_input.connect(func(ev: InputEvent):
 			if ev is InputEventMouseButton and ev.pressed:
@@ -517,7 +561,7 @@ func _apply_today_quote(entry: Dictionary, total_count: int = 1) -> void:
 	today_quote_label.text = entry["text"]
 	var target_item = entry.get("item", null)
 	if target_item != null:
-		today_quote_label.tooltip_text = "좌클릭: 「%s」 독서 일기장 펼치기 · 우클릭: 다음 밑줄 · Shift+좌클릭: 복사 (%d/%d)" % [target_item.title, quote_cursor + 1, maxi(1, total_count)]
+		today_quote_label.tooltip_text = "%s (%s)\n좌클릭: 「%s」 독서 일기장 펼치기 · 우클릭: 다음 밑줄 · Shift+좌클릭: 복사 (%d/%d)" % [entry["text"], target_item.author_or_series, target_item.title, quote_cursor + 1, maxi(1, total_count)]
 	else:
 		today_quote_label.tooltip_text = "나만의 첫 독서 일기를 시작해보세요"
 	if next_quote_btn != null:
@@ -593,11 +637,21 @@ func _render_cards() -> void:
 		filtered.sort_custom(func(a, b): return a.get_item_value() > b.get_item_value())
 
 	var total_count: int = archive_state.items.size()
+	var filtered_val: int = 0
+	for fit in filtered:
+		filtered_val += fit.get_item_value()
+	var filtered_val_str: String = archive_state.format_krw(filtered_val)
 	if search_input != null:
 		if filtered.size() == total_count:
-			search_input.placeholder_text = "작품·대사 검색... (전체 %d종)" % total_count
+			search_input.placeholder_text = "작품·대사 검색... (전체 %d종 · %s)" % [total_count, filtered_val_str]
 		else:
-			search_input.placeholder_text = "작품·대사 검색... (%d/%d종 표시)" % [filtered.size(), total_count]
+			search_input.placeholder_text = "작품·대사 검색... (%d/%d종 · %s)" % [filtered.size(), total_count, filtered_val_str]
+	if sort_btn != null:
+		var sort_names := ["기본순", "다독순", "최신순", "가치순"]
+		var cur_sort_name: String = sort_names[sort_mode % sort_names.size()]
+		sort_btn.tooltip_text = "[S/6~9] 정렬: %s (%d/%d종 · %s) · 우클릭·Shift+S: 이전 · Shift+좌클릭: 기본순" % [cur_sort_name, filtered.size(), total_count, filtered_val_str]
+	if random_pick_btn != null:
+		random_pick_btn.tooltip_text = "[R] 오늘의 랜덤 작품 추천 열기 (%d/%d종 · %s · 우클릭·Shift+R: 미리보기 · Shift+좌클릭: 서재 필터)" % [filtered.size(), total_count, filtered_val_str]
 	
 	if filtered.is_empty():
 		var empty_box := VBoxContainer.new()
@@ -793,6 +847,7 @@ func _update_modal_nav_tooltips(item) -> void:
 		next_btn.tooltip_text = "▶ 다음 일기 (%d/%d): %s (→ · 우클릭: 끝 · Shift+좌클릭: 끝)" % [next_idx + 1, total, archive_state.items[next_idx].title]
 	if page_lbl != null:
 		page_lbl.text = "%d/%d" % [idx + 1, total]
+		page_lbl.tooltip_text = "현재 %d/%d번째: %s (%s) · 좌클릭: 다음 · 우클릭: 이전 · Shift+좌/우클릭: 처음/끝" % [idx + 1, total, item.title, archive_state.format_krw(item.get_item_value())]
 
 func _open_detail_modal(item) -> void:
 	if item == null or detail_modal == null:
@@ -960,16 +1015,23 @@ func _on_camera_snap_btn_pressed() -> void:
 	_on_tab_all_pressed()
 	_show_toast("📸 카메라 찰칵! 실물 표지가 등록되었습니다: %s (%s)" % [added.title, _get_filtered_cards_summary()])
 
+func _sync_theme_btn_tooltip(t: Dictionary) -> void:
+	var theme_btn: Button = get_node_or_null("VBox/BottomBar/Margin/VBox/NavRow/ThemeBtn")
+	if theme_btn != null:
+		theme_btn.tooltip_text = "[T] 속지 테마 (%d/%d: %s) · 우클릭·Shift+T: 이전 · Shift+좌클릭: 기본 테마" % [theme_cursor + 1, ROOM_THEMES.size(), t["name"]]
+
 func _step_theme(delta: int) -> void:
 	theme_cursor = (theme_cursor + delta + ROOM_THEMES.size()) % ROOM_THEMES.size()
 	var t = ROOM_THEMES[theme_cursor]
 	bg_rect.color = t["bg"]
+	_sync_theme_btn_tooltip(t)
 	_show_toast("🎨 진열장 배경 테마 변경: " + t["name"])
 
 func _reset_theme() -> void:
 	theme_cursor = 0
 	var t = ROOM_THEMES[0]
 	bg_rect.color = t["bg"]
+	_sync_theme_btn_tooltip(t)
 	_show_toast("🎨 기본 속지 테마 복원: " + t["name"])
 
 func _on_theme_btn_pressed() -> void:

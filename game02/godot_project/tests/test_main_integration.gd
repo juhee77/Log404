@@ -4392,14 +4392,184 @@ func _init() -> void:
 	assert(main_inst.add_modal.visible == false and main_inst.add_modal.title_input.text == "", "Ctrl+ESC in AddModal should clear and close")
 	print("✓ Sprint 220 Milestone: Global Ctrl/Cmd+Tab Switch & Ctrl/Cmd+ESC Instant Reset/Close verified")
 
-	# Sprint 221: Live Filtered Count in Search Placeholder
+	# Sprint 221 & 222: Live Filtered Count + Asset Value in Search Placeholder
 	main_inst.archive_state.reset_to_rich_defaults()
 	main_inst._on_tab_all_pressed()
-	assert(main_inst.search_input.placeholder_text == "작품·대사 검색... (전체 6종)", "All tab should show total 6종 in search placeholder")
+	assert(main_inst.search_input.placeholder_text == "작품·대사 검색... (전체 6종 · ₩80,000)", "All tab should show total 6종 · ₩80,000 in search placeholder")
 	main_inst._on_tab_manga_pressed()
-	assert(main_inst.search_input.placeholder_text == "작품·대사 검색... (4/6종 표시)", "Manga tab should show 4/6종 표시 in search placeholder")
+	assert(main_inst.search_input.placeholder_text == "작품·대사 검색... (4/6종 · ₩70,000)", "Manga tab should show 4/6종 · ₩70,000 in search placeholder")
 	main_inst._on_tab_all_pressed()
-	print("✓ Sprint 221: Live Filtered Count in Search Placeholder verified")
+	print("✓ Sprint 222: Live Filtered Count & Asset Value in Search Placeholder verified")
+
+	# Sprint 223: Live Category Count & Asset Value in All 5 Filter Tab Tooltips
+	main_inst._update_stats()
+	assert(main_inst.tab_all.tooltip_text.find("6종 · ₩80,000") != -1, "TabAll tooltip should show 6종 · ₩80,000")
+	assert(main_inst.tab_manga.tooltip_text.find("4종 · ₩70,000") != -1, "TabManga tooltip should show 4종 · ₩70,000")
+	assert(main_inst.tab_gacha.tooltip_text.find("2종 · ₩10,000") != -1, "TabGacha tooltip should show 2종 · ₩10,000")
+	assert(main_inst.tab_complete.tooltip_text.find("4종 · ₩70,000") != -1, "TabComplete tooltip should show 4종 · ₩70,000")
+	assert(main_inst.tab_fav.tooltip_text.find("6종 · ₩80,000") != -1, "TabFav tooltip should show 6종 · ₩80,000")
+	print("✓ Sprint 223: Live Category Count & Asset Value in All 5 Filter Tab Tooltips verified")
+
+	# Sprint 224: Live Sort Mode + Filtered Count & Value in SortBtn Tooltip
+	main_inst._on_tab_manga_pressed()
+	main_inst._set_sort_mode(3)
+	assert(main_inst.sort_btn.tooltip_text.find("가치순 (4/6종 · ₩70,000)") != -1, "SortBtn tooltip should show active sort mode, count and value")
+	main_inst._set_sort_mode(0)
+	main_inst._on_tab_all_pressed()
+	print("✓ Sprint 224: Live Sort Mode, Filtered Count & Value in SortBtn Tooltip verified")
+
+	# Sprint 225 Milestone: Live Ambient Sound & Room Theme Preset Tooltips
+	main_inst.cycle_ambient_sound(1)
+	var amb_btn_225: Button = main_inst.get_node_or_null("VBox/TopBar/TopMargin/StatsVBox/TitleRow/AmbientBtn")
+	assert(amb_btn_225 != null and amb_btn_225.tooltip_text.find("2/6:") != -1, "AmbientBtn tooltip should show live preset index (2/6)")
+	main_inst._step_theme(1)
+	var thm_btn_225: Button = main_inst.get_node_or_null("VBox/BottomBar/Margin/VBox/NavRow/ThemeBtn")
+	assert(thm_btn_225 != null and thm_btn_225.tooltip_text.find("2/4:") != -1, "ThemeBtn tooltip should show live theme index (2/4)")
+	main_inst._reset_theme()
+	print("✓ Sprint 225 Milestone: Live Ambient Sound & Room Theme Preset Tooltips verified")
+
+	# Sprint 226: Live Item Title, Index & Asset Value in DetailModal PageBadgeLabel Tooltip
+	main_inst._on_card_clicked(main_inst.archive_state.items[0])
+	var page_lbl_226: Label = main_inst.detail_modal.find_child("PageBadgeLabel", true, false)
+	assert(page_lbl_226 != null and page_lbl_226.tooltip_text.find("1/6번째: 슬램덩크") != -1 and page_lbl_226.tooltip_text.find("₩21,000") != -1, "PageBadgeLabel tooltip should show live index, title and value")
+	main_inst.detail_modal.close()
+	print("✓ Sprint 226: Live Item Title, Index & Asset Value in PageBadgeLabel Tooltip verified")
+
+	# Sprint 227: Live Next/Last Volume Number in DetailModal AddVolBtn & RemVolBtn Tooltips
+	main_inst._on_card_clicked(main_inst.archive_state.items[0])
+	assert(main_inst.detail_modal.add_vol_btn.tooltip_text.find("새 4권") != -1, "AddVolBtn tooltip should show next volume number (새 4권)")
+	var rem_v_btn_227: Button = main_inst.detail_modal.get_node_or_null("Panel/VBox/BodyMargin/Body/TopInfo/MetaVBox/BtnRow/RemoveVolBtn")
+	assert(rem_v_btn_227 != null and rem_v_btn_227.tooltip_text.find("마지막 3권") != -1, "RemoveVolBtn tooltip should show last volume number (마지막 3권)")
+	main_inst.detail_modal.close()
+	print("✓ Sprint 227: Live Volume Numbers in AddVolBtn & RemVolBtn Tooltips verified")
+
+	# Sprint 228: Live Item Title, Volume Count & Value in ShareCardBtn & DeleteBtn Tooltips
+	main_inst._on_card_clicked(main_inst.archive_state.items[0])
+	var share_btn_228: Button = main_inst.detail_modal.get_node_or_null("Panel/VBox/BodyMargin/Body/TopInfo/MetaVBox/BtnRow/ShareCardBtn")
+	var del_btn_228: Button = main_inst.detail_modal.get_node_or_null("Panel/VBox/BodyMargin/Body/TopInfo/MetaVBox/BtnRow/DeleteBtn")
+	assert(share_btn_228 != null and share_btn_228.tooltip_text.find("「슬램덩크 신장재편판」(3권 · ₩21,000)") != -1, "ShareCardBtn tooltip should show live item title, volume count and value")
+	assert(del_btn_228 != null and del_btn_228.tooltip_text.find("「슬램덩크 신장재편판」(3권)") != -1, "DeleteBtn tooltip should show live item title and volume count")
+	main_inst.detail_modal.close()
+	print("✓ Sprint 228: Live Item Title, Volume Count & Value in ShareCardBtn & DeleteBtn Tooltips verified")
+
+	# Sprint 229: Live SaveQuoteBtn Title & HighlightBtn ON/OFF Status in Tooltips
+	main_inst._on_card_clicked(main_inst.archive_state.items[0])
+	assert(main_inst.detail_modal.save_quote_btn.tooltip_text.find("「슬램덩크 신장재편판」") != -1, "SaveQuoteBtn tooltip should show active item title")
+	var hl_btn_229: Button = main_inst.detail_modal.get_node_or_null("Panel/VBox/BodyMargin/Body/QuoteEditRow/HighlightBtn")
+	var orig_hl_229: bool = main_inst.detail_modal.current_item.highlight_enabled
+	main_inst.detail_modal.toggle_quote_highlight()
+	var expected_hl_str: String = "ON ✨" if not orig_hl_229 else "OFF"
+	assert(hl_btn_229 != null and hl_btn_229.tooltip_text.find(expected_hl_str) != -1, "HighlightBtn tooltip should reflect live ON/OFF state")
+	main_inst.detail_modal.toggle_quote_highlight()
+	main_inst.detail_modal.close()
+	print("✓ Sprint 229: Live SaveQuoteBtn Title & HighlightBtn ON/OFF Status Tooltips verified")
+
+	# Sprint 230 Milestone: Live Category & Swatch Color Name in AddModal SubmitBtn Tooltip
+	main_inst._on_add_btn_pressed()
+	assert(main_inst.add_modal.submit_btn.tooltip_text.find("이북·단행본") != -1 and main_inst.add_modal.submit_btn.tooltip_text.find("[크림슨]") != -1, "AddModal SubmitBtn tooltip should show 이북·단행본 and [크림슨]")
+	main_inst.add_modal.select_color(main_inst.add_modal.COVER_SWATCHES[1]["hex"])
+	assert(main_inst.add_modal.submit_btn.tooltip_text.find("[코발트]") != -1, "AddModal SubmitBtn tooltip should update to [코발트]")
+	main_inst.add_modal.close()
+	print("✓ Sprint 230 Milestone: Live Category & Swatch Name in AddModal SubmitBtn Tooltip verified")
+
+	# Sprint 231: Live Library/Category Count & Value in Bottom/Top Action Button Tooltips
+	main_inst._update_stats()
+	var nav_row_231: HBoxContainer = main_inst.get_node_or_null("VBox/BottomBar/Margin/VBox/NavRow")
+	var top_add_231: Control = main_inst.get_node_or_null("VBox/TopBar/TopMargin/StatsVBox/TitleRow/AddBtn")
+	assert(nav_row_231 != null and nav_row_231.get_child(0).tooltip_text.find("이북 4종 · ₩70,000") != -1, "WebBtn tooltip should show 이북 4종 · ₩70,000")
+	assert(nav_row_231.get_child(1).tooltip_text.find("가챠 2종 · ₩10,000") != -1, "CamBtn tooltip should show 가챠 2종 · ₩10,000")
+	assert(nav_row_231.get_child(2).tooltip_text.find("현재 6종 · ₩80,000") != -1, "DiyBtn tooltip should show 현재 6종 · ₩80,000")
+	assert(top_add_231 != null and top_add_231.tooltip_text.find("현재 6종 · ₩80,000") != -1, "AddBtn tooltip should show 현재 6종 · ₩80,000")
+	print("✓ Sprint 231: Live Library/Category Count & Value in Action Button Tooltips verified")
+
+	# Sprint 232: Live Filtered Pool in RandomPickBtn & Item Title in DetailModal CloseBtn Tooltips
+	main_inst._on_tab_manga_pressed()
+	assert(main_inst.random_pick_btn.tooltip_text.find("4/6종 · ₩70,000") != -1, "RandomPickBtn tooltip should show 4/6종 · ₩70,000")
+	main_inst._on_tab_all_pressed()
+	main_inst._on_card_clicked(main_inst.archive_state.items[0])
+	var close_btn_232: Button = main_inst.detail_modal.get_node_or_null("Panel/VBox/Header/HBox/CloseBtn")
+	assert(close_btn_232 != null and close_btn_232.tooltip_text.find("「슬램덩크 신장재편판」") != -1, "DetailModal CloseBtn tooltip should show active item title")
+	main_inst.detail_modal.close()
+	print("✓ Sprint 232: Live Filtered Pool in RandomPickBtn & Title in DetailModal CloseBtn Tooltips verified")
+
+	# Sprint 233: Full Untruncated Quote & Author in TodayQuoteLabel Tooltip
+	main_inst._refresh_today_quote()
+	assert(main_inst.today_quote_label.tooltip_text.find(main_inst.today_quote_label.text) != -1 and main_inst.today_quote_label.tooltip_text.find("이노우에 다케히코") != -1, "TodayQuoteLabel tooltip should include full untruncated quote and author")
+	print("✓ Sprint 233: Full Untruncated Quote & Author in TodayQuoteLabel Tooltip verified")
+
+	# Sprint 234: Live Volume Stats & Average Rating in VolHeader Tooltip
+	main_inst._on_card_clicked(main_inst.archive_state.items[0])
+	assert(main_inst.detail_modal.vol_header.tooltip_text.find("소장 3/3권 (100%)") != -1 and main_inst.detail_modal.vol_header.tooltip_text.find("평균 ★5.0") != -1, "VolHeader tooltip should show live volume stats and average rating")
+	main_inst.detail_modal.close()
+	print("✓ Sprint 234: Live Volume Stats & Average Rating in VolHeader Tooltip verified")
+
+	# Sprint 235 Milestone: Full Untruncated Volume Quote in DetailModal Volume Row Tooltip
+	main_inst._on_card_clicked(main_inst.archive_state.items[0])
+	var vol_row2_235 = main_inst.detail_modal.vol_list.get_child(1)
+	var vol2_quote_lbl_235: Label = vol_row2_235.get_child(0).get_child(0).get_child(4) as Label
+	assert(vol2_quote_lbl_235 != null and vol2_quote_lbl_235.tooltip_text.find(main_inst.archive_state.items[0].volumes[1]["quote"]) != -1, "Volume row quote_lbl tooltip should show full untruncated quote")
+	main_inst.detail_modal.close()
+	print("✓ Sprint 235 Milestone: Full Untruncated Volume Quote in Volume Row Tooltip verified")
+
+	# Sprint 236: Live Volume Number & Star Score in Volume Row StarBtn Tooltip
+	main_inst._on_card_clicked(main_inst.archive_state.items[0])
+	var vol_row1_236 = main_inst.detail_modal.vol_list.get_child(0)
+	var vol1_star_btn_236: Button = vol_row1_236.get_child(0).get_child(0).get_child(5) as Button
+	assert(vol1_star_btn_236 != null and vol1_star_btn_236.tooltip_text.find("1권 별점 5/5점") != -1, "Volume row star_btn tooltip should show 1권 별점 5/5점")
+	main_inst.detail_modal.close()
+	print("✓ Sprint 236: Live Volume Number & Star Score in Volume Row StarBtn Tooltip verified")
+
+	# Sprint 237: Live Volume State, Date & Bookmark Status in Volume Row Tooltips
+	main_inst._on_card_clicked(main_inst.archive_state.items[0])
+	var vol_row1_237 = main_inst.detail_modal.vol_list.get_child(0).get_child(0).get_child(0)
+	var v1_st_237: Button = vol_row1_237.get_child(1) as Button
+	var v1_dt_237: Button = vol_row1_237.get_child(2) as Button
+	var v1_bm_237: Button = vol_row1_237.get_child(3) as Button
+	assert(v1_st_237.tooltip_text.find("1권 상태: 초판특전") != -1, "Volume row status_btn tooltip should show 1권 상태: 초판특전")
+	assert(v1_dt_237.tooltip_text.find("1권 기록일:") != -1, "Volume row date_btn tooltip should show 1권 기록일:")
+	assert(v1_bm_237.tooltip_text.find("1권 북마크 [") != -1, "Volume row bm_btn tooltip should show 1권 북마크 status")
+	main_inst.detail_modal.close()
+	print("✓ Sprint 237: Live Volume State, Date & Bookmark Status in Volume Row Tooltips verified")
+
+	# Sprint 238: Live Volume Summary in Volume Number Badge Tooltip
+	main_inst._on_card_clicked(main_inst.archive_state.items[0])
+	var vol_row1_238 = main_inst.detail_modal.vol_list.get_child(0).get_child(0).get_child(0)
+	var v1_lbl_238: Label = vol_row1_238.get_child(0) as Label
+	assert(v1_lbl_238.tooltip_text.find("1권 요약: 초판특전 · ★") != -1, "vol_lbl tooltip should show 1권 요약 with status and rating")
+	assert(v1_lbl_238.tooltip_text.find("북마크 ON") != -1 or v1_lbl_238.tooltip_text.find("북마크 OFF") != -1, "vol_lbl tooltip should show bookmark state")
+	assert(v1_lbl_238.tooltip_text.find("Shift+좌클릭: 초판+북마크+★5") != -1, "vol_lbl tooltip should keep shortcut hint")
+	main_inst.detail_modal.close()
+	print("✓ Sprint 238: Live Volume Summary in Volume Number Badge Tooltip verified")
+
+	# Sprint 239: Live Draft Title & Filled Count in AddModal SubmitBtn & CloseBtn Tooltips
+	main_inst.add_modal.open()
+	assert(main_inst.add_modal.close_btn.tooltip_text.find("[입력칸 비어 있음]") != -1, "AddModal close_btn tooltip should show [입력칸 비어 있음] on open")
+	main_inst.add_modal.fill_sample_inputs()
+	assert(main_inst.add_modal.submit_btn.tooltip_text.find("「오늘의 독서 스크랩」") != -1, "AddModal submit_btn tooltip should show live draft title")
+	assert(main_inst.add_modal.close_btn.tooltip_text.find("[작성 중 3/3칸]") != -1, "AddModal close_btn tooltip should show [작성 중 3/3칸]")
+	main_inst.add_modal.clear_inputs()
+	assert(main_inst.add_modal.close_btn.tooltip_text.find("[입력칸 비어 있음]") != -1, "AddModal close_btn tooltip should reset to [입력칸 비어 있음] after clear")
+	main_inst.add_modal.close()
+	print("✓ Sprint 239: Live Draft Title & Filled Count in AddModal SubmitBtn & CloseBtn Tooltips verified")
+
+	# Sprint 240 Milestone: Full Untruncated Quote, Author & Rating in Shelf CardItem & StatusLabel Tooltips
+	main_inst.archive_state.reset_to_rich_defaults()
+	main_inst._render_cards()
+	var card0_240 = main_inst.card_grid.get_child(0)
+	assert(card0_240.tooltip_text.find("이노우에 다케히코") != -1, "CardItem tooltip should include author")
+	assert(card0_240.tooltip_text.find("★5.0") != -1, "CardItem tooltip should include avg rating")
+	assert(card0_240.tooltip_text.find("농구... 좋아하세요?") != -1, "CardItem tooltip should include untruncated quote")
+	assert(card0_240.status_label.tooltip_text.find("농구... 좋아하세요?") != -1, "CardItem status_label tooltip should include untruncated quote")
+	print("✓ Sprint 240 Milestone: Full Untruncated Quote, Author & Rating in Shelf CardItem & StatusLabel Tooltips verified")
+
+	# Sprint 241: Author, Rating, Volume Count & Asset Value in Spine Shelf Tooltips
+	main_inst._update_stats()
+	var spine0_241 = main_inst.spine_shelf_row.get_child(0)
+	assert(spine0_241.tooltip_text.find("이노우에 다케히코") != -1, "Spine tooltip should include author")
+	assert(spine0_241.tooltip_text.find("★5.0") != -1, "Spine tooltip should include avg rating")
+	assert(spine0_241.tooltip_text.find("3권 소장") != -1, "Spine tooltip should include volume count")
+	assert(spine0_241.tooltip_text.find("₩21,000") != -1, "Spine tooltip should include asset value")
+	print("✓ Sprint 241: Author, Rating, Volume Count & Asset Value in Spine Shelf Tooltips verified")
 
 	# Restore clean 6 defaults on disk so screenshot is clean
 	main_inst.archive_state.reset_to_rich_defaults()
