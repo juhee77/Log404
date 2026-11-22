@@ -23,6 +23,10 @@ window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
 window/handheld/orientation=1
 
+[gui]
+
+theme/custom="res://assets/fonts/pretendard_theme.tres"
+
 [rendering]
 
 renderer/rendering_method="mobile"

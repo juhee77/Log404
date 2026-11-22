@@ -5,9 +5,14 @@ const CollectionItemClass = preload("res://scripts/collection_item.gd")
 var items: Array = []
 var selected_item = null
 var current_filter: int = -1
-var current_theme: String = "clean_white"
+var current_theme: String = "cream"
+var owner_name: String = ""
 
 const SAVE_FILE_PATH = "user://archive_data_v2.json"
+
+func get_library_title() -> String:
+	var n := owner_name.strip_edges()
+	return "나의 서재" if n.is_empty() else "%s의 서재" % n
 
 const WEB_PRESET_CATALOG = [
 	{"title": "더 퍼스트 슬램덩크 리소스", "author": "이노우에 다케히코", "tag": "초판특전", "color": "#dc2626", "icon": "🏀", "obi": "★ 극장판 비하인드 스토리 수록!"},
@@ -152,18 +157,23 @@ func export_diary_summary() -> String:
 		lines.append("- [" + it.status_tag + " · " + it.condition_grade + " · " + format_krw(it.get_item_value()) + "] " + it.title + " (" + it.author_or_series + ") · " + it.reading_weather + " · " + it.reading_spot + " " + it.obi_text)
 	return "\n".join(lines)
 
+func to_backup_json() -> String:
+	var data_array: Array = []
+	for it in items:
+		data_array.append(it.to_dict())
+	var payload := {
+		"owner_name": owner_name,
+		"theme_id": current_theme,
+		"items": data_array
+	}
+	return JSON.stringify(payload, "  ")
+
 func save_to_file(custom_path: String = "") -> bool:
 	var target_path = custom_path if custom_path != "" else SAVE_FILE_PATH
 	var file = FileAccess.open(target_path, FileAccess.WRITE)
 	if not file:
 		return false
-	
-	var data_array: Array = []
-	for it in items:
-		data_array.append(it.to_dict())
-	
-	var json_str = JSON.stringify(data_array, "  ")
-	file.store_string(json_str)
+	file.store_string(to_backup_json())
 	file.close()
 	return true
 
@@ -180,11 +190,23 @@ func load_from_file(custom_path: String = "") -> bool:
 	file.close()
 	
 	var parsed = JSON.parse_string(json_str)
-	if typeof(parsed) != TYPE_ARRAY or parsed.is_empty():
+	var raw_items: Array = []
+	if typeof(parsed) == TYPE_DICTIONARY:
+		owner_name = str(parsed.get("owner_name", ""))
+		var tid: String = str(parsed.get("theme_id", "cream"))
+		current_theme = tid if tid in ["cream", "sepia", "dark"] else "cream"
+		var arr = parsed.get("items", [])
+		if typeof(arr) == TYPE_ARRAY:
+			raw_items = arr
+	elif typeof(parsed) == TYPE_ARRAY:
+		raw_items = parsed
+	else:
+		return false
+	if raw_items.is_empty():
 		return false
 	
 	items.clear()
-	for d in parsed:
+	for d in raw_items:
 		if typeof(d) == TYPE_DICTIONARY:
 			var it = CollectionItemClass.new(
 				d.get("id", ""),

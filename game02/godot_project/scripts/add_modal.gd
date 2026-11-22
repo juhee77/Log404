@@ -1,644 +1,256 @@
 class_name AddModal
 extends Control
 
-signal item_submitted(title: String, category: int, author: String, color_hex: String, quote_text: String)
-signal help_requested(copy_to_clipboard: bool)
+const UiTokensClass = preload("res://scripts/ui_tokens.gd")
 
-@onready var title_input: LineEdit = $Panel/VBox/BodyMargin/Body/TitleInput
-@onready var author_input: LineEdit = $Panel/VBox/BodyMargin/Body/AuthorInput
-@onready var quote_input: LineEdit = $Panel/VBox/BodyMargin/Body/QuoteInput
-@onready var cat_option: OptionButton = $Panel/VBox/BodyMargin/Body/CatOption
-@onready var color_row: HBoxContainer = $Panel/VBox/BodyMargin/Body/ColorRow
-@onready var submit_btn: Button = $Panel/VBox/BodyMargin/Body/SubmitBtn
-@onready var close_btn: Button = $Panel/VBox/Header/HBox/CloseBtn
+signal item_submitted(title: String, category: int, author: String, cover_color: String, quote: String, price: int)
 
-const COVER_SWATCHES = [
-	{"name": "크림슨", "hex": "#b91c1c"},
-	{"name": "코발트", "hex": "#1d4ed8"},
-	{"name": "테라코타", "hex": "#c2410c"},
-	{"name": "로즈", "hex": "#be185d"},
-	{"name": "포레스트", "hex": "#15803d"},
-	{"name": "바이올렛", "hex": "#6d28d9"}
-]
+var _palette: Dictionary = UiTokensClass.get_palette("cream")
+var _selected_cat: int = 0
+var _selected_color: String = UiTokensClass.COVER_COLORS[0]
 
-var selected_color: String = "#b91c1c"
+var _sheet: PanelContainer
+var _handle: ColorRect
+var _hdr_lbl: Label
+var _close_btn: Button
+var _cat_book_btn: Button
+var _cat_gacha_btn: Button
+var _title_input: LineEdit
+var _author_input: LineEdit
+var _price_input: LineEdit
+var _quote_input: LineEdit
+var _color_lbl: Label
+var _color_row: HBoxContainer
+var _submit_btn: Button
 
 func _ready() -> void:
+	set_anchors_preset(Control.PRESET_FULL_RECT)
 	visible = false
-	cat_option.clear()
-	cat_option.add_item("📖 이북 · 만화 단행본 일기", 0)
-	cat_option.add_item("🔮 가챠 · 굿즈 스크랩 노트", 1)
-	cat_option.item_selected.connect(func(_idx: int) -> void: _sync_submit_tooltip())
-	_build_color_swatches()
-	_style_inputs()
-	_sync_submit_tooltip()
-	title_input.text_submitted.connect(func(_t): author_input.grab_focus())
-	author_input.text_submitted.connect(func(_t): _on_submit_btn_pressed())
-	quote_input.text_submitted.connect(func(_t): _on_submit_btn_pressed())
-	var input_samples := [
-		[title_input, "나의 비밀 독서 일기"],
-		[author_input, "주희의 서재"],
-		[quote_input, "오늘도 한 페이지의 여운을 남겼다."]
-	]
-	for pair in input_samples:
-		var fld: LineEdit = pair[0]
-		var smp: String = pair[1]
-		if fld != null:
-			fld.tooltip_text = "우클릭: 입력 비우기 / 샘플 채움 · Shift+좌클릭: 샘플 채움"
-			fld.text_changed.connect(func(_t: String) -> void: _sync_submit_tooltip())
-			fld.gui_input.connect(func(ev: InputEvent) -> void:
-				if ev is InputEventMouseButton and ev.pressed:
-					if ev.button_index == MOUSE_BUTTON_RIGHT:
-						fld.text = "" if fld.text != "" else smp
-						_sync_submit_tooltip()
-					elif ev.button_index == MOUSE_BUTTON_LEFT and ev.shift_pressed:
-						fld.accept_event()
-						fld.text = smp
-						_sync_submit_tooltip()
-			)
-	var dimmer: Control = get_node_or_null("Dimmer")
-	if dimmer != null:
-		dimmer.tooltip_text = "좌클릭: 일기 작성 창 닫기 · 우클릭·Shift+좌클릭: 입력 내용만 비우기"
-		dimmer.gui_input.connect(func(ev):
-			if ev is InputEventMouseButton and ev.pressed:
-				if ev.button_index == MOUSE_BUTTON_LEFT and ev.shift_pressed:
-					dimmer.accept_event()
-					clear_inputs()
-				elif ev.button_index == MOUSE_BUTTON_LEFT:
-					close()
-				elif ev.button_index == MOUSE_BUTTON_RIGHT:
-					clear_inputs()
-		)
-	var header_title: Label = get_node_or_null("Panel/VBox/Header/HBox/TitleLabel")
-	if header_title != null:
-		header_title.mouse_filter = Control.MOUSE_FILTER_STOP
-		header_title.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
-		header_title.tooltip_text = "좌클릭: 샘플 일기 일괄 채움 · 우클릭: 입력 전체 비우기 · Shift+좌클릭: 샘플 즉시 등록"
-		header_title.gui_input.connect(func(ev: InputEvent) -> void:
-			if ev is InputEventMouseButton and ev.pressed:
-				if ev.button_index == MOUSE_BUTTON_LEFT and ev.shift_pressed:
-					header_title.accept_event()
-					_submit_with_sample_fallback()
-				elif ev.button_index == MOUSE_BUTTON_LEFT:
-					title_input.text = "나의 비밀 독서 일기"
-					author_input.text = "주희의 서재"
-					quote_input.text = "오늘도 한 페이지의 여운을 남겼다."
-				elif ev.button_index == MOUSE_BUTTON_RIGHT:
-					clear_inputs()
-		)
+	_build_ui()
+	apply_theme(_palette)
 
-func _build_color_swatches() -> void:
-	for child in color_row.get_children():
-		child.queue_free()
-	for sw in COVER_SWATCHES:
-		var btn = Button.new()
-		btn.text = sw["name"]
-		btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		btn.add_theme_font_size_override("font_size", 9)
-		var sb = StyleBoxFlat.new()
-		sb.bg_color = Color.from_string(sw["hex"], Color(0.7, 0.2, 0.2))
-		sb.corner_radius_top_left = 6
-		sb.corner_radius_top_right = 6
-		sb.corner_radius_bottom_left = 6
-		sb.corner_radius_bottom_right = 6
-		btn.add_theme_stylebox_override("normal", sb)
-		btn.add_theme_color_override("font_color", Color(1, 1, 1))
-		var hex_val = sw["hex"]
-		btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
-		btn.tooltip_text = "좌클릭: '%s' 표지색 선택 · 우클릭: 이 색으로 즉시 등록 · Shift+좌클릭: 이 색으로 즉시 등록" % sw["name"]
-		btn.pressed.connect(func(): select_color(hex_val))
-		btn.gui_input.connect(func(ev: InputEvent) -> void:
-			if ev is InputEventMouseButton and ev.pressed:
-				if ev.button_index == MOUSE_BUTTON_RIGHT:
-					select_color(hex_val)
-					_submit_with_sample_fallback()
-				elif ev.button_index == MOUSE_BUTTON_LEFT and ev.shift_pressed:
-					btn.accept_event()
-					select_color(hex_val)
-					_submit_with_sample_fallback()
-		)
-		color_row.add_child(btn)
-	_highlight_selected_swatch()
+func _build_ui() -> void:
+	for ch in get_children():
+		ch.queue_free()
 
-func _style_inputs() -> void:
-	var inp_sb = StyleBoxFlat.new()
-	inp_sb.bg_color = Color(0.98, 0.96, 0.92, 1)
-	inp_sb.border_width_bottom = 2
-	inp_sb.border_color = Color(0.80, 0.72, 0.62, 1)
-	inp_sb.content_margin_left = 8
-	for le in [title_input, author_input, quote_input]:
-		le.clear_button_enabled = true
-		le.add_theme_stylebox_override("normal", inp_sb)
-		le.add_theme_color_override("font_color", Color(0.18, 0.14, 0.11))
-		le.add_theme_color_override("font_placeholder_color", Color(0.55, 0.48, 0.42))
-	for ctrl in [submit_btn, close_btn, cat_option]:
-		if ctrl != null:
-			ctrl.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
-	if cat_option != null:
-		cat_option.tooltip_text = "작품 분류 선택 (우클릭·Shift+좌클릭: 이북 ↔ 가챠 즉시 전환)"
-		cat_option.gui_input.connect(func(ev: InputEvent) -> void:
-			if ev is InputEventMouseButton and ev.pressed:
-				if ev.button_index == MOUSE_BUTTON_RIGHT:
-					cat_option.select(1 if cat_option.selected == 0 else 0)
-				elif ev.button_index == MOUSE_BUTTON_LEFT and ev.shift_pressed:
-					cat_option.accept_event()
-					cat_option.select(1 if cat_option.selected == 0 else 0)
-		)
-
-	var ink_sb = StyleBoxFlat.new()
-	ink_sb.bg_color = Color(0.22, 0.16, 0.13, 1)
-	ink_sb.corner_radius_top_left = 8
-	ink_sb.corner_radius_top_right = 8
-	ink_sb.corner_radius_bottom_left = 8
-	ink_sb.corner_radius_bottom_right = 8
-	submit_btn.add_theme_stylebox_override("normal", ink_sb)
-	submit_btn.add_theme_color_override("font_color", Color(0.98, 0.96, 0.92))
-
-	var cream_btn = StyleBoxFlat.new()
-	cream_btn.bg_color = Color(0.95, 0.91, 0.84, 1)
-	cream_btn.corner_radius_top_left = 6
-	cream_btn.corner_radius_top_right = 6
-	cream_btn.corner_radius_bottom_left = 6
-	cream_btn.corner_radius_bottom_right = 6
-	close_btn.add_theme_stylebox_override("normal", cream_btn)
-	close_btn.add_theme_color_override("font_color", Color(0.32, 0.25, 0.20))
-	close_btn.tooltip_text = "닫기 (ESC · 우클릭: 입력란 모두 비우기 · Shift+좌클릭: 입력란 모두 비우기)"
-	close_btn.gui_input.connect(func(ev: InputEvent) -> void:
-		if ev is InputEventMouseButton and ev.pressed:
-			if ev.button_index == MOUSE_BUTTON_RIGHT:
-				clear_inputs()
-			elif ev.button_index == MOUSE_BUTTON_LEFT and ev.shift_pressed:
-				close_btn.accept_event()
-				clear_inputs()
+	var dimmer := ColorRect.new()
+	dimmer.set_anchors_preset(Control.PRESET_FULL_RECT)
+	dimmer.color = Color(0.07, 0.05, 0.04, 0.48)
+	dimmer.gui_input.connect(func(ev: InputEvent):
+		if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_LEFT:
+			close()
 	)
-	submit_btn.tooltip_text = "서재에 등록 (Enter · 우클릭: 빈 제목 시 샘플 자동 채움 등록 · Shift+좌클릭: 샘플 자동 채움 등록)"
-	submit_btn.gui_input.connect(func(ev: InputEvent) -> void:
-		if ev is InputEventMouseButton and ev.pressed:
-			if ev.button_index == MOUSE_BUTTON_RIGHT:
-				_submit_with_sample_fallback()
-			elif ev.button_index == MOUSE_BUTTON_LEFT and ev.shift_pressed:
-				submit_btn.accept_event()
-				_submit_with_sample_fallback()
+	add_child(dimmer)
+
+	_sheet = PanelContainer.new()
+	_sheet.anchor_left = 0.0
+	_sheet.anchor_right = 1.0
+	_sheet.anchor_top = 0.30
+	_sheet.anchor_bottom = 1.0
+	add_child(_sheet)
+
+	var root_vbox := VBoxContainer.new()
+	root_vbox.add_theme_constant_override("separation", 0)
+	_sheet.add_child(root_vbox)
+
+	var handle_center := CenterContainer.new()
+	handle_center.custom_minimum_size = Vector2(0, 18)
+	_handle = ColorRect.new()
+	_handle.custom_minimum_size = Vector2(40, 4)
+	handle_center.add_child(_handle)
+	root_vbox.add_child(handle_center)
+
+	var hdr_m := MarginContainer.new()
+	hdr_m.add_theme_constant_override("margin_left", 20)
+	hdr_m.add_theme_constant_override("margin_right", 20)
+	hdr_m.add_theme_constant_override("margin_top", 4)
+	hdr_m.add_theme_constant_override("margin_bottom", 12)
+	root_vbox.add_child(hdr_m)
+
+	var hdr_hbox := HBoxContainer.new()
+	hdr_m.add_child(hdr_hbox)
+
+	_hdr_lbl = Label.new()
+	_hdr_lbl.text = "새 소장 기록"
+	_hdr_lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_hdr_lbl.add_theme_font_size_override("font_size", 17)
+	hdr_hbox.add_child(_hdr_lbl)
+
+	_close_btn = Button.new()
+	_close_btn.text = "✕"
+	_close_btn.custom_minimum_size = Vector2(32, 32)
+	_close_btn.add_theme_font_size_override("font_size", 14)
+	_close_btn.pressed.connect(close)
+	hdr_hbox.add_child(_close_btn)
+
+	var scroll := ScrollContainer.new()
+	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	root_vbox.add_child(scroll)
+
+	var form_m := MarginContainer.new()
+	form_m.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	form_m.add_theme_constant_override("margin_left", 20)
+	form_m.add_theme_constant_override("margin_right", 20)
+	form_m.add_theme_constant_override("margin_top", 4)
+	form_m.add_theme_constant_override("margin_bottom", 24)
+	scroll.add_child(form_m)
+
+	var vbox := VBoxContainer.new()
+	vbox.add_theme_constant_override("separation", 12)
+	form_m.add_child(vbox)
+
+	var cat_row := HBoxContainer.new()
+	cat_row.add_theme_constant_override("separation", 8)
+	vbox.add_child(cat_row)
+
+	_cat_book_btn = Button.new()
+	_cat_book_btn.text = "만화·도서"
+	_cat_book_btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_cat_book_btn.custom_minimum_size = Vector2(0, 38)
+	_cat_book_btn.add_theme_font_size_override("font_size", 13)
+	_cat_book_btn.pressed.connect(func(): _select_cat(0))
+	cat_row.add_child(_cat_book_btn)
+
+	_cat_gacha_btn = Button.new()
+	_cat_gacha_btn.text = "가챠·굿즈"
+	_cat_gacha_btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_cat_gacha_btn.custom_minimum_size = Vector2(0, 38)
+	_cat_gacha_btn.add_theme_font_size_override("font_size", 13)
+	_cat_gacha_btn.pressed.connect(func(): _select_cat(1))
+	cat_row.add_child(_cat_gacha_btn)
+
+	_title_input = LineEdit.new()
+	_title_input.placeholder_text = "작품명 또는 굿즈 이름 *"
+	_title_input.custom_minimum_size = Vector2(0, 42)
+	_title_input.add_theme_font_size_override("font_size", 13)
+	_title_input.text_submitted.connect(func(_t): _author_input.grab_focus())
+	vbox.add_child(_title_input)
+
+	var pair_row := HBoxContainer.new()
+	pair_row.add_theme_constant_override("separation", 8)
+	vbox.add_child(pair_row)
+
+	_author_input = LineEdit.new()
+	_author_input.placeholder_text = "작가 / 브랜드"
+	_author_input.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_author_input.custom_minimum_size = Vector2(0, 40)
+	_author_input.add_theme_font_size_override("font_size", 13)
+	pair_row.add_child(_author_input)
+
+	_price_input = LineEdit.new()
+	_price_input.placeholder_text = "가격 (원)"
+	_price_input.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_price_input.custom_minimum_size = Vector2(0, 40)
+	_price_input.add_theme_font_size_override("font_size", 13)
+	pair_row.add_child(_price_input)
+
+	_quote_input = LineEdit.new()
+	_quote_input.placeholder_text = "기억하고 싶은 첫 문장 또는 메모"
+	_quote_input.custom_minimum_size = Vector2(0, 40)
+	_quote_input.add_theme_font_size_override("font_size", 13)
+	_quote_input.text_submitted.connect(func(_t): _on_submit())
+	vbox.add_child(_quote_input)
+
+	_color_lbl = Label.new()
+	_color_lbl.text = "표지 컬러"
+	_color_lbl.add_theme_font_size_override("font_size", 12)
+	vbox.add_child(_color_lbl)
+
+	_color_row = HBoxContainer.new()
+	_color_row.add_theme_constant_override("separation", 10)
+	vbox.add_child(_color_row)
+
+	_submit_btn = Button.new()
+	_submit_btn.text = "서재에 등록하기"
+	_submit_btn.custom_minimum_size = Vector2(0, 44)
+	_submit_btn.add_theme_font_size_override("font_size", 14)
+	_submit_btn.pressed.connect(_on_submit)
+	vbox.add_child(_submit_btn)
+
+func apply_theme(p: Dictionary) -> void:
+	_palette = p
+	if _sheet == null:
+		return
+	_sheet.add_theme_stylebox_override("panel", UiTokensClass.make_sheet_box(p["bg"]))
+	_handle.color = p["border"]
+	_hdr_lbl.add_theme_color_override("font_color", p["ink"])
+	UiTokensClass.style_button(_close_btn, p["surface_soft"], p["ink"], 99, Color(0, 0, 0, 0), 0, 0, 0)
+	UiTokensClass.style_line_edit(_title_input, p)
+	UiTokensClass.style_line_edit(_author_input, p)
+	UiTokensClass.style_line_edit(_price_input, p)
+	UiTokensClass.style_line_edit(_quote_input, p)
+	_color_lbl.add_theme_color_override("font_color", p["ink_sub"])
+	UiTokensClass.style_button(_submit_btn, p["accent"], Color.WHITE, 12)
+	_select_cat(_selected_cat)
+	_render_colors()
+
+func _select_cat(c: int) -> void:
+	_selected_cat = c
+	UiTokensClass.style_button(
+		_cat_book_btn,
+		_palette["ink"] if c == 0 else _palette["surface"],
+		_palette["bg"] if c == 0 else _palette["ink_sub"],
+		12, _palette["ink"] if c == 0 else _palette["border"], 1
+	)
+	UiTokensClass.style_button(
+		_cat_gacha_btn,
+		_palette["ink"] if c == 1 else _palette["surface"],
+		_palette["bg"] if c == 1 else _palette["ink_sub"],
+		12, _palette["ink"] if c == 1 else _palette["border"], 1
 	)
 
-func _submit_with_sample_fallback() -> void:
-	if title_input.text.strip_edges() == "":
-		title_input.text = "오늘의 독서 스크랩"
-		if author_input.text.strip_edges() == "":
-			author_input.text = "주희의 다꾸 서재"
-		if quote_input.text.strip_edges() == "":
-			quote_input.text = "소중한 한 권의 기억을 담다."
-	_on_submit_btn_pressed()
+func _render_colors() -> void:
+	for ch in _color_row.get_children():
+		ch.queue_free()
+	for hex in UiTokensClass.COVER_COLORS:
+		var b := Button.new()
+		b.custom_minimum_size = Vector2(34, 34)
+		var c_hex: String = str(hex)
+		var col := Color.from_string(c_hex, Color("#C82342"))
+		var is_sel: bool = (_selected_color.to_lower() == c_hex.to_lower())
+		b.text = "✓" if is_sel else ""
+		b.add_theme_font_size_override("font_size", 14)
+		UiTokensClass.style_button(b, col, Color.WHITE, 99, _palette["ink"] if is_sel else Color(0, 0, 0, 0), 2 if is_sel else 0, 0, 0)
+		b.pressed.connect(func():
+			_selected_color = c_hex
+			_render_colors()
+		)
+		_color_row.add_child(b)
 
-func fill_sample_inputs() -> void:
-	if title_input != null and title_input.text.strip_edges() == "":
-		title_input.text = "오늘의 독서 스크랩"
-	if author_input != null and author_input.text.strip_edges() == "":
-		author_input.text = "주희의 다꾸 서재"
-	if quote_input != null and quote_input.text.strip_edges() == "":
-		quote_input.text = "소중한 한 권의 기억을 담다."
-	_sync_submit_tooltip()
-
-func _step_color(delta: int) -> void:
-	if COVER_SWATCHES.is_empty():
-		return
-	var cur_idx: int = 0
-	for i in range(COVER_SWATCHES.size()):
-		if COVER_SWATCHES[i]["hex"].to_lower() == selected_color.to_lower():
-			cur_idx = i
-			break
-	var next_idx: int = (cur_idx + delta + COVER_SWATCHES.size()) % COVER_SWATCHES.size()
-	select_color(COVER_SWATCHES[next_idx]["hex"])
-
-func clear_inputs() -> void:
-	title_input.text = ""
-	author_input.text = ""
-	quote_input.text = ""
-	_sync_submit_tooltip()
-	title_input.grab_focus()
-
-func select_color(hex_code: String) -> void:
-	selected_color = hex_code
-	_highlight_selected_swatch()
-	_sync_submit_tooltip()
-
-func _sync_submit_tooltip() -> void:
-	var cat_name: String = "이북·단행본" if (cat_option == null or cat_option.selected == 0) else "가챠·굿즈"
-	var swatch_name: String = "크림슨"
-	for sw in COVER_SWATCHES:
-		if sw["hex"].to_lower() == selected_color.to_lower():
-			swatch_name = sw["name"]
-			break
-	var draft_title: String = title_input.text.strip_edges() if title_input != null else ""
-	if submit_btn != null:
-		if draft_title.is_empty():
-			submit_btn.tooltip_text = "새 %s 일기 등록 [%s] (Enter · 우클릭: 샘플 자동 채움 · Shift+좌클릭: 샘플 자동 채움 등록)" % [cat_name, swatch_name]
-		else:
-			var short_title: String = draft_title.left(18) + ("…" if draft_title.length() > 18 else "")
-			submit_btn.tooltip_text = "「%s」 %s 일기 등록 [%s] (Enter · 우클릭: 샘플 자동 채움 · Shift+좌클릭: 샘플 자동 채움 등록)" % [short_title, cat_name, swatch_name]
-	if close_btn != null:
-		var filled_cnt: int = 0
-		for fld in [title_input, author_input, quote_input]:
-			if fld != null and not fld.text.strip_edges().is_empty():
-				filled_cnt += 1
-		var draft_status: String = "[작성 중 %d/3칸]" % filled_cnt if filled_cnt > 0 else "[입력칸 비어 있음]"
-		close_btn.tooltip_text = "닫기 %s (ESC · 우클릭: 입력란 모두 비우기 · Shift+좌클릭: 입력란 모두 비우기)" % draft_status
-
-func _highlight_selected_swatch() -> void:
-	if color_row == null:
-		return
-	var children = color_row.get_children()
-	for i in range(min(children.size(), COVER_SWATCHES.size())):
-		var btn = children[i]
-		if not (btn is Button):
-			continue
-		var sw = COVER_SWATCHES[i]
-		var is_sel = (selected_color.to_lower() == sw["hex"].to_lower())
-		btn.text = ("✓ " + sw["name"]) if is_sel else sw["name"]
-		var sb = StyleBoxFlat.new()
-		sb.bg_color = Color.from_string(sw["hex"], Color(0.7, 0.2, 0.2))
-		sb.border_width_left = 2 if is_sel else 0
-		sb.border_width_top = 2 if is_sel else 0
-		sb.border_width_right = 2 if is_sel else 0
-		sb.border_width_bottom = 2 if is_sel else 0
-		sb.border_color = Color(0.99, 0.96, 0.88, 1)
-		sb.corner_radius_top_left = 6
-		sb.corner_radius_top_right = 6
-		sb.corner_radius_bottom_left = 6
-		sb.corner_radius_bottom_right = 6
-		btn.add_theme_stylebox_override("normal", sb)
-
-func open() -> void:
-	title_input.text = ""
-	title_input.placeholder_text = "작품·굿즈 제목 (예: 슬램덩크 신장재편판)"
-	author_input.text = ""
-	quote_input.text = ""
-	cat_option.selected = 0
-	selected_color = "#b91c1c"
-	_highlight_selected_swatch()
-	_sync_submit_tooltip()
+func open(p: Dictionary = {}) -> void:
+	_selected_cat = 0
+	_selected_color = UiTokensClass.COVER_COLORS[0]
+	_title_input.text = ""
+	_title_input.placeholder_text = "작품명 또는 굿즈 이름 *"
+	_author_input.text = ""
+	_price_input.text = ""
+	_quote_input.text = ""
+	if not p.is_empty():
+		apply_theme(p)
+	else:
+		_select_cat(0)
+		_render_colors()
 	visible = true
-	title_input.grab_focus()
+	_title_input.grab_focus()
 
 func close() -> void:
 	visible = false
 
-func _unhandled_input(event: InputEvent) -> void:
-	if not visible or not (event is InputEventKey) or not event.pressed or event.echo:
-		return
-	if event.keycode == KEY_F1:
-		help_requested.emit(event.shift_pressed)
-		get_viewport().set_input_as_handled()
-		return
-	if (event.ctrl_pressed or event.meta_pressed) and (event.keycode == KEY_ENTER or event.keycode == KEY_KP_ENTER):
-		if event.shift_pressed:
-			_submit_with_sample_fallback()
-		else:
-			_on_submit_btn_pressed()
-		get_viewport().set_input_as_handled()
-		return
-	if (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_SLASH:
-		if event.shift_pressed:
-			help_requested.emit(false)
-		elif title_input != null:
-			title_input.grab_focus()
-			title_input.select_all()
-		get_viewport().set_input_as_handled()
-		return
-	if (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_TAB:
-		_step_color(-1 if event.shift_pressed else 1)
-		get_viewport().set_input_as_handled()
-		return
-	if (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_ESCAPE:
-		clear_inputs()
-		close()
-		get_viewport().set_input_as_handled()
-		return
-	if (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_S:
-		if event.shift_pressed:
-			_submit_with_sample_fallback()
-		else:
-			_on_submit_btn_pressed()
-		get_viewport().set_input_as_handled()
-		return
-	if (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_R and not COVER_SWATCHES.is_empty():
-		var next_r_idx: int = randi() % COVER_SWATCHES.size()
-		if COVER_SWATCHES.size() > 1 and COVER_SWATCHES[next_r_idx]["hex"].to_lower() == selected_color.to_lower():
-			next_r_idx = (next_r_idx + 1) % COVER_SWATCHES.size()
-		select_color(COVER_SWATCHES[next_r_idx]["hex"])
-		get_viewport().set_input_as_handled()
-		return
-	if (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_L:
-		clear_inputs()
-		get_viewport().set_input_as_handled()
-		return
-	if (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_I:
-		fill_sample_inputs()
-		if event.shift_pressed:
-			_submit_with_sample_fallback()
-		get_viewport().set_input_as_handled()
-		return
-	if (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_G and cat_option != null:
-		cat_option.select(1)
-		if event.shift_pressed:
-			_submit_with_sample_fallback()
-		get_viewport().set_input_as_handled()
-		return
-	if (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_E and cat_option != null:
-		cat_option.select(0)
-		if event.shift_pressed:
-			_submit_with_sample_fallback()
-		get_viewport().set_input_as_handled()
-		return
-	if (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_W:
-		if event.shift_pressed:
-			clear_inputs()
-		close()
-		get_viewport().set_input_as_handled()
-		return
-	if (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_0:
-		clear_inputs()
-		if cat_option != null:
-			cat_option.select(0)
-		if not COVER_SWATCHES.is_empty():
-			select_color(COVER_SWATCHES[0]["hex"])
-		if event.shift_pressed:
-			close()
-		get_viewport().set_input_as_handled()
-		return
-	if (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_T and title_input != null:
-		if event.shift_pressed:
-			title_input.text = ""
-		title_input.grab_focus()
-		get_viewport().set_input_as_handled()
-		return
-	if (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_P:
-		_step_color(-1 if event.shift_pressed else 1)
-		get_viewport().set_input_as_handled()
-		return
-	if (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_M and quote_input != null:
-		if event.shift_pressed:
-			quote_input.text = ""
-		quote_input.grab_focus()
-		get_viewport().set_input_as_handled()
-		return
-	if (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_U and author_input != null:
-		if event.shift_pressed:
-			author_input.text = ""
-		author_input.grab_focus()
-		get_viewport().set_input_as_handled()
-		return
-	if (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_J and cat_option != null:
-		cat_option.select(1 - cat_option.selected)
-		if event.shift_pressed:
-			_submit_with_sample_fallback()
-		get_viewport().set_input_as_handled()
-		return
-	if (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_O:
-		if event.shift_pressed:
-			_submit_with_sample_fallback()
-		else:
-			_on_submit_btn_pressed()
-		get_viewport().set_input_as_handled()
-		return
-	if (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_Y:
-		if event.shift_pressed:
-			clear_inputs()
-		else:
-			fill_sample_inputs()
-		get_viewport().set_input_as_handled()
-		return
-	if (event.ctrl_pressed or event.meta_pressed) and event.keycode in [KEY_1, KEY_2, KEY_3, KEY_4, KEY_5]:
-		var sw_idx: int = event.keycode - KEY_1
-		if sw_idx >= 0 and sw_idx < COVER_SWATCHES.size():
-			select_color(COVER_SWATCHES[sw_idx]["hex"])
-			if event.shift_pressed:
-				_submit_with_sample_fallback()
-		get_viewport().set_input_as_handled()
-		return
-	if (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_6:
-		if COVER_SWATCHES.size() >= 6:
-			select_color(COVER_SWATCHES[5]["hex"])
-			if event.shift_pressed:
-				_submit_with_sample_fallback()
-		get_viewport().set_input_as_handled()
-		return
-	if (event.ctrl_pressed or event.meta_pressed) and event.keycode in [KEY_7, KEY_8] and cat_option != null:
-		cat_option.select(0 if event.keycode == KEY_7 else 1)
-		if event.shift_pressed:
-			_submit_with_sample_fallback()
-		get_viewport().set_input_as_handled()
-		return
-	if (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_9:
-		fill_sample_inputs()
-		if event.shift_pressed:
-			_submit_with_sample_fallback()
-		get_viewport().set_input_as_handled()
-		return
-	if (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_H:
-		help_requested.emit(event.shift_pressed)
-		get_viewport().set_input_as_handled()
-		return
-	if (event.ctrl_pressed or event.meta_pressed) and event.keycode in [KEY_UP, KEY_DOWN]:
-		var dir_ud: int = -1 if event.keycode == KEY_UP else 1
-		if event.shift_pressed:
-			_step_color(dir_ud)
-		else:
-			var flds := [title_input, author_input, quote_input]
-			var cur_i: int = -1
-			for i in range(flds.size()):
-				if flds[i] != null and flds[i].has_focus():
-					cur_i = i
-					break
-			var nxt_i: int = (0 if dir_ud > 0 else flds.size() - 1) if cur_i == -1 else (cur_i + dir_ud + flds.size()) % flds.size()
-			if flds[nxt_i] != null:
-				flds[nxt_i].grab_focus()
-		get_viewport().set_input_as_handled()
-		return
-	if (event.ctrl_pressed or event.meta_pressed) and event.keycode in [KEY_PAGEUP, KEY_PAGEDOWN]:
-		_step_color(-1 if event.keycode == KEY_PAGEUP else 1)
-		if event.shift_pressed and cat_option != null:
-			cat_option.select(1 - cat_option.selected)
-		get_viewport().set_input_as_handled()
-		return
-	if (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_SPACE:
-		_step_color(-1 if event.shift_pressed else 1)
-		get_viewport().set_input_as_handled()
-		return
-	if (event.ctrl_pressed or event.meta_pressed) and event.keycode == KEY_BACKSPACE:
-		clear_inputs()
-		if event.shift_pressed:
-			close()
-		get_viewport().set_input_as_handled()
-		return
-	if event.shift_pressed and (event.keycode == KEY_ENTER or event.keycode == KEY_KP_ENTER):
-		_submit_with_sample_fallback()
-		get_viewport().set_input_as_handled()
-		return
-	if event.keycode == KEY_ESCAPE:
-		if event.shift_pressed:
-			clear_inputs()
-			get_viewport().set_input_as_handled()
-			return
-		for le in [title_input, author_input, quote_input]:
-			if le != null and le.has_focus() and le.text != "":
-				le.text = ""
-				get_viewport().set_input_as_handled()
-				return
-		close()
-		get_viewport().set_input_as_handled()
-		return
-	if event.keycode == KEY_TAB:
-		var fields := [title_input, author_input, quote_input]
-		var f_idx: int = -1
-		for i in range(fields.size()):
-			if fields[i] != null and fields[i].has_focus():
-				f_idx = i
-				break
-		if event.shift_pressed:
-			if f_idx > 0 and fields[f_idx - 1] != null:
-				fields[f_idx - 1].grab_focus()
-			elif f_idx == 0 and fields[0] != null:
-				fields[0].release_focus()
-			elif fields[fields.size() - 1] != null:
-				fields[fields.size() - 1].grab_focus()
-		else:
-			if f_idx == -1 and fields[0] != null:
-				fields[0].grab_focus()
-			elif f_idx >= 0 and f_idx < fields.size() - 1 and fields[f_idx + 1] != null:
-				fields[f_idx + 1].grab_focus()
-			elif f_idx == fields.size() - 1 and fields[f_idx] != null:
-				fields[f_idx].release_focus()
-		get_viewport().set_input_as_handled()
-		return
-	var any_focused: bool = false
-	for le in [title_input, author_input, quote_input]:
-		if le != null and le.has_focus():
-			any_focused = true
-			break
-	if not any_focused:
-		if event.keycode in [KEY_1, KEY_2, KEY_3, KEY_4, KEY_5, KEY_6]:
-			var sw_idx: int = event.keycode - KEY_1
-			if sw_idx >= 0 and sw_idx < COVER_SWATCHES.size():
-				select_color(COVER_SWATCHES[sw_idx]["hex"])
-				if event.shift_pressed:
-					_submit_with_sample_fallback()
-			get_viewport().set_input_as_handled()
-		elif event.keycode in [KEY_7, KEY_8] and cat_option != null:
-			cat_option.select(0 if event.keycode == KEY_7 else 1)
-			if event.shift_pressed:
-				_submit_with_sample_fallback()
-			get_viewport().set_input_as_handled()
-		elif event.keycode == KEY_9:
-			fill_sample_inputs()
-			if event.shift_pressed:
-				_submit_with_sample_fallback()
-			get_viewport().set_input_as_handled()
-		elif event.keycode == KEY_C and cat_option != null:
-			cat_option.select(1 if cat_option.selected == 0 else 0)
-			if event.shift_pressed:
-				_submit_with_sample_fallback()
-			get_viewport().set_input_as_handled()
-		elif event.keycode == KEY_F:
-			fill_sample_inputs()
-			if event.shift_pressed:
-				_submit_with_sample_fallback()
-			get_viewport().set_input_as_handled()
-		elif event.keycode == KEY_X:
-			clear_inputs()
-			if event.shift_pressed:
-				close()
-			get_viewport().set_input_as_handled()
-		elif event.keycode == KEY_LEFT:
-			_step_color(-1)
-			get_viewport().set_input_as_handled()
-		elif event.keycode == KEY_RIGHT:
-			_step_color(1)
-			get_viewport().set_input_as_handled()
-		elif event.keycode == KEY_S:
-			if event.shift_pressed:
-				_submit_with_sample_fallback()
-			else:
-				_on_submit_btn_pressed()
-			get_viewport().set_input_as_handled()
-		elif event.keycode == KEY_E and cat_option != null:
-			cat_option.select(0)
-			if event.shift_pressed:
-				_submit_with_sample_fallback()
-			get_viewport().set_input_as_handled()
-		elif event.keycode == KEY_G and cat_option != null:
-			cat_option.select(1)
-			if event.shift_pressed:
-				_submit_with_sample_fallback()
-			get_viewport().set_input_as_handled()
-		elif event.keycode == KEY_T and title_input != null:
-			if event.shift_pressed:
-				title_input.text = ""
-			title_input.grab_focus()
-			get_viewport().set_input_as_handled()
-		elif event.keycode == KEY_A and author_input != null:
-			if event.shift_pressed:
-				author_input.text = ""
-			author_input.grab_focus()
-			get_viewport().set_input_as_handled()
-		elif event.keycode == KEY_Q and quote_input != null:
-			if event.shift_pressed:
-				quote_input.text = ""
-			quote_input.grab_focus()
-			get_viewport().set_input_as_handled()
-		elif event.keycode == KEY_SPACE:
-			_step_color(-1 if event.shift_pressed else 1)
-			get_viewport().set_input_as_handled()
-		elif event.keycode == KEY_R and not COVER_SWATCHES.is_empty():
-			var next_r_idx: int = randi() % COVER_SWATCHES.size()
-			if COVER_SWATCHES.size() > 1 and COVER_SWATCHES[next_r_idx]["hex"].to_lower() == selected_color.to_lower():
-				next_r_idx = (next_r_idx + 1) % COVER_SWATCHES.size()
-			select_color(COVER_SWATCHES[next_r_idx]["hex"])
-			if event.shift_pressed:
-				_submit_with_sample_fallback()
-			get_viewport().set_input_as_handled()
-		elif event.keycode == KEY_0:
-			clear_inputs()
-			if cat_option != null:
-				cat_option.select(0)
-			if not COVER_SWATCHES.is_empty():
-				select_color(COVER_SWATCHES[0]["hex"])
-			if event.shift_pressed:
-				close()
-			get_viewport().set_input_as_handled()
-		elif event.keycode == KEY_HOME and not COVER_SWATCHES.is_empty():
-			select_color(COVER_SWATCHES[0]["hex"])
-			get_viewport().set_input_as_handled()
-		elif event.keycode == KEY_END and not COVER_SWATCHES.is_empty():
-			select_color(COVER_SWATCHES[COVER_SWATCHES.size() - 1]["hex"])
-			get_viewport().set_input_as_handled()
-		elif event.keycode == KEY_BACKSPACE:
-			clear_inputs()
-			if event.shift_pressed:
-				close()
-			get_viewport().set_input_as_handled()
-		elif event.keycode == KEY_ENTER or event.keycode == KEY_KP_ENTER:
-			_on_submit_btn_pressed()
-			get_viewport().set_input_as_handled()
-		elif event.keycode == KEY_H or (event.keycode == KEY_SLASH and event.shift_pressed):
-			help_requested.emit(event.shift_pressed and event.keycode == KEY_H)
-			get_viewport().set_input_as_handled()
-		elif event.keycode == KEY_SLASH and not event.shift_pressed and title_input != null:
-			title_input.grab_focus()
-			title_input.select_all()
-			get_viewport().set_input_as_handled()
-
-func _on_close_btn_pressed() -> void:
-	close()
-
-func _on_submit_btn_pressed() -> void:
-	var t = title_input.text.strip_edges()
+func _on_submit() -> void:
+	var t := _title_input.text.strip_edges()
 	if t.is_empty():
-		title_input.placeholder_text = "⚠️ 작품 제목을 먼저 입력해주세요!"
-		title_input.grab_focus()
+		_title_input.placeholder_text = "작품명을 먼저 입력해 주세요"
+		_title_input.grab_focus()
 		return
-	var cat = cat_option.selected
-	var a = author_input.text.strip_edges()
-	var q = quote_input.text.strip_edges()
-	item_submitted.emit(t, cat, a, selected_color, q)
+	var a := _author_input.text.strip_edges()
+	var q := _quote_input.text.strip_edges()
+	var p_str := _price_input.text.strip_edges().replace(",", "")
+	var price_val: int = maxi(0, int(p_str)) if p_str.is_valid_int() else 0
+	item_submitted.emit(t, _selected_cat, a, _selected_color, q, price_val)
 	close()
+
+func _unhandled_input(event: InputEvent) -> void:
+	if visible and event is InputEventKey and event.pressed and event.keycode == KEY_ESCAPE:
+		close()
+		get_viewport().set_input_as_handled()

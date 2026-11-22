@@ -1,160 +1,174 @@
 class_name CardItem
 extends PanelContainer
 
-signal clicked(item)
-signal quick_advanced(item)
-signal quote_copy_requested(item)
-signal author_filter_requested(item)
+const ArchiveStateClass = preload("res://scripts/archive_state.gd")
+const UiTokensClass = preload("res://scripts/ui_tokens.gd")
 
-@onready var masking_tape: ColorRect = $VBox/TopTapeRow/MaskingTape
-@onready var cover_rect: ColorRect = $VBox/CardMargin/InnerVBox/CoverContainer/CoverRect
-@onready var spine_strip: ColorRect = $VBox/CardMargin/InnerVBox/CoverContainer/SpineStrip
-@onready var cover_icon: Label = $VBox/CardMargin/InnerVBox/CoverContainer/CoverIcon
-@onready var cat_badge: Label = $VBox/CardMargin/InnerVBox/CoverContainer/CatBadge
-@onready var vol_badge: Label = $VBox/CardMargin/InnerVBox/CoverContainer/VolBadge
-@onready var sticker_badge: Label = $VBox/CardMargin/InnerVBox/CoverContainer/StickerBadge
-@onready var obi_panel: PanelContainer = $VBox/CardMargin/InnerVBox/CoverContainer/ObiPanel
-@onready var obi_label: Label = $VBox/CardMargin/InnerVBox/CoverContainer/ObiPanel/ObiLabel
-@onready var title_label: Label = $VBox/CardMargin/InnerVBox/InfoContainer/TitleLabel
-@onready var author_label: Label = $VBox/CardMargin/InnerVBox/InfoContainer/AuthorLabel
-@onready var progress_bar: ProgressBar = %ProgressBar
-@onready var progress_label: Label = $VBox/CardMargin/InnerVBox/InfoContainer/ProgressRow/ProgressLabel
-@onready var status_label: Label = $VBox/CardMargin/InnerVBox/InfoContainer/QuotePanel/StatusLabel
+signal card_clicked(item)
 
 var current_item = null
+var _palette: Dictionary = UiTokensClass.get_palette("cream")
+
+var _cover_panel: PanelContainer
+var _cat_lbl: Label
+var _stamp_lbl: Label
+var _cover_title_lbl: Label
+var _cover_author_lbl: Label
+var _meta_left_lbl: Label
+var _meta_right_lbl: Label
+var _progress_bar: ProgressBar
+
+func _init() -> void:
+	size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	custom_minimum_size = Vector2(180, 256)
+	mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	_build_ui()
+
+func _build_ui() -> void:
+	var vbox := VBoxContainer.new()
+	vbox.add_theme_constant_override("separation", 10)
+	add_child(vbox)
+
+	# Editorial Book Cover (Rounded + Spine Crease)
+	_cover_panel = PanelContainer.new()
+	_cover_panel.custom_minimum_size = Vector2(0, 186)
+	_cover_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	vbox.add_child(_cover_panel)
+
+	var cov_margin := MarginContainer.new()
+	cov_margin.add_theme_constant_override("margin_left", 10)
+	cov_margin.add_theme_constant_override("margin_right", 10)
+	cov_margin.add_theme_constant_override("margin_top", 10)
+	cov_margin.add_theme_constant_override("margin_bottom", 12)
+	cov_margin.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_cover_panel.add_child(cov_margin)
+
+	var cov_vbox := VBoxContainer.new()
+	cov_vbox.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	cov_margin.add_child(cov_vbox)
+
+	# Top Badges Row
+	var top_row := HBoxContainer.new()
+	top_row.add_theme_constant_override("separation", 6)
+	top_row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	cov_vbox.add_child(top_row)
+
+	_cat_lbl = Label.new()
+	_cat_lbl.add_theme_font_size_override("font_size", 10)
+	_cat_lbl.add_theme_color_override("font_color", Color(1, 1, 1, 0.95))
+	_cat_lbl.add_theme_stylebox_override("normal", UiTokensClass.make_box(Color(0, 0, 0, 0.30), 99, Color(0, 0, 0, 0), 0, 8, 2))
+	_cat_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	top_row.add_child(_cat_lbl)
+
+	var spacer_top := Control.new()
+	spacer_top.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	spacer_top.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	top_row.add_child(spacer_top)
+
+	_stamp_lbl = Label.new()
+	_stamp_lbl.add_theme_font_size_override("font_size", 10)
+	_stamp_lbl.add_theme_color_override("font_color", Color(1, 1, 1, 0.96))
+	_stamp_lbl.add_theme_stylebox_override("normal", UiTokensClass.make_box(Color(1, 1, 1, 0.22), 99, Color(0, 0, 0, 0), 0, 8, 2))
+	_stamp_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	top_row.add_child(_stamp_lbl)
+
+	# Middle push spacer
+	var mid_spacer := Control.new()
+	mid_spacer.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	mid_spacer.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	cov_vbox.add_child(mid_spacer)
+
+	# Bottom Editorial Title & Author inside cover
+	_cover_title_lbl = Label.new()
+	_cover_title_lbl.add_theme_font_size_override("font_size", 14)
+	_cover_title_lbl.add_theme_color_override("font_color", Color(1, 1, 1, 0.98))
+	_cover_title_lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_cover_title_lbl.max_lines_visible = 2
+	_cover_title_lbl.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	_cover_title_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	cov_vbox.add_child(_cover_title_lbl)
+
+	_cover_author_lbl = Label.new()
+	_cover_author_lbl.add_theme_font_size_override("font_size", 11)
+	_cover_author_lbl.add_theme_color_override("font_color", Color(1, 1, 1, 0.82))
+	_cover_author_lbl.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	_cover_author_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	cov_vbox.add_child(_cover_author_lbl)
+
+	# Bottom Info Area (Below Cover — NO duplicate title!)
+	var info_vbox := VBoxContainer.new()
+	info_vbox.add_theme_constant_override("separation", 6)
+	info_vbox.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	vbox.add_child(info_vbox)
+
+	var meta_row := HBoxContainer.new()
+	meta_row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	info_vbox.add_child(meta_row)
+
+	_meta_left_lbl = Label.new()
+	_meta_left_lbl.add_theme_font_size_override("font_size", 12)
+	_meta_left_lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_meta_left_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	meta_row.add_child(_meta_left_lbl)
+
+	_meta_right_lbl = Label.new()
+	_meta_right_lbl.add_theme_font_size_override("font_size", 12)
+	_meta_right_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	_meta_right_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	meta_row.add_child(_meta_right_lbl)
+
+	_progress_bar = ProgressBar.new()
+	_progress_bar.custom_minimum_size = Vector2(0, 6)
+	_progress_bar.show_percentage = false
+	_progress_bar.max_value = 100.0
+	_progress_bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	info_vbox.add_child(_progress_bar)
 
 func _gui_input(event: InputEvent) -> void:
-	if event is InputEventMouseButton and event.pressed:
-		if event.button_index == MOUSE_BUTTON_LEFT:
-			if event.shift_pressed:
-				author_filter_requested.emit(current_item)
-			else:
-				clicked.emit(current_item)
-		elif event.button_index == MOUSE_BUTTON_RIGHT:
-			if event.shift_pressed:
-				quote_copy_requested.emit(current_item)
-			else:
-				quick_advance()
-
-func quick_advance() -> void:
-	if current_item != null:
-		current_item.quick_advance_volume()
-		setup(current_item)
-		quick_advanced.emit(current_item)
+	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+		if current_item != null:
+			card_clicked.emit(current_item)
 
 func get_reading_progress() -> float:
 	if current_item == null:
 		return 0.0
-	if current_item.has_method("get_completion_percentage"):
-		return current_item.get_completion_percentage()
 	if current_item.status_tag == "전권완결" or current_item.status_tag == "완독":
 		return 100.0
-	if current_item.volumes.size() == 0:
-		return 30.0
-	var vols = current_item.volumes.size()
-	return clampf(float(vols) * 25.0, 20.0, 100.0)
+	if current_item.target_volumes > 0:
+		return clampf(float(current_item.volumes.size()) / float(current_item.target_volumes) * 100.0, 10.0, 100.0)
+	if current_item.category == 1:
+		return 100.0
+	return clampf(float(current_item.volumes.size()) * 25.0, 20.0, 100.0)
 
-const ArchiveStateClass = preload("res://scripts/archive_state.gd")
+func apply_theme(p: Dictionary) -> void:
+	_palette = p
+	add_theme_stylebox_override("panel", UiTokensClass.make_box(p["surface"], 16, p["border"], 1, 10, 10, p["shadow"], 6))
+	_meta_left_lbl.add_theme_color_override("font_color", p["ink"])
+	_meta_right_lbl.add_theme_color_override("font_color", p["ink_sub"])
+	var prog := get_reading_progress()
+	_progress_bar.add_theme_stylebox_override("background", UiTokensClass.make_box(p["surface_soft"], 4, Color(0, 0, 0, 0), 0, 0, 0))
+	var fill_col: Color = p["sage"] if prog >= 100.0 else p["accent"]
+	_progress_bar.add_theme_stylebox_override("fill", UiTokensClass.make_box(fill_col, 4, Color(0, 0, 0, 0), 0, 0, 0))
 
-func setup(item) -> void:
+func setup(item, p: Dictionary = {}) -> void:
 	current_item = item
-	mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
-	title_label.text = item.title
-	var base_author = item.author_or_series if item.author_or_series != "" else "작가 미상"
-	var avg_r = 5.0
-	if item.volumes.size() > 0:
-		var sum_r = 0.0
-		for v in item.volumes:
-			sum_r += float(v.get("rating", 5))
-		avg_r = sum_r / float(item.volumes.size())
-	author_label.text = base_author + " · ★" + String.num(avg_r, 1)
-	var est_val = item.get_item_value() if item.has_method("get_item_value") else int(item.estimated_value)
-	var val_suffix = (" · " + ArchiveStateClass.format_krw(est_val)) if est_val > 0 else ""
-	if item.reread_count > 1:
-		author_label.text += " · 🔁" + str(item.reread_count) + "회독"
-	if item.duplicate_count > 1:
-		author_label.text += " · 👯×" + str(item.duplicate_count)
-	if item.possession_state != "" and item.possession_state != "📦 소장중":
-		author_label.text += " · " + item.possession_state
+	if not p.is_empty():
+		_palette = p
 
-	# 독서 진행률 (E-Book 리더기 & 굿노트 독서트래커 감성)
-	var prog = get_reading_progress()
-	if progress_bar != null:
-		progress_bar.value = prog
-	if progress_label != null:
-		if item.category == 1:
-			var g_state := "진열" if prog >= 100.0 else "보관"
-			if item.possession_state == "✨ 전시중":
-				g_state = "전시"
-			elif item.possession_state == "🚚 배송중":
-				g_state = "배송"
-			elif item.possession_state == "🛒 예약중":
-				g_state = "예약"
-			progress_label.text = g_state + val_suffix
-		elif prog >= 100.0:
-			progress_label.text = "완독" + val_suffix
-		else:
-			progress_label.text = str(int(prog)) + "%" + val_suffix
-	
-	# 다꾸 도장 스탬프 (💮 전권완결, 초판특전 등) & 감성 데코 스티커
-	var sticker = item.get("deco_sticker") if item.get("deco_sticker") != null else "✨"
-	if item.status_tag != "":
-		sticker_badge.visible = true
-		sticker_badge.text = " 💮" + item.status_tag + " " + sticker + " "
-	else:
-		sticker_badge.visible = true
-		sticker_badge.text = " " + sticker + " "
+	var base_col := Color.from_string(item.cover_color, Color("#C82342"))
+	_cover_panel.add_theme_stylebox_override("panel", UiTokensClass.make_cover_box(base_col, 6, 12))
 
-	# 이북 표지 컬러 & 책등 접힘선 & 파스텔 와시 테이프
-	var base_col = Color.from_string(item.cover_color, Color(0.65, 0.25, 0.2))
-	cover_rect.color = base_col
-	spine_strip.color = base_col.darkened(0.32)
-	if masking_tape != null:
-		var washi = base_col.lightened(0.62)
-		washi.a = 0.85
-		masking_tape.color = washi
-	cover_icon.text = item.icon_emoji if item.icon_emoji != "" else ("📖" if item.category == 0 else "🔮")
+	_cat_lbl.text = "BOOK" if item.category == 0 else "GOODS"
+	_stamp_lbl.text = item.status_tag if item.status_tag != "" else "소장중"
+	_cover_title_lbl.text = item.title
+	_cover_author_lbl.text = item.author_or_series if item.author_or_series != "" else "작가 미상"
 
-	# 하단 띠지 (Obi Band)
-	if item.obi_text != "":
-		obi_panel.visible = true
-		obi_label.text = item.obi_text
-	else:
-		obi_panel.visible = false
+	var avg_r: float = item.get_average_rating() if item.has_method("get_average_rating") else 5.0
+	var left_prefix: String = "%d권" % item.volumes.size() if item.category == 0 else "소장"
+	_meta_left_lbl.text = "%s · ★%.1f" % [left_prefix, avg_r]
 
-	# 일기장 밑줄 문장 (첫 권 명대사 또는 메모)
-	var first_quote = ""
-	if item.volumes.size() > 0:
-		first_quote = item.volumes[0].get("quote", "")
-	if first_quote == "":
-		first_quote = item.memo if item.memo != "" else "나만의 소장 기록 일기"
+	var est_val: int = item.get_item_value() if item.has_method("get_item_value") else int(item.estimated_value)
+	_meta_right_lbl.text = ArchiveStateClass.format_krw(est_val)
 
-	if item.category == 0: # MANGA
-		cat_badge.text = " E-BOOK "
-		var vols = item.volumes.size()
-		var bm_cnt = item.get_bookmarked_volumes_count() if item.has_method("get_bookmarked_volumes_count") else 0
-		vol_badge.visible = true
-		vol_badge.text = (str(vols) + "권 · 🔖" + str(bm_cnt)) if bm_cnt > 0 else (str(vols) + "권")
-		status_label.text = "🖋️ \"" + first_quote + "\""
-	else: # GACHA
-		cat_badge.text = " DIARY "
-		vol_badge.visible = true
-		vol_badge.text = ("🔮×" + str(item.duplicate_count)) if item.duplicate_count > 1 else "🔮가챠"
-		status_label.text = "🖋️ " + first_quote
-
-	var val_fmt = ArchiveStateClass.format_krw(est_val) if est_val > 0 else "₩0"
-	if status_label != null:
-		status_label.mouse_filter = Control.MOUSE_FILTER_PASS
-		status_label.tooltip_text = "🖋️ \"%s\" — %s" % [first_quote, item.title]
-	tooltip_text = "%s (%s · ★%.1f)\n🖋️ \"%s\"\n%s · %s · %s\n%s · %s · %s\n(Shift+좌클릭: 작가 검색 · 우클릭: +1권 빠른 기록 · Shift+우클릭: 감상 요약 복사)" % [
-		item.title,
-		base_author,
-		avg_r,
-		first_quote,
-		item.storage_location,
-		item.reading_weather,
-		item.reading_spot,
-		item.cover_finish,
-		item.condition_grade,
-		val_fmt
-	]
+	_progress_bar.value = get_reading_progress()
+	apply_theme(_palette)

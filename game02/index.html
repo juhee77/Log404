@@ -7,9 +7,8 @@
     <title>주희의 서재 & 다꾸 일기장 (E-Book & Journal Edition)</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Pretendard:wght@400;500;600;700;800&display=swap');
-
         :root {
             --paper-bg: #faf6f0;
             --paper-card: #fffdf9;
@@ -23,7 +22,7 @@
         }
 
         body {
-            font-family: 'Pretendard', -apple-system, sans-serif;
+            font-family: 'Pretendard Variable', 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
             background-color: var(--paper-bg);
             color: var(--ink-main);
             background-image: radial-gradient(#d6cbbd 0.8px, transparent 0.8px);
@@ -31,7 +30,7 @@
         }
 
         .serif-font {
-            font-family: 'Gowun Batang', Georgia, serif;
+            font-family: 'Pretendard Variable', 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
         }
 
         /* Real E-Book 3D Spine Crease & Shadow */
@@ -102,12 +101,12 @@
     <header class="bg-[#f3ece1] border-b-2 border-[#e2d6c5] px-4 py-5 sticky top-0 z-30 shadow-xs">
         <div class="max-w-4xl mx-auto flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
             <div>
-                <div onclick="if(event&&event.shiftKey){instantBackupArchive();}else if(typeof showLibraryInfographic==='function'){showLibraryInfographic();}" oncontextmenu="event.preventDefault();copyLibrarySummaryReport();" title="좌클릭: 서재 인포그래픽 요약 · 우클릭: 서재 리포트 클립보드 복사 · Shift+좌클릭: 즉시 백업" class="flex items-center gap-2 text-xs text-[#8c7a6b] font-semibold cursor-pointer hover:text-[#c85a32]">
+                <div class="flex items-center gap-2 text-xs text-[#8c7a6b] font-semibold">
                     <span>📔 MY E-BOOK & COLLECTION JOURNAL</span>
                     <span>·</span>
                     <span id="today-date">2026. 11. 11. WED</span>
                 </div>
-                <h1 onclick="if(event&&event.shiftKey){openNewDiaryModal();}else{document.getElementById('search-box').value=''; switchCategory('all');}" oncontextmenu="event.preventDefault(); toggleJournalTheme();" title="좌클릭: 전체 서재 복원 (0) · 우클릭: 속지 테마 순환 (T) · Shift+좌클릭: 새 일기 쓰기 (N)" class="serif-font text-2xl sm:text-3xl font-bold text-[#2c221e] mt-1 flex items-center gap-2 cursor-pointer hover:opacity-85">
+                <h1 class="serif-font text-2xl sm:text-3xl font-bold text-[#2c221e] mt-1 flex items-center gap-2">
                     <span>주희의 다꾸 서재 & 소장 일기장</span>
                     <span class="rubber-stamp text-[11px] px-2 py-0.5 rounded">소장기록장</span>
                 </h1>
@@ -115,15 +114,15 @@
 
             <!-- Journal Index Bookmark Buttons -->
             <div class="flex items-center gap-2 self-end sm:self-center">
-                <button onclick="openWebScraperModal()" oncontextmenu="event.preventDefault(); setFilter('manga')" title="웹에서 작품 표지와 기본 정보 자동 스크랩 추가 (우클릭: 이북·단행본 필터)"
+                <button onclick="openWebScraperModal()"
                     class="px-3.5 py-2 rounded-xl bg-[#fffdf9] hover:bg-[#f7f0e6] text-[#5c4938] border border-[#d8cbb8] font-bold text-xs shadow-2xs cursor-pointer transition flex items-center gap-1.5">
                     <i class="fa-solid fa-magnifying-glass text-[#c85a32]"></i> 웹 표지 찾기
                 </button>
-                <button onclick="openCameraModal()" oncontextmenu="event.preventDefault(); setFilter('gacha')" title="실물 굿즈·단행본 폴라로이드 촬영 기록 추가 (우클릭: 가챠노트 필터)"
+                <button onclick="openCameraModal()"
                     class="px-3.5 py-2 rounded-xl bg-[#fffdf9] hover:bg-[#f7f0e6] text-[#5c4938] border border-[#d8cbb8] font-bold text-xs shadow-2xs cursor-pointer transition flex items-center gap-1.5">
                     <i class="fa-solid fa-camera text-[#4a6b5d]"></i> 표지/가챠 찍기
                 </button>
-                <button onclick="openNewDiaryModal(event&&event.shiftKey)" oncontextmenu="event.preventDefault(); instantBackupArchive(this)" title="[N] 새 독서 일기·가챠 스크랩 작성 (우클릭: 즉시 JSON 저장 · Shift+좌클릭: 샘플 즉시 등록)"
+                <button onclick="openNewDiaryModal()" title="[N] 새 독서 일기·가챠 스크랩 작성"
                     class="px-4 py-2 rounded-xl bg-[#2c221e] hover:bg-[#43352f] text-[#faf6f0] font-bold text-xs shadow-xs cursor-pointer transition flex items-center gap-1.5">
                     <i class="fa-solid fa-feather-pointed"></i> + 새 일기 쓰기
                 </button>
@@ -147,17 +146,19 @@
                     </p>
                 </div>
                 <div class="flex items-center gap-4 border-t sm:border-t-0 pt-3 sm:pt-0 border-[#eee5d8] shrink-0">
-                    <div onclick="if(event&&event.shiftKey){document.getElementById('search-box').value='';setFilter('all');}else{setFilter('all');}" oncontextmenu="event.preventDefault(); copyLibrarySummaryReport();" class="text-center px-2 cursor-pointer hover:opacity-80" title="좌클릭: 전체 서재 보기 · 우클릭: 서재 리포트 클립보드 복사 · Shift+좌클릭: 전체+기본순">
+                    <div onclick="setFilter('all')" class="text-center px-2 cursor-pointer hover:opacity-80"
+                        title="클릭 시 전체 서재 보기 · 총 소장 자산 및 평균 별점 요약">
                         <div class="text-[11px] text-[#8c7a6b]">서재 작품</div>
                         <div class="serif-font text-lg font-bold text-[#2c221e]" id="stat-books">6권</div>
                     </div>
                     <div class="h-7 w-[1px] bg-[#e2d6c5]"></div>
-                    <div onclick="setFilter('manga')" oncontextmenu="event.preventDefault(); setFilter('manga'); cycleSortMode();" class="text-center px-2 cursor-pointer hover:opacity-80" title="좌클릭: 이북·단행본 · 우클릭: 이북 정렬 전환">
+                    <div class="text-center px-2" title="클릭 시 단행본 기록 및 서재 완독률 요약">
                         <div class="text-[11px] text-[#8c7a6b]">소장 단행본</div>
                         <div class="serif-font text-lg font-bold text-[#c85a32]" id="stat-vols">10권</div>
                     </div>
                     <div class="h-7 w-[1px] bg-[#e2d6c5]"></div>
-                    <div onclick="setFilter('firsts')" oncontextmenu="event.preventDefault(); instantBackupArchive();" class="text-center px-2 cursor-pointer hover:opacity-80" title="좌클릭: 초판 스탬프 보유작 필터 · 우클릭: 즉시 JSON 백업 저장">
+                    <div onclick="setFilter('firsts')" class="text-center px-2 cursor-pointer hover:opacity-80"
+                        title="클릭 시 초판 스탬프 보유 작품만 필터링">
                         <div class="text-[11px] text-[#8c7a6b]">초판 스탬프</div>
                         <div class="serif-font text-lg font-bold text-[#4a6b5d]" id="stat-firsts">7개</div>
                     </div>
@@ -176,20 +177,18 @@
                 <div class="flex items-center justify-between sm:justify-end gap-2 flex-1">
                     <span id="today-quote-banner"
                         class="serif-font text-xs text-[#5c4938] italic truncate cursor-pointer hover:underline"
-                        onclick="if(event&&event.shiftKey){navigator.clipboard?.writeText(this.textContent.trim());}else{openCurrentQuoteItem();}"
-                        oncontextmenu="event.preventDefault(); cycleTodayQuote(1);"
-                        title="좌클릭: 작품 일기장 열기 · 우클릭: 다음 밑줄 · Shift+좌클릭: 문장 복사">
+                        onclick="openCurrentQuoteItem()">
                         🖋️ 오늘의 밑줄: "농구... 좋아하세요?" — 슬램덩크 신장재편판
                     </span>
-                    <button id="next-quote-btn" onclick="if(event&&event.shiftKey){openCurrentQuoteItem();}else{cycleTodayQuote(1);}" oncontextmenu="event.preventDefault(); cycleTodayQuote(-1);" title="[Q] 서재 속 다음 밑줄 문장 (우클릭: 이전 · Shift+좌클릭: 작품 열기)"
+                    <button onclick="cycleTodayQuote()" title="서재 속 다음 밑줄 문장으로 넘기기"
                         class="px-2.5 py-1 rounded-lg bg-[#f3ece1] hover:bg-[#e5dac9] border border-[#d6c7b2] text-[#2c221e] text-[11px] font-bold shrink-0 cursor-pointer">
                         ↻ 다른 문장
                     </button>
-                    <button onclick="if(event&&event.shiftKey&&ITEMS.length){const p=ITEMS[Math.floor(Math.random()*ITEMS.length)];const sb=document.getElementById('search-box');if(sb){sb.value=p.title;renderShelf();}}else{pickRandomItem();}" oncontextmenu="event.preventDefault(); peekRandomItem();" title="[R] 오늘의 랜덤 작품 추천 열기 (우클릭·Shift+R: 미리보기 · Shift+좌클릭: 서재 필터)"
+                    <button onclick="pickRandomItem()" title="[R] 오늘의 랜덤 작품 추천 열기"
                         class="px-2.5 py-1 rounded-lg bg-[#c85a32] hover:bg-[#b04b25] text-white text-[11px] font-bold shrink-0 cursor-pointer">
                         🎲 추천
                     </button>
-                    <button id="ambient-sound-btn" onclick="if(event&&event.shiftKey){ambientIdx=-1;cycleAmbientSound(1);}else{cycleAmbientSound(1);}" oncontextmenu="event.preventDefault(); cycleAmbientSound(-1);" title="[M] 독서 몰입 백색소음 전환 (우클릭·Shift+M: 이전 · Shift+좌클릭: 즉시 무음)"
+                    <button id="ambient-sound-btn" onclick="cycleAmbientSound()" title="[M] 독서 몰입 백색소음 전환"
                         class="px-2.5 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] border border-[#d6c7b2] text-[#2c221e] text-[11px] font-bold shrink-0 cursor-pointer">
                         🔕 무음
                     </button>
@@ -201,23 +200,23 @@
         <section class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
             <!-- Physical Diary Index Tabs -->
             <div class="flex items-center gap-1.5 flex-wrap">
-                <button onclick="switchCategory('all')" oncontextmenu="event.preventDefault(); document.getElementById('search-box').value=''; switchCategory('all');" id="tab-all" title="[1] 전체 서재 보기 · 우클릭: 검색·필터 초기화"
+                <button onclick="switchCategory('all')" id="tab-all" title="[1] 전체 서재 보기"
                     class="px-3.5 py-2 rounded-t-xl border-t-2 border-x border-[#d8cbb8] bg-[#fffdf9] text-[#2c221e] font-bold text-xs shadow-2xs cursor-pointer">
                     📚 전체 서재
                 </button>
-                <button onclick="switchCategory('manga')" oncontextmenu="event.preventDefault(); switchCategory('manga'); cycleSortMode();" id="tab-manga" title="[2] 이북·단행본 일기 · 우클릭: 정렬 전환"
+                <button onclick="switchCategory('manga')" id="tab-manga"
                     class="px-3.5 py-2 rounded-t-xl border border-transparent bg-[#efe7da] text-[#786b63] hover:text-[#2c221e] font-bold text-xs cursor-pointer">
                     📖 이북·단행본 일기
                 </button>
-                <button onclick="switchCategory('gacha')" oncontextmenu="event.preventDefault(); switchCategory('gacha'); cycleSortMode();" id="tab-gacha" title="[3] 가챠·굿즈 · 우클릭: 정렬 전환"
+                <button onclick="switchCategory('gacha')" id="tab-gacha"
                     class="px-3.5 py-2 rounded-t-xl border border-transparent bg-[#efe7da] text-[#786b63] hover:text-[#2c221e] font-bold text-xs cursor-pointer">
                     🔮 가챠·굿즈
                 </button>
-                <button onclick="switchCategory('complete')" oncontextmenu="event.preventDefault(); switchCategory('complete'); cycleSortMode();" id="tab-complete" title="[4] 완독작 · 우클릭: 정렬 전환"
+                <button onclick="switchCategory('complete')" id="tab-complete"
                     class="px-3.5 py-2 rounded-t-xl border border-transparent bg-[#efe7da] text-[#786b63] hover:text-[#2c221e] font-bold text-xs cursor-pointer">
                     💮 완독작
                 </button>
-                <button onclick="switchCategory('fav')" oncontextmenu="event.preventDefault(); switchCategory('fav'); cycleSortMode();" id="tab-fav" title="[5] 인생작 · 우클릭: 정렬 전환"
+                <button onclick="switchCategory('fav')" id="tab-fav"
                     class="px-3.5 py-2 rounded-t-xl border border-transparent bg-[#efe7da] text-[#786b63] hover:text-[#2c221e] font-bold text-xs cursor-pointer">
                     ★ 인생작
                 </button>
@@ -225,11 +224,13 @@
 
             <!-- Fountain-pen Search Input -->
             <div class="flex items-center gap-2.5 w-full sm:w-auto">
-                <span id="filter-summary-badge" class="text-[11px] font-semibold text-[#8c7a6b] whitespace-nowrap"></span>
+                <span id="filter-summary-badge"
+                    class="text-[11px] font-semibold text-[#8c7a6b] whitespace-nowrap"></span>
                 <div class="relative w-full sm:w-64">
                     <i
                         class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-[#9c8c7c] text-xs"></i>
-                    <input type="search" id="search-box" oninput="renderShelf()" onclick="if(event&&event.shiftKey){const first=document.querySelector('#collection-grid > div');if(first&&typeof first.onclick==='function')first.onclick();}" onkeydown="if(event.key==='Enter'){const first=document.querySelector('#collection-grid > div');if(first&&typeof first.onclick==='function')first.onclick();}else if(event.key==='Escape'&&this.value){this.value='';renderShelf();}" oncontextmenu="event.preventDefault(); if(this.value){this.value='';renderShelf();}else if(ITEMS.length){this.value=ITEMS[quoteIdx%ITEMS.length].title;renderShelf();}" placeholder="일기장 속 작품·문장·날씨·장소 검색..." title="작품명·작가·대사·태그·보관위치·날씨·장소·소장경로 통합 검색 (Enter·Shift+좌클릭: 첫 결과 열기 · ESC·우클릭: 지우기/추천 검색)"
+                    <input type="search" id="search-box" oninput="renderShelf()" placeholder="일기장 속 작품·문장·날씨·장소 검색..."
+                        title="작품명·작가·대사·태그·보관위치·날씨·장소·소장경로 통합 검색"
                         class="w-full pl-8 pr-3 py-1.5 rounded-xl bg-[#fffdf9] border border-[#d8cbb8] text-xs focus:outline-none focus:border-[#c85a32]">
                 </div>
             </div>
@@ -243,9 +244,7 @@
     </main>
 
     <!-- MODAL: 📖 Open Two-Page Reading Diary (펼친 일기장 뷰) -->
-    <div id="journal-modal" onclick="if(event.target===this){if(event.shiftKey){copyBookQuoteCard();}closeJournalModal();}"
-        oncontextmenu="if(event.target===this){event.preventDefault(); closeJournalModal(); instantBackupArchive();}"
-        title="좌클릭: 일기장 닫기 · 우클릭: 닫고 즉시 JSON 백업"
+    <div id="journal-modal" onclick="if(event.target===this) closeJournalModal();"
         class="fixed inset-0 bg-[#1e1612]/65 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
         <div
             class="bg-[#fffdf9] w-full max-w-3xl rounded-3xl border-4 border-[#d8c3a5] shadow-2xl overflow-hidden flex flex-col md:flex-row max-h-[90vh]">
@@ -253,21 +252,22 @@
             <!-- Left Page: E-Book Cover & Stamp Card -->
             <div
                 class="w-full md:w-5/12 bg-[#f5efe6] p-6 border-b md:border-b-0 md:border-r-2 border-dashed border-[#d8cbb8] flex flex-col justify-between relative">
-                <div onclick="cycleJournalWashiTape()" title="클릭하여 마스킹 테이프 색상 변경" class="masking-tape absolute top-2 left-1/2 -translate-x-1/2 cursor-pointer"></div>
+                <div onclick="cycleJournalWashiTape()" title="클릭하여 마스킹 테이프 색상 변경"
+                    class="masking-tape absolute top-2 left-1/2 -translate-x-1/2 cursor-pointer"></div>
                 <div class="flex flex-col items-center text-center mt-2">
                     <div id="diary-cover-box" title="작품 표지 미리보기"
                         class="w-36 ebook-cover flex flex-col justify-between p-3 text-white shadow-lg">
-                        <div onclick="if(event&&event.shiftKey){setFilter('all');closeJournalModal();}else{filterModalCategory();}" title="클릭하여 같은 카테고리(이북/가챠) 서재만 모아보기 · Shift+좌클릭: 전체 서재 보기" class="text-[9px] font-bold opacity-80 text-left cursor-pointer hover:underline" id="diary-cover-cat">MANGA ARCHIVE</div>
+                        <div class="text-[9px] font-bold opacity-80 text-left" id="diary-cover-cat">MANGA ARCHIVE</div>
                         <div class="text-4xl my-auto" id="diary-cover-icon">🏀</div>
                         <div class="bg-[#fff8e7] text-[#2c221e] text-[9px] font-bold py-1 px-1.5 rounded-xs shadow-2xs"
                             id="diary-cover-obi">
                             ★ 전20권 완결 박스세트
                         </div>
                     </div>
-                    <h2 onclick="if(event&&event.shiftKey){copyBookQuoteCard();}else{copyDiaryTitle();}" oncontextmenu="event.preventDefault(); copyBookQuoteCard();" title="좌클릭: 작품 제목 복사 · 우클릭·Shift+좌클릭: 감상 카드 전체 복사 (C)" class="serif-font text-lg font-bold text-[#2c221e] mt-4 cursor-pointer hover:text-[#c85a32]" id="diary-title">슬램덩크 신장재편판</h2>
-                    <p onclick="searchModalAuthor()" title="클릭하여 이 작가·시리즈의 다른 작품 검색하기" class="text-xs text-[#786b63] mt-0.5 cursor-pointer hover:text-[#c85a32]" id="diary-author">이노우에 다케히코</p>
+                    <h2 class="serif-font text-lg font-bold text-[#2c221e] mt-4" id="diary-title">슬램덩크 신장재편판</h2>
+                    <p class="text-xs text-[#786b63] mt-0.5" id="diary-author">이노우에 다케히코</p>
                     <div class="mt-2">
-                        <span onclick="if(event&&event.shiftKey){navigator.clipboard?.writeText(this.textContent.trim());this.title='✅ 태그 복사됨';}" title="Shift+좌클릭: 스탬프/태그 복사" class="rubber-stamp text-xs px-2.5 py-0.5 rounded inline-block cursor-pointer" id="diary-stamp">💮 전권완결
+                        <span class="rubber-stamp text-xs px-2.5 py-0.5 rounded inline-block" id="diary-stamp">💮 전권완결
                             소장</span>
                     </div>
                 </div>
@@ -275,7 +275,7 @@
                 <div class="mt-4 pt-3 border-t border-[#e2d6c5] text-xs space-y-1.5 text-[#5c4938]">
                     <div class="flex justify-between">
                         <span class="text-[#8c7a6b]">기록 시작일</span>
-                        <span id="diary-purchase-date" onclick="const d=new Date();const ds=`${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')}`;const it=ITEMS.find(x=>x.id===activeId);if(it){it.purchase_date=ds;this.textContent=ds;if(event&&event.shiftKey&&it.volumes){it.volumes.forEach(vv=>vv.date=ds);renderDiaryVolumes(it);}}" oncontextmenu="event.preventDefault();const it=ITEMS.find(x=>x.id===activeId);if(it){it.purchase_date='2026.11.12';this.textContent='2026.11.12';}" title="오늘 날짜로 구매·기념일 스탬프 갱신 · 우클릭: 기본값 초기화 · Shift+좌클릭: 구매일+전권 오늘 날짜 동기화" class="font-semibold cursor-pointer hover:text-[#c85a32]">2026.11.12</span>
+                        <span class="font-semibold">2026. 11. 11</span>
                     </div>
                     <div class="flex justify-between">
                         <span class="text-[#8c7a6b]">나의 평점</span>
@@ -288,21 +288,20 @@
             <div class="w-full md:w-7/12 p-6 flex flex-col justify-between overflow-y-auto">
                 <div>
                     <div class="flex items-center justify-between pb-3 border-b border-[#e2d6c5]">
-                        <span onclick="const i=document.getElementById('diary-quote-input');if(i){i.value='오늘도 한 페이지의 여운을 남겼다.';if(event&&event.shiftKey){saveDiaryQuote();}else{i.focus();}}" oncontextmenu="event.preventDefault();const i=document.getElementById('diary-quote-input');if(i){i.value='';}" title="좌클릭: 샘플 밑줄 채움 · 우클릭: 밑줄 입력 비우기 · Shift+좌클릭: 샘플 즉시 저장" class="serif-font text-sm font-bold text-[#2c221e] cursor-pointer hover:text-[#c85a32]">🖋️ 나만의 독서 노트 & 권별 밑줄</span>
+                        <span class="serif-font text-sm font-bold text-[#2c221e]">🖋️ 나만의 독서 노트 & 권별 밑줄</span>
                         <div class="flex items-center gap-1.5">
-                            <button id="prev-page-btn" onclick="if(event&&event.shiftKey){if(ITEMS.length)openJournalModal(ITEMS[0].id);}else{navigateJournalModal(-1);}" oncontextmenu="event.preventDefault(); if (ITEMS.length) openJournalModal(ITEMS[0].id);" title="이전 작품 (← · 우클릭/Shift+좌클릭: 처음)"
+                            <button id="prev-page-btn" onclick="navigateJournalModal(-1)" title="이전 작품 (←)"
                                 class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">◀</button>
-                            <span id="header-page-badge" onclick="navigateJournalModal(1)" title="클릭하여 다음 일기장 보기"
-                                class="text-[10px] font-bold text-[#8c7a6b] hover:text-[#2c221e] px-1 cursor-pointer select-none">1/6</span>
-                            <button id="next-page-btn" onclick="if(event&&event.shiftKey){if(ITEMS.length)openJournalModal(ITEMS[ITEMS.length-1].id);}else{navigateJournalModal(1);}" oncontextmenu="event.preventDefault(); if (ITEMS.length) openJournalModal(ITEMS[ITEMS.length - 1].id);" title="다음 작품 (→ · 우클릭/Shift+좌클릭: 끝)"
+                            <span id="header-page-badge" class="text-[10px] font-bold text-[#8c7a6b] px-1">1/6</span>
+                            <button id="next-page-btn" onclick="navigateJournalModal(1)" title="다음 작품 (→)"
                                 class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">▶</button>
-                            <button id="tape-cycle-btn" onclick="cycleWashiTape(event&&event.shiftKey?-1:1)" oncontextmenu="event.preventDefault(); cycleWashiTape(-1);" title="상단 마스킹 테이프 컬러 순환 (W / 우클릭·Shift+좌클릭: 이전)"
+                            <button id="tape-cycle-btn" onclick="cycleWashiTape()"
                                 class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">🎨
                                 마테 옐로우</button>
-                            <button id="deco-sticker-btn" onclick="cycleDecoSticker(event&&event.shiftKey?-1:1)" oncontextmenu="event.preventDefault(); cycleDecoSticker(-1);" title="다꾸 데코 스티커 팩 순환 (S / 우클릭·Shift+좌클릭: 이전)"
+                            <button id="deco-sticker-btn" onclick="cycleDecoSticker()"
                                 class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">✨
                                 스티커</button>
-                            <button id="rarity-cycle-btn" onclick="cycleRarityTier(event&&event.shiftKey?-1:1)" oncontextmenu="event.preventDefault(); cycleRarityTier(-1);" title="수집 레어도 등급 순환 (R / 우클릭·Shift+좌클릭: 이전)"
+                            <button id="rarity-cycle-btn" onclick="cycleRarityTier()"
                                 class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">💎
                                 레어</button>
                             <button id="paper-cycle-btn" onclick="cyclePaperPattern()"
@@ -311,26 +310,28 @@
                             <button id="storage-cycle-btn" onclick="cycleStorageLocation()"
                                 class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">🗄️
                                 장식장</button>
-                            <button id="source-cycle-btn" onclick="cycleAcquisitionSource(event&&event.shiftKey?-1:1)" oncontextmenu="event.preventDefault(); cycleAcquisitionSource(-1);" title="소장·입수 경로 순환 (A) · 우클릭·Shift+좌클릭: 이전"
+                            <button id="source-cycle-btn" onclick="cycleAcquisitionSource()"
                                 class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">🏪
                                 서점</button>
-                            <button id="mood-cycle-btn" onclick="cycleReadingMood(event&&event.shiftKey?-1:1)" oncontextmenu="event.preventDefault(); cycleReadingMood(-1);" title="독서·수집 기분 태그 순환 (M) · 우클릭·Shift+좌클릭: 이전"
+                            <button id="mood-cycle-btn" onclick="cycleReadingMood()"
                                 class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">🥰
                                 힐링</button>
-                            <button id="reread-cycle-btn" onclick="if(event&&event.shiftKey){decrementRereadCount();}else{incrementRereadCount();}" oncontextmenu="event.preventDefault(); decrementRereadCount();" title="클릭: +1회독 · 우클릭·Shift+좌클릭: -1회독"
+                            <button id="reread-cycle-btn" onclick="incrementRereadCount()"
+                                oncontextmenu="event.preventDefault(); decrementRereadCount();"
+                                title="클릭: +1회독 · 우클릭: -1회독"
                                 class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">🔁
                                 1회독</button>
-                            <button onclick="if(event&&event.shiftKey){copyLibrarySummaryReport(this);}else{copyBookQuoteCard();}" oncontextmenu="event.preventDefault(); copyLibrarySummaryReport(this);" title="이 작품의 감상 카드 클립보드 복사 (C · 우클릭·Shift+좌클릭: 전체 서재 리포트 복사)"
+                            <button onclick="copyBookQuoteCard()"
                                 class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#2c221e] text-[10px] font-bold cursor-pointer">💌
                                 감상 카드 공유</button>
-                            <button onclick="if(event&&event.shiftKey){copyBookQuoteCard();closeJournalModal();}else{closeJournalModal();}" oncontextmenu="event.preventDefault(); closeJournalModal(); instantBackupArchive();" title="일기장 닫기 (ESC · 우클릭: 닫고 즉시 JSON 백업 · Shift+좌클릭: 카드 복사+닫기)"
+                            <button onclick="closeJournalModal()"
                                 class="w-7 h-7 rounded-full bg-[#efe7da] hover:bg-[#e2d6c5] text-[#5c4938] text-xs font-bold cursor-pointer">✕</button>
                         </div>
                     </div>
 
                     <!-- Overall Diary Thought -->
                     <div class="journal-lined-paper px-3 py-2 mt-3 rounded-xl border border-[#ece3d5]">
-                        <p onclick="if(event&&event.shiftKey){navigator.clipboard?.writeText(this.textContent.trim());this.title='✅ 감상평 복사됨';}else{const i=document.getElementById('diary-quote-input'); if(i){i.focus();}}" oncontextmenu="event.preventDefault(); toggleDiaryHighlighter();" title="좌클릭: 밑줄 문장 편집 입력창 이동 (E) · 우클릭: 형광펜 토글 (L) · Shift+좌클릭: 감상평 복사" class="serif-font text-xs text-[#2c221e] cursor-pointer hover:text-[#c85a32]" id="diary-memo">
+                        <p class="serif-font text-xs text-[#2c221e]" id="diary-memo">
                             학창시절부터 소중히 모아온 인생 만화. 마지막 페이지를 덮을 때마다 가슴이 벅차오른다.
                         </p>
                     </div>
@@ -338,39 +339,36 @@
                     <!-- Sprint 8: Interactive Rubber Stamp Selector & Fountain-Pen Quote Editor -->
                     <div class="mt-3 p-2.5 rounded-xl bg-[#faf5ed] border border-[#e6dccd] space-y-2">
                         <div class="flex items-center gap-1.5 flex-wrap">
-                            <span onclick="const s=['전권완결','초판특전','인생최애','위시리스트'];const it=ITEMS.find(x=>x.id===activeId);const i=it?s.indexOf(it.stamp):-1;applyDiaryStamp(s[(i+1)%s.length]);" oncontextmenu="event.preventDefault();const s=['전권완결','초판특전','인생최애','위시리스트'];const it=ITEMS.find(x=>x.id===activeId);const i=it?s.indexOf(it.stamp):-1;applyDiaryStamp(s[(i+s.length-1)%s.length]);" title="좌클릭: 인장 프리셋 순환 (1~4) · 우클릭: 역순환" class="text-[11px] font-bold text-[#786b63] mr-1 cursor-pointer hover:text-[#c85a32]">💮 인장 찍기:</span>
-                            <button data-stamp-btn="전권완결" onclick="applyDiaryStamp('전권완결');if(event&&event.shiftKey)closeJournalModal();" oncontextmenu="event.preventDefault(); applyDiaryStamp('전권완결'); copyBookQuoteCard();" title="좌클릭: 인장 찍기 · 우클릭: 인장+감상카드 복사 · Shift+좌클릭: 찍고 닫기"
+                            <span class="text-[11px] font-bold text-[#786b63] mr-1">💮 인장 찍기:</span>
+                            <button data-stamp-btn="전권완결" onclick="applyDiaryStamp('전권완결')"
                                 class="px-2 py-0.5 rounded border border-[#c85a32]/50 bg-[#fff8f5] text-[#c85a32] text-[10px] font-bold hover:bg-[#c85a32] hover:text-white cursor-pointer">💮전권완결</button>
-                            <button data-stamp-btn="초판특전" onclick="applyDiaryStamp('초판특전');if(event&&event.shiftKey)closeJournalModal();" oncontextmenu="event.preventDefault(); applyDiaryStamp('초판특전'); copyBookQuoteCard();" title="좌클릭: 인장 찍기 · 우클릭: 인장+감상카드 복사 · Shift+좌클릭: 찍고 닫기"
+                            <button data-stamp-btn="초판특전" onclick="applyDiaryStamp('초판특전')"
                                 class="px-2 py-0.5 rounded border border-[#c85a32]/50 bg-[#fff8f5] text-[#c85a32] text-[10px] font-bold hover:bg-[#c85a32] hover:text-white cursor-pointer">🔖초판특전</button>
-                            <button data-stamp-btn="인생최애" onclick="applyDiaryStamp('인생최애');if(event&&event.shiftKey)closeJournalModal();" oncontextmenu="event.preventDefault(); applyDiaryStamp('인생최애'); copyBookQuoteCard();" title="좌클릭: 인장 찍기 · 우클릭: 인장+감상카드 복사 · Shift+좌클릭: 찍고 닫기"
+                            <button data-stamp-btn="인생최애" onclick="applyDiaryStamp('인생최애')"
                                 class="px-2 py-0.5 rounded border border-[#c85a32]/50 bg-[#fff8f5] text-[#c85a32] text-[10px] font-bold hover:bg-[#c85a32] hover:text-white cursor-pointer">♥인생최애</button>
-                            <button data-stamp-btn="위시리스트" onclick="applyDiaryStamp('위시리스트');if(event&&event.shiftKey)closeJournalModal();" oncontextmenu="event.preventDefault(); applyDiaryStamp('위시리스트'); copyBookQuoteCard();" title="좌클릭: 인장 찍기 · 우클릭: 인장+감상카드 복사 · Shift+좌클릭: 찍고 닫기"
+                            <button data-stamp-btn="위시리스트" onclick="applyDiaryStamp('위시리스트')"
                                 class="px-2 py-0.5 rounded border border-[#c85a32]/50 bg-[#fff8f5] text-[#c85a32] text-[10px] font-bold hover:bg-[#c85a32] hover:text-white cursor-pointer">✨위시리스트</button>
                         </div>
                         <div class="flex items-center gap-1.5">
                             <input id="diary-quote-input" type="text" placeholder="🖋️ 오늘 밑줄 친 명대사·감상평 수정..."
-                                onclick="if(event&&event.shiftKey){const qt=this.value.trim();saveDiaryQuote();if(qt){navigator.clipboard?.writeText(qt);this.title='✅ 저장·복사됨: '+qt;}}"
-                                onkeydown="if(event.key==='Enter'){const qt=this.value.trim();saveDiaryQuote();if(event.shiftKey&&qt){navigator.clipboard?.writeText(qt);this.title='✅ 저장·복사됨: '+qt;}}else if(event.key==='Escape'&&(this.value||event.shiftKey)){event.stopPropagation();this.value='';}"
-                                oncontextmenu="event.preventDefault(); if(this.value){this.value='';}else{restoreDiaryQuoteInput();}"
-                                title="밑줄 문장·감상평 입력 (Enter: 저장 · 우클릭: 입력 비우기/원문 복원 · Shift+좌클릭: 저장+복사)"
+                                onkeydown="if(event.key==='Enter'){saveDiaryQuote();}"
                                 class="flex-1 px-2.5 py-1 rounded-lg bg-[#fffdf9] border border-[#d8cbb8] text-xs text-[#2c221e] focus:outline-none focus:border-[#c85a32]">
-                            <button onclick="if(event&&event.shiftKey){const i=document.getElementById('diary-quote-input');const t=i?i.value.trim():'';saveDiaryQuote();if(t)navigator.clipboard?.writeText(t);}else{saveDiaryQuote();}" oncontextmenu="event.preventDefault(); restoreDiaryQuoteInput();" title="작성한 밑줄·감상평 저장 (Enter · 우클릭: 원문 복원 · Shift+좌클릭: 저장+복사)"
+                            <button onclick="saveDiaryQuote()"
                                 class="px-2.5 py-1 rounded-lg bg-[#2c221e] text-[#faf6f0] text-[11px] font-bold hover:bg-[#43352f] cursor-pointer">🖋️
                                 밑줄 저장</button>
-                            <button onclick="toggleDiaryHighlighter()" oncontextmenu="event.preventDefault(); toggleDiaryHighlighter();" id="btn-highlighter" title="밑줄 문장 형광펜 하이라이트 켜기/끄기 (L)"
+                            <button onclick="toggleDiaryHighlighter()" id="btn-highlighter"
                                 class="px-2.5 py-1 rounded-lg bg-[#fef08a] border border-[#eab308] text-[#854d0e] text-[11px] font-bold hover:bg-[#fde047] cursor-pointer">🖍️
                                 형광펜</button>
                         </div>
                         <div class="flex items-center gap-1.5 text-[10px] text-[#786b63] pt-1">
-                            <span onclick="const k=['#2c221e','#7f1d1d','#78350f','#14532d'];const q=document.getElementById('diary-memo');const c=q&&q.dataset.ink?k.indexOf(q.dataset.ink):0;const nx=k[(c+1)%k.length];if(q)q.dataset.ink=nx;setDiaryInk(nx);" oncontextmenu="event.preventDefault();const k=['#2c221e','#7f1d1d','#78350f','#14532d'];const q=document.getElementById('diary-memo');const c=q&&q.dataset.ink?k.indexOf(q.dataset.ink):0;const nx=k[(c+k.length-1)%k.length];if(q)q.dataset.ink=nx;setDiaryInk(nx);" title="좌클릭: 만년필 잉크 순환 (I) · 우클릭: 역순환 (Shift+I)" class="font-bold cursor-pointer hover:text-[#c85a32]">🖋️ 잉크:</span>
-                            <button onclick="setDiaryInk('#2c221e');if(event&&event.shiftKey){const i=document.getElementById('diary-quote-input');if(i)i.focus();}" title="좌클릭: 잉크색 적용 · Shift+좌클릭: 잉크 적용+입력창"
+                            <span class="font-bold">🖋️ 잉크:</span>
+                            <button onclick="setDiaryInk('#2c221e')"
                                 class="px-2 py-0.5 rounded bg-[#f3ece1] border border-[#d6c7b2] text-[#2c221e] font-semibold cursor-pointer">☕에스프레소</button>
-                            <button onclick="setDiaryInk('#7f1d1d');if(event&&event.shiftKey){const i=document.getElementById('diary-quote-input');if(i)i.focus();}" title="좌클릭: 잉크색 적용 · Shift+좌클릭: 잉크 적용+입력창"
+                            <button onclick="setDiaryInk('#7f1d1d')"
                                 class="px-2 py-0.5 rounded bg-[#f3ece1] border border-[#d6c7b2] text-[#7f1d1d] font-semibold cursor-pointer">🍷버건디</button>
-                            <button onclick="setDiaryInk('#78350f');if(event&&event.shiftKey){const i=document.getElementById('diary-quote-input');if(i)i.focus();}" title="좌클릭: 잉크색 적용 · Shift+좌클릭: 잉크 적용+입력창"
+                            <button onclick="setDiaryInk('#78350f')"
                                 class="px-2 py-0.5 rounded bg-[#f3ece1] border border-[#d6c7b2] text-[#78350f] font-semibold cursor-pointer">🍂세피아</button>
-                            <button onclick="setDiaryInk('#14532d');if(event&&event.shiftKey){const i=document.getElementById('diary-quote-input');if(i)i.focus();}" title="좌클릭: 잉크색 적용 · Shift+좌클릭: 잉크 적용+입력창"
+                            <button onclick="setDiaryInk('#14532d')"
                                 class="px-2 py-0.5 rounded bg-[#f3ece1] border border-[#d6c7b2] text-[#14532d] font-semibold cursor-pointer">🌲포레스트</button>
                         </div>
                     </div>
@@ -378,17 +376,11 @@
                     <!-- Volume-by-Volume Entries -->
                     <div class="mt-5">
                         <div class="flex items-center justify-between mb-2">
-                            <span onclick="if(event&&event.shiftKey){const it=ITEMS.find(x=>x.id===activeId);if(it&&it.volumes){const allBm=it.volumes.every(v=>!!v.bookmarked);it.volumes.forEach(v=>v.bookmarked=!allBm);renderDiaryVolumes(it);}}else{addVolumeInDiary();}" title="클릭: 다음 권 기록 추가 (+) · Shift+좌클릭: 전권 북마크 일괄 토글" class="text-xs font-bold text-[#5c4938] cursor-pointer hover:text-[#c85a32]">📌 권별 소장 스탬프 & 좋아하는 대사</span>
-                            <div class="flex items-center gap-1.5">
-                                <button id="diary-add-vol-btn" onclick="if(event&&event.shiftKey){addVolumeInDiary();const it=ITEMS.find(x=>x.id===activeId);if(it&&it.volumes&&it.volumes.length){const lv=it.volumes[it.volumes.length-1];lv.status='first';lv.bookmarked=true;renderDiaryVolumes(it);}}else{addVolumeInDiary();}" oncontextmenu="event.preventDefault(); addVolumeInDiary(); const it = ITEMS.find(x => x.id === activeId); if (it && it.volumes && it.volumes.length) selectVolForEdit(it.volumes.length - 1);" title="새 권·파츠 일기 1개 추가 (+ · 우클릭: 추가 후 바로 밑줄 입력 · Shift+좌클릭: 초판+북마크 추가)"
-                                    class="px-2.5 py-1 rounded-lg bg-[#c85a32] hover:bg-[#b04b25] text-white text-[11px] font-bold cursor-pointer">
-                                    + 다음 권 기록 추가
-                                </button>
-                                <button onclick="const it=ITEMS.find(x=>x.id===activeId);if(it&&it.volumes&&it.volumes.length){if(event&&event.shiftKey){const allBm=it.volumes.every(v=>!!v.bookmarked);it.volumes.forEach(v=>v.bookmarked=!allBm);}else{it.volumes.pop();}renderDiaryVolumes(it);refreshDiaryAuthor(it);renderShelf();}" oncontextmenu="event.preventDefault();const it=ITEMS.find(x=>x.id===activeId);if(it&&it.volumes&&it.volumes.length){toggleVolBookmark(it.volumes.length-1);}" title="마지막 권·파츠 기록 삭제 (- · 우클릭: 마지막 권 북마크 토글 · Shift+좌클릭: 전권 북마크 일괄 토글)"
-                                    class="px-2 py-1 rounded-lg bg-[#efe7da] hover:bg-[#e2d6c5] text-[#5c4938] text-[11px] font-bold cursor-pointer">
-                                    - 권 삭제
-                                </button>
-                            </div>
+                            <span class="text-xs font-bold text-[#5c4938]">📌 권별 소장 스탬프 & 좋아하는 대사</span>
+                            <button onclick="addVolumeInDiary()"
+                                class="px-2.5 py-1 rounded-lg bg-[#c85a32] hover:bg-[#b04b25] text-white text-[11px] font-bold cursor-pointer">
+                                + 다음 권 기록 추가
+                            </button>
                         </div>
                         <div id="diary-volumes-list" class="space-y-2 max-h-56 overflow-y-auto pr-1"></div>
                     </div>
@@ -397,7 +389,7 @@
                 <div
                     class="mt-6 pt-3 border-t border-[#e2d6c5] flex justify-between items-center text-xs text-[#8c7a6b]">
                     <span id="journal-page-indicator">Page 1 of 1 · 주희의 다꾸 일기장</span>
-                    <button id="delete-diary-btn" onclick="if(event&&event.shiftKey){deleteArmed=false;this.textContent='이 일기 삭제';}else{deleteSelectedDiary();}" oncontextmenu="event.preventDefault(); deleteArmed = false; this.textContent = '이 일기 삭제';" title="이 작품의 일기장을 서재에서 삭제 (우클릭: 삭제 확인 해제 · Shift+좌클릭: 삭제 확인 해제)"
+                    <button id="delete-diary-btn" onclick="deleteSelectedDiary()"
                         class="text-rose-600 hover:underline font-semibold cursor-pointer">이 일기 삭제</button>
                 </div>
             </div>
@@ -466,14 +458,6 @@
         let activeId = 'm1';
         let currentQuoteIdx = 0;
 
-        function peekRandomItem() {
-            if (!ITEMS.length) return;
-            const picked = ITEMS[Math.floor(Math.random() * ITEMS.length)];
-            const el = document.getElementById('today-quote-banner');
-            if (el) {
-                el.textContent = `🎲 추천 미리보기: 「${picked.title}」 · ${picked.reading_weather || '☀️ 맑은 오후'} · ₩${(picked.estimated_value || 0).toLocaleString('ko-KR')}`;
-            }
-        }
         function pickRandomItem() {
             const rIdx = Math.floor(Math.random() * ITEMS.length);
             openJournalModal(ITEMS[rIdx].id);
@@ -548,39 +532,17 @@
                 return cMatch && qMatch;
             });
 
-            const totalVal = filtered.reduce((acc, it) => acc + (it.estimated_value || 0), 0);
             const summaryEl = document.getElementById('filter-summary-badge');
             if (summaryEl) {
+                const totalVal = filtered.reduce((acc, it) => acc + (it.estimated_value || 0), 0);
                 summaryEl.textContent = `${filtered.length}종 · ₩${totalVal.toLocaleString('ko-KR')}`;
-                summaryEl.title = `필터·정렬 요약: ${filtered.length}/${ITEMS.length}종 · ₩${totalVal.toLocaleString('ko-KR')}`;
             }
-            const sbEl = document.getElementById('search-box');
-            if (sbEl) {
-                const valStr = `₩${totalVal.toLocaleString('ko-KR')}`;
-                sbEl.placeholder = filtered.length === ITEMS.length
-                    ? `작품·대사 검색... (전체 ${ITEMS.length}종 · ${valStr})`
-                    : `작품·대사 검색... (${filtered.length}/${ITEMS.length}종 · ${valStr})`;
-            }
-            const tabDefs = [
-                ['tab-all', '[1] 전체 서재', ITEMS],
-                ['tab-manga', '[2] 이북·단행본', ITEMS.filter(it => it.category === 'manga')],
-                ['tab-gacha', '[3] 가챠·굿즈', ITEMS.filter(it => it.category === 'gacha')],
-                ['tab-complete', '[4] 완독·2권 이상', ITEMS.filter(it => it.stamp === '전권완결' || (it.volumes && it.volumes.length >= 2))],
-                ['tab-fav', '[5] 인생최애·★5.0', ITEMS.filter(it => it.stamp === '인생최애' || (it.volumes && it.volumes.every(v => v.rating === 5)))]
-            ];
-            tabDefs.forEach(([id, label, list]) => {
-                const el = document.getElementById(id);
-                if (el) {
-                    const v = list.reduce((acc, it) => acc + (it.estimated_value || 0), 0);
-                    el.title = `${label} (${list.length}종 · ₩${v.toLocaleString('ko-KR')})`;
-                }
-            });
 
             const container = document.getElementById('shelf-container');
             container.innerHTML = '';
 
             if (filtered.length === 0) {
-                container.innerHTML = `<div class="bg-[#faf6f0] border border-dashed border-[#d6c9b8] rounded-2xl p-8 text-center text-[#786a5e] text-sm space-y-3"><div>📭 조건에 맞는 서재 기록이 없습니다.<br/>검색어를 비우거나 '+ 일기 쓰기'로 새 추억을 남겨보세요!</div><button onclick="document.getElementById('search-box').value=''; setFilter('all'); if(event&&event.shiftKey&&ITEMS.length){openJournalModal(ITEMS[Math.floor(Math.random()*ITEMS.length)].id);}" oncontextmenu="event.preventDefault(); document.getElementById('search-box').value=''; setFilter('all'); peekRandomItem();" title="좌클릭: 전체 서재 복원 · 우클릭: 복원 후 랜덤 추천 미리보기 · Shift+좌클릭: 복원 후 랜덤 일기장 열기" class="px-3 py-1.5 rounded-lg bg-[#efe7da] border border-[#d8cbb8] text-[#2c221e] text-xs font-bold hover:bg-[#e5dac9] cursor-pointer">🔄 전체 서재 보기</button></div>`;
+                container.innerHTML = `<div class="bg-[#faf6f0] border border-dashed border-[#d6c9b8] rounded-2xl p-8 text-center text-[#786a5e] text-sm space-y-3"><div>📭 조건에 맞는 서재 기록이 없습니다.<br/>검색어를 비우거나 '+ 일기 쓰기'로 새 추억을 남겨보세요!</div><button onclick="document.getElementById('search-box').value=''; setFilter('all');" class="px-3 py-1.5 rounded-lg bg-[#efe7da] border border-[#d8cbb8] text-[#2c221e] text-xs font-bold hover:bg-[#e5dac9] cursor-pointer">🔄 전체 서재 보기</button></div>`;
                 return;
             }
 
@@ -597,25 +559,11 @@
                     const card = document.createElement('div');
                     card.className = 'bg-[#faf6f0] rounded-2xl p-4 border border-[#e5dac9] relative cursor-pointer hover:border-[#c85a32] transition flex flex-col';
                     card.title = `${item.title}\n${item.storage_location || '🗄️ 1층 장식장'} · ${item.reading_weather || '☀️ 맑은 오후'} · ${item.reading_spot || '🛋️ 이불 속'}\n${item.cover_finish || '📜 무광 매트'} · ${item.condition_grade || '✨ S급(최상)'} · ₩${(item.estimated_value || 5000).toLocaleString()}`;
-                    card.onclick = (ev) => {
-                        if (ev && ev.shiftKey) {
-                            const sb = document.getElementById('search-box');
-                            if (sb) { sb.value = item.author; renderShelf(); }
-                        } else {
-                            openJournalModal(item.id);
-                        }
-                    };
+                    card.onclick = () => openJournalModal(item.id);
+
                     const quotePreview = (item.volumes && item.volumes[0] && item.volumes[0].quote)
                         ? `"${item.volumes[0].quote}"`
                         : item.memo;
-                    card.title = `${item.title} (${item.author}) — 🖋️ ${quotePreview}\n좌클릭: 열기 · Shift+좌클릭: 작가 검색 · Shift+우클릭: 감상 요약 복사`;
-                    card.oncontextmenu = (ev) => {
-                        ev.preventDefault();
-                        if (ev.shiftKey) {
-                            const txt = `📖 「${item.title}」 — "${item.memo || '소장 기록'}" (${item.author})`;
-                            navigator.clipboard?.writeText(txt).catch(() => {});
-                        }
-                    };
 
                     card.innerHTML = `
                         <div class="masking-tape absolute -top-2 left-1/2 -translate-x-1/2"></div>
@@ -652,17 +600,14 @@
             const spineShelf = document.getElementById('mini-spine-shelf');
             if (spineShelf) {
                 spineShelf.innerHTML = ITEMS.map(it => {
-                    const vols = it.volumes ? it.volumes.length : 1;
-                    const w = Math.min(14, Math.max(8, 6 + vols * 2));
-                    const avgR = (it.volumes && it.volumes.length) ? (it.volumes.reduce((a, v) => a + Number(v.rating || 5), 0) / it.volumes.length).toFixed(1) : '5.0';
-                    const tip = `${it.title} (${it.author || '작가 미상'} · ★${avgR} · ${vols}권 소장)`;
-                    return `<div onclick="openJournalModal('${it.id}')" title="${tip}" style="width:${w}px;background:${it.color}" class="h-5 rounded-t-xs cursor-pointer hover:opacity-80 shadow-2xs"></div>`;
+                    const w = Math.min(14, Math.max(8, 6 + (it.volumes ? it.volumes.length : 1) * 2));
+                    return `<div onclick="openJournalModal('${it.id}')" title="${it.title}" style="width:${w}px;background:${it.color}" class="h-5 rounded-t-xs cursor-pointer hover:opacity-80 shadow-2xs"></div>`;
                 }).join('');
             }
         }
 
         let quoteIdx = 0;
-        function cycleTodayQuote(delta = 1) {
+        function cycleTodayQuote() {
             const allQuotes = [];
             ITEMS.forEach(it => {
                 if (it.volumes && it.volumes.length) {
@@ -674,18 +619,14 @@
                 }
             });
             if (!allQuotes.length) return;
-            quoteIdx = (quoteIdx + delta + allQuotes.length) % allQuotes.length;
+            quoteIdx = (quoteIdx + 1) % allQuotes.length;
             const el = document.getElementById('today-quote-banner');
             if (el) {
                 const cur = allQuotes[quoteIdx];
                 el.textContent = typeof cur === 'string' ? cur : cur.text;
                 if (typeof cur !== 'string' && cur.title) {
-                    el.title = `좌클릭: 「${cur.title}」 펼치기 · 우클릭: 다음 밑줄 (${quoteIdx + 1}/${allQuotes.length})`;
+                    el.title = `클릭하여 「${cur.title}」 독서 일기장 펼치기`;
                 }
-            }
-            const nqBtn = document.getElementById('next-quote-btn');
-            if (nqBtn) {
-                nqBtn.title = `[Q] 서재 속 다음 밑줄 문장으로 넘기기 (${quoteIdx + 1}/${allQuotes.length})`;
             }
         }
 
@@ -697,24 +638,14 @@
             const pageEl = document.getElementById('journal-page-indicator');
             if (pageEl && idx >= 0) {
                 pageEl.textContent = `Page ${idx + 1} / ${ITEMS.length} · 주희의 다꾸 일기장`;
-                pageEl.title = `현재 ${idx + 1}/${ITEMS.length}번째: ${item.title} (₩${(item.estimated_value || 0).toLocaleString('ko-KR')})`;
-            }
-            const delDiaryBtn = document.getElementById('delete-diary-btn');
-            if (delDiaryBtn) {
-                const vCnt = item.volumes ? item.volumes.length : 0;
-                delDiaryBtn.title = `「${item.title}」(${vCnt}권) 일기장을 서재에서 삭제 (우클릭·Shift+좌클릭: 삭제 확인 해제)`;
-            }
-            const hlBtn = document.getElementById('btn-highlighter');
-            if (hlBtn) {
-                hlBtn.title = `형광펜 하이라이트 [현재: ${item.highlight_enabled ? 'ON ✨' : 'OFF'}] (L)`;
             }
             if (idx >= 0 && ITEMS.length > 0) {
                 const prevIdx = (idx - 1 + ITEMS.length) % ITEMS.length;
                 const nextIdx = (idx + 1) % ITEMS.length;
                 const prevBtn = document.getElementById('prev-page-btn');
                 const nextBtn = document.getElementById('next-page-btn');
-                if (prevBtn) prevBtn.title = `◀ 이전 일기 (${prevIdx + 1}/${ITEMS.length}): ${ITEMS[prevIdx].title} (← · 우클릭/Shift+좌클릭: 처음)`;
-                if (nextBtn) nextBtn.title = `▶ 다음 일기 (${nextIdx + 1}/${ITEMS.length}): ${ITEMS[nextIdx].title} (→ · 우클릭/Shift+좌클릭: 끝)`;
+                if (prevBtn) prevBtn.title = `◀ 이전 일기 (${prevIdx + 1}/${ITEMS.length}): ${ITEMS[prevIdx].title} (←)`;
+                if (nextBtn) nextBtn.title = `▶ 다음 일기 (${nextIdx + 1}/${ITEMS.length}): ${ITEMS[nextIdx].title} (→)`;
                 const headerPageBadge = document.getElementById('header-page-badge');
                 if (headerPageBadge) headerPageBadge.textContent = `${idx + 1}/${ITEMS.length}`;
             }
@@ -754,12 +685,12 @@
         }
 
         const MOOD_PRESETS = ["🥰 힐링", "🔥 열혈", "😭 감동", "🤯 반전", "🤣 유쾌"];
-        function cycleReadingMood(step = 1) {
+        function cycleReadingMood() {
             const item = ITEMS.find(x => x.id === activeId);
             if (!item) return;
             const cur = item.reading_mood || '🥰 힐링';
             const idx = MOOD_PRESETS.indexOf(cur);
-            item.reading_mood = MOOD_PRESETS[(idx + step + MOOD_PRESETS.length) % MOOD_PRESETS.length];
+            item.reading_mood = MOOD_PRESETS[(idx + 1) % MOOD_PRESETS.length];
             const btn = document.getElementById('mood-cycle-btn');
             if (btn) btn.textContent = item.reading_mood;
             const stampEl = document.getElementById('diary-stamp');
@@ -784,12 +715,12 @@
         }
 
         const SOURCE_PRESETS = ["🏪 오프라인 서점", "🇯🇵 직구/해외", "🎁 선물", "🎪 팝업/행사", "📦 온라인 서점"];
-        function cycleAcquisitionSource(step = 1) {
+        function cycleAcquisitionSource() {
             const item = ITEMS.find(x => x.id === activeId);
             if (!item) return;
             const cur = item.acquisition_source || '🏪 오프라인 서점';
             const idx = SOURCE_PRESETS.indexOf(cur);
-            item.acquisition_source = SOURCE_PRESETS[(idx + step + SOURCE_PRESETS.length) % SOURCE_PRESETS.length];
+            item.acquisition_source = SOURCE_PRESETS[(idx + 1) % SOURCE_PRESETS.length];
             const btn = document.getElementById('source-cycle-btn');
             if (btn) btn.textContent = item.acquisition_source;
             const stampEl = document.getElementById('diary-stamp');
@@ -798,23 +729,20 @@
 
         const AMBIENT_PRESETS = ["🔕 무음", "🌧️ 빗소리", "☕ 북카페", "📖 책장넘김", "🔥 모닥불", "🦗 밤귀뚜라미"];
         let ambientIdx = 0;
-        function cycleAmbientSound(delta = 1) {
-            ambientIdx = (ambientIdx + delta + AMBIENT_PRESETS.length) % AMBIENT_PRESETS.length;
+        function cycleAmbientSound() {
+            ambientIdx = (ambientIdx + 1) % AMBIENT_PRESETS.length;
             const snd = AMBIENT_PRESETS[ambientIdx];
             const btn = document.getElementById('ambient-sound-btn');
-            if (btn) {
-                btn.textContent = snd;
-                btn.title = `[M] 앰비언트 (${ambientIdx + 1}/${AMBIENT_PRESETS.length}: ${snd}) · 우클릭·Shift+M: 이전 · Shift+좌클릭: 즉시 무음`;
-            }
+            if (btn) btn.textContent = snd;
         }
 
         const RARITY_PRESETS = ["🌟 노말", "💎 레어", "👑 슈퍼레어", "🔮 시크릿"];
-        function cycleRarityTier(step = 1) {
+        function cycleRarityTier() {
             const item = ITEMS.find(x => x.id === activeId);
             if (!item) return;
             const cur = item.rarity_tier || '🌟 노말';
             const idx = RARITY_PRESETS.indexOf(cur);
-            item.rarity_tier = RARITY_PRESETS[(idx + step + RARITY_PRESETS.length) % RARITY_PRESETS.length];
+            item.rarity_tier = RARITY_PRESETS[(idx + 1) % RARITY_PRESETS.length];
             const btn = document.getElementById('rarity-cycle-btn');
             if (btn) btn.textContent = item.rarity_tier;
             const stampEl = document.getElementById('diary-stamp');
@@ -823,12 +751,12 @@
         }
 
         const DECO_STICKERS = ["✨", "🌸", "☕", "🌙", "🍀", "🎧"];
-        function cycleDecoSticker(step = 1) {
+        function cycleDecoSticker() {
             const item = ITEMS.find(x => x.id === activeId);
             if (!item) return;
             const cur = item.deco_sticker || '✨';
             const idx = DECO_STICKERS.indexOf(cur);
-            item.deco_sticker = DECO_STICKERS[(idx + step + DECO_STICKERS.length) % DECO_STICKERS.length];
+            item.deco_sticker = DECO_STICKERS[(idx + 1) % DECO_STICKERS.length];
             const btn = document.getElementById('deco-sticker-btn');
             if (btn) btn.textContent = `${item.deco_sticker} 스티커`;
             const stampEl = document.getElementById('diary-stamp');
@@ -854,12 +782,12 @@
             }
         }
 
-        function cycleWashiTape(step = 1) {
+        function cycleWashiTape() {
             const item = ITEMS.find(x => x.id === activeId);
             if (!item) return;
             const curHex = (item.washi_tape_color || '#f4d394').toLowerCase();
             const idx = WASHI_PALETTE.findIndex(p => p.color.toLowerCase() === curHex);
-            const nextIdx = (idx + step + WASHI_PALETTE.length) % WASHI_PALETTE.length;
+            const nextIdx = (idx + 1) % WASHI_PALETTE.length;
             item.washi_tape_color = WASHI_PALETTE[nextIdx].color;
             applyJournalWashiTape(item.washi_tape_color);
         }
@@ -867,11 +795,6 @@
         function renderDiaryVolumes(item) {
             const list = document.getElementById('diary-volumes-list');
             list.innerHTML = '';
-            const addVolBtn = document.getElementById('diary-add-vol-btn');
-            if (addVolBtn && item) {
-                const nxtVol = (item.volumes ? item.volumes.length : 0) + 1;
-                addVolBtn.title = `새 ${nxtVol}권·파츠 일기 추가 (+ · 우클릭: 추가 후 바로 밑줄 입력 · Shift+좌클릭: 초판+북마크 추가)`;
-            }
             if (item.category === 'gacha' && (!item.volumes || item.volumes.length === 0)) {
                 const info = document.createElement('div');
                 info.className = 'p-2.5 rounded-xl bg-[#faf6f0] border border-[#e5dac9] text-xs font-bold text-[#5c4938] space-y-1';
@@ -884,22 +807,14 @@
                 row.className = 'p-2.5 rounded-xl bg-[#faf6f0] border border-[#e5dac9] flex items-center justify-between text-xs';
                 const isFirst = v.status === 'first';
                 const isBm = !!v.bookmarked;
-                const vStText = isFirst ? '초판특전' : '소장완료';
-                const vBmText = isBm ? '북마크 ON' : '북마크 OFF';
-                const vRVal = Number(v.rating || 0);
-                const vRText = vRVal > 0 ? `★${vRVal}` : '별점 없음';
-                const vDtText = (v.date || '').trim() || '날짜 없음';
                 row.innerHTML = `
                     <div class="flex items-center gap-2 min-w-0">
-                        <span onclick="if(event&&event.shiftKey){const it=ITEMS.find(x=>x.id===activeId);if(it&&it.volumes&&it.volumes[${idx}]){const tv=it.volumes[${idx}];tv.status='first';tv.bookmarked=true;tv.rating=5;renderDiaryVolumes(it);refreshDiaryAuthor(it);renderShelf();}}else{startEditVolQuote(${idx});}" oncontextmenu="event.preventDefault(); toggleVolBookmark(${idx});" title="${v.vol}권 요약: ${vStText} · ${vRText} · ${vBmText} · ${vDtText}&#10;좌클릭: ${v.vol}권 밑줄 문장 편집 · 우클릭: 북마크 토글 · Shift+좌클릭: 초판+북마크+★5" class="serif-font font-bold text-[#2c221e] shrink-0 cursor-pointer hover:text-[#c85a32]">${v.vol}권</span>
-                        <button onclick="if(event&&event.shiftKey){const it=ITEMS.find(x=>x.id===activeId);if(it&&it.volumes&&it.volumes[${idx}]){const ns=it.volumes[${idx}].status==='first'?'owned':'first';it.volumes.forEach(vv=>vv.status=ns);renderDiaryVolumes(it);}}else{toggleVolStatus(${idx});}" oncontextmenu="event.preventDefault(); toggleVolStatus(${idx}); toggleVolBookmark(${idx});" title="클릭: 초판/소장 전환 · 우클릭: 초판+북마크 동시 토글 · Shift+좌클릭: 전권 일괄 전환" class="px-1.5 py-0.5 rounded border ${isFirst ? 'bg-[#fff8f5] border-[#c85a32]/50 text-[#c85a32]' : 'bg-[#eef5f0] border-[#4a6b5d]/50 text-[#4a6b5d]'} text-[10px] font-bold shrink-0 cursor-pointer">${isFirst ? '🔖 초판특전' : '✓ 소장완료'}</button>
-                        <button onclick="if(event&&event.shiftKey){const it=ITEMS.find(x=>x.id===activeId);if(it&&it.volumes&&it.volumes[${idx}]){it.volumes[${idx}].status='first';it.volumes[${idx}].bookmarked=true;renderDiaryVolumes(it);}}else{toggleVolBookmark(${idx});}" oncontextmenu="event.preventDefault(); startEditVolQuote(${idx});" class="text-[12px] shrink-0 cursor-pointer hover:scale-110" title="북마크 토글 (우클릭: ${v.vol}권 밑줄 문장 편집 · Shift+좌클릭: 초판+북마크)">${isBm ? '🔖' : '🏷️'}</button>
-                        <span onclick="if(event&&event.shiftKey){const it=ITEMS.find(x=>x.id===activeId);if(it&&it.volumes&&it.volumes[${idx}]){const tv=it.volumes[${idx}];navigator.clipboard?.writeText(`${it.title} ${tv.vol}권: '${tv.quote||''}'`);tv.bookmarked=true;renderDiaryVolumes(it);refreshDiaryAuthor(it);renderShelf();}}else{startEditVolQuote(${idx});}" oncontextmenu="event.preventDefault(); const qText = this.textContent; navigator.clipboard?.writeText('${'${'}item.title.replace(/'/g, "\\'")${'}'} ${v.vol}권: ' + qText); this.title='✅ 복사됨: ' + qText;" class="serif-font text-[#5c4938] truncate cursor-pointer hover:text-[#c85a32]" title="클릭하여 ${v.vol}권 밑줄 문장 편집 · 우클릭: 밑줄 문장 복사 · Shift+좌클릭: 복사+북마크">${v.quote ? `"${v.quote}"` : '메모 없음'}</span>
+                        <span class="serif-font font-bold text-[#2c221e] shrink-0">${v.vol}권</span>
+                        <button onclick="toggleVolStatus(${idx})" class="px-1.5 py-0.5 rounded border ${isFirst ? 'bg-[#fff8f5] border-[#c85a32]/50 text-[#c85a32]' : 'bg-[#eef5f0] border-[#4a6b5d]/50 text-[#4a6b5d]'} text-[10px] font-bold shrink-0 cursor-pointer">${isFirst ? '🔖 초판특전' : '✓ 소장완료'}</button>
+                        <button onclick="toggleVolBookmark(${idx})" class="text-[12px] shrink-0 cursor-pointer hover:scale-110" title="북마크 토글">${isBm ? '🔖' : '🏷️'}</button>
+                        <span onclick="startEditVolQuote(${idx})" class="serif-font text-[#5c4938] truncate cursor-pointer hover:text-[#c85a32]" title="클릭하여 ${v.vol}권 밑줄 문장 편집">${v.quote ? `"${v.quote}"` : '메모 없음'}</span>
                     </div>
-                    <div class="flex items-center gap-1.5 shrink-0 ml-2">
-                        <button onclick="const d=new Date();const ds=`${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')}`;const it=ITEMS.find(x=>x.id===activeId);if(it&&it.volumes){if(event&&event.shiftKey){it.volumes.forEach(vv=>vv.date=ds);}else if(it.volumes[${idx}]){it.volumes[${idx}].date=ds;}renderDiaryVolumes(it);}" oncontextmenu="event.preventDefault();const it=ITEMS.find(x=>x.id===activeId);if(it&&it.volumes&&it.volumes[${idx}]){const vv=it.volumes[${idx}];navigator.clipboard?.writeText(`${it.title} ${vv.vol}권: '${vv.quote||it.memo}'`);this.textContent='✅ 복사됨';}" title="클릭하여 오늘 날짜로 읽은 날 스탬프 갱신 · 우클릭: 이 권 대사 복사 · Shift+좌클릭: 전권 오늘 날짜 일괄 스탬프" class="px-1.5 py-0.5 rounded bg-[#f4ece0] hover:bg-[#e8dccb] text-[#6b5a4e] text-[10px] font-bold cursor-pointer">${v.date ? '📅 ' + v.date : '📅 날짜'}</button>
-                        <button onclick="if(event&&event.shiftKey){const it=ITEMS.find(x=>x.id===activeId);if(it&&it.volumes&&it.volumes[${idx}]){it.volumes[${idx}].rating=5;it.volumes[${idx}].bookmarked=true;renderDiaryVolumes(it);}}else{cycleVolRating(${idx});}" class="text-[#c85a32] font-bold cursor-pointer hover:opacity-80" title="클릭하여 별점 변경 · Shift+좌클릭: ★5+북마크">${'★'.repeat(v.rating || 5)}</button>
-                    </div>
+                    <button onclick="cycleVolRating(${idx})" class="text-[#c85a32] font-bold shrink-0 ml-2 cursor-pointer hover:opacity-80" title="클릭하여 별점 변경">${'★'.repeat(v.rating || 5)}</button>
                 `;
                 list.appendChild(row);
             });
@@ -1017,34 +932,19 @@
             if (e.key === 'Escape') {
                 const jm = document.getElementById('journal-modal');
                 if (jm && !jm.classList.contains('hidden')) {
-                    if (e.shiftKey) {
-                        copyBookQuoteCard();
-                        closeJournalModal();
-                    } else if (document.activeElement && document.activeElement.id === 'diary-quote-input') {
-                        document.activeElement.blur();
-                    } else {
-                        closeJournalModal();
-                    }
+                    closeJournalModal();
                 } else {
                     const sb = document.getElementById('search-box');
-                    if (sb && (sb.value !== '' || e.shiftKey)) {
+                    if (sb && sb.value !== '') {
                         sb.value = '';
-                        if (e.shiftKey) switchCategory('all');
-                        else renderShelf();
+                        renderShelf();
                     }
                 }
-            } else if (e.key === '/' && !e.shiftKey && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
+            } else if (e.key === '/' && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
                 const jm = document.getElementById('journal-modal');
                 if (!jm || jm.classList.contains('hidden')) {
                     e.preventDefault();
                     document.getElementById('search-box')?.focus();
-                }
-            } else if (e.key === ' ' && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
-                const jm = document.getElementById('journal-modal');
-                if (!jm || jm.classList.contains('hidden')) {
-                    e.preventDefault();
-                    if (e.shiftKey && ITEMS.length) openJournalModal(ITEMS[Math.floor(Math.random() * ITEMS.length)].id);
-                    else { const first = document.querySelector('#collection-grid > div'); if (first && typeof first.onclick === 'function') first.onclick(); }
                 }
             } else if (['0', '1', '2', '3', '4', '5'].includes(e.key) && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
                 const jm = document.getElementById('journal-modal');
@@ -1057,1128 +957,32 @@
                         const tabMap = { '1': 'all', '2': 'manga', '3': 'gacha', '4': 'complete', '5': 'fav' };
                         setFilter(tabMap[e.key]);
                     }
-                } else if (['1', '2', '3', '4'].includes(e.key)) {
-                    const stampMap = { '1': '전권완결', '2': '초판특전', '3': '인생최애', '4': '위시리스트' };
-                    applyDiaryStamp(stampMap[e.key]);
                 }
             } else if ((e.key === 'r' || e.key === 'R') && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
                 const jm = document.getElementById('journal-modal');
                 if (!jm || jm.classList.contains('hidden')) {
-                    if (e.shiftKey) peekRandomItem();
-                    else pickRandomItem();
-                } else if (activeId != null) {
-                    cycleRarityTier(e.shiftKey ? -1 : 1);
-                }
-            } else if ((e.key === 's' || e.key === 'S') && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
-                const jm = document.getElementById('journal-modal');
-                if (jm && !jm.classList.contains('hidden') && activeId != null) {
-                    cycleDecoSticker(e.shiftKey ? -1 : 1);
+                    pickRandomItem();
                 }
             } else if ((e.key === 'm' || e.key === 'M') && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
                 const jm = document.getElementById('journal-modal');
                 if (!jm || jm.classList.contains('hidden')) {
-                    cycleAmbientSound(e.shiftKey ? -1 : 1);
-                } else if (activeId != null) {
-                    cycleReadingMood();
+                    cycleAmbientSound();
                 }
-            } else if ((e.key === 'x' || e.key === 'X') && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
-                const jm = document.getElementById('journal-modal');
-                if (jm && !jm.classList.contains('hidden') && activeId != null) {
-                    const item = ITEMS.find(x => x.id === activeId);
-                    if (item) {
-                        const icons = ['🏀', '🪄', '🐱', '🏐', '🌸', '🌙', '📖', '✨'];
-                        item.icon = icons[(icons.indexOf(item.icon) + 1) % icons.length];
-                        const iconEl = document.getElementById('diary-cover-icon');
-                        if (iconEl) iconEl.textContent = item.icon;
-                        renderShelf();
-                        const pageEl = document.getElementById('journal-page-indicator');
-                        if (pageEl) {
-                            const prevTxt = pageEl.textContent;
-                            pageEl.textContent = `🎨 아이콘: ${item.icon}`;
-                            setTimeout(() => { if (pageEl.textContent.includes('아이콘:')) pageEl.textContent = prevTxt; }, 1600);
-                        }
-                    }
-                }
-            } else if ((e.key === 'q' || e.key === 'Q' || e.key === 'y' || e.key === 'Y' || e.key === 'z' || e.key === 'Z') && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
-                const jm = document.getElementById('journal-modal');
-                if (jm && !jm.classList.contains('hidden') && activeId != null) {
-                    const item = ITEMS.find(x => x.id === activeId);
-                    if (item) {
-                        let msg = '';
-                        if (e.key === 'q' || e.key === 'Q') {
-                            const colors = ['#b91c1c', '#0369a1', '#db2777', '#c2410c', '#e11d48', '#7e22ce'];
-                            item.color = colors[(colors.indexOf(item.color) + 1) % colors.length];
-                            const cbox = document.getElementById('diary-cover-box');
-                            if (cbox) cbox.style.background = item.color;
-                            renderShelf();
-                            msg = '🎨 표지 색상 변경됨';
-                        } else if (e.key === 'y' || e.key === 'Y') {
-                            const cur = item.reread_count || 1;
-                            item.reread_count = e.shiftKey ? Math.max(1, cur - 1) : cur + 1;
-                            msg = `🔁 ${item.reread_count}회독`;
-                        } else {
-                            const states = ['📦 소장중', '🔖 예약중', '🚚 배송중', '🖼️ 전시중'];
-                            item.possession_state = states[(states.indexOf(item.possession_state || states[0]) + 1) % states.length];
-                            msg = `📌 상태: ${item.possession_state}`;
-                        }
-                        const pageEl = document.getElementById('journal-page-indicator');
-                        if (pageEl) {
-                            const prevTxt = pageEl.textContent;
-                            pageEl.textContent = msg;
-                            setTimeout(() => { if (pageEl.textContent === msg) pageEl.textContent = prevTxt; }, 1600);
-                        }
-                    }
-                }
-            } else if ((e.key === 'u' || e.key === 'U' || e.key === 'j' || e.key === 'J') && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
-                const jm = document.getElementById('journal-modal');
-                if (jm && !jm.classList.contains('hidden') && activeId != null) {
-                    const item = ITEMS.find(x => x.id === activeId);
-                    if (item) {
-                        let msg = '';
-                        if (e.key === 'u' || e.key === 'U') {
-                            const weathers = ['☀️ 맑은 오후', '🌧️ 비 오는 밤', '❄️ 눈 오는 겨울', '🌙 새벽 감성'];
-                            item.reading_weather = weathers[(weathers.indexOf(item.reading_weather || weathers[0]) + 1) % weathers.length];
-                            msg = `🌤️ 날씨: ${item.reading_weather}`;
-                        } else {
-                            const spots = ['🛏️ 이불 속', '☕ 카페 창가', '📚 동네 도서관', '🛋️ 거실 소파'];
-                            item.reading_spot = spots[(spots.indexOf(item.reading_spot || spots[0]) + 1) % spots.length];
-                            msg = `📍 장소: ${item.reading_spot}`;
-                        }
-                        const pageEl = document.getElementById('journal-page-indicator');
-                        if (pageEl) {
-                            const prevTxt = pageEl.textContent;
-                            pageEl.textContent = msg;
-                            setTimeout(() => { if (pageEl.textContent === msg) pageEl.textContent = prevTxt; }, 1600);
-                        }
-                    }
-                }
-            } else if ((e.key === 'd' || e.key === 'D' || e.key === 'k' || e.key === 'K') && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
-                const jm = document.getElementById('journal-modal');
-                if (jm && !jm.classList.contains('hidden') && activeId != null) {
-                    const item = ITEMS.find(x => x.id === activeId);
-                    if (item) {
-                        let msg = '';
-                        if (e.key === 'd' || e.key === 'D') {
-                            const cur = item.duplicate_count || 1;
-                            item.duplicate_count = e.shiftKey ? Math.max(1, cur - 1) : cur + 1;
-                            msg = `👯 복수 소장: ×${item.duplicate_count}`;
-                        } else {
-                            const chars = ['🌟 최애 캐릭터', '🏀 강백호·서태웅', '🪄 프리렌·힘멜', '🎀 체리·케로'];
-                            item.favorite_character = chars[(chars.indexOf(item.favorite_character || chars[0]) + 1) % chars.length];
-                            msg = `🌟 최애캐: ${item.favorite_character}`;
-                        }
-                        const pageEl = document.getElementById('journal-page-indicator');
-                        if (pageEl) {
-                            const prevTxt = pageEl.textContent;
-                            pageEl.textContent = msg;
-                            setTimeout(() => { if (pageEl.textContent === msg) pageEl.textContent = prevTxt; }, 1600);
-                        }
-                    }
-                }
-            } else if ((e.key === 'b' || e.key === 'B' || e.key === 'n' || e.key === 'N') && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
-                const jm = document.getElementById('journal-modal');
-                if (jm && !jm.classList.contains('hidden') && activeId != null) {
-                    if (e.key === 'b' || e.key === 'B') {
-                        cycleStorageLocation();
-                    } else {
-                        const item = ITEMS.find(x => x.id === activeId);
-                        if (item) {
-                            const nibs = [10, 12, 14];
-                            const cur = item.pen_nib_size || 10;
-                            item.pen_nib_size = nibs[(nibs.indexOf(cur) + 1) % nibs.length];
-                            const memoEl = document.getElementById('diary-memo');
-                            if (memoEl) memoEl.style.fontSize = item.pen_nib_size + 'px';
-                        }
-                    }
-                }
-            } else if ((e.key === 'f' || e.key === 'F' || e.key === 'a' || e.key === 'A') && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
-                const jm = document.getElementById('journal-modal');
-                if (jm && !jm.classList.contains('hidden') && activeId != null) {
-                    if (e.key === 'a' || e.key === 'A') {
-                        cycleAcquisitionSource();
-                    } else {
-                        const item = ITEMS.find(x => x.id === activeId);
-                        if (item) {
-                            const finishes = ['📔 무광 매트', '✨ 유광 코팅', '🌈 홀로그램', '📕 패브릭 양장'];
-                            item.cover_finish = finishes[(finishes.indexOf(item.cover_finish || finishes[0]) + 1) % finishes.length];
-                            const pageEl = document.getElementById('journal-page-indicator');
-                            if (pageEl) {
-                                const prevTxt = pageEl.textContent;
-                                pageEl.textContent = `✨ 표지 마감: ${item.cover_finish}`;
-                                setTimeout(() => { if (pageEl.textContent.includes('표지 마감:')) pageEl.textContent = prevTxt; }, 1600);
-                            }
-                        }
-                    }
-                }
-            } else if ((e.key === 'g' || e.key === 'G' || e.key === 't' || e.key === 'T') && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
-                const jm = document.getElementById('journal-modal');
-                if (jm && !jm.classList.contains('hidden') && activeId != null) {
-                    const item = ITEMS.find(x => x.id === activeId);
-                    if (item) {
-                        if (e.key === 'g' || e.key === 'G') {
-                            const grades = ['✨ S급(최상)', '🌟 A급(양호)', '📦 B급(사용감)', '🖼️ 개봉전시'];
-                            item.condition_grade = grades[(grades.indexOf(item.condition_grade || grades[0]) + 1) % grades.length];
-                        } else {
-                            const tags = ['#소장각', '#인생만화', '#재독필수', '#초판수집'];
-                            item.custom_tag = tags[(tags.indexOf(item.custom_tag || tags[0]) + 1) % tags.length];
-                        }
-                        const pageEl = document.getElementById('journal-page-indicator');
-                        if (pageEl) {
-                            const prevTxt = pageEl.textContent;
-                            pageEl.textContent = (e.key === 'g' || e.key === 'G') ? `✨ 등급: ${item.condition_grade}` : `🏷️ 태그: ${item.custom_tag}`;
-                            setTimeout(() => { if (pageEl.textContent.includes('등급:') || pageEl.textContent.includes('태그:')) pageEl.textContent = prevTxt; }, 1600);
-                        }
-                    }
-                }
-            } else if ((e.key === 'o' || e.key === 'O') && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
-                const jm = document.getElementById('journal-modal');
-                if (jm && !jm.classList.contains('hidden') && activeId != null) {
-                    const item = ITEMS.find(x => x.id === activeId);
-                    if (item) {
-                        const obis = ['★ 전20권 완결 박스세트', '★ 초판 투명 북마크 동봉', '★ 소장각 100% 인생작', '★ 2026 올해의 서재 픽'];
-                        const idx = obis.indexOf(item.obi);
-                        item.obi = obis[(idx + 1) % obis.length];
-                        const obiEl = document.getElementById('diary-cover-obi');
-                        if (obiEl) obiEl.textContent = item.obi;
-                        renderShelf();
-                    }
-                }
-            } else if ((e.key === 'ArrowLeft' || e.key === 'ArrowRight' || e.key === 'Home' || e.key === 'End' || e.key === 'PageUp' || e.key === 'PageDown' || e.key === ' ') && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
+            } else if ((e.key === 'ArrowLeft' || e.key === 'ArrowRight' || e.key === 'Home' || e.key === 'End') && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
                 const jm = document.getElementById('journal-modal');
                 if (jm && !jm.classList.contains('hidden')) {
-                    if (e.key === ' ') e.preventDefault();
                     if (e.key === 'Home' && ITEMS.length > 0) {
                         openJournalModal(ITEMS[0].id);
                     } else if (e.key === 'End' && ITEMS.length > 0) {
                         openJournalModal(ITEMS[ITEMS.length - 1].id);
-                    } else if (e.key === 'PageUp' && e.shiftKey && ITEMS.length > 0) {
-                        openJournalModal(ITEMS[0].id);
-                    } else if (e.key === 'PageDown' && e.shiftKey && ITEMS.length > 0) {
-                        openJournalModal(ITEMS[ITEMS.length - 1].id);
-                    } else if (e.key === 'PageUp' || (e.key === ' ' && e.shiftKey)) {
-                        navigateJournalModal(-1);
-                    } else if (e.key === 'PageDown' || e.key === ' ') {
-                        navigateJournalModal(1);
-                    } else if (e.shiftKey && ITEMS.length > 0) {
-                        openJournalModal(e.key === 'ArrowLeft' ? ITEMS[0].id : ITEMS[ITEMS.length - 1].id);
                     } else {
                         navigateJournalModal(e.key === 'ArrowLeft' ? -1 : 1);
                     }
                 }
-            } else if ((e.key === 'c' || e.key === 'C') && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
-                const jm = document.getElementById('journal-modal');
-                if (jm && !jm.classList.contains('hidden') && activeId != null) {
-                    const item = ITEMS.find(x => x.id === activeId);
-                    if (item) {
-                        const cardText = `[📔 주희의 다꾸 서재 — 독서 감상 카드]\n📖 작품: ${item.title} (${item.author})\n🖋️ 밑줄: "${item.memo}"`;
-                        navigator.clipboard?.writeText(cardText).catch(() => {});
-                        const pageEl = document.getElementById('journal-page-indicator');
-                        if (pageEl) {
-                            const prevTxt = pageEl.textContent;
-                            pageEl.textContent = `💌 「${item.title}」 감상 카드 복사됨!`;
-                            setTimeout(() => { if (pageEl.textContent.includes('복사됨')) pageEl.textContent = prevTxt; }, 1600);
-                        }
-                    }
-                }
-            } else if ((e.key === 'w' || e.key === 'W') && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
-                const jm = document.getElementById('journal-modal');
-                if (jm && !jm.classList.contains('hidden') && activeId != null) {
-                    cycleWashiTape(e.shiftKey ? -1 : 1);
-                } else {
-                    openWebScraperModal();
-                    if (e.shiftKey && ITEMS.length) openJournalModal(ITEMS[0].id);
-                }
-            } else if ((e.key === 'p' || e.key === 'P') && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
-                const jm = document.getElementById('journal-modal');
-                if (jm && !jm.classList.contains('hidden') && activeId != null) {
-                    cyclePaperPattern();
-                } else {
-                    openCameraModal();
-                    if (e.shiftKey && ITEMS.length) openJournalModal(ITEMS[0].id);
-                }
-            } else if ((e.key === 'v' || e.key === 'V' || e.key === 'l' || e.key === 'L') && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
+            } else if ((e.key === 'h' || e.key === '?') && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
                 const jm = document.getElementById('journal-modal');
                 if (!jm || jm.classList.contains('hidden')) {
-                    if (e.key === 'v' || e.key === 'V') {
-                        sortMode = (e.shiftKey || sortMode === 3) ? 0 : 3;
-                        renderShelf();
-                    } else if (ITEMS.length > 0) {
-                        const qIt = ITEMS[quoteIdx % ITEMS.length];
-                        if (e.shiftKey) { const sb = document.getElementById('search-box'); if (sb) { sb.value = qIt.title; renderShelf(); } }
-                        else { openJournalModal(qIt.id); }
-                    }
-                }
-            } else if ((e.key === 'b' || e.key === 'B' || ((e.key === 'f' || e.key === 'F') && !e.ctrlKey && !e.metaKey)) && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
-                const jm = document.getElementById('journal-modal');
-                if (!jm || jm.classList.contains('hidden')) {
-                    if (e.key === 'b' || e.key === 'B') {
-                        if (e.shiftKey) copyLibrarySummaryReport();
-                        else instantBackupArchive();
-                    } else {
-                        switchCategory('fav');
-                        if (e.shiftKey) { const favIt = ITEMS.find(x => x.stamp === '인생최애'); if (favIt) openJournalModal(favIt.id); }
-                    }
-                }
-            } else if ((!document.getElementById('journal-modal') || document.getElementById('journal-modal').classList.contains('hidden')) && ['e', 'E', 'g', 'G', 'd', 'D'].includes(e.key) && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
-                const lk = e.key.toLowerCase();
-                if (lk === 'e') {
-                    switchCategory('manga');
-                    if (e.shiftKey) { const mIt = ITEMS.find(x => x.category === 'manga'); if (mIt) openJournalModal(mIt.id); }
-                } else if (lk === 'g') {
-                    switchCategory('gacha');
-                    if (e.shiftKey) { const gIt = ITEMS.find(x => x.category === 'gacha'); if (gIt) openJournalModal(gIt.id); }
-                } else {
-                    switchCategory('complete');
-                    if (e.shiftKey) { const cIt = ITEMS.find(x => (x.volumes || []).length >= 2); if (cIt) openJournalModal(cIt.id); }
-                }
-            } else if ((!document.getElementById('journal-modal') || document.getElementById('journal-modal').classList.contains('hidden')) && ['a', 'A', 'u', 'U'].includes(e.key) && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
-                const lk = e.key.toLowerCase();
-                if (lk === 'a') {
-                    switchCategory('all');
-                    if (e.shiftKey && ITEMS.length > 0) openJournalModal(ITEMS[0].id);
-                } else {
-                    switchCategory('all');
-                    const firstIt = ITEMS.find(x => (x.volumes || []).some(v => v.isFirst)) || ITEMS[0];
-                    if (e.shiftKey && firstIt) openJournalModal(firstIt.id);
-                    else showToast('🔖 초판 스탬프 보유 작품만 모아봅니다.');
-                }
-            } else if ((!document.getElementById('journal-modal') || document.getElementById('journal-modal').classList.contains('hidden')) && ['o', 'O', 'x', 'X'].includes(e.key) && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
-                const lk = e.key.toLowerCase();
-                if (lk === 'o') {
-                    if (e.shiftKey && ITEMS.length > 0) {
-                        const rIt = ITEMS[Math.floor(Math.random() * ITEMS.length)];
-                        openJournalModal(rIt.id);
-                    } else if (ITEMS.length > 0) {
-                        openJournalModal(ITEMS[0].id);
-                    }
-                } else {
-                    const si = document.getElementById('search-input');
-                    if (si) si.value = '';
-                    switchCategory('all');
-                    showToast(e.shiftKey ? '🧹 스튜디오 전체 초기화 완료!' : '🧹 검색/필터 초기화 완료!');
-                }
-            } else if (document.getElementById('add-modal') && !document.getElementById('add-modal').classList.contains('hidden') && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
-                const lk = e.key.toLowerCase();
-                if (lk === 'f') showToast(e.shiftKey ? '📝 샘플 일기 자동 채움 및 등록!' : '📝 샘플 일기 자동 채움!');
-                else if (lk === 'x') showToast(e.shiftKey ? '🧹 입력 초기화 및 모달 닫기' : '🧹 입력란 전체 비우기');
-                else if (lk === 's') showToast(e.shiftKey ? '✨ 샘플 폴백 즉시 일기 등록!' : '📖 새 일기 등록 제출!');
-                else if (lk === 'e' || lk === 'g') showToast(lk === 'e' ? '📚 카테고리: 이북·만화 선택' : '🔮 카테고리: 가챠·굿즈 선택');
-                else if (lk === 't') showToast('✏️ 제목 입력란 포커스 이동');
-                else if (lk === 'a') showToast('✍️ 작가/브랜드 입력란 포커스 이동');
-                else if (lk === 'q') showToast('💬 한줄 밑줄 입력란 포커스 이동');
-                else if (e.key === ' ') showToast(e.shiftKey ? '🎨 이전 표지 컬러 선택' : '🎨 다음 표지 컬러 선택');
-                else if (lk === 'r') showToast(e.shiftKey ? '🎲 랜덤 표지 컬러 적용 및 즉시 등록!' : '🎲 랜덤 표지 컬러 선택!');
-                else if (e.key === '0') showToast(e.shiftKey ? '🧹 모달 기본값 초기화 및 닫기' : '🧹 모달 기본값 초기화');
-                else if (['6', '7', '8', '9'].includes(e.key)) {
-                    if (e.key === '6') showToast('🎨 6번 바이올렛 표지 컬러 선택');
-                    else if (e.key === '7' || e.key === '8') showToast(e.key === '7' ? '📚 카테고리: 이북·만화 선택' : '🔮 카테고리: 가챠·굿즈 선택');
-                    else showToast(e.shiftKey ? '📝 샘플 일기 자동 채움 및 등록!' : '📝 샘플 일기 자동 채움!');
-                }
-                else if (e.key === 'Home' || e.key === 'End') showToast(e.key === 'Home' ? '🎨 첫 번째 표지 컬러 선택' : '🎨 마지막 표지 컬러 선택');
-                else if (e.key === 'Backspace') showToast(e.shiftKey ? '🧹 입력 초기화 및 모달 닫기' : '🧹 입력란 전체 비우기');
-                else if (lk === 'h' || e.key === '?') showToast('⌨️ 새 일기 단축키: [1~5/←→/Space] 컬러 · [Home/End] 첫·끝 · [R] 랜덤 · [C/E/G] 분류 · [T/A/Q] 칸이동 · [F] 샘플 · [S/Enter] 등록 · [0/Bksp/X] 초기화 · [ESC] 닫기');
-                else if (e.key === 'Enter') showToast('📖 새 일기 등록 제출!');
-                else if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') showToast(e.key === 'ArrowLeft' ? '🎨 이전 표지 컬러 선택' : '🎨 다음 표지 컬러 선택');
-            } else if (e.key === 'F1') {
-                e.preventDefault();
-                const am = document.getElementById('add-modal');
-                const jm = document.getElementById('journal-modal');
-                if (am && !am.classList.contains('hidden')) {
-                    showToast('⌨️ 새 일기 단축키: [1~6/←→/Space] 컬러 · [7/8] 분류 · [9] 샘플 · [T/A/Q] 칸이동 · [S/Enter] 등록 · [ESC] 닫기');
-                } else if (jm && !jm.classList.contains('hidden')) {
-                    showToast('⌨️ 모달 단축키: [←/→/↑/↓] 넘김 · [1~4] 인장 · [5~8] 잉크 · [9] 형광펜 · [0] 원문복원 · [Enter] 편집 · [ESC/Bksp] 닫기');
-                } else {
-                    showToast('⌨️ 단축키: [0] 초기화 · [1~5] 탭 · [6~9] 정렬 · [Ctrl+K//] 검색 · [Ctrl+S] 백업 · [Ctrl+N] 새일기 · [H/F1] 도움말');
-                }
-            } else if ((e.ctrlKey || e.metaKey) && (e.key === 'k' || e.key === 'K')) {
-                e.preventDefault();
-                const si = document.getElementById('search-input');
-                if (si) { si.focus(); si.select(); }
-            } else if ((e.ctrlKey || e.metaKey) && (e.key === 's' || e.key === 'S')) {
-                e.preventDefault();
-                const jm = document.getElementById('journal-modal');
-                if (jm && !jm.classList.contains('hidden')) {
-                    saveDiaryQuote();
-                } else {
-                    instantBackupArchive();
-                }
-            } else if ((e.ctrlKey || e.metaKey) && (e.key === 'n' || e.key === 'N')) {
-                e.preventDefault();
-                openAddModal();
-            } else if ((e.ctrlKey || e.metaKey) && (e.key === 'r' || e.key === 'R')) {
-                e.preventDefault();
-                const jm = document.getElementById('journal-modal');
-                if (jm && !jm.classList.contains('hidden')) {
-                    showToast(e.shiftKey ? '📖 회독 수 감소 (-1회독)' : '📖 회독 수 증가 (+1회독)');
-                } else if (ITEMS.length > 0) {
-                    const rIt = ITEMS[Math.floor(Math.random() * ITEMS.length)];
-                    openJournalModal(rIt.id);
-                }
-            } else if ((e.ctrlKey || e.metaKey) && (e.key === 'b' || e.key === 'B')) {
-                e.preventDefault();
-                if (e.shiftKey) copyLibrarySummaryReport();
-                else instantBackupArchive();
-            } else if ((e.ctrlKey || e.metaKey) && (e.key === 'l' || e.key === 'L')) {
-                e.preventDefault();
-                const jm = document.getElementById('journal-modal');
-                if (jm && !jm.classList.contains('hidden')) {
-                    showToast(e.shiftKey ? '📄 속지 패턴 변경!' : '🖍️ 형광펜 하이라이트 토글');
-                } else if (ITEMS.length > 0) {
-                    openJournalModal(ITEMS[0].id);
-                }
-            } else if ((e.ctrlKey || e.metaKey) && (e.key === 'd' || e.key === 'D')) {
-                e.preventDefault();
-                const jm = document.getElementById('journal-modal');
-                if (jm && !jm.classList.contains('hidden')) {
-                    showToast(e.shiftKey ? '👯 복수 소장 수량 감소 (-1)' : '👯 복수 소장 수량 증가 (+1)');
-                } else {
-                    switchCategory('complete');
-                }
-            } else if ((e.ctrlKey || e.metaKey) && (e.key === 'i' || e.key === 'I')) {
-                e.preventDefault();
-                const jm = document.getElementById('journal-modal');
-                if (jm && !jm.classList.contains('hidden')) {
-                    const item = ITEMS.find(x => x.id === activeId);
-                    if (item) {
-                        const inks = ['#2c221e', '#7f1d1d', '#78350f', '#14532d'];
-                        const idx = inks.indexOf(item.ink_color || '#2c221e');
-                        setDiaryInk(inks[(idx + (e.shiftKey ? -1 : 1) + inks.length) % inks.length]);
-                    }
-                } else {
-                    showToast(e.shiftKey ? '💾 로컬 JSON 서재 백업 저장 완료!' : '📊 서재 인포그래픽 브리핑!');
-                }
-            } else if ((e.ctrlKey || e.metaKey) && (e.key === 'g' || e.key === 'G')) {
-                e.preventDefault();
-                const jm = document.getElementById('journal-modal');
-                if (jm && !jm.classList.contains('hidden')) {
-                    showToast('✨ 상태 등급 순환 완료!');
-                } else {
-                    switchCategory('gacha');
-                }
-            } else if ((e.ctrlKey || e.metaKey) && (e.key === 'e' || e.key === 'E')) {
-                e.preventDefault();
-                const jm = document.getElementById('journal-modal');
-                if (jm && !jm.classList.contains('hidden')) {
-                    const qi = document.getElementById('diary-quote-input');
-                    if (qi) { qi.focus(); qi.select(); }
-                } else {
-                    switchCategory('manga');
-                }
-            } else if ((e.ctrlKey || e.metaKey) && (e.key === 'w' || e.key === 'W')) {
-                const jm = document.getElementById('journal-modal');
-                if (jm && !jm.classList.contains('hidden')) {
-                    e.preventDefault();
-                    if (e.shiftKey) showToast('📋 독서 카드 복사 및 일기장 닫기');
-                    closeJournalModal();
-                }
-            } else if ((e.ctrlKey || e.metaKey) && e.key === '0') {
-                e.preventDefault();
-                const jm = document.getElementById('journal-modal');
-                if (jm && !jm.classList.contains('hidden')) {
-                    const item = ITEMS.find(x => x.id === activeId);
-                    const qi = document.getElementById('diary-quote-input');
-                    if (item && qi) qi.value = item.quote || '';
-                    showToast(e.shiftKey ? '🧹 일기장 입력 복원 및 닫기' : '🧹 밑줄 입력란 원문 복원 완료!');
-                    if (e.shiftKey) closeJournalModal();
-                } else {
-                    const si = document.getElementById('search-input');
-                    if (si) si.value = '';
-                    switchCategory('all');
-                    showToast(e.shiftKey ? '🧹 스튜디오 전체 초기화 완료!' : '🧹 검색/필터 초기화 완료!');
-                }
-            } else if ((e.ctrlKey || e.metaKey) && (e.key === 't' || e.key === 'T')) {
-                e.preventDefault();
-                const jm = document.getElementById('journal-modal');
-                if (jm && !jm.classList.contains('hidden')) {
-                    showToast('🏷️ 스마트 키워드 태그 순환!');
-                } else {
-                    showToast(e.shiftKey ? '🎨 이전 속지 테마 적용' : '🎨 다음 속지 테마 적용');
-                }
-            } else if ((e.ctrlKey || e.metaKey) && (e.key === 'p' || e.key === 'P')) {
-                e.preventDefault();
-                const jm = document.getElementById('journal-modal');
-                if (jm && !jm.classList.contains('hidden')) {
-                    showToast(e.shiftKey ? '📄 이전 속지 패턴 적용' : '📄 다음 속지 패턴 적용');
-                } else {
-                    if (typeof openCameraModal === 'function') openCameraModal();
-                    else showToast('📸 폴라로이드 실물 촬영 스튜디오 실행!');
-                }
-            } else if ((e.ctrlKey || e.metaKey) && (e.key === 'm' || e.key === 'M')) {
-                e.preventDefault();
-                const jm = document.getElementById('journal-modal');
-                if (jm && !jm.classList.contains('hidden')) {
-                    showToast(e.shiftKey ? '🎭 이전 독서 무드 스탬프' : '🎭 다음 독서 무드 스탬프');
-                } else {
-                    if (typeof toggleSound === 'function') toggleSound();
-                    else showToast('🎧 앰비언트 사운드 전환');
-                }
-            } else if ((e.ctrlKey || e.metaKey) && (e.key === 'u' || e.key === 'U')) {
-                e.preventDefault();
-                const jm = document.getElementById('journal-modal');
-                if (jm && !jm.classList.contains('hidden')) {
-                    showToast(e.shiftKey ? '🌤️ 이전 독서 날씨 스탬프' : '🌤️ 다음 독서 날씨 스탬프');
-                } else {
-                    switchCategory('firsts');
-                    showToast('🏷️ 초판 스탬프 작품 필터');
-                }
-            } else if ((e.ctrlKey || e.metaKey) && (e.key === 'j' || e.key === 'J')) {
-                e.preventDefault();
-                const jm = document.getElementById('journal-modal');
-                if (jm && !jm.classList.contains('hidden')) {
-                    showToast(e.shiftKey ? '📍 이전 독서 장소 스탬프' : '📍 다음 독서 장소 스탬프');
-                } else if (ITEMS.length > 0) {
-                    const target = e.shiftKey ? ITEMS[0] : ITEMS[ITEMS.length - 1];
-                    if (target) openJournalModal(target.id);
-                }
-            } else if ((e.ctrlKey || e.metaKey) && (e.key === 'o' || e.key === 'O')) {
-                e.preventDefault();
-                const jm = document.getElementById('journal-modal');
-                if (jm && !jm.classList.contains('hidden')) {
-                    showToast(e.shiftKey ? '🎀 이전 띠지 프리셋 적용' : '🎀 다음 띠지 프리셋 적용');
-                } else if (ITEMS.length > 0) {
-                    const target = e.shiftKey ? ITEMS[Math.floor(Math.random() * ITEMS.length)] : ITEMS[0];
-                    if (target) openJournalModal(target.id);
-                }
-            } else if ((e.ctrlKey || e.metaKey) && (e.key === 'y' || e.key === 'Y')) {
-                e.preventDefault();
-                const jm = document.getElementById('journal-modal');
-                if (jm && !jm.classList.contains('hidden')) {
-                    showToast(e.shiftKey ? '📖 회독 카운트 -1' : '📖 회독 카운트 +1');
-                } else {
-                    if (typeof toggleSound === 'function') toggleSound();
-                    else showToast('🎧 앰비언트 사운드 전환');
-                }
-            } else if ((e.ctrlKey || e.metaKey) && ['1', '2', '3', '4', '5'].includes(e.key)) {
-                e.preventDefault();
-                const jm = document.getElementById('journal-modal');
-                if (jm && !jm.classList.contains('hidden')) {
-                    if (e.key === '5') {
-                        setDiaryInk('#2c221e');
-                        showToast('🖋️ 에스프레소 만년필 잉크 적용');
-                    } else {
-                        const stamps = { '1': '전권완결', '2': '초판특전', '3': '인생최애', '4': '위시리스트' };
-                        showToast('💮 인장 스탬프: ' + stamps[e.key]);
-                    }
-                    if (e.shiftKey) closeJournalModal();
-                } else {
-                    const tabs = { '1': 'all', '2': 'manga', '3': 'gacha', '4': 'completed', '5': 'favorites' };
-                    switchCategory(tabs[e.key]);
-                    showToast('🔖 빠른 탭 전환 (' + e.key + ')');
-                }
-            } else if ((e.ctrlKey || e.metaKey) && ['6', '7', '8', '9'].includes(e.key)) {
-                e.preventDefault();
-                const jm = document.getElementById('journal-modal');
-                if (jm && !jm.classList.contains('hidden')) {
-                    if (e.key === '9') {
-                        showToast(e.shiftKey ? '🖍️ 형광펜 토글 · 독서 카드 복사 및 닫기' : '🖍️ 형광펜 하이라이트 토글');
-                    } else {
-                        const inks = { '6': '#7f1d1d', '7': '#78350f', '8': '#14532d' };
-                        setDiaryInk(inks[e.key]);
-                        showToast('🖋️ 만년필 잉크 전환 (' + e.key + ')');
-                    }
-                    if (e.shiftKey) closeJournalModal();
-                } else {
-                    const sorts = { '6': '기본순', '7': '다독순', '8': '최신순', '9': '자산가치순' };
-                    showToast('↕️ 정렬 전환: ' + sorts[e.key]);
-                }
-            } else if ((e.ctrlKey || e.metaKey) && (e.key === 'h' || e.key === 'H')) {
-                e.preventDefault();
-                showToast('⌨️ 전역 단축키: [Ctrl/Cmd+1~5] 탭·인장 · [Ctrl/Cmd+H] 도움말 · [Ctrl/Cmd+S] 저장 · [Ctrl/Cmd+W] 닫기');
-            } else if ((e.ctrlKey || e.metaKey) && ['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown'].includes(e.key)) {
-                e.preventDefault();
-                const jm = document.getElementById('journal-modal');
-                const isPrev = (e.key === 'ArrowUp' || e.key === 'PageUp');
-                if (jm && !jm.classList.contains('hidden')) {
-                    const idx = ITEMS.findIndex(x => x.id === activeId);
-                    if (idx !== -1 && ITEMS.length > 0) {
-                        const nextIdx = e.shiftKey ? (isPrev ? 0 : ITEMS.length - 1) : (idx + (isPrev ? -1 : 1) + ITEMS.length) % ITEMS.length;
-                        openJournalModal(ITEMS[nextIdx].id);
-                    }
-                } else if (e.key === 'PageUp' || e.key === 'PageDown') {
-                    const order = ['all', 'manga', 'gacha', 'completed', 'favorites'];
-                    const cur = order.indexOf(currentCategory || 'all');
-                    const nxt = order[((cur === -1 ? 0 : cur) + (isPrev ? -1 : 1) + order.length) % order.length];
-                    switchCategory(nxt);
-                } else {
-                    showToast(e.shiftKey ? '🎧 앰비언트 사운드 순환' : (isPrev ? '↕️ 이전 정렬' : '↕️ 다음 정렬'));
-                }
-            } else if ((e.ctrlKey || e.metaKey) && e.key === ' ') {
-                e.preventDefault();
-                const jm = document.getElementById('journal-modal');
-                if (jm && !jm.classList.contains('hidden')) {
-                    const dir = e.shiftKey ? -1 : 1;
-                    const idx = ITEMS.findIndex(x => x.id === activeId);
-                    if (idx !== -1 && ITEMS.length > 0) openJournalModal(ITEMS[(idx + dir + ITEMS.length) % ITEMS.length].id);
-                } else if (ITEMS.length > 0) {
-                    const target = e.shiftKey ? ITEMS[Math.floor(Math.random() * ITEMS.length)] : ITEMS[0];
-                    if (target) openJournalModal(target.id);
-                }
-            } else if ((e.ctrlKey || e.metaKey) && e.key === 'Backspace') {
-                e.preventDefault();
-                const jm = document.getElementById('journal-modal');
-                if (jm && !jm.classList.contains('hidden')) {
-                    if (e.shiftKey) showToast('📋 독서 카드 복사 및 일기장 닫기');
-                    closeJournalModal();
-                } else {
-                    const si = document.getElementById('search-input');
-                    if (si) si.value = '';
-                    switchCategory('all');
-                    showToast(e.shiftKey ? '🧹 스튜디오 전체 초기화 완료!' : '🧹 검색/필터 초기화 완료!');
-                }
-            } else if ((e.ctrlKey || e.metaKey) && (e.key === '/' || e.key === '?')) {
-                e.preventDefault();
-                const jm = document.getElementById('journal-modal');
-                if (e.shiftKey) {
-                    showToast('⌨️ 전역 단축키: [Ctrl/Cmd+/] 포커스 · [Ctrl/Cmd+Enter] 열기·저장 · [Ctrl/Cmd+H] 도움말');
-                } else if (jm && !jm.classList.contains('hidden')) {
-                    const qi = document.getElementById('diary-quote-input');
-                    if (qi) { qi.focus(); qi.select(); }
-                } else {
-                    const si = document.getElementById('search-input');
-                    if (si) { si.focus(); si.select(); }
-                }
-            } else if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
-                e.preventDefault();
-                const jm = document.getElementById('journal-modal');
-                if (jm && !jm.classList.contains('hidden')) {
-                    if (e.shiftKey) showToast('🖍️ 형광펜 하이라이트 토글');
-                    else showToast('🖋️ 밑줄 문장 저장 완료!');
-                } else if (e.shiftKey) {
-                    if (typeof openAddModal === 'function') openAddModal();
-                } else if (ITEMS.length > 0) {
-                    openJournalModal(ITEMS[0].id);
-                }
-            } else if ((e.ctrlKey || e.metaKey) && e.key === 'Tab') {
-                e.preventDefault();
-                const jm = document.getElementById('journal-modal');
-                const dir = e.shiftKey ? -1 : 1;
-                if (jm && !jm.classList.contains('hidden')) {
-                    const idx = ITEMS.findIndex(x => x.id === activeId);
-                    if (idx !== -1 && ITEMS.length > 0) openJournalModal(ITEMS[(idx + dir + ITEMS.length) % ITEMS.length].id);
-                } else {
-                    const order = ['all', 'manga', 'gacha', 'completed', 'favorites'];
-                    const cur = order.indexOf(currentCategory || 'all');
-                    const nxt = order[((cur === -1 ? 0 : cur) + dir + order.length) % order.length];
-                    switchCategory(nxt);
-                }
-            } else if ((e.ctrlKey || e.metaKey) && e.key === 'Escape') {
-                e.preventDefault();
-                const jm = document.getElementById('journal-modal');
-                if (jm && !jm.classList.contains('hidden')) {
-                    if (e.shiftKey) showToast('📋 독서 카드 복사 및 일기장 닫기');
-                    closeJournalModal();
-                } else {
-                    const si = document.getElementById('search-input');
-                    if (si) si.value = '';
-                    switchCategory('all');
-                    showToast('🧹 스튜디오 전체 초기화 완료!');
-                }
-            } else if (document.getElementById('journal-modal') && !document.getElementById('journal-modal').classList.contains('hidden') && (e.key === '/' || e.key === 'Tab' || e.key === 'Enter' || e.key === 'Backspace' || e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === '0' || e.key === '9' || ['5', '6', '7', '8'].includes(e.key)) && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
-                if (e.key === 'Tab') {
-                    e.preventDefault();
-                    const dir = e.shiftKey ? -1 : 1;
-                    const idx = ITEMS.findIndex(x => x.id === activeId);
-                    if (idx !== -1 && ITEMS.length > 0) openJournalModal(ITEMS[(idx + dir + ITEMS.length) % ITEMS.length].id);
-                } else if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
-                    const dir = e.key === 'ArrowUp' ? -1 : 1;
-                    const idx = ITEMS.findIndex(x => x.id === activeId);
-                    if (idx !== -1 && ITEMS.length > 0) {
-                        const nextIdx = e.shiftKey ? (dir < 0 ? 0 : ITEMS.length - 1) : (idx + dir + ITEMS.length) % ITEMS.length;
-                        openJournalModal(ITEMS[nextIdx].id);
-                    }
-                } else if (e.key === '0') {
-                    const item = ITEMS.find(x => x.id === activeId);
-                    const qi = document.getElementById('diary-quote-input');
-                    if (item && qi) qi.value = item.quote || '';
-                    showToast(e.shiftKey ? '🧹 일기장 입력 복원 및 닫기' : '🧹 밑줄 입력란 원문 복원 완료!');
-                    if (e.shiftKey) closeJournalModal();
-                } else if (['5', '6', '7', '8'].includes(e.key)) {
-                    const inks = { '5': '#2c221e', '6': '#7f1d1d', '7': '#78350f', '8': '#14532d' };
-                    setDiaryInk(inks[e.key]);
-                    if (e.shiftKey) closeJournalModal();
-                } else if (e.key === '9') {
-                    showToast(e.shiftKey ? '🖍️ 형광펜 토글 · 독서 카드 복사 및 닫기' : '🖍️ 형광펜 하이라이트 토글');
-                    if (e.shiftKey) closeJournalModal();
-                } else if (e.key === '/' && !e.shiftKey) {
-                    e.preventDefault();
-                    const qi = document.getElementById('diary-quote-input');
-                    if (qi) { qi.focus(); qi.select(); }
-                } else if (e.key === 'Backspace') {
-                    if (e.shiftKey) showToast('📋 독서 카드 복사 및 일기장 닫기');
-                    closeJournalModal();
-                } else if (e.shiftKey) {
-                    showToast('🖍️ 형광펜 하이라이트 토글');
-                } else {
-                    const qi = document.getElementById('diary-quote-input');
-                    if (qi) { qi.focus(); qi.select(); }
-                }
-            } else if ((!document.getElementById('journal-modal') || document.getElementById('journal-modal').classList.contains('hidden')) && ['k', 'K', 'z', 'Z'].includes(e.key) && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
-                const lk = e.key.toLowerCase();
-                if (lk === 'k') {
-                    showToast(e.shiftKey ? '📚 정렬 기준 변경: 기본 등록순' : '📚 정렬 기준 변경: 권수 많은 순(다독순)');
-                } else {
-                    showToast(e.shiftKey ? '📚 정렬 기준 변경: 기본 등록순' : '📚 정렬 기준 변경: 최근 기록순(최신순)');
-                }
-            } else if ((!document.getElementById('journal-modal') || document.getElementById('journal-modal').classList.contains('hidden')) && ['j', 'J', 'y', 'Y'].includes(e.key) && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
-                const lk = e.key.toLowerCase();
-                if (lk === 'j') {
-                    if (ITEMS.length > 0) openJournalModal(e.shiftKey ? ITEMS[0].id : ITEMS[ITEMS.length - 1].id);
-                } else {
-                    showToast(e.shiftKey ? '🎧 앰비언트 사운드 이전 프리셋' : '🔇 앰비언트 사운드 음소거/재생 토글');
-                }
-            } else if ((!document.getElementById('journal-modal') || document.getElementById('journal-modal').classList.contains('hidden')) && ['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(e.key) && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
-                if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
-                    const dir = e.key === 'ArrowLeft' ? -1 : 1;
-                    if (e.shiftKey) showToast(dir < 0 ? '🎨 이전 속지 테마 적용' : '🎨 다음 속지 테마 적용');
-                    else showToast(dir < 0 ? '🖋️ 이전 오늘의 밑줄 탐색' : '🖋️ 다음 오늘의 밑줄 탐색');
-                } else if (ITEMS.length > 0) {
-                    openJournalModal(e.key === 'Home' ? ITEMS[0].id : ITEMS[ITEMS.length - 1].id);
-                }
-            } else if ((!document.getElementById('journal-modal') || document.getElementById('journal-modal').classList.contains('hidden')) && ['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown'].includes(e.key) && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
-                if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
-                    const dir = e.key === 'ArrowUp' ? -1 : 1;
-                    showToast(e.shiftKey ? (dir < 0 ? '🎧 이전 앰비언트 사운드' : '🎧 다음 앰비언트 사운드') : (dir < 0 ? '📚 이전 정렬 기준 전환' : '📚 다음 정렬 기준 전환'));
-                } else {
-                    const cats = ['all', 'manga', 'gacha', 'complete', 'fav'];
-                    const curIdx = Math.max(0, cats.indexOf(currentCategory));
-                    const nextCat = cats[(curIdx + (e.key === 'PageUp' ? -1 : 1) + cats.length) % cats.length];
-                    switchCategory(nextCat);
-                }
-            } else if ((!document.getElementById('journal-modal') || document.getElementById('journal-modal').classList.contains('hidden')) && (!document.getElementById('add-modal') || document.getElementById('add-modal').classList.contains('hidden')) && e.key === 'Tab' && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
-                e.preventDefault();
-                const cats = ['all', 'manga', 'gacha', 'complete', 'fav'];
-                const curIdx = Math.max(0, cats.indexOf(currentCategory));
-                const nextCat = cats[(curIdx + (e.shiftKey ? -1 : 1) + cats.length) % cats.length];
-                switchCategory(nextCat);
-            } else if ((!document.getElementById('journal-modal') || document.getElementById('journal-modal').classList.contains('hidden')) && (!document.getElementById('add-modal') || document.getElementById('add-modal').classList.contains('hidden')) && ['6', '7', '8', '9'].includes(e.key) && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
-                const modeNames = { '6': '기본 등록순', '7': '권수 많은 순(다독순)', '8': '최근 기록순(최신순)', '9': '소장 가치순(고액순)' };
-                showToast('📚 정렬 기준 변경: ' + modeNames[e.key]);
-                if (e.shiftKey && e.key !== '6' && ITEMS.length > 0) openJournalModal(ITEMS[0].id);
-            } else if ((!document.getElementById('journal-modal') || document.getElementById('journal-modal').classList.contains('hidden')) && (e.key === 'Enter' || e.key === 'Backspace') && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
-                if (e.key === 'Enter') {
-                    if (e.shiftKey) openAddModal();
-                    else if (ITEMS.length > 0) openJournalModal(ITEMS[0].id);
-                } else {
-                    const si = document.getElementById('search-input');
-                    if (si) si.value = '';
-                    switchCategory('all');
-                    showToast(e.shiftKey ? '🧹 스튜디오 전체 초기화 완료!' : '🧹 검색/필터 초기화 완료!');
-                }
-            } else if (document.getElementById('add-modal') && !document.getElementById('add-modal').classList.contains('hidden') && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
-                const lk = e.key.toLowerCase();
-                if (lk === 'f') showToast(e.shiftKey ? '📝 샘플 일기 자동 채움 및 등록!' : '📝 샘플 일기 자동 채움!');
-                else if (lk === 'x') showToast(e.shiftKey ? '🧹 입력 초기화 및 모달 닫기' : '🧹 입력란 전체 비우기');
-                else if (lk === 's') showToast(e.shiftKey ? '✨ 샘플 폴백 즉시 일기 등록!' : '📖 새 일기 등록 제출!');
-                else if (lk === 'e' || lk === 'g') showToast(lk === 'e' ? '📚 카테고리: 이북·만화 선택' : '🔮 카테고리: 가챠·굿즈 선택');
-                else if (lk === 't') showToast('✏️ 제목 입력란 포커스 이동');
-                else if (lk === 'a') showToast('✍️ 작가/브랜드 입력란 포커스 이동');
-                else if (lk === 'q') showToast('💬 한줄 밑줄 입력란 포커스 이동');
-                else if (e.key === ' ') showToast(e.shiftKey ? '🎨 이전 표지 컬러 선택' : '🎨 다음 표지 컬러 선택');
-                else if (lk === 'r') showToast(e.shiftKey ? '🎲 랜덤 표지 컬러 적용 및 즉시 등록!' : '🎲 랜덤 표지 컬러 선택!');
-                else if (e.key === '0') showToast(e.shiftKey ? '🧹 모달 기본값 초기화 및 닫기' : '🧹 모달 기본값 초기화');
-                else if (['6', '7', '8', '9'].includes(e.key)) {
-                    if (e.key === '6') showToast('🎨 6번 바이올렛 표지 컬러 선택');
-                    else if (e.key === '7' || e.key === '8') showToast(e.key === '7' ? '📚 카테고리: 이북·만화 선택' : '🔮 카테고리: 가챠·굿즈 선택');
-                    else showToast(e.shiftKey ? '📝 샘플 일기 자동 채움 및 등록!' : '📝 샘플 일기 자동 채움!');
-                }
-                else if (e.key === 'Home' || e.key === 'End') showToast(e.key === 'Home' ? '🎨 첫 번째 표지 컬러 선택' : '🎨 마지막 표지 컬러 선택');
-                else if (e.key === 'Backspace') showToast(e.shiftKey ? '🧹 입력 초기화 및 모달 닫기' : '🧹 입력란 전체 비우기');
-                else if (lk === 'h' || e.key === '?') showToast('⌨️ 새 일기 단축키: [1~5/←→/Space] 컬러 · [Home/End] 첫·끝 · [R] 랜덤 · [C/E/G] 분류 · [T/A/Q] 칸이동 · [F] 샘플 · [S/Enter] 등록 · [0/Bksp/X] 초기화 · [ESC] 닫기');
-                else if (e.key === 'Enter') showToast('📖 새 일기 등록 제출!');
-                else if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') showToast(e.key === 'ArrowLeft' ? '🎨 이전 표지 컬러 선택' : '🎨 다음 표지 컬러 선택');
-            } else if (e.key === 'F1') {
-                e.preventDefault();
-                const am = document.getElementById('add-modal');
-                const jm = document.getElementById('journal-modal');
-                if (am && !am.classList.contains('hidden')) {
-                    showToast('⌨️ 새 일기 단축키: [1~6/←→/Space] 컬러 · [7/8] 분류 · [9] 샘플 · [T/A/Q] 칸이동 · [S/Enter] 등록 · [ESC] 닫기');
-                } else if (jm && !jm.classList.contains('hidden')) {
-                    showToast('⌨️ 모달 단축키: [←/→/↑/↓] 넘김 · [1~4] 인장 · [5~8] 잉크 · [9] 형광펜 · [0] 원문복원 · [Enter] 편집 · [ESC/Bksp] 닫기');
-                } else {
-                    showToast('⌨️ 단축키: [0] 초기화 · [1~5] 탭 · [6~9] 정렬 · [Ctrl+K//] 검색 · [Ctrl+S] 백업 · [Ctrl+N] 새일기 · [H/F1] 도움말');
-                }
-            } else if ((e.ctrlKey || e.metaKey) && (e.key === 'k' || e.key === 'K')) {
-                e.preventDefault();
-                const si = document.getElementById('search-input');
-                if (si) { si.focus(); si.select(); }
-            } else if ((e.ctrlKey || e.metaKey) && (e.key === 's' || e.key === 'S')) {
-                e.preventDefault();
-                const jm = document.getElementById('journal-modal');
-                if (jm && !jm.classList.contains('hidden')) {
-                    saveDiaryQuote();
-                } else {
-                    instantBackupArchive();
-                }
-            } else if ((e.ctrlKey || e.metaKey) && (e.key === 'n' || e.key === 'N')) {
-                e.preventDefault();
-                openAddModal();
-            } else if ((e.ctrlKey || e.metaKey) && (e.key === 'r' || e.key === 'R')) {
-                e.preventDefault();
-                const jm = document.getElementById('journal-modal');
-                if (jm && !jm.classList.contains('hidden')) {
-                    showToast(e.shiftKey ? '📖 회독 수 감소 (-1회독)' : '📖 회독 수 증가 (+1회독)');
-                } else if (ITEMS.length > 0) {
-                    const rIt = ITEMS[Math.floor(Math.random() * ITEMS.length)];
-                    openJournalModal(rIt.id);
-                }
-            } else if ((e.ctrlKey || e.metaKey) && (e.key === 'b' || e.key === 'B')) {
-                e.preventDefault();
-                if (e.shiftKey) copyLibrarySummaryReport();
-                else instantBackupArchive();
-            } else if ((e.ctrlKey || e.metaKey) && (e.key === 'l' || e.key === 'L')) {
-                e.preventDefault();
-                const jm = document.getElementById('journal-modal');
-                if (jm && !jm.classList.contains('hidden')) {
-                    showToast(e.shiftKey ? '📄 속지 패턴 변경!' : '🖍️ 형광펜 하이라이트 토글');
-                } else if (ITEMS.length > 0) {
-                    openJournalModal(ITEMS[0].id);
-                }
-            } else if ((e.ctrlKey || e.metaKey) && (e.key === 'd' || e.key === 'D')) {
-                e.preventDefault();
-                const jm = document.getElementById('journal-modal');
-                if (jm && !jm.classList.contains('hidden')) {
-                    showToast(e.shiftKey ? '👯 복수 소장 수량 감소 (-1)' : '👯 복수 소장 수량 증가 (+1)');
-                } else {
-                    switchCategory('complete');
-                }
-            } else if ((e.ctrlKey || e.metaKey) && (e.key === 'i' || e.key === 'I')) {
-                e.preventDefault();
-                const jm = document.getElementById('journal-modal');
-                if (jm && !jm.classList.contains('hidden')) {
-                    const item = ITEMS.find(x => x.id === activeId);
-                    if (item) {
-                        const inks = ['#2c221e', '#7f1d1d', '#78350f', '#14532d'];
-                        const idx = inks.indexOf(item.ink_color || '#2c221e');
-                        setDiaryInk(inks[(idx + (e.shiftKey ? -1 : 1) + inks.length) % inks.length]);
-                    }
-                } else {
-                    showToast(e.shiftKey ? '💾 로컬 JSON 서재 백업 저장 완료!' : '📊 서재 인포그래픽 브리핑!');
-                }
-            } else if ((e.ctrlKey || e.metaKey) && (e.key === 'g' || e.key === 'G')) {
-                e.preventDefault();
-                const jm = document.getElementById('journal-modal');
-                if (jm && !jm.classList.contains('hidden')) {
-                    showToast('✨ 상태 등급 순환 완료!');
-                } else {
-                    switchCategory('gacha');
-                }
-            } else if ((e.ctrlKey || e.metaKey) && (e.key === 'e' || e.key === 'E')) {
-                e.preventDefault();
-                const jm = document.getElementById('journal-modal');
-                if (jm && !jm.classList.contains('hidden')) {
-                    const qi = document.getElementById('diary-quote-input');
-                    if (qi) { qi.focus(); qi.select(); }
-                } else {
-                    switchCategory('manga');
-                }
-            } else if ((e.ctrlKey || e.metaKey) && (e.key === 'w' || e.key === 'W')) {
-                const jm = document.getElementById('journal-modal');
-                if (jm && !jm.classList.contains('hidden')) {
-                    e.preventDefault();
-                    if (e.shiftKey) showToast('📋 독서 카드 복사 및 일기장 닫기');
-                    closeJournalModal();
-                }
-            } else if ((e.ctrlKey || e.metaKey) && e.key === '0') {
-                e.preventDefault();
-                const jm = document.getElementById('journal-modal');
-                if (jm && !jm.classList.contains('hidden')) {
-                    const item = ITEMS.find(x => x.id === activeId);
-                    const qi = document.getElementById('diary-quote-input');
-                    if (item && qi) qi.value = item.quote || '';
-                    showToast(e.shiftKey ? '🧹 일기장 입력 복원 및 닫기' : '🧹 밑줄 입력란 원문 복원 완료!');
-                    if (e.shiftKey) closeJournalModal();
-                } else {
-                    const si = document.getElementById('search-input');
-                    if (si) si.value = '';
-                    switchCategory('all');
-                    showToast(e.shiftKey ? '🧹 스튜디오 전체 초기화 완료!' : '🧹 검색/필터 초기화 완료!');
-                }
-            } else if ((e.ctrlKey || e.metaKey) && (e.key === 't' || e.key === 'T')) {
-                e.preventDefault();
-                const jm = document.getElementById('journal-modal');
-                if (jm && !jm.classList.contains('hidden')) {
-                    showToast('🏷️ 스마트 키워드 태그 순환!');
-                } else {
-                    showToast(e.shiftKey ? '🎨 이전 속지 테마 적용' : '🎨 다음 속지 테마 적용');
-                }
-            } else if ((e.ctrlKey || e.metaKey) && (e.key === 'p' || e.key === 'P')) {
-                e.preventDefault();
-                const jm = document.getElementById('journal-modal');
-                if (jm && !jm.classList.contains('hidden')) {
-                    showToast(e.shiftKey ? '📄 이전 속지 패턴 적용' : '📄 다음 속지 패턴 적용');
-                } else {
-                    if (typeof openCameraModal === 'function') openCameraModal();
-                    else showToast('📸 폴라로이드 실물 촬영 스튜디오 실행!');
-                }
-            } else if ((e.ctrlKey || e.metaKey) && (e.key === 'm' || e.key === 'M')) {
-                e.preventDefault();
-                const jm = document.getElementById('journal-modal');
-                if (jm && !jm.classList.contains('hidden')) {
-                    showToast(e.shiftKey ? '🎭 이전 독서 무드 스탬프' : '🎭 다음 독서 무드 스탬프');
-                } else {
-                    if (typeof toggleSound === 'function') toggleSound();
-                    else showToast('🎧 앰비언트 사운드 전환');
-                }
-            } else if ((e.ctrlKey || e.metaKey) && (e.key === 'u' || e.key === 'U')) {
-                e.preventDefault();
-                const jm = document.getElementById('journal-modal');
-                if (jm && !jm.classList.contains('hidden')) {
-                    showToast(e.shiftKey ? '🌤️ 이전 독서 날씨 스탬프' : '🌤️ 다음 독서 날씨 스탬프');
-                } else {
-                    switchCategory('firsts');
-                    showToast('🏷️ 초판 스탬프 작품 필터');
-                }
-            } else if ((e.ctrlKey || e.metaKey) && (e.key === 'j' || e.key === 'J')) {
-                e.preventDefault();
-                const jm = document.getElementById('journal-modal');
-                if (jm && !jm.classList.contains('hidden')) {
-                    showToast(e.shiftKey ? '📍 이전 독서 장소 스탬프' : '📍 다음 독서 장소 스탬프');
-                } else if (ITEMS.length > 0) {
-                    const target = e.shiftKey ? ITEMS[0] : ITEMS[ITEMS.length - 1];
-                    if (target) openJournalModal(target.id);
-                }
-            } else if ((e.ctrlKey || e.metaKey) && (e.key === 'o' || e.key === 'O')) {
-                e.preventDefault();
-                const jm = document.getElementById('journal-modal');
-                if (jm && !jm.classList.contains('hidden')) {
-                    showToast(e.shiftKey ? '🎀 이전 띠지 프리셋 적용' : '🎀 다음 띠지 프리셋 적용');
-                } else if (ITEMS.length > 0) {
-                    const target = e.shiftKey ? ITEMS[Math.floor(Math.random() * ITEMS.length)] : ITEMS[0];
-                    if (target) openJournalModal(target.id);
-                }
-            } else if ((e.ctrlKey || e.metaKey) && (e.key === 'y' || e.key === 'Y')) {
-                e.preventDefault();
-                const jm = document.getElementById('journal-modal');
-                if (jm && !jm.classList.contains('hidden')) {
-                    showToast(e.shiftKey ? '📖 회독 카운트 -1' : '📖 회독 카운트 +1');
-                } else {
-                    if (typeof toggleSound === 'function') toggleSound();
-                    else showToast('🎧 앰비언트 사운드 전환');
-                }
-            } else if ((e.ctrlKey || e.metaKey) && ['1', '2', '3', '4', '5'].includes(e.key)) {
-                e.preventDefault();
-                const jm = document.getElementById('journal-modal');
-                if (jm && !jm.classList.contains('hidden')) {
-                    if (e.key === '5') {
-                        setDiaryInk('#2c221e');
-                        showToast('🖋️ 에스프레소 만년필 잉크 적용');
-                    } else {
-                        const stamps = { '1': '전권완결', '2': '초판특전', '3': '인생최애', '4': '위시리스트' };
-                        showToast('💮 인장 스탬프: ' + stamps[e.key]);
-                    }
-                    if (e.shiftKey) closeJournalModal();
-                } else {
-                    const tabs = { '1': 'all', '2': 'manga', '3': 'gacha', '4': 'completed', '5': 'favorites' };
-                    switchCategory(tabs[e.key]);
-                    showToast('🔖 빠른 탭 전환 (' + e.key + ')');
-                }
-            } else if ((e.ctrlKey || e.metaKey) && ['6', '7', '8', '9'].includes(e.key)) {
-                e.preventDefault();
-                const jm = document.getElementById('journal-modal');
-                if (jm && !jm.classList.contains('hidden')) {
-                    if (e.key === '9') {
-                        showToast(e.shiftKey ? '🖍️ 형광펜 토글 · 독서 카드 복사 및 닫기' : '🖍️ 형광펜 하이라이트 토글');
-                    } else {
-                        const inks = { '6': '#7f1d1d', '7': '#78350f', '8': '#14532d' };
-                        setDiaryInk(inks[e.key]);
-                        showToast('🖋️ 만년필 잉크 전환 (' + e.key + ')');
-                    }
-                    if (e.shiftKey) closeJournalModal();
-                } else {
-                    const sorts = { '6': '기본순', '7': '다독순', '8': '최신순', '9': '자산가치순' };
-                    showToast('↕️ 정렬 전환: ' + sorts[e.key]);
-                }
-            } else if ((e.ctrlKey || e.metaKey) && (e.key === 'h' || e.key === 'H')) {
-                e.preventDefault();
-                showToast('⌨️ 전역 단축키: [Ctrl/Cmd+1~5] 탭·인장 · [Ctrl/Cmd+H] 도움말 · [Ctrl/Cmd+S] 저장 · [Ctrl/Cmd+W] 닫기');
-            } else if ((e.ctrlKey || e.metaKey) && ['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown'].includes(e.key)) {
-                e.preventDefault();
-                const jm = document.getElementById('journal-modal');
-                const isPrev = (e.key === 'ArrowUp' || e.key === 'PageUp');
-                if (jm && !jm.classList.contains('hidden')) {
-                    const idx = ITEMS.findIndex(x => x.id === activeId);
-                    if (idx !== -1 && ITEMS.length > 0) {
-                        const nextIdx = e.shiftKey ? (isPrev ? 0 : ITEMS.length - 1) : (idx + (isPrev ? -1 : 1) + ITEMS.length) % ITEMS.length;
-                        openJournalModal(ITEMS[nextIdx].id);
-                    }
-                } else if (e.key === 'PageUp' || e.key === 'PageDown') {
-                    const order = ['all', 'manga', 'gacha', 'completed', 'favorites'];
-                    const cur = order.indexOf(currentCategory || 'all');
-                    const nxt = order[((cur === -1 ? 0 : cur) + (isPrev ? -1 : 1) + order.length) % order.length];
-                    switchCategory(nxt);
-                } else {
-                    showToast(e.shiftKey ? '🎧 앰비언트 사운드 순환' : (isPrev ? '↕️ 이전 정렬' : '↕️ 다음 정렬'));
-                }
-            } else if ((e.ctrlKey || e.metaKey) && e.key === ' ') {
-                e.preventDefault();
-                const jm = document.getElementById('journal-modal');
-                if (jm && !jm.classList.contains('hidden')) {
-                    const dir = e.shiftKey ? -1 : 1;
-                    const idx = ITEMS.findIndex(x => x.id === activeId);
-                    if (idx !== -1 && ITEMS.length > 0) openJournalModal(ITEMS[(idx + dir + ITEMS.length) % ITEMS.length].id);
-                } else if (ITEMS.length > 0) {
-                    const target = e.shiftKey ? ITEMS[Math.floor(Math.random() * ITEMS.length)] : ITEMS[0];
-                    if (target) openJournalModal(target.id);
-                }
-            } else if ((e.ctrlKey || e.metaKey) && e.key === 'Backspace') {
-                e.preventDefault();
-                const jm = document.getElementById('journal-modal');
-                if (jm && !jm.classList.contains('hidden')) {
-                    if (e.shiftKey) showToast('📋 독서 카드 복사 및 일기장 닫기');
-                    closeJournalModal();
-                } else {
-                    const si = document.getElementById('search-input');
-                    if (si) si.value = '';
-                    switchCategory('all');
-                    showToast(e.shiftKey ? '🧹 스튜디오 전체 초기화 완료!' : '🧹 검색/필터 초기화 완료!');
-                }
-            } else if ((e.ctrlKey || e.metaKey) && (e.key === '/' || e.key === '?')) {
-                e.preventDefault();
-                const jm = document.getElementById('journal-modal');
-                if (e.shiftKey) {
-                    showToast('⌨️ 전역 단축키: [Ctrl/Cmd+/] 포커스 · [Ctrl/Cmd+Enter] 열기·저장 · [Ctrl/Cmd+H] 도움말');
-                } else if (jm && !jm.classList.contains('hidden')) {
-                    const qi = document.getElementById('diary-quote-input');
-                    if (qi) { qi.focus(); qi.select(); }
-                } else {
-                    const si = document.getElementById('search-input');
-                    if (si) { si.focus(); si.select(); }
-                }
-            } else if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
-                e.preventDefault();
-                const jm = document.getElementById('journal-modal');
-                if (jm && !jm.classList.contains('hidden')) {
-                    if (e.shiftKey) showToast('🖍️ 형광펜 하이라이트 토글');
-                    else showToast('🖋️ 밑줄 문장 저장 완료!');
-                } else if (e.shiftKey) {
-                    if (typeof openAddModal === 'function') openAddModal();
-                } else if (ITEMS.length > 0) {
-                    openJournalModal(ITEMS[0].id);
-                }
-            } else if ((e.ctrlKey || e.metaKey) && e.key === 'Tab') {
-                e.preventDefault();
-                const jm = document.getElementById('journal-modal');
-                const dir = e.shiftKey ? -1 : 1;
-                if (jm && !jm.classList.contains('hidden')) {
-                    const idx = ITEMS.findIndex(x => x.id === activeId);
-                    if (idx !== -1 && ITEMS.length > 0) openJournalModal(ITEMS[(idx + dir + ITEMS.length) % ITEMS.length].id);
-                } else {
-                    const order = ['all', 'manga', 'gacha', 'completed', 'favorites'];
-                    const cur = order.indexOf(currentCategory || 'all');
-                    const nxt = order[((cur === -1 ? 0 : cur) + dir + order.length) % order.length];
-                    switchCategory(nxt);
-                }
-            } else if ((e.ctrlKey || e.metaKey) && e.key === 'Escape') {
-                e.preventDefault();
-                const jm = document.getElementById('journal-modal');
-                if (jm && !jm.classList.contains('hidden')) {
-                    if (e.shiftKey) showToast('📋 독서 카드 복사 및 일기장 닫기');
-                    closeJournalModal();
-                } else {
-                    const si = document.getElementById('search-input');
-                    if (si) si.value = '';
-                    switchCategory('all');
-                    showToast('🧹 스튜디오 전체 초기화 완료!');
-                }
-            } else if (document.getElementById('journal-modal') && !document.getElementById('journal-modal').classList.contains('hidden') && (e.key === '/' || e.key === 'Tab' || e.key === 'Enter' || e.key === 'Backspace' || e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === '0' || e.key === '9' || ['5', '6', '7', '8'].includes(e.key)) && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
-                if (e.key === 'Tab') {
-                    e.preventDefault();
-                    const dir = e.shiftKey ? -1 : 1;
-                    const idx = ITEMS.findIndex(x => x.id === activeId);
-                    if (idx !== -1 && ITEMS.length > 0) openJournalModal(ITEMS[(idx + dir + ITEMS.length) % ITEMS.length].id);
-                } else if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
-                    const dir = e.key === 'ArrowUp' ? -1 : 1;
-                    const idx = ITEMS.findIndex(x => x.id === activeId);
-                    if (idx !== -1 && ITEMS.length > 0) {
-                        const nextIdx = e.shiftKey ? (dir < 0 ? 0 : ITEMS.length - 1) : (idx + dir + ITEMS.length) % ITEMS.length;
-                        openJournalModal(ITEMS[nextIdx].id);
-                    }
-                } else if (e.key === '0') {
-                    const item = ITEMS.find(x => x.id === activeId);
-                    const qi = document.getElementById('diary-quote-input');
-                    if (item && qi) qi.value = item.quote || '';
-                    showToast(e.shiftKey ? '🧹 일기장 입력 복원 및 닫기' : '🧹 밑줄 입력란 원문 복원 완료!');
-                    if (e.shiftKey) closeJournalModal();
-                } else if (['5', '6', '7', '8'].includes(e.key)) {
-                    const inks = { '5': '#2c221e', '6': '#7f1d1d', '7': '#78350f', '8': '#14532d' };
-                    setDiaryInk(inks[e.key]);
-                    if (e.shiftKey) closeJournalModal();
-                } else if (e.key === '9') {
-                    showToast(e.shiftKey ? '🖍️ 형광펜 토글 · 독서 카드 복사 및 닫기' : '🖍️ 형광펜 하이라이트 토글');
-                    if (e.shiftKey) closeJournalModal();
-                } else if (e.key === '/' && !e.shiftKey) {
-                    e.preventDefault();
-                    const qi = document.getElementById('diary-quote-input');
-                    if (qi) { qi.focus(); qi.select(); }
-                } else if (e.key === 'Backspace') {
-                    if (e.shiftKey) showToast('📋 독서 카드 복사 및 일기장 닫기');
-                    closeJournalModal();
-                } else if (e.shiftKey) {
-                    showToast('🖍️ 형광펜 하이라이트 토글');
-                } else {
-                    const qi = document.getElementById('diary-quote-input');
-                    if (qi) { qi.focus(); qi.select(); }
-                }
-            } else if ((e.key === 'i' || e.key === 'I') && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
-                const jm = document.getElementById('journal-modal');
-                if (jm && !jm.classList.contains('hidden') && activeId != null) {
-                    const item = ITEMS.find(x => x.id === activeId);
-                    if (item) {
-                        const inks = ['#2c221e', '#7f1d1d', '#78350f', '#14532d'];
-                        const idx = inks.indexOf(item.ink_color || '#2c221e');
-                        setDiaryInk(inks[(idx + 1) % inks.length]);
-                    }
-                }
-            } else if ((e.key === 'e' || e.key === 'E') && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
-                const jm = document.getElementById('journal-modal');
-                if (jm && !jm.classList.contains('hidden')) {
-                    e.preventDefault();
-                    const qi = document.getElementById('diary-quote-input');
-                    if (qi) {
-                        if (e.shiftKey) qi.value = '오늘도 한 페이지의 여운을 남겼다.';
-                        qi.focus();
-                    }
-                }
-            } else if ((e.key === 'h' || e.key === 'H' || e.key === '?') && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
-                const jm = document.getElementById('journal-modal');
-                if (jm && !jm.classList.contains('hidden')) {
-                    const msg = '⌨️ [←/→] 넘김 · [Home/End] 처음·끝 · [E] 문장 · [C] 복사 · [Shift+순환키] 역순환 · [ESC] 닫기';
-                    if (e.shiftKey && (e.key === 'h' || e.key === 'H')) navigator.clipboard?.writeText(msg);
-                    const pageEl = document.getElementById('journal-page-indicator');
-                    if (pageEl) {
-                        const prevTxt = pageEl.textContent;
-                        pageEl.textContent = msg;
-                        setTimeout(() => { if (pageEl.textContent.includes('넘김')) pageEl.textContent = prevTxt; }, 2200);
-                    }
-                } else {
-                    alert('⌨️ 단축키 안내\n[1~5] 서재 탭 전환(Shift: 즉시 열기) · [/] 검색 · [R] 랜덤 추천 · [N] 새 일기(Shift: 샘플 등록) · [M] 백색소음 · [←/→] 모달 책장 넘김 · [Shift+순환키] 역순환 · [우클릭] 역순환/백업/필터 · [ESC] 닫기/초기화');
-                }
-            } else if (e.shiftKey && ['0', '1', '2', '3', '4', '5', 'N', 'n', 'I', 'i', 'C', 'c', 'H', 'h'].includes(e.key) && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
-                const jm = document.getElementById('journal-modal');
-                if (!jm || jm.classList.contains('hidden')) {
-                    if (e.key === '0') { document.getElementById('search-box').value = ''; switchCategory('all'); themeIdx = 0; applyJournalTheme(0); }
-                    else if (e.key === '1') { switchCategory('all'); if (ITEMS.length) openJournalModal(ITEMS[Math.floor(Math.random() * ITEMS.length)].id); }
-                    else if (e.key === '2') { switchCategory('manga'); const f = ITEMS.find(x => x.category === 'manga'); if (f) openJournalModal(f.id); }
-                    else if (e.key === '3') { switchCategory('gacha'); const f = ITEMS.find(x => x.category === 'gacha'); if (f) openJournalModal(f.id); }
-                    else if (e.key === '4') { switchCategory('complete'); const f = ITEMS.find(x => (x.volumes || []).length >= 2); if (f) openJournalModal(f.id); }
-                    else if (e.key === '5') { switchCategory('fav'); const f = ITEMS.find(x => x.stamp === '인생최애'); if (f) openJournalModal(f.id); }
-                    else if (e.key === 'n' || e.key === 'N') { openNewDiaryModal(true); }
-                    else if (e.key === 'i' || e.key === 'I') { instantBackupArchive(); }
-                    else if (e.key === 'c' || e.key === 'C') { const tq = document.getElementById('today-quote-text')?.textContent || ''; if (tq) navigator.clipboard?.writeText(tq); }
-                    else if (e.key === 'h' || e.key === 'H') { navigator.clipboard?.writeText('⌨️ [1~5] 탭 · [/] 검색 · [R] 추천 · [N] 새 일기 · [M] 소음 · [ESC] 닫기'); }
-                } else if (['1', '2', '3', '4'].includes(e.key)) {
-                    const smap = { '1': '전권완결', '2': '초판특전', '3': '인생최애', '4': '위시리스트' };
-                    applyDiaryStamp(smap[e.key]);
-                    closeJournalModal();
-                } else if (e.key === 'l' || e.key === 'L') {
-                    cyclePaperPattern();
-                }
-            } else if (e.shiftKey && (e.key === 'Delete' || e.key === 'Backspace') && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
-                const jm = document.getElementById('journal-modal');
-                if (jm && !jm.classList.contains('hidden')) {
-                    deleteArmed = false;
-                    const db = document.getElementById('delete-diary-btn');
-                    if (db) db.textContent = '이 일기 삭제';
+                    alert('⌨️ 단축키 안내\n[1~5] 서재 탭 전환 · [/] 검색 · [R] 랜덤 추천 · [M] 백색소음 · [←/→] 모달 책장 넘김 · [ESC] 닫기/초기화');
                 }
             }
         });
@@ -2203,8 +1007,8 @@
             renderShelf();
         }
 
-        function openNewDiaryModal(instantSample = false) {
-            const title = instantSample ? '오늘의 독서 스크랩' : prompt('새로 일기장에 기록할 만화책이나 가챠 이름을 적어주세요:', '나의 비밀 독서 일기');
+        function openNewDiaryModal() {
+            const title = prompt('새로 일기장에 기록할 만화책이나 가챠 이름을 적어주세요:', '나의 비밀 독서 일기');
             if (!title) return;
             ITEMS.unshift({
                 id: 'n_' + Date.now(), category: 'manga', title, author: '주희의 다꾸 노트',
@@ -2230,60 +1034,6 @@
                 ITEMS.splice(idx, 1);
                 closeJournalModal();
                 renderShelf();
-            }
-        }
-
-        function filterModalCategory() {
-            const item = ITEMS.find(x => x.id === activeId);
-            if (!item) return;
-            closeJournalModal();
-            switchCategory(item.category === 'gacha' ? 'gacha' : 'manga');
-        }
-
-        function searchModalAuthor() {
-            const item = ITEMS.find(x => x.id === activeId);
-            if (!item) return;
-            const inp = document.getElementById('search-box');
-            if (inp) inp.value = item.author || '';
-            closeJournalModal();
-            renderShelf();
-        }
-
-        function copyDiaryTitle() {
-            const el = document.getElementById('diary-title');
-            if (!el) return;
-            const titleText = el.textContent;
-            navigator.clipboard?.writeText(titleText).catch(() => {});
-            el.title = `✅ 복사됨: ${titleText}`;
-        }
-
-        function restoreDiaryQuoteInput() {
-            const item = ITEMS.find(x => x.id === activeId);
-            const inp = document.getElementById('diary-quote-input');
-            if (item && inp) {
-                inp.value = item.memo || '';
-            }
-        }
-
-        function copyLibrarySummaryReport(btn) {
-            const totalVols = ITEMS.reduce((s, x) => s + (x.volumes ? x.volumes.length : 0), 0);
-            const report = `📚 주희의 다꾸 서재 리포트 · 총 ${ITEMS.length}종 · 단행본 ${totalVols}권`;
-            navigator.clipboard?.writeText(report).catch(() => {});
-            if (btn) {
-                const prev = btn.textContent;
-                btn.textContent = '📋 서재 리포트 복사됨';
-                setTimeout(() => { btn.textContent = prev; }, 1600);
-            }
-        }
-
-        function instantBackupArchive(btn) {
-            try {
-                localStorage.setItem('pocket_archive_backup_v1', JSON.stringify(ITEMS));
-            } catch (e) {}
-            if (btn) {
-                const prev = btn.innerHTML;
-                btn.innerHTML = `<i class="fa-solid fa-floppy-disk"></i> JSON 백업 완료 (${ITEMS.length}건)`;
-                setTimeout(() => { btn.innerHTML = prev; }, 1800);
             }
         }
 

@@ -90,29 +90,31 @@ theme_override_constants/separation = 2
 
 [node name="SubTitle" type="Label" parent="VBox/TopBar/TopMargin/StatsVBox/TitleRow/TitleCol"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.55, 0.46, 0.39, 1)
-theme_override_font_sizes/font_size = 9
-text = "📔 2026. 11. 11 · MY E-BOOK & COLLECTION DIARY"
+theme_override_colors/font_color = Color(0.48, 0.41, 0.36, 1)
+theme_override_font_sizes/font_size = 11
+text = "2026. 11. 22 · 6작품 · 10권 · 완독 81% · ₩80,000"
 
 [node name="AppTitle" type="Label" parent="VBox/TopBar/TopMargin/StatsVBox/TitleRow/TitleCol"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.17, 0.13, 0.11, 1)
-theme_override_font_sizes/font_size = 16
-text = "주희의 다꾸 서재 & 소장 일기장"
+theme_override_colors/font_color = Color(0.14, 0.11, 0.09, 1)
+theme_override_font_sizes/font_size = 19
+text = "주희의 서재"
 
 [node name="AddBtn" type="Button" parent="VBox/TopBar/TopMargin/StatsVBox/TitleRow"]
-custom_minimum_size = Vector2(96, 32)
+custom_minimum_size = Vector2(88, 34)
 layout_mode = 2
-theme_override_font_sizes/font_size = 11
-text = "🖋️ + 일기 쓰기"
+theme_override_font_sizes/font_size = 12
+text = "+ 새 기록"
 
 [node name="AmbientBtn" type="Button" parent="VBox/TopBar/TopMargin/StatsVBox/TitleRow"]
+visible = false
 custom_minimum_size = Vector2(72, 32)
 layout_mode = 2
 theme_override_font_sizes/font_size = 11
 text = "🔕 무음"
 
 [node name="StatRow" type="HBoxContainer" parent="VBox/TopBar/TopMargin/StatsVBox"]
+visible = false
 layout_mode = 2
 theme_override_constants/separation = 8
 
@@ -217,7 +219,7 @@ text = "2개"
 horizontal_alignment = 1
 
 [node name="SpineBanner" type="PanelContainer" parent="VBox/TopBar/TopMargin/StatsVBox"]
-custom_minimum_size = Vector2(0, 32)
+custom_minimum_size = Vector2(0, 44)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_stat")
 
@@ -226,6 +228,7 @@ layout_mode = 2
 theme_override_constants/separation = 8
 
 [node name="SpineShelfRow" type="HBoxContainer" parent="VBox/TopBar/TopMargin/StatsVBox/SpineBanner/HBox"]
+visible = false
 custom_minimum_size = Vector2(72, 24)
 layout_mode = 2
 theme_override_constants/separation = 2
@@ -234,18 +237,19 @@ alignment = 1
 [node name="TodayQuoteLabel" type="Label" parent="VBox/TopBar/TopMargin/StatsVBox/SpineBanner/HBox"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_colors/font_color = Color(0.28, 0.21, 0.17, 1)
-theme_override_font_sizes/font_size = 10
-text = "🖋️ 오늘의 밑줄: \"농구... 좋아하세요?\" — 슬램덩크"
-text_overrun_behavior = 3
+theme_override_colors/font_color = Color(0.22, 0.17, 0.14, 1)
+theme_override_font_sizes/font_size = 12
+text = "🖋️ \"농구... 좋아하세요?\" — 슬램덩크 신장재편판"
+autowrap_mode = 3
 
 [node name="NextQuoteBtn" type="Button" parent="VBox/TopBar/TopMargin/StatsVBox/SpineBanner/HBox"]
-custom_minimum_size = Vector2(50, 24)
+custom_minimum_size = Vector2(56, 26)
 layout_mode = 2
-theme_override_font_sizes/font_size = 9
-text = "↻ 문장"
+theme_override_font_sizes/font_size = 10
+text = "다음 ↻"
 
 [node name="RandomPickBtn" type="Button" parent="VBox/TopBar/TopMargin/StatsVBox/SpineBanner/HBox"]
+visible = false
 custom_minimum_size = Vector2(50, 24)
 layout_mode = 2
 theme_override_font_sizes/font_size = 9
@@ -316,9 +320,9 @@ size_flags_vertical = 3
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-theme_override_constants/h_separation = 10
-theme_override_constants/v_separation = 12
-columns = 3
+theme_override_constants/h_separation = 12
+theme_override_constants/v_separation = 14
+columns = 2
 
 [node name="BottomBar" type="PanelContainer" parent="VBox"]
 layout_mode = 2
@@ -326,9 +330,9 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_bottom")
 
 [node name="Margin" type="MarginContainer" parent="VBox/BottomBar"]
 layout_mode = 2
-theme_override_constants/margin_left = 10
+theme_override_constants/margin_left = 12
 theme_override_constants/margin_top = 6
-theme_override_constants/margin_right = 10
+theme_override_constants/margin_right = 12
 theme_override_constants/margin_bottom = 8
 
 [node name="VBox" type="VBoxContainer" parent="VBox/BottomBar/Margin"]
@@ -336,18 +340,20 @@ layout_mode = 2
 theme_override_constants/separation = 4
 
 [node name="ToastLabel" type="Label" parent="VBox/BottomBar/Margin/VBox"]
+visible = false
 layout_mode = 2
 theme_override_colors/font_color = Color(0.42, 0.34, 0.28, 1)
-theme_override_font_sizes/font_size = 10
-text = "🖋️ 카드를 누르면 만년필 독서 일기장이 펼쳐집니다 · 리디북스 & 굿노트 다꾸 에디션"
+theme_override_font_sizes/font_size = 11
+text = ""
 horizontal_alignment = 1
 text_overrun_behavior = 3
 
 [node name="NavRow" type="HBoxContainer" parent="VBox/BottomBar/Margin/VBox"]
 layout_mode = 2
-theme_override_constants/separation = 6
+theme_override_constants/separation = 8
 
 [node name="WebBtn" type="Button" parent="VBox/BottomBar/Margin/VBox/NavRow"]
+visible = false
 custom_minimum_size = Vector2(0, 34)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -355,6 +361,7 @@ theme_override_font_sizes/font_size = 11
 text = "🌐 웹표지 스크랩"
 
 [node name="CamBtn" type="Button" parent="VBox/BottomBar/Margin/VBox/NavRow"]
+visible = false
 custom_minimum_size = Vector2(0, 34)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -362,6 +369,7 @@ theme_override_font_sizes/font_size = 11
 text = "📸 폴라로이드 촬영"
 
 [node name="DiyBtn" type="Button" parent="VBox/BottomBar/Margin/VBox/NavRow"]
+visible = false
 custom_minimum_size = Vector2(0, 34)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -369,11 +377,11 @@ theme_override_font_sizes/font_size = 11
 text = "🖋️ 새 일기 쓰기"
 
 [node name="ThemeBtn" type="Button" parent="VBox/BottomBar/Margin/VBox/NavRow"]
-custom_minimum_size = Vector2(0, 34)
+custom_minimum_size = Vector2(0, 36)
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 11
-text = "📔 속지 테마"
+theme_override_font_sizes/font_size = 12
+text = "🎨 테마 변경"
 
 [node name="DetailModal" parent="." instance=ExtResource("2_detail")]
 visible = false

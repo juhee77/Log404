@@ -1,0 +1,14 @@
+[gd_resource type="Theme" format=3]
+
+[ext_resource type="FontFile" path="res://assets/fonts/PretendardVariable.ttf" id="1_pretendard"]
+
+[sub_resource type="SystemFont" id="SystemFont_emoji"]
+font_names = PackedStringArray("Apple Color Emoji", "Noto Color Emoji", "Segoe UI Emoji", "Sans-Serif")
+
+[sub_resource type="FontVariation" id="FontVariation_pretendard"]
+base_font = ExtResource("1_pretendard")
+fallbacks = Array[Font]([SubResource("SystemFont_emoji")])
+
+[resource]
+default_font = SubResource("FontVariation_pretendard")
+
