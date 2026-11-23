@@ -3,50 +3,48 @@ extends Control
 
 const ArchiveStateClass = preload("res://scripts/archive_state.gd")
 const UiTokensClass = preload("res://scripts/ui_tokens.gd")
+const DsButtonClass = preload("res://scripts/ui/ds_button.gd")
+const DsCardClass = preload("res://scripts/ui/ds_card.gd")
+const DsBadgeClass = preload("res://scripts/ui/ds_badge.gd")
+const DsInputClass = preload("res://scripts/ui/ds_input.gd")
+const DsSegmentedClass = preload("res://scripts/ui/ds_segmented.gd")
 
 signal diary_updated(item)
 signal item_deleted(item)
 signal toast_requested(msg: String)
 
 var current_item = null
-var _palette: Dictionary = UiTokensClass.get_palette("cream")
+var _palette: Dictionary = UiTokensClass.get_palette("millie")
 var _active_tab: int = 0
 var _delete_armed: bool = false
 
-var _dimmer: ColorRect
-var _sheet: PanelContainer
+var _sheet
 var _handle: ColorRect
 var _cover_panel: PanelContainer
+var _cover_tex: TextureRect
 var _cover_lbl: Label
-var _badge_lbl: Label
+var _badge_lbl
 var _title_lbl: Label
 var _author_lbl: Label
-var _close_btn: Button
-
-var _seg_wrap: PanelContainer
-var _seg_btns: Array[Button] = []
+var _seg_tabs
 
 var _panel_vols: VBoxContainer
 var _vol_summary_lbl: Label
-var _add_vol_btn: Button
 var _vol_list: VBoxContainer
 
 var _panel_memo: VBoxContainer
-var _hl_btn: Button
-var _memo_preview_panel: PanelContainer
+var _hl_btn
+var _memo_preview_panel
 var _memo_preview_lbl: Label
 var _memo_input: TextEdit
-var _save_memo_btn: Button
-var _ink_panel: PanelContainer
 var _ink_row: HBoxContainer
 
 var _panel_info: VBoxContainer
-var _info_card: PanelContainer
 var _stamp_row: HFlowContainer
 var _price_input: LineEdit
 var _loc_input: LineEdit
-var _save_info_btn: Button
-var _delete_btn: Button
+var _photo_remove_btn
+var _delete_btn
 
 func _ready() -> void:
 	set_anchors_preset(Control.PRESET_FULL_RECT)
@@ -58,32 +56,26 @@ func _build_ui() -> void:
 	for ch in get_children():
 		ch.queue_free()
 
-	_dimmer = ColorRect.new()
-	_dimmer.set_anchors_preset(Control.PRESET_FULL_RECT)
-	_dimmer.color = Color(0.07, 0.05, 0.04, 0.48)
-	_dimmer.gui_input.connect(func(ev: InputEvent):
+	var dimmer := ColorRect.new()
+	dimmer.set_anchors_preset(Control.PRESET_FULL_RECT)
+	dimmer.color = Color(0.07, 0.05, 0.04, 0.48)
+	dimmer.gui_input.connect(func(ev: InputEvent):
 		if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_LEFT:
 			close()
 	)
-	add_child(_dimmer)
+	add_child(dimmer)
 
-	# Bottom Sheet anchored to bottom 86%
-	_sheet = PanelContainer.new()
+	_sheet = DsCardClass.create(DsCardClass.Variant.SHEET)
 	_sheet.anchor_left = 0.0
 	_sheet.anchor_right = 1.0
 	_sheet.anchor_top = 0.14
 	_sheet.anchor_bottom = 1.0
-	_sheet.offset_left = 0
-	_sheet.offset_right = 0
-	_sheet.offset_top = 0
-	_sheet.offset_bottom = 0
 	add_child(_sheet)
 
 	var root_vbox := VBoxContainer.new()
 	root_vbox.add_theme_constant_override("separation", 0)
 	_sheet.add_child(root_vbox)
 
-	# Drag handle
 	var handle_center := CenterContainer.new()
 	handle_center.custom_minimum_size = Vector2(0, 18)
 	_handle = ColorRect.new()
@@ -105,14 +97,35 @@ func _build_ui() -> void:
 
 	_cover_panel = PanelContainer.new()
 	_cover_panel.custom_minimum_size = Vector2(56, 74)
+	_cover_panel.clip_children = CanvasItem.CLIP_CHILDREN_AND_DRAW
+	_cover_panel.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	_cover_panel.tooltip_text = "눌러서 표지 사진 변경"
+	_cover_panel.gui_input.connect(func(ev: InputEvent):
+		if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_LEFT:
+			_on_pick_cover_photo()
+	)
 	hdr_hbox.add_child(_cover_panel)
 
+	var cov_layer := Control.new()
+	cov_layer.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_cover_panel.add_child(cov_layer)
+
+	_cover_tex = TextureRect.new()
+	_cover_tex.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_cover_tex.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	_cover_tex.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	_cover_tex.visible = false
+	_cover_tex.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	cov_layer.add_child(_cover_tex)
+
 	var cov_m := MarginContainer.new()
+	cov_m.set_anchors_preset(Control.PRESET_FULL_RECT)
 	cov_m.add_theme_constant_override("margin_left", 6)
 	cov_m.add_theme_constant_override("margin_right", 6)
 	cov_m.add_theme_constant_override("margin_top", 6)
 	cov_m.add_theme_constant_override("margin_bottom", 6)
-	_cover_panel.add_child(cov_m)
+	cov_m.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	cov_layer.add_child(cov_m)
 
 	_cover_lbl = Label.new()
 	_cover_lbl.add_theme_font_size_override("font_size", 10)
@@ -131,8 +144,7 @@ func _build_ui() -> void:
 
 	var badge_row := HBoxContainer.new()
 	meta_col.add_child(badge_row)
-	_badge_lbl = Label.new()
-	_badge_lbl.add_theme_font_size_override("font_size", 11)
+	_badge_lbl = DsBadgeClass.create("소장중", DsBadgeClass.Variant.MILLIE, 11)
 	badge_row.add_child(_badge_lbl)
 
 	_title_lbl = Label.new()
@@ -145,42 +157,22 @@ func _build_ui() -> void:
 	_author_lbl.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	meta_col.add_child(_author_lbl)
 
-	_close_btn = Button.new()
-	_close_btn.text = "✕"
-	_close_btn.custom_minimum_size = Vector2(34, 34)
-	_close_btn.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
-	_close_btn.add_theme_font_size_override("font_size", 14)
-	_close_btn.pressed.connect(close)
-	hdr_hbox.add_child(_close_btn)
+	var close_btn = DsButtonClass.create("✕", DsButtonClass.Variant.SECONDARY, DsButtonClass.Size.SM, close)
+	close_btn.custom_minimum_size = Vector2(34, 34)
+	close_btn.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+	hdr_hbox.add_child(close_btn)
 
-	# 3-Tab Segmented Control
+	# 3-Tab Segmented Control (Shared DS Component)
 	var seg_margin := MarginContainer.new()
 	seg_margin.add_theme_constant_override("margin_left", 20)
 	seg_margin.add_theme_constant_override("margin_right", 20)
 	seg_margin.add_theme_constant_override("margin_bottom", 10)
 	root_vbox.add_child(seg_margin)
 
-	_seg_wrap = PanelContainer.new()
-	seg_margin.add_child(_seg_wrap)
+	_seg_tabs = DsSegmentedClass.create(PackedStringArray(["권별 기록", "감상·밑줄", "소장 정보"]), _switch_tab)
+	seg_margin.add_child(_seg_tabs)
 
-	var seg_hbox := HBoxContainer.new()
-	seg_hbox.add_theme_constant_override("separation", 4)
-	_seg_wrap.add_child(seg_hbox)
-
-	_seg_btns.clear()
-	var tab_names := ["권별 기록", "감상·밑줄", "소장 정보"]
-	for i in range(tab_names.size()):
-		var b := Button.new()
-		b.text = tab_names[i]
-		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		b.custom_minimum_size = Vector2(0, 34)
-		b.add_theme_font_size_override("font_size", 13)
-		var idx := i
-		b.pressed.connect(func(): _switch_tab(idx))
-		seg_hbox.add_child(b)
-		_seg_btns.append(b)
-
-	# Scrollable Tab Body
+	# Scrollable Body
 	var scroll := ScrollContainer.new()
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
@@ -198,7 +190,7 @@ func _build_ui() -> void:
 	body_stack.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	body_m.add_child(body_stack)
 
-	# --- TAB 0: Volumes ---
+	# TAB 0: Volumes
 	_panel_vols = VBoxContainer.new()
 	_panel_vols.add_theme_constant_override("separation", 10)
 	body_stack.add_child(_panel_vols)
@@ -211,18 +203,14 @@ func _build_ui() -> void:
 	_vol_summary_lbl.add_theme_font_size_override("font_size", 12)
 	vol_top.add_child(_vol_summary_lbl)
 
-	_add_vol_btn = Button.new()
-	_add_vol_btn.text = "+ 다음 권 추가"
-	_add_vol_btn.custom_minimum_size = Vector2(0, 30)
-	_add_vol_btn.add_theme_font_size_override("font_size", 12)
-	_add_vol_btn.pressed.connect(_on_add_volume)
-	vol_top.add_child(_add_vol_btn)
+	var add_vol_btn = DsButtonClass.create("+ 다음 권 추가", DsButtonClass.Variant.PRIMARY, DsButtonClass.Size.SM, _on_add_volume)
+	vol_top.add_child(add_vol_btn)
 
 	_vol_list = VBoxContainer.new()
 	_vol_list.add_theme_constant_override("separation", 10)
 	_panel_vols.add_child(_vol_list)
 
-	# --- TAB 1: Memo & Ink ---
+	# TAB 1: Memo & Ink
 	_panel_memo = VBoxContainer.new()
 	_panel_memo.add_theme_constant_override("separation", 12)
 	body_stack.add_child(_panel_memo)
@@ -236,14 +224,10 @@ func _build_ui() -> void:
 	memo_title.add_theme_font_size_override("font_size", 13)
 	memo_hdr.add_child(memo_title)
 
-	_hl_btn = Button.new()
-	_hl_btn.text = "형광펜 OFF"
-	_hl_btn.custom_minimum_size = Vector2(0, 28)
-	_hl_btn.add_theme_font_size_override("font_size", 11)
-	_hl_btn.pressed.connect(_on_toggle_highlight)
+	_hl_btn = DsButtonClass.create("형광펜 OFF", DsButtonClass.Variant.OUTLINE, DsButtonClass.Size.SM, _on_toggle_highlight)
 	memo_hdr.add_child(_hl_btn)
 
-	_memo_preview_panel = PanelContainer.new()
+	_memo_preview_panel = DsCardClass.create(DsCardClass.Variant.SUBTLE, 14, 12, 14)
 	_panel_memo.add_child(_memo_preview_panel)
 
 	_memo_preview_lbl = Label.new()
@@ -258,18 +242,14 @@ func _build_ui() -> void:
 	_memo_input.add_theme_font_size_override("font_size", 13)
 	_panel_memo.add_child(_memo_input)
 
-	_save_memo_btn = Button.new()
-	_save_memo_btn.text = "감상 저장"
-	_save_memo_btn.custom_minimum_size = Vector2(0, 40)
-	_save_memo_btn.add_theme_font_size_override("font_size", 13)
-	_save_memo_btn.pressed.connect(_on_save_memo)
-	_panel_memo.add_child(_save_memo_btn)
+	var save_memo_btn = DsButtonClass.create("감상 저장", DsButtonClass.Variant.PRIMARY, DsButtonClass.Size.LG, _on_save_memo)
+	_panel_memo.add_child(save_memo_btn)
 
-	_ink_panel = PanelContainer.new()
-	_panel_memo.add_child(_ink_panel)
+	var ink_panel = DsCardClass.create(DsCardClass.Variant.SUBTLE, 14, 12, 14)
+	_panel_memo.add_child(ink_panel)
 	var ink_vbox := VBoxContainer.new()
 	ink_vbox.add_theme_constant_override("separation", 8)
-	_ink_panel.add_child(ink_vbox)
+	ink_panel.add_child(ink_vbox)
 
 	var ink_lbl := Label.new()
 	ink_lbl.text = "만년필 잉크 컬러"
@@ -280,19 +260,19 @@ func _build_ui() -> void:
 	_ink_row.add_theme_constant_override("separation", 8)
 	ink_vbox.add_child(_ink_row)
 
-	# --- TAB 2: Info ---
+	# TAB 2: Info
 	_panel_info = VBoxContainer.new()
 	_panel_info.add_theme_constant_override("separation", 14)
 	body_stack.add_child(_panel_info)
 
-	_info_card = PanelContainer.new()
-	_panel_info.add_child(_info_card)
+	var info_card = DsCardClass.create(DsCardClass.Variant.SUBTLE, 16, 14, 16)
+	_panel_info.add_child(info_card)
 	var info_vbox := VBoxContainer.new()
 	info_vbox.add_theme_constant_override("separation", 12)
-	_info_card.add_child(info_vbox)
+	info_card.add_child(info_vbox)
 
 	var st_lbl := Label.new()
-	st_lbl.text = "소장 상태 도장"
+	st_lbl.text = "소장 상태 배지"
 	st_lbl.add_theme_font_size_override("font_size", 12)
 	info_vbox.add_child(st_lbl)
 
@@ -311,9 +291,7 @@ func _build_ui() -> void:
 	var p_lbl := Label.new()
 	p_lbl.text = "추정 가치 (원)"
 	p_lbl.add_theme_font_size_override("font_size", 12)
-	_price_input = LineEdit.new()
-	_price_input.placeholder_text = "예: 21000"
-	_price_input.add_theme_font_size_override("font_size", 13)
+	_price_input = DsInputClass.create("예: 21000", DsInputClass.Variant.SURFACE, 38)
 	price_col.add_child(p_lbl)
 	price_col.add_child(_price_input)
 	fields_row.add_child(price_col)
@@ -324,55 +302,39 @@ func _build_ui() -> void:
 	var l_lbl := Label.new()
 	l_lbl.text = "보관 위치"
 	l_lbl.add_theme_font_size_override("font_size", 12)
-	_loc_input = LineEdit.new()
-	_loc_input.placeholder_text = "예: 거실 책장 1층"
-	_loc_input.add_theme_font_size_override("font_size", 13)
+	_loc_input = DsInputClass.create("예: 거실 책장 1층", DsInputClass.Variant.SURFACE, 38)
 	loc_col.add_child(l_lbl)
 	loc_col.add_child(_loc_input)
 	fields_row.add_child(loc_col)
 
-	_save_info_btn = Button.new()
-	_save_info_btn.text = "소장 정보 저장"
-	_save_info_btn.custom_minimum_size = Vector2(0, 40)
-	_save_info_btn.add_theme_font_size_override("font_size", 13)
-	_save_info_btn.pressed.connect(_on_save_info)
-	info_vbox.add_child(_save_info_btn)
+	var photo_row := HBoxContainer.new()
+	photo_row.add_theme_constant_override("separation", 8)
+	info_vbox.add_child(photo_row)
 
-	_delete_btn = Button.new()
-	_delete_btn.text = "이 작품 기록 삭제"
-	_delete_btn.custom_minimum_size = Vector2(0, 40)
-	_delete_btn.add_theme_font_size_override("font_size", 13)
-	_delete_btn.pressed.connect(_on_delete_pressed)
+	var photo_change_btn = DsButtonClass.create("📷 표지 사진 변경", DsButtonClass.Variant.OUTLINE, DsButtonClass.Size.MD, _on_pick_cover_photo)
+	photo_change_btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	photo_row.add_child(photo_change_btn)
+
+	_photo_remove_btn = DsButtonClass.create("사진 제거", DsButtonClass.Variant.DANGER, DsButtonClass.Size.MD, _on_remove_cover_photo)
+	_photo_remove_btn.custom_minimum_size = Vector2(78, 36)
+	photo_row.add_child(_photo_remove_btn)
+
+	var save_info_btn = DsButtonClass.create("소장 정보 저장", DsButtonClass.Variant.PRIMARY, DsButtonClass.Size.LG, _on_save_info)
+	info_vbox.add_child(save_info_btn)
+
+	_delete_btn = DsButtonClass.create("이 작품 기록 삭제", DsButtonClass.Variant.DANGER, DsButtonClass.Size.LG, _on_delete_pressed)
 	_panel_info.add_child(_delete_btn)
 
 func apply_theme(p: Dictionary) -> void:
 	_palette = p
 	if _sheet == null:
 		return
-	_sheet.add_theme_stylebox_override("panel", UiTokensClass.make_sheet_box(p["bg"]))
 	_handle.color = p["border"]
-	_badge_lbl.add_theme_stylebox_override("normal", UiTokensClass.make_box(p["accent_soft"], 99, Color(0, 0, 0, 0), 0, 10, 3))
-	_badge_lbl.add_theme_color_override("font_color", p["accent"])
 	_title_lbl.add_theme_color_override("font_color", p["ink"])
 	_author_lbl.add_theme_color_override("font_color", p["ink_sub"])
-	UiTokensClass.style_button(_close_btn, p["surface_soft"], p["ink"], 99, Color(0, 0, 0, 0), 0, 0, 0)
-
-	_seg_wrap.add_theme_stylebox_override("panel", UiTokensClass.make_box(p["surface_soft"], 14, Color(0, 0, 0, 0), 0, 4, 4))
 	_vol_summary_lbl.add_theme_color_override("font_color", p["ink_sub"])
-	UiTokensClass.style_button(_add_vol_btn, p["ink"], p["bg"], 99, Color(0, 0, 0, 0), 0, 14, 4)
-
-	_memo_preview_panel.add_theme_stylebox_override("panel", UiTokensClass.make_box(p["surface"], 14, p["border"], 1, 14, 12))
 	UiTokensClass.style_text_edit(_memo_input, p)
-	UiTokensClass.style_button(_save_memo_btn, p["ink"], p["bg"], 12)
-	_ink_panel.add_theme_stylebox_override("panel", UiTokensClass.make_box(p["surface"], 14, p["border"], 1, 14, 12))
-
-	_info_card.add_theme_stylebox_override("panel", UiTokensClass.make_box(p["surface"], 16, p["border"], 1, 16, 14))
-	UiTokensClass.style_line_edit(_price_input, p, p["bg"])
-	UiTokensClass.style_line_edit(_loc_input, p, p["bg"])
-	UiTokensClass.style_button(_save_info_btn, p["ink"], p["bg"], 12)
-	UiTokensClass.style_button(_delete_btn, p["danger_soft"], p["danger"], 12)
-
-	_switch_tab(_active_tab)
+	UiTokensClass.theme_ds_tree(self, p)
 	if current_item != null and visible:
 		_refresh_all()
 
@@ -383,6 +345,7 @@ func open(item, p: Dictionary = {}) -> void:
 	if not p.is_empty():
 		apply_theme(p)
 	_refresh_all()
+	_seg_tabs.set_active(0)
 	_switch_tab(0)
 	visible = true
 
@@ -394,21 +357,23 @@ func _switch_tab(idx: int) -> void:
 	_panel_vols.visible = (idx == 0)
 	_panel_memo.visible = (idx == 1)
 	_panel_info.visible = (idx == 2)
-	for i in range(_seg_btns.size()):
-		var act := (i == idx)
-		UiTokensClass.style_button(
-			_seg_btns[i],
-			_palette["surface"] if act else Color(0, 0, 0, 0),
-			_palette["ink"] if act else _palette["ink_sub"],
-			10, Color(0, 0, 0, 0), 0, 8, 6
-		)
 
 func _refresh_all() -> void:
 	if current_item == null:
 		return
 	var base_col := Color.from_string(current_item.cover_color, Color("#C82342"))
 	_cover_panel.add_theme_stylebox_override("panel", UiTokensClass.make_cover_box(base_col, 5, 10))
-	_cover_lbl.text = current_item.title
+	var tex := UiTokensClass.load_cover_texture(str(current_item.cover_path))
+	if tex != null:
+		_cover_tex.texture = tex
+		_cover_tex.visible = true
+		_cover_lbl.visible = false
+	else:
+		_cover_tex.texture = null
+		_cover_tex.visible = false
+		_cover_lbl.visible = true
+		_cover_lbl.text = current_item.title
+	_photo_remove_btn.visible = (tex != null)
 
 	_badge_lbl.text = current_item.status_tag if current_item.status_tag != "" else "소장중"
 	_title_lbl.text = current_item.title
@@ -436,8 +401,8 @@ func _render_volumes() -> void:
 	for i in range(current_item.volumes.size()):
 		var v: Dictionary = current_item.volumes[i]
 		var idx := i
-		var card := PanelContainer.new()
-		card.add_theme_stylebox_override("panel", UiTokensClass.make_box(_palette["surface"], 14, _palette["border"], 1, 14, 12))
+		var card = DsCardClass.create(DsCardClass.Variant.SUBTLE, 14, 12, 14)
+		card.apply_theme(_palette)
 		_vol_list.add_child(card)
 
 		var vb := VBoxContainer.new()
@@ -455,20 +420,16 @@ func _render_volumes() -> void:
 		top.add_child(num_lbl)
 
 		var is_first: bool = str(v.get("status", "")) == "first"
-		var st_btn := Button.new()
-		st_btn.text = "초판특전" if is_first else "소장완료"
-		st_btn.add_theme_font_size_override("font_size", 11)
-		UiTokensClass.style_button(
-			st_btn,
-			_palette["accent_soft"] if is_first else _palette["sage_soft"],
-			_palette["accent"] if is_first else _palette["sage"],
-			99, Color(0, 0, 0, 0), 0, 10, 3
+		var st_btn = DsButtonClass.create(
+			"초판특전" if is_first else "소장완료",
+			DsButtonClass.Variant.ACCENT if is_first else DsButtonClass.Variant.SECONDARY,
+			DsButtonClass.Size.SM,
+			func():
+				current_item.volumes[idx]["status"] = "owned" if is_first else "first"
+				_refresh_all()
+				diary_updated.emit(current_item)
 		)
-		st_btn.pressed.connect(func():
-			current_item.volumes[idx]["status"] = "owned" if is_first else "first"
-			_refresh_all()
-			diary_updated.emit(current_item)
-		)
+		st_btn.apply_theme(_palette)
 		top.add_child(st_btn)
 
 		var dt_lbl := Label.new()
@@ -479,22 +440,19 @@ func _render_volumes() -> void:
 		top.add_child(dt_lbl)
 
 		var r_val: int = clampi(int(v.get("rating", 5)), 1, 5)
-		var star_btn := Button.new()
-		star_btn.text = "★".repeat(r_val) + "☆".repeat(5 - r_val)
-		star_btn.add_theme_font_size_override("font_size", 13)
-		UiTokensClass.style_button(star_btn, Color(0, 0, 0, 0), Color("#D97706"), 6, Color(0, 0, 0, 0), 0, 4, 2)
-		star_btn.pressed.connect(func():
+		var star_btn = DsButtonClass.create("★".repeat(r_val) + "☆".repeat(5 - r_val), DsButtonClass.Variant.GHOST, DsButtonClass.Size.SM, func():
 			current_item.volumes[idx]["rating"] = (r_val % 5) + 1
 			_refresh_all()
 			diary_updated.emit(current_item)
 		)
+		star_btn.add_theme_font_size_override("font_size", 13)
+		star_btn.add_theme_color_override("font_color", Color("#D97706"))
 		top.add_child(star_btn)
 
-		var q_edit := LineEdit.new()
+		var q_edit = DsInputClass.create("이 권의 밑줄 문장을 입력하세요", DsInputClass.Variant.SURFACE, 36)
 		q_edit.text = str(v.get("quote", ""))
-		q_edit.placeholder_text = "이 권의 밑줄 문장을 입력하세요"
 		q_edit.add_theme_font_size_override("font_size", 12)
-		UiTokensClass.style_line_edit(q_edit, _palette, _palette["bg"])
+		q_edit.apply_theme(_palette)
 		q_edit.text_submitted.connect(func(new_txt: String):
 			current_item.volumes[idx]["quote"] = new_txt.strip_edges()
 			diary_updated.emit(current_item)
@@ -503,7 +461,7 @@ func _render_volumes() -> void:
 		)
 		q_edit.focus_exited.connect(func():
 			if current_item != null and idx < current_item.volumes.size():
-				var clean := q_edit.text.strip_edges()
+				var clean: String = q_edit.text.strip_edges()
 				if str(current_item.volumes[idx].get("quote", "")) != clean:
 					current_item.volumes[idx]["quote"] = clean
 					diary_updated.emit(current_item)
@@ -513,12 +471,8 @@ func _render_volumes() -> void:
 func _render_memo_panel() -> void:
 	var hl_on: bool = bool(current_item.highlight_enabled)
 	_hl_btn.text = "형광펜 ON" if hl_on else "형광펜 OFF"
-	UiTokensClass.style_button(
-		_hl_btn,
-		_palette["hl_bg"] if hl_on else _palette["surface"],
-		_palette["hl_ink"] if hl_on else _palette["ink_sub"],
-		99, _palette["border"], 1, 10, 4
-	)
+	_hl_btn.variant = DsButtonClass.Variant.ACCENT if hl_on else DsButtonClass.Variant.OUTLINE
+	_hl_btn.apply_theme(_palette)
 
 	var memo_txt: String = current_item.memo if current_item.memo != "" else "감상평을 남겨보세요."
 	_memo_preview_lbl.text = "\"%s\"" % memo_txt
@@ -528,22 +482,22 @@ func _render_memo_panel() -> void:
 	_memo_preview_lbl.add_theme_color_override("font_color", ink_col)
 	_memo_preview_panel.add_theme_stylebox_override(
 		"panel",
-		UiTokensClass.make_box(_palette["hl_bg"] if hl_on else _palette["surface"], 14, _palette["border"], 1, 14, 12)
+		UiTokensClass.make_box(_palette["hl_bg"] if hl_on else _palette["bg_subtle"], 14, Color(0, 0, 0, 0), 0, 14, 12)
 	)
 	_memo_input.text = current_item.memo
 
 	for ch in _ink_row.get_children():
 		ch.queue_free()
 	for ink in UiTokensClass.INK_PRESETS:
+		var hex: String = ink["hex"]
+		var is_sel: bool = current_item.memo_ink_color.to_lower() == hex.to_lower()
+		var col := Color.from_string(hex, _palette["ink"])
 		var b := Button.new()
 		b.text = ink["name"]
 		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		b.custom_minimum_size = Vector2(0, 34)
 		b.add_theme_font_size_override("font_size", 12)
-		var hex: String = ink["hex"]
-		var is_sel: bool = current_item.memo_ink_color.to_lower() == hex.to_lower()
-		var col := Color.from_string(hex, _palette["ink"])
-		UiTokensClass.style_button(b, _palette["bg"], col if _palette["bg"].v > 0.3 else _palette["ink"], 10, col if is_sel else _palette["border"], 2 if is_sel else 1, 6, 4)
+		UiTokensClass.style_button(b, _palette["surface"], col if _palette["bg"].v > 0.3 else _palette["ink"], 10, col if is_sel else _palette["border"], 2 if is_sel else 1, 6, 4)
 		b.pressed.connect(func():
 			current_item.memo_ink_color = hex
 			_render_memo_panel()
@@ -555,22 +509,14 @@ func _render_info_panel() -> void:
 	for ch in _stamp_row.get_children():
 		ch.queue_free()
 	for st in UiTokensClass.STAMP_PRESETS:
-		var b := Button.new()
-		b.text = st
-		b.add_theme_font_size_override("font_size", 12)
-		var is_sel: bool = (current_item.status_tag == st)
-		UiTokensClass.style_button(
-			b,
-			_palette["ink"] if is_sel else _palette["bg"],
-			_palette["bg"] if is_sel else _palette["ink_sub"],
-			99, _palette["border"], 1, 14, 6
-		)
 		var stamp_val: String = st
-		b.pressed.connect(func():
+		var b = DsButtonClass.create(stamp_val, DsButtonClass.Variant.CHIP, DsButtonClass.Size.SM, func():
 			current_item.status_tag = stamp_val
 			_refresh_all()
 			diary_updated.emit(current_item)
 		)
+		b.is_selected = (current_item.status_tag == stamp_val)
+		b.apply_theme(_palette)
 		_stamp_row.add_child(b)
 
 	var est_v: int = current_item.get_item_value() if current_item.has_method("get_item_value") else int(current_item.estimated_value)
@@ -600,6 +546,26 @@ func _on_save_memo() -> void:
 	_render_memo_panel()
 	diary_updated.emit(current_item)
 	toast_requested.emit("감상평을 저장했어요")
+
+func _on_pick_cover_photo() -> void:
+	if current_item == null:
+		return
+	UiTokensClass.open_image_picker(self, func(saved_path: String, _file_name: String):
+		if current_item == null or saved_path.is_empty():
+			return
+		current_item.cover_path = saved_path
+		_refresh_all()
+		diary_updated.emit(current_item)
+		toast_requested.emit("표지 사진을 적용했어요")
+	)
+
+func _on_remove_cover_photo() -> void:
+	if current_item == null:
+		return
+	current_item.cover_path = ""
+	_refresh_all()
+	diary_updated.emit(current_item)
+	toast_requested.emit("표지 사진을 제거했어요")
 
 func _on_save_info() -> void:
 	if current_item == null:

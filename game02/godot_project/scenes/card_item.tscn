@@ -2,7 +2,6 @@
 
 [ext_resource type="Script" path="res://scripts/card_item.gd" id="1_card"]
 
-[node name="CardItem" type="PanelContainer"]
-custom_minimum_size = Vector2(180, 256)
+[node name="CardItem" type="VBoxContainer"]
 size_flags_horizontal = 3
 script = ExtResource("1_card")

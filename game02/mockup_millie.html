@@ -1,0 +1,1209 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Pocket Archive — 밀리의 서재 스타일 UI 목업</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --bg: #FFFFFF;
+            --bg-subtle: #F7F7F7;
+            --surface: #FFFFFF;
+            --surface-soft: #F3F3F3;
+            --border: #EAEAEA;
+            --ink: #242424;
+            --ink-sub: #6F6F6F;
+            --ink-muted: #A5A5A5;
+            --millie: #FFEB60;
+            --millie-deep: #E5C800;
+            --accent: #242424;
+            --sage: #2F7D57;
+            --sage-soft: #EAF6EF;
+            --shelf-shadow: 0 8px 14px -6px rgba(0, 0, 0, 0.14);
+        }
+
+        [data-theme="paper"] {
+            --bg: #FAF7F2;
+            --bg-subtle: #F2ECE3;
+            --surface: #FFFDF9;
+            --surface-soft: #EFE8DD;
+            --border: #E6DDD0;
+            --ink: #26201C;
+            --ink-sub: #74675E;
+            --ink-muted: #A6998E;
+            --millie: #FFE670;
+        }
+
+        [data-theme="dark"] {
+            --bg: #141414;
+            --bg-subtle: #1D1D1D;
+            --surface: #1F1F1F;
+            --surface-soft: #2A2A2A;
+            --border: #2F2F2F;
+            --ink: #F5F5F5;
+            --ink-sub: #A8A8A8;
+            --ink-muted: #727272;
+            --millie: #F5DC4C;
+            --accent: #F5DC4C;
+            --sage: #5AC18E;
+            --sage-soft: rgba(90, 193, 142, 0.14);
+            --shelf-shadow: 0 10px 18px -6px rgba(0, 0, 0, 0.55);
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+        body {
+            margin: 0;
+            font-family: 'Pretendard Variable', 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #E9E9E9;
+            color: var(--ink);
+            font-feature-settings: "tnum";
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px 12px;
+        }
+
+        .app-frame {
+            width: 100%;
+            max-width: 430px;
+            height: 860px;
+            max-height: calc(100vh - 40px);
+            background: var(--bg);
+            border-radius: 36px;
+            box-shadow: 0 24px 64px rgba(0, 0, 0, 0.16), 0 0 0 1px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+            transition: background 0.22s ease, color 0.22s ease;
+        }
+
+        /* Top Underline Tabs (Millie Signature) */
+        .top-tabs {
+            display: flex;
+            align-items: center;
+            gap: 22px;
+            padding: 0 20px;
+            border-bottom: 1px solid var(--border);
+            background: var(--bg);
+        }
+        .top-tab {
+            position: relative;
+            padding: 12px 2px 11px;
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--ink-muted);
+            background: none;
+            border: none;
+            cursor: pointer;
+            transition: color 0.16s ease;
+        }
+        .top-tab.active {
+            color: var(--ink);
+            font-weight: 800;
+        }
+        .top-tab.active::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: -1px;
+            height: 2.5px;
+            background: var(--ink);
+            border-radius: 2px;
+        }
+
+        .scroll-area {
+            flex: 1;
+            overflow-y: auto;
+            scrollbar-width: none;
+            padding-bottom: 96px;
+        }
+        .scroll-area::-webkit-scrollbar { display: none; }
+
+        /* Icon Button */
+        .icon-btn {
+            width: 34px;
+            height: 34px;
+            border-radius: 999px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            border: none;
+            color: var(--ink);
+            cursor: pointer;
+            transition: background 0.15s ease;
+        }
+        .icon-btn:hover { background: var(--surface-soft); }
+
+        /* Millie Book Cover */
+        .book-cover {
+            position: relative;
+            aspect-ratio: 1 / 1.42;
+            border-radius: 4px 10px 10px 4px;
+            overflow: hidden;
+            box-shadow:
+                inset 8px 0 12px rgba(0, 0, 0, 0.22),
+                inset 1.5px 0 0 rgba(255, 255, 255, 0.25),
+                0 6px 14px rgba(0, 0, 0, 0.14);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 10px 10px 11px 14px;
+            color: #fff;
+            background-size: cover;
+            background-position: center;
+            transition: transform 0.18s ease;
+        }
+        .book-item:active .book-cover { transform: scale(0.97); }
+        .book-cover::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(0,0,0,0.06) 0%, rgba(0,0,0,0) 45%, rgba(0,0,0,0.44) 100%);
+            pointer-events: none;
+        }
+        .book-cover::after {
+            content: "";
+            position: absolute;
+            left: 8px;
+            top: 0;
+            bottom: 0;
+            width: 1px;
+            background: rgba(255, 255, 255, 0.22);
+            pointer-events: none;
+        }
+
+        /* Bookshelf Row Underline (Millie Bookshelf Feel) */
+        .shelf-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+            padding-bottom: 14px;
+            margin-bottom: 18px;
+            border-bottom: 6px solid var(--surface-soft);
+            box-shadow: var(--shelf-shadow);
+        }
+        .shelf-row.cols-2 {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        /* Filter Pill */
+        .chip {
+            padding: 6px 13px;
+            border-radius: 999px;
+            font-size: 12.5px;
+            font-weight: 600;
+            white-space: nowrap;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--ink-sub);
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+        .chip.active {
+            background: var(--ink);
+            color: var(--bg);
+            border-color: var(--ink);
+        }
+
+        /* Floating Add FAB */
+        .fab {
+            position: absolute;
+            right: 20px;
+            bottom: 22px;
+            height: 48px;
+            padding: 0 18px;
+            border-radius: 999px;
+            background: var(--ink);
+            color: var(--bg);
+            font-size: 14px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.22);
+            z-index: 30;
+            transition: transform 0.16s ease;
+        }
+        .fab:active { transform: scale(0.95); }
+        [data-theme="dark"] .fab {
+            background: var(--millie);
+            color: #1A1A1A;
+        }
+
+        /* Full-Screen Subpage (Settings Page) */
+        .subpage {
+            position: absolute;
+            inset: 0;
+            background: var(--bg);
+            z-index: 45;
+            display: flex;
+            flex-direction: column;
+            transform: translateX(100%);
+            transition: transform 0.24s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .subpage.open { transform: translateX(0); }
+
+        /* Bottom Sheet */
+        .sheet-backdrop {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.45);
+            backdrop-filter: blur(4px);
+            z-index: 50;
+            display: flex;
+            align-items: flex-end;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+        }
+        .sheet-backdrop.open { opacity: 1; pointer-events: auto; }
+        .sheet-panel {
+            width: 100%;
+            max-height: 88%;
+            background: var(--bg);
+            border-radius: 26px 26px 0 0;
+            display: flex;
+            flex-direction: column;
+            transform: translateY(28px);
+            transition: transform 0.24s cubic-bezier(0.22, 1, 0.36, 1);
+            overflow: hidden;
+        }
+        .sheet-backdrop.open .sheet-panel { transform: translateY(0); }
+
+        .seg-wrap {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            background: var(--surface-soft);
+            padding: 4px;
+            border-radius: 12px;
+            gap: 4px;
+        }
+        .seg-btn {
+            padding: 8px 6px;
+            border-radius: 9px;
+            font-size: 12.5px;
+            font-weight: 600;
+            color: var(--ink-sub);
+            border: none;
+            background: transparent;
+            cursor: pointer;
+        }
+        .seg-btn.active {
+            background: var(--surface);
+            color: var(--ink);
+            font-weight: 700;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+        }
+
+        .floating-toast {
+            position: absolute;
+            bottom: 82px;
+            left: 50%;
+            transform: translateX(-50%) translateY(10px);
+            background: var(--ink);
+            color: var(--bg);
+            padding: 9px 16px;
+            border-radius: 999px;
+            font-size: 12.5px;
+            font-weight: 600;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.2s ease;
+            z-index: 70;
+            white-space: nowrap;
+        }
+        .floating-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+        .hl-mark {
+            background: linear-gradient(180deg, transparent 50%, var(--millie) 50%);
+            padding: 0 3px;
+            border-radius: 2px;
+        }
+
+        /* Gacha Acrylic Figure Display Case (전시대) */
+        .showcase-cabinet {
+            border-radius: 22px;
+            padding: 18px 14px 16px;
+            position: relative;
+            overflow: hidden;
+            border: 1.5px solid var(--border);
+            transition: background 0.25s ease, border-color 0.25s ease;
+        }
+        .showcase-cabinet[data-case="acrylic"] {
+            background: linear-gradient(180deg, #F6F8FB 0%, #EEF2F7 100%);
+            border-color: #DCE3EC;
+        }
+        .showcase-cabinet[data-case="wood"] {
+            background: linear-gradient(180deg, #F3E9DC 0%, #E7D7C1 100%);
+            border-color: #D6C1A5;
+        }
+        .showcase-cabinet[data-case="museum"] {
+            background: linear-gradient(180deg, #1E1F24 0%, #141519 100%);
+            border-color: #2E3038;
+            color: #F5F5F5;
+        }
+        .showcase-led {
+            position: absolute;
+            top: 0;
+            left: 14%;
+            right: 14%;
+            height: 6px;
+            border-radius: 0 0 8px 8px;
+            background: #FFF9D6;
+            box-shadow: 0 4px 28px 10px rgba(255, 238, 150, 0.55);
+            transition: opacity 0.25s ease;
+            pointer-events: none;
+        }
+        .showcase-cabinet.led-off .showcase-led { opacity: 0; }
+        .showcase-tier {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px;
+            padding: 16px 8px 0;
+            position: relative;
+        }
+        .acrylic-glass-shelf {
+            height: 10px;
+            margin: 0 2px 18px;
+            border-radius: 999px;
+            background: linear-gradient(180deg, rgba(255,255,255,0.88) 0%, rgba(215,228,242,0.55) 100%);
+            border: 1px solid rgba(255,255,255,0.75);
+            box-shadow: 0 8px 14px -4px rgba(20, 30, 50, 0.16);
+        }
+        .showcase-cabinet[data-case="museum"] .acrylic-glass-shelf {
+            background: linear-gradient(180deg, rgba(255,255,255,0.22) 0%, rgba(255,255,255,0.06) 100%);
+            border-color: rgba(255,255,255,0.18);
+            box-shadow: 0 8px 18px -4px rgba(0,0,0,0.6);
+        }
+        .figure-slot {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            transition: transform 0.18s ease;
+        }
+        .figure-slot:active { transform: scale(0.96); }
+        .figure-dome {
+            width: 112px;
+            height: 118px;
+            border-radius: 56px 56px 14px 14px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1.5px solid rgba(255,255,255,0.7);
+            box-shadow: inset 0 8px 18px rgba(255,255,255,0.45), 0 8px 16px rgba(0,0,0,0.12);
+            background-size: cover;
+            background-position: center;
+        }
+        .figure-pedestal {
+            width: 96px;
+            height: 12px;
+            margin-top: -5px;
+            border-radius: 999px;
+            background: linear-gradient(180deg, rgba(255,255,255,0.92), rgba(205,212,222,0.85));
+            border: 1px solid rgba(255,255,255,0.85);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.14);
+            z-index: 2;
+        }
+        .showcase-cabinet[data-case="museum"] .figure-pedestal {
+            background: linear-gradient(180deg, #3A3D47, #23252C);
+            border-color: rgba(255,255,255,0.14);
+        }
+        .figure-plaque {
+            margin-top: 7px;
+            padding: 3px 9px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            max-width: 132px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            background: rgba(255,255,255,0.82);
+            color: #242424;
+            border: 1px solid rgba(0,0,0,0.06);
+        }
+        .showcase-cabinet[data-case="museum"] .figure-plaque {
+            background: rgba(255,255,255,0.1);
+            color: #F5F5F5;
+            border-color: rgba(255,255,255,0.12);
+        }
+    </style>
+</head>
+<body>
+    <div class="app-frame" id="app" data-theme="millie">
+        <!-- Top Header (Millie Style: Library Title Left + Search / Theme / Settings Icons Top-Right) -->
+        <header class="px-5 pt-5 pb-2 flex items-center justify-between shrink-0" style="background: var(--bg);">
+            <div class="flex items-center gap-2 min-w-0">
+                <span class="w-2.5 h-2.5 rounded-full shrink-0" style="background: var(--millie); box-shadow: 0 0 0 1px rgba(0,0,0,0.08);"></span>
+                <h1 id="library-title" onclick="openSettings()" class="text-[20px] font-extrabold tracking-tight truncate cursor-pointer" title="눌러서 서재 이름 변경">나의 서재</h1>
+            </div>
+            <div class="flex items-center gap-1 shrink-0">
+                <button class="icon-btn" onclick="toggleSearchBar()" title="검색">
+                    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+                </button>
+                <button class="icon-btn" onclick="cycleThemeQuick()" title="테마 빠르게 전환">
+                    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r="1.2"/><circle cx="17.5" cy="10.5" r="1.2"/><circle cx="8.5" cy="7.5" r="1.2"/><circle cx="6.5" cy="12.5" r="1.2"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.9 0 1.6-.7 1.6-1.6 0-.4-.2-.8-.4-1.1-.3-.3-.4-.7-.4-1.1 0-.9.7-1.6 1.6-1.6H16c3.3 0 6-2.7 6-6 0-4.9-4.5-8.6-10-8.6z"/></svg>
+                </button>
+                <button class="icon-btn" onclick="openSettings()" title="설정">
+                    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9c.26.6.85 1 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                </button>
+            </div>
+        </header>
+
+        <!-- Expandable Search Bar -->
+        <div id="search-wrap" class="px-5 pb-2 hidden shrink-0" style="background: var(--bg);">
+            <input id="search-input" type="text" placeholder="작품명, 작가, 밑줄 문장 검색" oninput="renderShelf()"
+                class="w-full px-3.5 py-2 rounded-xl text-[13px] outline-none"
+                style="background: var(--surface-soft); color: var(--ink);">
+        </div>
+
+        <!-- Top Navigation Tabs (Moved to Top!) -->
+        <nav class="top-tabs shrink-0">
+            <button class="top-tab active" data-tab="shelf" onclick="switchTab('shelf')">책장</button>
+            <button class="top-tab" data-tab="showcase" onclick="switchTab('showcase')">전시대</button>
+            <button class="top-tab" data-tab="notes" onclick="switchTab('notes')">독서 노트</button>
+            <button class="top-tab" data-tab="stats" onclick="switchTab('stats')">통계</button>
+        </nav>
+
+        <!-- TAB 1: BOOKSHELF -->
+        <main id="view-shelf" class="scroll-area px-5 pt-4">
+            <!-- Millie Highlight Quote Strip -->
+            <section onclick="cycleQuote()" class="p-4 rounded-2xl mb-4 cursor-pointer relative overflow-hidden" style="background: var(--bg-subtle);">
+                <div class="flex items-center justify-between mb-1.5">
+                    <span class="text-[11px] font-extrabold px-2 py-0.5 rounded-md" style="background: var(--millie); color: #242424;">오늘의 밑줄</span>
+                    <button onclick="event.stopPropagation(); openQuoteSource()" class="text-[11.5px] font-semibold cursor-pointer bg-transparent border-0" style="color: var(--ink-sub);">원문 보기 ›</button>
+                </div>
+                <p id="quote-text" class="text-[14.5px] font-bold leading-relaxed mt-1"></p>
+                <p id="quote-meta" class="text-[12px] mt-1" style="color: var(--ink-sub);"></p>
+            </section>
+
+            <!-- Filter Chips + View Toggle + Sort -->
+            <div class="flex items-center justify-between gap-2 mb-3">
+                <div class="flex items-center gap-1.5 overflow-x-auto" style="scrollbar-width: none;">
+                    <button class="chip active" onclick="setFilter('all', this)">전체</button>
+                    <button class="chip" onclick="setFilter('book', this)">만화·도서</button>
+                    <button class="chip" onclick="setFilter('gacha', this)">가챠·굿즈</button>
+                    <button class="chip" onclick="setFilter('done', this)">완독</button>
+                </div>
+            </div>
+
+            <div class="flex items-center justify-between mb-4 text-[12px]" style="color: var(--ink-sub);">
+                <span id="shelf-count-lbl">총 6권 · ₩80,000</span>
+                <div class="flex items-center gap-2">
+                    <button id="col-toggle-btn" onclick="toggleCols()" class="px-2 py-1 rounded-lg text-[11.5px] font-semibold cursor-pointer border-0" style="background: var(--surface-soft); color: var(--ink-sub);">3열 보기</button>
+                    <select id="sort-select" onchange="renderShelf()" class="text-[12px] font-semibold bg-transparent border-0 outline-none cursor-pointer" style="color: var(--ink);">
+                        <option value="default">등록순</option>
+                        <option value="rating">별점순</option>
+                        <option value="value">가치순</option>
+                        <option value="title">가나다순</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Bookshelf Rows -->
+            <div id="shelf-container"></div>
+        </main>
+
+        <!-- TAB 2: GACHA FIGURE SHOWCASE (전시대) -->
+        <main id="view-showcase" class="scroll-area px-5 pt-4 hidden">
+            <div class="flex items-center justify-between mb-3.5">
+                <div>
+                    <p class="text-[14px] font-extrabold">피규어 전시대</p>
+                    <p class="text-[11.5px]" style="color: var(--ink-sub);" id="showcase-count-lbl">진열 중 2개 · ₩10,000</p>
+                </div>
+                <button id="led-toggle-btn" onclick="toggleShowcaseLed()" class="px-3 py-1.5 rounded-full text-[11.5px] font-bold cursor-pointer border-0" style="background: var(--millie); color: #242424;">💡 조명 ON</button>
+            </div>
+
+            <div id="showcase-cabinet" class="showcase-cabinet" data-case="acrylic">
+                <div class="showcase-led"></div>
+                <div id="showcase-tiers"></div>
+            </div>
+        </main>
+
+        <!-- TAB 3: READING NOTES -->
+        <main id="view-notes" class="scroll-area px-5 pt-4 hidden">
+            <div class="flex items-center justify-between mb-3">
+                <p class="text-[13px] font-bold" style="color: var(--ink-sub);" id="notes-count-lbl">저장된 밑줄</p>
+            </div>
+            <div id="notes-list" class="space-y-3"></div>
+        </main>
+
+        <!-- TAB 3: STATS -->
+        <main id="view-stats" class="scroll-area px-5 pt-4 hidden">
+            <div class="p-5 rounded-2xl mb-4" style="background: var(--bg-subtle);">
+                <p class="text-[12px] font-semibold" style="color: var(--ink-sub);">내 서재 총 소장 가치</p>
+                <p class="text-[28px] font-extrabold tracking-tight mt-1" id="st-total-val">₩80,000</p>
+                <div class="mt-4 grid grid-cols-3 gap-2 pt-4 border-t" style="border-color: var(--border);">
+                    <div>
+                        <p class="text-[11px]" style="color: var(--ink-muted);">전체 작품</p>
+                        <p class="text-[17px] font-extrabold mt-0.5" id="st-items">6종</p>
+                    </div>
+                    <div>
+                        <p class="text-[11px]" style="color: var(--ink-muted);">기록 권수</p>
+                        <p class="text-[17px] font-extrabold mt-0.5" id="st-vols">10권</p>
+                    </div>
+                    <div>
+                        <p class="text-[11px]" style="color: var(--ink-muted);">평균 완독률</p>
+                        <p class="text-[17px] font-extrabold mt-0.5" style="color: var(--sage);" id="st-rate">88%</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-5 rounded-2xl" style="background: var(--bg-subtle);">
+                <p class="text-[13px] font-bold mb-3">카테고리 구성</p>
+                <div id="st-cat-bars" class="space-y-3"></div>
+            </div>
+        </main>
+
+        <!-- Floating Add Record Button (Clean, No Bottom Bar!) -->
+        <button class="fab" onclick="openAddModal()">
+            <span class="text-[18px] leading-none">+</span>
+            <span>기록 추가</span>
+        </button>
+
+        <!-- Floating Toast -->
+        <div id="toast" class="floating-toast"></div>
+
+        <!-- SETTINGS FULL PAGE (Dedicated Subpage — Scalable for Future Settings) -->
+        <div id="settings-page" class="subpage">
+            <header class="px-4 pt-5 pb-3 flex items-center gap-2 border-b shrink-0" style="border-color: var(--border); background: var(--bg);">
+                <button onclick="closeSettings()" class="icon-btn" title="뒤로">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                </button>
+                <h2 class="text-[17px] font-extrabold">설정</h2>
+            </header>
+
+            <div class="flex-1 overflow-y-auto px-5 py-5 space-y-6" style="scrollbar-width: none;">
+                <!-- Section 1: Library Profile -->
+                <section>
+                    <p class="text-[12px] font-bold mb-2.5 px-1" style="color: var(--ink-muted);">서재 프로필</p>
+                    <div class="p-4 rounded-2xl" style="background: var(--bg-subtle);">
+                        <p class="text-[13.5px] font-bold mb-1">서재 이름</p>
+                        <p class="text-[12px] mb-3" style="color: var(--ink-sub);">이름을 입력하면 'OOO의 서재'로 표시됩니다. 비워두면 '나의 서재'가 됩니다.</p>
+                        <div class="flex gap-2">
+                            <input id="owner-name-input" type="text" placeholder="이름 입력 (예: 주희, 민수)" onkeydown="if(event.key==='Enter') saveOwnerName()"
+                                class="flex-1 px-3.5 py-2.5 rounded-xl text-[13px] outline-none"
+                                style="background: var(--surface); border: 1px solid var(--border); color: var(--ink);">
+                            <button onclick="saveOwnerName()" class="px-4 py-2.5 rounded-xl text-[13px] font-bold cursor-pointer border-0" style="background: var(--ink); color: var(--bg);">적용</button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 2: Display & Theme -->
+                <section>
+                    <p class="text-[12px] font-bold mb-2.5 px-1" style="color: var(--ink-muted);">화면 및 테마</p>
+                    <div class="p-4 rounded-2xl space-y-4" style="background: var(--bg-subtle);">
+                        <div>
+                            <p class="text-[13.5px] font-bold mb-2.5">서재 테마</p>
+                            <div class="grid grid-cols-3 gap-2">
+                                <button onclick="setTheme('millie')" class="p-3 rounded-xl border text-center cursor-pointer" style="background: #FFFFFF; color: #242424; border-color: var(--border);">
+                                    <div class="w-5 h-5 rounded-full mx-auto mb-1.5" style="background: #FFEB60;"></div>
+                                    <span class="text-[12px] font-bold">밀리 화이트</span>
+                                </button>
+                                <button onclick="setTheme('paper')" class="p-3 rounded-xl border text-center cursor-pointer" style="background: #FAF7F2; color: #26201C; border-color: var(--border);">
+                                    <div class="w-5 h-5 rounded-full mx-auto mb-1.5" style="background: #EFE8DD;"></div>
+                                    <span class="text-[12px] font-bold">웜 페이퍼</span>
+                                </button>
+                                <button onclick="setTheme('dark')" class="p-3 rounded-xl border text-center cursor-pointer" style="background: #141414; color: #F5F5F5; border-color: #333;">
+                                    <div class="w-5 h-5 rounded-full mx-auto mb-1.5" style="background: #F5DC4C;"></div>
+                                    <span class="text-[12px] font-bold">미드나잇</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="pt-3 border-t" style="border-color: var(--border);">
+                            <p class="text-[13.5px] font-bold mb-2.5">전시대 스타일</p>
+                            <div class="grid grid-cols-3 gap-2">
+                                <button data-case-btn="acrylic" onclick="setShowcaseStyle('acrylic', this)" class="p-2.5 rounded-xl border-2 text-center cursor-pointer" style="background: #F3F6FA; color: #242424; border-color: var(--ink);">
+                                    <div class="w-5 h-5 rounded-full mx-auto mb-1 border" style="background: #FFFFFF; border-color: #DCE3EC;"></div>
+                                    <span class="text-[11.5px] font-bold">아크릴 화이트</span>
+                                </button>
+                                <button data-case-btn="wood" onclick="setShowcaseStyle('wood', this)" class="p-2.5 rounded-xl border text-center cursor-pointer" style="background: #EFE4D4; color: #2A2118; border-color: var(--border);">
+                                    <div class="w-5 h-5 rounded-full mx-auto mb-1" style="background: #D6C1A5;"></div>
+                                    <span class="text-[11.5px] font-bold">우드 장식장</span>
+                                </button>
+                                <button data-case-btn="museum" onclick="setShowcaseStyle('museum', this)" class="p-2.5 rounded-xl border text-center cursor-pointer" style="background: #1B1C21; color: #F5F5F5; border-color: #333;">
+                                    <div class="w-5 h-5 rounded-full mx-auto mb-1" style="background: #3A3D47;"></div>
+                                    <span class="text-[11.5px] font-bold">뮤지엄 다크</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-between pt-3 border-t" style="border-color: var(--border);">
+                            <div>
+                                <p class="text-[13.5px] font-bold">기본 책장 보기</p>
+                                <p class="text-[11.5px]" style="color: var(--ink-sub);">책장 한 줄에 표시할 표지 개수</p>
+                            </div>
+                            <button id="settings-col-btn" onclick="toggleCols()" class="px-3.5 py-2 rounded-xl text-[12.5px] font-bold cursor-pointer border" style="background: var(--surface); border-color: var(--border); color: var(--ink);">3열 보기</button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 3: Data Management -->
+                <section>
+                    <p class="text-[12px] font-bold mb-2.5 px-1" style="color: var(--ink-muted);">데이터 관리</p>
+                    <div class="rounded-2xl overflow-hidden" style="background: var(--bg-subtle);">
+                        <button onclick="exportBackup()" class="w-full px-4 py-3.5 flex items-center justify-between text-left cursor-pointer bg-transparent border-0" style="color: var(--ink);">
+                            <div>
+                                <p class="text-[13.5px] font-bold">JSON 데이터 백업 복사</p>
+                                <p class="text-[11.5px]" style="color: var(--ink-sub);">모든 작품과 권별 밑줄 기록을 클립보드로 내보냅니다</p>
+                            </div>
+                            <span style="color: var(--ink-muted);">›</span>
+                        </button>
+                    </div>
+                </section>
+
+                <!-- Section 4: App Info -->
+                <section>
+                    <p class="text-[12px] font-bold mb-2.5 px-1" style="color: var(--ink-muted);">앱 정보</p>
+                    <div class="px-4 py-3.5 rounded-2xl flex items-center justify-between text-[13px]" style="background: var(--bg-subtle);">
+                        <span class="font-semibold">Pocket Archive</span>
+                        <span style="color: var(--ink-muted);">v2.1 · Millie UI</span>
+                    </div>
+                </section>
+            </div>
+        </div>
+
+        <!-- DETAIL BOTTOM SHEET -->
+        <div id="detail-sheet" class="sheet-backdrop" onclick="if(event.target===this) closeDetail()">
+            <div class="sheet-panel">
+                <div class="w-10 h-1 rounded-full mx-auto mt-3 mb-1 shrink-0" style="background: var(--border);"></div>
+                <div class="px-5 pt-2 pb-3 flex items-start justify-between gap-3 border-b shrink-0" style="border-color: var(--border);">
+                    <div class="flex items-center gap-3.5 min-w-0">
+                        <label class="cursor-pointer shrink-0" title="눌러서 표지 사진 변경">
+                            <div id="d-cover" class="w-14 h-[78px] rounded-lg shadow-md flex items-end p-1.5 text-white text-[9px] font-bold leading-tight bg-cover bg-center"></div>
+                            <input type="file" accept="image/*" class="hidden" onchange="handleDetailCoverUpload(event)">
+                        </label>
+                        <div class="min-w-0">
+                            <span id="d-badge" class="inline-block text-[10.5px] font-bold px-2 py-0.5 rounded-md mb-1" style="background: var(--millie); color: #242424;"></span>
+                            <h3 id="d-title" class="text-[17px] font-extrabold truncate"></h3>
+                            <p id="d-author" class="text-[12px] mt-0.5" style="color: var(--ink-sub);"></p>
+                        </div>
+                    </div>
+                    <button onclick="closeDetail()" class="icon-btn shrink-0" style="background: var(--surface-soft);">✕</button>
+                </div>
+
+                <div class="px-5 pt-3 pb-2 shrink-0">
+                    <div class="seg-wrap">
+                        <button class="seg-btn active" id="seg-vols" onclick="switchDetailTab('vols')">권별 기록</button>
+                        <button class="seg-btn" id="seg-memo" onclick="switchDetailTab('memo')">감상·밑줄</button>
+                        <button class="seg-btn" id="seg-info" onclick="switchDetailTab('info')">소장 정보</button>
+                    </div>
+                </div>
+
+                <div class="flex-1 overflow-y-auto px-5 py-3 space-y-3" style="scrollbar-width: none;">
+                    <div id="panel-vols" class="space-y-2.5">
+                        <div class="flex items-center justify-between">
+                            <span id="d-vol-summary" class="text-[12px] font-bold" style="color: var(--ink-sub);"></span>
+                            <button onclick="addVolume()" class="px-3 py-1.5 rounded-full text-[12px] font-bold cursor-pointer border-0" style="background: var(--ink); color: var(--bg);">+ 다음 권 추가</button>
+                        </div>
+                        <div id="d-vol-list" class="space-y-2"></div>
+                    </div>
+
+                    <div id="panel-memo" class="hidden space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span class="text-[12.5px] font-bold" style="color: var(--ink-sub);">대표 감상 & 밑줄</span>
+                            <button id="d-hl-btn" onclick="toggleHighlight()" class="text-[11.5px] font-bold px-2.5 py-1 rounded-full cursor-pointer border" style="border-color: var(--border);">형광펜 OFF</button>
+                        </div>
+                        <div id="d-memo-preview" class="p-4 rounded-2xl text-[14px] leading-relaxed" style="background: var(--bg-subtle);"></div>
+                        <textarea id="d-memo-input" rows="3" class="w-full p-3 rounded-xl text-[13px] outline-none resize-none" style="background: var(--surface-soft); color: var(--ink);" placeholder="기억하고 싶은 문장을 적어보세요"></textarea>
+                        <button onclick="saveMemo()" class="w-full py-2.5 rounded-xl text-[13px] font-bold cursor-pointer border-0" style="background: var(--ink); color: var(--bg);">감상 저장</button>
+                    </div>
+
+                    <div id="panel-info" class="hidden space-y-3">
+                        <div class="p-4 rounded-2xl space-y-3" style="background: var(--bg-subtle);">
+                            <div>
+                                <p class="text-[12px] font-bold mb-1.5" style="color: var(--ink-sub);">상태 배지</p>
+                                <div id="d-stamp-row" class="flex flex-wrap gap-1.5"></div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-2.5">
+                                <div>
+                                    <label class="block text-[12px] font-bold mb-1" style="color: var(--ink-sub);">추정 가치 (원)</label>
+                                    <input id="d-price-input" type="number" step="1000" class="w-full px-3 py-2 rounded-xl text-[13px] outline-none" style="background: var(--surface); border: 1px solid var(--border); color: var(--ink);">
+                                </div>
+                                <div>
+                                    <label class="block text-[12px] font-bold mb-1" style="color: var(--ink-sub);">보관 위치</label>
+                                    <input id="d-loc-input" type="text" class="w-full px-3 py-2 rounded-xl text-[13px] outline-none" style="background: var(--surface); border: 1px solid var(--border); color: var(--ink);">
+                                </div>
+                            </div>
+                            <div class="flex gap-2">
+                                <label class="flex-1 py-2.5 rounded-xl text-[12.5px] font-bold text-center cursor-pointer" style="background: var(--surface); border: 1px solid var(--border); color: var(--ink);">
+                                    📷 표지 사진 변경
+                                    <input type="file" accept="image/*" class="hidden" onchange="handleDetailCoverUpload(event)">
+                                </label>
+                                <button id="d-remove-photo-btn" onclick="removeDetailCover()" class="px-3.5 py-2.5 rounded-xl text-[12.5px] font-bold cursor-pointer border-0 hidden" style="background: #FEECEC; color: #C53030;">사진 제거</button>
+                            </div>
+                            <button onclick="saveInfo()" class="w-full py-2.5 rounded-xl text-[13px] font-bold cursor-pointer border-0" style="background: var(--ink); color: var(--bg);">소장 정보 저장</button>
+                        </div>
+                        <button onclick="deleteCurrentItem()" class="w-full py-2.5 rounded-xl text-[13px] font-bold cursor-pointer border-0" style="background: #FEECEC; color: #C53030;">이 작품 기록 삭제</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ADD RECORD BOTTOM SHEET -->
+        <div id="add-sheet" class="sheet-backdrop" onclick="if(event.target===this) closeAddModal()">
+            <div class="sheet-panel">
+                <div class="w-10 h-1 rounded-full mx-auto mt-3 mb-1 shrink-0" style="background: var(--border);"></div>
+                <div class="px-5 py-3 flex items-center justify-between border-b" style="border-color: var(--border);">
+                    <h3 class="text-[16px] font-extrabold">새 소장 기록</h3>
+                    <button onclick="closeAddModal()" class="icon-btn" style="background: var(--surface-soft);">✕</button>
+                </div>
+                <div class="p-5 space-y-3 overflow-y-auto">
+                    <div class="grid grid-cols-2 gap-2">
+                        <button id="add-cat-book" onclick="selectAddCat('book')" class="py-2.5 rounded-xl text-[13px] font-bold border-0 cursor-pointer" style="background: var(--ink); color: var(--bg);">만화·도서</button>
+                        <button id="add-cat-gacha" onclick="selectAddCat('gacha')" class="py-2.5 rounded-xl text-[13px] font-bold border-0 cursor-pointer" style="background: var(--surface-soft); color: var(--ink-sub);">가챠·굿즈</button>
+                    </div>
+                    <input id="add-title" type="text" placeholder="작품명 또는 굿즈 이름 *" class="w-full px-3.5 py-2.5 rounded-xl text-[13.5px] outline-none" style="background: var(--surface-soft); color: var(--ink);">
+                    <div class="grid grid-cols-2 gap-2">
+                        <input id="add-author" type="text" placeholder="작가 / 브랜드" class="w-full px-3.5 py-2.5 rounded-xl text-[13px] outline-none" style="background: var(--surface-soft); color: var(--ink);">
+                        <input id="add-price" type="number" placeholder="가격 (원)" class="w-full px-3.5 py-2.5 rounded-xl text-[13px] outline-none" style="background: var(--surface-soft); color: var(--ink);">
+                    </div>
+                    <input id="add-quote" type="text" placeholder="기억하고 싶은 첫 문장 또는 메모" class="w-full px-3.5 py-2.5 rounded-xl text-[13px] outline-none" style="background: var(--surface-soft); color: var(--ink);">
+                    <div>
+                        <p class="text-[12px] font-bold mb-2" style="color: var(--ink-sub);">표지 컬러 또는 사진</p>
+                        <div class="flex items-center gap-2 mb-2.5" id="add-color-row"></div>
+                        <label class="block w-full py-2.5 px-3 rounded-xl text-[12.5px] font-bold text-center cursor-pointer border border-dashed" style="border-color: var(--border); color: var(--ink-sub);">
+                            <span id="add-photo-lbl">📷 표지 사진 첨부 (선택)</span>
+                            <input type="file" accept="image/*" class="hidden" onchange="handleAddCoverUpload(event)">
+                        </label>
+                    </div>
+                    <button onclick="submitAdd()" class="w-full py-3 rounded-xl text-[14px] font-extrabold cursor-pointer border-0" style="background: var(--millie); color: #242424;">서재에 등록하기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const STAMPS = ['전권완결', '초판특전', '인생최애', '소장중', '위시'];
+        const COVER_COLORS = ['#C82342', '#0077B6', '#D9480F', '#DB2777', '#6D28D9', '#2E5947'];
+        const THEMES = ['millie', 'paper', 'dark'];
+        const THEME_NAMES = { millie: '밀리 화이트', paper: '웜 페이퍼', dark: '미드나잇' };
+
+        let items = [
+            {
+                id: 1, category: 'book', title: '슬램덩크 신장재편판', author: '이노우에 다케히코',
+                color: '#C82342', coverImage: '', stamp: '전권완결', targetVols: 3, price: 21000, location: '거실 책장 1층',
+                memo: '인생 최고의 농구 만화. 일러스트 표지 신장재편판.', highlight: true,
+                volumes: [
+                    { vol: 1, first: true, rating: 5, date: '11.22', quote: '농구... 좋아하세요?' },
+                    { vol: 2, first: false, rating: 5, date: '11.22', quote: '리바운드를 제압하는 자가 시합을 제압한다.' },
+                    { vol: 3, first: true, rating: 5, date: '11.22', quote: '포기하면 그 순간이 바로 시합 종료예요.' }
+                ]
+            },
+            {
+                id: 2, category: 'book', title: '장송의 프리렌', author: '야마다 카네히토',
+                color: '#0077B6', coverImage: '', stamp: '초판특전', targetVols: 4, price: 21000, location: '침대 옆 협탁',
+                memo: '여운이 길게 남는 여행 판타지.', highlight: false,
+                volumes: [
+                    { vol: 1, first: true, rating: 5, date: '11.18', quote: '힘멜이라면 그렇게 했을 거니까.' },
+                    { vol: 2, first: true, rating: 5, date: '11.19', quote: '단 10년 함께했을 뿐인데.' },
+                    { vol: 3, first: false, rating: 5, date: '11.21', quote: '짧은 시간이라도 함께 걸었던 기억.' }
+                ]
+            },
+            {
+                id: 3, category: 'gacha', title: '치이카와 캡슐 피규어', author: '반다이 가샤폰',
+                color: '#DB2777', coverImage: '', stamp: '인생최애', targetVols: 1, price: 5000, location: '아크릴 케이스',
+                memo: '국전 가챠샵에서 단번에 뽑은 시크릿 피규어!', highlight: false,
+                volumes: [{ vol: 1, first: true, rating: 5, date: '11.20', quote: '국전 가챠샵에서 단번에 뽑은 최애!' }]
+            },
+            {
+                id: 4, category: 'book', title: '하이큐!! 파이널 가이드', author: '후루다테 하루이치',
+                color: '#D9480F', coverImage: '', stamp: '전권완결', targetVols: 2, price: 14000, location: '거실 책장 2층',
+                memo: '쓰레기장의 결전 기념판.', highlight: false,
+                volumes: [
+                    { vol: 1, first: true, rating: 5, date: '11.15', quote: '날아라 카라스노!' },
+                    { vol: 2, first: false, rating: 5, date: '11.16', quote: '재능은 꽃피우는 것, 센스는 갈고닦는 것.' }
+                ]
+            },
+            {
+                id: 5, category: 'book', title: '카드캡터 체리 애장판', author: 'CLAMP',
+                color: '#E11D48', coverImage: '', stamp: '인생최애', targetVols: 4, price: 14000, location: '유리 장식장',
+                memo: '크로우카드 일러스트 수록 애장판.', highlight: true,
+                volumes: [
+                    { vol: 1, first: true, rating: 5, date: '11.12', quote: '봉인해제(릴리즈)!' },
+                    { vol: 2, first: true, rating: 5, date: '11.14', quote: '절대 괜찮을 거야.' }
+                ]
+            },
+            {
+                id: 6, category: 'gacha', title: '루나 요술봉 아크릴', author: '한정판 캡슐 토이',
+                color: '#6D28D9', coverImage: '', stamp: '초판특전', targetVols: 1, price: 5000, location: '책상 위 스탠드',
+                memo: '책상 위 아크릴 스탠드 보물 1호.', highlight: false,
+                volumes: [{ vol: 1, first: true, rating: 5, date: '11.22', quote: '책상 위 아크릴 스탠드 보물 1호.' }]
+            }
+        ];
+
+        let currentFilter = 'all';
+        let shelfCols = 3;
+        let quoteIdx = 0;
+        let activeItemId = null;
+        let addCat = 'book';
+        let addColor = COVER_COLORS[0];
+        let addCoverImage = '';
+        let toastTimer = null;
+
+        const fmtKRW = n => '₩' + Number(n || 0).toLocaleString('ko-KR');
+        const getAvgRating = it => it.volumes.length ? it.volumes.reduce((s, v) => s + v.rating, 0) / it.volumes.length : 5.0;
+        const getProgress = it => (it.stamp === '전권완결' || it.category === 'gacha') ? 100 : Math.min(100, Math.round((it.volumes.length / Math.max(1, it.targetVols)) * 100));
+
+        function showToast(msg) {
+            const el = document.getElementById('toast');
+            el.textContent = msg;
+            el.classList.add('show');
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => el.classList.remove('show'), 2000);
+        }
+
+        function toggleSearchBar() {
+            const w = document.getElementById('search-wrap');
+            w.classList.toggle('hidden');
+            if (!w.classList.contains('hidden')) document.getElementById('search-input').focus();
+        }
+
+        function cycleThemeQuick() {
+            const cur = document.getElementById('app').dataset.theme || 'millie';
+            const next = THEMES[(THEMES.indexOf(cur) + 1) % THEMES.length];
+            setTheme(next);
+        }
+
+        function setTheme(t) {
+            document.getElementById('app').dataset.theme = t;
+            showToast(`'${THEME_NAMES[t]}' 테마를 적용했어요`);
+        }
+
+        function openSettings() { document.getElementById('settings-page').classList.add('open'); }
+        function closeSettings() { document.getElementById('settings-page').classList.remove('open'); }
+
+        function saveOwnerName() {
+            const v = (document.getElementById('owner-name-input').value || '').trim();
+            const title = v ? `${v}의 서재` : '나의 서재';
+            document.getElementById('library-title').textContent = title;
+            showToast(`서재 이름을 '${title}'(으)로 변경했어요`);
+        }
+
+        function switchTab(tab) {
+            ['shelf', 'showcase', 'notes', 'stats'].forEach(t => document.getElementById('view-' + t).classList.toggle('hidden', t !== tab));
+            document.querySelectorAll('.top-tab').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+            if (tab === 'showcase') renderShowcase();
+            if (tab === 'notes') renderNotes();
+            if (tab === 'stats') renderStats();
+        }
+
+        let showcaseLed = true;
+        function toggleShowcaseLed() {
+            showcaseLed = !showcaseLed;
+            const cab = document.getElementById('showcase-cabinet');
+            cab.classList.toggle('led-off', !showcaseLed);
+            const btn = document.getElementById('led-toggle-btn');
+            btn.textContent = showcaseLed ? '💡 조명 ON' : '조명 OFF';
+            btn.style.background = showcaseLed ? 'var(--millie)' : 'var(--surface-soft)';
+            btn.style.color = showcaseLed ? '#242424' : 'var(--ink-sub)';
+        }
+
+        const CASE_NAMES = { acrylic: '아크릴 화이트', wood: '우드 장식장', museum: '뮤지엄 다크' };
+        function setShowcaseStyle(style, btn) {
+            document.getElementById('showcase-cabinet').dataset.case = style;
+            document.querySelectorAll('[data-case-btn]').forEach(b => {
+                const isSel = b.dataset.caseBtn === style;
+                b.style.borderWidth = isSel ? '2px' : '1px';
+                b.style.borderColor = isSel ? 'var(--ink)' : 'var(--border)';
+            });
+            showToast(`전시대를 '${CASE_NAMES[style]}'(으)로 변경했어요`);
+        }
+
+        function renderShowcase() {
+            const gachas = items.filter(it => it.category === 'gacha');
+            const totalVal = gachas.reduce((s, it) => s + Number(it.price || 0), 0);
+            document.getElementById('showcase-count-lbl').textContent = `진열 중 ${gachas.length}개 · ${fmtKRW(totalVal)}`;
+
+            const tiersEl = document.getElementById('showcase-tiers');
+            if (!gachas.length) {
+                tiersEl.innerHTML = `<div class="py-16 text-center text-[13px] opacity-60">전시할 가챠·피규어를 '+ 기록 추가'로 등록해 보세요.</div>`;
+                return;
+            }
+
+            let html = '';
+            for (let i = 0; i < gachas.length; i += 2) {
+                const pair = gachas.slice(i, i + 2);
+                html += `<div class="showcase-tier">`;
+                html += pair.map(it => {
+                    const bg = it.coverImage
+                        ? `background-image: url('${it.coverImage}');`
+                        : `background: radial-gradient(circle at 35% 28%, ${it.color}CC, ${it.color});`;
+                    return `
+                        <div class="figure-slot" onclick="openDetail(${it.id})">
+                            <div class="figure-dome" style="${bg}">
+                                ${it.coverImage ? '' : `<span class="text-[12px] font-extrabold text-white text-center px-3 drop-shadow-sm leading-snug">${it.title}</span>`}
+                                <span class="absolute top-2 right-2 text-[9px] font-extrabold px-1.5 py-0.5 rounded-full" style="background: var(--millie); color: #242424;">${it.stamp}</span>
+                            </div>
+                            <div class="figure-pedestal"></div>
+                            <div class="figure-plaque">${it.title}</div>
+                            <span class="text-[10px] opacity-65 mt-0.5">${it.location || '전시 중'} · ${fmtKRW(it.price)}</span>
+                        </div>
+                    `;
+                }).join('');
+                html += `</div><div class="acrylic-glass-shelf"></div>`;
+            }
+            tiersEl.innerHTML = html;
+        }
+
+        function getAllQuotes() {
+            const out = [];
+            items.forEach(it => it.volumes.forEach(v => { if (v.quote) out.push({ item: it, vol: v.vol, quote: v.quote }); }));
+            return out;
+        }
+
+        function renderQuoteCard() {
+            const qs = getAllQuotes();
+            if (!qs.length) return;
+            const q = qs[quoteIdx % qs.length];
+            document.getElementById('quote-text').textContent = `"${q.quote}"`;
+            document.getElementById('quote-meta').textContent = `${q.item.title} ${q.vol}권 · ${q.item.author}`;
+        }
+
+        function cycleQuote() { quoteIdx++; renderQuoteCard(); }
+        function openQuoteSource() { const qs = getAllQuotes(); if (qs.length) openDetail(qs[quoteIdx % qs.length].item.id); }
+
+        function setFilter(f, btn) {
+            currentFilter = f;
+            document.querySelectorAll('.chip').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            renderShelf();
+        }
+
+        function toggleCols() {
+            shelfCols = shelfCols === 3 ? 2 : 3;
+            const label = shelfCols === 3 ? '3열 보기' : '2열 보기';
+            document.getElementById('col-toggle-btn').textContent = label;
+            const scb = document.getElementById('settings-col-btn');
+            if (scb) scb.textContent = label;
+            renderShelf();
+        }
+
+        function renderShelf() {
+            renderQuoteCard();
+            const q = (document.getElementById('search-input').value || '').trim().toLowerCase();
+            const sort = document.getElementById('sort-select').value;
+            let list = items.filter(it => {
+                if (currentFilter === 'book' && it.category !== 'book') return false;
+                if (currentFilter === 'gacha' && it.category !== 'gacha') return false;
+                if (currentFilter === 'done' && getProgress(it) < 100) return false;
+                if (q) {
+                    const hay = `${it.title} ${it.author} ${it.memo} ${it.volumes.map(v => v.quote).join(' ')}`.toLowerCase();
+                    if (!hay.includes(q)) return false;
+                }
+                return true;
+            });
+            if (sort === 'rating') list.sort((a, b) => getAvgRating(b) - getAvgRating(a));
+            else if (sort === 'value') list.sort((a, b) => (b.price || 0) - (a.price || 0));
+            else if (sort === 'title') list.sort((a, b) => a.title.localeCompare(b.title, 'ko'));
+
+            const totalVal = list.reduce((s, it) => s + Number(it.price || 0), 0);
+            document.getElementById('shelf-count-lbl').textContent = `총 ${list.length}작품 · ${fmtKRW(totalVal)}`;
+
+            const container = document.getElementById('shelf-container');
+            if (!list.length) {
+                container.innerHTML = `<div class="py-16 text-center text-[13px]" style="color: var(--ink-muted);">조건에 맞는 작품이 없습니다.</div>`;
+                return;
+            }
+
+            // Group into Bookshelf Rows (Millie bookshelf ledges!)
+            let html = '';
+            for (let i = 0; i < list.length; i += shelfCols) {
+                const rowItems = list.slice(i, i + shelfCols);
+                html += `<div class="shelf-row ${shelfCols === 2 ? 'cols-2' : ''}">`;
+                html += rowItems.map(it => {
+                    const prog = getProgress(it);
+                    const bg = it.coverImage ? `background-image: url('${it.coverImage}');` : `background-color: ${it.color};`;
+                    return `
+                        <article onclick="openDetail(${it.id})" class="book-item cursor-pointer min-w-0">
+                            <div class="book-cover" style="${bg}">
+                                <div class="relative z-10 flex justify-between items-start gap-1">
+                                    <span class="text-[9px] font-bold px-1.5 py-0.5 rounded" style="background: rgba(0,0,0,0.34);">${it.category === 'book' ? 'BOOK' : 'GOODS'}</span>
+                                    ${prog >= 100 ? `<span class="text-[9px] font-extrabold px-1.5 py-0.5 rounded" style="background: var(--millie); color: #242424;">완독</span>` : ''}
+                                </div>
+                                <div class="relative z-10">
+                                    <p class="${shelfCols === 2 ? 'text-[13.5px]' : 'text-[11.5px]'} font-extrabold leading-snug line-clamp-2 drop-shadow-sm">${it.title}</p>
+                                </div>
+                            </div>
+                            <p class="text-[12px] font-bold truncate mt-2" style="color: var(--ink);">${it.title}</p>
+                            <p class="text-[10.5px] truncate mt-0.5" style="color: var(--ink-sub);">${it.author} · ${prog}%</p>
+                        </article>
+                    `;
+                }).join('');
+                html += `</div>`;
+            }
+            container.innerHTML = html;
+        }
+
+        function renderNotes() {
+            const qs = getAllQuotes();
+            document.getElementById('notes-count-lbl').textContent = `저장된 밑줄 ${qs.length}개`;
+            document.getElementById('notes-list').innerHTML = qs.map(q => `
+                <div onclick="openDetail(${q.item.id})" class="p-4 rounded-2xl cursor-pointer" style="background: var(--bg-subtle);">
+                    <p class="text-[14px] font-bold leading-relaxed" style="color: var(--ink);">"${q.quote}"</p>
+                    <p class="text-[11.5px] mt-2" style="color: var(--ink-sub);">${q.item.title} ${q.vol}권 · ${q.item.author}</p>
+                </div>
+            `).join('');
+        }
+
+        function renderStats() {
+            const totalVal = items.reduce((s, it) => s + Number(it.price || 0), 0);
+            const totalVols = items.reduce((s, it) => s + it.volumes.length, 0);
+            const avgRate = items.length ? Math.round(items.reduce((s, it) => s + getProgress(it), 0) / items.length) : 0;
+            document.getElementById('st-total-val').textContent = fmtKRW(totalVal);
+            document.getElementById('st-items').textContent = items.length + '종';
+            document.getElementById('st-vols').textContent = totalVols + '권';
+            document.getElementById('st-rate').textContent = avgRate + '%';
+
+            const books = items.filter(x => x.category === 'book');
+            const gachas = items.filter(x => x.category === 'gacha');
+            const bp = items.length ? Math.round((books.length / items.length) * 100) : 0;
+            const gp = 100 - bp;
+            document.getElementById('st-cat-bars').innerHTML = `
+                <div>
+                    <div class="flex justify-between text-[12px] font-semibold mb-1"><span>만화·도서 (${books.length}종)</span><span>${bp}%</span></div>
+                    <div class="h-2 rounded-full overflow-hidden" style="background: var(--border);"><div class="h-full rounded-full" style="width:${bp}%; background: var(--ink);"></div></div>
+                </div>
+                <div>
+                    <div class="flex justify-between text-[12px] font-semibold mb-1"><span>가챠·굿즈 (${gachas.length}종)</span><span>${gp}%</span></div>
+                    <div class="h-2 rounded-full overflow-hidden" style="background: var(--border);"><div class="h-full rounded-full" style="width:${gp}%; background: var(--millie-deep);"></div></div>
+                </div>
+            `;
+        }
+
+        function openDetail(id) {
+            activeItemId = id;
+            const it = items.find(x => x.id === id);
+            if (!it) return;
+            renderDetail(it);
+            switchDetailTab('vols');
+            document.getElementById('detail-sheet').classList.add('open');
+        }
+        function closeDetail() { document.getElementById('detail-sheet').classList.remove('open'); }
+        function switchDetailTab(tab) {
+            ['vols', 'memo', 'info'].forEach(t => {
+                document.getElementById('panel-' + t).classList.toggle('hidden', t !== tab);
+                document.getElementById('seg-' + t).classList.toggle('active', t === tab);
+            });
+        }
+
+        function renderDetail(it) {
+            const cov = document.getElementById('d-cover');
+            cov.style.background = it.coverImage ? `url('${it.coverImage}') center/cover` : it.color;
+            cov.textContent = it.coverImage ? '' : it.title.slice(0, 6);
+            document.getElementById('d-remove-photo-btn').classList.toggle('hidden', !it.coverImage);
+            document.getElementById('d-badge').textContent = it.stamp;
+            document.getElementById('d-title').textContent = it.title;
+            document.getElementById('d-author').textContent = `${it.author} · ★${getAvgRating(it).toFixed(1)} · ${fmtKRW(it.price)}`;
+
+            const firstCnt = it.volumes.filter(v => v.first).length;
+            document.getElementById('d-vol-summary').textContent = `총 ${it.volumes.length}권 · 초판 ${firstCnt}권 · 완독 ${getProgress(it)}%`;
+            document.getElementById('d-vol-list').innerHTML = it.volumes.map((v, idx) => `
+                <div class="p-3.5 rounded-2xl space-y-2" style="background: var(--bg-subtle);">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-2">
+                            <span class="text-[13.5px] font-extrabold">${v.vol}권</span>
+                            <button onclick="toggleVolFirst(${idx})" class="text-[11px] font-bold px-2 py-0.5 rounded-md cursor-pointer border-0"
+                                style="background: ${v.first ? 'var(--millie)' : 'var(--sage-soft)'}; color: ${v.first ? '#242424' : 'var(--sage)'};">
+                                ${v.first ? '초판특전' : '소장완료'}
+                            </button>
+                            <span class="text-[11px]" style="color: var(--ink-muted);">${v.date}</span>
+                        </div>
+                        <button onclick="cycleVolStar(${idx})" class="text-[13px] cursor-pointer bg-transparent border-0" style="color: #D97706;">${'★'.repeat(v.rating)}${'☆'.repeat(5 - v.rating)}</button>
+                    </div>
+                    <input type="text" value="${(v.quote || '').replace(/"/g, '&quot;')}" onchange="updateVolQuote(${idx}, this.value)"
+                        placeholder="이 권의 밑줄 문장 입력"
+                        class="w-full px-3 py-2 rounded-xl text-[12.5px] outline-none"
+                        style="background: var(--surface); border: 1px solid var(--border); color: var(--ink);">
+                </div>
+            `).join('');
+
+            const prev = document.getElementById('d-memo-preview');
+            prev.innerHTML = it.highlight ? `<span class="hl-mark">"${it.memo || '감상평을 남겨보세요.'}"</span>` : `"${it.memo || '감상평을 남겨보세요.'}"`;
+            document.getElementById('d-memo-input').value = it.memo || '';
+            const hlBtn = document.getElementById('d-hl-btn');
+            hlBtn.textContent = it.highlight ? '형광펜 ON' : '형광펜 OFF';
+            hlBtn.style.background = it.highlight ? 'var(--millie)' : 'transparent';
+            hlBtn.style.color = it.highlight ? '#242424' : 'var(--ink-sub)';
+
+            document.getElementById('d-stamp-row').innerHTML = STAMPS.map(st => `
+                <button onclick="setStamp('${st}')" class="px-3 py-1.5 rounded-full text-[12px] font-bold cursor-pointer border"
+                    style="background: ${it.stamp === st ? 'var(--ink)' : 'var(--surface)'}; color: ${it.stamp === st ? 'var(--bg)' : 'var(--ink-sub)'}; border-color: var(--border);">${st}</button>
+            `).join('');
+            document.getElementById('d-price-input').value = it.price || 0;
+            document.getElementById('d-loc-input').value = it.location || '';
+        }
+
+        const getActiveItem = () => items.find(x => x.id === activeItemId);
+        function addVolume() { const it = getActiveItem(); it.volumes.push({ vol: it.volumes.length + 1, first: false, rating: 5, date: '11.23', quote: '' }); renderDetail(it); renderShelf(); showToast(`${it.volumes.length}권을 추가했어요`); }
+        function toggleVolFirst(i) { const it = getActiveItem(); it.volumes[i].first = !it.volumes[i].first; renderDetail(it); renderShelf(); }
+        function cycleVolStar(i) { const it = getActiveItem(); it.volumes[i].rating = (it.volumes[i].rating % 5) + 1; renderDetail(it); renderShelf(); }
+        function updateVolQuote(i, v) { const it = getActiveItem(); it.volumes[i].quote = v.trim(); renderQuoteCard(); showToast('밑줄을 저장했어요'); }
+        function toggleHighlight() { const it = getActiveItem(); it.highlight = !it.highlight; renderDetail(it); }
+        function saveMemo() { const it = getActiveItem(); it.memo = document.getElementById('d-memo-input').value.trim(); renderDetail(it); showToast('감상평을 저장했어요'); }
+        function setStamp(st) { const it = getActiveItem(); it.stamp = st; renderDetail(it); renderShelf(); }
+        function saveInfo() { const it = getActiveItem(); it.price = Math.max(0, Number(document.getElementById('d-price-input').value) || 0); it.location = document.getElementById('d-loc-input').value.trim(); renderDetail(it); renderShelf(); showToast('소장 정보를 저장했어요'); }
+        function deleteCurrentItem() { items = items.filter(x => x.id !== activeItemId); closeDetail(); renderShelf(); renderShowcase(); showToast('기록을 삭제했어요'); }
+        function handleDetailCoverUpload(e) {
+            const f = e.target.files[0]; if (!f) return;
+            const r = new FileReader(); r.onload = ev => { const it = getActiveItem(); it.coverImage = ev.target.result; renderDetail(it); renderShelf(); renderShowcase(); showToast('표지 사진을 변경했어요'); }; r.readAsDataURL(f);
+        }
+        function removeDetailCover() { const it = getActiveItem(); it.coverImage = ''; renderDetail(it); renderShelf(); renderShowcase(); showToast('표지 사진을 제거했어요'); }
+
+        function openAddModal() {
+            addCat = 'book'; addColor = COVER_COLORS[0]; addCoverImage = '';
+            document.getElementById('add-title').value = '';
+            document.getElementById('add-author').value = '';
+            document.getElementById('add-price').value = '';
+            document.getElementById('add-quote').value = '';
+            document.getElementById('add-photo-lbl').textContent = '📷 표지 사진 첨부 (선택)';
+            renderAddColors();
+            document.getElementById('add-sheet').classList.add('open');
+        }
+        function closeAddModal() { document.getElementById('add-sheet').classList.remove('open'); }
+        function selectAddCat(c) {
+            addCat = c;
+            document.getElementById('add-cat-book').style.background = c === 'book' ? 'var(--ink)' : 'var(--surface-soft)';
+            document.getElementById('add-cat-book').style.color = c === 'book' ? 'var(--bg)' : 'var(--ink-sub)';
+            document.getElementById('add-cat-gacha').style.background = c === 'gacha' ? 'var(--ink)' : 'var(--surface-soft)';
+            document.getElementById('add-cat-gacha').style.color = c === 'gacha' ? 'var(--bg)' : 'var(--ink-sub)';
+        }
+        function renderAddColors() {
+            document.getElementById('add-color-row').innerHTML = COVER_COLORS.map(c => `
+                <button onclick="addColor='${c}'; renderAddColors();" class="w-8 h-8 rounded-full cursor-pointer border-0"
+                    style="background:${c}; box-shadow: ${addColor === c ? '0 0 0 2px var(--bg), 0 0 0 4px ' + c : 'none'};"></button>
+            `).join('');
+        }
+        function handleAddCoverUpload(e) {
+            const f = e.target.files[0]; if (!f) return;
+            const r = new FileReader(); r.onload = ev => { addCoverImage = ev.target.result; document.getElementById('add-photo-lbl').textContent = `📷 첨부됨: ${f.name}`; }; r.readAsDataURL(f);
+        }
+        function submitAdd() {
+            const title = document.getElementById('add-title').value.trim();
+            if (!title) { showToast('작품명을 입력해 주세요'); return; }
+            const author = document.getElementById('add-author').value.trim() || '작가 미상';
+            const price = Math.max(0, Number(document.getElementById('add-price').value) || 0);
+            const quote = document.getElementById('add-quote').value.trim();
+            items.unshift({ id: Date.now(), category: addCat, title, author, color: addColor, coverImage: addCoverImage, stamp: '소장중', targetVols: 1, price, location: '내 서재', memo: quote || '새 소장 기록', highlight: false, volumes: [{ vol: 1, first: false, rating: 5, date: '11.23', quote }] });
+            closeAddModal(); renderShelf(); renderShowcase(); showToast(`「${title}」 기록을 추가했어요`);
+        }
+        function exportBackup() { navigator.clipboard?.writeText(JSON.stringify(items, null, 2)).catch(() => {}); showToast('JSON 백업을 복사했어요'); }
+
+        renderShelf();
+    </script>
+</body>
+</html>
+

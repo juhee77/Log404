@@ -5,8 +5,10 @@ const CollectionItemClass = preload("res://scripts/collection_item.gd")
 var items: Array = []
 var selected_item = null
 var current_filter: int = -1
-var current_theme: String = "cream"
+var current_theme: String = "millie"
 var owner_name: String = ""
+var showcase_style: String = "acrylic"
+var shelf_columns: int = 3
 
 const SAVE_FILE_PATH = "user://archive_data_v2.json"
 
@@ -164,6 +166,8 @@ func to_backup_json() -> String:
 	var payload := {
 		"owner_name": owner_name,
 		"theme_id": current_theme,
+		"showcase_style": showcase_style,
+		"shelf_columns": shelf_columns,
 		"items": data_array
 	}
 	return JSON.stringify(payload, "  ")
@@ -193,8 +197,16 @@ func load_from_file(custom_path: String = "") -> bool:
 	var raw_items: Array = []
 	if typeof(parsed) == TYPE_DICTIONARY:
 		owner_name = str(parsed.get("owner_name", ""))
-		var tid: String = str(parsed.get("theme_id", "cream"))
-		current_theme = tid if tid in ["cream", "sepia", "dark"] else "cream"
+		var tid: String = str(parsed.get("theme_id", "millie"))
+		if tid == "cream":
+			tid = "millie"
+		elif tid == "sepia":
+			tid = "paper"
+		current_theme = tid if tid in ["millie", "paper", "dark"] else "millie"
+		var sid: String = str(parsed.get("showcase_style", "acrylic"))
+		showcase_style = sid if sid in ["acrylic", "wood", "museum"] else "acrylic"
+		var sc: int = int(parsed.get("shelf_columns", 3))
+		shelf_columns = 2 if sc == 2 else 3
 		var arr = parsed.get("items", [])
 		if typeof(arr) == TYPE_ARRAY:
 			raw_items = arr

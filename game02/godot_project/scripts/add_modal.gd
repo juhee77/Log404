@@ -2,26 +2,30 @@ class_name AddModal
 extends Control
 
 const UiTokensClass = preload("res://scripts/ui_tokens.gd")
+const DsButtonClass = preload("res://scripts/ui/ds_button.gd")
+const DsCardClass = preload("res://scripts/ui/ds_card.gd")
+const DsInputClass = preload("res://scripts/ui/ds_input.gd")
+const DsSegmentedClass = preload("res://scripts/ui/ds_segmented.gd")
 
-signal item_submitted(title: String, category: int, author: String, cover_color: String, quote: String, price: int)
+signal item_submitted(title: String, category: int, author: String, cover_color: String, quote: String, price: int, cover_path: String)
 
-var _palette: Dictionary = UiTokensClass.get_palette("cream")
+var _palette: Dictionary = UiTokensClass.get_palette("millie")
 var _selected_cat: int = 0
 var _selected_color: String = UiTokensClass.COVER_COLORS[0]
+var _selected_cover_path: String = ""
 
-var _sheet: PanelContainer
+var _sheet
 var _handle: ColorRect
 var _hdr_lbl: Label
-var _close_btn: Button
-var _cat_book_btn: Button
-var _cat_gacha_btn: Button
+var _cat_seg
 var _title_input: LineEdit
 var _author_input: LineEdit
 var _price_input: LineEdit
 var _quote_input: LineEdit
 var _color_lbl: Label
 var _color_row: HBoxContainer
-var _submit_btn: Button
+var _photo_pick_btn: Button
+var _photo_clear_btn: Button
 
 func _ready() -> void:
 	set_anchors_preset(Control.PRESET_FULL_RECT)
@@ -42,10 +46,10 @@ func _build_ui() -> void:
 	)
 	add_child(dimmer)
 
-	_sheet = PanelContainer.new()
+	_sheet = DsCardClass.create(DsCardClass.Variant.SHEET)
 	_sheet.anchor_left = 0.0
 	_sheet.anchor_right = 1.0
-	_sheet.anchor_top = 0.30
+	_sheet.anchor_top = 0.28
 	_sheet.anchor_bottom = 1.0
 	add_child(_sheet)
 
@@ -76,12 +80,9 @@ func _build_ui() -> void:
 	_hdr_lbl.add_theme_font_size_override("font_size", 17)
 	hdr_hbox.add_child(_hdr_lbl)
 
-	_close_btn = Button.new()
-	_close_btn.text = "✕"
-	_close_btn.custom_minimum_size = Vector2(32, 32)
-	_close_btn.add_theme_font_size_override("font_size", 14)
-	_close_btn.pressed.connect(close)
-	hdr_hbox.add_child(_close_btn)
+	var close_btn = DsButtonClass.create("✕", DsButtonClass.Variant.SECONDARY, DsButtonClass.Size.SM, close)
+	close_btn.custom_minimum_size = Vector2(32, 32)
+	hdr_hbox.add_child(close_btn)
 
 	var scroll := ScrollContainer.new()
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -100,30 +101,10 @@ func _build_ui() -> void:
 	vbox.add_theme_constant_override("separation", 12)
 	form_m.add_child(vbox)
 
-	var cat_row := HBoxContainer.new()
-	cat_row.add_theme_constant_override("separation", 8)
-	vbox.add_child(cat_row)
+	_cat_seg = DsSegmentedClass.create(PackedStringArray(["만화·도서", "가챠·굿즈"]), func(idx: int): _selected_cat = idx)
+	vbox.add_child(_cat_seg)
 
-	_cat_book_btn = Button.new()
-	_cat_book_btn.text = "만화·도서"
-	_cat_book_btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	_cat_book_btn.custom_minimum_size = Vector2(0, 38)
-	_cat_book_btn.add_theme_font_size_override("font_size", 13)
-	_cat_book_btn.pressed.connect(func(): _select_cat(0))
-	cat_row.add_child(_cat_book_btn)
-
-	_cat_gacha_btn = Button.new()
-	_cat_gacha_btn.text = "가챠·굿즈"
-	_cat_gacha_btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	_cat_gacha_btn.custom_minimum_size = Vector2(0, 38)
-	_cat_gacha_btn.add_theme_font_size_override("font_size", 13)
-	_cat_gacha_btn.pressed.connect(func(): _select_cat(1))
-	cat_row.add_child(_cat_gacha_btn)
-
-	_title_input = LineEdit.new()
-	_title_input.placeholder_text = "작품명 또는 굿즈 이름 *"
-	_title_input.custom_minimum_size = Vector2(0, 42)
-	_title_input.add_theme_font_size_override("font_size", 13)
+	_title_input = DsInputClass.create("작품명 또는 굿즈 이름 *", DsInputClass.Variant.FILLED, 42)
 	_title_input.text_submitted.connect(func(_t): _author_input.grab_focus())
 	vbox.add_child(_title_input)
 
@@ -131,29 +112,20 @@ func _build_ui() -> void:
 	pair_row.add_theme_constant_override("separation", 8)
 	vbox.add_child(pair_row)
 
-	_author_input = LineEdit.new()
-	_author_input.placeholder_text = "작가 / 브랜드"
+	_author_input = DsInputClass.create("작가 / 브랜드", DsInputClass.Variant.FILLED, 40)
 	_author_input.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	_author_input.custom_minimum_size = Vector2(0, 40)
-	_author_input.add_theme_font_size_override("font_size", 13)
 	pair_row.add_child(_author_input)
 
-	_price_input = LineEdit.new()
-	_price_input.placeholder_text = "가격 (원)"
+	_price_input = DsInputClass.create("가격 (원)", DsInputClass.Variant.FILLED, 40)
 	_price_input.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	_price_input.custom_minimum_size = Vector2(0, 40)
-	_price_input.add_theme_font_size_override("font_size", 13)
 	pair_row.add_child(_price_input)
 
-	_quote_input = LineEdit.new()
-	_quote_input.placeholder_text = "기억하고 싶은 첫 문장 또는 메모"
-	_quote_input.custom_minimum_size = Vector2(0, 40)
-	_quote_input.add_theme_font_size_override("font_size", 13)
+	_quote_input = DsInputClass.create("기억하고 싶은 첫 문장 또는 메모", DsInputClass.Variant.FILLED, 40)
 	_quote_input.text_submitted.connect(func(_t): _on_submit())
 	vbox.add_child(_quote_input)
 
 	_color_lbl = Label.new()
-	_color_lbl.text = "표지 컬러"
+	_color_lbl.text = "표지 컬러 또는 사진"
 	_color_lbl.add_theme_font_size_override("font_size", 12)
 	vbox.add_child(_color_lbl)
 
@@ -161,44 +133,44 @@ func _build_ui() -> void:
 	_color_row.add_theme_constant_override("separation", 10)
 	vbox.add_child(_color_row)
 
-	_submit_btn = Button.new()
-	_submit_btn.text = "서재에 등록하기"
-	_submit_btn.custom_minimum_size = Vector2(0, 44)
-	_submit_btn.add_theme_font_size_override("font_size", 14)
-	_submit_btn.pressed.connect(_on_submit)
-	vbox.add_child(_submit_btn)
+	var photo_row := HBoxContainer.new()
+	photo_row.add_theme_constant_override("separation", 8)
+	vbox.add_child(photo_row)
+
+	_photo_pick_btn = DsButtonClass.create("📷 표지 사진 첨부 (선택)", DsButtonClass.Variant.OUTLINE, DsButtonClass.Size.MD, _on_pick_photo)
+	_photo_pick_btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	photo_row.add_child(_photo_pick_btn)
+
+	_photo_clear_btn = DsButtonClass.create("제거", DsButtonClass.Variant.DANGER, DsButtonClass.Size.MD, _on_clear_photo)
+	_photo_clear_btn.custom_minimum_size = Vector2(58, 36)
+	_photo_clear_btn.visible = false
+	photo_row.add_child(_photo_clear_btn)
+
+	var submit_btn = DsButtonClass.create("서재에 등록하기", DsButtonClass.Variant.ACCENT, DsButtonClass.Size.LG, _on_submit)
+	vbox.add_child(submit_btn)
+
+func _on_pick_photo() -> void:
+	UiTokensClass.open_image_picker(self, func(saved_path: String, file_name: String):
+		if not saved_path.is_empty():
+			_selected_cover_path = saved_path
+			_photo_pick_btn.text = "📷 첨부됨: %s" % file_name
+			_photo_clear_btn.visible = true
+	)
+
+func _on_clear_photo() -> void:
+	_selected_cover_path = ""
+	_photo_pick_btn.text = "📷 표지 사진 첨부 (선택)"
+	_photo_clear_btn.visible = false
 
 func apply_theme(p: Dictionary) -> void:
 	_palette = p
 	if _sheet == null:
 		return
-	_sheet.add_theme_stylebox_override("panel", UiTokensClass.make_sheet_box(p["bg"]))
 	_handle.color = p["border"]
 	_hdr_lbl.add_theme_color_override("font_color", p["ink"])
-	UiTokensClass.style_button(_close_btn, p["surface_soft"], p["ink"], 99, Color(0, 0, 0, 0), 0, 0, 0)
-	UiTokensClass.style_line_edit(_title_input, p)
-	UiTokensClass.style_line_edit(_author_input, p)
-	UiTokensClass.style_line_edit(_price_input, p)
-	UiTokensClass.style_line_edit(_quote_input, p)
 	_color_lbl.add_theme_color_override("font_color", p["ink_sub"])
-	UiTokensClass.style_button(_submit_btn, p["accent"], Color.WHITE, 12)
-	_select_cat(_selected_cat)
+	UiTokensClass.theme_ds_tree(self, p)
 	_render_colors()
-
-func _select_cat(c: int) -> void:
-	_selected_cat = c
-	UiTokensClass.style_button(
-		_cat_book_btn,
-		_palette["ink"] if c == 0 else _palette["surface"],
-		_palette["bg"] if c == 0 else _palette["ink_sub"],
-		12, _palette["ink"] if c == 0 else _palette["border"], 1
-	)
-	UiTokensClass.style_button(
-		_cat_gacha_btn,
-		_palette["ink"] if c == 1 else _palette["surface"],
-		_palette["bg"] if c == 1 else _palette["ink_sub"],
-		12, _palette["ink"] if c == 1 else _palette["border"], 1
-	)
 
 func _render_colors() -> void:
 	for ch in _color_row.get_children():
@@ -220,16 +192,19 @@ func _render_colors() -> void:
 
 func open(p: Dictionary = {}) -> void:
 	_selected_cat = 0
+	_cat_seg.set_active(0)
 	_selected_color = UiTokensClass.COVER_COLORS[0]
+	_selected_cover_path = ""
 	_title_input.text = ""
 	_title_input.placeholder_text = "작품명 또는 굿즈 이름 *"
 	_author_input.text = ""
 	_price_input.text = ""
 	_quote_input.text = ""
+	_photo_pick_btn.text = "📷 표지 사진 첨부 (선택)"
+	_photo_clear_btn.visible = false
 	if not p.is_empty():
 		apply_theme(p)
 	else:
-		_select_cat(0)
 		_render_colors()
 	visible = true
 	_title_input.grab_focus()
@@ -247,7 +222,7 @@ func _on_submit() -> void:
 	var q := _quote_input.text.strip_edges()
 	var p_str := _price_input.text.strip_edges().replace(",", "")
 	var price_val: int = maxi(0, int(p_str)) if p_str.is_valid_int() else 0
-	item_submitted.emit(t, _selected_cat, a, _selected_color, q, price_val)
+	item_submitted.emit(t, _selected_cat, a, _selected_color, q, price_val, _selected_cover_path)
 	close()
 
 func _unhandled_input(event: InputEvent) -> void:
