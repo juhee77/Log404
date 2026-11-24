@@ -1,19 +1,34 @@
-# 📔 주희의 다꾸 서재 & 소장 일기장 — Pocket Archive (Game02)
+# 📔 나의 서재 & 소장 아카이브 — Pocket Archive (Game02)
 
-Godot 4.6.2 모바일 기반의 **E-Book 리더기 서재(Apple Books · 리디북스 레퍼런스) & 만년필 다꾸 독서노트(굿노트 · 몰스킨 레퍼런스)** 감성 아카이브 앱입니다.
-14인 가상 애자일 스쿼드(다꾸러 3인, 기획자 2인, UX/UI 디자이너 2인, 개발자 4인, QA 2인, CEO 1인)가 **20분 주기 스프린트**로 UI 목업(`index.html`)과 실제 Godot 앱(`godot_project`)을 동시에 고도화하며 [SPRINT_LOG.md](SPRINT_LOG.md)에 전 과정을 기록합니다.
+Godot 4.6.2 모바일 기반의 **밀리의 서재 스타일 책장 · 아크릴 피규어 전시대 · 독서 노트 아카이브** 앱입니다.  
+**Pretendard Variable** 타이포그래피와 자체 공용 디자인 시스템(`scripts/ui/`)으로 구성되어 있으며, 누구나 자신의 이름(`OOO의 서재` / `나의 서재`)으로 서재를 꾸밀 수 있습니다.
 
 ---
 
-## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 83)
+## 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — v2.2 Millie UI)
 
-| 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
+| 📚 책장 메인 (`main.tscn`) | 🏛️ 아크릴 피규어 전시대 (`전시대` 탭) |
 | :---: | :---: |
-| ![Pocket Archive Main Screen](godot_project/screenshots/godot_app_screen.png) | ![Pocket Archive Detail Modal](godot_project/screenshots/godot_modal_screen.png) |
+| ![Pocket Archive Bookshelf](godot_project/screenshots/godot_app_screen.png) | ![Pocket Archive Figure Showcase](godot_project/screenshots/godot_showcase_screen.png) |
+
+| 📖 상세 바텀시트 (`detail_modal.tscn`) | ⚙️ 전용 설정 페이지 (`settings_page.gd`) |
+| :---: | :---: |
+| ![Pocket Archive Detail Sheet](godot_project/screenshots/godot_modal_screen.png) | ![Pocket Archive Settings Page](godot_project/screenshots/godot_settings_screen.png) |
 
 ---
 
-## 🚀 최신 스프린트 업데이트 요약 ([전체 회의록 보기](SPRINT_LOG.md))
+## ✨ v2.2 핵심 기능 및 아키텍처
+
+- **밀리의 서재 스타일 UI & 상단 탭**: 하단 바를 없애고 상단 언더라인 4-탭(`책장` · `전시대` · `독서 노트` · `통계`), 우측 상단 유틸리티(`🔍 검색` · `🎨 테마 전환` · `⚙️ 설정`), 우측 하단 `+ 기록 추가` FAB로 화면 여백과 집중도를 극대화했습니다.
+- **아크릴 피규어 전시대 (`전시대` 탭)**: 가챠·피규어·굿즈 전용 투명 유리 선반·아치형 돔·받침대·명패 UI와 **`💡 조명 ON/OFF`** 스포트라이트를 제공합니다. (전시대 스타일 3종: `아크릴 화이트` · `우드 장식장` · `뮤지엄 다크`)
+- **표지 사진 첨부 & 저장**: OS 네이티브 파일 선택창(`PNG/JPG/WebP`)으로 책 표지나 피규어 실물 사진을 등록·변경·제거할 수 있으며, `user://covers/`에 자동 저장됩니다.
+- **전용 설정 페이지 (`settings_page.gd`)**: 서재 이름 커스터마이징(`OOO의 서재` / `나의 서재`), 3종 서재 테마(`밀리 화이트` · `웜 페이퍼` · `미드나잇`), 전시대 스타일, 기본 책장 열 수(`3열`/`2열`), JSON 데이터 백업을 한곳에서 관리합니다.
+- **공용 디자인 시스템 (`scripts/ui/`)**: `DsButton`, `DsCard`, `DsBadge`, `DsInput`, `DsSegmented` 5종 공용 컴포넌트와 `UiTokens.theme_ds_tree()`로 모든 화면의 스타일과 테마를 일원화했습니다.
+- **인터랙티브 웹 목업**: [mockup_millie.html](mockup_millie.html)에서 브라우저로 동일한 UI를 바로 체험할 수 있습니다.
+
+---
+
+## 🚀 이전 스프린트 기록 ([전체 회의록 보기](SPRINT_LOG.md))
 
 ### [Sprint 83] 실시간 검색 결과 건수·자산 요약 토스트 & 모달 헤더 `PageBadgeLabel` (`n/N`)
 - **모달 헤더 페이지 배지 (`detail_modal.gd` · `main_view.gd` · `index.html`)**: 모달 상단 `◀` `▶` 버튼 사이에 현재 작품 순번(`1/6`~`6/6`)을 실시간 표시합니다.

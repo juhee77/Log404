@@ -8,23 +8,32 @@ Godot 4+ 기반의 감성 게임 및 인터랙티브 아카이브 애플리케�
 
 | 프로젝트 | 장르 & 플랫폼 | 설명 | 주요 기술 및 문서 |
 | :--- | :--- | :--- | :--- |
-| **[Game02] 주희의 다꾸 서재 & 소장 일기장** | 📔 E-Book 서재 & 만년필 다꾸 독서노트 (Mobile) | 리디북스·Apple Books 감성 서재 + 굿노트·몰스킨 다이어리 | [Game02 상세 문서](game02/README.md) · [스프린트 회의록](game02/SPRINT_LOG.md) |
+| **[Game02] Pocket Archive (나의 서재)** | 📔 밀리의 서재 스타일 책장 & 피규어 전시대 (Mobile) | Pretendard 공용 디자인 시스템 · 책장 · 아크릴 전시대 · 독서 노트 | [Game02 상세 문서](game02/README.md) · [웹 목업](game02/mockup_millie.html) |
 | **[Game01] 스터디 카페 타이쿤** | ☕ 2.5D 이소메트릭 경영 시뮬레이션 (PC/iOS) | 수험생과 카공족을 유치하는 프리미엄 스터디 카페 타이쿤 | [Game01 상세 보기](#-game01-스터디-카페-타이쿤-study-cafe-tycoon) |
 
 ---
 
-## 📔 [Game02] 주희의 다꾸 서재 & 소장 일기장 (Pocket Archive)
+## 📔 [Game02] Pocket Archive — 나의 서재 & 피규어 전시대
 
-> **Godot 4.6.2 모바일 기반 E-Book 리더기 서재(Apple Books · 리디북스) & 만년필 다꾸 독서노트(굿노트 · 몰스킨) 감성 아카이브 앱**  
-> 14인 가상 애자일 스쿼드가 20분 주기 자동 스프린트로 지속 개선 중입니다.
+> **Godot 4.6.2 모바일 기반 밀리의 서재 스타일 책장 · 아크릴 피규어 전시대 · 독서 노트 아카이브 앱**  
+> Pretendard Variable 폰트와 공용 디자인 시스템(`scripts/ui/`) 기반으로 구축되었습니다.
 
-### 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — Sprint 83)
+### 📸 실제 구동 스크린샷 (Godot 4.6 Metal 렌더링 — v2.2 Millie UI)
 
-| 📔 메인 E-Book 서재 & 다꾸 일기장 (`main.tscn`) | 🖋️ 펼친 몰스킨 독서노트 상세 모달 (`detail_modal.tscn`) |
+| 📚 책장 메인 (`main.tscn`) | 🏛️ 아크릴 피규어 전시대 (`전시대` 탭) |
 | :---: | :---: |
-| ![Pocket Archive Main Screen](game02/godot_project/screenshots/godot_app_screen.png) | ![Pocket Archive Detail Modal](game02/godot_project/screenshots/godot_modal_screen.png) |
+| ![Pocket Archive Bookshelf](game02/godot_project/screenshots/godot_app_screen.png) | ![Pocket Archive Figure Showcase](game02/godot_project/screenshots/godot_showcase_screen.png) |
 
-### ✨ 주요 핵심 기능
+| 📖 상세 바텀시트 (`detail_modal.tscn`) | ⚙️ 전용 설정 페이지 (`settings_page.gd`) |
+| :---: | :---: |
+| ![Pocket Archive Detail Sheet](game02/godot_project/screenshots/godot_modal_screen.png) | ![Pocket Archive Settings Page](game02/godot_project/screenshots/godot_settings_screen.png) |
+
+### ✨ 주요 핵심 기능 (v2.2)
+- **상단 언더라인 4-탭 & 우측 상단 유틸리티**: `책장` · `전시대` · `독서 노트` · `통계` 상단 탭과 우측 상단 `🔍 검색` · `🎨 테마` · `⚙️ 설정 페이지`, 우측 하단 `+ 기록 추가` FAB
+- **아크릴 피규어 전시대 (`전시대` 탭)**: 투명 유리 선반·원형 받침대·아치형 돔·명패 및 `💡 조명 ON/OFF` (설정에서 `아크릴 화이트` · `우드 장식장` · `뮤지엄 다크` 전환)
+- **실제 표지 사진 첨부·변경**: OS 네이티브 파일 선택창 연동 + `user://covers/` 영구 저장 + 둥근 북커버/유리돔 자동 크롭 렌더링
+- **맞춤형 서재 이름 & 전용 설정 페이지**: 누구나 자신의 이름(`OOO의 서재` / `나의 서재`) 설정 가능, 3종 테마(`밀리 화이트` · `웜 페이퍼` · `미드나잇`), 3열/2열 책장 전환, JSON 백업
+- **공용 디자인 시스템 (`scripts/ui/`)**: `DsButton` · `DsCard` · `DsBadge` · `DsInput` · `DsSegmented` 및 `UiTokens.theme_ds_tree()` 일괄 테마 전파
 - **최신 Sprint 83 하이라이트**: 실시간 검색 결과 건수·자산 요약 토스트(`main_view.gd`) 및 모달 헤더 `◀ 1/6 ▶` 실시간 페이지 배지(`detail_modal.gd` · `index.html`) 완성
 - **최신 Sprint 82 하이라이트**: 5대 서재 탭 전체 건수·자산 요약 토스트 통일, 웹 `#filter-summary-badge` 동기화 및 모달 `◀` `▶` 이전/다음 작품명·순번 동적 툴팁(`main_view.gd` · `index.html`) 완성
 - **최신 Sprint 81 하이라이트**: 모달 책장 넘김 페이지 인덱스(`(n/N)`) 토스트·웹 하단 `Page n / N` 동기화 및 완독·최애 탭 필터 건수/자산 요약 토스트(`main_view.gd` · `index.html`) 완성
