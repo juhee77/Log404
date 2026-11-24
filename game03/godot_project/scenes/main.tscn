@@ -1,0 +1,32 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scripts/main.gd" id="1_main"]
+[ext_resource type="Script" path="res://scripts/car5_room.gd" id="2_room"]
+[ext_resource type="Script" path="res://scripts/puzzle_modal.gd" id="3_modal"]
+
+[node name="Main" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_main")
+
+[node name="RoomLayer" type="CanvasLayer" parent="."]
+layer = 0
+
+[node name="Car5Room" type="Node2D" parent="RoomLayer"]
+script = ExtResource("2_room")
+
+[node name="UILayer" type="CanvasLayer" parent="."]
+layer = 1
+
+[node name="PuzzleModal" type="Control" parent="UILayer"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("3_modal")
