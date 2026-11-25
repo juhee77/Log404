@@ -99,15 +99,14 @@ func handle_room_input(event: InputEvent) -> void:
 		if mb.button_index == MOUSE_BUTTON_LEFT:
 			if mb.pressed:
 				is_dragging = true
-				drag_start_mouse_x = mb.position.x
+				drag_start_mouse_x = get_viewport().get_mouse_position().x
 				drag_start_scroll_x = target_scroll_x
 				drag_distance = 0.0
 			else:
 				var was_click := drag_distance < 10.0
 				is_dragging = false
 				if was_click:
-					var world_pos := mb.position + Vector2(scroll_x, 0.0)
-					var hit := _hit_test(world_pos)
+					var hit := _hit_test(get_local_mouse_position())
 					if hit != "":
 						hotspot_clicked.emit(hit)
 		elif mb.button_index == MOUSE_BUTTON_WHEEL_UP and mb.pressed:
@@ -115,15 +114,14 @@ func handle_room_input(event: InputEvent) -> void:
 		elif mb.button_index == MOUSE_BUTTON_WHEEL_DOWN and mb.pressed:
 			scroll_by(140.0)
 	elif event is InputEventMouseMotion:
-		var mm := event as InputEventMouseMotion
+		var mouse_x := get_viewport().get_mouse_position().x
 		if is_dragging:
-			var dx := mm.position.x - drag_start_mouse_x
+			var dx := mouse_x - drag_start_mouse_x
 			drag_distance = maxf(drag_distance, absf(dx))
 			var max_scroll := maxf(0.0, ROOM_WIDTH - get_viewport_rect().size.x)
 			target_scroll_x = clampf(drag_start_scroll_x - dx, 0.0, max_scroll)
 		else:
-			var world_pos := mm.position + Vector2(scroll_x, 0.0)
-			var hit := _hit_test(world_pos)
+			var hit := _hit_test(get_local_mouse_position())
 			if hit != hovered_hotspot:
 				hovered_hotspot = hit
 				if hit != "":
@@ -346,3 +344,4 @@ func _draw_hover_highlight() -> void:
 	var rect: Rect2 = HOTSPOTS[hovered_hotspot]["rect"]
 	var alpha := 0.55 + 0.35 * sin(anim_time * 5.0)
 	draw_rect(rect, Color(0.99, 0.9, 0.54, alpha), false, 3.5)
+

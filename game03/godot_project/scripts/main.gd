@@ -12,6 +12,7 @@ var item_desc_label: Label
 
 
 func _ready() -> void:
+	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_build_hud()
 
 	room.hotspot_clicked.connect(_on_hotspot_clicked)
@@ -259,3 +260,4 @@ func _handle_validator_click() -> void:
 		_show_dialogue("티크", "찰칵—! 승차권에 별 모양 구멍이 뚫리면서 5호차 문이 열렸어! 해냈어!")
 	else:
 		_show_dialogue("티크", "검표기가 승차권을 기다리고 있어! 인벤토리에서 [복원된 승차권]을 선택해 넣어보자.")
+
