@@ -103,6 +103,8 @@ func scroll_by(delta_x: float) -> void:
 
 
 func _process(delta: float) -> void:
+	if not visible:
+		return
 	anim_time += delta
 
 	var key_dir := Input.get_axis("ui_left", "ui_right")

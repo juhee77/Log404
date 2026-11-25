@@ -1,8 +1,10 @@
 extends Control
 
-@onready var room: Node2D = $RoomLayer/Car5Room
+@onready var room5: Node2D = $RoomLayer/Car5Room
+@onready var room4: Node2D = $RoomLayer/Car4Room
 @onready var modal: Control = $UILayer/PuzzleModal
 
+var title_lbl: Label
 var hover_label: Label
 var tick_hint_btn: Button
 var speaker_label: Label
@@ -15,22 +17,29 @@ func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_build_hud()
 
-	room.hotspot_clicked.connect(_on_hotspot_clicked)
-	room.hotspot_hovered.connect(_on_hotspot_hovered)
+	room5.hotspot_clicked.connect(_on_hotspot_clicked)
+	room5.hotspot_hovered.connect(_on_hotspot_hovered)
+	room4.hotspot_clicked.connect(_on_hotspot_clicked)
+	room4.hotspot_hovered.connect(_on_hotspot_hovered)
 
 	GameState.inventory_changed.connect(_refresh_inventory)
 	GameState.selection_changed.connect(_on_selection_changed)
 	GameState.flag_changed.connect(_on_flag_changed)
 	GameState.dialogue_requested.connect(_show_dialogue)
+	GameState.chapter_changed.connect(_on_chapter_changed)
 
-	_refresh_inventory(GameState.inventory)
-	_show_dialogue("나레이션", "눈을 뜨자 별빛이 흐르는 야간열차의 침대칸이다. 내가 누구인지 기억나지 않는다... 왼쪽에 걸린 코트가 반짝이고 있다.")
+	# 에피소드 2 테스트 편의를 위해 Ch.2로 바로 시작 (상단 버튼으로 Ch.1/Ch.2 자유 전환)
+	GameState.start_chapter(2)
+
+
+func _get_active_room() -> Node2D:
+	return room5 if GameState.current_chapter == 1 else room4
 
 
 func _unhandled_input(event: InputEvent) -> void:
 	if modal.visible:
 		return
-	room.handle_room_input(event)
+	_get_active_room().handle_room_input(event)
 
 
 func _build_hud() -> void:
@@ -43,6 +52,7 @@ func _build_hud() -> void:
 	top_bar.offset_right = -20
 	top_bar.offset_top = 14
 	top_bar.offset_bottom = 62
+	top_bar.add_theme_constant_override("separation", 10)
 	top_bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	ui_layer.add_child(top_bar)
 	ui_layer.move_child(top_bar, 0)
@@ -57,16 +67,35 @@ func _build_hud() -> void:
 	title_badge.add_theme_stylebox_override("panel", tstyle)
 	top_bar.add_child(title_badge)
 
-	var title_lbl := Label.new()
-	title_lbl.text = "✦ Ch.1  5호차 — 잠든 침대칸  (04:04)"
-	title_lbl.add_theme_font_size_override("font_size", 18)
+	title_lbl = Label.new()
+	title_lbl.add_theme_font_size_override("font_size", 17)
 	title_lbl.add_theme_color_override("font_color", Color("#FDE68A"))
 	title_badge.add_child(title_lbl)
+
+	# 챕터 전환 버튼 (Ch.1 / Ch.2)
+	var ch1_btn := Button.new()
+	ch1_btn.text = "Ch.1 5호차"
+	ch1_btn.custom_minimum_size = Vector2(96, 40)
+	ch1_btn.pressed.connect(func():
+		modal.close_modal()
+		GameState.start_chapter(1)
+	)
+	top_bar.add_child(ch1_btn)
+
+	var ch2_btn := Button.new()
+	ch2_btn.text = "Ch.2 4호차"
+	ch2_btn.custom_minimum_size = Vector2(96, 40)
+	ch2_btn.pressed.connect(func():
+		modal.close_modal()
+		GameState.start_chapter(2)
+	)
+	top_bar.add_child(ch2_btn)
 
 	hover_label = Label.new()
 	hover_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	hover_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	hover_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	hover_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	hover_label.add_theme_font_size_override("font_size", 18)
 	hover_label.add_theme_color_override("font_color", Color("#FFFBEB"))
 	hover_label.text = ""
@@ -74,7 +103,7 @@ func _build_hud() -> void:
 
 	tick_hint_btn = Button.new()
 	tick_hint_btn.text = "🐦 티크에게 힌트 듣기"
-	tick_hint_btn.custom_minimum_size = Vector2(200, 44)
+	tick_hint_btn.custom_minimum_size = Vector2(195, 44)
 	tick_hint_btn.visible = false
 	tick_hint_btn.pressed.connect(_on_tick_hint_pressed)
 	top_bar.add_child(tick_hint_btn)
@@ -87,7 +116,7 @@ func _build_hud() -> void:
 	left_btn.offset_left = 14
 	left_btn.offset_top = -62
 	left_btn.offset_bottom = 22
-	left_btn.pressed.connect(func(): room.scroll_by(-420.0))
+	left_btn.pressed.connect(func(): _get_active_room().scroll_by(-420.0))
 	ui_layer.add_child(left_btn)
 	ui_layer.move_child(left_btn, 1)
 
@@ -99,7 +128,7 @@ func _build_hud() -> void:
 	right_btn.offset_left = -62
 	right_btn.offset_top = -62
 	right_btn.offset_bottom = 22
-	right_btn.pressed.connect(func(): room.scroll_by(420.0))
+	right_btn.pressed.connect(func(): _get_active_room().scroll_by(420.0))
 	ui_layer.add_child(right_btn)
 	ui_layer.move_child(right_btn, 2)
 
@@ -124,7 +153,6 @@ func _build_hud() -> void:
 	bottom_hbox.add_theme_constant_override("separation", 20)
 	bottom_panel.add_child(bottom_hbox)
 
-	# 좌측: 대화 영역
 	var dlg_vbox := VBoxContainer.new()
 	dlg_vbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	dlg_vbox.add_theme_constant_override("separation", 6)
@@ -141,10 +169,8 @@ func _build_hud() -> void:
 	dialogue_label.add_theme_color_override("font_color", Color("#F8FAFC"))
 	dlg_vbox.add_child(dialogue_label)
 
-	var vsep := VSeparator.new()
-	bottom_hbox.add_child(vsep)
+	bottom_hbox.add_child(VSeparator.new())
 
-	# 우측: 인벤토리 영역
 	var inv_vbox := VBoxContainer.new()
 	inv_vbox.custom_minimum_size = Vector2(440, 0)
 	inv_vbox.add_theme_constant_override("separation", 6)
@@ -153,12 +179,28 @@ func _build_hud() -> void:
 	item_desc_label = Label.new()
 	item_desc_label.add_theme_font_size_override("font_size", 14)
 	item_desc_label.add_theme_color_override("font_color", Color("#CBD5E1"))
-	item_desc_label.text = "소지품 (두 조각을 순서대로 눌러 조합할 수 있습니다)"
+	item_desc_label.text = "소지품 (아이템을 선택해 사용하거나 서로 조합하세요)"
 	inv_vbox.add_child(item_desc_label)
 
 	inventory_box = HBoxContainer.new()
 	inventory_box.add_theme_constant_override("separation", 8)
 	inv_vbox.add_child(inventory_box)
+
+
+func _on_chapter_changed(chapter_num: int) -> void:
+	hover_label.text = ""
+	if chapter_num == 1:
+		room5.visible = true
+		room4.visible = false
+		title_lbl.text = "✦ Ch.1  5호차 — 잠든 침대칸 (04:04)"
+		tick_hint_btn.visible = GameState.has_flag("tick_joined")
+		_show_dialogue("나레이션", "눈을 뜨자 별빛이 흐르는 야간열차의 침대칸이다. 내가 누구인지 기억나지 않는다... 왼쪽에 걸린 코트가 반짝이고 있다.")
+	else:
+		room5.visible = false
+		room4.visible = true
+		title_lbl.text = "✦ Ch.2  4호차 — 끝없는 티타임의 식당칸 (04:04)"
+		tick_hint_btn.visible = true
+		_show_dialogue("티크", "와, 향긋한 홍차 냄새! 여긴 4호차 식당칸이야. 저기 도자기 인형 요리사님한테 말을 걸어보거나 왼쪽 주문서 게시판을 확인해 보자!")
 
 
 func _on_hotspot_hovered(label_text: String) -> void:
@@ -214,6 +256,7 @@ func _on_selection_changed(selected_id: String) -> void:
 
 func _on_hotspot_clicked(hotspot_id: String) -> void:
 	match hotspot_id:
+		# ---------------- Chapter 1 (5호차) ----------------
 		"coat":
 			if not GameState.has_flag("coat_searched"):
 				GameState.set_flag("coat_searched", true)
@@ -239,6 +282,24 @@ func _on_hotspot_clicked(hotspot_id: String) -> void:
 			else:
 				_show_dialogue("부엉이 차장 (방송)", "\"표에 목적지가 없는 승객은 내릴 수 없습니다. 먼저 옆의 황동 검표기에 승차권을 확인받으세요.\"")
 
+		# ---------------- Chapter 2 (4호차) ----------------
+		"menu_board":
+			modal.open_menu_view()
+		"tea_bar":
+			_show_dialogue("나레이션", "선반 위에 로즈(빨강)·얼그레이(파랑)·카모마일(노랑) 찻통과 황동 찻주전자가 정갈하게 놓여 있다.")
+		"tea_tables":
+			modal.open_tea_puzzle_view()
+		"chef_madeleine":
+			_handle_madeleine_click()
+		"dumbwaiter":
+			_handle_dumbwaiter_click()
+		"car4_door":
+			if GameState.has_flag("ch2_door_unlocked"):
+				GameState.set_flag("ch2_cleared", true)
+				modal.open_ch2_clear_view()
+			else:
+				_show_dialogue("마들렌", "\"잠시만요 손님! 생일 케이크에 촛불이 켜지기 전까지는 다음 칸으로 보내드릴 수 없어요.\"")
+
 
 func _handle_validator_click() -> void:
 	if GameState.has_flag("door_unlocked"):
@@ -261,3 +322,35 @@ func _handle_validator_click() -> void:
 	else:
 		_show_dialogue("티크", "검표기가 승차권을 기다리고 있어! 인벤토리에서 [복원된 승차권]을 선택해 넣어보자.")
 
+
+func _handle_madeleine_click() -> void:
+	if GameState.has_flag("ch2_cake_served"):
+		_show_dialogue("마들렌", "\"따뜻한 촛불을 보니 잊었던 웃음소리가 떠오르는 것 같아요. 오른쪽 4호차 문을 열어두었답니다!\"")
+		return
+
+	if GameState.selected_item_id == "lit_cake":
+		GameState.remove_item("lit_cake")
+		GameState.set_flag("ch2_cake_served", true)
+		GameState.set_flag("ch2_door_unlocked", true)
+		_show_dialogue("나레이션", "촛불이 반짝이는 순간, 누군가와 나란히 앉아 생일 축하 노래를 부르던 따뜻한 기억이 스쳐 지나갔다. 딸깍— 4호차 출구 문이 열렸다!")
+		return
+
+	if not GameState.has_flag("ch2_tea_solved"):
+		_show_dialogue("마들렌", "\"어서 오세요! 생일 손님을 위한 티타임을 준비 중인데... 왼쪽 주문서대로 세 테이블에 홍차를 놓는 걸 도와주시겠어요?\"")
+	else:
+		_show_dialogue("마들렌", "\"드린 핸들로 오른쪽 덤웨이터에서 케이크를 꺼내 촛불을 켜주시겠어요? 그 불빛이 있어야 문이 열린답니다.\"")
+
+
+func _handle_dumbwaiter_click() -> void:
+	if GameState.has_flag("ch2_dumbwaiter_used"):
+		_show_dialogue("나레이션", "덤웨이터 승강기가 열려 있다. 케이크와 성냥은 이미 꺼냈다.")
+		return
+
+	if GameState.selected_item_id == "dumbwaiter_handle":
+		GameState.remove_item("dumbwaiter_handle")
+		GameState.set_flag("ch2_dumbwaiter_used", true)
+		GameState.add_item("birthday_cake")
+		GameState.add_item("star_match")
+		_show_dialogue("티크", "끼이익— 덜컹! 아래 주방에서 [생일 케이크]랑 [별빛 성냥]이 올라왔어! 소지품에서 둘을 합쳐 촛불을 켜보자!")
+	else:
+		_show_dialogue("나레이션", "주방으로 연결된 음식 승강기(덤웨이터)다. 오른쪽 소켓에 손잡이가 빠져 있어 돌릴 수 없다.")

@@ -4,8 +4,10 @@ signal inventory_changed(items: Array[String])
 signal selection_changed(selected_id: String)
 signal flag_changed(flag_name: String, value: bool)
 signal dialogue_requested(speaker: String, text: String)
+signal chapter_changed(chapter_num: int)
 
 const ITEM_CATALOG: Dictionary = {
+	# Chapter 1 (5호차)
 	"ticket_left": {
 		"name": "찢어진 승차권 (좌)",
 		"symbol": "🎫L",
@@ -25,36 +27,73 @@ const ITEM_CATALOG: Dictionary = {
 		"name": "황동 태엽 열쇠",
 		"symbol": "🔑",
 		"desc": "작은 부엉이 문양이 새겨진 정교한 태엽 감기용 열쇠."
+	},
+	# Chapter 2 (4호차)
+	"dumbwaiter_handle": {
+		"name": "덤웨이터 핸들",
+		"symbol": "⚙️",
+		"desc": "주방 음식 승강기를 돌리는 데 쓰는 묵직한 황동 손잡이."
+	},
+	"birthday_cake": {
+		"name": "생일 케이크",
+		"symbol": "🎂",
+		"desc": "딸기와 크림이 얹힌 하얀 생일 케이크. 아직 초에 불이 붙지 않았다."
+	},
+	"star_match": {
+		"name": "별빛 성냥",
+		"symbol": "🔥",
+		"desc": "그으면 황금빛 불꽃이 피어오르는 동화 속 성냥."
+	},
+	"lit_cake": {
+		"name": "촛불 켜진 케이크",
+		"symbol": "🕯️🎂",
+		"desc": "따뜻한 별빛 촛불이 흔들리는 완성된 생일 케이크."
 	}
 }
 
+var current_chapter: int = 1
 var inventory: Array[String] = []
 var selected_item_id: String = ""
-var flags: Dictionary = {
-	"coat_searched": false,
-	"tick_joined": false,
-	"mirror_wiped": false,
-	"suitcase_opened": false,
-	"validator_wound": false,
-	"door_unlocked": false,
-	"chapter_cleared": false
-}
+var flags: Dictionary = {}
 
 
-func reset_state() -> void:
-	inventory = []
-	selected_item_id = ""
+func _ready() -> void:
+	_init_flags()
+
+
+func _init_flags() -> void:
 	flags = {
+		# Chapter 1
 		"coat_searched": false,
 		"tick_joined": false,
 		"mirror_wiped": false,
 		"suitcase_opened": false,
 		"validator_wound": false,
 		"door_unlocked": false,
-		"chapter_cleared": false
+		"chapter_cleared": false,
+		# Chapter 2
+		"ch2_tea_solved": false,
+		"ch2_dumbwaiter_used": false,
+		"ch2_cake_served": false,
+		"ch2_door_unlocked": false,
+		"ch2_cleared": false
 	}
+
+
+func start_chapter(chapter_num: int) -> void:
+	current_chapter = chapter_num
+	inventory = []
+	selected_item_id = ""
+	_init_flags()
+	if chapter_num >= 2:
+		flags["tick_joined"] = true
 	inventory_changed.emit(inventory.duplicate())
 	selection_changed.emit(selected_item_id)
+	chapter_changed.emit(current_chapter)
+
+
+func reset_state() -> void:
+	start_chapter(current_chapter)
 
 
 func has_flag(flag_name: String) -> bool:
@@ -96,7 +135,6 @@ func remove_item(item_id: String) -> void:
 
 
 func select_item(item_id: String) -> void:
-	# 이미 선택된 아이템과 다른 승차권 조각을 클릭하면 자동 조합 시도
 	if selected_item_id != "" and selected_item_id != item_id:
 		if try_combine(selected_item_id, item_id):
 			return
@@ -119,6 +157,14 @@ func try_combine(item_a: String, item_b: String) -> bool:
 		selection_changed.emit(selected_item_id)
 		say("티크", "딱 맞아떨어졌어! 찢어진 승차권이 하나로 복원됐어. 그런데 목적지 칸이 비어 있네...?")
 		return true
+	if pair == ["birthday_cake", "star_match"]:
+		remove_item("birthday_cake")
+		remove_item("star_match")
+		add_item("lit_cake")
+		selected_item_id = "lit_cake"
+		selection_changed.emit(selected_item_id)
+		say("티크", "와아—! 케이크 초에 따뜻한 별빛 불꽃이 피어올랐어! 이제 요리사 마들렌에게 전해줄까?")
+		return true
 	return false
 
 
@@ -131,6 +177,12 @@ func say(speaker: String, text: String) -> void:
 
 
 func get_tick_hint() -> String:
+	if current_chapter == 1:
+		return _get_ch1_hint()
+	return _get_ch2_hint()
+
+
+func _get_ch1_hint() -> String:
 	if not has_flag("tick_joined"):
 		return ""
 	if not has_flag("suitcase_opened"):
@@ -144,3 +196,15 @@ func get_tick_hint() -> String:
 	if not has_flag("door_unlocked"):
 		return "검표기 태엽이 감겼어! 이제 [복원된 승차권]을 선택해서 검표기에 넣어보자!"
 	return "5호차 문이 열렸어! 오른쪽 출구 문을 눌러 4호차로 건너가 보자!"
+
+
+func _get_ch2_hint() -> String:
+	if not has_flag("ch2_tea_solved"):
+		return "왼쪽 벽의 [주문서 게시판]을 먼저 읽어봐! 거기 적힌 단서대로 가운데 3개 티테이블(A·B·C)에 맞는 홍차를 세팅해 주면 돼."
+	if not has_flag("ch2_dumbwaiter_used"):
+		return "마들렌한테 받은 [덤웨이터 핸들]을 선택해서 오른쪽 벽의 [주방 덤웨이터]에 끼워 돌려보자!"
+	if has_item("birthday_cake") and has_item("star_match"):
+		return "케이크랑 별빛 성냥이 모였어! 아래 소지품에서 두 개를 차례로 눌러 촛불을 켜보자!"
+	if not has_flag("ch2_cake_served"):
+		return "[촛불 켜진 케이크]를 선택해서 가운데 도자기 인형 요리사 [마들렌]에게 건네주자!"
+	return "4호차 문이 열렸어! 오른쪽 출구 문을 눌러 3호차로 향해 보자!"

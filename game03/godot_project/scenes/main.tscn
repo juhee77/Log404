@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://scripts/main.gd" id="1_main"]
-[ext_resource type="Script" path="res://scripts/car5_room.gd" id="2_room"]
-[ext_resource type="Script" path="res://scripts/puzzle_modal.gd" id="3_modal"]
+[ext_resource type="Script" path="res://scripts/car5_room.gd" id="2_room5"]
+[ext_resource type="Script" path="res://scripts/car4_room.gd" id="3_room4"]
+[ext_resource type="Script" path="res://scripts/puzzle_modal.gd" id="4_modal"]
 
 [node name="Main" type="Control"]
 layout_mode = 3
@@ -17,7 +18,11 @@ script = ExtResource("1_main")
 layer = 0
 
 [node name="Car5Room" type="Node2D" parent="RoomLayer"]
-script = ExtResource("2_room")
+script = ExtResource("2_room5")
+
+[node name="Car4Room" type="Node2D" parent="RoomLayer"]
+visible = false
+script = ExtResource("3_room4")
 
 [node name="UILayer" type="CanvasLayer" parent="."]
 layer = 1
@@ -29,4 +34,4 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("3_modal")
+script = ExtResource("4_modal")

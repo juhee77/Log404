@@ -9,7 +9,11 @@ var close_button: Button
 
 var dial_values: Array[int] = [0, 0, 0]
 var dial_labels: Array[Label] = []
+var tea_choices: Array[int] = [0, 0, 0]
+var tea_buttons: Array[Button] = []
 var current_mode: String = ""
+
+const TEA_OPTIONS: Array[String] = ["선택 안 함", "🌹 로즈 티", "🫖 얼그레이", "🌼 카모마일"]
 
 
 class ModalArtCanvas extends Control:
@@ -162,6 +166,7 @@ func _clear_content() -> void:
 	for child in content_box.get_children():
 		child.queue_free()
 	dial_labels.clear()
+	tea_buttons.clear()
 
 
 func close_modal() -> void:
@@ -382,19 +387,190 @@ func open_chapter_clear_view() -> void:
 	story.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	story.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	story.add_theme_font_size_override("font_size", 18)
-	story.text = "황동 문이 부드럽게 열리며 따뜻한 홍차 향기가 흘러들어온다.\n\n스피커 너머로 부엉이 차장의 목소리가 울린다.\n\"404번 승객님, 첫 번째 문을 통과하셨군요.\n다음 칸은 '끝없는 티타임의 4호차 식당칸'입니다.\"\n\n[ Demo Chapter 1 완료 ]"
+	story.text = "황동 문이 부드럽게 열리며 따뜻한 홍차 향기가 흘러들어온다.\n\n스피커 너머로 부엉이 차장의 목소리가 울린다.\n\"404번 승객님, 첫 번째 문을 통과하셨군요.\n다음 칸은 '끝없는 티타임의 4호차 식당칸'입니다.\""
 	content_box.add_child(story)
+
+	var next_btn := Button.new()
+	next_btn.text = "4호차 (에피소드 2)로 이동하기 ▶"
+	next_btn.custom_minimum_size = Vector2(280, 48)
+	next_btn.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	next_btn.pressed.connect(func():
+		close_modal()
+		GameState.start_chapter(2)
+	)
+	content_box.add_child(next_btn)
 
 	var restart_btn := Button.new()
 	restart_btn.text = "5호차 처음부터 다시 플레이"
-	restart_btn.custom_minimum_size = Vector2(260, 46)
+	restart_btn.custom_minimum_size = Vector2(240, 40)
 	restart_btn.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	restart_btn.pressed.connect(func():
 		dial_values = [0, 0, 0]
-		GameState.reset_state()
+		GameState.start_chapter(1)
 		close_modal()
-		GameState.say("나레이션", "눈을 뜨자 별빛이 흐르는 야간열차의 침대칸이다. 시계는 새벽 4시 04분에 멈춰 있다.")
 	)
 	content_box.add_child(restart_btn)
+
+	visible = true
+
+
+# ==============================================================================
+# Chapter 2 (4호차 — 끝없는 티타임의 식당칸) 모달
+# ==============================================================================
+func open_menu_view() -> void:
+	current_mode = "menu"
+	_clear_content()
+	title_label.text = "벽면 주문서 게시판"
+
+	var note_panel := PanelContainer.new()
+	var nstyle := StyleBoxFlat.new()
+	nstyle.bg_color = Color("#FDF6E3")
+	nstyle.border_color = Color("#C2B59B")
+	nstyle.set_border_width_all(2)
+	nstyle.set_corner_radius_all(8)
+	nstyle.set_content_margin_all(18)
+	note_panel.add_theme_stylebox_override("panel", nstyle)
+	content_box.add_child(note_panel)
+
+	var note_lbl := Label.new()
+	note_lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	note_lbl.add_theme_font_size_override("font_size", 17)
+	note_lbl.add_theme_color_override("font_color", Color("#3B2322"))
+	note_lbl.text = "[ 오늘의 티타임 예약 주문서 ]\n\n세 자리(A: 창가 · B: 중앙 · C: 시계 옆)에 각기 다른 홍차(로즈 · 얼그레이 · 카모마일)를 올릴 것.\n\n  1. 🌹 로즈 티는 시계 옆(C)도, 중앙(B)도 아니다.\n  2. 🫖 얼그레이는 창가(A)도, 시계 옆(C)도 아니다.\n  3. 🌼 카모마일은 남은 자리에 조용히 놓아드릴 것."
+	note_panel.add_child(note_lbl)
+
+	var hint := Label.new()
+	hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	hint.add_theme_font_size_override("font_size", 15)
+	hint.add_theme_color_override("font_color", Color("#CBD5E1"))
+	hint.text = "추리한 대로 중앙의 [티테이블 A · B · C]에 홍차를 세팅해 주자."
+	content_box.add_child(hint)
+
+	visible = true
+
+
+func open_tea_puzzle_view() -> void:
+	current_mode = "tea_puzzle"
+	_clear_content()
+	title_label.text = "티테이블 A · B · C 홍차 세팅"
+
+	if GameState.has_flag("ch2_tea_solved"):
+		var done_lbl := Label.new()
+		done_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		done_lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		done_lbl.add_theme_font_size_override("font_size", 18)
+		done_lbl.text = "세 테이블에 따뜻한 홍차가 완벽하게 서빙되어 있다.\n(A: 로즈 티 · B: 얼그레이 · C: 카모마일)"
+		content_box.add_child(done_lbl)
+		visible = true
+		return
+
+	var info := Label.new()
+	info.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	info.add_theme_font_size_override("font_size", 16)
+	info.text = "각 테이블 버튼을 눌러 올바른 홍차를 선택한 뒤 서빙하세요."
+	content_box.add_child(info)
+
+	var names: Array[String] = ["테이블 A\n(창가)", "테이블 B\n(중앙)", "테이블 C\n(시계 옆)"]
+	var row := HBoxContainer.new()
+	row.alignment = BoxContainer.ALIGNMENT_CENTER
+	row.add_theme_constant_override("separation", 18)
+	content_box.add_child(row)
+
+	for idx in range(3):
+		var card := PanelContainer.new()
+		var cstyle := StyleBoxFlat.new()
+		cstyle.bg_color = Color("#1A352D")
+		cstyle.border_color = Color("#D4AF37")
+		cstyle.set_border_width_all(2)
+		cstyle.set_corner_radius_all(10)
+		cstyle.set_content_margin_all(14)
+		card.add_theme_stylebox_override("panel", cstyle)
+		row.add_child(card)
+
+		var col := VBoxContainer.new()
+		col.alignment = BoxContainer.ALIGNMENT_CENTER
+		col.add_theme_constant_override("separation", 12)
+		card.add_child(col)
+
+		var lbl := Label.new()
+		lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		lbl.add_theme_font_size_override("font_size", 16)
+		lbl.add_theme_color_override("font_color", Color("#FDE68A"))
+		lbl.text = names[idx]
+		col.add_child(lbl)
+
+		var btn := Button.new()
+		btn.custom_minimum_size = Vector2(138, 48)
+		btn.text = TEA_OPTIONS[tea_choices[idx]]
+		btn.pressed.connect(_cycle_tea.bind(idx))
+		col.add_child(btn)
+		tea_buttons.append(btn)
+
+	var serve_btn := Button.new()
+	serve_btn.text = "홍차 서빙 완료"
+	serve_btn.custom_minimum_size = Vector2(220, 46)
+	serve_btn.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	serve_btn.pressed.connect(_try_serve_tea)
+	content_box.add_child(serve_btn)
+
+	visible = true
+
+
+func _cycle_tea(index: int) -> void:
+	var next_choices: Array[int] = tea_choices.duplicate()
+	next_choices[index] = (next_choices[index] + 1) % TEA_OPTIONS.size()
+	tea_choices = next_choices
+	if index < tea_buttons.size():
+		tea_buttons[index].text = TEA_OPTIONS[tea_choices[index]]
+
+
+func _try_serve_tea() -> void:
+	# 정답: A = 로즈(1), B = 얼그레이(2), C = 카모마일(3)
+	if tea_choices == [1, 2, 3]:
+		GameState.set_flag("ch2_tea_solved", true)
+		GameState.add_item("dumbwaiter_handle")
+		GameState.say("마들렌", "\"어머, 완벽해요! 향긋한 홍차가 딱 맞게 놓였어요! 감사해요, 이 [덤웨이터 핸들]로 오른쪽 승강기를 돌려 케이크를 올려주시겠어요?\"")
+		close_modal()
+	else:
+		GameState.say("티크", "음, 주문서 내용과 조금 다른 것 같아! 왼쪽 벽의 [주문서 게시판] 단서를 다시 확인해 보자.")
+
+
+func open_ch2_clear_view() -> void:
+	current_mode = "ch2_clear"
+	_clear_content()
+	title_label.text = "Chapter 2 Clear — 4호차 통과!"
+
+	var story := Label.new()
+	story.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	story.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	story.add_theme_font_size_override("font_size", 18)
+	story.text = "생일 케이크의 따뜻한 촛불 너머로,\n오래전 누군가와 함께 웃으며 박수 치던 기억이 스쳐 지나갔다.\n\n4호차의 문이 열리고, 푸른 별빛과 꽃향기가 감도는\n'3호차 — 별이 자라는 온실·화실칸'이 모습을 드러낸다.\n\n[ Chapter 2 완료 · 다음 에피소드: 3호차 온실칸 예정 ]"
+	content_box.add_child(story)
+
+	var btn_row := HBoxContainer.new()
+	btn_row.alignment = BoxContainer.ALIGNMENT_CENTER
+	btn_row.add_theme_constant_override("separation", 16)
+	content_box.add_child(btn_row)
+
+	var ch1_btn := Button.new()
+	ch1_btn.text = "5호차(Ch.1)부터 다시"
+	ch1_btn.custom_minimum_size = Vector2(200, 44)
+	ch1_btn.pressed.connect(func():
+		dial_values = [0, 0, 0]
+		tea_choices = [0, 0, 0]
+		close_modal()
+		GameState.start_chapter(1)
+	)
+	btn_row.add_child(ch1_btn)
+
+	var ch2_btn := Button.new()
+	ch2_btn.text = "4호차(Ch.2) 다시 플레이"
+	ch2_btn.custom_minimum_size = Vector2(200, 44)
+	ch2_btn.pressed.connect(func():
+		tea_choices = [0, 0, 0]
+		close_modal()
+		GameState.start_chapter(2)
+	)
+	btn_row.add_child(ch2_btn)
 
 	visible = true
