@@ -12,6 +12,97 @@ var dial_labels: Array[Label] = []
 var current_mode: String = ""
 
 
+class ModalArtCanvas extends Control:
+	var art_type: String = ""
+	var is_wiped: bool = false
+
+	func _draw() -> void:
+		var r := Rect2(Vector2.ZERO, size)
+		match art_type:
+			"window":
+				_draw_window_art(r)
+			"clock":
+				_draw_clock_art(r)
+			"mirror":
+				_draw_mirror_art(r)
+
+	func _draw_window_art(r: Rect2) -> void:
+		draw_polygon(
+			PackedVector2Array([r.position, Vector2(r.end.x, r.position.y), r.end, Vector2(r.position.x, r.end.y)]),
+			PackedColorArray([Color("#060B1E"), Color("#060B1E"), Color("#1A2A58"), Color("#1A2A58")])
+		)
+		draw_rect(r, Color("#D4AF37"), false, 4.0)
+
+		# 배경 작은 별들
+		var bg_stars: Array[Vector2] = [
+			Vector2(45, 32), Vector2(88, 72), Vector2(130, 28), Vector2(310, 44),
+			Vector2(360, 128), Vector2(68, 148), Vector2(420, 152), Vector2(280, 162)
+		]
+		for p in bg_stars:
+			draw_circle(p, 2.0, Color(1.0, 0.96, 0.82, 0.7))
+
+		# 초승달
+		var m := Vector2(395, 58)
+		draw_circle(m, 34.0, Color(0.99, 0.9, 0.54, 0.14))
+		draw_circle(m, 22.0, Color("#FEF08A"))
+		draw_circle(m + Vector2(9, -5), 19.0, Color("#0C1636"))
+
+		# 빛나는 '4' 모양 별자리
+		var pts: Array[Vector2] = [
+			Vector2(220, 32), Vector2(165, 118), Vector2(262, 118),
+			Vector2(236, 52), Vector2(236, 168)
+		]
+		draw_line(pts[0], pts[1], Color("#FDE68A", 0.78), 2.5)
+		draw_line(pts[1], pts[2], Color("#FDE68A", 0.78), 2.5)
+		draw_line(pts[3], pts[4], Color("#FDE68A", 0.78), 2.5)
+		for pt in pts:
+			draw_circle(pt, 10.0, Color(0.99, 0.9, 0.54, 0.28))
+			draw_circle(pt, 4.8, Color("#FFFBEB"))
+
+	func _draw_clock_art(r: Rect2) -> void:
+		var c := r.get_center()
+		# 회중시계 고리 & 용두
+		draw_arc(c + Vector2(0, -74), 14.0, 0.0, TAU, 24, Color("#D4AF37"), 4.0)
+		draw_rect(Rect2(c.x - 10, c.y - 68, 20, 14), Color("#B8893A"))
+		# 시계 외곽 황동 베젤
+		draw_circle(c, 58.0, Color("#8C6226"))
+		draw_circle(c, 54.0, Color("#E5C068"))
+		draw_circle(c, 47.0, Color("#FFFBEB"))
+		draw_arc(c, 47.0, 0.0, TAU, 48, Color("#B8893A"), 2.0)
+
+		# 12시간 눈금
+		for i in range(12):
+			var a := float(i) / 12.0 * TAU - PI * 0.5
+			var p1 := c + Vector2(cos(a), sin(a)) * 38.0
+			var p2 := c + Vector2(cos(a), sin(a)) * 44.0
+			draw_line(p1, p2, Color("#3B2322"), 2.5 if i % 3 == 0 else 1.5)
+
+		# 04:04 시침(4시 방향) & 분침(4분 방향)
+		var hour_a := (4.0 + 4.0 / 60.0) / 12.0 * TAU - PI * 0.5
+		var min_a := (4.0 / 60.0) * TAU - PI * 0.5
+		draw_line(c, c + Vector2(cos(hour_a), sin(hour_a)) * 24.0, Color("#1E293B"), 4.0)
+		draw_line(c, c + Vector2(cos(min_a), sin(min_a)) * 34.0, Color("#334155"), 2.8)
+		draw_circle(c, 4.5, Color("#B45309"))
+
+	func _draw_mirror_art(r: Rect2) -> void:
+		var m := r.grow(-8)
+		draw_rect(r, Color("#A67C2E"))
+		draw_rect(r.grow(-3), Color("#E5C068"))
+		draw_rect(m, Color("#1E293B") if is_wiped else Color("#94A3B8"))
+
+		if is_wiped:
+			draw_colored_polygon(PackedVector2Array([
+				m.position + Vector2(22, 0), m.position + Vector2(64, 0),
+				m.position + Vector2(0, 92), m.position + Vector2(0, 50)
+			]), Color(1, 1, 1, 0.09))
+			draw_arc(m.get_center(), 52.0, 0.0, TAU, 44, Color(0.99, 0.9, 0.54, 0.25), 18.0)
+			draw_arc(m.get_center(), 52.0, 0.0, TAU, 44, Color("#FEF08A"), 8.0)
+		else:
+			draw_circle(m.get_center() + Vector2(-42, -26), 54.0, Color(1, 1, 1, 0.26))
+			draw_circle(m.get_center() + Vector2(36, 22), 60.0, Color(1, 1, 1, 0.24))
+			draw_circle(m.get_center() + Vector2(-8, 44), 46.0, Color(1, 1, 1, 0.22))
+
+
 func _ready() -> void:
 	visible = false
 	set_anchors_preset(Control.PRESET_FULL_RECT)
@@ -22,7 +113,7 @@ func _ready() -> void:
 func _build_base_ui() -> void:
 	var dim := ColorRect.new()
 	dim.set_anchors_preset(Control.PRESET_FULL_RECT)
-	dim.color = Color(0.04, 0.06, 0.12, 0.78)
+	dim.color = Color(0.04, 0.05, 0.11, 0.8)
 	add_child(dim)
 
 	var center := CenterContainer.new()
@@ -30,9 +121,9 @@ func _build_base_ui() -> void:
 	add_child(center)
 
 	panel = PanelContainer.new()
-	panel.custom_minimum_size = Vector2(560, 380)
+	panel.custom_minimum_size = Vector2(580, 420)
 	var style := StyleBoxFlat.new()
-	style.bg_color = Color("#1F1826")
+	style.bg_color = Color("#1D1624")
 	style.border_color = Color("#D4AF37")
 	style.set_border_width_all(3)
 	style.set_corner_radius_all(14)
@@ -59,8 +150,7 @@ func _build_base_ui() -> void:
 	close_button.pressed.connect(close_modal)
 	header.add_child(close_button)
 
-	var sep := HSeparator.new()
-	root_vbox.add_child(sep)
+	root_vbox.add_child(HSeparator.new())
 
 	content_box = VBoxContainer.new()
 	content_box.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -85,12 +175,11 @@ func open_window_view() -> void:
 	_clear_content()
 	title_label.text = "창밖의 별바다"
 
-	var art := Label.new()
-	art.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	art.add_theme_font_size_override("font_size", 28)
-	art.add_theme_color_override("font_color", Color("#FEF08A"))
-	art.text = "✦       ★\n      ╱   │\n    ★ ── ★ ── ★\n          │\n          ★"
-	content_box.add_child(art)
+	var canvas := ModalArtCanvas.new()
+	canvas.art_type = "window"
+	canvas.custom_minimum_size = Vector2(460, 195)
+	canvas.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	content_box.add_child(canvas)
 
 	var desc := Label.new()
 	desc.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -107,16 +196,28 @@ func open_table_view() -> void:
 	_clear_content()
 	title_label.text = "회중시계 & 여행일지"
 
-	var clock_lbl := Label.new()
-	clock_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	clock_lbl.add_theme_font_size_override("font_size", 36)
-	clock_lbl.add_theme_color_override("font_color", Color("#FDE68A"))
-	clock_lbl.text = "🕰️  04 : 04"
-	content_box.add_child(clock_lbl)
+	var top_row := HBoxContainer.new()
+	top_row.alignment = BoxContainer.ALIGNMENT_CENTER
+	top_row.add_theme_constant_override("separation", 24)
+	content_box.add_child(top_row)
+
+	var clock_canvas := ModalArtCanvas.new()
+	clock_canvas.art_type = "clock"
+	clock_canvas.custom_minimum_size = Vector2(150, 155)
+	top_row.add_child(clock_canvas)
+
+	var time_lbl := Label.new()
+	time_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	time_lbl.add_theme_font_size_override("font_size", 28)
+	time_lbl.add_theme_color_override("font_color", Color("#FDE68A"))
+	time_lbl.text = "04 : 04\n(멈춰 있음)"
+	top_row.add_child(time_lbl)
 
 	var note_panel := PanelContainer.new()
 	var nstyle := StyleBoxFlat.new()
 	nstyle.bg_color = Color("#FDF6E3")
+	nstyle.border_color = Color("#C2B59B")
+	nstyle.set_border_width_all(2)
 	nstyle.set_corner_radius_all(8)
 	nstyle.set_content_margin_all(16)
 	note_panel.add_theme_stylebox_override("panel", nstyle)
@@ -124,9 +225,9 @@ func open_table_view() -> void:
 
 	var note_lbl := Label.new()
 	note_lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	note_lbl.add_theme_font_size_override("font_size", 17)
+	note_lbl.add_theme_font_size_override("font_size", 16)
 	note_lbl.add_theme_color_override("font_color", Color("#3B2322"))
-	note_lbl.text = "[ 낡은 여행일지의 메모 ]\n\n\"가방의 비밀을 잊었을 때를 위해 적어둔다.\n  첫째는 창밖의 별이 그린 숫자,\n  둘째는 김을 닦아낸 거울 속 보름달,\n  셋째는 멈춰버린 시계의 분침이 가리키는 수.\""
+	note_lbl.text = "[ 낡은 여행일지의 메모 ]\n\"가방의 비밀을 잊었을 때를 위해 적어둔다.\n  첫째는 창밖의 별이 그린 숫자,\n  둘째는 김을 닦아낸 거울 속 보름달,\n  셋째는 멈춰버린 시계의 분침이 가리키는 수.\""
 	note_panel.add_child(note_lbl)
 
 	visible = true
@@ -138,24 +239,12 @@ func open_mirror_view() -> void:
 	title_label.text = "황동 프레임 거울"
 
 	var wiped := GameState.has_flag("mirror_wiped")
-	var mirror_box := PanelContainer.new()
-	mirror_box.custom_minimum_size = Vector2(260, 170)
-	mirror_box.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
-	var mstyle := StyleBoxFlat.new()
-	mstyle.bg_color = Color("#334155") if wiped else Color("#94A3B8")
-	mstyle.border_color = Color("#D4AF37")
-	mstyle.set_border_width_all(4)
-	mstyle.set_corner_radius_all(10)
-	mirror_box.add_theme_stylebox_override("panel", mstyle)
-	content_box.add_child(mirror_box)
-
-	var symbol := Label.new()
-	symbol.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	symbol.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	symbol.add_theme_font_size_override("font_size", 64 if wiped else 22)
-	symbol.add_theme_color_override("font_color", Color("#FDE68A") if wiped else Color("#E2E8F0"))
-	symbol.text = "0" if wiped else "(뿌옇게 김이 서려 있다)"
-	mirror_box.add_child(symbol)
+	var canvas := ModalArtCanvas.new()
+	canvas.art_type = "mirror"
+	canvas.is_wiped = wiped
+	canvas.custom_minimum_size = Vector2(260, 190)
+	canvas.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	content_box.add_child(canvas)
 
 	var desc := Label.new()
 	desc.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -199,13 +288,24 @@ func open_suitcase_view() -> void:
 	var info := Label.new()
 	info.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	info.add_theme_font_size_override("font_size", 17)
-	info.text = "3자리 황동 다이얼 자물쇠가 단단히 잠겨 있다."
+	info.text = "가죽 벨트 사이로 3자리 황동 다이얼 자물쇠가 단단히 잠겨 있다."
 	content_box.add_child(info)
+
+	var lock_plate := PanelContainer.new()
+	lock_plate.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	var lstyle := StyleBoxFlat.new()
+	lstyle.bg_color = Color("#462314")
+	lstyle.border_color = Color("#D4AF37")
+	lstyle.set_border_width_all(3)
+	lstyle.set_corner_radius_all(12)
+	lstyle.set_content_margin_all(20)
+	lock_plate.add_theme_stylebox_override("panel", lstyle)
+	content_box.add_child(lock_plate)
 
 	var dial_row := HBoxContainer.new()
 	dial_row.alignment = BoxContainer.ALIGNMENT_CENTER
-	dial_row.add_theme_constant_override("separation", 28)
-	content_box.add_child(dial_row)
+	dial_row.add_theme_constant_override("separation", 24)
+	lock_plate.add_child(dial_row)
 
 	for idx in range(3):
 		var col := VBoxContainer.new()
@@ -215,21 +315,32 @@ func open_suitcase_view() -> void:
 
 		var up_btn := Button.new()
 		up_btn.text = "▲"
-		up_btn.custom_minimum_size = Vector2(68, 36)
+		up_btn.custom_minimum_size = Vector2(72, 36)
 		up_btn.pressed.connect(_change_dial.bind(idx, 1))
 		col.add_child(up_btn)
 
+		var num_frame := PanelContainer.new()
+		var nf := StyleBoxFlat.new()
+		nf.bg_color = Color("#18120E")
+		nf.border_color = Color("#E5C068")
+		nf.set_border_width_all(2)
+		nf.set_corner_radius_all(6)
+		nf.set_content_margin_all(6)
+		num_frame.add_theme_stylebox_override("panel", nf)
+		col.add_child(num_frame)
+
 		var num_lbl := Label.new()
 		num_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		num_lbl.add_theme_font_size_override("font_size", 36)
+		num_lbl.custom_minimum_size = Vector2(54, 46)
+		num_lbl.add_theme_font_size_override("font_size", 34)
 		num_lbl.add_theme_color_override("font_color", Color("#FDE68A"))
 		num_lbl.text = str(dial_values[idx])
-		col.add_child(num_lbl)
+		num_frame.add_child(num_lbl)
 		dial_labels.append(num_lbl)
 
 		var down_btn := Button.new()
 		down_btn.text = "▼"
-		down_btn.custom_minimum_size = Vector2(68, 36)
+		down_btn.custom_minimum_size = Vector2(72, 36)
 		down_btn.pressed.connect(_change_dial.bind(idx, -1))
 		col.add_child(down_btn)
 
