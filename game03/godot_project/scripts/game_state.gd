@@ -29,6 +29,11 @@ const ITEM_CATALOG: Dictionary = {
 		"desc": "작은 부엉이 문양이 새겨진 정교한 태엽 감기용 열쇠."
 	},
 	# Chapter 2 (4호차)
+	"golden_tea_pot": {
+		"name": "황금 홍차 포트",
+		"symbol": "🫖✨",
+		"desc": "정확히 4oz 비율로 완벽하게 우려낸 향긋한 홍차 주전자."
+	},
 	"dumbwaiter_handle": {
 		"name": "덤웨이터 핸들",
 		"symbol": "⚙️",
@@ -72,6 +77,7 @@ func _init_flags() -> void:
 		"door_unlocked": false,
 		"chapter_cleared": false,
 		# Chapter 2
+		"ch2_tea_brewed": false,
 		"ch2_tea_solved": false,
 		"ch2_dumbwaiter_used": false,
 		"ch2_cake_served": false,
@@ -199,12 +205,14 @@ func _get_ch1_hint() -> String:
 
 
 func _get_ch2_hint() -> String:
+	if not has_flag("ch2_tea_brewed"):
+		return "먼저 왼쪽 [황동 티 바]에서 8oz·5oz·3oz 주전자로 정확히 4oz 홍차를 계량해 우려내자! (8→5, 5→3, 3→8 순서로 옮겨봐!)"
 	if not has_flag("ch2_tea_solved"):
-		return "왼쪽 벽의 [주문서 게시판]을 먼저 읽어봐! 거기 적힌 단서대로 가운데 3개 티테이블(A·B·C)에 맞는 홍차를 세팅해 주면 돼."
+		return "왼쪽 벽 [주문서 게시판]의 5가지 단서를 읽고, 가운데 [티테이블 A·B·C]에 맞는 홍차와 디저트를 세팅해 주자!"
 	if not has_flag("ch2_dumbwaiter_used"):
-		return "마들렌한테 받은 [덤웨이터 핸들]을 선택해서 오른쪽 벽의 [주방 덤웨이터]에 끼워 돌려보자!"
+		return "마들렌한테 받은 [덤웨이터 핸들]을 선택해 오른쪽 [주방 덤웨이터]를 열고, 3×3 황동 파이프를 왼쪽 위에서 오른쪽 아래로 연결하자!"
 	if has_item("birthday_cake") and has_item("star_match"):
-		return "케이크랑 별빛 성냥이 모였어! 아래 소지품에서 두 개를 차례로 눌러 촛불을 켜보자!"
+		return "케이크랑 별빛 성냥이 모였어! 아래 소지품에서 두 개를 차례로 눌러 촛불을 준비해 보자!"
 	if not has_flag("ch2_cake_served"):
-		return "[촛불 켜진 케이크]를 선택해서 가운데 도자기 인형 요리사 [마들렌]에게 건네주자!"
+		return "[촛불 켜진 케이크]를 선택해서 가운데 요리사 [마들렌]에게 건네주고, 5개 촛불을 모두 켜주자!"
 	return "4호차 문이 열렸어! 오른쪽 출구 문을 눌러 3호차로 향해 보자!"

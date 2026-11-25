@@ -286,9 +286,12 @@ func _on_hotspot_clicked(hotspot_id: String) -> void:
 		"menu_board":
 			modal.open_menu_view()
 		"tea_bar":
-			_show_dialogue("나레이션", "선반 위에 로즈(빨강)·얼그레이(파랑)·카모마일(노랑) 찻통과 황동 찻주전자가 정갈하게 놓여 있다.")
+			modal.open_water_jug_view()
 		"tea_tables":
-			modal.open_tea_puzzle_view()
+			if not GameState.has_flag("ch2_tea_brewed"):
+				_show_dialogue("티크", "아직 우려낸 홍차가 없어! 먼저 왼쪽 [황동 티 바]에서 4oz 홍차를 완벽하게 계량해 우려오자!")
+			else:
+				modal.open_tea_puzzle_view()
 		"chef_madeleine":
 			_handle_madeleine_click()
 		"dumbwaiter":
@@ -329,16 +332,15 @@ func _handle_madeleine_click() -> void:
 		return
 
 	if GameState.selected_item_id == "lit_cake":
-		GameState.remove_item("lit_cake")
-		GameState.set_flag("ch2_cake_served", true)
-		GameState.set_flag("ch2_door_unlocked", true)
-		_show_dialogue("나레이션", "촛불이 반짝이는 순간, 누군가와 나란히 앉아 생일 축하 노래를 부르던 따뜻한 기억이 스쳐 지나갔다. 딸깍— 4호차 출구 문이 열렸다!")
+		modal.open_candle_puzzle_view()
 		return
 
-	if not GameState.has_flag("ch2_tea_solved"):
-		_show_dialogue("마들렌", "\"어서 오세요! 생일 손님을 위한 티타임을 준비 중인데... 왼쪽 주문서대로 세 테이블에 홍차를 놓는 걸 도와주시겠어요?\"")
+	if not GameState.has_flag("ch2_tea_brewed"):
+		_show_dialogue("마들렌", "\"어서 오세요! 생일 손님을 위한 티타임을 준비 중인데... 먼저 왼쪽 [황동 티 바]에서 정확히 4oz 홍차를 우려주시겠어요?\"")
+	elif not GameState.has_flag("ch2_tea_solved"):
+		_show_dialogue("마들렌", "\"우려낸 홍차 향이 정말 좋네요! 이제 왼쪽 주문서대로 세 테이블에 홍차와 디저트를 놓아주시겠어요?\"")
 	else:
-		_show_dialogue("마들렌", "\"드린 핸들로 오른쪽 덤웨이터에서 케이크를 꺼내 촛불을 켜주시겠어요? 그 불빛이 있어야 문이 열린답니다.\"")
+		_show_dialogue("마들렌", "\"드린 핸들로 오른쪽 덤웨이터 파이프를 고쳐 케이크를 올리고, 촛불을 켜서 가져다주시겠어요?\"")
 
 
 func _handle_dumbwaiter_click() -> void:
@@ -347,10 +349,6 @@ func _handle_dumbwaiter_click() -> void:
 		return
 
 	if GameState.selected_item_id == "dumbwaiter_handle":
-		GameState.remove_item("dumbwaiter_handle")
-		GameState.set_flag("ch2_dumbwaiter_used", true)
-		GameState.add_item("birthday_cake")
-		GameState.add_item("star_match")
-		_show_dialogue("티크", "끼이익— 덜컹! 아래 주방에서 [생일 케이크]랑 [별빛 성냥]이 올라왔어! 소지품에서 둘을 합쳐 촛불을 켜보자!")
+		modal.open_pipe_puzzle_view()
 	else:
-		_show_dialogue("나레이션", "주방으로 연결된 음식 승강기(덤웨이터)다. 오른쪽 소켓에 손잡이가 빠져 있어 돌릴 수 없다.")
+		_show_dialogue("나레이션", "주방으로 연결된 음식 승강기(덤웨이터)다. 오른쪽 소켓에 손잡이가 빠져 있고 내부 파이프도 꼬여 있는 것 같다.")
