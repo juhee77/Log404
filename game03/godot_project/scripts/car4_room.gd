@@ -513,3 +513,4 @@ func _draw_ellipse(center: Vector2, rx: float, ry: float, col: Color) -> void:
 
 func draw_ellipse_shadow(center: Vector2, rx: float, ry: float) -> void:
 	_draw_ellipse(center, rx, ry, Color(0.04, 0.02, 0.03, 0.5))
+
