@@ -409,3 +409,4 @@ class CandleLightsPuzzle extends VBoxContainer:
 	func _refresh() -> void:
 		for i in range(5):
 			candle_btns[i].text = ("🔥\n🕯️\nON" if lit[i] else "·\n🕯️\nOFF")
+
